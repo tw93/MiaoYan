@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown underline, color and center text with HTML · MiaoYan Blog</title>
+<meta name="description" content="Markdown has no underline, color, centering or super/subscript syntax. Use HTML, and see what GitHub strips and what MiaoYan&#x27;s preview renders.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-underline-and-color/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-underline-and-color/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-underline-and-color/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-underline-and-color/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-underline-and-color/">
+<meta property="og:title" content="Markdown underline, color and center text with HTML · MiaoYan Blog">
+<meta property="og:description" content="Markdown has no underline, color, centering or super/subscript syntax. Use HTML, and see what GitHub strips and what MiaoYan&#x27;s preview renders.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-underline-and-color.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-underline-and-color.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown underline, color and center text with HTML", "item": "https://miaoyan.app/blog/markdown-underline-and-color/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-underline-and-color/#article", "headline": "Markdown underline, color and center text with HTML", "description": "Markdown has no underline, color, centering or super/subscript syntax. Use HTML, and see what GitHub strips and what MiaoYan's preview renders.", "url": "https://miaoyan.app/blog/markdown-underline-and-color/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-underline-and-color/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-underline-and-color.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is there a Markdown syntax for underline?", "acceptedAnswer": {"@type": "Answer", "text": "No. Neither CommonMark nor GFM defines one. Use <u> or <ins>, or Pandoc's [text]{.underline} when you convert with Pandoc."}}, {"@type": "Question", "name": "Why does my red text show as black on GitHub?", "acceptedAnswer": {"@type": "Answer", "text": "GitHub's sanitizer removes style attributes, so the span stays but its color is dropped. Use bold or a callout, or publish the note somewhere that keeps inline styles."}}, {"@type": "Question", "name": "Can I write H2O with a real subscript in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, with H<sub>2</sub>O, or with $\\mathrm{H_2O}$ if you are already in math mode. The H~2~O form is read as strikethrough in MiaoYan."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-underline-and-color/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-underline-and-color/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown underline, color and center text with HTML</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>7 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-underline-and-color.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown has no syntax for underline, text color, centering, font size, superscript, subscript or highlight, so you borrow HTML for all of them: <code>&lt;u&gt;</code> or <code>&lt;ins&gt;</code> for underline, <code>&lt;sup&gt;</code> and <code>&lt;sub&gt;</code> for the raised and lowered text, <code>&lt;mark&gt;</code> for highlight, <code>&lt;span style="color:red"&gt;</code> for color, and <code>&lt;p align="center"&gt;</code> for centering. The catch is that not every place your note is shown accepts every tag. GitHub, for example, keeps <code>&lt;sup&gt;</code>, <code>&lt;sub&gt;</code> and <code>&lt;ins&gt;</code> but drops <code>style</code> attributes, and MiaoYan's preview passes raw HTML through but does not understand <code>==highlight==</code> or <code>^sup^</code>. Pick the form that survives where the note will actually be read.</p>
+<h2 id="why-markdown-leaves-these-out">Why Markdown leaves these out</h2>
+<p>John Gruber's original Markdown documentation says the syntax only covers what can be conveyed in plain text, that Markdown is a writing format while HTML is a publishing format, and that for any markup Markdown does not cover you simply use HTML itself. Bold and italic look like emphasis in a plain text email, so they got syntax. Color, size and alignment are presentation, and a note full of presentation stops being easy to read as source.</p>
+<p>Underline has a second problem: on the web, underlined text is what a link looks like. MDN's page on the <code>&lt;u&gt;</code> element warns against using its default underline in a way that could be confused with a hyperlink, and notes that the element means a non-textual annotation, such as marking a misspelling, not general emphasis. If you want to stress a phrase, bold or italic is usually the better choice, and underline is for the cases where you really need it.</p>
+<h2 id="the-html-fallbacks">The HTML fallbacks</h2>
+<table>
+<thead>
+<tr>
+<th>You want</th>
+<th>Write</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Underline</td>
+<td><code>&lt;u&gt;text&lt;/u&gt;</code> or <code>&lt;ins&gt;text&lt;/ins&gt;</code></td>
+<td>GitHub documents <code>&lt;ins&gt;</code> for underline</td>
+</tr>
+<tr>
+<td>Superscript</td>
+<td><code>x&lt;sup&gt;2&lt;/sup&gt;</code></td>
+<td>Works almost everywhere</td>
+</tr>
+<tr>
+<td>Subscript</td>
+<td><code>H&lt;sub&gt;2&lt;/sub&gt;O</code></td>
+<td>Works almost everywhere</td>
+</tr>
+<tr>
+<td>Highlight</td>
+<td><code>&lt;mark&gt;text&lt;/mark&gt;</code></td>
+<td>Marks text as highlighted</td>
+</tr>
+<tr>
+<td>Color</td>
+<td><code>&lt;span style="color:red"&gt;text&lt;/span&gt;</code></td>
+<td>Needs a renderer that keeps <code>style</code></td>
+</tr>
+<tr>
+<td>Center</td>
+<td><code>&lt;p align="center"&gt;text&lt;/p&gt;</code></td>
+<td><code>align</code> is old but widely accepted</td>
+</tr>
+<tr>
+<td>Smaller text</td>
+<td><code>&lt;small&gt;text&lt;/small&gt;</code></td>
+<td>Not a precise size</td>
+</tr>
+</tbody>
+</table>
+<p>Inline tags go inside a paragraph and need no blank lines. Block tags such as <code>&lt;p&gt;</code> and <code>&lt;div&gt;</code> start an HTML block, and that block ends at the next blank line, which matters for the next section.</p>
+<h2 id="centering-and-the-blank-line-rule">Centering and the blank line rule</h2>
+<pre><code class="language-markdown">&lt;p align=&quot;center&quot;&gt;A centered line.&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+
+Markdown **works** in here because of the blank lines.
+
+&lt;/div&gt;
+</code></pre>
+<p>A line that starts with <code>&lt;div</code> or <code>&lt;p</code> begins an HTML block in CommonMark, and everything up to the first blank line is copied through as raw HTML without Markdown parsing. So <code>**bold**</code> directly after <code>&lt;div align="center"&gt;</code> stays as literal asterisks. Put a blank line after the opening tag and before the closing one and the content in between is parsed as Markdown again. The <a href="/blog/markdown-collapsible-sections/">collapsible sections</a> post explains the same rule for <code>&lt;details&gt;</code>.</p>
+<p>In MiaoYan's preview, <code>&lt;p align="center"&gt;</code> and the paragraphs inside <code>&lt;div align="center"&gt;</code> are centered, and the same holds for <code>left</code> and <code>right</code>. The preview's stylesheet sets paragraphs to left-aligned and has explicit rules for those three <code>align</code> values. <code>&lt;center&gt;</code> and <code>&lt;font&gt;</code> are old HTML tags that GitHub removes, keeping only the text, so prefer <code>align</code> for centering.</p>
+<h2 id="what-miaoyan-renders">What MiaoYan renders</h2>
+<p>MiaoYan's preview turns Markdown into HTML with cmark-gfm and asks it to keep raw HTML (the <code>CMARK_OPT_UNSAFE</code> flag), so tags such as <code>&lt;u&gt;</code>, <code>&lt;mark&gt;</code>, <code>&lt;sup&gt;</code>, <code>&lt;sub&gt;</code> and <code>&lt;span style="..."&gt;</code> reach the preview's web view and the browser engine draws them. The parser has four extensions turned on, which are table, footnotes, strikethrough and tasklist. None of them adds underline, highlight, superscript or subscript.</p>
+<p>That has two consequences. <code>==highlight==</code> and <code>^sup^</code> stay as literal text. And the single-tilde subscript form from other editors, <code>H~2~O</code>, does not become a subscript either: the strikethrough extension accepts one tilde on each side as well as two, so it reads <code>~2~</code> as struck-through text. The syntax guide that V4.5.0 puts in its Examples folder writes <code>H~2~O</code> and <code>26^th^</code> (the Chinese guide writes <code>16^世纪^</code>), but the preview does not render them as subscript and superscript, and the <a href="/blog/markdown-cheat-sheet/">cheat sheet</a> tells you to use <code>&lt;sub&gt;</code> and <code>&lt;sup&gt;</code> instead.</p>
+<p>Because the preview does not sanitize HTML, it is a good place to try an idea and a poor place to learn what other readers will see. Anything that works only because the app lets it through will break when you publish the same file somewhere stricter.</p>
+<h2 id="what-github-keeps-and-strips">What GitHub keeps and strips</h2>
+<p>GitHub documents three of these in its basic formatting guide: <code>&lt;sub&gt;</code>, <code>&lt;sup&gt;</code> and <code>&lt;ins&gt;</code>, the last one for underline. Its markup project adds that rendered HTML is sanitized and that inline styles are removed. Rendering a sample through GitHub's Markdown API shows the rest:</p>
+<ul>
+<li><code>&lt;ins&gt;</code>, <code>&lt;sup&gt;</code>, <code>&lt;sub&gt;</code> and <code>&lt;mark&gt;</code> are kept.</li>
+<li><code>&lt;u&gt;</code> and <code>&lt;small&gt;</code> lose their tags, so the text stays but the underline or smaller size does not.</li>
+<li><code>&lt;span style="color:red"&gt;</code> keeps the text and loses the color.</li>
+<li><code>align="center"</code> is kept, which is why centered README logos work.</li>
+<li><code>H~2~O</code> becomes struck-through text there too, since GitHub also reads single tildes as strikethrough.</li>
+</ul>
+<p>GitHub does give you one color feature of its own: in issues, pull requests and discussions, a HEX, RGB or HSL value in backticks, such as <code>#0969DA</code>, shows a small color swatch next to it. That marks a color; it does not tint text.</p>
+<p>Typora's reference, by comparison, says plainly that you can use <code>&lt;span style="color:red"&gt;</code> for color and <code>&lt;u&gt;</code> for underline.</p>
+<h2 id="extensions-that-exist-elsewhere">Extensions that exist elsewhere</h2>
+<p>Several editors define their own short syntax. They work only where the renderer enables them:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Syntax</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Highlight</td>
+<td><code>==text==</code></td>
+<td>Pandoc <code>mark</code> extension, Typora (turn on in Preferences)</td>
+</tr>
+<tr>
+<td>Superscript</td>
+<td><code>x^2^</code></td>
+<td>Pandoc, Typora (turn on in Preferences)</td>
+</tr>
+<tr>
+<td>Subscript</td>
+<td><code>H~2~O</code></td>
+<td>Pandoc, Typora (turn on in Preferences)</td>
+</tr>
+<tr>
+<td>Underline</td>
+<td><code>[text]{.underline}</code></td>
+<td>Pandoc, with the bracketed spans extension</td>
+</tr>
+</tbody>
+</table>
+<p>Pandoc's manual adds that spaces inside <code>^...^</code> or <code>~...~</code> must be escaped with a backslash, as in <code>P~a\ cat~</code>. These forms are tidy to type but unreadable to any tool that does not know them, which is a good reason to keep the HTML versions in notes you plan to move between apps.</p>
+<h2 id="math-as-a-way-to-get-superscripts">Math as a way to get superscripts</h2>
+<p>If your notes already use formulas, <code>$x^2$</code> and <code>$x_i$</code> give superscripts and subscripts without any HTML, and MiaoYan renders them with the bundled KaTeX. KaTeX also supports <code>\mathrm{}</code> for upright text and <code>\textcolor{blue}{...}</code> for color, so <code>$\textcolor{blue}{F=ma}$</code> colors a formula. This is the right tool for formulas and a clumsy one for ordinary words, because math mode uses math fonts and spacing. See <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a> for the delimiters and pitfalls.</p>
+<h2 id="keeping-notes-portable">Keeping notes portable</h2>
+<ul>
+<li>Prefer semantic HTML (<code>&lt;mark&gt;</code>, <code>&lt;sup&gt;</code>, <code>&lt;ins&gt;</code>) over <code>style</code> attributes, since more renderers keep it.</li>
+<li>Avoid hard-coded colors if you read in both light and dark themes, since a dark red tuned for white can vanish on a dark background.</li>
+<li>Use bold or italic when the goal is emphasis, and reserve color for the rare case that needs it.</li>
+<li>Test a note in the strictest place it will appear, such as the GitHub preview, before relying on a tag.</li>
+<li>Escape literal characters you do not want parsed, as covered in <a href="/blog/markdown-escape-characters/">escape characters</a>.</li>
+</ul>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-there-a-markdown-syntax-for-underline">Is there a Markdown syntax for underline?</h3>
+<p>No. Neither CommonMark nor GFM defines one. Use <code>&lt;u&gt;</code> or <code>&lt;ins&gt;</code>, or Pandoc's <code>[text]{.underline}</code> when you convert with Pandoc.</p>
+<h3 id="why-does-my-red-text-show-as-black-on-github">Why does my red text show as black on GitHub?</h3>
+<p>GitHub's sanitizer removes <code>style</code> attributes, so the span stays but its color is dropped. Use bold or a callout, or publish the note somewhere that keeps inline styles.</p>
+<h3 id="can-i-write-h2o-with-a-real-subscript-in-miaoyan">Can I write H2O with a real subscript in MiaoYan?</h3>
+<p>Yes, with <code>H&lt;sub&gt;2&lt;/sub&gt;O</code>, or with <code>$\mathrm{H_2O}$</code> if you are already in math mode. The <code>H~2~O</code> form is read as strikethrough in MiaoYan.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-bold-italic-strikethrough/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown bold, italic and strikethrough: syntax and pitfalls</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown blockquotes and nested lists: indent rules</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

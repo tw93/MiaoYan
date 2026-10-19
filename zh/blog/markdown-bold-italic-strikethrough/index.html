@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 加粗、斜体与删除线的写法和坑 · 妙言博客</title>
+<meta name="description" content="加粗、斜体、删除线怎么写，为什么紧贴中文标点会失效，以及妙言「格式」菜单里的快捷键。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/">
+<meta property="og:title" content="Markdown 加粗、斜体与删除线的写法和坑 · 妙言博客">
+<meta property="og:description" content="加粗、斜体、删除线怎么写，为什么紧贴中文标点会失效，以及妙言「格式」菜单里的快捷键。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-bold-italic-strikethrough.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-bold-italic-strikethrough.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 加粗、斜体与删除线的写法和坑", "item": "https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/#article", "headline": "Markdown 加粗、斜体与删除线的写法和坑", "description": "加粗、斜体、删除线怎么写，为什么紧贴中文标点会失效，以及妙言「格式」菜单里的快捷键。", "url": "https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-bold-italic-strikethrough.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "粗体是两个星号还是两个下划线？", "acceptedAnswer": {"@type": "Answer", "text": "两种都合法，星号更稳，因为下划线在词内和中文旁边不起作用。"}}, {"@type": "Question", "name": "为什么加粗后面紧跟中文标点时会显示星号？", "acceptedAnswer": {"@type": "Answer", "text": "结尾的 ** 前面是标点、后面是字符，无法闭合，把标点挪到外面、加一个空格，或者改用 <strong>。"}}, {"@type": "Question", "name": "GitHub 支持单波浪线的删除线吗？", "acceptedAnswer": {"@type": "Answer", "text": "它的文档列出了 ~~text~~ 和 ~text~，GFM 规范也写的是一个或两个波浪线。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-bold-italic-strikethrough/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-bold-italic-strikethrough/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 加粗、斜体与删除线的写法和坑</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-bold-italic-strikethrough.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>加粗写 <code>**加粗**</code>，斜体写 <code>*斜体*</code>，删除线写 <code>~~删除线~~</code>。星号放在词中间也能用，下划线不行，删除线是 GitHub Flavored Markdown 的扩展，不属于 CommonMark 的核心。强调失败、页面上留下原样的星号，几乎都是因为紧贴分隔符的那个字符，<code>**</code> 开头紧挨标点、或者结尾紧跟在标点后面，它和相邻文字之间就必须隔一个空格或者再隔一个标点，这在中文里最容易踩到，比如 <code>**注意：**这样不行</code>。妙言 V4.5.0 在「格式」菜单里有粗体、斜体和删除线，规则卡住的时候可以退回 <code>&lt;b&gt;</code> 和 <code>&lt;del&gt;</code> 标签。</p>
+<h2 id="星号下划线与组合">星号、下划线与组合</h2>
+<pre><code class="language-markdown">*斜体* 或 _斜体_
+**粗体** 或 __粗体__
+***粗斜体***
+**粗体里有 *斜体* 一段**
+~~**又删除又加粗**~~
+</code></pre>
+<p>两种字符生成的 HTML 一样，一个是 <code>&lt;em&gt;</code>，两个是 <code>&lt;strong&gt;</code>，三个是粗体外面再包一层斜体，嵌套顺序随意，<code>**_x_**</code> 和 <code>***x***</code> 都是粗斜体。一段强调不能跨过空行，<code>**粗体</code>、一个空行、<code>断开**</code> 三者合起来还是原样的星号。强调在标题、列表项、表格单元格、链接文字里都能用，也可以包住行内代码。</p>
+<p>区别在词中间的行为。<code>un*frigging*believable</code> 中间会变斜体，<code>un_frigging_believable</code> 和 <code>snake_case_name</code> 则保持原样，因为 CommonMark 不允许 <code>_</code> 在词内部开启或结束强调。这样标识符是安全的，不过单独成词的 <code>__init__</code> 仍然会变成粗体的 init，代码要放进反引号里。默认用 <code>*</code> 可以同时躲开这两个麻烦，因为它在词内和中文旁边的行为一致。</p>
+<h2 id="为什么有些强调会失效">为什么有些强调会失效</h2>
+<p>CommonMark 看的是 <code>*</code> 或 <code>_</code> 这一串字符两侧的字符。用大白话说，一串分隔符要能开启强调，后面不能是空白，而且后面如果是标点，前面必须是空白或标点，要能结束强调，前面不能是空白，而且前面如果是标点，后面必须是空白或标点，规范里把这两种叫作左侧夹持和右侧夹持，下划线在此之上再加一条词内规则。</p>
+<p>下面这些例子在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里跑过，四个扩展也都打开了：</p>
+<table>
+<thead>
+<tr>
+<th>写法</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>这是**加粗**文字</code></td>
+<td>可以，中文字符算普通字符</td>
+</tr>
+<tr>
+<td><code>**加粗**，逗号</code> 和 <code>**加粗**。</code></td>
+<td>可以，结尾的 <code>**</code> 前面是汉字</td>
+</tr>
+<tr>
+<td><code>**注意：**这样不行</code></td>
+<td>失败，留下原样的星号</td>
+</tr>
+<tr>
+<td><code>中文**（括号）**继续</code></td>
+<td>失败</td>
+</tr>
+<tr>
+<td><code>句子**“引号”**后面</code></td>
+<td>失败</td>
+</tr>
+<tr>
+<td><code>**bold.**Next</code></td>
+<td>失败，ASCII 里原因相同</td>
+</tr>
+<tr>
+<td><code>这是_斜体_文字</code></td>
+<td>失败，<code>_</code> 在词内被禁止</td>
+</tr>
+<tr>
+<td><code>这是*斜体*文字</code></td>
+<td>可以</td>
+</tr>
+</tbody>
+</table>
+<p>失败的几行形状相同，分隔符的里侧是标点，外侧是普通字符。全角的 <code>：</code>、<code>“</code>、<code>（</code> 都算标点，而中文又没有空格来满足规则。有三种改法在同一轮测试里都成立，把标点挪到外面，<code>**注意**：这样可以</code>，在分隔符旁边加空格或者再放一个标点，<code>**注意：** 这样可以</code> 或者 <code>（**括号**）继续</code>，再就是改用 <code>&lt;strong&gt;</code> 标签。</p>
+<p>还有一点取决于引擎。CommonMark 0.31.2 规范把 <code>¥</code> 这类符号也算作标点，而妙言用的这版 cmark-gfm 仍然把 <code>价格**¥100**元</code> 渲染成粗体，所以在妙言里正常的笔记，换成按 0.31 规则实现的解析器可能就坏了，要发布到哪里就在哪里测一遍。妙言的编辑区也用自己的正则给粗体和斜体上色，并不走 cmark，那条正则只要求标记内侧不是空白，所以像 <code>**注意：**这样</code> 这样的片段在编辑区里会被染成粗体，预览里却显示星号，所以以预览为准。</p>
+<h2 id="删除线">删除线</h2>
+<p><code>~~文字~~</code> 是 GFM 的扩展，妙言 V4.5.0 已经启用。GFM 规范写的是一个或两个波浪线都行，GitHub 文档里列的是 <code>~~ ~~</code> 或 <code>~ ~</code>。测试里 <code>~one~</code> 会划掉，但数量不一致的 <code>~~a~</code>，以及行中间的三个波浪线，都保持原样。</p>
+<p>单个波浪线对中文和技术文字是个坑。<code>3~5 天，6~10 天</code> 渲染出来是 <code>3</code>、被划掉的「5 天，6」、再加 <code>10 天</code>。<code>~5</code> 和 <code>~10</code> 这种前面带空格的写法没事，<code>~/Documents</code> 也保持原样。表示范围就写 <code>3-5</code>，或者用全角的 <code>～</code>，或者写成 <code>\~</code>，其余可转义的字符见 <a href="/zh/blog/markdown-escape-characters/">转义字符</a>。想要删除线时写两个波浪线更稳。编辑区自己的删除线正则只认两个波浪线，所以单波浪线的删除线只在预览里生效，编辑区里看不到样式。</p>
+<p>删除线不在 CommonMark 规范里，不带这个扩展的解析器会把波浪线直接打出来，<a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM</a> 里列了其他差异，文字要送到这类渲染器的话，用 <code>&lt;del&gt;</code> 或 <code>&lt;s&gt;</code> 更保险。</p>
+<h2 id="妙言里的菜单和快捷键">妙言里的菜单和快捷键</h2>
+<p>V4.5.0 里「格式」菜单有这几项：</p>
+<table>
+<thead>
+<tr>
+<th>菜单项</th>
+<th>英文标签</th>
+<th>快捷键</th>
+<th>写入</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>粗体</td>
+<td>Bold</td>
+<td><code>⌘B</code></td>
+<td><code>**文字**</code></td>
+</tr>
+<tr>
+<td>斜体</td>
+<td>Italic</td>
+<td><code>⌘I</code></td>
+<td><code>*文字*</code></td>
+</tr>
+<tr>
+<td>删除线</td>
+<td>Deleteline</td>
+<td><code>⌘⇧X</code></td>
+<td><code>~~文字~~</code></td>
+</tr>
+</tbody>
+</table>
+<p>选中文字时命令会把它包起来，光标停在结尾标记后面，没选中时插入一对空标记，光标落在中间。它只包不切换，在已经加粗的文字上再按一次 <code>⌘B</code> 会多包一层变成 <code>****文字****</code>，要自己手动删掉。这些命令需要编辑区有焦点，预览模式下什么也不做。同一个菜单里还有下划线，写出来是 <code>&lt;u&gt;文字&lt;/u&gt;</code>，因为 Markdown 没有下划线语法。其余语法的对应关系见 <a href="/zh/blog/markdown-cheat-sheet/">速查表</a>。</p>
+<h2 id="什么时候用-html">什么时候用 HTML</h2>
+<p>预览会渲染原始 HTML，所以 <code>&lt;b&gt;</code>、<code>&lt;strong&gt;</code>、<code>&lt;del&gt;</code> 和 <code>&lt;s&gt;</code> 都能用，分隔符贴着标点或中文又加不了空格的时候就用它们。行内标签里的 Markdown 仍然会解析，<code>&lt;b&gt;*x*&lt;/b&gt;</code> 得到的是粗体里包斜体。</p>
+<p>标签要和文字放在同一行，单独占一行的标签会开启 HTML 块，块里面的行不再按 Markdown 解析。代价在另一头，会剥掉原始 HTML 的渲染器会丢掉这些标签，你想要强调的地方就只剩普通文字。</p>
+<h2 id="怎么检查">怎么检查</h2>
+<p>打开预览，找有没有残留的 <code>*</code>、<code>_</code> 或 <code>~</code>，然后依次排查，分隔符内侧是不是有空白，分隔符是不是一侧挨着标点、另一侧是字符，下划线是不是在词中间，波浪线数量是否一致，开头和结尾标记之间是不是有空行。字符还是被当成语法的话，就用反斜杠转义。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="粗体是两个星号还是两个下划线">粗体是两个星号还是两个下划线？</h3>
+<p>两种都合法，星号更稳，因为下划线在词内和中文旁边不起作用。</p>
+<h3 id="为什么加粗后面紧跟中文标点时会显示星号">为什么加粗后面紧跟中文标点时会显示星号？</h3>
+<p>结尾的 <code>**</code> 前面是标点、后面是字符，无法闭合，把标点挪到外面、加一个空格，或者改用 <code>&lt;strong&gt;</code>。</p>
+<h3 id="github-支持单波浪线的删除线吗">GitHub 支持单波浪线的删除线吗？</h3>
+<p>它的文档列出了 <code>~~text~~</code> 和 <code>~text~</code>，GFM 规范也写的是一个或两个波浪线。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-comments/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 注释：HTML 注释与 [//]: # 写法</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-underline-and-color/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 下划线、文字颜色与居中的写法</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

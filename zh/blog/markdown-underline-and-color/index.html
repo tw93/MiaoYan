@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 下划线、文字颜色与居中的写法 · 妙言博客</title>
+<meta name="description" content="Markdown 没有下划线、颜色、居中和上下标语法，用 HTML 补，并说明 GitHub 会去掉什么、妙言能渲染什么。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-underline-and-color/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-underline-and-color/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-underline-and-color/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-underline-and-color/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-underline-and-color/">
+<meta property="og:title" content="Markdown 下划线、文字颜色与居中的写法 · 妙言博客">
+<meta property="og:description" content="Markdown 没有下划线、颜色、居中和上下标语法，用 HTML 补，并说明 GitHub 会去掉什么、妙言能渲染什么。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-underline-and-color.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-underline-and-color.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 下划线、文字颜色与居中的写法", "item": "https://miaoyan.app/zh/blog/markdown-underline-and-color/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-underline-and-color/#article", "headline": "Markdown 下划线、文字颜色与居中的写法", "description": "Markdown 没有下划线、颜色、居中和上下标语法，用 HTML 补，并说明 GitHub 会去掉什么、妙言能渲染什么。", "url": "https://miaoyan.app/zh/blog/markdown-underline-and-color/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-underline-and-color/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-underline-and-color.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 有下划线语法吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，CommonMark 和 GFM 都没定义。用 <u> 或 <ins>，用 Pandoc 转换时也可以写 [文字]{.underline}。"}}, {"@type": "Question", "name": "为什么我的红色文字在 GitHub 上是黑的？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 的过滤器会移除 style 属性，span 还在，颜色没了。改用加粗或引用块，或者把笔记发布到保留行内样式的地方。"}}, {"@type": "Question", "name": "在妙言里能写真正的 H₂O 下标吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，写 H<sub>2</sub>O，已经在公式里的话写 $\\mathrm{H_2O}$。H~2~O 在妙言里会被读成删除线。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-underline-and-color/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-underline-and-color/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 下划线、文字颜色与居中的写法</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-underline-and-color.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown 本身没有下划线、文字颜色、居中、字号、上标、下标和高亮的语法，要用就借 HTML，下划线写 <code>&lt;u&gt;</code> 或 <code>&lt;ins&gt;</code>，上下标写 <code>&lt;sup&gt;</code> 和 <code>&lt;sub&gt;</code>，高亮写 <code>&lt;mark&gt;</code>，颜色写 <code>&lt;span style="color:red"&gt;</code>，居中写 <code>&lt;p align="center"&gt;</code>。麻烦在于笔记最后显示的地方未必认所有标签，比如 GitHub 会保留 <code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;ins&gt;</code>，却会丢掉 <code>style</code> 属性；妙言的预览会放行原始 HTML，但不认 <code>==高亮==</code> 和 <code>^上标^</code>。所以写之前先想清楚这篇笔记最终在哪里读，再挑能活下来的那种写法。</p>
+<h2 id="为什么-markdown-不提供这些">为什么 Markdown 不提供这些</h2>
+<p>John Gruber 最初的 Markdown 文档里说得很明白，它的语法只覆盖纯文本里就能表达的东西，Markdown 是写作格式，HTML 是发布格式，Markdown 没覆盖的标记直接写 HTML 就行。加粗和斜体在纯文本邮件里本来就是强调的写法，所以有语法；颜色、字号和对齐属于排版，一篇满是排版标记的笔记，源码就不好读了。</p>
+<p>下划线还有个额外的问题，网页上带下划线的文字通常就是链接。MDN 对 <code>&lt;u&gt;</code> 的说明里提醒过，不要让它默认的下划线和超链接混淆，而且这个元素的本意是标注非文本层面的记号，比如标出拼写错误，并不是通用的强调。想突出一个词，加粗或斜体多半更合适，下划线留给真的需要的场合。</p>
+<h2 id="html-替代写法">HTML 替代写法</h2>
+<table>
+<thead>
+<tr>
+<th>想要的效果</th>
+<th>写法</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>下划线</td>
+<td><code>&lt;u&gt;文字&lt;/u&gt;</code> 或 <code>&lt;ins&gt;文字&lt;/ins&gt;</code></td>
+<td>GitHub 文档里把 <code>&lt;ins&gt;</code> 列为下划线</td>
+</tr>
+<tr>
+<td>上标</td>
+<td><code>x&lt;sup&gt;2&lt;/sup&gt;</code></td>
+<td>几乎处处可用</td>
+</tr>
+<tr>
+<td>下标</td>
+<td><code>H&lt;sub&gt;2&lt;/sub&gt;O</code></td>
+<td>几乎处处可用</td>
+</tr>
+<tr>
+<td>高亮</td>
+<td><code>&lt;mark&gt;文字&lt;/mark&gt;</code></td>
+<td>语义是标记出的重点</td>
+</tr>
+<tr>
+<td>颜色</td>
+<td><code>&lt;span style="color:red"&gt;文字&lt;/span&gt;</code></td>
+<td>渲染器要保留 <code>style</code></td>
+</tr>
+<tr>
+<td>居中</td>
+<td><code>&lt;p align="center"&gt;文字&lt;/p&gt;</code></td>
+<td><code>align</code> 很老，但接受度高</td>
+</tr>
+<tr>
+<td>小一点的字</td>
+<td><code>&lt;small&gt;文字&lt;/small&gt;</code></td>
+<td>不是精确字号</td>
+</tr>
+</tbody>
+</table>
+<p>行内标签写在段落里就行，不需要空行；<code>&lt;p&gt;</code>、<code>&lt;div&gt;</code> 这类块级标签会开启一个 HTML 块，到下一个空行才结束，这一点在下一节会用到。</p>
+<h2 id="居中与空行规则">居中与空行规则</h2>
+<pre><code class="language-markdown">&lt;p align=&quot;center&quot;&gt;一行居中的文字。&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+
+因为前后有空行，这里面的 **加粗** 仍然会被解析。
+
+&lt;/div&gt;
+</code></pre>
+<p>按 CommonMark 的规则，以 <code>&lt;div</code> 或 <code>&lt;p</code> 开头的行会开启 HTML 块，直到第一个空行之前的内容都会原样当作 HTML 输出，不再做 Markdown 解析，所以 <code>&lt;div align="center"&gt;</code> 紧接着写 <code>**加粗**</code>，星号会原样显示。在开标签后面和闭标签前面各留一个空行，中间的内容就又会被当成 Markdown 解析了。<a href="/zh/blog/markdown-collapsible-sections/">折叠区块</a>那篇里的 <code>&lt;details&gt;</code> 也是同一条规则。</p>
+<p>在妙言的预览里，<code>&lt;p align="center"&gt;</code> 和 <code>&lt;div align="center"&gt;</code> 里的段落会居中，<code>left</code> 和 <code>right</code> 同理，预览样式表默认把段落设成左对齐，并给这三个 <code>align</code> 值单独写了规则。<code>&lt;center&gt;</code> 和 <code>&lt;font&gt;</code> 是很老的标签，GitHub 会把它们去掉只留文字，居中还是用 <code>align</code> 更稳。</p>
+<h2 id="妙言能渲染什么">妙言能渲染什么</h2>
+<p>妙言的预览用 cmark-gfm 把 Markdown 转成 HTML，并让它保留原始 HTML（<code>CMARK_OPT_UNSAFE</code> 这个选项），所以 <code>&lt;u&gt;</code>、<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;span style="..."&gt;</code> 都会原样交给预览的 web view，由浏览器引擎绘制。解析器打开了四个扩展，分别是表格、脚注、删除线和任务列表，没有一个提供下划线、高亮、上标或下标。</p>
+<p>这带来两个结果。<code>==高亮==</code> 和 <code>^上标^</code> 会按字面显示；其他编辑器里常见的单波浪线下标 <code>H~2~O</code> 也不会变成下标，删除线扩展除了两个波浪线，也接受前后各一个波浪线，于是 <code>~2~</code> 会被读成删除线。V4.5.0 放在 <code>Examples</code> 文件夹里的语法指南写了 <code>H~2~O</code> 和 <code>26^th^</code>（中文版写的是 <code>16^世纪^</code>），但预览并不会把它们渲染成下标和上标，<a href="/zh/blog/markdown-cheat-sheet/">语法速查</a>里也建议改用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code>。</p>
+<p>预览不会过滤 HTML，所以它适合试写法，不适合用来判断别人看到的样子，只因为软件放行才生效的标签，换到更严格的地方发布就会失效。</p>
+<h2 id="github-保留什么去掉什么">GitHub 保留什么、去掉什么</h2>
+<p>GitHub 在基础格式文档里列了三个，<code>&lt;sub&gt;</code>、<code>&lt;sup&gt;</code> 和 <code>&lt;ins&gt;</code>，最后一个用来做下划线。它的 markup 项目还说明，渲染出的 HTML 会经过过滤，行内样式会被去掉。拿一段示例交给 GitHub 的 Markdown API 渲染，结果是这样：</p>
+<ul>
+<li><code>&lt;ins&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;mark&gt;</code> 会保留。</li>
+<li><code>&lt;u&gt;</code> 和 <code>&lt;small&gt;</code> 的标签被去掉，文字还在，下划线和小字号没了。</li>
+<li><code>&lt;span style="color:red"&gt;</code> 文字还在，颜色没了。</li>
+<li><code>align="center"</code> 会保留，所以 README 里居中的 logo 才能正常显示。</li>
+<li><code>H~2~O</code> 在那里同样变成删除线，GitHub 也把单个波浪线当作删除线。</li>
+</ul>
+<p>GitHub 自己提供的颜色功能只有一个，在 issue、PR 和讨论里，把 HEX、RGB 或 HSL 写进反引号，比如 <code>#0969DA</code>，旁边会出现一个小色块。它是在标示一个颜色，并不会给文字上色。作为对比，Typora 的参考页直接说可以用 <code>&lt;span style="color:red"&gt;</code> 上色、用 <code>&lt;u&gt;</code> 加下划线。</p>
+<h2 id="其他编辑器里的简写">其他编辑器里的简写</h2>
+<p>有些编辑器自己定义了短语法，只有渲染器打开了才有效：</p>
+<table>
+<thead>
+<tr>
+<th>效果</th>
+<th>写法</th>
+<th>哪里支持</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高亮</td>
+<td><code>==文字==</code></td>
+<td>Pandoc 的 <code>mark</code> 扩展，Typora（在偏好设置里开启）</td>
+</tr>
+<tr>
+<td>上标</td>
+<td><code>x^2^</code></td>
+<td>Pandoc，Typora（在偏好设置里开启）</td>
+</tr>
+<tr>
+<td>下标</td>
+<td><code>H~2~O</code></td>
+<td>Pandoc，Typora（在偏好设置里开启）</td>
+</tr>
+<tr>
+<td>下划线</td>
+<td><code>[文字]{.underline}</code></td>
+<td>Pandoc，需要 bracketed spans 扩展</td>
+</tr>
+</tbody>
+</table>
+<p>Pandoc 手册还补了一条，<code>^...^</code> 或 <code>~...~</code> 里如果有空格，要用反斜杠转义，比如 <code>P~a\ cat~</code>。这些写法敲起来整齐，但对不认识它们的工具来说完全没法读，要在多个软件之间搬笔记的话，HTML 写法更稳。</p>
+<h2 id="用公式写上下标">用公式写上下标</h2>
+<p>笔记里本来就有公式的话，<code>$x^2$</code> 和 <code>$x_i$</code> 不用任何 HTML 就能得到上标和下标，妙言用内置的 KaTeX 渲染。KaTeX 还支持 <code>\mathrm{}</code> 写正体、<code>\textcolor{blue}{...}</code> 上色，所以 <code>$\textcolor{blue}{F=ma}$</code> 能给公式着色。公式场景用它合适，写普通文字就别扭了，因为数学模式用的是数学字体和间距。分隔符和常见的坑见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<h2 id="让笔记保持可移植">让笔记保持可移植</h2>
+<ul>
+<li>优先用语义化的 HTML（<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;ins&gt;</code>），少用 <code>style</code> 属性，因为保留前者的渲染器更多。</li>
+<li>如果浅色和深色主题都会用，避免写死颜色，为白底调好的深红色放到深色背景上可能就看不见了。</li>
+<li>只是想强调，用加粗或斜体，颜色留给真正需要的少数场合。</li>
+<li>在最严格的显示环境里测一下，比如 GitHub 的预览，再决定能不能依赖某个标签。</li>
+<li>不想被解析的字符要转义，见<a href="/zh/blog/markdown-escape-characters/">转义字符</a>。</li>
+</ul>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="markdown-有下划线语法吗">Markdown 有下划线语法吗？</h3>
+<p>没有，CommonMark 和 GFM 都没定义。用 <code>&lt;u&gt;</code> 或 <code>&lt;ins&gt;</code>，用 Pandoc 转换时也可以写 <code>[文字]{.underline}</code>。</p>
+<h3 id="为什么我的红色文字在-github-上是黑的">为什么我的红色文字在 GitHub 上是黑的？</h3>
+<p>GitHub 的过滤器会移除 <code>style</code> 属性，span 还在，颜色没了。改用加粗或引用块，或者把笔记发布到保留行内样式的地方。</p>
+<h3 id="在妙言里能写真正的-h₂o-下标吗">在妙言里能写真正的 H₂O 下标吗？</h3>
+<p>可以，写 <code>H&lt;sub&gt;2&lt;/sub&gt;O</code>，已经在公式里的话写 <code>$\mathrm{H_2O}$</code>。<code>H~2~O</code> 在妙言里会被读成删除线。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-bold-italic-strikethrough/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 加粗、斜体与删除线的写法和坑</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

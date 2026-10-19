@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 注释：HTML 注释与 [//]: # 写法 · 妙言博客</title>
+<meta name="description" content="用 &lt;!-- --&gt; 或 [//]: # 写注释，哪里隐藏、哪里会漏出来，以及妙言在预览和导出里怎么处理。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-comments/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-comments/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-comments/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-comments/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-comments/">
+<meta property="og:title" content="Markdown 注释：HTML 注释与 [//]: # 写法 · 妙言博客">
+<meta property="og:description" content="用 &lt;!-- --&gt; 或 [//]: # 写注释，哪里隐藏、哪里会漏出来，以及妙言在预览和导出里怎么处理。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-comments.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-comments.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 注释：HTML 注释与 [//]: # 写法", "item": "https://miaoyan.app/zh/blog/markdown-comments/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-comments/#article", "headline": "Markdown 注释：HTML 注释与 [//]: # 写法", "description": "用 <!-- --> 或 [//]: # 写注释，哪里隐藏、哪里会漏出来，以及妙言在预览和导出里怎么处理。", "url": "https://miaoyan.app/zh/blog/markdown-comments/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-comments/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-comments.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 有官方的注释语法吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，CommonMark 和 GFM 都没有定义。HTML 注释是 Markdown 透传的原始 HTML，[//]: # (text) 是被借用成约定的链接引用定义。"}}, {"@type": "Question", "name": "该用哪一种？", "acceptedAnswer": {"@type": "Answer", "text": "HTML 注释用得更广，也支持多行。输出必须保持干净，或者渲染器会剥掉原始 HTML 时，用引用写法。"}}, {"@type": "Question", "name": "注释会在 GitHub 上显示吗？", "acceptedAnswer": {"@type": "Answer", "text": "渲染后的页面里不会，但原始文件和编辑页里看得到。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-comments/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-comments/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 注释：HTML 注释与 [//]: # 写法</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-comments.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown 自己没有注释语法，只能借用别的。最常见的是 HTML 注释 <code>&lt;!-- 备注 --&gt;</code>，单独占一行，前后各空一行，它不会出现在渲染结果里，却仍然留在源文件、导出的 HTML 文件和「查看源代码」里。另一种是链接引用定义 <code>[//]: # (备注)</code>，它在 HTML 里什么也不输出，连源码里都没有。妙言 V4.5.0 在预览和 PDF 导出里会把两种都隐藏，导出 HTML 时 HTML 注释会原样留在文件里。两种都不是私密的，密码和令牌千万别写进去。</p>
+<h2 id="两种写法">两种写法</h2>
+<pre><code class="language-markdown">可见的段落。
+
+&lt;!-- 一行的注释。 --&gt;
+
+&lt;!--
+多行的注释。
+这里的 Markdown 不会被解析：
+- **不会加粗**
+--&gt;
+
+[//]: # (不会在 HTML 里留下任何东西的注释。)
+
+又是可见的段落。
+</code></pre>
+<p>HTML 写法之所以成立，是因为原始 HTML 本来就是 Markdown 的一部分。CommonMark 把以 <code>&lt;!--</code> 开头的行当作 HTML 块的开始，遇到第一个含有 <code>--&gt;</code> 的行才结束，中间的内容原样透传，里面的空行也不会提前结束，所以多行注释里可以放列表和空行。在段落中间，<code>Hello &lt;!-- aside --&gt; world</code> 被当作行内原始 HTML，仍然留在行内。</p>
+<p>引用写法是另一套机制。CommonMark 定义的链接引用定义是方括号里的标签、冒号、目的地和可选的标题，标题可以用引号或圆括号，定义本身不渲染任何东西，所以 <code>//</code> 只是个标签，<code>#</code> 是目的地，你的注释是标题，<code>[//]: &lt;&gt; (text)</code> 和 <code>[note]: # "text"</code> 效果相同。标题可以跨多行，但不能含空行，定义也不能打断段落，前面要留一个空行。在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里，<code>Para</code> 后面紧跟 <code>[//]: # (x)</code>，这条定义会被当成普通文字打印出来。</p>
+<h2 id="两种写法各留下什么">两种写法各留下什么</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>HTML 注释</th>
+<th><code>[//]: # (text)</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>渲染后的页面</td>
+<td>隐藏</td>
+<td>隐藏</td>
+</tr>
+<tr>
+<td>HTML 源码</td>
+<td>有</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>渲染器剥掉原始 HTML 时</td>
+<td>失效</td>
+<td>仍然有效</td>
+</tr>
+<tr>
+<td>内容是否按 Markdown 解析</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<p>HTML 注释会进入生成的 HTML，任何人对你的笔记生成的页面点「查看源代码」都能读到。会剥掉原始 HTML 的渲染器，会把它换成 <code>&lt;!-- raw HTML omitted --&gt;</code> 这样的占位符，内容就没了。引用写法什么也不留，但它只是一种约定，不是功能，笔记里别处如果写了 <code>[//]</code>，那段文字会变成指向 <code>#</code> 的链接，同一个标签的第二条定义会被忽略，所以 <code>//</code> 只用一次，或者给每条注释一个不重复的标签。</p>
+<p>GitHub 文档记录了 HTML 写法，说放进 HTML 注释的内容会从渲染后的 Markdown 里隐藏，原始文件和编辑页里仍然看得到，能读这个仓库的人就能读到它。</p>
+<h2 id="哪里会漏出来">哪里会漏出来</h2>
+<ul>
+<li><strong>代码。</strong> 围栏代码块和行内代码里的 <code>&lt;!-- --&gt;</code> 会按字面显示，因为那里面什么都不解析，想展示一个注释就是这样写的。</li>
+<li><strong>没有闭合的注释。</strong> 块开头的 <code>&lt;!--</code> 没有 <code>--&gt;</code>，会把文档后面的所有内容吞进 HTML 块，浏览器就把它们全部隐藏。</li>
+<li><strong>嵌套。</strong> 注释在第一个 <code>--&gt;</code> 处结束，一个块里含有第二个注释时，内层 <code>--&gt;</code> 之后的 <code>leaked text</code> 会出现在页面上，后面还跟着一个多余的 <code>--&gt;</code>，要去掉里面那层注释标记，不要嵌套。</li>
+<li><strong>闭合符后面的文字。</strong> 像 <code>&lt;!-- c --&gt; **text**</code> 这样的一行，整行都属于 HTML 块，所以 <code>**text**</code> 不会加粗，注释要单独占一行。</li>
+<li><strong>四个空格。</strong> 空行之后缩进的 <code>&lt;!-- c --&gt;</code> 是代码块，会被打印出来。</li>
+<li><strong>Front matter。</strong> 妙言只在笔记以 <code>---</code> 开头时才隐藏那个块，上面放一条注释，这个块就变成一条分隔线加一个标题，注释要放在结尾的 <code>---</code> 下面，规则见 <a href="/zh/blog/markdown-front-matter/">front matter</a> 一文。</li>
+</ul>
+<p>表格单元格和标题里可以放行内注释，列表项里把注释缩进到项目文字的位置也可以。</p>
+<h2 id="妙言-v450-怎么处理">妙言 V4.5.0 怎么处理</h2>
+<p>妙言用 cmark-gfm 渲染 Markdown，并打开了原始 HTML 选项（<code>CMARK_OPT_UNSAFE</code>），所以注释会作为真正的 HTML 注释进入预览，网页视图不会把它画出来。这同一个渲染器给预览、PDF 导出、HTML 导出和「拷贝HTML」供稿，预览和 PDF 导出里看不到注释文字，因为 PDF 是印出来的预览。「文件」「导出」「HTML」会重新渲染笔记，把 HTML 存到下载目录，这条路径上没有哪一步会去掉注释，所以文件里有。用分享菜单里的「拷贝HTML」复制，也是同样渲染整篇笔记文字，注释包含在内。</p>
+<p>编辑区的高亮对注释没有规则，V4.5.0 也没有注释的格式菜单命令或斜杠快捷输入，标记要自己敲。因为源文件里留着它们，在所有笔记里搜 <code>TODO</code> 或者 <code>&lt;!--</code> 都能找到，这也是用注释而不是直接删掉一行的主要理由，<code>grep -rn "&lt;!--" notes/</code> 可以把它们全列出来。</p>
+<h2 id="注释还是-front-matter">注释还是 front matter</h2>
+<p>两者在渲染结果里都是隐藏的，在文件里都读得到，区别在谁来使用它们。Front matter 是 Jekyll、Hugo 这类生成器会读取的元数据，比如标题、日期或 <code>draft</code> 标记，注释则是所有工具都忽略的。构建要用的字段放 front matter，给自己或编辑的备注放注释，草稿标记还能做注释做不到的事，生成器可以把这个页面排除在站点之外。一段内容如果不能发布，就挪到另一篇笔记里，不要藏在注释里。</p>
+<h2 id="别把秘密写进注释">别把秘密写进注释</h2>
+<p>注释是你可能会同步、提交或导出的文件里的纯文本，笔记文件夹可能经过 iCloud 云盘、Dropbox 或 git，参见 <a href="/zh/blog/sync-markdown-notes-across-devices/">同步笔记</a>，导出的 HTML 页面会把注释带给收到它的人。内容敏感的话，就不要放进任何你要分享或发布的笔记。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="markdown-有官方的注释语法吗">Markdown 有官方的注释语法吗？</h3>
+<p>没有，CommonMark 和 GFM 都没有定义。HTML 注释是 Markdown 透传的原始 HTML，<code>[//]: # (text)</code> 是被借用成约定的链接引用定义。</p>
+<h3 id="该用哪一种">该用哪一种？</h3>
+<p>HTML 注释用得更广，也支持多行。输出必须保持干净，或者渲染器会剥掉原始 HTML 时，用引用写法。</p>
+<h3 id="注释会在-github-上显示吗">注释会在 GitHub 上显示吗？</h3>
+<p>渲染后的页面里不会，但原始文件和编辑页里看得到。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-horizontal-line/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 分割线怎么写，以及 --- 的坑</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-bold-italic-strikethrough/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 加粗、斜体与删除线的写法和坑</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

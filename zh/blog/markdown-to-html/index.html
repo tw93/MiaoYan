@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 转 HTML：命令行与妙言导出 · 妙言博客</title>
+<meta name="description" content="用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-to-html/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-to-html/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-to-html/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-to-html/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-to-html/">
+<meta property="og:title" content="Markdown 转 HTML：命令行与妙言导出 · 妙言博客">
+<meta property="og:description" content="用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-html.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-to-html.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转 HTML：命令行与妙言导出", "item": "https://miaoyan.app/zh/blog/markdown-to-html/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-html/#article", "headline": "Markdown 转 HTML：命令行与妙言导出", "description": "用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。", "url": "https://miaoyan.app/zh/blog/markdown-to-html/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-html/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-html.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "一定要托管吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要，用浏览器从磁盘直接打开就行，只是妙言导出的文件要联网才能加载样式和脚本。"}}, {"@type": "Question", "name": "哪个工具输出的 HTML 最干净？", "acceptedAnswer": {"@type": "Answer", "text": "cmark-gfm 和 markdown-it 给的是朴素的片段，Pandoc 加 -s 给完整页面，输出取决于你启用了哪些扩展。"}}, {"@type": "Question", "name": "妙言能整个文件夹一起转吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出菜单只作用于选中的那一篇笔记。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-to-html/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-to-html/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 转 HTML：命令行与妙言导出</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-html.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown 转 HTML 分两步，解析器先读懂 Markdown 并建出文档树，渲染器再把这棵树写成 HTML 标签。临时转一个页面，命令行里用 Pandoc（<code>pandoc -s note.md -o note.html</code>）就能得到一份完整的、放哪儿都能用的文件；在妙言 V4.5.0 里，文件 &gt; 导出 &gt; HTML 在应用里做同样的事，只有一个限制要先知道，导出的文件从妙言的 CDN 加载样式和脚本，并且不带本地图片。</p>
+<h2 id="片段还是完整页面">片段还是完整页面</h2>
+<p>解析器默认给的是片段，一堆 <code>&lt;h1&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;ul&gt;</code>，没有 <code>&lt;html&gt;</code> 和 <code>&lt;body&gt;</code>，要把 HTML 放进模板、CMS 或邮件时，要的就是它。完整页面则需要在片段外面包一层带字符集、标题和样式表链接的 head。</p>
+<p>Pandoc 的手册写得很明确，默认只生成文档片段，加 <code>-s</code> 或 <code>--standalone</code> 才生成带 <code>&lt;head&gt;</code> 和 <code>&lt;body&gt;</code> 的完整文档，<code>--css</code> 要和 <code>-s</code> 一起用，因为样式表的链接是写进文档头部的。</p>
+<h2 id="命令行的几条路">命令行的几条路</h2>
+<pre><code class="language-bash"># Pandoc：完整页面，链接外部样式表
+pandoc -s note.md -o note.html --css style.css
+
+# Pandoc：样式和图片都内联成一个文件
+pandoc -s note.md -o note.html --embed-resources
+
+# markdown-it：输出片段到文件
+npm install markdown-it
+npx markdown-it note.md -o note.html
+</code></pre>
+<p>Pandoc 的 <code>--embed-resources</code> 生成没有任何外部依赖的独立 HTML 文件，只对 HTML 输出有效，旧的 <code>--self-contained</code> 是 <code>--embed-resources --standalone</code> 的弃用同义词。Pandoc 自己的 Markdown 已经能读管道表格、任务列表和删除线，加 <code>-f gfm</code>（手册里描述为 GitHub-Flavored Markdown）则按 GitHub 的规则读，还会打开 <code>&gt; [!NOTE]</code> 这类提示块。Pandoc 的数学公式默认用 MathML，<code>--math-method=katex</code> 可以切到 KaTeX。</p>
+<p>markdown-it 的命令行读文件，不给文件时读标准输入，不加 <code>-o</code> 就写到标准输出，参数里有关闭内嵌 HTML 的 <code>--no-html</code>、自动识别链接的 <code>-l</code> 和排版替换的 <code>-t</code>。它的 README 把「Safe by default」列在特性里，库的默认选项也确实是 <code>html: false</code>，但命令行不加 <code>--no-html</code> 就会打开内嵌 HTML，转不是自己写的文本时记得加上这个参数。</p>
+<p>cmark-gfm 是妙言用的 C 解析器，它的 README 说库默认会清除原始 HTML 和有风险的链接，命令行加 <code>--unsafe</code> 才放行。它负责把 Markdown 渲染成 HTML，页面的 head、样式表和脚本要你自己加。</p>
+<h2 id="它到底是怎么转的">它到底是怎么转的</h2>
+<p>Markdown 是文本格式，所有工具走的是同一条流水线，块解析器判断每一行是段落、标题、列表还是代码围栏，行内解析器处理其中的强调、链接和代码片段，结果是一棵树，渲染器遍历这棵树再打印标签。CommonMark 规定了核心语法对应的 HTML，GFM 在上面加了表格和任务列表，所以两个启用了不同扩展的工具，对同一个文件可能输出不同的 HTML，这就是同一张表在一个工具里是表格、在另一个里是一堆竖线的原因。</p>
+<p>「转换好的页面」里其他东西都是渲染之后才加的，head、样式表，以及画公式和图表的脚本。转换器替不替你加，才是工具之间真正的差别。CommonMark 和 GFM 各规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的区别</a>。</p>
+<h2 id="妙言的-html-导出">妙言的 HTML 导出</h2>
+<p>在妙言 V4.5.0 里选中一篇笔记，点文件 &gt; 导出 &gt; HTML，或者在妙言窗口里按 <code>Control + Shift + H</code>，不需要先打开预览。文件以 <code>标题.html</code> 写进下载目录，标题里的 <code>/</code> 换成 <code>_</code>，重名时在后面加时间戳，下载目录写不进去时会弹出保存面板，提示是「已导出到下载目录~」。</p>
+<p>文件里有什么：</p>
+<ul>
+<li>正文是 cmark-gfm 的输出，原始 HTML 放行，所以你写的标签会保留，笔记开头的 front matter 会先被去掉。</li>
+<li>妙言会在顶部补一个笔记标题的 <code>&lt;h1&gt;</code>，本来笔记以 <code>#</code> 标题开头时应该跳过，但 V4.5.0 里这个判断从来不成立，所以你自己的标题上面也会再加一行，两者相同时标题就出现两次，介意的话在导出的文件里删掉一个。</li>
+<li>页面用的是预览的模板，字体取你设置的预览字体，正文宽度限制在 760 像素，颜色按当前主题的浅色或深色。</li>
+<li>它不内联任何东西。一个 <code>&lt;base&gt;</code> 标签指向 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>，模板里排版、KaTeX、highlight.js、Mermaid 和 Markmap 的样式与脚本都从那里加载，离线打开时，写在页面里的背景色、文字颜色和正文宽度还在，排版样式表加载不到，公式和图表也画不出来。</li>
+</ul>
+<p>最容易让人意外的是图片。HTML 导出渲染 Markdown 时没有走预览和 PDF 导出用来查找本地图片的那一步，而 <code>&lt;base&gt;</code> 标签又让所有相对路径都按 CDN 地址解析，<code>/i/photo.png</code> 变成 <code>https://cdn.miaoyan.app/i/photo.png</code>，<code>images/fig.png</code> 变成那边 <code>DownView.bundle/</code> 下的路径，都不存在，把图片拷到 HTML 旁边也没用，<code>https://</code> 开头的远程图片可以正常加载。要分享的文件，要么笔记里用远程图片地址，要么导出 PDF，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>，图片路径的细节见 <a href="/zh/blog/markdown-images/">Markdown 图片</a>。</p>
+<h2 id="放到网上">放到网上</h2>
+<p>不需要服务器的文件可以放到任何静态托管上。比如 GitHub Pages，会把仓库里的 HTML、CSS 和 JavaScript 文件发布成网站，入口文件找的是 <code>index.html</code>，要放在发布目录的最顶层。把转换好的页面命名为 <code>index.html</code>，图片放在旁边，Markdown 里用相对路径，搬过去之后路径仍然成立。</p>
+<p>用 Pandoc 的 <code>--embed-resources</code> 得到的是一个文件，发邮件或上传都不会漏东西；用妙言导出的要记得 CDN 这层依赖，页面放到你的站点上，样式仍然来自 <code>cdn.miaoyan.app</code>。</p>
+<h2 id="原始-html-与安全">原始 HTML 与安全</h2>
+<p>Markdown 允许内嵌 HTML，放行 HTML 的转换器也会放行 <code>&lt;script&gt;</code> 标签。Pandoc 手册对它的 Markdown 读取器写明了后果，启用 <code>raw_html</code> 时用户可以注入任意 HTML，建议把所有来自不可信输入的 HTML 都过一遍 HTML 净化器。可以用 <code>-f markdown-raw_html</code> 关掉这个扩展，但同一节也提醒，链接和属性里照样能放危险内容，对用户提交的文本还是要过净化器。</p>
+<p>DOMPurify 自称是只依赖 DOM 的 HTML、MathML 和 SVG 的 XSS 净化器，用法是 <code>DOMPurify.sanitize(dirty)</code>，在服务器上运行需要 jsdom 这类 DOM 实现。转自己的笔记时这些都不要紧，Markdown 来自别人时才要紧，因为妙言的预览和导出都保留原始 HTML。</p>
+<h2 id="常见问题的排查">常见问题的排查</h2>
+<ul>
+<li><strong>页面没有样式。</strong> Pandoc 的页面不加 <code>--css</code> 就没有你自己的样式表，妙言导出的文件离线打开则加载不到它的样式。</li>
+<li><strong>图片是坏的。</strong> 妙言导出里的本地路径会按妙言的 CDN 地址解析，改用远程地址，或者在 Pandoc 里用 <code>--embed-resources</code>。</li>
+<li><strong>表格显示成竖线。</strong> 用的是没有表格扩展的纯 CommonMark 解析器，Pandoc 和 markdown-it 默认就能读管道表格，cmark-gfm 要挂上表格扩展才行。</li>
+<li><strong>公式显示成原始的美元符号。</strong> 页面没有公式渲染器，妙言导出的页面需要 CDN 能访问。</li>
+<li><strong>托管后 404。</strong> 入口文件不叫 <code>index.html</code>，或者不在发布目录的顶层。</li>
+</ul>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="一定要托管吗">一定要托管吗？</h3>
+<p>不需要，用浏览器从磁盘直接打开就行，只是妙言导出的文件要联网才能加载样式和脚本。</p>
+<h3 id="哪个工具输出的-html-最干净">哪个工具输出的 HTML 最干净？</h3>
+<p>cmark-gfm 和 markdown-it 给的是朴素的片段，Pandoc 加 <code>-s</code> 给完整页面，输出取决于你启用了哪些扩展。</p>
+<h3 id="妙言能整个文件夹一起转吗">妙言能整个文件夹一起转吗？</h3>
+<p>导出菜单只作用于选中的那一篇笔记。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-to-word/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 Word：Pandoc 与妙言导出</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

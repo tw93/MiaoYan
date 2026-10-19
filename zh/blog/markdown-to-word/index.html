@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 转 Word：Pandoc 与妙言导出 · 妙言博客</title>
+<meta name="description" content="用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-to-word/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-to-word/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-to-word/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-to-word/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-to-word/">
+<meta property="og:title" content="Markdown 转 Word：Pandoc 与妙言导出 · 妙言博客">
+<meta property="og:description" content="用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-word.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-to-word.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转 Word：Pandoc 与妙言导出", "item": "https://miaoyan.app/zh/blog/markdown-to-word/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-word/#article", "headline": "Markdown 转 Word：Pandoc 与妙言导出", "description": "用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。", "url": "https://miaoyan.app/zh/blog/markdown-to-word/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-word/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-word.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言能直接存成 .docx 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，V4.5.0 导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。"}}, {"@type": "Question", "name": "为什么中文和英文看起来不是一个字体？", "acceptedAnswer": {"@type": "Answer", "text": "样式里西文和中文各指定了一个字体，在参考文档的样式里设置东亚字体。"}}, {"@type": "Question", "name": "需要装 LaTeX 吗？", "acceptedAnswer": {"@type": "Answer", "text": "转 docx 不需要，Pandoc 对 LaTeX 的依赖在它默认的 PDF 路径上，不在 Word 文件上。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-to-word/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-to-word/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 转 Word：Pandoc 与妙言导出</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-word.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>把 Markdown 转成 Word，最稳的办法是 Pandoc，<code>pandoc note.md -o note.docx</code> 会把标题、列表、表格、代码和公式转成真正的 Word 结构，再用 <code>--reference-doc</code> 指定字体和样式。妙言 V4.5.0 不直接写 <code>.docx</code>，它的导出是 HTML、图片和 PDF，所以在妙言里要么导出 Word 能读或能粘贴的东西，要么对同一个笔记文件跑 Pandoc。图表、提示块和双链，两条路都需要手动处理一步。</p>
+<h2 id="pandoc-这条路">Pandoc 这条路</h2>
+<pre><code class="language-bash">pandoc note.md -o note.docx
+</code></pre>
+<p>在笔记所在的文件夹里运行，这样笔记引用的图片才找得到。Pandoc 手册说 <code>--resource-path</code> 默认是工作目录，只在 Pandoc 自己要找图片时才起作用，写 docx 就属于这种情况。图片在别处时用 <code>--resource-path</code> 列出文件夹，并且自己把 <code>.</code> 也写上，因为一旦设置了这个选项，工作目录除非列出来，否则不再被搜索。</p>
+<p>粘贴进妙言的图片在笔记里写成 <code>/i/name.png</code>，前面带斜杠，Pandoc 会把它当成从磁盘根目录算起的路径，于是提示 <code>Could not fetch resource</code>，用图片的描述文字顶替图片。在笔记所在文件夹里转换时把这个斜杠去掉就行：</p>
+<pre><code class="language-bash">sed 's#](/i/#](i/#g' note.md | pandoc -f gfm -o note.docx
+</code></pre>
+<p>Pandoc 自己的 Markdown 已经能读管道表格、任务列表和删除线，按 GFM 读则是照 GitHub 的规则来，还会打开处理 <code>&gt; [!NOTE]</code> 提示块的 <code>alerts</code> 扩展：</p>
+<pre><code class="language-bash">pandoc -f gfm note.md -o note.docx
+</code></pre>
+<p>手册把 <code>gfm</code> 描述为 GitHub-Flavored Markdown，不加的话 Pandoc 按它自己的 Markdown 方言读，和 GFM 大部分重叠，但并不完全一样。<code>$...$</code> 公式两种读法都行，<code>tex_math_dollars</code> 扩展把两个美元符号之间的内容当作 TeX 公式，两种格式里它都是开着的。运行 <code>pandoc --list-extensions=gfm</code> 可以看到这个格式有哪些扩展，前面是 <code>+</code> 的表示默认开着。</p>
+<h2 id="格式从哪里来">格式从哪里来</h2>
+<p>Pandoc 不是从零画一份 Word 文档，而是把你的内容填进一份参考文档，外观来自这份文档的样式。手册列出了这些样式，段落样式有 Normal、Body Text、First Paragraph、Compact、Title、Author、Date、Heading 1 到 Heading 9、Source Code 和 Footnote Text，字符样式有 Verbatim Char 和 Hyperlink，表格样式只有一个叫 Table。</p>
+<p>所以格式不在 Markdown 里，<code>##</code> 变成 Heading 2 段落，代码围栏变成 Source Code，它们长什么样由参考文档决定。公式也不会被丢掉，手册写明 docx 输出里的 TeX 公式会写成 OMML，也就是 Word 自己的公式格式，到了 Word 里是可以直接编辑的公式。</p>
+<h2 id="设置字体尤其是中文">设置字体，尤其是中文</h2>
+<p>先取出默认的参考文档，在 Word 里改好，再传回去：</p>
+<pre><code class="language-bash">pandoc -o custom-reference.docx --print-default-data-file reference.docx
+pandoc note.md -o note.docx --reference-doc=custom-reference.docx
+</code></pre>
+<p>用 Word 或 LibreOffice 打开 <code>custom-reference.docx</code>，改的是样式而不是示例文字，正文改 Normal 和 Body Text，标题改各级 Heading，代码改 Source Code。中文文档要把这些样式里的中文（东亚）字体也设上，不只设西文字体，因为一个样式可以给西文字符和中文字符分别指定字体，只改西文的话，中文还是样式原来的字体，和西文放在一起可能不协调。同一份参考文件对每篇笔记都适用，只需要做一次。</p>
+<p>默认的 <code>reference.docx</code> 也带着页面大小和页边距，转出来纸张不对，就在参考文档里改一次。</p>
+<h2 id="走妙言的导出">走妙言的导出</h2>
+<p>妙言的文件 &gt; 导出子菜单有 HTML、图片、PDF 和妙言 PPT PDF，没有一个是 Word 格式，也不能替代 Pandoc 去编辑，适合的情形是读的人要的是渲染后的样子，而不是可编辑文字。</p>
+<ul>
+<li><strong>PDF。</strong> 文件 &gt; 导出 &gt; PDF 把预览打印到固定的 A4 页面，保存在下载目录，对方只读，或者图表必须保持原样时用它，内容见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>。</li>
+<li><strong>HTML。</strong> 文件 &gt; 导出 &gt; HTML 写出 <code>标题.html</code>，样式和脚本从妙言的 CDN 加载，本地图片的路径也指向那个 CDN，加载不出来，见 <a href="/zh/blog/markdown-to-html/">Markdown 转 HTML</a>。可以用浏览器打开，选中内容再粘贴进 Word，但 Word 对粘贴进来的 HTML 保留多少并不固定，拿自己的笔记试一次再检查结果，能跟着过来的只有远程图片。</li>
+<li><strong>图片。</strong> 写出整个预览的 PNG，更适合单张插图，不适合当文档。</li>
+</ul>
+<h2 id="哪些能保留哪些会丢">哪些能保留，哪些会丢</h2>
+<table>
+<thead>
+<tr>
+<th>笔记里的内容</th>
+<th>经过 Pandoc</th>
+<th>怎么处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标题、列表、粗体、链接</td>
+<td>变成 Word 样式</td>
+<td>检查参考文档里的样式</td>
+</tr>
+<tr>
+<td>表格</td>
+<td>变成使用 Table 样式的 Word 表格</td>
+<td>检查列宽和对齐</td>
+</tr>
+<tr>
+<td>代码围栏</td>
+<td>标了语言的围栏会高亮，在 docx 里用 Source Code</td>
+<td>检查长行</td>
+</tr>
+<tr>
+<td><code>$...$</code> 公式</td>
+<td>写成 Word 公式（OMML）</td>
+<td>点一下公式确认</td>
+</tr>
+<tr>
+<td>Mermaid、PlantUML、Markmap 块</td>
+<td>对 Pandoc 来说是带语言名的普通代码，不会画图</td>
+<td>把图贴成图片</td>
+</tr>
+<tr>
+<td><code>&gt; [!NOTE]</code> 提示块</td>
+<td>加 <code>-f gfm</code> 时变成一行 Note 加正文的普通段落，用 Pandoc 自己的 Markdown 时是以 <code>[!NOTE]</code> 开头的引用</td>
+<td>在 Word 里重新排版或改写</td>
+</tr>
+<tr>
+<td><code>[[双链]]</code></td>
+<td>Pandoc 有 <code>wikilinks_title_after_pipe</code> 和 <code>wikilinks_title_before_pipe</code> 两个扩展</td>
+<td>换成真正的链接，或者启用其一</td>
+</tr>
+</tbody>
+</table>
+<p>图表方面，妙言在预览和 PDF 导出里会渲染 Mermaid 和 Markmap，一个可行的办法是从预览里截下图表，作为图片插入，Mermaid 源码仍留在笔记里；PlantUML 需要网络，预览要向 PlantUML 服务器取 SVG。</p>
+<p>提示块的框会丢。妙言会把 <code>&gt; [!NOTE]</code> 引用块渲染成带样式的提示块，Pandoc 手册说它的 <code>alerts</code> 扩展支持 GitHub 风格的 Markdown alert，<code>--list-extensions</code> 显示这个扩展在 <code>gfm</code> 里开着、在 Pandoc 自己的 Markdown 里关着。在 Pandoc 3.12.1 里，<code>-f gfm</code> 会把提示块变成一行 Note 加正文，都是 First Paragraph 样式，没有框也没有颜色，用 Pandoc 自己的 Markdown 则保留为以 <code>[!NOTE]</code> 开头的引用。</p>
+<h2 id="转完之后的检查">转完之后的检查</h2>
+<ol>
+<li>打开文件，在 Word 的导航窗格里看标题层级，跳级说明源文件里就跳了。</li>
+<li>滚到每一张表和每一张图，图缺了说明 Pandoc 没找到文件，在笔记所在目录运行，或者设 <code>--resource-path</code>。</li>
+<li>点一个公式，它应该是公式，如果是图片或者原样的美元符号，回头检查输入格式。</li>
+<li>看第一页，笔记开头的 front matter 是元数据而不是正文，确认标题和作者是你要的样子。</li>
+<li>搜 <code>[!</code>、<code>[[</code> 和三个反引号，找出没转换的提示块、双链和代码围栏。</li>
+<li>在 <code>custom-reference.docx</code> 里改一个样式，重新转换，确认整篇文档都跟着变。</li>
+</ol>
+<p>Pandoc 的 raw 块可以往 docx 里插入 Word 专用的 XML，比如分页符，手册在 <code>raw_attribute</code> 扩展那一节给了例子，这个扩展在 Pandoc 自己的 Markdown 里开着、在 <code>gfm</code> 里关着，按 GFM 读时要写成 <code>-f gfm+raw_attribute</code>，Markdown 表达不了的版式细节可以这样控制。Markdown 本身能写什么，见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="妙言能直接存成-docx-吗">妙言能直接存成 .docx 吗？</h3>
+<p>不能，V4.5.0 导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。</p>
+<h3 id="为什么中文和英文看起来不是一个字体">为什么中文和英文看起来不是一个字体？</h3>
+<p>样式里西文和中文各指定了一个字体，在参考文档的样式里设置东亚字体。</p>
+<h3 id="需要装-latex-吗">需要装 LaTeX 吗？</h3>
+<p>转 docx 不需要，Pandoc 对 LaTeX 的依赖在它默认的 PDF 路径上，不在 Word 文件上。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-to-html/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 HTML：命令行与妙言导出</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

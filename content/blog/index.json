@@ -433,6 +433,132 @@
         "title": "Markdown 是什么",
         "description": "Markdown 的来历、覆盖大多数写作的十个记号、怎么变成 HTML、不擅长什么，以及在妙言里写第一篇。"
       }
+    },
+    {
+      "slug": "markdown-horizontal-line",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown horizontal line: ---, *** and ___",
+        "description": "Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0."
+      },
+      "zh": {
+        "title": "Markdown 分割线怎么写，以及 --- 的坑",
+        "description": "三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。"
+      }
+    },
+    {
+      "slug": "markdown-comments",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown comments: HTML comments and [//]: # (note)",
+        "description": "Write comments in Markdown with <!-- --> or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export."
+      },
+      "zh": {
+        "title": "Markdown 注释：HTML 注释与 [//]: # 写法",
+        "description": "用 <!-- --> 或 [//]: # 写注释，哪里隐藏、哪里会漏出来，以及妙言在预览和导出里怎么处理。"
+      }
+    },
+    {
+      "slug": "markdown-bold-italic-strikethrough",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown bold, italic and strikethrough: syntax and pitfalls",
+        "description": "Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan's Format menu shortcuts."
+      },
+      "zh": {
+        "title": "Markdown 加粗、斜体与删除线的写法和坑",
+        "description": "加粗、斜体、删除线怎么写，为什么紧贴中文标点会失效，以及妙言「格式」菜单里的快捷键。"
+      }
+    },
+    {
+      "slug": "markdown-underline-and-color",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown underline, color and center text with HTML",
+        "description": "Markdown has no underline, color, centering or super/subscript syntax. Use HTML, and see what GitHub strips and what MiaoYan's preview renders."
+      },
+      "zh": {
+        "title": "Markdown 下划线、文字颜色与居中的写法",
+        "description": "Markdown 没有下划线、颜色、居中和上下标语法，用 HTML 补，并说明 GitHub 会去掉什么、妙言能渲染什么。"
+      }
+    },
+    {
+      "slug": "markdown-blockquotes-and-nested-lists",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown blockquotes and nested lists: indent rules",
+        "description": "Write blockquotes, lazy lines, nested quotes and [!NOTE] callouts, learn why nested lists need 2, 3 or 4 spaces, and why 4 spaces can become code."
+      },
+      "zh": {
+        "title": "Markdown 引用与嵌套列表的缩进规则",
+        "description": "引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。"
+      }
+    },
+    {
+      "slug": "open-md-file-mac",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "notes",
+      "en": {
+        "title": "How to open a .md file on Mac",
+        "description": "A .md file is plain text. Open it with TextEdit, Quick Look or a Markdown app, set a default app with Get Info, and avoid the rich text trap."
+      },
+      "zh": {
+        "title": "Mac 上怎么打开 .md 文件",
+        "description": "md 是纯文本。用文本编辑、快速查看或 Markdown 应用打开，用显示简介设默认应用，避开富文本的坑。"
+      }
+    },
+    {
+      "slug": "markdown-to-html",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown to HTML: Pandoc, markdown-it and MiaoYan export",
+        "description": "Convert Markdown to HTML with Pandoc, cmark-gfm or markdown-it, fragment vs full page, raw HTML safety, and what MiaoYan V4.5.0's HTML export includes."
+      },
+      "zh": {
+        "title": "Markdown 转 HTML：命令行与妙言导出",
+        "description": "用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。"
+      }
+    },
+    {
+      "slug": "markdown-to-word",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown to Word: Pandoc, reference.docx and MiaoYan exports",
+        "description": "Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead."
+      },
+      "zh": {
+        "title": "Markdown 转 Word：Pandoc 与妙言导出",
+        "description": "用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。"
+      }
+    },
+    {
+      "slug": "zettelkasten-markdown-notes",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "notes",
+      "en": {
+        "title": "Zettelkasten with Markdown files: IDs, links and a weekly routine",
+        "description": "Run a Zettelkasten in plain Markdown files: Luhmann's slip-box, atomic notes, file names, wikilinks, backlinks in MiaoYan, and when Obsidian fits better."
+      },
+      "zh": {
+        "title": "用 Markdown 文件做卡片笔记法",
+        "description": "卢曼卡片盒的做法、原子笔记、文件命名、妙言里的双向链接与反向链接，以及什么时候 Obsidian 更合适。"
+      }
     }
   ]
 }

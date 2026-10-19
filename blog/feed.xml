@@ -223,5 +223,68 @@
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
       <description>What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.</description>
     </item>
+    <item>
+      <title>Markdown horizontal line: ---, *** and ___</title>
+      <link>https://miaoyan.app/blog/markdown-horizontal-line/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-horizontal-line/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0.</description>
+    </item>
+    <item>
+      <title>Markdown comments: HTML comments and [//]: # (note)</title>
+      <link>https://miaoyan.app/blog/markdown-comments/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-comments/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write comments in Markdown with &lt;!-- --&gt; or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export.</description>
+    </item>
+    <item>
+      <title>Markdown bold, italic and strikethrough: syntax and pitfalls</title>
+      <link>https://miaoyan.app/blog/markdown-bold-italic-strikethrough/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-bold-italic-strikethrough/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan&#x27;s Format menu shortcuts.</description>
+    </item>
+    <item>
+      <title>Markdown underline, color and center text with HTML</title>
+      <link>https://miaoyan.app/blog/markdown-underline-and-color/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-underline-and-color/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Markdown has no underline, color, centering or super/subscript syntax. Use HTML, and see what GitHub strips and what MiaoYan&#x27;s preview renders.</description>
+    </item>
+    <item>
+      <title>Markdown blockquotes and nested lists: indent rules</title>
+      <link>https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write blockquotes, lazy lines, nested quotes and [!NOTE] callouts, learn why nested lists need 2, 3 or 4 spaces, and why 4 spaces can become code.</description>
+    </item>
+    <item>
+      <title>How to open a .md file on Mac</title>
+      <link>https://miaoyan.app/blog/open-md-file-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/open-md-file-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>A .md file is plain text. Open it with TextEdit, Quick Look or a Markdown app, set a default app with Get Info, and avoid the rich text trap.</description>
+    </item>
+    <item>
+      <title>Markdown to HTML: Pandoc, markdown-it and MiaoYan export</title>
+      <link>https://miaoyan.app/blog/markdown-to-html/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-to-html/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Convert Markdown to HTML with Pandoc, cmark-gfm or markdown-it, fragment vs full page, raw HTML safety, and what MiaoYan V4.5.0&#x27;s HTML export includes.</description>
+    </item>
+    <item>
+      <title>Markdown to Word: Pandoc, reference.docx and MiaoYan exports</title>
+      <link>https://miaoyan.app/blog/markdown-to-word/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-to-word/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead.</description>
+    </item>
+    <item>
+      <title>Zettelkasten with Markdown files: IDs, links and a weekly routine</title>
+      <link>https://miaoyan.app/blog/zettelkasten-markdown-notes/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/zettelkasten-markdown-notes/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Run a Zettelkasten in plain Markdown files: Luhmann&#x27;s slip-box, atomic notes, file names, wikilinks, backlinks in MiaoYan, and when Obsidian fits better.</description>
+    </item>
   </channel>
 </rss>

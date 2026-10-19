@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 分割线怎么写，以及 --- 的坑 · 妙言博客</title>
+<meta name="description" content="三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-horizontal-line/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-horizontal-line/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-horizontal-line/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-horizontal-line/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-horizontal-line/">
+<meta property="og:title" content="Markdown 分割线怎么写，以及 --- 的坑 · 妙言博客">
+<meta property="og:description" content="三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 分割线怎么写，以及 --- 的坑", "item": "https://miaoyan.app/zh/blog/markdown-horizontal-line/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-horizontal-line/#article", "headline": "Markdown 分割线怎么写，以及 --- 的坑", "description": "三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。", "url": "https://miaoyan.app/zh/blog/markdown-horizontal-line/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-horizontal-line/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp", "timeRequired": "PT5M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "三种写法该用哪个？", "acceptedAnswer": {"@type": "Answer", "text": "--- 最常见，纯文本里最好读。线可能紧贴在段落下面时用 ***，它不会变成标题。"}}, {"@type": "Question", "name": "能让分割线变粗或者变色吗？", "acceptedAnswer": {"@type": "Answer", "text": "Markdown 里不行，没有这种语法。在显示 HTML 的页面里给 hr 写 CSS。"}}, {"@type": "Question", "name": "为什么我的 --- 变成了大标题？", "acceptedAnswer": {"@type": "Answer", "text": "它直接贴在一行文字下面，CommonMark 把它当成 setext 标题的下划线，在两者之间加一个空行。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-horizontal-line/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-horizontal-line/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 分割线怎么写，以及 --- 的坑</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 5 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-horizontal-line.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>单独一行写 <code>---</code>、<code>***</code> 或 <code>___</code>，上面留一个空行，三种写法画出来的都是同一条分割线（CommonMark 里叫 thematic break），但 <code>---</code> 有个坑，直接贴在一行文字下面时，那行文字会变成标题而不是分割线。在妙言 V4.5.0 里还要多记两件事，同样的 <code>---</code> 在 PPT 模式里是幻灯片的分页符，写在笔记最开头时又是 front matter 的围栏。</p>
+<h2 id="三种写法">三种写法</h2>
+<pre><code class="language-markdown">线上面的段落。
+
+---
+
+***
+
+___
+
+线下面的段落。
+</code></pre>
+<p>CommonMark 规范对分割线的定义是，一行里有三个或更多相同的 <code>-</code>、<code>_</code> 或 <code>*</code>，前面最多三个空格，除了空格和制表符之外不能有别的字符。规范自己的例子里字符之间带空格也算，所以 <code>- - -</code> 和 <code>* * *</code> 同样是分割线，一行 37 个下划线也是；混着写不行，规范要求除空格和制表符以外的字符必须全部相同。</p>
+<p>不成立的写法也很具体，<code>--</code> 和 <code>**</code> 太短，只是普通文字，<code>+++</code> 不是分割线，<code>---a---</code> 或 <code>a------</code> 这种一行里还有别的字符的，是普通段落，缩进到四个空格以上会变成代码块或上一段的延续。</p>
+<p>GitHub 渲染按 GitHub Flavored Markdown 规范走，规范里关于分割线的例子同样列了这三种。GitHub 文档里「基本写作和格式语法」那一页完全没提分割线，要查就看规范。</p>
+<h2 id="setext-标题的坑">setext 标题的坑</h2>
+<pre><code class="language-markdown">第一节
+---
+
+下一段。
+</code></pre>
+<p>这不是「一段文字加一条线」。CommonMark 里一行文字下面紧贴 <code>---</code>，就是 setext 标题，「第一节」会变成 <code>&lt;h2&gt;</code>，规范的例子是 <code>Foo</code>、<code>---</code>、<code>bar</code>，输出 <code>&lt;h2&gt;Foo&lt;/h2&gt;</code> 加 <code>&lt;p&gt;bar&lt;/p&gt;</code>，两种读法冲突时标题赢。<code>===</code> 贴在文字下面也一样，变成 <code>&lt;h1&gt;</code>，单独一行的 <code>===</code> 只是普通文字，不是分割线。</p>
+<p>办法是在横线上面留一个空行，规范并不强制，但留了就没有歧义。更省事的是直接用 <code>***</code>，规范的例子 <code>Foo</code>、<code>***</code>、<code>bar</code> 输出段落、<code>&lt;hr /&gt;</code>、段落，不会变成标题。</p>
+<p>列表有自己的规则，一行既能当列表符号又能当分割线时，按分割线算，<code>* * *</code> 是分割线，不是空的列表项。要在列表项里放分割线，规范建议换一个和列表不同的符号，比如 <code>- * * *</code>。<code>- 条目</code> 下面紧贴 <code>---</code> 时，列表在这里结束并画出分割线，不会把条目变成标题，这也是规范里的例子。</p>
+<h2 id="写成-html">写成 HTML</h2>
+<pre><code class="language-markdown">&lt;hr&gt;
+</code></pre>
+<p>Markdown 允许内嵌 HTML，三种写法最后生成的就是 <code>&lt;hr&gt;</code>。妙言预览渲染时开着 cmark-gfm 的 unsafe 选项，原样放行 HTML，所以 <code>&lt;hr&gt;</code> 在这里能用。有些发布平台会过滤内嵌 HTML，在那里还是写 Markdown 形式更稳。</p>
+<p>Markdown 没有给分割线加 class 或内联样式的语法，要加只能写 HTML，能不能保留要看渲染器的 HTML 过滤。</p>
+<h2 id="妙言怎么画它">妙言怎么画它</h2>
+<p>妙言 V4.5.0 用 cmark-gfm 渲染笔记，再把 HTML 放进网页视图。分割线输出为 <code>&lt;hr&gt;</code>，预览样式表（内置 DownView 资源里的 <code>typography.css</code>）给它 1 像素高、无边框、背景取主题的边框色，上下各留 1.6em 的外边距。浅色主题的边框色是 <code>#e6e6e6</code>，深色主题是 <code>#454545</code>，两种主题下都比较淡。</p>
+<p>自己的网页里要改分割线的样子，是 CSS 的事，不是 Markdown 的事：</p>
+<pre><code class="language-css">hr {
+  border: 0;
+  height: 1px;
+  margin: 2em 0;
+  background: #d0d0d0;
+}
+</code></pre>
+<h2 id="妙言里-的另外两个用途">妙言里 <code>---</code> 的另外两个用途</h2>
+<h3 id="幻灯片分页符">幻灯片分页符</h3>
+<p>在 PPT 模式（<code>Command + Option + P</code>）里，妙言把笔记交给 reveal.js，它的 Markdown 插件按 <code>\r?\n---\r?\n</code> 这个模式切页，也就是前后各有换行的一行 <code>---</code>。这带来三个结果，一行 <code>---</code> 就是一张幻灯片的边界，所以不能拿它在一页里当分隔线；<code>----</code> 或者 <code>---</code> 后面跟了空格，都匹配不上；setext 的坑在幻灯片里也不存在，因为切分发生在解析器看到这一行之前，<code>---</code> 上面紧贴的文字只是上一页的结尾，不会变成标题。</p>
+<p><code>***</code>、<code>___</code> 和 <code>&lt;hr&gt;</code> 匹配不上这个模式，会留在当前这页里，和其他行一样交给 reveal 的 Markdown 渲染器，一页内要分隔线就试它们，演示前在 PPT 模式里看一眼这一页。完整流程见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p>快捷键只检查笔记里有没有 <code>---</code> 这三个字符，表格分隔行 <code>|---|---|</code> 里就含有，所以只有表格、没有真正分页符的笔记也会启动 PPT 模式。</p>
+<h3 id="front-matter-围栏">front matter 围栏</h3>
+<p>笔记第一行是 <code>---</code> 时，妙言会往下找下一个以三个短横线开头的行，这一行正好是 <code>---</code>，两行之间的内容就当成 front matter，在预览、PPT 模式和导出里隐藏，如果是 <code>----</code> 或者短横线后面还有别的字，就什么都不隐藏。笔记中间的三个短横线仍然是普通分割线。所以开头写一条装饰性的 <code>---</code> 会让第一段消失，开头先写标题，或者顶上那条用 <code>***</code>。完整规则见 <a href="/zh/blog/markdown-front-matter/">Markdown front matter</a>。</p>
+<h2 id="分割线没出来时">分割线没出来时</h2>
+<ul>
+<li><strong>出现的是标题而不是线。</strong> <code>---</code> 上面紧贴着文字，加一个空行，或者换成 <code>***</code>。</li>
+<li><strong>线是字面字符。</strong> 少于三个字符、字符混用、同一行有别的字符，或者缩进了四个空格。</li>
+<li><strong>笔记开头不见了。</strong> 笔记以 <code>---</code> 开头，后面某行正好是 <code>---</code>，中间的内容被当成了 front matter。</li>
+<li><strong>幻灯片在不该分的地方分了。</strong> PPT 模式下每一行 <code>---</code> 都是边界，分隔线换成 <code>***</code> 或 <code>&lt;hr&gt;</code>。</li>
+<li><strong>在妙言以外的应用里没有线。</strong> 渲染器可能过滤了 <code>&lt;hr&gt;</code>，改用 <code>---</code> 并在上面留空行。</li>
+</ul>
+<p>CommonMark 和 GFM 各自规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的区别</a>，其余语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="三种写法该用哪个">三种写法该用哪个？</h3>
+<p><code>---</code> 最常见，纯文本里最好读。线可能紧贴在段落下面时用 <code>***</code>，它不会变成标题。</p>
+<h3 id="能让分割线变粗或者变色吗">能让分割线变粗或者变色吗？</h3>
+<p>Markdown 里不行，没有这种语法。在显示 HTML 的页面里给 <code>hr</code> 写 CSS。</p>
+<h3 id="为什么我的-变成了大标题">为什么我的 <code>---</code> 变成了大标题？</h3>
+<p>它直接贴在一行文字下面，CommonMark 把它当成 setext 标题的下划线，在两者之间加一个空行。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/what-is-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 是什么</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-comments/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 注释：HTML 注释与 [//]: # 写法</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

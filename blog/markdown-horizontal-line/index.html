@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown horizontal line: ---, *** and ___ · MiaoYan Blog</title>
+<meta name="description" content="Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-horizontal-line/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-horizontal-line/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-horizontal-line/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-horizontal-line/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-horizontal-line/">
+<meta property="og:title" content="Markdown horizontal line: ---, *** and ___ · MiaoYan Blog">
+<meta property="og:description" content="Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown horizontal line: ---, *** and ___", "item": "https://miaoyan.app/blog/markdown-horizontal-line/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-horizontal-line/#article", "headline": "Markdown horizontal line: ---, *** and ___", "description": "Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0.", "url": "https://miaoyan.app/blog/markdown-horizontal-line/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-horizontal-line/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which of the three should I use?", "acceptedAnswer": {"@type": "Answer", "text": "--- is the most common and reads best in plain text. Use *** when the line might sit under a paragraph, since it cannot become a heading."}}, {"@type": "Question", "name": "Can I make a rule thicker or colored in Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. Markdown has no syntax for it. Style hr in the CSS of the page that shows the HTML."}}, {"@type": "Question", "name": "Why does my --- become a big heading?", "acceptedAnswer": {"@type": "Answer", "text": "It sits directly under a line of text, which CommonMark reads as a setext heading underline. Add a blank line between them."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-horizontal-line/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-horizontal-line/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown horizontal line: ---, *** and ___</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-horizontal-line.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Put <code>---</code>, <code>***</code> or <code>___</code> on a line of its own and keep a blank line above it. All three draw the same horizontal line (CommonMark calls it a thematic break), but <code>---</code> has a trap: directly under a line of text it turns that text into a heading instead. In MiaoYan V4.5.0 there are two more things to know, because the same <code>---</code> line is also the slide separator in PPT mode and the fence of front matter at the top of a note.</p>
+<h2 id="the-three-forms">The three forms</h2>
+<pre><code class="language-markdown">Above the line.
+
+---
+
+***
+
+___
+
+Below the line.
+</code></pre>
+<p>The CommonMark spec says a thematic break is a line of three or more matching <code>-</code>, <code>_</code> or <code>*</code> characters, with up to three spaces of indentation in front, and nothing else on the line except spaces or tabs. Its own examples show that spaces between the characters are fine, so <code>- - -</code> and <code>* * *</code> are rules too, and so is a line of 37 underscores. Mixed characters are not: the spec requires all the characters other than spaces or tabs to be the same.</p>
+<p>What does not work is just as specific. <code>--</code> and <code>**</code> are too short and stay plain text. <code>+++</code> is not a rule. A line with extra characters, such as <code>---a---</code> or <code>a------</code>, is an ordinary paragraph. Four or more spaces of indentation turn the line into code or a continuation of the paragraph above.</p>
+<p>GitHub's rendering follows the GitHub Flavored Markdown spec, which lists the same three forms in its example for thematic breaks. GitHub's own page on basic writing and formatting syntax does not mention horizontal rules at all, so the spec is the reference to check.</p>
+<h2 id="the-setext-trap">The setext trap</h2>
+<pre><code class="language-markdown">Section one
+---
+
+Next paragraph.
+</code></pre>
+<p>This is not a paragraph followed by a line. In CommonMark, a line of text with <code>---</code> directly below it is a setext heading, so "Section one" becomes an <code>&lt;h2&gt;</code>. The spec's example is a line <code>Foo</code>, then <code>---</code>, then <code>bar</code>, and it renders <code>&lt;h2&gt;Foo&lt;/h2&gt;</code> followed by <code>&lt;p&gt;bar&lt;/p&gt;</code>. The heading reading wins over the rule reading. The same happens with <code>===</code> under a line of text, which makes an <code>&lt;h1&gt;</code>; on a line of its own, <code>===</code> is plain text, not a rule.</p>
+<p>The fix is a blank line above the dashes. Make the blank line a habit; the spec does not require it, but it removes the ambiguity. If you do not want to think about it at all, use <code>***</code>: under a line of text it is a rule, and the spec's example of <code>Foo</code>, <code>***</code>, <code>bar</code> gives a paragraph, an <code>&lt;hr /&gt;</code> and another paragraph.</p>
+<p>Lists have their own rule. A line that could be a list marker or a rule is a rule: <code>* * *</code> is a rule, not an empty bullet. If you want a rule inside a list item, the spec's advice is to use a different bullet from the list's, such as <code>- * * *</code>. A <code>---</code> right under a <code>- item</code> ends the list and draws a rule, rather than making the item a heading, per the spec's example.</p>
+<h2 id="writing-it-as-html">Writing it as HTML</h2>
+<pre><code class="language-markdown">&lt;hr&gt;
+</code></pre>
+<p>Markdown allows raw HTML, and <code>&lt;hr&gt;</code> is the element that all three Markdown forms produce. MiaoYan's preview passes raw HTML through, because it renders with cmark-gfm's unsafe option on, so <code>&lt;hr&gt;</code> works there. Some publishing platforms filter raw HTML out. On those, the Markdown form is the safer one.</p>
+<p>Markdown has no syntax for a class or inline style on a rule, so HTML is the only way to attach one, and whether it survives depends on the renderer's HTML filter.</p>
+<h2 id="how-miaoyan-draws-it">How MiaoYan draws it</h2>
+<p>MiaoYan V4.5.0 renders notes with cmark-gfm, then shows the HTML in a web view. The line comes out as an <code>&lt;hr&gt;</code> element, and the preview stylesheet (<code>typography.css</code> in the bundled DownView resources) gives it a height of 1 pixel, no border, a background taken from the theme's border color, and a margin of 1.6em above and below. In the light theme that color is <code>#e6e6e6</code> and in the dark theme <code>#454545</code>, so the line stays quiet in both.</p>
+<p>For your own pages, styling a rule is a CSS job, not a Markdown one:</p>
+<pre><code class="language-css">hr {
+  border: 0;
+  height: 1px;
+  margin: 2em 0;
+  background: #d0d0d0;
+}
+</code></pre>
+<h2 id="two-other-jobs-for-in-miaoyan">Two other jobs for <code>---</code> in MiaoYan</h2>
+<h3 id="slide-separator">Slide separator</h3>
+<p>In PPT mode (<code>Command + Option + P</code>), MiaoYan hands the note to reveal.js, whose Markdown plugin splits slides on the pattern <code>\r?\n---\r?\n</code>, a <code>---</code> line with a newline on each side. That has three consequences. A <code>---</code> line becomes a slide boundary, so you cannot use it as a divider inside a slide. A <code>----</code> line or a <code>---</code> followed by a space does not match the pattern. And the setext trap disappears in slide mode, because the split happens before the parser sees the line: text directly above <code>---</code> is the end of a slide, not a heading.</p>
+<p><code>***</code>, <code>___</code> and <code>&lt;hr&gt;</code> are not matched by that pattern, so they stay inside the slide and go to reveal's Markdown renderer like any other line, which makes them the forms to try when you want a divider inside one slide. Check the slide in PPT mode before presenting. The deck workflow is in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
+<p>The shortcut only checks that the note contains the text <code>---</code> somewhere. A table divider row such as <code>|---|---|</code> contains it, so a note with a table and no real separator still starts PPT mode.</p>
+<h3 id="front-matter-fence">Front matter fence</h3>
+<p>A note whose first line is <code>---</code> is treated as front matter up to the next line that begins with three dashes. If that line is exactly <code>---</code>, MiaoYan hides everything between the two lines in the preview, PPT mode and exports; if it is <code>----</code> or has more text after the dashes, nothing is hidden. Three dashes in the middle of a note stay an ordinary rule. This is why a note that opens with a decorative <code>---</code> loses its first section; open with a title or use <code>***</code> for the top line. The full rules are in <a href="/blog/markdown-front-matter/">Markdown front matter</a>.</p>
+<h2 id="when-the-line-does-not-show-up">When the line does not show up</h2>
+<ul>
+<li><strong>A heading appears instead of a line.</strong> There is text directly above <code>---</code>. Add a blank line, or switch to <code>***</code>.</li>
+<li><strong>The line is literal text.</strong> There are fewer than three characters, mixed characters, other characters on the line, or four spaces of indentation.</li>
+<li><strong>The top of the note vanished.</strong> The note starts with <code>---</code> and a later line is exactly <code>---</code>, so everything between was read as front matter.</li>
+<li><strong>A slide split in the wrong place.</strong> In PPT mode every <code>---</code> line is a boundary. Replace dividers with <code>***</code> or <code>&lt;hr&gt;</code>.</li>
+<li><strong>No line in an app other than MiaoYan.</strong> The renderer may filter raw <code>&lt;hr&gt;</code>. Use <code>---</code> with a blank line above it.</li>
+</ul>
+<p>For the broader picture of what CommonMark and GFM each define, see <a href="/blog/commonmark-vs-gfm/">CommonMark vs GFM</a>, and for the rest of the syntax, the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a>.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="which-of-the-three-should-i-use">Which of the three should I use?</h3>
+<p><code>---</code> is the most common and reads best in plain text. Use <code>***</code> when the line might sit under a paragraph, since it cannot become a heading.</p>
+<h3 id="can-i-make-a-rule-thicker-or-colored-in-markdown">Can I make a rule thicker or colored in Markdown?</h3>
+<p>No. Markdown has no syntax for it. Style <code>hr</code> in the CSS of the page that shows the HTML.</p>
+<h3 id="why-does-my-become-a-big-heading">Why does my <code>---</code> become a big heading?</h3>
+<p>It sits directly under a line of text, which CommonMark reads as a setext heading underline. Add a blank line between them.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/what-is-markdown/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">What is Markdown? A plain-text way to format</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-comments/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown comments: HTML comments and [//]: # (note)</span><span class="blog-related-meta">5 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

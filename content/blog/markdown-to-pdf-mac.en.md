@@ -56,7 +56,7 @@ Typora exports from File > Export > PDF. Export > PDF in preferences sets paper 
 
 In VS Code, yzane's Markdown PDF extension puts `markdown-pdf: Export (pdf)` on the editor's right-click menu and in the palette opened with F1. It prints through Chrome, Edge, Chromium, or a Chromium it downloads. Math is KaTeX with no network, Mermaid fences are included but the Mermaid script loads from a CDN by default (`markdown-pdf.mermaidServer`), and `markdown-pdf.displayHeaderFooter` defaults to true.
 
-MiaoYan has no File > Print, so this route runs in another app that opens the note. Apple's Mac User Guide gives this route for any printable document: File > Print, then the PDF menu, Save as PDF, and the same Print dialog is where paper size is chosen. MiaoYan's HTML export is a poor choice to open in a browser and print: its base URL is `https://cdn.miaoyan.app/Resources/DownView.bundle/`, and local images are not rewritten to `file://`, so `images/fig.png` is not found beside the HTML in Downloads.
+MiaoYan has no File > Print, so this route runs in another app that opens the note. Apple's Mac User Guide gives this route for any printable document: File > Print, then the PDF menu, Save as PDF, and the same Print dialog is where paper size is chosen. MiaoYan's HTML export is a poor choice to open in a browser and print: its base URL is `https://cdn.miaoyan.app/Resources/DownView.bundle/`, and local images are not rewritten to `file://`, so `images/fig.png` is looked up on that CDN and does not load.
 
 ## What goes wrong
 

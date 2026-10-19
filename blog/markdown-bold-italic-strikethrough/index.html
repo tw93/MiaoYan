@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown bold, italic and strikethrough: syntax and pitfalls · MiaoYan Blog</title>
+<meta name="description" content="Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan&#x27;s Format menu shortcuts.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-bold-italic-strikethrough/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-bold-italic-strikethrough/">
+<meta property="og:title" content="Markdown bold, italic and strikethrough: syntax and pitfalls · MiaoYan Blog">
+<meta property="og:description" content="Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan&#x27;s Format menu shortcuts.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-bold-italic-strikethrough.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-bold-italic-strikethrough.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown bold, italic and strikethrough: syntax and pitfalls", "item": "https://miaoyan.app/blog/markdown-bold-italic-strikethrough/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-bold-italic-strikethrough/#article", "headline": "Markdown bold, italic and strikethrough: syntax and pitfalls", "description": "Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan's Format menu shortcuts.", "url": "https://miaoyan.app/blog/markdown-bold-italic-strikethrough/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-bold-italic-strikethrough/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-bold-italic-strikethrough.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is bold two asterisks or two underscores?", "acceptedAnswer": {"@type": "Answer", "text": "Both are valid. Asterisks are safer, since underscores do nothing inside words and next to Chinese text."}}, {"@type": "Question", "name": "Why does my bold show asterisks next to Chinese punctuation?", "acceptedAnswer": {"@type": "Answer", "text": "The closing ** follows punctuation and precedes a letter, so it cannot close. Move the punctuation outside, add a space, or use <strong>."}}, {"@type": "Question", "name": "Does GitHub support single-tilde strikethrough?", "acceptedAnswer": {"@type": "Answer", "text": "Its documentation lists ~~text~~ and ~text~, and the GFM spec says one or two tildes."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-bold-italic-strikethrough/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-bold-italic-strikethrough/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown bold, italic and strikethrough: syntax and pitfalls</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-bold-italic-strikethrough.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Use <code>**bold**</code>, <code>*italic*</code> and <code>~~strikethrough~~</code>. Asterisks also work inside words, underscores do not, and strikethrough is a GitHub Flavored Markdown extension rather than core CommonMark. When emphasis fails and you see literal asterisks, the cause is nearly always the character touching the delimiter: a <code>**</code> that opens next to punctuation or closes right after it has to be separated from the neighbouring text by a space or more punctuation. That bites hardest in Chinese text, such as <code>**注意：**这样不行</code>. MiaoYan V4.5.0 has Bold, Italic and Deleteline in the Format menu, and you can fall back to <code>&lt;b&gt;</code> and <code>&lt;del&gt;</code> tags when the rules get in the way.</p>
+<h2 id="asterisks-underscores-and-combinations">Asterisks, underscores and combinations</h2>
+<pre><code class="language-markdown">*italic* or _italic_
+**bold** or __bold__
+***bold italic***
+**bold with *italic* inside**
+~~**struck and bold**~~
+</code></pre>
+<p>Both characters make the same HTML, <code>&lt;em&gt;</code> for one and <code>&lt;strong&gt;</code> for two. Three give italic wrapped around bold, and nesting in either order works, so <code>**_x_**</code> and <code>***x***</code> both render bold italic. A span cannot cross a blank line, so <code>**bold</code>, a blank line, then <code>break**</code> stays literal. Emphasis also works inside headings, list items, table cells and link text, and around code spans.</p>
+<p>The difference is intraword behaviour. <code>un*frigging*believable</code> italicizes the middle, but <code>un_frigging_believable</code> and <code>snake_case_name</code> stay as typed, because CommonMark does not let <code>_</code> open or close emphasis inside a word. That protects identifiers such as <code>snake_case_name</code>, though a standalone <code>__init__</code> still turns into bold init, so put code in backticks. Defaulting to <code>*</code> avoids both surprises, since it behaves the same inside words and next to CJK characters.</p>
+<h2 id="why-some-emphasis-fails">Why some emphasis fails</h2>
+<p>CommonMark decides by looking at the characters on each side of a run of <code>*</code> or <code>_</code>. In plain words: a run can open emphasis only if what follows is not whitespace, and if what follows is punctuation, what precedes must be whitespace or punctuation. A run can close only if what precedes is not whitespace, and if what precedes is punctuation, what follows must be whitespace or punctuation. The spec calls these left-flanking and right-flanking runs. Underscore adds the intraword rule on top.</p>
+<p>These were run through cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan V4.5.0, with its four extensions on:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>这是**加粗**文字</code></td>
+<td>bold works, CJK letters count as ordinary text</td>
+</tr>
+<tr>
+<td><code>**加粗**，逗号</code> and <code>**加粗**。</code></td>
+<td>works, the closing <code>**</code> follows a letter</td>
+</tr>
+<tr>
+<td><code>**注意：**这样不行</code></td>
+<td>fails, literal asterisks</td>
+</tr>
+<tr>
+<td><code>中文**（括号）**继续</code></td>
+<td>fails</td>
+</tr>
+<tr>
+<td><code>句子**“引号”**后面</code></td>
+<td>fails</td>
+</tr>
+<tr>
+<td><code>**bold.**Next</code></td>
+<td>fails, same cause in ASCII</td>
+</tr>
+<tr>
+<td><code>这是_斜体_文字</code></td>
+<td>fails, <code>_</code> is blocked inside a word</td>
+</tr>
+<tr>
+<td><code>这是*斜体*文字</code></td>
+<td>works</td>
+</tr>
+</tbody>
+</table>
+<p>The failing rows share one shape: punctuation on the inside of the delimiter, an ordinary character on the outside. Full-width punctuation such as <code>：</code>, <code>“</code> and <code>（</code> counts as punctuation, and Chinese has no spaces to satisfy the rule. Three fixes worked in the same runs: move the punctuation outside, <code>**注意**：这样可以</code>; put a space or more punctuation beside the delimiter, <code>**注意：** 这样可以</code> or <code>（**括号**）继续</code>; or use <code>&lt;strong&gt;</code> tags.</p>
+<p>One more thing is engine-dependent. The CommonMark 0.31.2 spec counts symbols such as <code>¥</code> as punctuation, while MiaoYan's cmark-gfm build still bolds <code>价格**¥100**元</code>. A note that renders in MiaoYan can therefore break in a parser that follows the 0.31 rule, so test the place it will be published. MiaoYan's editor pane also tints bold and italic with its own regular expressions, not cmark, and that pattern only checks for non-space characters inside the marks, so a span like <code>**注意：**这样</code> is tinted as bold in the editor while the preview shows asterisks. Judge by the preview.</p>
+<h2 id="strikethrough">Strikethrough</h2>
+<p><code>~~text~~</code> is a GFM extension, and MiaoYan V4.5.0 enables it. The GFM spec says one or two tildes work, and GitHub's docs list <code>~~ ~~</code> or <code>~ ~</code>. In the test runs, <code>~one~</code> struck through, but unequal counts such as <code>~~a~</code> and three tildes mid-line stayed literal.</p>
+<p>The single tilde is a trap for Chinese and technical text. <code>3~5 天，6~10 天</code> rendered as <code>3</code>, then a struck-through "5 天，6", then <code>10 天</code>. Pairs like <code>~5</code> and <code>~10</code> with a space before them are safe, and <code>~/Documents</code> stays literal. For a range, write <code>3-5</code>, use the full-width <code>～</code>, or escape with <code>\~</code>; the <a href="/blog/markdown-escape-characters/">escape characters</a> article has the rest of the list. Two tildes are safer for deliberate strikethrough. The editor's own strike pattern recognises only the double-tilde form, so a single-tilde strike shows up in the preview but gets no styling in the editor.</p>
+<p>Strikethrough is not in the CommonMark spec. A parser without the extension prints the tildes, and the <a href="/blog/commonmark-vs-gfm/">CommonMark vs GFM</a> article lists what else differs. If the text will reach such a renderer, <code>&lt;del&gt;</code> or <code>&lt;s&gt;</code> is the safer choice.</p>
+<h2 id="the-menu-and-shortcuts-in-miaoyan">The menu and shortcuts in MiaoYan</h2>
+<p>In V4.5.0, the Format menu (in Chinese, 格式) holds these items:</p>
+<table>
+<thead>
+<tr>
+<th>Menu item</th>
+<th>Chinese label</th>
+<th>Shortcut</th>
+<th>Inserts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bold</td>
+<td>粗体</td>
+<td><code>⌘B</code></td>
+<td><code>**text**</code></td>
+</tr>
+<tr>
+<td>Italic</td>
+<td>斜体</td>
+<td><code>⌘I</code></td>
+<td><code>*text*</code></td>
+</tr>
+<tr>
+<td>Deleteline</td>
+<td>删除线</td>
+<td><code>⌘⇧X</code></td>
+<td><code>~~text~~</code></td>
+</tr>
+</tbody>
+</table>
+<p>With text selected, the command wraps it and leaves the cursor after the closing mark. With nothing selected it inserts an empty pair and puts the cursor between the marks. It always wraps and never toggles, so pressing <code>⌘B</code> on bold text adds a second layer, <code>****text****</code>, which you remove by hand. The commands need the editor focused and do nothing in preview mode. The same menu has Underline, which writes <code>&lt;u&gt;text&lt;/u&gt;</code>, because Markdown has no underline syntax. See the <a href="/blog/markdown-cheat-sheet/">cheat sheet</a> for how the rest of the syntax maps.</p>
+<h2 id="when-to-use-html">When to use HTML</h2>
+<p>The preview renders raw HTML, so <code>&lt;b&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;del&gt;</code> and <code>&lt;s&gt;</code> all work. Reach for them when a delimiter sits against punctuation or CJK text and you cannot add a space. Markdown inside inline tags is still parsed, so <code>&lt;b&gt;*x*&lt;/b&gt;</code> gives bold wrapped around italic.</p>
+<p>Keep the tag on the same line as its text. A tag alone on a line starts an HTML block, and the lines inside it are not parsed as Markdown. The trade-off is portability in the other direction: a renderer that strips raw HTML drops the tags, which can leave plain text where you wanted emphasis.</p>
+<h2 id="checking-the-result">Checking the result</h2>
+<p>Open the preview and look for literal <code>*</code>, <code>_</code> or <code>~</code>. Then check in order: whitespace just inside the delimiter, punctuation touching the delimiter with a letter on the other side, an underscore in the middle of a word, unequal tilde counts, and a blank line between the opening and closing marks. If a character is still being read as syntax, escape it with a backslash.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-bold-two-asterisks-or-two-underscores">Is bold two asterisks or two underscores?</h3>
+<p>Both are valid. Asterisks are safer, since underscores do nothing inside words and next to Chinese text.</p>
+<h3 id="why-does-my-bold-show-asterisks-next-to-chinese-punctuation">Why does my bold show asterisks next to Chinese punctuation?</h3>
+<p>The closing <code>**</code> follows punctuation and precedes a letter, so it cannot close. Move the punctuation outside, add a space, or use <code>&lt;strong&gt;</code>.</p>
+<h3 id="does-github-support-single-tilde-strikethrough">Does GitHub support single-tilde strikethrough?</h3>
+<p>Its documentation lists <code>~~text~~</code> and <code>~text~</code>, and the GFM spec says one or two tildes.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-comments/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown comments: HTML comments and [//]: # (note)</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/markdown-underline-and-color/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown underline, color and center text with HTML</span><span class="blog-related-meta">7 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

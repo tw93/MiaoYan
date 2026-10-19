@@ -71,6 +71,15 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markmap mind maps from a Markdown outline](https://miaoyan.app/blog/markmap-mind-maps/): Turn headings and lists into a mind map with a markmap fence, what MiaoYan renders offline, which options apply, and how it differs from Mermaid.
 - [PlantUML in Markdown: fences, server rendering and privacy](https://miaoyan.app/blog/plantuml-in-markdown/): Write sequence, class and activity diagrams in a plantuml fence, how MiaoYan renders them with plantuml.com, the privacy cost, and local or Mermaid options.
 - [What is Markdown? A plain-text way to format](https://miaoyan.app/blog/what-is-markdown/): What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.
+- [Markdown horizontal line: ---, *** and ___](https://miaoyan.app/blog/markdown-horizontal-line/): Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0.
+- [Markdown comments: HTML comments and [//]: # (note)](https://miaoyan.app/blog/markdown-comments/): Write comments in Markdown with <!-- --> or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export.
+- [Markdown bold, italic and strikethrough: syntax and pitfalls](https://miaoyan.app/blog/markdown-bold-italic-strikethrough/): Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan's Format menu shortcuts.
+- [Markdown underline, color and center text with HTML](https://miaoyan.app/blog/markdown-underline-and-color/): Markdown has no underline, color, centering or super/subscript syntax. Use HTML, and see what GitHub strips and what MiaoYan's preview renders.
+- [Markdown blockquotes and nested lists: indent rules](https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/): Write blockquotes, lazy lines, nested quotes and [!NOTE] callouts, learn why nested lists need 2, 3 or 4 spaces, and why 4 spaces can become code.
+- [How to open a .md file on Mac](https://miaoyan.app/blog/open-md-file-mac/): A .md file is plain text. Open it with TextEdit, Quick Look or a Markdown app, set a default app with Get Info, and avoid the rich text trap.
+- [Markdown to HTML: Pandoc, markdown-it and MiaoYan export](https://miaoyan.app/blog/markdown-to-html/): Convert Markdown to HTML with Pandoc, cmark-gfm or markdown-it, fragment vs full page, raw HTML safety, and what MiaoYan V4.5.0's HTML export includes.
+- [Markdown to Word: Pandoc, reference.docx and MiaoYan exports](https://miaoyan.app/blog/markdown-to-word/): Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead.
+- [Zettelkasten with Markdown files: IDs, links and a weekly routine](https://miaoyan.app/blog/zettelkasten-markdown-notes/): Run a Zettelkasten in plain Markdown files: Luhmann's slip-box, atomic notes, file names, wikilinks, backlinks in MiaoYan, and when Obsidian fits better.
 
 - [Mac 上怎么选 Markdown 编辑器](https://miaoyan.app/zh/blog/markdown-editor-for-mac/): 从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、VS Code 与妙言。
 - [Markdown 语法速查与 GFM 差异](https://miaoyan.app/zh/blog/markdown-cheat-sheet/): 常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。
@@ -103,4 +112,13 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [用 Markdown 大纲画 Markmap 思维导图](https://miaoyan.app/zh/blog/markmap-mind-maps/): 用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。
 - [Markdown 里写 PlantUML：围栏、服务器渲染与隐私](https://miaoyan.app/zh/blog/plantuml-in-markdown/): 用 plantuml 围栏画时序图、类图和活动图，妙言如何经 plantuml.com 渲染、隐私代价，以及本地渲染和 Mermaid 的替代做法。
 - [Markdown 是什么](https://miaoyan.app/zh/blog/what-is-markdown/): Markdown 的来历、覆盖大多数写作的十个记号、怎么变成 HTML、不擅长什么，以及在妙言里写第一篇。
+- [Markdown 分割线怎么写，以及 --- 的坑](https://miaoyan.app/zh/blog/markdown-horizontal-line/): 三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。
+- [Markdown 注释：HTML 注释与 [//]: # 写法](https://miaoyan.app/zh/blog/markdown-comments/): 用 <!-- --> 或 [//]: # 写注释，哪里隐藏、哪里会漏出来，以及妙言在预览和导出里怎么处理。
+- [Markdown 加粗、斜体与删除线的写法和坑](https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/): 加粗、斜体、删除线怎么写，为什么紧贴中文标点会失效，以及妙言「格式」菜单里的快捷键。
+- [Markdown 下划线、文字颜色与居中的写法](https://miaoyan.app/zh/blog/markdown-underline-and-color/): Markdown 没有下划线、颜色、居中和上下标语法，用 HTML 补，并说明 GitHub 会去掉什么、妙言能渲染什么。
+- [Markdown 引用与嵌套列表的缩进规则](https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/): 引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。
+- [Mac 上怎么打开 .md 文件](https://miaoyan.app/zh/blog/open-md-file-mac/): md 是纯文本。用文本编辑、快速查看或 Markdown 应用打开，用显示简介设默认应用，避开富文本的坑。
+- [Markdown 转 HTML：命令行与妙言导出](https://miaoyan.app/zh/blog/markdown-to-html/): 用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。
+- [Markdown 转 Word：Pandoc 与妙言导出](https://miaoyan.app/zh/blog/markdown-to-word/): 用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。
+- [用 Markdown 文件做卡片笔记法](https://miaoyan.app/zh/blog/zettelkasten-markdown-notes/): 卢曼卡片盒的做法、原子笔记、文件命名、妙言里的双向链接与反向链接，以及什么时候 Obsidian 更合适。
 <!-- blog:end -->

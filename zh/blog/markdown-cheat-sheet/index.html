@@ -157,7 +157,7 @@ print(&quot;hello&quot;)
 <h3 id="双链和-frontmatter">双链和 frontmatter</h3>
 <p><code>[[项目计划]]</code> 按标题原文链接到另一篇笔记，不带 <code>.md</code> 后缀，妙言会据此生成反链。笔记最开头夹在两行 <code>---</code> 之间的块会当作 frontmatter，在渲染预览里隐藏。</p>
 <h3 id="上下标">上下标</h3>
-<p>妙言自带的语法指南里写了 <code>H~2~O</code> 和 <code>26^th^</code>，但妙言并不渲染这种写法，平时不要依赖，需要的话用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code> 这两个 HTML 标签。</p>
+<p>妙言自带的语法指南里写了 <code>H~2~O</code> 和 <code>16^世纪^</code>，但妙言会把 <code>~2~</code> 当成删除线，<code>^世纪^</code> 原样显示，需要上下标的话用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code> 这两个 HTML 标签。</p>
 <h2 id="这些东西怎么拼在一起">这些东西怎么拼在一起</h2>
 <p>Markdown 源码先经过解析器变成 HTML，CommonMark 规定核心语法怎么对应到 HTML，GFM 在上面再加一些规则。妙言的预览用的是 cmark-gfm 的 Swift 移植版，挂了 table、footnotes、strikethrough 和 tasklist 四个扩展，生成的 HTML 再装进网页视图，由 KaTeX 完成公式排版，由图表库把围栏代码块变成 SVG。大多数意外都能这样拆开看，在解析器这一步出问题说明语法写错或者不被支持，在后面出问题就是渲染器的事，比如公式有错误或者图表拼写有误。</p>
 <h2 id="常见错误">常见错误</h2>

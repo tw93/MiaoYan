@@ -156,7 +156,7 @@ Markdown works inside after a blank line.
 <h3 id="wikilinks-and-frontmatter">Wikilinks and frontmatter</h3>
 <p><code>[[Project plan]]</code> links to another note by its exact title, without the <code>.md</code> suffix, and MiaoYan builds backlinks from them. A block at the very start of the note between two <code>---</code> lines is treated as frontmatter and hidden in the rendered preview.</p>
 <h3 id="subscript-and-superscript">Subscript and superscript</h3>
-<p>MiaoYan's bundled syntax guide shows <code>H~2~O</code> and <code>26^th^</code>. MiaoYan does not render that syntax, so do not rely on it. Use <code>&lt;sub&gt;</code> and <code>&lt;sup&gt;</code> HTML if you need either.</p>
+<p>MiaoYan's bundled syntax guide shows <code>H~2~O</code> and <code>26^th^</code>, but MiaoYan reads <code>~2~</code> as strikethrough and leaves <code>^th^</code> as plain text. Use <code>&lt;sub&gt;</code> and <code>&lt;sup&gt;</code> HTML if you need either.</p>
 <h2 id="how-the-pieces-fit">How the pieces fit</h2>
 <p>Markdown source passes through a parser that produces HTML. CommonMark specifies how the core syntax maps to HTML, and GFM adds extra rules on top. MiaoYan's preview uses a Swift port of cmark-gfm with four extensions attached: table, footnotes, strikethrough and tasklist. The HTML then loads into a web view, where KaTeX turns math into typeset output and the diagram libraries turn fenced blocks into SVG. That split explains most surprises. If it fails in the parser, the syntax is wrong or unsupported. If it fails later, it is a renderer problem such as a math error or a diagram typo.</p>
 <h2 id="common-mistakes">Common mistakes</h2>

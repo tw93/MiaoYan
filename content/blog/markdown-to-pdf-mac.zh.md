@@ -60,7 +60,7 @@ Typora 支持页上的导出入口是 File > Export > PDF，也能导出 HTML �
 
 VS Code 里，yzane 的 Markdown PDF 扩展把 `markdown-pdf: Export (pdf)` 放在编辑器的右键菜单里，用 F1 打开的命令面板里也有这一项。打印经过本机的 Chrome、Edge、Chromium，或者扩展自己下载的 Chromium。公式用 KaTeX，不需要网络，Mermaid 围栏也包含在导出里，不过 Mermaid 脚本默认从 CDN 加载（`markdown-pdf.mermaidServer`），`markdown-pdf.displayHeaderFooter` 的默认值是 true。
 
-妙言没有「打印」命令，这条路要在另一个能打开笔记的应用里走。Apple 的 Mac 使用手册给的办法是，在能打印的文稿里从文件菜单选打印，再打开 PDF 弹出式菜单，选取保存为 PDF，纸张大小也在同一个打印对话框里定。妙言导出的 HTML 不适合拿到浏览器里打印，文件的 base URL 是 `https://cdn.miaoyan.app/Resources/DownView.bundle/`，本地图片也不会像预览那样改成 `file://`，`images/fig.png` 不会出现在下载目录那份 HTML 旁边。
+妙言没有「打印」命令，这条路要在另一个能打开笔记的应用里走。Apple 的 Mac 使用手册给的办法是，在能打印的文稿里从文件菜单选打印，再打开 PDF 弹出式菜单，选取保存为 PDF，纸张大小也在同一个打印对话框里定。妙言导出的 HTML 不适合拿到浏览器里打印，文件的 base URL 是 `https://cdn.miaoyan.app/Resources/DownView.bundle/`，本地图片也不会像预览那样改成 `file://`，`images/fig.png` 会被拿到这个 CDN 上去找，加载不出来。
 
 ## 对不上的时候
 

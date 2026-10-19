@@ -223,5 +223,68 @@
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
       <description>Markdown 的来历、覆盖大多数写作的十个记号、怎么变成 HTML、不擅长什么，以及在妙言里写第一篇。</description>
     </item>
+    <item>
+      <title>Markdown 分割线怎么写，以及 --- 的坑</title>
+      <link>https://miaoyan.app/zh/blog/markdown-horizontal-line/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-horizontal-line/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。</description>
+    </item>
+    <item>
+      <title>Markdown 注释：HTML 注释与 [//]: # 写法</title>
+      <link>https://miaoyan.app/zh/blog/markdown-comments/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-comments/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>用 &lt;!-- --&gt; 或 [//]: # 写注释，哪里隐藏、哪里会漏出来，以及妙言在预览和导出里怎么处理。</description>
+    </item>
+    <item>
+      <title>Markdown 加粗、斜体与删除线的写法和坑</title>
+      <link>https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-bold-italic-strikethrough/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>加粗、斜体、删除线怎么写，为什么紧贴中文标点会失效，以及妙言「格式」菜单里的快捷键。</description>
+    </item>
+    <item>
+      <title>Markdown 下划线、文字颜色与居中的写法</title>
+      <link>https://miaoyan.app/zh/blog/markdown-underline-and-color/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-underline-and-color/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Markdown 没有下划线、颜色、居中和上下标语法，用 HTML 补，并说明 GitHub 会去掉什么、妙言能渲染什么。</description>
+    </item>
+    <item>
+      <title>Markdown 引用与嵌套列表的缩进规则</title>
+      <link>https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。</description>
+    </item>
+    <item>
+      <title>Mac 上怎么打开 .md 文件</title>
+      <link>https://miaoyan.app/zh/blog/open-md-file-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/open-md-file-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>md 是纯文本。用文本编辑、快速查看或 Markdown 应用打开，用显示简介设默认应用，避开富文本的坑。</description>
+    </item>
+    <item>
+      <title>Markdown 转 HTML：命令行与妙言导出</title>
+      <link>https://miaoyan.app/zh/blog/markdown-to-html/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-to-html/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。</description>
+    </item>
+    <item>
+      <title>Markdown 转 Word：Pandoc 与妙言导出</title>
+      <link>https://miaoyan.app/zh/blog/markdown-to-word/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-to-word/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。</description>
+    </item>
+    <item>
+      <title>用 Markdown 文件做卡片笔记法</title>
+      <link>https://miaoyan.app/zh/blog/zettelkasten-markdown-notes/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/zettelkasten-markdown-notes/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>卢曼卡片盒的做法、原子笔记、文件命名、妙言里的双向链接与反向链接，以及什么时候 Obsidian 更合适。</description>
+    </item>
   </channel>
 </rss>

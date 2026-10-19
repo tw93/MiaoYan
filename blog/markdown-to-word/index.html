@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown to Word: Pandoc, reference.docx and MiaoYan exports · MiaoYan Blog</title>
+<meta name="description" content="Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-to-word/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-to-word/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-to-word/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-to-word/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-to-word/">
+<meta property="og:title" content="Markdown to Word: Pandoc, reference.docx and MiaoYan exports · MiaoYan Blog">
+<meta property="og:description" content="Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-word.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-to-word.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown to Word: Pandoc, reference.docx and MiaoYan exports", "item": "https://miaoyan.app/blog/markdown-to-word/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-to-word/#article", "headline": "Markdown to Word: Pandoc, reference.docx and MiaoYan exports", "description": "Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead.", "url": "https://miaoyan.app/blog/markdown-to-word/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-to-word/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-to-word.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can MiaoYan save a .docx directly?", "acceptedAnswer": {"@type": "Answer", "text": "No. V4.5.0 exports HTML, Image, PDF and MiaoYan PPT PDF. Use Pandoc on the note file for a docx."}}, {"@type": "Question", "name": "Why do my Chinese characters look different from the English ones?", "acceptedAnswer": {"@type": "Answer", "text": "The style names one font for Latin text and another for Chinese. Set the East Asian font in the reference document's styles."}}, {"@type": "Question", "name": "Do I need LaTeX installed?", "acceptedAnswer": {"@type": "Answer", "text": "Not for docx. Pandoc's LaTeX requirement applies to its default PDF route, not to a Word file."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-to-word/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-to-word/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown to Word: Pandoc, reference.docx and MiaoYan exports</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>7 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-word.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>The reliable way to turn Markdown into a Word file is Pandoc: <code>pandoc note.md -o note.docx</code> converts headings, lists, tables, code and math into real Word structures, and <code>--reference-doc</code> lets you set the fonts and styles of the result. MiaoYan V4.5.0 does not write <code>.docx</code>. Its exports are HTML, PNG image and PDF, so inside MiaoYan the choices are to export something Word can read or paste, or to run Pandoc on the same note file. Diagrams, callouts and wikilinks need a manual step in either case.</p>
+<h2 id="the-pandoc-route">The Pandoc route</h2>
+<pre><code class="language-bash">pandoc note.md -o note.docx
+</code></pre>
+<p>Run it in the folder that holds the note, so the images it refers to can be found. Pandoc's manual says <code>--resource-path</code> defaults to the working directory, and that it matters only when Pandoc itself has to find an image, as it does when it writes a docx. If the images live elsewhere, list the folders with <code>--resource-path</code>, and include <code>.</code> yourself, because once the option is set the working directory is no longer searched unless you list it.</p>
+<p>Images pasted into MiaoYan are written as <code>/i/name.png</code>, with a leading slash, and Pandoc reads that as a path from the root of the disk, so it warns <code>Could not fetch resource</code> and puts the image's description in its place. Drop the slash on the way in, from the note's folder:</p>
+<pre><code class="language-bash">sed 's#](/i/#](i/#g' note.md | pandoc -f gfm -o note.docx
+</code></pre>
+<p>Pandoc's own Markdown already reads pipe tables, task lists and strikethrough. Reading the note as GFM follows GitHub's rules instead and turns on the <code>alerts</code> extension for <code>&gt; [!NOTE]</code> callouts:</p>
+<pre><code class="language-bash">pandoc -f gfm note.md -o note.docx
+</code></pre>
+<p>The manual describes <code>gfm</code> as GitHub-Flavored Markdown. Without it, Pandoc reads the file as its own Markdown flavor, which overlaps with GFM but is not identical. <code>$...$</code> math works either way: the <code>tex_math_dollars</code> extension treats text between two dollar signs as TeX math, and it is on for both formats. Run <code>pandoc --list-extensions=gfm</code> to see which extensions the format has, where a leading <code>+</code> marks one that is on.</p>
+<h2 id="where-the-formatting-comes-from">Where the formatting comes from</h2>
+<p>Pandoc does not draw a Word document from scratch. It fills a reference document with your content, and the look comes from that document's styles. The manual lists them: paragraph styles including Normal, Body Text, First Paragraph, Compact, Title, Author, Date, Heading 1 through Heading 9, Source Code and Footnote Text, character styles such as Verbatim Char and Hyperlink, and one table style named Table.</p>
+<p>So the formatting is not in the Markdown. A <code>##</code> becomes a Heading 2 paragraph, a fenced code block becomes Source Code, and what those look like is whatever the reference document says. Math is not skipped either: the manual says TeX math in docx output is rendered as OMML, Word's own equation markup, so a formula arrives as an equation you can edit in Word.</p>
+<h2 id="set-the-fonts-especially-for-chinese">Set the fonts, especially for Chinese</h2>
+<p>Get the default reference document, edit it in Word, and pass it back:</p>
+<pre><code class="language-bash">pandoc -o custom-reference.docx --print-default-data-file reference.docx
+pandoc note.md -o note.docx --reference-doc=custom-reference.docx
+</code></pre>
+<p>Open <code>custom-reference.docx</code> in Word or LibreOffice and edit the styles, not the sample text: change Normal and Body Text for the body, the Heading styles for titles, and Source Code for code. For a Chinese document, set the Chinese (East Asian) font on those styles as well as the Latin one, because a style can name one face for Latin characters and another for Chinese ones. If you only change the Latin font, the Chinese text keeps whatever face the style already had and can look mismatched. The same reference file works for every note you convert, so this is a one-time job.</p>
+<p>The default <code>reference.docx</code> also carries page size and margins. If the converted file comes out on the wrong paper, fix it once in the reference document.</p>
+<h2 id="going-through-miaoyans-exports">Going through MiaoYan's exports</h2>
+<p>MiaoYan's File &gt; Export submenu has HTML, Image, PDF and MiaoYan PPT PDF. None is a Word format, and none is a Pandoc substitute for editing. They are useful when the reader needs the document as rendered rather than as editable text.</p>
+<ul>
+<li><strong>PDF.</strong> File &gt; Export &gt; PDF prints the preview onto a fixed A4 page and saves it in Downloads. Use it when the recipient only reads, or when diagrams must stay exactly as drawn. <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a> covers what it contains.</li>
+<li><strong>HTML.</strong> File &gt; Export &gt; HTML writes <code>Title.html</code>. Its styles and scripts load from MiaoYan's CDN and local image paths point at that CDN too, so they do not load, as described in <a href="/blog/markdown-to-html/">Markdown to HTML</a>. You can open it in a browser, select the content and paste it into Word, but what Word keeps from pasted HTML varies, so try it with your own note and check the result. Only remote images can come along.</li>
+<li><strong>Image.</strong> Writes a PNG of the whole preview, which suits a single figure more than a document.</li>
+</ul>
+<h2 id="what-survives-and-what-breaks">What survives and what breaks</h2>
+<table>
+<thead>
+<tr>
+<th>Element in the note</th>
+<th>Through Pandoc</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Headings, lists, bold, links</td>
+<td>Become Word styles</td>
+<td>Check the styles in the reference document</td>
+</tr>
+<tr>
+<td>Tables</td>
+<td>Become Word tables using the Table style</td>
+<td>Check widths and alignment</td>
+</tr>
+<tr>
+<td>Code fences</td>
+<td>Fenced code with a language name is highlighted; in docx it uses Source Code</td>
+<td>Check long lines</td>
+</tr>
+<tr>
+<td><code>$...$</code> math</td>
+<td>Written as Word equations (OMML)</td>
+<td>Click an equation and check it</td>
+</tr>
+<tr>
+<td>Mermaid, PlantUML, Markmap blocks</td>
+<td>A fence with a language word is ordinary code to Pandoc, not a drawing</td>
+<td>Paste a picture of the diagram</td>
+</tr>
+<tr>
+<td><code>&gt; [!NOTE]</code> callouts</td>
+<td>With <code>-f gfm</code>, a plain paragraph reading Note followed by the text; with Pandoc's own Markdown, a quote starting with <code>[!NOTE]</code></td>
+<td>Restyle or rewrite it in Word</td>
+</tr>
+<tr>
+<td><code>[[wikilinks]]</code></td>
+<td>Pandoc has wikilinks extensions, named <code>wikilinks_title_after_pipe</code> and <code>wikilinks_title_before_pipe</code></td>
+<td>Replace with real links, or enable one</td>
+</tr>
+</tbody>
+</table>
+<p>For diagrams, MiaoYan renders Mermaid and Markmap in its preview and in PDF export, so one workable path is to capture the diagram from the preview and insert it as a picture, with the Mermaid source kept in the note. PlantUML needs a network because the preview asks a PlantUML server for the SVG.</p>
+<p>Callouts lose their box. MiaoYan turns <code>&gt; [!NOTE]</code> blockquotes into styled callouts in its preview. Pandoc's manual says its <code>alerts</code> extension supports GitHub-style Markdown alerts, and <code>--list-extensions</code> shows it on for <code>gfm</code> and off for Pandoc's own Markdown. With Pandoc 3.12.1, <code>-f gfm</code> turns the callout into a paragraph reading Note followed by the text, both in the First Paragraph style with no box or color, while Pandoc's own Markdown keeps a quote that starts with <code>[!NOTE]</code>.</p>
+<h2 id="a-short-check-after-converting">A short check after converting</h2>
+<ol>
+<li>Open the file and look at the heading levels in Word's navigation pane. A skipped level means the source skipped one.</li>
+<li>Scroll to every table and every image. A missing image means Pandoc could not find the file, so run it from the note's folder or set <code>--resource-path</code>.</li>
+<li>Click one equation. It should be an equation, and if it is a picture or raw dollar signs, revisit the input format.</li>
+<li>Look at the first page. A front matter block at the top of the note is metadata and not body text, so check that the title and author came out the way you want.</li>
+<li>Search for <code>[!</code>, <code>[[</code> and three backticks to find callouts, wikilinks and code fences that did not convert.</li>
+<li>Change one style in <code>custom-reference.docx</code>, convert again, and confirm the whole document follows.</li>
+</ol>
+<p>Pandoc's raw blocks can insert Word-specific XML, such as a page break, into a docx. The manual shows this under the <code>raw_attribute</code> extension, which is on in Pandoc's own Markdown and off in <code>gfm</code>, so with GFM input write <code>-f gfm+raw_attribute</code>. It is the way to control layout details Markdown cannot express. For the rest of what the Markdown side can express, see the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> and <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid diagrams in Markdown</a>.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-miaoyan-save-a-docx-directly">Can MiaoYan save a .docx directly?</h3>
+<p>No. V4.5.0 exports HTML, Image, PDF and MiaoYan PPT PDF. Use Pandoc on the note file for a docx.</p>
+<h3 id="why-do-my-chinese-characters-look-different-from-the-english-ones">Why do my Chinese characters look different from the English ones?</h3>
+<p>The style names one font for Latin text and another for Chinese. Set the East Asian font in the reference document's styles.</p>
+<h3 id="do-i-need-latex-installed">Do I need LaTeX installed?</h3>
+<p>Not for docx. Pandoc's LaTeX requirement applies to its default PDF route, not to a Word file.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-to-html/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown to HTML: Pandoc, markdown-it and MiaoYan export</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown blockquotes and nested lists: indent rules</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

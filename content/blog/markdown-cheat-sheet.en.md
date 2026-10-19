@@ -175,7 +175,7 @@ MiaoYan renders raw HTML in the preview, and `/fold` followed by `Tab` inserts t
 
 ### Subscript and superscript
 
-MiaoYan's bundled syntax guide shows `H~2~O` and `26^th^`. MiaoYan does not render that syntax, so do not rely on it. Use `<sub>` and `<sup>` HTML if you need either.
+MiaoYan's bundled syntax guide shows `H~2~O` and `26^th^`, but MiaoYan reads `~2~` as strikethrough and leaves `^th^` as plain text. Use `<sub>` and `<sup>` HTML if you need either.
 
 ## How the pieces fit
 

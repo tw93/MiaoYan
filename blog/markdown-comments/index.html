@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown comments: HTML comments and [//]: # (note) · MiaoYan Blog</title>
+<meta name="description" content="Write comments in Markdown with &lt;!-- --&gt; or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-comments/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-comments/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-comments/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-comments/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-comments/">
+<meta property="og:title" content="Markdown comments: HTML comments and [//]: # (note) · MiaoYan Blog">
+<meta property="og:description" content="Write comments in Markdown with &lt;!-- --&gt; or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-comments.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-comments.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown comments: HTML comments and [//]: # (note)", "item": "https://miaoyan.app/blog/markdown-comments/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-comments/#article", "headline": "Markdown comments: HTML comments and [//]: # (note)", "description": "Write comments in Markdown with <!-- --> or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export.", "url": "https://miaoyan.app/blog/markdown-comments/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-comments/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-comments.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is there an official Markdown comment?", "acceptedAnswer": {"@type": "Answer", "text": "No. Neither CommonMark nor GFM defines one. The HTML comment is raw HTML that Markdown passes through, and [//]: # (text) is a link reference definition used as a convention."}}, {"@type": "Question", "name": "Which form should I use?", "acceptedAnswer": {"@type": "Answer", "text": "The HTML comment is more widely understood and supports several lines. Use the reference form when the output must stay clean, or when the renderer strips raw HTML."}}, {"@type": "Question", "name": "Does a comment show in GitHub?", "acceptedAnswer": {"@type": "Answer", "text": "Not in the rendered page, but it appears in the raw file and the edit view."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-comments/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-comments/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown comments: HTML comments and [//]: # (note)</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>5 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-comments.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown has no comment syntax of its own, so you borrow one. The common choice is an HTML comment, <code>&lt;!-- note --&gt;</code>, on its own line with blank lines around it. It disappears from the rendered page but stays in the source, in any exported HTML file and in "view source". The alternative is a link reference definition, <code>[//]: # (note)</code>, which produces no output at all, not even in the HTML. MiaoYan V4.5.0 hides both in the preview and in PDF export, and keeps the HTML comment inside exported HTML. Neither is private, so never put a password or a token in one.</p>
+<h2 id="two-ways-to-write-a-comment">Two ways to write a comment</h2>
+<pre><code class="language-markdown">Visible paragraph.
+
+&lt;!-- A comment on one line. --&gt;
+
+&lt;!--
+A comment on several lines.
+Markdown here is not parsed:
+- **not bold**
+--&gt;
+
+[//]: # (A comment that leaves nothing in the HTML.)
+
+Visible again.
+</code></pre>
+<p>The HTML form works because raw HTML is part of Markdown. CommonMark starts an HTML block at a line beginning with <code>&lt;!--</code> and ends it at the first line containing <code>--&gt;</code>, and everything between is passed through untouched. Blank lines inside do not end it, which is why a multi-line comment can hold lists and blank lines safely. Inside a paragraph, <code>Hello &lt;!-- aside --&gt; world</code> is treated as inline raw HTML and stays inline.</p>
+<p>The reference form is a different mechanism. CommonMark defines a link reference definition as a label in brackets, a colon, a destination and an optional title in quotes or parentheses. A definition renders nothing, so <code>//</code> is just a label, <code>#</code> a destination and your comment the title. <code>[//]: &lt;&gt; (text)</code> and <code>[note]: # "text"</code> behave the same. The title may run over several lines but cannot contain a blank line, and the definition cannot interrupt a paragraph, so keep a blank line before it. In cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan V4.5.0, <code>Para</code> followed directly by <code>[//]: # (x)</code> printed the definition as plain text.</p>
+<h2 id="what-each-form-leaves-behind">What each form leaves behind</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>HTML comment</th>
+<th><code>[//]: # (text)</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rendered page</td>
+<td>hidden</td>
+<td>hidden</td>
+</tr>
+<tr>
+<td>HTML source</td>
+<td>present</td>
+<td>absent</td>
+</tr>
+<tr>
+<td>Works where raw HTML is stripped</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>Contents parsed as Markdown</td>
+<td>no</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>The HTML comment survives into the generated HTML, so anyone who opens "view source" on a page built from your note can read it. A renderer that strips raw HTML replaces it with a placeholder such as <code>&lt;!-- raw HTML omitted --&gt;</code>, and the contents are gone. The reference form leaves nothing, but it is a convention, not a feature: if another part of the note writes <code>[//]</code>, that text becomes a link to <code>#</code>, and a second definition with the same label is ignored. Use <code>//</code> once, or give each comment a unique label.</p>
+<p>GitHub documents the HTML form, saying content placed in an HTML comment is hidden from the rendered Markdown. The text stays in the file, so it shows in the raw view and the editor, and anyone who can read the repository can read it.</p>
+<h2 id="where-comments-leak">Where comments leak</h2>
+<ul>
+<li><strong>Code.</strong> Inside a fenced block or inline code, <code>&lt;!-- --&gt;</code> is shown literally, because nothing is parsed there. This is also how you display one.</li>
+<li><strong>An unclosed comment.</strong> <code>&lt;!--</code> at the start of a block with no <code>--&gt;</code> swallows the rest of the document into the HTML block, and the browser then hides all of it.</li>
+<li><strong>Nesting.</strong> A comment ends at the first <code>--&gt;</code>. In a block that contains a second comment, <code>leaked text</code> after the inner <code>--&gt;</code> shows up on the page, followed by a stray <code>--&gt;</code>. Remove the inner comment markers instead of nesting.</li>
+<li><strong>Text after the closer.</strong> On a line such as <code>&lt;!-- c --&gt; **text**</code>, the whole line belongs to the HTML block, so <code>**text**</code> is not bold. Put the comment on its own line.</li>
+<li><strong>Four spaces.</strong> An indented <code>&lt;!-- c --&gt;</code> after a blank line is a code block, and it prints.</li>
+<li><strong>Front matter.</strong> MiaoYan hides a <code>---</code> block only when the note starts with it, so a comment above it turns the block into a rule and a heading. Put comments below the closing <code>---</code>; the <a href="/blog/markdown-front-matter/">front matter</a> article has the rule.</li>
+</ul>
+<p>Table cells and headings take inline comments fine; in a list item, indent the comment to the item's text and it works.</p>
+<h2 id="how-miaoyan-v450-handles-them">How MiaoYan V4.5.0 handles them</h2>
+<p>MiaoYan renders Markdown with cmark-gfm and the raw-HTML option on (<code>CMARK_OPT_UNSAFE</code>), so comments reach the preview as real HTML comments, which a web view never draws. That one renderer feeds the preview, PDF export, HTML export and Copy HTML. The preview and PDF export show no comment text, because a PDF is the printed preview. File &gt; Export &gt; HTML renders the note again and saves the HTML to Downloads, and no step on that path removes comments, so the file contains them. Copying with Copy HTML (in the share menu) renders the whole note text the same way, comments included.</p>
+<p>The editor's highlighter has no rule for comments, and V4.5.0 has no Format-menu command or slash shortcut for them, so type the markers yourself. Because the source keeps them, a search for <code>TODO</code> or for <code>&lt;!--</code> finds them in every note, which is the main reason to prefer a comment over deleting a line: <code>grep -rn "&lt;!--" notes/</code> lists them all.</p>
+<h2 id="comments-or-front-matter">Comments or front matter</h2>
+<p>Both are hidden in rendered output and both are readable in the file. The difference is who consumes them. Front matter is metadata that generators such as Jekyll and Hugo read, like a title, date or <code>draft</code> flag, and a comment is ignored by every tool. Use front matter for fields a build needs, and a comment for a note to yourself or an editor. A draft flag also does something a comment cannot: a generator can leave the page out of the site. If a paragraph must not be published, move it to another note rather than hiding it in a comment.</p>
+<h2 id="never-put-secrets-in-a-comment">Never put secrets in a comment</h2>
+<p>A comment is plain text in a file you may sync, commit or export. The note folder may go through iCloud Drive, Dropbox or git, as in <a href="/blog/sync-markdown-notes-across-devices/">syncing notes</a>, and an exported HTML page carries the comment to whoever receives it. If it is sensitive, keep it out of any note you share or publish.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-there-an-official-markdown-comment">Is there an official Markdown comment?</h3>
+<p>No. Neither CommonMark nor GFM defines one. The HTML comment is raw HTML that Markdown passes through, and <code>[//]: # (text)</code> is a link reference definition used as a convention.</p>
+<h3 id="which-form-should-i-use">Which form should I use?</h3>
+<p>The HTML comment is more widely understood and supports several lines. Use the reference form when the output must stay clean, or when the renderer strips raw HTML.</p>
+<h3 id="does-a-comment-show-in-github">Does a comment show in GitHub?</h3>
+<p>Not in the rendered page, but it appears in the raw file and the edit view.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-horizontal-line/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown horizontal line: ---, *** and ___</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-bold-italic-strikethrough/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown bold, italic and strikethrough: syntax and pitfalls</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

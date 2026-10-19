@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown blockquotes and nested lists: indent rules · MiaoYan Blog</title>
+<meta name="description" content="Write blockquotes, lazy lines, nested quotes and [!NOTE] callouts, learn why nested lists need 2, 3 or 4 spaces, and why 4 spaces can become code.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/">
+<meta property="og:title" content="Markdown blockquotes and nested lists: indent rules · MiaoYan Blog">
+<meta property="og:description" content="Write blockquotes, lazy lines, nested quotes and [!NOTE] callouts, learn why nested lists need 2, 3 or 4 spaces, and why 4 spaces can become code.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown blockquotes and nested lists: indent rules", "item": "https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/#article", "headline": "Markdown blockquotes and nested lists: indent rules", "description": "Write blockquotes, lazy lines, nested quotes and [!NOTE] callouts, learn why nested lists need 2, 3 or 4 spaces, and why 4 spaces can become code.", "url": "https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-blockquotes-and-nested-lists/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I put a blockquote inside a list item?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Indent the > lines to the item's content column, two spaces under -, and repeat the same indent on every line."}}, {"@type": "Question", "name": "Why does my quote lose its second line?", "acceptedAnswer": {"@type": "Answer", "text": "That line was not a paragraph continuation, for example it started a list or came after a blank line. Put > at the start of every line."}}, {"@type": "Question", "name": "Do callouts work in every Markdown app?", "acceptedAnswer": {"@type": "Answer", "text": "No. GitHub and MiaoYan V4.5.0 render them, and others show a plain quote that begins with [!NOTE]."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-blockquotes-and-nested-lists/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-blockquotes-and-nested-lists/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown blockquotes and nested lists: indent rules</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-blockquotes-and-nested-lists.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>A blockquote is a line that starts with <code>&gt;</code>, and a quote nests by adding another <code>&gt;</code>. A nested list nests when the child's marker sits at or past the column where the parent's text begins: two spaces under <code>-</code>, three under <code>1.</code>, four under <code>10.</code>. Four spaces in the wrong place turn a line into a code block, and Markdown has no syntax for indenting a paragraph at all. MiaoYan V4.5.0 turns <code>&gt; [!NOTE]</code> quotes into callouts like GitHub does, and its Tab key indents by two spaces, or three under a numbered line, which is enough until a number reaches 10.</p>
+<h2 id="blockquote-syntax">Blockquote syntax</h2>
+<pre><code class="language-markdown">&gt; A quoted line.
+&gt; Another line in the same quote.
+&gt;
+&gt; A second paragraph, still inside the quote.
+</code></pre>
+<p>The space after <code>&gt;</code> is optional, and up to three spaces may come before it. With four leading spaces the line is indented code, so <code>&gt; text</code> prints the <code>&gt;</code> literally. A blank line without <code>&gt;</code> ends the quote, and a later <code>&gt; ...</code> starts a separate one. For one quote with two paragraphs, keep a bare <code>&gt;</code> on the blank line.</p>
+<p>Headings, lists, fenced code and more quotes all work inside a quote, as long as every line, fence lines included, starts with <code>&gt;</code>:</p>
+<pre><code class="language-markdown">&gt; ## A heading in a quote
+&gt;
+&gt; 1. First step
+&gt; 2. Second step
+&gt;
+&gt; ```bash
+&gt; make build
+&gt; ```
+</code></pre>
+<h2 id="lazy-continuation">Lazy continuation</h2>
+<p>CommonMark lets you drop the <code>&gt;</code> on later lines of a paragraph. <code>&gt; a</code> followed by a bare <code>lazy</code> line is one quote holding the paragraph "a lazy". The rule only covers paragraph text: a blank line ends it, and in <code>&gt; - foo</code> followed by a bare <code>- bar</code>, the quote ends after the first line.</p>
+<p>The preview also depends on the Line Break setting. cmark-gfm joins lazy lines with a space, but MiaoYan's default renders every newline as a <code>&lt;br&gt;</code>, so the same two lines stay apart in MiaoYan and run together in a GitHub <code>.md</code> file. <a href="/blog/markdown-line-breaks/">Markdown line breaks</a> covers the setting. For anything you publish, put the <code>&gt;</code> on every line.</p>
+<h2 id="nested-quotes-and-callouts">Nested quotes and callouts</h2>
+<pre><code class="language-markdown">&gt; The outer quote.
+&gt;
+&gt; &gt; The inner quote.
+&gt;
+&gt; Back in the outer one.
+</code></pre>
+<p>Each extra <code>&gt;</code> adds a level, and <code>&gt; &gt;</code> and <code>&gt;&gt;</code> mean the same. The bare <code>&gt;</code> before "Back in the outer one" matters, because without it that text would continue the inner paragraph.</p>
+<p>A callout is a quote whose first line is a marker. MiaoYan V4.5.0 recognizes five, in any letter case:</p>
+<pre><code class="language-markdown">&gt; [!NOTE]
+&gt; Useful context.
+
+&gt; [!WARNING]
+&gt; Check this before you delete anything.
+</code></pre>
+<p>The others are <code>TIP</code>, <code>IMPORTANT</code> and <code>CAUTION</code>. The preview draws a coloured box with an icon and a title row reading Note, Tip, Important, Warning or Caution. The marker must be alone on its line: <code>&gt; [!NOTE]: text</code> and unknown words such as <code>[!DANGER]</code> stay ordinary quotes, a marker inside a fenced code block is left alone, and a plain quote nested inside a callout stays a quote. GitHub documents the same five types and adds two cautions that matter for notes headed there: limit them to one or two per article, and alerts cannot be nested inside other elements. Apps without callout support show a normal quote with <code>[!NOTE]</code> in it; the <a href="/blog/markdown-cheat-sheet/">cheat sheet</a> files callouts under extensions.</p>
+<h2 id="how-nested-list-indentation-works">How nested list indentation works</h2>
+<p>A list item owns the following lines that are indented to its content column, the column where the text after the marker starts. A child list is nested when its marker begins at or after that column, so the indent you need depends on the parent's marker:</p>
+<table>
+<thead>
+<tr>
+<th>Parent marker</th>
+<th>Smallest nested indent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-</code></td>
+<td>2 spaces</td>
+</tr>
+<tr>
+<td><code>1.</code></td>
+<td>3 spaces</td>
+</tr>
+<tr>
+<td><code>10.</code></td>
+<td>4 spaces</td>
+</tr>
+<tr>
+<td><code>100.</code></td>
+<td>5 spaces</td>
+</tr>
+</tbody>
+</table>
+<p>GitHub's guide gives the same method: count the characters before the item text and type that many spaces. These cases were run through cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan V4.5.0, with the same extensions and options. <code>1. one</code> followed by <code>- sub</code> with two spaces gave two separate lists, not a nested one. One space under <code>- a</code> made a sibling. Three spaces under <code>10. one</code> made a separate bullet list, and four nested it. So for bullets any indent from 2 to 5 spaces works (six or more is read as text or code), and the "2 or 4 spaces" argument only matters under numbers, where you need the marker width.</p>
+<p>Markers also decide where lists start and end. Switching between <code>-</code>, <code>*</code> and <code>+</code>, or between <code>.</code> and <code>)</code>, starts a new list. The first number sets the start, so <code>3.</code> then <code>4.</code> renders as an ordered list starting at 3, <code>0.</code> is allowed, and later numbers are ignored, so <code>1.</code> on every line still counts up. A marker is one to nine digits, and only a list starting with <code>1</code> can interrupt a paragraph, which is why <code>2024. was a year</code> inside a paragraph stays text; <a href="/blog/markdown-escape-characters/">escape characters</a> has the fix for the start of one.</p>
+<p>To continue an item with a paragraph or code, indent it to the same column after a blank line:</p>
+<pre><code class="language-markdown">- Step one
+
+  Second paragraph of step one.
+
+  ```bash
+  make build
+  ```
+- Step two
+</code></pre>
+<p>A fence written at column 0 would close the list instead.</p>
+<h2 id="why-four-spaces-makes-a-code-block">Why four spaces makes a code block</h2>
+<p>An indented code block is four or more spaces at the start of a line after a blank line. At the top level, <code>text</code> after a blank line is code. Inside a list the four count from the content column, so code under <code>-</code> needs six. After a line of ordinary text, indented lines do not start code, they continue the paragraph. Indent to the content column, not by four, and prefer fences for code, as in <a href="/blog/markdown-code-blocks/">Markdown code blocks</a>.</p>
+<h2 id="indenting-a-paragraph">Indenting a paragraph</h2>
+<p>Leading spaces are dropped in a paragraph, and four of them make code, so the trick is to start the line with a character that is not a space:</p>
+<pre><code class="language-markdown">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;An indented paragraph.
+
+　　中文段落的首行缩进，用两个全角空格。
+</code></pre>
+<p>The <code>&amp;nbsp;</code> entities render as real spaces, and the full-width space (U+3000) is an ordinary character to the parser, so it never starts a code block. The cost is that the indent lives in the text itself, so every paragraph needs its own.</p>
+<h2 id="indenting-in-miaoyans-editor">Indenting in MiaoYan's editor</h2>
+<p>In V4.5.0, <code>Tab</code> indents the current line, or every selected line, by two spaces, and <code>Shift+Tab</code> removes up to three leading spaces or one tab. The Format menu has the same pair as Shift Right (<code>⌘]</code>) and Shift Left (<code>⌘[</code>). If the line above is a numbered item, <code>Tab</code> indents by three spaces, and it rewrites the number on a numbered line to <code>1</code>, so <code>2. two</code> becomes <code>1. two</code>, the start of a nested numbered list.</p>
+<p>The width follows the line above, not the parent's marker, so under <code>10. item</code> you get three spaces, which the table above showed is a sibling list. Add a space and check the preview. <code>Return</code> at the end of a list or quote line starts the next with the same marker, with numbers counted up by one, and <code>Return</code> on an empty marker clears it. Only the first marker is copied, so in a <code>&gt; &gt;</code> quote you type the second <code>&gt;</code> yourself.</p>
+<h2 id="checking-the-result">Checking the result</h2>
+<p>Look at the preview, not the editor. A child that sits at its parent's level was indented too little for that marker. A monospace line was indented too far after a blank line. A literal <code>&gt;</code> had four or more spaces in front. A list that restarts at 1 changed its marker character.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-i-put-a-blockquote-inside-a-list-item">Can I put a blockquote inside a list item?</h3>
+<p>Yes. Indent the <code>&gt;</code> lines to the item's content column, two spaces under <code>-</code>, and repeat the same indent on every line.</p>
+<h3 id="why-does-my-quote-lose-its-second-line">Why does my quote lose its second line?</h3>
+<p>That line was not a paragraph continuation, for example it started a list or came after a blank line. Put <code>&gt;</code> at the start of every line.</p>
+<h3 id="do-callouts-work-in-every-markdown-app">Do callouts work in every Markdown app?</h3>
+<p>No. GitHub and MiaoYan V4.5.0 render them, and others show a plain quote that begins with <code>[!NOTE]</code>.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-underline-and-color/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown underline, color and center text with HTML</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-to-html/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown to HTML: Pandoc, markdown-it and MiaoYan export</span><span class="blog-related-meta">7 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>
