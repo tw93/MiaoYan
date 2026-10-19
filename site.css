@@ -226,7 +226,7 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   to { --mark-orbit: 360deg; }
 }
 .tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; text-wrap: balance; }
-html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; }
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
 .lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
 .tagline + .trust { margin-top: 18px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
