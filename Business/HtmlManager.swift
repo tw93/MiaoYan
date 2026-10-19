@@ -101,6 +101,9 @@ class HtmlManager {
                     -webkit-print-color-adjust: exact;
                     print-color-adjust: exact;
                 }
+                /* Not the PDF's text font: the note and its generated title
+                   sit in `#write.heti`, which sets `--text-font`, the user's
+                   preview font. This stack only reaches text outside it. */
                 body {
                     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", sans-serif !important;
                     line-height: 1.58 !important;
