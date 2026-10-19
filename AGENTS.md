@@ -40,6 +40,7 @@ MiaoYan is a lightweight Markdown editor built with Swift. This open-source repo
 - `skills/miaoyan/` - published Agent Skill (tracked) describing MiaoYan's Markdown, PPT, and `miao` CLI surfaces to outside agents; it restates product syntax, so it drifts when those surfaces change.
 - `.github/RELEASE_NOTES.md` - public release note source for GitHub release and appcast body generation.
 - `.github/workflows/` - holds `ci.yml` only; release builds are not driven by a tracked release workflow.
+- `vercel.json` - `main` is also deployed as static files to `cdn.miaoyan.app` (Vercel project `miao-yan`, team Faberon), because exported HTML sets `<base href>` to `https://cdn.miaoyan.app/Resources/DownView.bundle/` (`HtmlManager.cdnBaseURL`); keep those paths stable. The file only adds `X-Robots-Tag: noindex`, since search engines were indexing that host's listing of this repository.
 
 ## Commands
 
