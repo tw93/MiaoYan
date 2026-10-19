@@ -679,6 +679,8 @@ class NotesTableView: NSTableView {
                 }
 
                 try FileManager.default.moveItem(at: src, to: dst)
+                // Deleting filed the history under the Trash path; bring it back.
+                NoteVersionManager.shared.moveVersions(from: src, to: dst)
             } catch {
                 AppDelegate.trackError(error, context: "NotesTableView.reloadRow")
             }

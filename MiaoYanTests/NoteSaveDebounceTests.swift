@@ -170,6 +170,33 @@ final class NoteSaveDebounceTests: XCTestCase {
         manager.waitForPendingWork()
     }
 
+    /// Deleting files the history under the Trash path; undoing the delete
+    /// must bring it back, or the restored note shows none.
+    @MainActor
+    func testUndoingADeleteBringsTheHistoryBack() throws {
+        let original = tempDir.appendingPathComponent("kept-\(UUID().uuidString).md")
+        let trashed = tempDir.appendingPathComponent("trashed-\(UUID().uuidString).md")
+        try "draft".write(to: trashed, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let inTrash = Note(url: trashed, with: project)
+        inTrash.load()
+        let manager = NoteVersionManager.shared
+        manager.saveVersionIfNeeded(for: inTrash, force: true)
+        manager.waitForPendingWork()
+        XCTAssertTrue(manager.hasVersions(for: inTrash))
+
+        let table = NotesTableView(frame: .zero)
+        table.storage = Storage(loadsLibrary: false)
+        table.unDelete([trashed: original])
+        manager.waitForPendingWork()
+
+        let restored = Note(url: original, with: project)
+        XCTAssertTrue(manager.hasVersions(for: restored), "the history came back with the note")
+        XCTAssertFalse(manager.hasVersions(for: inTrash), "nothing is left under the Trash path")
+        manager.removeVersions(for: restored)
+        manager.waitForPendingWork()
+    }
+
     @MainActor
     func testMissingFileIsNotAFailedLoad() {
         let url = tempDir.appendingPathComponent("not-yet-written.md")

@@ -1005,6 +1005,8 @@ final class ShellModel {
                 AppDelegate.trackError(error, context: "ShellModel.restoreDeleted")
                 continue
             }
+            // Deleting filed the history under the Trash path; bring it back.
+            AppEnvironment.current.versionManager.moveVersions(from: trashed, to: original)
             if let note = storage.getBy(url: trashed) {
                 storage.removeBy(note: note)
             }
