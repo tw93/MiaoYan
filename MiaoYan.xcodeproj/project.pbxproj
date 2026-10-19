@@ -10,6 +10,8 @@
 		5E1100000000000000000015 /* ShellPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000005 /* ShellPalette.swift */; };
 		5E1100000000000000000014 /* ShellEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000004 /* ShellEditor.swift */; };
 		5E1100000000000000000011 /* ShellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000001 /* ShellModel.swift */; };
+		5E1100000000000000000017 /* ShellModel+Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000007 /* ShellModel+Export.swift */; };
+		5E1100000000000000000016 /* ShellModel+Folders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000006 /* ShellModel+Folders.swift */; };
 		5E1100000000000000000012 /* ShellRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000002 /* ShellRootView.swift */; };
 		5E1100000000000000000013 /* ShellWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000003 /* ShellWindowController.swift */; };
 		C0DE0000000000000000A004 /* MiaoYanCore in Frameworks */ = {isa = PBXBuildFile; productRef = C0DE0000000000000000A002 /* MiaoYanCore */; };
@@ -204,6 +206,8 @@
 		5E1100000000000000000005 /* ShellPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellPalette.swift; sourceTree = "<group>"; };
 		5E1100000000000000000004 /* ShellEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellEditor.swift; sourceTree = "<group>"; };
 		5E1100000000000000000001 /* ShellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellModel.swift; sourceTree = "<group>"; };
+		5E1100000000000000000007 /* ShellModel+Export.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShellModel+Export.swift"; sourceTree = "<group>"; };
+		5E1100000000000000000006 /* ShellModel+Folders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShellModel+Folders.swift"; sourceTree = "<group>"; };
 		5E1100000000000000000002 /* ShellRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellRootView.swift; sourceTree = "<group>"; };
 		5E1100000000000000000003 /* ShellWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellWindowController.swift; sourceTree = "<group>"; };
 		17D270682FE43740B52C6C24 /* MiaoYanTests/Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = MiaoYanTests/Info.plist; sourceTree = SOURCE_ROOT; };
@@ -400,6 +404,8 @@
 			isa = PBXGroup;
 			children = (
 				5E1100000000000000000001 /* ShellModel.swift */,
+				5E1100000000000000000007 /* ShellModel+Export.swift */,
+				5E1100000000000000000006 /* ShellModel+Folders.swift */,
 				5E1100000000000000000002 /* ShellRootView.swift */,
 				5E1100000000000000000003 /* ShellWindowController.swift */,
 				5E1100000000000000000004 /* ShellEditor.swift */,
@@ -852,6 +858,8 @@
 				5E1100000000000000000015 /* ShellPalette.swift in Sources */,
 				5E1100000000000000000014 /* ShellEditor.swift in Sources */,
 				5E1100000000000000000011 /* ShellModel.swift in Sources */,
+				5E1100000000000000000017 /* ShellModel+Export.swift in Sources */,
+				5E1100000000000000000016 /* ShellModel+Folders.swift in Sources */,
 				5E1100000000000000000012 /* ShellRootView.swift in Sources */,
 				5E1100000000000000000013 /* ShellWindowController.swift in Sources */,
 				27F1C0312F40000400AAA001 /* BacktickAndFontNormalizer.swift in Sources */,
