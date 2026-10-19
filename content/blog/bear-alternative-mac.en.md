@@ -1,4 +1,4 @@
-If you want to leave Bear but keep writing Markdown on a Mac, the move is to export your notes as `.md` files and open the folder in an editor that reads plain files. MiaoYan does this: folders are your categories, every note is a file, and an iCloud Drive folder carries the notes to iPhone and iPad. The trade-off is real. Bear organizes with tags across the whole library, and MiaoYan has no tags at all, so a library that lives on `#tags` needs a plan before you move.
+If you want to leave Bear but keep writing Markdown on a Mac, the move is to export your notes as `.md` files and open the folder in an editor that reads plain files. MiaoYan does this: folders are your categories, every note is a file, and an iCloud Drive folder carries the notes to iPhone and iPad. Bear organizes with tags across the whole library and MiaoYan has no tags at all, so a library that lives on `#tags` needs a plan before you move.
 
 ## What Bear does well
 

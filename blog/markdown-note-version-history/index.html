@@ -59,14 +59,14 @@
 <li>Click "Restore to This Version". MiaoYan replaces the note's text with that version and shows a confirmation, "Restored to version from" followed by that version's time.</li>
 </ol>
 <p>If the note has no snapshots yet, the window says "No Version History" and explains that "Versions are saved automatically every 5 minutes while editing".</p>
-<p>Restoring is itself recoverable. Before it replaces the text, MiaoYan saves your current text as a new snapshot, so the restore appears in the same list and you can go back.</p>
+<p>Restoring is itself recoverable. Before it replaces the text, MiaoYan saves your current text as a new snapshot, so your pre-restore text appears in the same list as a new snapshot and you can go back.</p>
 <h2 id="how-it-actually-works">How it actually works</h2>
 <p>This is read from the app's source, so it describes behavior rather than promises.</p>
 <p><strong>When a snapshot is taken.</strong> A snapshot is considered whenever the note is written to disk, which happens after a short pause in typing. A new one is saved only if at least five minutes have passed since the previous snapshot of that note. Two events skip the five-minute wait: switching to another note (the one you leave is saved as a snapshot) and restoring a version (the current text is saved as a snapshot first). Opening the history window also tries a save, but a normal, throttled one that respects the interval.</p>
 <p><strong>What is skipped.</strong> Empty or whitespace-only notes are not saved. A snapshot is also skipped when it matches the newest saved version after comparing line by line with surrounding whitespace trimmed and blank lines removed, so a pure spacing change does not create an entry.</p>
 <p><strong>Where files go.</strong> Each note gets its own folder under <code>Library/Application Support/com.tw93.miaoyan/Versions/</code>, named with the note's file name plus a hash of its full path. Inside are plain <code>.md</code> files named by their UTC timestamp, for example <code>2026-10-18T15-42-07Z.md</code>. They are ordinary text, so you can open them in any editor. The history window shows the date in your local time.</p>
 <p><strong>How many.</strong> At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted.</p>
-<p><strong>Renames, moves and deletion.</strong> Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash gives it a new path, and its earlier history stays filed under the old one. The history window then starts again from the new path.</p>
+<p><strong>Renames, moves and deletions.</strong> Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash gives it a new path, and its earlier history stays filed under the old one. The history window then starts again from the new path.</p>
 <p><strong>The five-minute timer is per session.</strong> The record of when the last snapshot happened lives in memory, so after you quit and reopen the app, the first save of a note can create a snapshot straight away, provided the text differs from the newest saved version.</p>
 <h2 id="what-this-covers-and-what-it-does-not">What this covers and what it does not</h2>
 <table>

@@ -23,7 +23,7 @@
 - 设置里有「外观」（字体和字号）和「笔记库」两部分，笔记库里有「选择文件夹…」，说明文字写的是妙言读写这个文件夹里的 Markdown 文件，由 iCloud Drive 或你的网盘 App 与 Mac 保持同步。
 - 阅读视图能渲染表格、脚注、删除线和任务列表，用 highlight.js 高亮代码，能画 Mermaid 图，`[[标题]]` 双链会打开对应笔记。
 
-4.5.0 版没有的部分，iPad 版没有自己的键盘快捷键，也没有渲染 LaTeX 公式、PlantUML 或 Markmap 的步骤，所以这些内容在 iPad 阅读视图里会显示成源码，虽然 Mac 版能渲染。需要在 iPad 上写公式的话，先拿一篇样例笔记试试。语法部分见 [Markdown 语法速查与 GFM 差异](/zh/blog/markdown-cheat-sheet/)和 [Markdown 里写 LaTeX 公式](/zh/blog/latex-math-in-markdown/)。
+4.5.0 版还缺两样，iPad 版没有自己的键盘快捷键，也不渲染 LaTeX 公式、PlantUML 或 Markmap，所以这些内容在 iPad 阅读视图里会显示成源码，虽然 Mac 版能渲染。需要在 iPad 上写公式的话，先拿一篇样例笔记试试。语法部分见 [Markdown 语法速查与 GFM 差异](/zh/blog/markdown-cheat-sheet/)和 [Markdown 里写 LaTeX 公式](/zh/blog/latex-math-in-markdown/)。
 
 ## iPad 怎么找到你的笔记
 
@@ -48,13 +48,13 @@ Mac 版读的是你在偏好设置里选的文件夹，iPad 版找资料库有�
 
 ## 其他 iPad Markdown 编辑器
 
-妙言只是其中一个选择，下面几个按它们自己的页面来说。
+妙言只是其中一个选择，下面几个的说明取自它们各自的官网页面。
 
 - **iA Writer** 用纯文本加 Markdown 写作，可以切到带样式的预览，iPad 和 iPhone 版是买断，Mac 和 Windows 版有试用。
 - **1Writer** 有行内预览和完整预览，可自定义额外键盘行，支持多窗口和拖放，能同步 Dropbox 和 WebDAV 文件夹以及 iCloud Drive。
 - **Obsidian** 移动端在编辑时底部有工具栏，下拉有快捷操作，它的帮助页说用法与桌面版相近。
 
-这三个里，列出 Dropbox 和 WebDAV 文件夹的是 1Writer，笔记本来就放在 Obsidian 库里的话就选 Obsidian。笔记是和 Mac 共用的一个文件夹，在 iPad 上主要阅读和做短编辑，妙言比较合适。Mac 这一侧的选择见 [Mac 上怎么选 Markdown 编辑器](/zh/blog/markdown-editor-for-mac/)。
+这三个里，列出 Dropbox 和 WebDAV 文件夹的是 1Writer，笔记本来就放在 Obsidian 库里的话就选 Obsidian。笔记放在和 Mac 共用的文件夹里，在 iPad 上主要阅读和做短编辑，妙言比较合适。Mac 这一侧的选择见 [Mac 上怎么选 Markdown 编辑器](/zh/blog/markdown-editor-for-mac/)。
 
 ## 常见问题
 

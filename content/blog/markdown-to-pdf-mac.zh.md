@@ -56,11 +56,11 @@ pandoc note.md -o note.pdf --pdf-engine=weasyprint
 
 行内 TeX 会交给 LaTeX 写入器，所以 `\newpage` 能在这条路上分页，WeasyPrint 收不到这条命令。YAML 里的 `papersize` 可以写 `a4` 或 `letter`，`geometry` 可以写手册示例里的 `top=30mm` 和 `left=20mm`。设置了 `CJKmainfont` 之后，`xelatex` 需要 `xeCJK`，`xelatex` 或 `lualatex` 需要 `fontspec`，PingFang SC 就是妙言打印字体栈里已经写上的中文字体。
 
-Typora 支持页上的导出入口是 File > Export > PDF，也能导出 HTML 和图片。偏好设置里 Export 下面的 PDF，可以改纸张，包括 A4、A5 或自定义尺寸，以及边距、导出主题、一级标题之间的分页、页眉和页脚，页脚示例是 `No. ${pageNo} / ${pageCount}`，Windows 和 Linux 上这条 PDF 只支持浅色主题。PDF (LaTeX / Pandoc) 要自己加进导出列表才会出现，并且要装好 Pandoc，`PATH` 上还要有一个引擎，或者填上引擎的完整路径。编辑器之间怎么选，见 [Mac 上的 Typora 替代品](/zh/blog/typora-alternative-mac/)。
+Typora 支持页上的导出入口是 File > Export > PDF，也能导出 HTML 和图片。偏好设置里 Export 下面的 PDF，可以改纸张，包括 A4、A5 或自定义尺寸，以及边距、导出主题、一级标题之间的分页、页眉和页脚，页脚示例是 `No. ${pageNo} / ${pageCount}`，Windows 和 Linux 上的 PDF 导出只支持浅色主题。PDF (LaTeX / Pandoc) 要自己加进导出列表才会出现，并且要装好 Pandoc，`PATH` 上还要有一个引擎，或者填上引擎的完整路径。编辑器之间怎么选，见 [Mac 上的 Typora 替代品](/zh/blog/typora-alternative-mac/)。
 
 VS Code 里，yzane 的 Markdown PDF 扩展把 `markdown-pdf: Export (pdf)` 放在编辑器的右键菜单里，用 F1 打开的命令面板里也有这一项。打印经过本机的 Chrome、Edge、Chromium，或者扩展自己下载的 Chromium。公式用 KaTeX，不需要网络，Mermaid 围栏也包含在导出里，不过 Mermaid 脚本默认从 CDN 加载（`markdown-pdf.mermaidServer`），`markdown-pdf.displayHeaderFooter` 的默认值是 true。
 
-妙言没有「打印」命令，这条路要在另一个能打开笔记的应用里走。Apple 的 Mac 使用手册把能打印的文稿从文件菜单选打印，再打开 PDF 弹出式菜单，选取保存为 PDF，纸张大小也在同一个打印对话框里定。妙言导出的 HTML 不适合拿到浏览器里打印，文件的 base URL 是 `https://cdn.miaoyan.app/Resources/DownView.bundle/`，本地图片也不会像预览那样改成 `file://`，`images/fig.png` 不会出现在下载目录那份 HTML 旁边。
+妙言没有「打印」命令，这条路要在另一个能打开笔记的应用里走。Apple 的 Mac 使用手册给的办法是，在能打印的文稿里从文件菜单选打印，再打开 PDF 弹出式菜单，选取保存为 PDF，纸张大小也在同一个打印对话框里定。妙言导出的 HTML 不适合拿到浏览器里打印，文件的 base URL 是 `https://cdn.miaoyan.app/Resources/DownView.bundle/`，本地图片也不会像预览那样改成 `file://`，`images/fig.png` 不会出现在下载目录那份 HTML 旁边。
 
 ## 对不上的时候
 

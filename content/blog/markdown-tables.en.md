@@ -29,7 +29,7 @@ A cell holds inline Markdown only. Emphasis, links, images, inline code and stri
 
 That works where the renderer allows inline HTML. MiaoYan's preview does. A backslash at the end of the line cannot help here, because the cell has no following source line to continue onto. If the viewer escapes HTML, you will see `<br>` as text, which is the cue to restructure the data instead.
 
-**Inline code and math.** Inline code is fine apart from the pipe rule. For math, MiaoYan's renderer masks each character inside `$...$`, `$$...$$`, `\(...\)` and `\[...\]` before the table parser runs, so `$n$` in a cell is safe, and the source also shows that a `|` inside a math span is masked too. That is this renderer's behavior and should not be assumed elsewhere; for a notation like absolute value, `\vert` avoids the question in any KaTeX renderer. See [LaTeX math in Markdown](/blog/latex-math-in-markdown/) for the delimiters.
+**Inline code and math.** Inline code is fine apart from the pipe rule. For math, MiaoYan's renderer masks each character inside `$...$`, `$$...$$`, `\(...\)` and `\[...\]` before the table parser runs, so `$n$` in a cell is safe, and the source also shows that a `|` inside a math span is masked too. That is this renderer's behavior and should not be assumed elsewhere; for a notation like absolute value, `\vert` sidesteps the problem in any KaTeX renderer. See [LaTeX math in Markdown](/blog/latex-math-in-markdown/) for the delimiters.
 
 ## What a table cannot do
 

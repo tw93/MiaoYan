@@ -75,7 +75,7 @@ The Mac user guide describes clicking one note and choosing File > Export To. Im
 
 ### Does a checked item stay checked?
 
-It stays checked when the exported line is `- [x]`. An open item is `- [ ]`. A circle character or a plain sentence stays that text in the preview. The cheat sheet covers how a click in MiaoYan's preview writes the checkbox back into the file.
+It stays checked when the exported line is `- [x]`. An open item is `- [ ]`. A circle character or a plain sentence stays plain text in the preview. The cheat sheet covers how a click in MiaoYan's preview writes the checkbox back into the file.
 
 ### Why does the same image link work in one app and miss in the other?
 

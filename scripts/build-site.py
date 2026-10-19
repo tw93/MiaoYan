@@ -74,7 +74,7 @@ COPY = {
         "features": [
             ("Local-first", "Your Markdown files stay in a folder you choose. MiaoYan does not collect note data; iCloud Drive, Nutstore, or another file-sync client can handle cross-device sync."),
             ("Focused", "A clear three-column layout keeps folders, notes, and writing together. Dark mode, distraction-free writing, and keyboard shortcuts are built in without a plugin system to maintain."),
-            ("Native", "Built natively with Swift 6 instead of Electron. Split mode pairs real-time preview with 60fps bidirectional scroll sync for focused Markdown editing."),
+            ("Native", "Built natively with Swift 6 instead of Electron. Split mode pairs real-time preview with 60fps bidirectional scroll sync."),
             ("Capable", "Wikilinks and backlinks, LaTeX, Mermaid, version history, auto-formatting, a CLI, and Markdown presentations cover the work around writing."),
         ],
         "compare_title": "Who MiaoYan is for",

@@ -58,12 +58,12 @@
 <p>格式就这么简单。Obsidian 的文档也是同样的说法，笔记是 vault 里的纯文本 Markdown 文件，而 vault 是「本地文件系统里的一个文件夹，包括其中的子文件夹」。格式通用，一个应用写出来的文件夹换另一个应用就能打开，<code>grep</code>、<code>git</code> 和 Spotlight 也都能直接用，不需要导出。</p>
 <h2 id="得到什么">得到什么</h2>
 <p><strong>可迁移。</strong> 换编辑器只是让它指向同一个文件夹，没有东西被锁在私有容器里，改主意的成本接近于零。</p>
-<p><strong>工具多。</strong> 凡是能读文本的工具都能读你的笔记，可以用 <code>rg</code> 搜，可以写脚本做每周回顾，也可以把文件夹交给编码 Agent。妙言自带一个 <code>miao</code> 命令行工具做这件事，在 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记</a> 里有详细说明。</p>
+<p><strong>工具多。</strong> 凡是能读文本的工具都能读你的笔记，可以用 <code>rg</code> 搜，可以写脚本做每周回顾，也可以把文件夹交给编码 Agent。妙言自带一个 <code>miao</code> 命令行工具做这件事，详细说明见 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记</a>。</p>
 <p><strong>好备份。</strong> 一堆小文本文件是最容易备份的东西，Time Machine、网盘和 git 仓库都把它当普通文件，恢复出来马上就能用。</p>
 <p><strong>不锁定，不收集数据。</strong> 应用只读写你选的那个文件夹里的文件，妙言的 README 写明笔记是你所选文件夹里的 Markdown 文件，并且不收集数据。</p>
 <h2 id="要付出什么">要付出什么</h2>
 <p>选这条路线之前，这几条值得先看清。</p>
-<p><strong>没有服务端搜索和索引。</strong> 搜索发生在你自己的设备上，妙言在搜索框里输入时会在笔记库里查找标题和正文，但没有网页搜索，也不能跨机器查询。</p>
+<p><strong>没有服务端搜索和索引。</strong> 搜索发生在你自己的设备上，在搜索框里输入时，妙言会在笔记库里查找标题和正文，但没有网页搜索，也不能跨机器查询。</p>
 <p><strong>同步要交给别人。</strong> 应用本身不负责同步，同步由网盘完成，而网盘不懂 Markdown，所以两台设备同时改同一个文件，得到的是一份冲突副本而不是合并后的笔记，细节见 <a href="/zh/blog/sync-markdown-notes-across-devices/">跨设备同步 Markdown 笔记</a>。</p>
 <p><strong>附件只是文件。</strong> 图片和 PDF 放在笔记旁边，链接只是一个路径，只搬笔记而不搬附件文件夹，图片就会失效。</p>
 <p><strong>历史要自己拼。</strong> 托管应用常常自带完整的修订记录，纯文件的做法是把应用自己的快照、Time Machine 和可选的 git 拼起来，见 <a href="/zh/blog/markdown-note-version-history/">Markdown 笔记的版本历史</a>。</p>
@@ -95,7 +95,7 @@
 <h2 id="出问题时怎么查">出问题时怎么查</h2>
 <ul>
 <li><strong>列表里找不到某篇笔记。</strong> 确认扩展名是 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code>，并且所在文件夹不是隐藏文件夹，也不叫 <code>i</code>、<code>files</code> 或 <code>assets</code>。</li>
-<li><strong>文件夹被拒绝。</strong> 网盘目录有时没有作为真正的文件夹暴露出来，妙言的提示是打开网盘应用，确认该文件夹已在访达中可见，或者开启离线访问。</li>
+<li><strong>文件夹被拒绝。</strong> 网盘目录有时不是以真正文件夹的形式提供的，妙言的提示是打开网盘应用，确认该文件夹已在访达中可见，或者开启离线访问。</li>
 <li><strong>同一篇笔记有两份。</strong> 几乎都是同步冲突，找找有没有同步服务加了后缀的第二个文件。</li>
 <li><strong>两个应用同时改。</strong> 虽然妙言会从磁盘重新加载并备份你没保存的文字，但最稳的习惯还是一次只用一个编辑器。</li>
 </ul>

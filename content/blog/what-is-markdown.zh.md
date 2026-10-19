@@ -1,10 +1,10 @@
-Markdown 是在纯文本文件里写出带格式文字的一种办法，用几个普通字符当记号，`#` 表示标题，词两边的 `*` 表示强调，`-` 表示列表项，由程序读懂这些记号再转成 HTML，但文件本身不需要任何程序也读得懂，这是大家用它的主要原因。它适合笔记、文档和文章，不适合依赖精确版面的东西，覆盖大多数写作的十个记号，十分钟左右就能学会。
+Markdown 是在纯文本文件里写出带格式文字的一种办法，用几个普通字符当记号，`#` 表示标题，词两边的 `*` 表示强调，`-` 表示列表项，由程序读懂这些记号再转成 HTML，但文件本身不需要任何程序也读得懂，这是大家用它的主要原因。它适合笔记、文档和文章，不适合依赖精确版面的东西。覆盖大多数写作的记号只有十个，十分钟左右就能学会。
 
 ## 它是怎么来的
 
 John Gruber 在 2004 年发布了 Markdown，他的[项目页面](https://daringfireball.net/projects/markdown/)把它说成两样东西，一种纯文本格式语法，加一个把这种语法转成 HTML 的 Perl 工具。这些记号取自大家在邮件和 Usenet 帖子里本来就在用的习惯，所以源文件看起来就像你随手敲的一封纯文本邮件。
 
-原始说明在一些地方写得含糊，各家实现不一致。2014 年前后 [CommonMark 项目](https://commonmark.org/)写出了一份没有歧义的规范，GitHub 随后发布了在它之上加入表格和任务列表的 GitHub Flavored Markdown（GFM）。[CommonMark 规范](https://spec.commonmark.org/0.31.2/)里提到 Reddit、StackOverflow 和 GitHub 上有几百万人在用 Markdown，大致就是你会碰到它的地方。有了这段历史，今天说的「Markdown」指的是一个定义清楚的核心，加上各个应用不一样的扩展，细节见 [CommonMark 与 GFM 有什么区别](/zh/blog/commonmark-vs-gfm/)。
+原始说明在一些地方写得含糊，各家实现不一致。2014 年前后 [CommonMark 项目](https://commonmark.org/)写出了一份没有歧义的规范，GitHub 随后发布了 GitHub Flavored Markdown（GFM），在它的基础上加入了表格和任务列表。[CommonMark 规范](https://spec.commonmark.org/0.31.2/)里提到 Reddit、StackOverflow 和 GitHub 上有几百万人在用 Markdown，大致就是你会碰到它的地方。有了这段历史，今天说的「Markdown」指的是一个定义清楚的核心，加上各个应用不一样的扩展，细节见 [CommonMark 与 GFM 有什么区别](/zh/blog/commonmark-vs-gfm/)。
 
 ## 覆盖大多数写作的十个记号
 
@@ -66,7 +66,7 @@ Markdown 描述的是结构，不是外观。它没法说某张图要离页边 2
 2. 选择「视图」菜单里的「切换预览」，或者按 `⌘3`，编辑区会变成渲染后的页面，再按一次回到源码；「切换分栏」（`⌘\`）可以把源码和预览并排放。
 3. 看预览页上有没有残留的记号，比如多出来的 `**` 或 `#`，它们标出解析器没读懂的位置。
 
-妙言 4.5.0 通过 cmark-gfm 解析器渲染 CommonMark 加表格、任务列表、删除线和脚注，预览里另外有公式、提示框和图表。资料库为空的首次启动时还会生成几篇示例笔记，其中有一篇「妙言 Markdown 语法指南」，可以当范例读。选编辑器可以对照 [Mac 上怎么选 Markdown 编辑器](/zh/blog/markdown-editor-for-mac/)。
+妙言 4.5.0 通过 cmark-gfm 解析器渲染 CommonMark 加表格、任务列表、删除线和脚注，预览里另外有公式、提示框和图表。首次启动且资料库为空时，还会生成几篇示例笔记，其中有一篇「妙言 Markdown 语法指南」，可以当范例读。选编辑器可以对照 [Mac 上怎么选 Markdown 编辑器](/zh/blog/markdown-editor-for-mac/)。
 
 ## 常见问题
 

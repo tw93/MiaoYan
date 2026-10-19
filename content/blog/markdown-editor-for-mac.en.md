@@ -1,4 +1,4 @@
-A good Markdown editor for Mac is one that keeps your notes as ordinary `.md` files in a folder you control, shows you the result without friction, and handles the extras you actually write, such as math and diagrams. Everything else is taste. The real choice is between three styles: a WYSIWYG editor like Typora, a plugin-driven vault like Obsidian, or a source-plus-preview editor like MiaoYan or a code editor with a preview pane. This guide covers the criteria first, then the options, then where MiaoYan fits and where it does not.
+A good Markdown editor for Mac is one that keeps your notes as ordinary `.md` files in a folder you control, shows you the rendered result as you write, and handles the extras you actually write, such as math and diagrams. Everything else is taste. The real choice is between three styles: a WYSIWYG editor like Typora, a plugin-driven vault like Obsidian, or a source-plus-preview editor like MiaoYan or a code editor with a preview pane. This guide covers the criteria first, then the options, then where MiaoYan fits and where it does not.
 
 ## What to look for
 
@@ -74,4 +74,4 @@ Yes, because all of them can read a folder of `.md` files. Keep one editor writi
 
 ### Does native mean better?
 
-Not by itself. A native app avoids bundling a browser engine, but the better question is whether it renders the syntax you write and keeps your files open. MiaoYan has no plugin system, so what it ships is what you get.
+Not by itself. A native app avoids bundling a browser engine, but the better question is whether it renders the syntax you write and keeps your notes as ordinary files you can open anywhere. MiaoYan has no plugin system, so what it ships is what you get.

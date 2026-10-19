@@ -24,7 +24,7 @@ Mac 上多数 Markdown 编辑器自己不做同步，只读一个文件夹，文
 
 ## 主要选项
 
-| 选项 | 风格 | 笔记存放 | 值得知道的 |
+| 选项 | 风格 | 笔记存放 | 备注 |
 |---|---|---|---|
 | Typora | 所见即所得，单窗格 | 文件 | 公式用 MathJax，支持 Mermaid，导出格式多，覆盖 macOS、Windows 和 Linux |
 | Obsidian | 带插件的 Markdown 笔记库 | vault 里的本地 `.md` | 插件很多，Sync 可选付费，官网写的是免费不限量（商用要看它的授权页） |
@@ -43,7 +43,7 @@ Mac 上多数 Markdown 编辑器自己不做同步，只读一个文件夹，文
 
 内置的有 KaTeX 公式、Mermaid、PlantUML 和 Markmap 图表、带反链的 `[[双链]]`、每篇笔记的版本历史、自动排版（`⌘⇧L`）、HTML、PDF 和图片导出、`miao` 命令行工具，还有把带 `---` 分隔符的笔记变成幻灯片的演示模式（见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)）。没有插件系统，没有的功能没办法自己加。
 
-其他设备上，App Store 买一次就覆盖 Mac、iPhone 和 iPad，三端打开同一个笔记文件夹，比如放在 iCloud 云盘里的那个。Mac 版是 MIT 协议，源码在 GitHub 公开，可以从 [App Store 页面](https://apps.apple.com/app/id6759252269) 获取，也可以直接看 [github.com/tw93/MiaoYan](https://github.com/tw93/MiaoYan) 上的代码。
+App Store 买一次就覆盖 Mac、iPhone 和 iPad，三端打开同一个笔记文件夹，比如放在 iCloud 云盘里的那个。Mac 版是 MIT 协议，源码在 GitHub 公开，可以从 [App Store 页面](https://apps.apple.com/app/id6759252269) 获取，也可以直接看 [github.com/tw93/MiaoYan](https://github.com/tw93/MiaoYan) 上的代码。
 
 ## 妙言不适合什么
 

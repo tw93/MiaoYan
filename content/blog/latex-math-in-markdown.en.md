@@ -3,7 +3,7 @@ Write inline math between single dollar signs, like `$E = mc^2$`, and block math
 ## Inline and block math
 
 ```markdown
-The energy is $E = mc^2$ in rest frame.
+The energy is $E = mc^2$ in the rest frame.
 
 $$
 \int_0^1 x^2 \, dx = \frac{1}{3}
@@ -70,7 +70,7 @@ A backslash before the dollar sign tells the renderer to leave it alone. MiaoYan
 
 ## What goes wrong and how to check
 
-1. **Nothing renders and the dollars show.** The closing delimiter is missing or crosses a code span. Math cannot start in a code span and end outside it.
+1. **Nothing renders and the dollar signs show.** The closing delimiter is missing or crosses a code span. Math cannot start in a code span and end outside it.
 2. **The formula is cut after an underscore.** The text was read as Markdown. In MiaoYan this is already protected, but in other apps use `\_` or switch to a block.
 3. **A block formula stays in a paragraph with stray line breaks.** Put `$$` on its own lines with a blank line before and after. MiaoYan also cleans line breaks inside single-paragraph `$$` blocks.
 4. **Unbalanced braces.** Every `{` needs a `}`. The engine will not typeset a formula with unbalanced braces.

@@ -84,7 +84,7 @@ A blank line starts a new paragraph.
 
 In CommonMark, a single newline inside a paragraph is a soft break that renders as a space, and a blank line starts a new paragraph. To force a line break without starting a paragraph, end the line with a backslash or with two spaces; both turn into a `<br>`. Apps differ here. MiaoYan has a Line Break setting in its Editor settings with two options: MiaoYan (the default, each newline starts a new line in the preview) or Github (a new line in the preview needs a blank line). In Github mode MiaoYan follows the CommonMark rule exactly, so a single newline becomes a space and the backslash or two spaces still give you a break. The preview and HTML or PDF export both follow the setting. If your text looks joined together or spread out in one app and not another, this is usually why.
 
-Two pitfalls follow from that. A note written in MiaoYan's default mode can look right in MiaoYan and run together on GitHub or in another editor, which use the soft-break rule, so switch to Github mode while writing anything you will publish elsewhere and the preview will match. And trailing spaces are invisible and often stripped by editors that trim whitespace on save, which is why the backslash is the more reliable way to break a line in a file you share.
+Two pitfalls follow from that. A note written in MiaoYan's default mode can look right in MiaoYan and run together on GitHub or in other editors, which use the soft-break rule, so switch to Github mode while writing anything you will publish elsewhere and the preview will match. And trailing spaces are invisible and often stripped by editors that trim whitespace on save, which is why the backslash is the more reliable way to break a line in a file you share.
 
 ### Escaping
 

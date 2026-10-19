@@ -8,7 +8,7 @@ An inline link puts the destination right after the text, with an optional title
 [MiaoYan on GitHub](https://github.com/tw93/MiaoYan "Source and releases")
 ```
 
-The title may be in double quotes, single quotes or parentheses, and it must be separated from the destination by a space. Most renderers show it as a tooltip, so do not put anything the reader needs only there.
+The title may be in double quotes, single quotes or parentheses, and it must be separated from the destination by a space. Most renderers show it as a tooltip, so do not put anything there that the reader must see.
 
 A reference link moves the destination out of the sentence, which keeps long URLs from cluttering a paragraph and lets several links share one address:
 
@@ -23,7 +23,7 @@ Definitions are not rendered and may sit before or after the links that use them
 
 ## Bare URLs are not the same as links
 
-GitHub turns a plain `https://example.com` into a link, because GFM adds an autolink extension on top of CommonMark. Not every renderer includes it. MiaoYan's renderer attaches four GFM extensions, tables, footnotes, strikethrough and task lists, and no autolink extension, so in the preview and in HTML export a bare address is plain text. The editor pane does turn it into a clickable link, so a URL that works while you type can lose its link once rendered. If a URL must be clickable everywhere, write `<https://example.com>` or `[text](https://example.com)`.
+GitHub turns a plain `https://example.com` into a link, because GFM adds an autolink extension on top of CommonMark. Not every renderer includes it. MiaoYan's renderer attaches four GFM extensions (tables, footnotes, strikethrough and task lists) and no autolink extension, so in the preview and in HTML export a bare address is plain text. The editor pane does turn it into a clickable link, so a URL that works while you type can lose its link once rendered. If a URL must be clickable everywhere, write `<https://example.com>` or `[text](https://example.com)`.
 
 ## Spaces and parentheses in destinations
 
@@ -53,7 +53,7 @@ To see the anchor GitHub generated, hover over the heading and click the link ic
 
 The preview does not use GitHub's slug. In the preview script, each heading gets an `id` equal to its visible text with the outer whitespace trimmed, and a repeated heading gets `-1`, `-2` and so on. Clicks on links that begin with `#` are intercepted, the fragment is URL-decoded, and the page scrolls smoothly to the element it selects.
 
-Three consequences follow from that, read from the source at V4.5.0. A GitHub-style `#install-on-mac` does not match a heading whose id is `Install on Mac`. A fragment with a space in it, such as the decoded `#Install on Mac`, is read as a selector for nested elements and matches nothing, so a heading with several words has no reliable fragment link in the preview. A heading that is one word, or Chinese text with no spaces, works with the text exactly as written: `#Install` or `#快速开始`. If you need a multi-word target in MiaoYan's preview, write `<a id="install"></a>` above the heading and link to `#install`; raw HTML is passed through, and the id is what the preview selects. GitHub documents the `name` attribute for custom anchors, so write both attributes if the note must work in both places.
+Three consequences follow from that, based on the V4.5.0 source. A GitHub-style `#install-on-mac` does not match a heading whose id is `Install on Mac`. A fragment with a space in it, such as the decoded `#Install on Mac`, is read as a selector for nested elements and matches nothing, so a heading with several words has no reliable fragment link in the preview. A heading that is one word, or Chinese text with no spaces, works with the text exactly as written: `#Install` or `#快速开始`. If you need a multi-word target in MiaoYan's preview, write `<a id="install"></a>` above the heading and link to `#install`; raw HTML is passed through, and the id is what the preview selects. GitHub documents the `name` attribute for custom anchors, so write both attributes if the note must work in both places.
 
 This is the one place where a note can look right in MiaoYan and break on GitHub, or the reverse. Test the links where the note will be read.
 

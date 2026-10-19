@@ -8,7 +8,7 @@ MiaoYan keeps up to 20 earlier versions of each note, saved automatically while 
 
 If the note has no snapshots yet, the window says "No Version History" and explains that "Versions are saved automatically every 5 minutes while editing".
 
-Restoring is itself recoverable. Before it replaces the text, MiaoYan saves your current text as a new snapshot, so the restore appears in the same list and you can go back.
+Restoring is itself recoverable. Before it replaces the text, MiaoYan saves your current text as a new snapshot, so your pre-restore text appears in the same list as a new snapshot and you can go back.
 
 ## How it actually works
 
@@ -22,7 +22,7 @@ This is read from the app's source, so it describes behavior rather than promise
 
 **How many.** At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted.
 
-**Renames, moves and deletion.** Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash gives it a new path, and its earlier history stays filed under the old one. The history window then starts again from the new path.
+**Renames, moves and deletions.** Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash gives it a new path, and its earlier history stays filed under the old one. The history window then starts again from the new path.
 
 **The five-minute timer is per session.** The record of when the last snapshot happened lives in memory, so after you quit and reopen the app, the first save of a note can create a snapshot straight away, provided the text differs from the newest saved version.
 

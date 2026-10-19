@@ -17,7 +17,7 @@ The label is only a key that connects the two parts. A number works, and so does
 
 ## Longer footnotes
 
-A footnote can run over more than one line. GitHub's syntax page says to add two spaces at the end of a line to break a line inside a footnote. Pandoc goes further, and later paragraphs of a footnote are indented, and the manual compares this to multi-paragraph list items.
+A footnote can run over more than one line. GitHub's syntax page says to add two spaces at the end of a line to break a line inside a footnote. Pandoc goes further: later paragraphs of a footnote are indented, and the manual compares this to multi-paragraph list items.
 
 ```markdown
 [^longnote]: First paragraph of the note.
@@ -43,11 +43,11 @@ The common mistake is moving a note between these. A note written for MiaoYan or
 
 ## What MiaoYan V4.5.0 does
 
-MiaoYan renders Markdown with a Swift package of cmark-gfm. In `Business/Markdown.swift` at V4.5.0, the parser is created with the footnotes option and then four syntax extensions are attached by name: `table`, `footnotes`, `strikethrough` and `tasklist`. Footnotes are therefore on by default, with no setting to turn on. The parser output goes to HTML with raw HTML allowed, and the web view shows it. HTML export and PDF export build on the same render, so a footnote that works in the preview works there too. cmark-gfm turns each marker into a superscript number linking to the note, and collects the definitions into a numbered list in a `footnotes` section at the end, each with a link back to the text. Clicking a marker in the preview scrolls to its note.
+MiaoYan renders Markdown with a Swift package of cmark-gfm. In `Business/Markdown.swift` at V4.5.0, the parser is created with the footnotes option and then four syntax extensions are attached by name: `table`, `footnotes`, `strikethrough` and `tasklist`. Footnotes are therefore on by default, with no setting to turn on. The parser output goes to HTML with raw HTML allowed, and the web view shows it. HTML export and PDF export build on the same rendering, so a footnote that works in the preview works there too. cmark-gfm turns each marker into a superscript number linking to the note, and collects the definitions into a numbered list in a `footnotes` section at the end, each with a link back to the text. Clicking a marker in the preview scrolls to its note.
 
 The bundled syntax guide that ships with the app also has a Footnotes section with five definitions, which you can open to copy a working pattern. The preview bundle ships no footnote-specific styling, so expect the default look of the page.
 
-One place is different. In slide mode, MiaoYan hands the note to reveal.js's Markdown plugin, which uses the `marked` library, not cmark-gfm. The plugin source at V4.5.0 has no footnote handling, so do not count on footnotes in a deck. If you need citations on slides, put the source in small text under the point, as described in [Markdown to slides](/blog/markdown-to-slides/).
+Slide mode is the exception. There MiaoYan hands the note to reveal.js's Markdown plugin, which uses the `marked` library, not cmark-gfm. The plugin source at V4.5.0 has no footnote handling, so do not count on footnotes in a deck. If you need citations on slides, put the source in small text under the point, as described in [Markdown to slides](/blog/markdown-to-slides/).
 
 ## When a footnote does not render
 

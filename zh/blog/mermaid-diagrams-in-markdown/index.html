@@ -114,7 +114,7 @@ A -&gt; B: message
 ```
 </code></pre>
 <p>想梳理一棵树的时候用 Markmap，关心方框之间谁调用谁、谁接着谁的时候用 Mermaid。</p>
-<p>妙言里不用背这些围栏，输入 <code>/mermaid</code>、<code>/plantuml</code> 或 <code>/markmap</code> 再按 <code>Tab</code> 就会插入模板，也可以在菜单栏的格式里选 Tab快捷输入。</p>
+<p>妙言里不用背这些围栏，输入 <code>/mermaid</code>、<code>/plantuml</code> 或 <code>/markmap</code> 再按 <code>Tab</code> 就会插入模板，也可以在菜单栏「格式」里选「Tab快捷输入」。</p>
 <h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
 <p>带语言名的围栏块对 Markdown 解析器来说只是文本，会输出一个带 <code>language-mermaid</code> 类名的 HTML code 元素。页面加载完以后，预览里的脚本去找这些类名，Mermaid 就调用打包的库把文本变成 SVG 并替换掉代码块，Markmap 用打包的 Markmap 和 d3 文件渲染在同一个位置，PlantUML 则是把文本编码进一个网址，作为图片地址指向 <code>https://www.plantuml.com/plantuml/svg/</code>，图片是从那台服务器取回来的。</p>
 <p>最后这一步是要特别留意的。文本是放在网址里传出去的，图里的任何内容，比如内部服务的名字，在预览渲染的时候都会离开你的 Mac。PlantUML 官方文档说可以自建服务器，但我在妙言的源码里看到公共地址是直接写在预览脚本里的，没有找到可以更改它的设置。私密的架构图就用 Mermaid。</p>
@@ -123,7 +123,7 @@ A -&gt; B: message
 <ul>
 <li><strong>图一直显示成代码。</strong> Mermaid 的话多半是语法错误，妙言在渲染失败时会把原始围栏源码留在原位，不会往页面里塞错误信息，所以看着像普通代码的块就是信号，可以把源码贴到 Mermaid 在线编辑器里，或者对着文档检查。</li>
 <li><strong>流程图被某个节点搞坏。</strong> 检查有没有小写的 <code>end</code>、括号不配对，或者标签里有特殊字符，必要时给标签加引号，比如 <code>A["Cost (USD)"]</code>。</li>
-<li><strong>PlantUML 先显示 Failed to load diagram 然后显示代码。</strong> 服务器连不上或者处于离线状态时，妙言会退回显示源码文本。</li>
+<li><strong>PlantUML 先显示「Failed to load diagram」然后显示代码。</strong> 服务器连不上或者处于离线状态时，妙言会改为显示源码文本。</li>
 <li><strong>Markmap 是空的。</strong> 块里至少要有一个标题或一个列表，根节点通常是第一个 <code>#</code> 标题。</li>
 <li><strong>大图看不清。</strong> 拆开，两张小图比一张四十个节点的图讲得更清楚。</li>
 </ul>

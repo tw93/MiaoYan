@@ -19,7 +19,7 @@ What the iPad app does in version 4.5.0:
 
 - On a wide screen it uses a three-column layout: a sidebar with Notes (recent ones), All Notes, your folders and Trash, a note list, and the note itself.
 - A note opens in a reading view. Tap the edit button to type in a Markdown editor and tap "Done" to finish. The editor shows a save state, "Saving" then "Saved".
-- Notes, folders, rename, move to folder, pin, share and Trash are in the app. Search looks through titles and note bodies locally.
+- The app handles notes, folders, renaming, moving, pinning, sharing and Trash. Search looks through titles and note bodies locally.
 - Settings has an Appearance section for font and size, and a Library section with "Choose Folder…". Its text says MiaoYan reads and writes Markdown files in the folder and that iCloud Drive or your cloud drive app keeps it in sync with Mac.
 - The reader renders tables, footnotes, strikethrough and task lists, highlights code with highlight.js, and draws Mermaid diagrams. `[[Title]]` wikilinks open the target note.
 
@@ -31,7 +31,7 @@ The Mac app reads a folder you choose in Preferences. The iPad app finds the lib
 
 So the sync path is: the Mac saves a `.md` file in iCloud Drive, iCloud uploads it, the iPad sees the file appear and lists it. MiaoYan has no sync of its own. That is why the folder on the Mac must be the same iCloud Drive folder the iPad opens. The details are in [Sync Markdown notes across devices](/blog/sync-markdown-notes-across-devices/).
 
-One more detail: the iPad app first reads the catalog of notes iCloud reports and then their contents. During a first launch it shows "Found N notes…", and until the files arrive search says how many "iCloud notes still downloading; results will improve as they sync." A list that looks short right after install is usually this, not data loss.
+One more detail: the iPad app first reads the catalog of notes iCloud reports and then their contents. During a first launch it shows "Found N notes…", and until the files arrive search shows "iCloud notes still downloading; results will improve as they sync." A list that looks short right after install is usually this, not data loss.
 
 ## When a note does not show up on the other device
 

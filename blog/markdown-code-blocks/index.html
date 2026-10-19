@@ -81,7 +81,7 @@ console.log(&quot;inner&quot;);
 </code></pre>
 <p>Per the CommonMark spec, when the content both begins and ends with a space and is not all spaces, one space is removed from each end. That is why the padding does not show up in the rendered output. Backslash escapes do not work inside a code span, so a backslash followed by an asterisk shows both exactly as typed.</p>
 <h2 id="diff-blocks">Diff blocks</h2>
-<p>Name the language <code>diff</code> and lines that start with <code>+</code> and <code>-</code> get added and removed colors:</p>
+<p>Name the language <code>diff</code> and lines that start with <code>+</code> and <code>-</code> are colored as additions and deletions:</p>
 <pre><code class="language-markdown">```diff
 - timeout: 30
 + timeout: 60
@@ -91,7 +91,7 @@ console.log(&quot;inner&quot;);
 <h2 id="how-miaoyan-renders-code-blocks">How MiaoYan renders code blocks</h2>
 <p>MiaoYan parses Markdown with cmark-gfm, which turns a fenced block into <code>&lt;pre&gt;&lt;code class="language-..."&gt;</code>. The preview then loads highlight.js 11.5.1, the version recorded in the bundle's vendor manifest at V4.5.0, and colors every <code>pre code</code> element. Three behaviors follow from how that library works.</p>
 <p>First, the bundle is a trimmed build, not the full highlight.js catalog. It registers 34 language definitions: Bash, C, C++, C#, CSS, Diff, Go, HTML and XML, INI and TOML, Java, JavaScript, JSON, Kotlin, Less, Lua, Makefile, Markdown, Objective-C, Perl, PHP, PHP template, plain text, Python, Python REPL, R, Ruby, Rust, SCSS, Shell Session, SQL, Swift, TypeScript, Visual Basic .NET and YAML. Common short names such as <code>js</code>, <code>ts</code>, <code>py</code>, <code>sh</code>, <code>yml</code>, <code>md</code>, <code>rs</code> and <code>rb</code> are aliases. There is no Dockerfile or GraphQL definition, for example.</p>
-<p>Second, a language word the bundle does not know turns highlighting off for that block, and the code shows in plain monospace. A block with no language word is the opposite case: highlight.js guesses from the content, which is convenient for a quick snippet and unreliable for short ones. If colors look wrong, add the word.</p>
+<p>Second, a language word the bundle does not know turns highlighting off for that block, and the code shows in plain monospace. A block with no language word is the opposite case: highlight.js guesses from the content, which saves typing but is unreliable when the code is very short. If colors look wrong, add the word.</p>
 <p>Third, long lines wrap instead of scrolling. The stylesheet sets <code>white-space: pre-wrap</code> on code blocks, so a long shell command stays readable without a horizontal scroll bar, at the cost of wrapped lines being harder to tell from separate lines.</p>
 <p>The editor pane colors code separately, using its own highlighter, and only for fences written with backticks. Tilde fences and nested four-backtick fences render correctly in the preview, but the editor's coloring may not match them. It also skips coloring for a block longer than 3000 characters, and for the whole note once it has more than 20 fenced blocks. The preview is the authority on how the note will export.</p>
 <h2 id="mermaid-plantuml-markmap-and-math">Mermaid, PlantUML, Markmap and math</h2>

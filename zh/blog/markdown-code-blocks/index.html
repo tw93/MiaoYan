@@ -54,7 +54,7 @@
     <div class="blog-body">
 <p>用三个反引号（或三个波浪线）把代码包起来，在开头的围栏后面写语言名，结尾用同一种字符、长度不短于开头的围栏收住；代码里本身带围栏时，外层就用更长的围栏。语言名是高亮器判断怎么上色的唯一线索，所以要权衡的是，你写的这个块是到哪都能用，还是只在自己的预览里好看。</p>
 <h2 id="围栏代码块和缩进代码块">围栏代码块和缩进代码块</h2>
-<p>围栏块以三个或更多反引号、波浪线开头，并以一行匹配的围栏结束。</p>
+<p>围栏块以三个或更多反引号或波浪线开头，并以一行匹配的围栏结束。</p>
 <pre><code class="language-markdown">```python
 def greet(name):
     return f&quot;hello {name}&quot;
@@ -80,7 +80,7 @@ console.log(&quot;inner&quot;);
 <p>行内代码是一串反引号包住的文字。文字里有反引号时，用更长的一串来开头和结尾，并在内容两侧各补一个空格，免得分隔符贴到内容上。</p>
 <pre><code class="language-markdown">用 `` `git log` `` 查看历史。
 </code></pre>
-<p>按 CommonMark 规范，内容两端都是空格且不全是空格时，会各去掉一个空格，所以补的空格不会出现在渲染结果里。代码片段里的反斜杠转义不生效，反斜杠后面跟星号会原样显示两个字符。</p>
+<p>按 CommonMark 规范，内容两端都是空格且不全是空格时，会各去掉一个空格，所以补的空格不会出现在渲染结果里。行内代码里的反斜杠转义不生效，反斜杠后面跟星号会原样显示两个字符。</p>
 <h2 id="diff-代码块">diff 代码块</h2>
 <p>语言名写 <code>diff</code>，以 <code>+</code> 和 <code>-</code> 开头的行会分别按新增和删除上色。</p>
 <pre><code class="language-markdown">```diff
@@ -92,14 +92,14 @@ console.log(&quot;inner&quot;);
 <h2 id="妙言怎么渲染代码块">妙言怎么渲染代码块</h2>
 <p>妙言用 cmark-gfm 解析 Markdown，围栏块会变成 <code>&lt;pre&gt;&lt;code class="language-..."&gt;</code>，预览再加载 highlight.js 11.5.1（V4.5.0 里 vendor 清单记录的版本）给每个 <code>pre code</code> 上色。下面三个行为都来自这个库本身的工作方式。</p>
 <p>第一，内置的是裁剪过的版本，不是 highlight.js 的完整语言库，一共注册了 34 种语言定义，Bash、C、C++、C#、CSS、Diff、Go、HTML 和 XML、INI 和 TOML、Java、JavaScript、JSON、Kotlin、Less、Lua、Makefile、Markdown、Objective-C、Perl、PHP、PHP 模板、纯文本、Python、Python REPL、R、Ruby、Rust、SCSS、Shell 会话、SQL、Swift、TypeScript、Visual Basic .NET 和 YAML。<code>js</code>、<code>ts</code>、<code>py</code>、<code>sh</code>、<code>yml</code>、<code>md</code>、<code>rs</code>、<code>rb</code> 这些常见短名是别名，像 Dockerfile 和 GraphQL 就不在里面。</p>
-<p>第二，写了一个库里不认识的语言名，这个块会关闭高亮，按普通等宽字体显示；不写语言名则是另一种情况，highlight.js 会根据内容猜，贴一小段代码时省事，短代码上并不可靠，颜色不对就补上语言名。</p>
+<p>第二，写了一个库里不认识的语言名，这个块会关闭高亮，按普通等宽字体显示；不写语言名则是另一种情况，highlight.js 会根据内容猜，临时贴代码时省事，但内容很短时猜得不准，颜色不对就补上语言名。</p>
 <p>第三，长行会换行而不是横向滚动，样式表给代码块设了 <code>white-space: pre-wrap</code>，长命令不用拖滚动条也能读完，代价是换行出来的行和真正的新行不太好区分。</p>
 <p>编辑区的代码着色是另一套高亮器，而且只认反引号写的围栏，波浪线围栏和四个反引号的嵌套写法在预览里渲染正确，编辑区里的着色可能对不上。单个代码块超过 3000 个字符时它会跳过着色，一篇笔记里围栏块超过 20 个时整篇都不再着色，最终导出成什么样，以预览为准。</p>
 <h2 id="mermaidplantumlmarkmap-和公式">Mermaid、PlantUML、Markmap 和公式</h2>
 <p>有些语言名做的不只是上色，<code>mermaid</code>、<code>plantuml</code> 和 <code>markmap</code> 会被妙言的图表脚本接管，换成一张图。Mermaid 和 Markmap 用内置的 JavaScript 渲染，PlantUML 则会生成指向 plantuml.com 公共服务的链接，需要联网，图的文本也会离开你的 Mac。Mermaid 解析失败时，预览会把源码留在块里，不会弹出错误页，细节见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
 <p>公式不是围栏语法，美元符号包起来的公式在代码之外处理。妙言的公式处理会跳过行内代码和围栏块，所以代码块里的 <code>$</code> 是安全的，写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
 <h2 id="复制和导出">复制和导出</h2>
-<p>V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反方向上，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的围栏。</p>
+<p>V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反过来，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的围栏。</p>
 <p>「导出」子菜单里有 HTML、图片和 PDF，PDF 的细节见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。导出的 HTML 文件会从妙言的 CDN 加载高亮和图表脚本，所以打开那个文件时，要联网才有颜色和图。</p>
 <h2 id="容易出错的地方">容易出错的地方</h2>
 <ul>

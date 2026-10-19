@@ -76,7 +76,7 @@ make test
 **这不是粗体**，星号会原样显示。
 &lt;/details&gt;
 </code></pre>
-<p>粗体那一行仍属于 HTML 块，星号就被原样打印出来；在 <code>&lt;/summary&gt;</code> 后面加一个空行，HTML 块就在那里结束，下一段重新按 Markdown 解析，<code>&lt;/details&gt;</code> 前面也要再留一个空行，免得闭合标签和最后一段粘在一起。</p>
+<p>粗体那一行仍属于 HTML 块，星号就被原样显示出来；在 <code>&lt;/summary&gt;</code> 后面加一个空行，HTML 块就在那里结束，下一段重新按 Markdown 解析，<code>&lt;/details&gt;</code> 前面也要再留一个空行，免得闭合标签和最后一段粘在一起。</p>
 <p>标题行也是同样的道理，<code>&lt;summary&gt;</code> 那一行属于 HTML 块，里面的 Markdown 不会转换，要加粗就写 <code>&lt;b&gt;构建&lt;/b&gt;</code>，要写代码就用 <code>&lt;code&gt;make&lt;/code&gt;</code>，不要写 <code>**构建**</code> 或反引号。</p>
 <h2 id="嵌套和能放什么">嵌套和能放什么</h2>
 <p><code>&lt;details&gt;</code> 可以嵌套，外层内容和内层开始标签之间留一个空行，每一层的标签各占一行。</p>
@@ -100,7 +100,7 @@ macOS 的细节。
 <p>在编辑器里输入 <code>/fold</code> 再按 <code>Tab</code> 就会插入这段结构，内容就是上面那个模板，包含 <code>&lt;details&gt;</code>、带选中占位文字的 <code>&lt;summary&gt;</code>、一个空行、一行正文和结束标签。<a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>里把这个快捷输入和其他斜杠命令放在一起列了。</p>
 <p>有两处容易踩坑。一是折叠状态下的标题是隐藏的，预览的目录用的是会跳过隐藏标题的选项，所以这样的标题在展开之前可能不会出现在目录里；二是从网页复制折叠区块再粘贴时，妙言的 HTML 转 Markdown 会把 <code>details</code> 和 <code>summary</code> 当成普通容器，标题和内容变成普通段落，折叠效果没有了，想保留就自己敲 HTML。</p>
 <h2 id="导出和打印">导出和打印</h2>
-<p>「导出」子菜单有 HTML、图片和 PDF，V4.5.0 里图片和 PDF 都从预览当下的样子出发。图片是给预览页面截一张快照，PDF 是把预览当前的 HTML 拷进打印流程，中间没有任何展开 <code>&lt;details&gt;</code> 的处理。点击标题时浏览器会给这个元素加上或去掉 <code>open</code> 属性，所以在预览里点开的块导出时是展开的，收起的块导出后只剩标题那一行。如果导出时只开着编辑区，妙言会先打开预览，这时没写 <code>open</code> 的块都是收起的。</p>
+<p>「导出」子菜单有 HTML、图片和 PDF，V4.5.0 里图片和 PDF 都以预览当前的样子为准。图片是给预览页面截一张快照，PDF 是把预览当前的 HTML 拷进打印流程，中间没有任何展开 <code>&lt;details&gt;</code> 的处理。点击标题时浏览器会给这个元素加上或去掉 <code>open</code> 属性，所以在预览里点开的块导出时是展开的，收起的块导出后只剩标题那一行。如果导出时只开着编辑区，妙言会先打开预览，这时没写 <code>open</code> 的块都是收起的。</p>
 <p>内容必须出现在纸面上时，这些块就写成 <code>&lt;details open&gt;</code>，预览和导出里都会默认展开，PDF 的其他设置见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
 <h2 id="可访问性">可访问性</h2>
 <p>原生 <code>&lt;details&gt;</code> 是一个展开控件，按 MDN 的说明，读者可以点击它，或聚焦后按空格键切换，元素里的内容会成为 <code>&lt;summary&gt;</code> 的可访问描述，比自己拼的开关要好，前提是标题写得有用。标题写清里面是什么，比如「Linux 构建步骤」，不要写「点击这里」或「更多」，也要写短，因为收起时只有这行文字可见。</p>
@@ -108,7 +108,7 @@ macOS 的细节。
 <h2 id="容易出错的地方">容易出错的地方</h2>
 <ul>
 <li>块里的 Markdown 显示成原始符号，多半是 <code>&lt;/summary&gt;</code> 后面或 <code>&lt;/details&gt;</code> 前面少了空行。</li>
-<li>在妙言里正常，换个地方变成一堆平铺文字，是那个渲染器会去掉或转义原始 HTML，要在读者实际看的地方测试。</li>
+<li>在妙言里正常，换个地方变成一堆平铺文字，是换到的那个渲染器会去掉或转义原始 HTML，要在读者实际看的地方测试。</li>
 <li>PDF 里少了内容，是导出时块处于收起状态，先在预览里点开，或者加 <code>open</code> 属性。</li>
 <li>折叠区里的围栏代码块乱了，在开头围栏前留一个空行，并让围栏和周围文字缩进一致。</li>
 </ul>
@@ -123,7 +123,7 @@ macOS 的细节。
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-code-blocks/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 代码块：围栏、语言标记与嵌套</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-escape-characters/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转义字符：反斜杠、实体与行内代码</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-code-blocks/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 代码块：围栏、语言标记与嵌套</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-escape-characters/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转义字符：反斜杠、实体与行内代码</span><span class="blog-related-meta">约 3 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

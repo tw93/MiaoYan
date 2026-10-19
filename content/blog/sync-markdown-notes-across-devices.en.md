@@ -5,7 +5,7 @@ MiaoYan does not sync anything itself. It reads and writes one folder of Markdow
 | Method | Best for | Watch out for |
 | --- | --- | --- |
 | iCloud Drive | Mac, iPhone and iPad, no setup beyond signing in | Files "optimized" away from the Mac need to be downloaded before they can be read |
-| Nutstore (坚果云) | Users in mainland China who want a folder synced by its desktop client | The folder must be the local one the desktop client syncs, not a web view |
+| Nutstore (坚果云) | Users in mainland China who want a folder synced by its desktop client | The folder must be the local one the desktop client syncs, not the web interface |
 | Dropbox | Mixed Mac, Windows and Linux machines | Conflicts show up as "conflicted copy" files |
 | git | People who want history and are fine syncing by hand | Nothing is automatic: you commit, pull and push yourself |
 

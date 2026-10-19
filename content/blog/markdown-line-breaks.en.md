@@ -50,7 +50,7 @@ Prefer a blank line when you mean a paragraph, and a backslash when you mean a b
 
 One boundary applies. The CommonMark spec says neither hard-break syntax works at the end of a paragraph or another block such as a heading, because there is no following line to break into, and a backslash inside code is just a backslash.
 
-## How to check which mode a file assumes
+## How to check which mode a renderer uses
 
 You cannot tell from the file, so test the renderer. Put three short lines in a scratch note with no blank lines between them:
 

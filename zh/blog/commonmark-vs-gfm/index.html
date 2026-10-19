@@ -69,7 +69,7 @@
 </ul>
 <p><strong>应用扩展</strong>就是其余的一切。脚注、美元符号公式、<code>&gt; [!NOTE]</code> 提示框、双链、Mermaid 图表都很常见，但没有一个写在 CommonMark 或 GFM 规范里。GitHub 自己的语法文档里写了脚注和提示框，那是 GitHub 的功能，不属于已发布的 GFM 规范。</p>
 <h2 id="妙言-450-实现到哪一层">妙言 4.5.0 实现到哪一层</h2>
-<p>妙言用 cmark-gfm 渲染 Markdown。4.5.0 的源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>，输出 HTML 时用的是允许原始 HTML 通过的选项，由此有两点。</p>
+<p>妙言用 cmark-gfm 渲染 Markdown。4.5.0 的源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。</p>
 <ul>
 <li>扩展自动链接没有挂上，所以裸 URL 不会被解析器变成链接，要写 <code>&lt;https://example.com&gt;</code> 或者普通链接。</li>
 <li>tagfilter 也没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，<code>&lt;details&gt;</code> 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。</li>
@@ -78,7 +78,7 @@
 <figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/commonmark-vs-gfm-mobile.webp" width="600" height="1282"><img src="/img/blog/commonmark-vs-gfm.webp" width="1000" height="336" loading="lazy" alt="Markdown 笔记依次经过公式保护、带四个扩展的 cmark-gfm 解析器、提示框改写，再由运行 KaTeX、图表脚本和 highlight.js 的网页视图生成预览。"></picture><figcaption>解析器负责 CommonMark 加表格、脚注、删除线和任务列表，公式、提示框和图表是在它前后额外加的。</figcaption></figure>
 
 <p>妙言设置里还有一项「换行方式」，两个选项是「妙言」和「Github」，底层是在「每个换行都当成换行」和「换行当成空格」之间切换，后者就是 CommonMark 的规则，实际效果在<a href="/zh/blog/markdown-cheat-sheet/">语法速查</a>里有讲。</p>
-<p>双链（<code>[[项目计划]]</code>）会被妙言索引用来生成反向链接，见<a href="/zh/blog/wikilinks-and-backlinks/">双链与反向链接</a>，它不在 CommonMark 或 GFM 里，没实现的渲染器会把方括号原样显示。</p>
+<p>妙言会索引双链（<code>[[项目计划]]</code>）来生成反向链接，见<a href="/zh/blog/wikilinks-and-backlinks/">双链与反向链接</a>，双链不在 CommonMark 或 GFM 里，没实现的渲染器会把方括号原样显示。</p>
 <h2 id="怎么写出可移植的-markdown">怎么写出可移植的 Markdown</h2>
 <p>可移植的意思是文件当纯文本读也顺，在你会用到的应用里渲染一致，几个习惯就够用了。</p>
 <ol>
@@ -124,7 +124,7 @@ graph LR
   A --&gt; B
 ```
 </code></pre>
-<p>结果这样读。两行连成一行说明应用遵循 CommonMark 的软换行规则，两行分开说明它在每个换行处断行；表格或任务框显示成文字，说明缺 GFM 扩展；<code>www.example.com</code> 有没有变成链接，能看出有没有扩展自动链接；引用块里还显示着 <code>[!NOTE]</code>，说明没有提示框；美元符号原样出现是没有公式，代码块里显示 Mermaid 源码是没有图表。</p>
+<p>结果这样读。两行连成一行说明应用遵循 CommonMark 的软换行规则，两行分开说明它在每个换行处断行；表格或任务框显示成文字，说明缺 GFM 扩展；<code>www.example.com</code> 有没有变成链接，能看出有没有扩展自动链接；引用块里还显示着 <code>[!NOTE]</code>，说明没有提示框；美元符号原样出现，说明没有公式渲染；代码块里显示 Mermaid 源码，说明没有图表渲染。</p>
 <p>在妙言 4.5.0 里，表格、任务框和删除线会渲染，<code>www.example.com</code> 保持纯文本，脚注、提示框、公式和图表会渲染，两行是连起来还是分开取决于换行方式设置。</p>
 <h2 id="其他工具有什么不同">其他工具有什么不同</h2>
 <p>GitHub 渲染 GFM 规范，它的<a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax" target="_blank" rel="noopener">语法文档</a>另外写了脚注和五种提示框，GFM 规范本身也说明 GitHub 在转成 HTML 之后还会做后处理和净化。</p>

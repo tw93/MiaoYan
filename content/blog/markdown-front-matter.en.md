@@ -27,7 +27,7 @@ There is no universal key list, because each generator defines its own.
 | Jekyll | YAML between triple dashes | `layout`, `title`, `date`, `published` |
 | Astro | YAML, or TOML | custom properties such as a title, description and tags |
 
-Hugo's documentation says it determines the format by looking at the delimiters, so `+++` means TOML, and it lists `date`, `draft`, `title` and `weight` as the most common fields. Jekyll uses `layout` and `title` in its basic example, `date` as a post variable, and `published: false` to keep a post out of the generated site. Astro's Markdown guide says frontmatter defines custom properties such as a title, description and tags, which your own components then read.
+Hugo's documentation says it determines the format by looking at the delimiters, so `+++` means TOML, and it lists `date`, `draft`, `title` and `weight` as the most common fields. Jekyll uses `layout` and `title` in its basic example, `date` as a post variable, and `published: false` to keep a post out of the generated site. Astro's Markdown guide says front matter defines custom properties such as a title, description and tags, which your own components then read.
 
 TOML front matter looks like this:
 

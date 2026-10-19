@@ -14,7 +14,7 @@ That is the whole format. Obsidian takes the same view: its documentation says n
 
 **Backups.** A folder of small text files is the easiest thing to back up. Time Machine, a cloud drive or a git repository all treat it as ordinary files, and a restored backup is immediately usable.
 
-**No lock-in, no data collection.** MiaoYan reads and writes your notes in the folder you choose. Its README states that notes are Markdown files in a folder you choose, with no data collection.
+**No lock-in, no data collection.** MiaoYan reads and writes your notes in the folder you choose. Its README says the notes are Markdown files and that MiaoYan collects no data.
 
 ## What it costs
 

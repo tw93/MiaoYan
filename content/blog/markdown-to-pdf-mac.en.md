@@ -18,7 +18,7 @@ Mermaid and Markmap run from scripts in the app. Printing waits until Mermaid bl
 
 PlantUML diagrams are fetched from `https://www.plantuml.com/plantuml/svg/`, so they need a network and the source leaves the Mac. [Mermaid diagrams in Markdown](/blog/mermaid-diagrams-in-markdown/) separates the three.
 
-A relative image is resolved in the note's project folder. `/i/photo.png` drops the leading slash and becomes `i/photo.png` there. A full path is used when the file exists. A missing local file is replaced by a box labeled `Image Not Found`. Images further down the document are lazy-loaded with a placeholder and `data-src`; export copies `data-src` back to `src` because the print view never scrolls. Tables are forced to the page width, the on-screen table of contents is hidden, and links lose their underline.
+A relative image is resolved in the note's project folder. `/i/photo.png` drops the leading slash and becomes `i/photo.png` there. A full path is used when the file exists. A missing local file is replaced by a box labeled `Image Not Found`. Every image after the first is lazy-loaded with a placeholder and `data-src`; export copies `data-src` back to `src` because the print view never scrolls. Tables are forced to the page width, the on-screen table of contents is hidden, and links lose their underline.
 
 The paper is A4, 595.2 by 841.8 points, with margins of 40, 48, and 45 points (top, bottom, sides), noted as 14 mm, 17 mm, and 16 mm. The print panel stays hidden, wide content is scaled to the page, and the background stays white in a dark preview. Text keeps the Preview Font from settings, with PingFang SC and Hiragino Sans GB behind it for Chinese. Headings h1 through h3 become an outline, with each bookmark's page estimated from the heading's height in the unpaged document, so an image or an unbreakable block can shift it by one page. A gray 8.5 pt footer reads `1 / N`. The PDF title is the export title, and the creator is MiaoYan.
 
@@ -34,7 +34,7 @@ MiaoYan renders the note with cmark-gfm, raw HTML included, then a web view runs
 
 Pandoc's default converts Markdown to LaTeX and runs `pdflatex`, so TeX has to be on `PATH`. `--pdf-engine` selects the program. The manual includes `pdflatex`, `xelatex`, `lualatex`, `weasyprint`, and `wkhtmltopdf`. With no `-t` flag the engine is `pdflatex`. For `-t html` the default is `weasyprint`, with `wkhtmltopdf` among the other HTML engines. The manual also says `wkhtmltopdf` is deprecated and should not be used on untrusted input.
 
-LaTeX takes paper, margins, and fonts as variables, and a missing package stops in the TeX log. An HTML engine prints a styled page, and `--css` is how you change it. Write `-s -o test.tex` and run `pdflatex test.tex` to inspect the middle file.
+LaTeX takes paper, margins, and fonts as variables, and a missing package stops in the TeX log. An HTML engine prints a styled page, and `--css` is how you change it. Write `-s -o test.tex` and run `pdflatex test.tex` to inspect the intermediate `.tex` file.
 
 ## Pandoc, Typora, VS Code, and the print dialog
 
@@ -56,7 +56,7 @@ Typora exports from File > Export > PDF. Export > PDF in preferences sets paper 
 
 In VS Code, yzane's Markdown PDF extension puts `markdown-pdf: Export (pdf)` on the editor's right-click menu and in the palette opened with F1. It prints through Chrome, Edge, Chromium, or a Chromium it downloads. Math is KaTeX with no network, Mermaid fences are included but the Mermaid script loads from a CDN by default (`markdown-pdf.mermaidServer`), and `markdown-pdf.displayHeaderFooter` defaults to true.
 
-MiaoYan has no File > Print, so this route runs in another app that opens the note. Apple's Mac User Guide saves a printable document from File > Print, then the PDF menu, Save as PDF, and the same Print dialog is where paper size is chosen. MiaoYan's HTML export is a poor choice to open in a browser and print: its base URL is `https://cdn.miaoyan.app/Resources/DownView.bundle/`, and local images are not rewritten to `file://`, so `images/fig.png` is not found beside the HTML in Downloads.
+MiaoYan has no File > Print, so this route runs in another app that opens the note. Apple's Mac User Guide gives this route for any printable document: File > Print, then the PDF menu, Save as PDF, and the same Print dialog is where paper size is chosen. MiaoYan's HTML export is a poor choice to open in a browser and print: its base URL is `https://cdn.miaoyan.app/Resources/DownView.bundle/`, and local images are not rewritten to `file://`, so `images/fig.png` is not found beside the HTML in Downloads.
 
 ## What goes wrong
 

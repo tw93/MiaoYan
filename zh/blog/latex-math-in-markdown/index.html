@@ -28,7 +28,7 @@
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
 <link rel="stylesheet" href="/site.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里写 LaTeX 公式", "item": "https://miaoyan.app/zh/blog/latex-math-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/latex-math-in-markdown/#article", "headline": "Markdown 里写 LaTeX 公式", "description": "行内与块级公式的写法、常用 LaTeX 结构、美元符号和下划线的坑，以及妙言如何用 KaTeX 渲染。", "url": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的公式需要联网吗", "acceptedAnswer": {"@type": "Answer", "text": "不需要，KaTeX 随应用打包。这一类功能里需要联网的是 PlantUML，它会发到公共服务器渲染。"}}, {"@type": "Question", "name": "KaTeX 和 MathJax 怎么选", "acceptedAnswer": {"@type": "Answer", "text": "需要某个只有 MathJax 才有的扩展，就用提供它的编辑器。普通的代数、微积分、矩阵和对齐公式，KaTeX 够用而且渲染快。"}}, {"@type": "Question", "name": "怎么写字面的美元符号", "acceptedAnswer": {"@type": "Answer", "text": "前面加反斜杠写成 \\$5，或者放进行内代码。"}}, {"@type": "Question", "name": "公式能自动编号吗", "acceptedAnswer": {"@type": "Answer", "text": "Typora 官网说开启后可以自动给公式编号。妙言没有公式编号的设置，KaTeX 在部分环境里支持用 \\tag{1} 给行加标签，可以手动编号。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里写 LaTeX 公式", "item": "https://miaoyan.app/zh/blog/latex-math-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/latex-math-in-markdown/#article", "headline": "Markdown 里写 LaTeX 公式", "description": "行内与块级公式的写法、常用 LaTeX 结构、美元符号和下划线的坑，以及妙言如何用 KaTeX 渲染。", "url": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的公式需要联网吗", "acceptedAnswer": {"@type": "Answer", "text": "不需要，KaTeX 随应用打包。这一类功能里需要联网的是 PlantUML，它会发到公共服务器渲染。"}}, {"@type": "Question", "name": "KaTeX 和 MathJax 怎么选", "acceptedAnswer": {"@type": "Answer", "text": "需要某个只有 MathJax 才有的扩展，就用提供它的编辑器。普通的代数、微积分、矩阵和对齐公式，KaTeX 够用而且渲染快。"}}, {"@type": "Question", "name": "怎么写出美元符号本身", "acceptedAnswer": {"@type": "Answer", "text": "前面加反斜杠写成 \\$5，或者放进行内代码。"}}, {"@type": "Question", "name": "公式能自动编号吗", "acceptedAnswer": {"@type": "Answer", "text": "Typora 官网说开启后可以自动给公式编号。妙言没有公式编号的设置，KaTeX 在部分环境里支持用 \\tag{1} 给行加标签，可以手动编号。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -128,7 +128,7 @@ $$
 <p>妙言分两步做这件事。先用一个预处理找出代码段和代码块之外的公式范围，跳过被转义的定界符，把里面的内容挡在解析器之外。解析后的 HTML 再装进网页视图，由 KaTeX 的 auto-render 脚本扫描四对定界符，替换成排好版的结果。KaTeX 默认忽略 <code>code</code> 和 <code>pre</code> 标签，所以代码块里的公式不会被渲染。</p>
 <p>引擎之间的差别也在这里。KaTeX 快，同步渲染，支持 LaTeX 的一个子集。MathJax 是另一个常见引擎，Typora 官网说它支持大部分 MathJax 扩展，包括 mhchem 和 AMSmath。公式如果来自用了冷门宏包的论文，先在编辑器里实测，再决定能不能依赖。妙言内置的 KaTeX 0.16.0 完全从应用内文件运行。</p>
 <h2 id="美元符号和价格">美元符号和价格</h2>
-<p>单个 <code>$</code> 同时也是货币符号，这是最常见的坑。妙言对此有一道保护，美元符号后面跟着数字，数字后面又不是数学的延续字符，就当作货币处理，所以 <code>It costs $5 today</code> 保持文本，<code>$2+2$</code> 仍然是公式，因为数字后面的 <code>+</code> 算作数学延续。别的编辑器未必有这道保护，笔记要在各处都正常显示的话，最好手动加上反斜杠转义。</p>
+<p>单个 <code>$</code> 同时也是货币符号，这是最常见的坑。妙言对此有一道保护，美元符号后面跟着数字，数字后面又不是数学的延续字符，就当作货币处理，所以 <code>It costs $5 today</code> 保持纯文本，<code>$2+2$</code> 仍然是公式，因为数字后面的 <code>+</code> 算作数学延续。别的编辑器未必有这道保护，笔记要在各处都正常显示的话，最好手动加上反斜杠转义。</p>
 <pre><code class="language-markdown">门票 \$5，升级版 \$10。
 </code></pre>
 <p>美元符号前面加反斜杠就是告诉渲染器不要动它。妙言开启了转义处理，预处理也会跳过被转义的定界符。</p>
@@ -136,11 +136,11 @@ $$
 <ol>
 <li><strong>什么都没渲染，美元符号原样显示。</strong> 结束定界符缺失，或者跨过了代码段，公式不能在代码段里开始、在外面结束。</li>
 <li><strong>公式在某个下划线处被截断。</strong> 文本被当成了 Markdown，妙言已经做了保护，其他应用里可以写成 <code>\_</code> 或改用块级。</li>
-<li><strong>块级公式留在段落里并多出换行。</strong> 把 <code>$$</code> 各占一行，前后空一行。妙言也会清理单段 <code>$$</code> 块里的换行。</li>
+<li><strong>块级公式留在段落里并多出换行。</strong> 让 <code>$$</code> 各占一行，前后空一行。妙言也会清理单段 <code>$$</code> 块里的换行。</li>
 <li><strong>花括号错误。</strong> 每个 <code>{</code> 都要有对应的 <code>}</code>，括号不配对时引擎不会排版。</li>
 <li><strong>某个命令没有效果。</strong> 该命令可能不在 KaTeX 的支持列表里，先查 KaTeX 的 Supported Functions 页面，再判断是不是 bug。</li>
 </ol>
-<p>想验证安装是否正常，新建一篇笔记贴上下面三段，按 <code>⌘3</code> 进入预览或按 <code>⌘\</code> 打开分栏。</p>
+<p>想确认公式渲染是否正常，新建一篇笔记贴上下面三段，按 <code>⌘3</code> 进入预览或按 <code>⌘\</code> 打开分栏。</p>
 <pre><code class="language-markdown">行内：$\sqrt{2}$
 
 $$
@@ -161,7 +161,7 @@ $$
 <p>不需要，KaTeX 随应用打包。这一类功能里需要联网的是 PlantUML，它会发到公共服务器渲染。</p>
 <h3 id="katex-和-mathjax-怎么选">KaTeX 和 MathJax 怎么选</h3>
 <p>需要某个只有 MathJax 才有的扩展，就用提供它的编辑器。普通的代数、微积分、矩阵和对齐公式，KaTeX 够用而且渲染快。</p>
-<h3 id="怎么写字面的美元符号">怎么写字面的美元符号</h3>
+<h3 id="怎么写出美元符号本身">怎么写出美元符号本身</h3>
 <p>前面加反斜杠写成 <code>\$5</code>，或者放进行内代码。</p>
 <h3 id="公式能自动编号吗">公式能自动编号吗</h3>
 <p>Typora 官网说开启后可以自动给公式编号。妙言没有公式编号的设置，KaTeX 在部分环境里支持用 <code>\tag{1}</code> 给行加标签，可以手动编号。</p>

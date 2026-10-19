@@ -12,7 +12,7 @@ Bear 官方 FAQ 把标签比作话题标签，在笔记任何位置输入 `#tag`
 
 Bear 在 iOS 和 macOS 上都把笔记放在一个 SQLite 数据库里，Mac 上的位置是 `~/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite`。官方页面说只读访问数据库是安全的，建议多数用户不要改它，真要改就先复制一份并退出 Bear。
 
-这是它和「一堆文件」最大的区别，Bear 里的笔记不是访达里看得见、也不是能直接用 `grep` 搜的文件。笔记还是你的，只是要走 Bear 的导出拿出来，而不是复制文件。
+这是它和「一堆文件」最大的区别，Bear 里的笔记不是访达里看得见，也不是能直接用 `grep` 搜的文件。笔记还是你的，只是要走 Bear 的导出拿出来，而不是复制文件。
 
 ## 先把笔记导出来
 

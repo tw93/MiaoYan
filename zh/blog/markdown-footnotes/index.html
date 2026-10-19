@@ -60,7 +60,7 @@
 [^size]: CommonMark 规范把图片定义为带描述的链接。
 [^html]: `&lt;img width&gt;` 的写法见图片那篇。
 </code></pre>
-<p>标记 <code>[^size]</code> 紧跟在要解释的词或标点后面，定义可以放在任何独占一行的位置，常见的做法是放在段落下面或整篇笔记末尾。GitHub 的文档明确说过，定义写在哪里不会影响脚注渲染的位置，所以紧挨着引用写也会出现在页面底部。</p>
+<p>标记 <code>[^size]</code> 紧跟在要解释的词或标点后面，定义可以放在任何独占一行的位置，常见的做法是放在段落下面或整篇笔记末尾。GitHub 的文档明确说过，定义写在哪里不会影响脚注渲染的位置，所以紧挨着标记写也会出现在页面底部。</p>
 <p>标签只是用来把两边连起来的键，数字可以，<code>[^size]</code> 这样的单词也可以。Pandoc 手册规定标识符里不能有空格、制表符、换行以及 <code>^</code>、<code>[</code>、<code>]</code>，输出时脚注一律按顺序编号，和你写的标签无关。脚注超过五六条以后，用有含义的标签会省事很多，中间插一条也不用重新排号。</p>
 <h2 id="比较长的脚注">比较长的脚注</h2>
 <p>脚注可以跨多行。GitHub 的语法页说，要在脚注里换行，行尾加两个空格；Pandoc 走得更远，脚注的后续段落要缩进，手册把它类比为多段落的列表项。</p>
@@ -68,7 +68,7 @@
 
     第二段，缩进四个空格。
 </code></pre>
-<p>多段落写法是 Pandoc 文档里的，GitHub 那页没有讲。妙言 V4.5.0 用的 cmark-gfm 会把缩进的第二段留在同一条脚注里，不缩进的段落回到正文。换别的渲染器时，在大篇幅依赖它之前先试一条长脚注。Pandoc 还有行内脚注 <code>^[脚注内容]</code>，不需要标签和单独的定义，但它是 Pandoc 的扩展，流程里没有 Pandoc 就用不上。</p>
+<p>多段落写法是 Pandoc 文档里的，GitHub 那页没有讲。妙言 V4.5.0 用的 cmark-gfm 会把缩进的第二段留在同一条脚注里，不缩进的段落回到正文。换别的渲染器时，大量使用多段脚注之前，先试一条长脚注。Pandoc 还有行内脚注 <code>^[脚注内容]</code>，不需要标签和单独的定义，但它是 Pandoc 的扩展，流程里没有 Pandoc 就用不上。</p>
 <h2 id="各处的支持情况">各处的支持情况</h2>
 <table>
 <thead>
@@ -124,7 +124,7 @@
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-escape-characters/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转义字符：反斜杠、实体与行内代码</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-front-matter/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown front matter 写法与渲染</span><span class="blog-related-meta">约 3 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-escape-characters/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转义字符：反斜杠、实体与行内代码</span><span class="blog-related-meta">约 3 分钟</span></a></li><li><a href="/zh/blog/markdown-front-matter/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown front matter 写法与渲染</span><span class="blog-related-meta">约 3 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

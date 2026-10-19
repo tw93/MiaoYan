@@ -22,7 +22,7 @@ For each `<img>` the preview checks the `src` value. An `http://` or `https://` 
 
 [[figure:markdown-images|Pasted images are copied into an i/ folder and referenced in the note text; the preview resolves the reference against the note's folder, PDF export prints the preview, and HTML export cannot find local images.|Pasting copies the file into i/ and writes its path into the note, so the preview and PDF find it, while HTML export does not.]]
 
-The consequence is simple. A note that uses `/i/harbor.jpg` or `i/harbor.jpg` works on any Mac as long as the `i/` folder travels with the note. A note that uses `/Users/you/Pictures/harbor.jpg` works only on the Mac that has that file, and shows the placeholder everywhere else.
+A note that uses `/i/harbor.jpg` or `i/harbor.jpg` works on any Mac as long as the `i/` folder travels with the note. A note that uses `/Users/you/Pictures/harbor.jpg` works only on the Mac that has that file, and shows the placeholder everywhere else.
 
 ## Why images break when a note moves
 

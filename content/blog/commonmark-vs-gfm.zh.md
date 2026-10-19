@@ -24,7 +24,7 @@ John Gruber 在 2004 年发布 Markdown，当时是一份语法说明加一个 P
 
 ## 妙言 4.5.0 实现到哪一层
 
-妙言用 cmark-gfm 渲染 Markdown。4.5.0 的源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，`table`、`footnotes`、`strikethrough` 和 `tasklist`，输出 HTML 时用的是允许原始 HTML 通过的选项，由此有两点。
+妙言用 cmark-gfm 渲染 Markdown。4.5.0 的源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，`table`、`footnotes`、`strikethrough` 和 `tasklist`，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。
 
 - 扩展自动链接没有挂上，所以裸 URL 不会被解析器变成链接，要写 `<https://example.com>` 或者普通链接。
 - tagfilter 也没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，`<details>` 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。
@@ -35,7 +35,7 @@ John Gruber 在 2004 年发布 Markdown，当时是一份语法说明加一个 P
 
 妙言设置里还有一项「换行方式」，两个选项是「妙言」和「Github」，底层是在「每个换行都当成换行」和「换行当成空格」之间切换，后者就是 CommonMark 的规则，实际效果在[语法速查](/zh/blog/markdown-cheat-sheet/)里有讲。
 
-双链（`[[项目计划]]`）会被妙言索引用来生成反向链接，见[双链与反向链接](/zh/blog/wikilinks-and-backlinks/)，它不在 CommonMark 或 GFM 里，没实现的渲染器会把方括号原样显示。
+妙言会索引双链（`[[项目计划]]`）来生成反向链接，见[双链与反向链接](/zh/blog/wikilinks-and-backlinks/)，双链不在 CommonMark 或 GFM 里，没实现的渲染器会把方括号原样显示。
 
 ## 怎么写出可移植的 Markdown
 
@@ -88,7 +88,7 @@ graph LR
 ```
 ````
 
-结果这样读。两行连成一行说明应用遵循 CommonMark 的软换行规则，两行分开说明它在每个换行处断行；表格或任务框显示成文字，说明缺 GFM 扩展；`www.example.com` 有没有变成链接，能看出有没有扩展自动链接；引用块里还显示着 `[!NOTE]`，说明没有提示框；美元符号原样出现是没有公式，代码块里显示 Mermaid 源码是没有图表。
+结果这样读。两行连成一行说明应用遵循 CommonMark 的软换行规则，两行分开说明它在每个换行处断行；表格或任务框显示成文字，说明缺 GFM 扩展；`www.example.com` 有没有变成链接，能看出有没有扩展自动链接；引用块里还显示着 `[!NOTE]`，说明没有提示框；美元符号原样出现，说明没有公式渲染；代码块里显示 Mermaid 源码，说明没有图表渲染。
 
 在妙言 4.5.0 里，表格、任务框和删除线会渲染，`www.example.com` 保持纯文本，脚注、提示框、公式和图表会渲染，两行是连起来还是分开取决于换行方式设置。
 

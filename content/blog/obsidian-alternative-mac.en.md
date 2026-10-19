@@ -31,7 +31,7 @@ If you rely on one of these, MiaoYan is not a drop-in replacement, and staying w
 
 ## Migrating a vault
 
-An Obsidian vault is a folder, so migration mostly means pointing MiaoYan at it. Obsidian's documentation notes that notes are plain text Markdown files in the vault and settings live in `.obsidian`.
+An Obsidian vault is a folder, so migration mostly means pointing MiaoYan at it. Obsidian's documentation says notes are plain text Markdown files in the vault and settings live in `.obsidian`.
 
 1. **Copy first.** Duplicate the vault folder in Finder. Work on the copy until you are satisfied. Notes are files, so this is the whole backup.
 2. **Point MiaoYan at it.** Open Preferences with Command comma, click "Change" next to "Note Location", choose the copy, then click "Confirm" when MiaoYan asks to restart.
@@ -64,7 +64,7 @@ rg -n --glob '*.md' '\[\[[^]]*[|#^]' .
 
 Because both apps use the same files, you can keep Obsidian for the notes that need plugins and open the same folder in MiaoYan for fast reading and writing. Avoid editing the same note in both at once. If MiaoYan has the note open when another app changes it, MiaoYan reloads from disk and backs up your unsaved text to `.miaoyan-conflicts`, but it is cleaner not to rely on that.
 
-## A fair comparison
+## Side by side
 
 | | Obsidian | MiaoYan |
 | --- | --- | --- |

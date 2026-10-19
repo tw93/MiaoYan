@@ -31,7 +31,7 @@ This differs from Obsidian. Obsidian documents `[[Example|Custom name]]` for dis
 
 ## How MiaoYan implements them
 
-Here is how it works, read from the source.
+Here is how it works, based on the source.
 
 **Pattern matching.** The editor and the index both look for `[[` followed by text and `]]`. The editor highlights the title as a link while you write. The index uses a separate pattern that takes any run of characters that is not a closing bracket, trims surrounding spaces, and treats the result as the target title.
 

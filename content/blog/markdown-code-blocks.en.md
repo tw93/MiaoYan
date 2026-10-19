@@ -50,7 +50,7 @@ Per the CommonMark spec, when the content both begins and ends with a space and 
 
 ## Diff blocks
 
-Name the language `diff` and lines that start with `+` and `-` get added and removed colors:
+Name the language `diff` and lines that start with `+` and `-` are colored as additions and deletions:
 
 ````markdown
 ```diff
@@ -67,7 +67,7 @@ MiaoYan parses Markdown with cmark-gfm, which turns a fenced block into `<pre><c
 
 First, the bundle is a trimmed build, not the full highlight.js catalog. It registers 34 language definitions: Bash, C, C++, C#, CSS, Diff, Go, HTML and XML, INI and TOML, Java, JavaScript, JSON, Kotlin, Less, Lua, Makefile, Markdown, Objective-C, Perl, PHP, PHP template, plain text, Python, Python REPL, R, Ruby, Rust, SCSS, Shell Session, SQL, Swift, TypeScript, Visual Basic .NET and YAML. Common short names such as `js`, `ts`, `py`, `sh`, `yml`, `md`, `rs` and `rb` are aliases. There is no Dockerfile or GraphQL definition, for example.
 
-Second, a language word the bundle does not know turns highlighting off for that block, and the code shows in plain monospace. A block with no language word is the opposite case: highlight.js guesses from the content, which is convenient for a quick snippet and unreliable for short ones. If colors look wrong, add the word.
+Second, a language word the bundle does not know turns highlighting off for that block, and the code shows in plain monospace. A block with no language word is the opposite case: highlight.js guesses from the content, which saves typing but is unreliable when the code is very short. If colors look wrong, add the word.
 
 Third, long lines wrap instead of scrolling. The stylesheet sets `white-space: pre-wrap` on code blocks, so a long shell command stays readable without a horizontal scroll bar, at the cost of wrapped lines being harder to tell from separate lines.
 

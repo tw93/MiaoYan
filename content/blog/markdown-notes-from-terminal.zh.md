@@ -25,11 +25,11 @@ miao update               # 更新 CLI
 
 **`miao list`** 不带参数时，打印笔记库里含有 Markdown 笔记的顶层文件夹。`miao list Projects` 打印该文件夹下直接包含的 Markdown 文件，路径相对于笔记库根目录。放在笔记库根目录的笔记默认不显示，CLI 会提示用 `miao list .` 把它们列出来。
 
-**`miao search`** 以 `路径:行号:内容` 的形式打印匹配，路径相对于笔记库根目录。如果装了 ripgrep（`rg`）就用它做固定字符串匹配，查询里的特殊字符不会被当成正则，没有 ripgrep 则退回 `grep`，`Trash` 文件夹里的文件会被排除。没有匹配时会向标准错误输出「No matches found」并以非零状态退出。
+**`miao search`** 以 `路径:行号:内容` 的形式打印匹配，路径相对于笔记库根目录。如果装了 ripgrep（`rg`）就用它做固定字符串匹配，查询里的特殊字符不会被当成正则，没有 ripgrep 则回退到 `grep`，`Trash` 文件夹里的文件会被排除。没有匹配时会向标准错误输出「No matches found」并以非零状态退出。
 
 **`miao cat`** 把整个文件连同 front matter 一起打印到标准输出，参数可以是路径、相对笔记库的路径或标题。标题按去掉 `.md` 的文件名匹配，完全一致的标题会解析到找到的第一个。
 
-**`miao open`** 在妙言里打开解析到的文件或文件夹。参数不是路径时，退回到 `miaoyan://goto/<标题>` 这个地址，wikilink 走的也是这条路（见 [Wikilink 与反向链接](/zh/blog/wikilinks-and-backlinks/)）。
+**`miao open`** 在妙言里打开解析到的文件或文件夹。参数不是路径时，回退到 `miaoyan://goto/<标题>` 这个地址，wikilink 走的也是这条路（见 [Wikilink 与反向链接](/zh/blog/wikilinks-and-backlinks/)）。
 
 **`miao new`** 用标题和可选的正文拼出一个 `miaoyan://new/` 地址交给应用，所以要装有妙言。正文是第二个参数，记得加引号。
 
@@ -43,7 +43,7 @@ CLI 不需要配置，但知道它怎么找笔记库，出问题时就好排查�
 2. 否则通过 `defaults read com.tw93.miaoyan` 读取妙言在你选择文件夹时保存的 `storageUrl` 偏好设置。
 3. 如果这样依然拿不到文件夹，再依次尝试 `~/Documents/MiaoYan`、`~/Save/MiaoYan` 和 `~/MiaoYan`。
 
-都不存在时，它会打印「Error: Notes directory not found.」并提示设置 `MIAOYAN_PATH`。笔记库放在不常见的位置时，包括 CLI 不会去找的妙言自己的 iCloud 云盘文件夹，可以写进 shell 配置：
+都不存在时，它会打印「Error: Notes directory not found.」并提示设置 `MIAOYAN_PATH`。笔记库放在不常见的位置时（包括 CLI 不会去找的妙言自己的 iCloud 云盘文件夹），把路径写进 shell 配置：
 
 ```bash
 export MIAOYAN_PATH="$HOME/Notes"
@@ -88,7 +88,7 @@ miao open "$(miao search 'quarterly review' | head -1 | cut -d: -f1)"
 
 ## 配合 AI 编码 Agent
 
-笔记库是个文件夹，能读文件的 Agent 本来就能读你的笔记。CLI 的帮助在两处，`miao search` 和 `miao list` 让 Agent 不用遍历整棵目录树就能用很少的开销看清笔记库的结构，`miao open` 则把结果展示给你看。
+笔记库是个文件夹，能读文件的 Agent 本来就能读你的笔记。CLI 能帮上忙的有两处，`miao search` 和 `miao list` 让 Agent 不用遍历整棵目录树就能用很少的开销看清笔记库的结构，`miao open` 则把结果展示给你看。
 
 妙言还发布了一个 Agent skill，教 Agent 认识妙言的语法，包括按精确标题写的 wikilink、放在 `i/` 文件夹里以 `/i/<文件名>` 引用的本地图片、数学公式和图表围栏、PPT 的分页符，以及 CLI 命令。安装方式：
 

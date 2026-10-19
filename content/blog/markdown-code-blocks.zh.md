@@ -2,7 +2,7 @@
 
 ## 围栏代码块和缩进代码块
 
-围栏块以三个或更多反引号、波浪线开头，并以一行匹配的围栏结束。
+围栏块以三个或更多反引号或波浪线开头，并以一行匹配的围栏结束。
 
 ````markdown
 ```python
@@ -46,7 +46,7 @@ console.log("inner");
 用 `` `git log` `` 查看历史。
 ```
 
-按 CommonMark 规范，内容两端都是空格且不全是空格时，会各去掉一个空格，所以补的空格不会出现在渲染结果里。代码片段里的反斜杠转义不生效，反斜杠后面跟星号会原样显示两个字符。
+按 CommonMark 规范，内容两端都是空格且不全是空格时，会各去掉一个空格，所以补的空格不会出现在渲染结果里。行内代码里的反斜杠转义不生效，反斜杠后面跟星号会原样显示两个字符。
 
 ## diff 代码块
 
@@ -67,7 +67,7 @@ console.log("inner");
 
 第一，内置的是裁剪过的版本，不是 highlight.js 的完整语言库，一共注册了 34 种语言定义，Bash、C、C++、C#、CSS、Diff、Go、HTML 和 XML、INI 和 TOML、Java、JavaScript、JSON、Kotlin、Less、Lua、Makefile、Markdown、Objective-C、Perl、PHP、PHP 模板、纯文本、Python、Python REPL、R、Ruby、Rust、SCSS、Shell 会话、SQL、Swift、TypeScript、Visual Basic .NET 和 YAML。`js`、`ts`、`py`、`sh`、`yml`、`md`、`rs`、`rb` 这些常见短名是别名，像 Dockerfile 和 GraphQL 就不在里面。
 
-第二，写了一个库里不认识的语言名，这个块会关闭高亮，按普通等宽字体显示；不写语言名则是另一种情况，highlight.js 会根据内容猜，贴一小段代码时省事，短代码上并不可靠，颜色不对就补上语言名。
+第二，写了一个库里不认识的语言名，这个块会关闭高亮，按普通等宽字体显示；不写语言名则是另一种情况，highlight.js 会根据内容猜，临时贴代码时省事，但内容很短时猜得不准，颜色不对就补上语言名。
 
 第三，长行会换行而不是横向滚动，样式表给代码块设了 `white-space: pre-wrap`，长命令不用拖滚动条也能读完，代价是换行出来的行和真正的新行不太好区分。
 
@@ -81,7 +81,7 @@ console.log("inner");
 
 ## 复制和导出
 
-V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反方向上，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的围栏。
+V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反过来，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的围栏。
 
 「导出」子菜单里有 HTML、图片和 PDF，PDF 的细节见 [在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。导出的 HTML 文件会从妙言的 CDN 加载高亮和图表脚本，所以打开那个文件时，要联网才有颜色和图。
 

@@ -23,7 +23,7 @@ Markmap's own documentation describes it as a combination of Markdown and mind m
 ```
 ````
 
-The first `#` heading becomes the root, `##` headings are its branches, and list items hang below the nearest heading. Lists nest by indentation, two spaces per level is the habit used here. You can mix levels: a list under a `##` heading is one level deeper than the heading.
+The first `#` heading becomes the root, `##` headings are its branches, and list items hang below the nearest heading. Lists nest by indentation, two spaces per level is the convention used here. You can mix levels: a list under a `##` heading is one level deeper than the heading.
 
 You do not have to type the fence. In MiaoYan, type `/markmap` and press `Tab`, or open the Tab Quick Input submenu in the Format menu and pick "/markmap - Mind Map". It inserts a small template with a root, two branches and three items, with the root title selected; the placeholder text is in Chinese.
 
