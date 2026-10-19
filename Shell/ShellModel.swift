@@ -430,12 +430,13 @@ final class ShellModel {
         guard let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
             return false
         }
-        let skipFolders: Set<String> = ["assets", ".cache", "i", ".Trash", "files"]
+        let skipFolders: Set<String> = [".cache", "i", ".Trash", "files"]
         for case let child as URL in enumerator {
             let name = child.lastPathComponent
             guard !skipFolders.contains(name), !name.hasPrefix("."),
                 let values = try? child.resourceValues(forKeys: Set(keys)),
                 values.isDirectory == true, values.isPackage == false,
+                !Storage.isHiddenAssetsFolder(child, allowedExtensions: allowedExtensions),
                 !isAttachmentOnlyFolder(child, allowedExtensions: allowedExtensions)
             else { continue }
             return true

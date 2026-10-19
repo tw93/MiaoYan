@@ -99,13 +99,14 @@ class Storage {
         guard let enumerator = FileManager.default.enumerator(at: project.url, includingPropertiesForKeys: keys, options: options) else {
             return []
         }
-        let skipFolders: Set<String> = ["assets", ".cache", "i", ".Trash", "files"]
+        let skipFolders: Set<String> = [".cache", "i", ".Trash", "files"]
         var found: [Project] = []
         for case let url as URL in enumerator {
             let name = url.lastPathComponent
             guard !skipFolders.contains(name), !name.hasPrefix("."),
                 let values = try? url.resourceValues(forKeys: Set(keys)),
                 values.isDirectory == true, values.isPackage == false,
+                !Self.isHiddenAssetsFolder(url, allowedExtensions: allowedExtensions),
                 !isAttachmentOnlyFolder(url: url)
             else { continue }
             // The library scan registers folders under the path as listed; a
@@ -1256,7 +1257,7 @@ class Storage {
             extensions.append(ext)
         }
         // Specific folder names to skip
-        let skipFolders = Set(["assets", ".cache", "i", ".Trash", "files"])
+        let skipFolders = Set([".cache", "i", ".Trash", "files"])
 
         var subDirs = [NSURL]()
 
@@ -1266,6 +1267,7 @@ class Storage {
 
             // Skip check for specific folder names
             if skipFolders.contains(fileURL.lastPathComponent) { continue }
+            if Self.isHiddenAssetsFolder(fileURL, allowedExtensions: allowedExtensions) { continue }
 
             do {
                 let resourceValues = try fileURL.resourceValues(forKeys: Set(keys))
@@ -1298,6 +1300,16 @@ class Storage {
         }
 
         return subDirs
+    }
+
+    /// `assets` usually holds a page's images, often in subfolders the
+    /// attachment-only check below lets through, so it stays out of the
+    /// sidebar unless notes sit directly in it: a folder of notes someone
+    /// named assets used to disappear.
+    nonisolated static func isHiddenAssetsFolder(_ url: URL, allowedExtensions: [String]) -> Bool {
+        guard url.lastPathComponent == "assets" else { return false }
+        let children = (try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])) ?? []
+        return !children.contains { allowedExtensions.contains($0.pathExtension.lowercased()) }
     }
 
     /// True when `url` is a leaf folder that holds only attachment-style files:

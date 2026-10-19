@@ -54,6 +54,33 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertTrue(names.contains("unused.png"), "an image nothing references is still found")
     }
 
+    // MARK: - Which folders are listed
+
+    /// `assets` is hidden as an image folder, but a folder of notes that
+    /// happens to carry the name must still be listed.
+    @MainActor
+    func testAssetsFolderIsListedOnlyWhenItHoldsNotes() throws {
+        let manager = FileManager.default
+        let notes = tempDir.appendingPathComponent("Notes/assets", isDirectory: true)
+        let media = tempDir.appendingPathComponent("Site/assets/img", isDirectory: true)
+        try manager.createDirectory(at: notes, withIntermediateDirectories: true)
+        try manager.createDirectory(at: media, withIntermediateDirectories: true)
+        try "# Idea\n".write(to: notes.appendingPathComponent("idea.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: media.appendingPathComponent("logo.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+        let folders = storage.subfolders(of: root)
+        let notesFolder = try XCTUnwrap(folders.first { $0.label == "Notes" })
+        let siteFolder = try XCTUnwrap(folders.first { $0.label == "Site" })
+
+        XCTAssertEqual(storage.subfolders(of: notesFolder).map(\.label), ["assets"], "a folder of notes named assets is listed")
+        XCTAssertTrue(storage.subfolders(of: siteFolder).isEmpty, "an assets folder of images stays hidden")
+        XCTAssertEqual(storage.getSubFolders(url: notesFolder.url)?.map { $0.lastPathComponent }, ["assets"])
+        XCTAssertEqual(storage.getSubFolders(url: siteFolder.url)?.count, 0)
+    }
+
     // MARK: - Moving a note carries its images
 
     private struct Folders {
