@@ -168,13 +168,14 @@ def fmt_date(d, lang):
 
 def minutes(slug, lang):
     """Reading time from the Markdown source, as on mole.fit: Chinese counts
-    characters at 500 a minute, words at 200."""
+    Han at 300 a minute plus words at 200, so a translation shows about the
+    same minutes as its English (500 read about 40% shorter)."""
     text = re.sub(r"```.*?```", " ", source(slug, lang), flags=re.S)
     text = FIGURE_RE.sub(" ", text)
     words = len(re.findall(r"[A-Za-z0-9]+", text))
     if lang == "zh":
         chars = len(re.findall(r"[㐀-䶿一-鿿]", text))
-        return max(1, round(chars / 500 + words / 200))
+        return max(1, round(chars / 300 + words / 200))
     return max(1, round(words / 200))
 
 
