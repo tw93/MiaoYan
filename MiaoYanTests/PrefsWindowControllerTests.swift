@@ -84,6 +84,45 @@ final class PrefsWindowControllerTests: XCTestCase {
         XCTAssertEqual(UserDefaultsManagement.fontName, FontConfiguration.defaultEditorFont)
     }
 
+    /// A chosen face that was missing appears: the shell re-renders, as the
+    /// storyboard window does from its own observer. Unrelated font changes
+    /// rebuild nothing.
+    @available(macOS 14, *)
+    @MainActor
+    func testShellRerendersWhenAMissingChosenFaceAppears() {
+        let defaults = UserDefaults.standard
+        let original = defaults.object(forKey: "fontName")
+        defer {
+            if let original { defaults.set(original, forKey: "fontName") } else { defaults.removeObject(forKey: "fontName") }
+            NotesTextProcessor.hl = nil
+            NotesTextProcessor.refreshFonts()
+        }
+        defaults.set("NoSuchFace-Regular", forKey: "fontName")
+        let model = ShellModel()
+        let revision = model.interfaceRevision
+        let style = model.previewStyleRevision
+
+        model.installedFontsDidChange()
+        XCTAssertEqual(model.interfaceRevision, revision, "nothing chosen appeared")
+
+        // The face is no longer missing, as when it gets installed.
+        defaults.set("Helvetica", forKey: "fontName")
+        model.installedFontsDidChange()
+        XCTAssertEqual(model.interfaceRevision, revision + 1)
+        XCTAssertEqual(model.previewStyleRevision, style + 1)
+    }
+
+    /// Both windows read fonts migrated before either opens.
+    func testFontMigrationRunsAtLaunchForEitherWindow() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let delegate = try String(contentsOf: root.appendingPathComponent("Controllers/AppDelegate.swift"), encoding: .utf8)
+        let start = try XCTUnwrap(delegate.range(of: "func applicationWillFinishLaunching("))
+        let end = try XCTUnwrap(delegate.range(of: "\n    }\n", range: start.upperBound..<delegate.endIndex))
+        XCTAssertTrue(delegate[start.upperBound..<end.lowerBound].contains("UserDefaultsManagement.migrateFontDefaultsIfNeeded()"))
+        let controller = try String(contentsOf: root.appendingPathComponent("Controllers/ViewController.swift"), encoding: .utf8)
+        XCTAssertFalse(controller.contains("migrateFontDefaultsIfNeeded()"), "runs once, at launch")
+    }
+
     @MainActor
     func testTheDefaultFaceWaitingToBeInstalledSelectsItsRow() throws {
         guard !FontCatalog.isInstalled(family: FontCatalog.retiredBundledFamily) else {

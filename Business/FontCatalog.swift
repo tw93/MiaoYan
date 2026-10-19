@@ -82,6 +82,13 @@ enum FontCatalog {
         NSFontManager.shared.availableFontFamilies.contains(family)
     }
 
+    /// Faces chosen in Settings that are not installed right now; a window
+    /// re-renders when one of them appears.
+    @MainActor
+    static func missingChosenFonts() -> Set<String> {
+        Set(UserDefaultsManagement.chosenFontNames.filter { NSFont(name: $0, size: 12) == nil && !isInstalled(family: $0) })
+    }
+
     /// What to show for a family. macOS carries localized names in the font's own
     /// name table, so a Chinese user reads 苹方-简 and 宋体-简 rather than
     /// PingFang SC and Songti SC, and this works for third-party faces too

@@ -351,13 +351,13 @@ class ViewController:
     /// installed) takes over as soon as it is installed, without a restart or picking it
     /// again. Unrelated font installs change nothing and redraw nothing.
     private func observeChosenFontInstalls() {
-        missingChosenFonts = Self.missingFonts()
+        missingChosenFonts = FontCatalog.missingChosenFonts()
         fontSetObserver = NotificationCenter.default.addObserver(
             forName: NSFont.fontSetChangedNotification, object: nil, queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self else { return }
-                let missing = Self.missingFonts()
+                let missing = FontCatalog.missingChosenFonts()
                 let appeared = !self.missingChosenFonts.subtracting(missing).isEmpty
                 self.missingChosenFonts = missing
                 guard appeared else { return }
@@ -367,12 +367,7 @@ class ViewController:
         }
     }
 
-    private static func missingFonts() -> Set<String> {
-        Set(UserDefaultsManagement.chosenFontNames.filter { NSFont(name: $0, size: 12) == nil && !FontCatalog.isInstalled(family: $0) })
-    }
-
     override func viewDidLoad() {
-        UserDefaultsManagement.migrateFontDefaultsIfNeeded()
         observeChosenFontInstalls()
         appContext.bind(viewController: self)
         // Hide empty state UI (no longer used)

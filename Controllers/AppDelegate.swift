@@ -52,6 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         migratePreferences()
+        UserDefaultsManagement.migrateFontDefaultsIfNeeded()
         UserDefaultsManagement.clearSingleMode()
         let storage = appContext.storage
         storage.loadProjects()

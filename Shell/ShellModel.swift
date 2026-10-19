@@ -1013,6 +1013,12 @@ final class ShellModel {
                 guard let self else { return }
                 // A drop on the Trash can take notes other than the open one.
                 self.selectedNoteURL = Self.selection(afterRemoving: removed, from: listed, selected: open)
+                // The list is empty: the editor lets the removed note go, as
+                // the storyboard window's delete does.
+                let held = [self.editor.textView.storageNote, EditTextView.note].compactMap { $0?.url }
+                if self.selectedNoteURL == nil, held.contains(where: removed.contains) {
+                    self.editor.clear()
+                }
                 // The Trash row comes and goes with its notes; once it is
                 // gone, All Notes is chosen, as in the storyboard sidebar.
                 self.reload()
@@ -1335,6 +1341,25 @@ final class ShellModel {
         } else if !UserDefaultsManagement.splitViewMode, editorMode == .split {
             editorMode = .edit
         }
+    }
+
+    /// Chosen faces that were not installed when last checked.
+    @ObservationIgnored private var missingChosenFonts = FontCatalog.missingChosenFonts()
+
+    /// The installed fonts changed. ViewController's rule: a chosen face that
+    /// was missing (TsangerJinKai02 picked before it is installed) takes over
+    /// at once; unrelated installs change nothing. This window re-renders
+    /// itself only, since the storyboard window's observer does its own.
+    func installedFontsDidChange() {
+        let missing = FontCatalog.missingChosenFonts()
+        let appeared = !missingChosenFonts.subtracting(missing).isEmpty
+        missingChosenFonts = missing
+        guard appeared else { return }
+        NotesTextProcessor.hl = nil
+        NotesTextProcessor.refreshFonts()
+        applyEditorSettings()
+        // The interface face is stored under the same name before and after.
+        interfaceRevision &+= 1
     }
 
     /// ⌘+ / ⌘- / ⌘0, the storyboard window's zoom: editor and preview move

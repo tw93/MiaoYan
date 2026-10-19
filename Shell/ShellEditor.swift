@@ -111,6 +111,12 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         textView.drawsBackground = true
         textView.backgroundColor = ShellPalette.background
         textView.insertionPointColor = .textColor
+        // The rest of the storyboard text view's attributes (Main.storyboard)
+        // that a text view made in code does not share.
+        textView.isAutomaticTextCompletionEnabled = false
+        textView.importsGraphics = true
+        textView.allowsDocumentBackgroundColorChange = true
+        textView.allowsCharacterPickerTouchBarItem = false
         textView.configureOnLoad()
 
         // ViewController.configureEditor
@@ -123,6 +129,11 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         textView.isAutomaticDashSubstitutionEnabled = false
         textView.textStorage?.delegate = textView.textStorage
         textView.linkTextAttributes = [.foregroundColor: Theme.highlightColor]
+        // ViewController.configureLayout: images scale down to the column,
+        // and nothing is editable until a note is filled in.
+        textView.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
+        textView.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
+        textView.isEditable = false
 
         super.init()
         textView.delegate = self
@@ -181,19 +192,55 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
             storage.containsAttachments
             ? NSMutableAttributedString(attributedString: storage).unLoadImages().unLoadCheckboxes().string : storage.string
         guard buffer != note.content.string else { return }
-        let selection = textView.selectedRange()
         reload(note)
-        let length = (textView.string as NSString).length
-        textView.setSelectedRange(NSRange(location: min(selection.location, length), length: 0))
     }
 
-    /// Reloads `note` into the buffer after it changed on disk, keeping the
-    /// scroll position.
+    private var reloadEpoch = 0
+
+    /// Reloads `note` into the buffer (a zoom, a font or appearance change,
+    /// new text from disk), keeping the scroll position and, as
+    /// `ViewController.refillEditArea` does, the live caret rather than the
+    /// cursor saved on disk. A selection survives when the text is the same;
+    /// new text keeps only the caret.
     func reload(_ note: Note) {
+        reloadEpoch &+= 1
+        let epoch = reloadEpoch
+        // A file changed outside is read after an await inside fill, which
+        // would then put back the saved cursor once this had returned. Read
+        // it first, so the fill below runs at once.
+        guard note.invalidateIfChangedOnDisk() else {
+            applyReload(note)
+            return
+        }
+        Task { [weak self] in
+            await note.ensureContentLoadedAsync()
+            guard let self, self.reloadEpoch == epoch, self.textView.storageNote === note else { return }
+            self.applyReload(note)
+        }
+    }
+
+    private func applyReload(_ note: Note) {
         let top = scrollView.contentView.bounds.origin.y
+        let before = textView.string
+        let selection = textView.selectedRange()
         textView.fill(note: note, options: FillOptions(highlight: false, saveTyping: false, force: true, needScrollToCursor: false))
+        if note.isContentLoaded, textView.storageNote === note {
+            let length = (textView.string as NSString).length
+            let location = min(selection.location, length)
+            let kept = textView.string == before ? min(selection.length, length - location) : 0
+            textView.setSelectedRange(NSRange(location: location, length: kept))
+        }
         scrollView.contentView.scroll(to: NSPoint(x: 0, y: top))
         scrollView.reflectScrolledClipView(scrollView.contentView)
+        invalidateLineStarts()
+    }
+
+    /// The storyboard window's empty list after a delete: the buffer and the
+    /// open note are let go, without a save, so nothing can write the removed
+    /// note's text again (#543).
+    func clear() {
+        reloadEpoch &+= 1
+        textView.clear()
         invalidateLineStarts()
     }
 

@@ -132,8 +132,10 @@ class ImagePreviewManager {
     }
 
     private func showImagePreviewTipIfNeeded() {
+        // The shell's editor has no viewDelegate; its window's content
+        // controller is where the shell's own toasts appear.
         guard UserDefaultsManagement.imagePreviewTipShowCount < 2,
-            let viewController = textView?.viewDelegate
+            let viewController = textView?.viewDelegate ?? textView?.window?.contentViewController
         else { return }
 
         UserDefaultsManagement.imagePreviewTipShowCount += 1

@@ -73,6 +73,11 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         ) { [weak self] _ in
             Task { @MainActor in self?.model.applyEditorSettings() }
         }
+        fontSetObserver = NotificationCenter.default.addObserver(
+            forName: NSFont.fontSetChangedNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.model.installedFontsDidChange() }
+        }
         fsManager = FileSystemEventManager(storage: AppEnvironment.current.storage, delegate: self)
         fsManager?.start()
         model.editor.onWillSave = { [weak self] in self?.blockFSUpdates() }
@@ -434,6 +439,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     }
 
     private var settingsObserver: NSObjectProtocol?
+    private var fontSetObserver: NSObjectProtocol?
 
     // MARK: Export
 
