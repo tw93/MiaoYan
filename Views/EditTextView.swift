@@ -42,7 +42,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         static let initialDelay: TimeInterval = 0
         static let fadeDuration: TimeInterval = 0.08
     }
-    public static var note: Note?
+    public static var note: Note? {
+        didSet { publishAccessibilityDocument() }
+    }
+    /// The window title stays "MiaoYan", so the open note is exposed only as the
+    /// window's accessibility document (AXDocument). Time trackers such as Hina
+    /// read it to tell which project the writing belongs to. Setting
+    /// representedURL instead would add a proxy icon to the title bar.
+    private static func publishAccessibilityDocument() {
+        let document = note?.url.absoluteString
+        for window in NSApplication.shared.windows where window.contentViewController is ViewController {
+            window.setAccessibilityDocument(document)
+        }
+    }
     /// Owner of the bytes currently in `textStorage`. In preview, presentation,
     /// and PPT modes `EditTextView.note` follows the list selection while the
     /// storage keeps the last edited note's content (fill() returns before the
