@@ -50,7 +50,7 @@ Mac 上多数 Markdown 编辑器自己不做同步，只读一个文件夹，文
 - 你想要所见即所得，妙言给不了，Typora 可以。
 - 你想要插件生态、图谱定制或者看板，这是 Obsidian 的地盘。
 - 你需要 Windows 或 Linux，妙言只有 Mac、iPhone 和 iPad，Mac 上要求 macOS 12 及以上。
-- 你需要 DOCX 这类文字处理格式，Typora 官网列了 DOCX 和 EPUB，妙言的导出菜单是 HTML、PDF 和图片，另外还有演示文稿用的 PPT PDF。
+- 你需要 DOCX 这类文字处理格式，Typora 官网列了 DOCX 和 EPUB，妙言的导出菜单是 HTML、PDF 和图片，另外还有演示文稿用的 PPT PDF，PDF 能改什么、不能改什么见[在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。
 - 你需要完全离线的 PlantUML，妙言会把 PlantUML 文本发到公共的 plantuml.com 服务器去渲染，这点在图表那篇里有展开。
 
 ## 选之前怎么验证

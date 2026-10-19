@@ -50,7 +50,7 @@ One App Store purchase covers Mac, iPhone and iPad, and all three open the same 
 - You want WYSIWYG. MiaoYan does not offer it, whereas Typora does.
 - You want a plugin ecosystem, graph view customization or Kanban boards. That is Obsidian's territory.
 - You need Windows or Linux. MiaoYan is Mac, iPhone and iPad only, and requires macOS 12 or later on the Mac.
-- You need word-processor export such as DOCX. Typora lists DOCX and EPUB, whereas MiaoYan's export menu offers HTML, PDF and image, plus a PPT PDF for decks.
+- You need word-processor export such as DOCX. Typora lists DOCX and EPUB, whereas MiaoYan's export menu offers HTML, PDF and image, plus a PPT PDF for decks ([Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers what the PDF can and cannot change).
 - You need offline PlantUML. MiaoYan sends PlantUML text to the public plantuml.com server to render it, covered in the diagrams post.
 
 ## How to check an editor before committing

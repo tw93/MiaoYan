@@ -107,7 +107,7 @@ A quick test is to insert `/mermaid` plus `Tab`, switch to preview with `⌘3` o
 
 ## Limits
 
-Mermaid's rendering depends on the version bundled in the app, and the version string is not recorded in the app's manifest, so newer diagram types may be missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter. For deck use, all three diagram types are initialized in presentation mode, covered in [Markdown to slides](/blog/markdown-to-slides/).
+Mermaid's rendering depends on the version bundled in the app, and the version string is not recorded in the app's manifest, so newer diagram types may be missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter; [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers page breaks in a PDF. For deck use, all three diagram types are initialized in presentation mode, covered in [Markdown to slides](/blog/markdown-to-slides/).
 
 Related reading: the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) for the fence syntax and [LaTeX math in Markdown](/blog/latex-math-in-markdown/) for formulas. MiaoYan is on the [App Store](https://apps.apple.com/app/id6759252269), and its source is at [github.com/tw93/MiaoYan](https://github.com/tw93/MiaoYan).
 

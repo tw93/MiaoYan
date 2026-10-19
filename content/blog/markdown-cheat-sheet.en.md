@@ -107,7 +107,7 @@ A table needs a header row and a divider row with the same number of cells. If t
 
 Each cell holds one line of inline Markdown, so emphasis, links, inline code and images work, while lists, code blocks and line breaks do not. Use `<br>` for a line break inside a cell, which MiaoYan renders because its preview allows raw HTML. A literal `|` inside a cell has to be written as `\|`, even inside backticks, or it splits the cell. Merged cells are not part of the syntax; write an HTML `<table>` with `colspan` if you need them.
 
-In MiaoYan's preview, a table spans the width of the note, and a table too wide to fit, for example one with a long formula or URL in a cell, scrolls sideways in its own box instead of widening the page. PDF and image exports cannot scroll, so there the table is fitted to the page width.
+In MiaoYan's preview, a table spans the width of the note, and a table too wide to fit, for example one with a long formula or URL in a cell, scrolls sideways in its own box instead of widening the page. PDF and image exports cannot scroll, so there the table is fitted to the page width, as [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) shows.
 
 ### Task lists
 

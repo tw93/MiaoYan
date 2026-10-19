@@ -42,6 +42,13 @@
       <description>Turn a Markdown note into a slide deck with --- separators, configure reveal.js options, and compare Marp, reveal.js and Slidev.</description>
     </item>
     <item>
+      <title>Markdown to PDF on Mac</title>
+      <link>https://miaoyan.app/blog/markdown-to-pdf-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-to-pdf-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Print a MiaoYan note to a fixed A4 PDF, and switch to Pandoc, Typora, VS Code, or the Mac print dialog for paper size and margins.</description>
+    </item>
+    <item>
       <title>Typora alternative for Mac: split preview with MiaoYan</title>
       <link>https://miaoyan.app/blog/typora-alternative-mac/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/typora-alternative-mac/</guid>

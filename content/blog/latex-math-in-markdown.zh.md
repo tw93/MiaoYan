@@ -94,7 +94,7 @@ $$
 
 - KaTeX 覆盖笔记里的大部分需求，但不是全部 LaTeX，像导言区里用 `\newcommand` 定义的宏和宏包在 Markdown 笔记里无法使用。
 - 公式在预览里渲染，编辑区显示的是源码。
-- PDF、HTML 和图片导出都来自渲染后的预览，重要的公式导出后要看一眼。
+- PDF、HTML 和图片导出都来自渲染后的预览，重要的公式导出后要看一眼，导出 PDF 的细节见[在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。
 
 ## 常见问题
 

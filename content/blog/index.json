@@ -71,6 +71,20 @@
       }
     },
     {
+      "slug": "markdown-to-pdf-mac",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown to PDF on Mac",
+        "description": "Print a MiaoYan note to a fixed A4 PDF, and switch to Pandoc, Typora, VS Code, or the Mac print dialog for paper size and margins."
+      },
+      "zh": {
+        "title": "在 Mac 上把 Markdown 转成 PDF",
+        "description": "妙言把笔记印成固定的 A4 PDF。要改纸张或边距，用 Pandoc、Typora 或别的应用打印。"
+      }
+    },
+    {
       "slug": "typora-alternative-mac",
       "date": "2026-10-19",
       "modified": "2026-10-19",

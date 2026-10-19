@@ -42,6 +42,13 @@
       <description>用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。</description>
     </item>
     <item>
+      <title>在 Mac 上把 Markdown 转成 PDF</title>
+      <link>https://miaoyan.app/zh/blog/markdown-to-pdf-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-to-pdf-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>妙言把笔记印成固定的 A4 PDF。要改纸张或边距，用 Pandoc、Typora 或别的应用打印。</description>
+    </item>
+    <item>
       <title>Mac 上的 Typora 替代品</title>
       <link>https://miaoyan.app/zh/blog/typora-alternative-mac/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/typora-alternative-mac/</guid>

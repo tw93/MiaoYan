@@ -45,6 +45,7 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [LaTeX math in Markdown: syntax, KaTeX and pitfalls](https://miaoyan.app/blog/latex-math-in-markdown/): Write inline and block math in Markdown, use common LaTeX constructs, avoid dollar and underscore pitfalls, and see how MiaoYan renders KaTeX.
 - [Mermaid diagrams in Markdown: flowchart, sequence, Gantt](https://miaoyan.app/blog/mermaid-diagrams-in-markdown/): Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline.
 - [Markdown to slides: --- separators and MiaoYan PPT mode](https://miaoyan.app/blog/markdown-to-slides/): Turn a Markdown note into a slide deck with --- separators, configure reveal.js options, and compare Marp, reveal.js and Slidev.
+- [Markdown to PDF on Mac](https://miaoyan.app/blog/markdown-to-pdf-mac/): Print a MiaoYan note to a fixed A4 PDF, and switch to Pandoc, Typora, VS Code, or the Mac print dialog for paper size and margins.
 - [Typora alternative for Mac: split preview with MiaoYan](https://miaoyan.app/blog/typora-alternative-mac/): Why people leave Typora, WYSIWYG versus split preview, what carries over (files, math, images) and where each app is stronger.
 - [Local-first Markdown notes: keep them as plain files](https://miaoyan.app/blog/local-first-markdown-notes/): Why plain Markdown files in your own folder beat a locked-in notes app, what it costs, and how MiaoYan reads the folder you choose.
 - [Sync Markdown notes across devices without a sync service](https://miaoyan.app/blog/sync-markdown-notes-across-devices/): Use iCloud Drive, Nutstore, Dropbox or git to sync a Markdown notes folder, set MiaoYan's Note Location, and avoid conflict copies.
@@ -58,6 +59,7 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown 里写 LaTeX 公式](https://miaoyan.app/zh/blog/latex-math-in-markdown/): 行内与块级公式的写法、常用 LaTeX 结构、美元符号和下划线的坑，以及妙言如何用 KaTeX 渲染。
 - [Markdown 里画 Mermaid 图](https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/): 用围栏代码块画流程图、时序图和甘特图，对比 PlantUML 与 Markmap，并说明妙言哪些图离线可用。
 - [Markdown 转幻灯片：用 --- 分页](https://miaoyan.app/zh/blog/markdown-to-slides/): 用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。
+- [在 Mac 上把 Markdown 转成 PDF](https://miaoyan.app/zh/blog/markdown-to-pdf-mac/): 妙言把笔记印成固定的 A4 PDF。要改纸张或边距，用 Pandoc、Typora 或别的应用打印。
 - [Mac 上的 Typora 替代品](https://miaoyan.app/zh/blog/typora-alternative-mac/): 为什么有人离开 Typora，所见即所得与分栏预览的取舍，笔记、公式和图片能带走什么，以及两者各自强在哪里。
 - [本地优先的 Markdown 笔记怎么管](https://miaoyan.app/zh/blog/local-first-markdown-notes/): 为什么把笔记存成自己文件夹里的纯 Markdown 文件，要付出什么，以及妙言怎么读取你选的文件夹。
 - [跨设备同步 Markdown 笔记的几种做法](https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/): 用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。

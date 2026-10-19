@@ -94,7 +94,7 @@ If you see a root sign, a sum with limits, and a literal `$5`, the engine and th
 
 - KaTeX covers most of what notes need, but not all of LaTeX. Packages and macros defined with `\newcommand` in a preamble are not part of a Markdown note.
 - Math is rendered in the preview. The editor pane shows raw source.
-- PDF, HTML and image exports are produced from the rendered preview. Check an exported file once to verify any formulas you care about.
+- PDF, HTML and image exports are produced from the rendered preview. Check an exported file once to verify any formulas you care about; [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers the PDF route.
 
 ## FAQ
 

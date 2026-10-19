@@ -107,7 +107,7 @@ Markmap 不太一样，它把普通的 Markdown 大纲变成可交互的思维�
 
 ## 限制
 
-Mermaid 的效果取决于应用打包的版本，而版本号没有记录在应用的清单里，所以较新的图类型可能缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次。做演示文稿时三种图表在演示模式里都会初始化，见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)。
+Mermaid 的效果取决于应用打包的版本，而版本号没有记录在应用的清单里，所以较新的图类型可能缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次，PDF 怎么分页见[在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。做演示文稿时三种图表在演示模式里都会初始化，见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)。
 
 相关阅读有讲围栏语法的 [Markdown 语法速查](/zh/blog/markdown-cheat-sheet/) 和讲公式的 [Markdown 里写 LaTeX 公式](/zh/blog/latex-math-in-markdown/)。妙言在 [App Store](https://apps.apple.com/app/id6759252269) 上，源码在 [github.com/tw93/MiaoYan](https://github.com/tw93/MiaoYan)。
 
