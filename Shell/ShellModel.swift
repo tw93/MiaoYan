@@ -293,6 +293,17 @@ final class ShellModel {
         isSelected(note) ? selectedNotes : [note]
     }
 
+    /// The row under the pointer, so a right-click knows which note it hit.
+    @ObservationIgnored var hoveredNoteURL: URL?
+
+    /// A right-click on a row selects it before its menu opens, keeping a
+    /// multiple selection it is part of, and the list takes the keys, as
+    /// NotesTableView.rightMouseDown does.
+    func selectForMenu(_ note: Note) {
+        if !isSelected(note), !isExporting { selectedNoteURL = note.url }
+        focusRequest = .list
+    }
+
     var selectedNote: Note? {
         guard let url = selectedNoteURL else { return nil }
         return notes.first { $0.url == url }
@@ -831,6 +842,29 @@ final class ShellModel {
     /// A SwiftUI column keyboard commands move focus to; that column takes
     /// focus and clears the request.
     var focusRequest: FocusTarget?
+    /// A focus request waiting for a hidden column to open.
+    @ObservationIgnored private var focusAfterLayout: FocusTarget?
+
+    /// ⌘/, the storyboard window's searchAndCreate: the list comes back if it
+    /// is hidden and the search field takes the keys, also when it is
+    /// already open or holds a query.
+    func focusSearch() {
+        guard !isPresenting else { return }
+        guard layout == .noteOnly else {
+            focusRequest = .search
+            return
+        }
+        isSearchOpen = true
+        focusAfterLayout = .search
+        toggleNoteList()
+    }
+
+    /// The window has finished opening or closing columns.
+    func layoutDidSettle() {
+        guard let target = focusAfterLayout else { return }
+        focusAfterLayout = nil
+        focusRequest = target
+    }
 
     /// Puts the cursor in the editor when it is on screen.
     func focusEditor() {
@@ -1330,9 +1364,10 @@ final class ShellModel {
     /// The storyboard window's Duplicate: the note's current text (unsaved
     /// edits included) and its images, next to it under a free name.
     /// Every one of `notes`, as the storyboard window duplicates the whole
-    /// selection; the last copy opens.
+    /// selection; the copies are listed and the selection stays on the
+    /// originals (NotesTableView.insertNew).
     func duplicate(_ originals: [Note]) {
-        var last: Note?
+        var copied = false
         for note in originals where !note.isTrash() {
             guard let name = note.getDupeName() else { continue }
             if note === EditTextView.note {
@@ -1349,10 +1384,9 @@ final class ShellModel {
             }
             // A successful save adds the copy to storage.
             copy.save()
-            last = copy
+            copied = true
         }
-        guard let last else { return }
-        selectedNoteURL = last.url
+        guard copied else { return }
         refreshNotes(keepSelection: true)
     }
 
@@ -1544,7 +1578,17 @@ final class ShellModel {
         }
     }
 
+    /// What the list was last filled with: a folder's notes, or a search in
+    /// it. The list puts back a folder's scroll place when it returns to it.
+    struct ListContent: Equatable {
+        let scope: Scope
+        let isSearch: Bool
+    }
+
+    private(set) var listContent: ListContent?
+
     private func computeNotes(keepSelection: Bool) async {
+        let listedScope = scope
         let (projects, type) = scopeProjects()
         for project in projects {
             if project.isTrash {
@@ -1589,6 +1633,8 @@ final class ShellModel {
         if !(keepSelection && ordered.contains(where: { $0.url == selectedNoteURL })) {
             selectedNoteURL = ordered.first?.url
         }
+        let content = ListContent(scope: listedScope, isSearch: !terms.isEmpty)
+        if listContent != content { listContent = content }
     }
 
     /// Notes' grouping: pinned first, then Today, Yesterday, the months of

@@ -412,6 +412,9 @@ struct ShellNoteList: View {
     @Bindable var model: ShellModel
     @FocusState private var listFocused: Bool
     @FocusState private var searchFocused: Bool
+    @State private var scrollBox = ShellScrollViewBox()
+    /// Each folder's scroll place, for this session.
+    @State private var scrollOffsets: [ShellModel.Scope: CGFloat] = [:]
 
     var body: some View {
         VStack(spacing: 0) {
@@ -456,17 +459,47 @@ struct ShellNoteList: View {
                                     model.clickNote(note, modifiers: NSEvent.modifierFlags)
                                     listFocused = true
                                 }
+                                .accessibilityAction {
+                                    model.clickNote(note, modifiers: [])
+                                    listFocused = true
+                                }
+                                // A right-click selects the row under the pointer first.
+                                .onHover { inside in
+                                    if inside {
+                                        model.hoveredNoteURL = note.url
+                                    } else if model.hoveredNoteURL == note.url {
+                                        model.hoveredNoteURL = nil
+                                    }
+                                }
                                 .contextMenu { ShellNoteMenu(model: model, note: note) }
                                 .draggable(note.url)
                             }
                         }
                     }
                     .padding(.bottom, 10)
+                    .background(alignment: .topLeading) {
+                        ShellScrollViewProbe { scrollBox.view = $0 }.frame(width: 1, height: 1)
+                    }
                 }
                 .scrollContentBackground(.hidden)
                 .onChange(of: model.selectedNoteURL) { _, url in
                     guard let url else { return }
                     proxy.scrollTo(url)
+                }
+                // NotesTableView keeps each folder's scroll place and shows
+                // the open note when the list comes back to a folder.
+                .onChange(of: model.scope) { old, _ in
+                    guard model.listContent == .init(scope: old, isSearch: false),
+                        let offset = scrollBox.view?.contentView.bounds.origin.y
+                    else { return }
+                    scrollOffsets[old] = offset
+                }
+                .onChange(of: model.listContent) { old, new in
+                    guard let new, !new.isSearch else { return }
+                    revealSelection(proxy, restoring: old?.scope == new.scope ? nil : scrollOffsets[new.scope] ?? 0)
+                }
+                .onAppear {
+                    if model.listContent != nil { revealSelection(proxy, restoring: nil) }
                 }
             }
             .focusable()
@@ -486,7 +519,14 @@ struct ShellNoteList: View {
                     listFocused = true
                 case .search:
                     model.isSearchOpen = true
-                    searchFocused = true
+                    if searchFocused {
+                        // Marked focused while the editor has the keys, or
+                        // set while the column was collapsed: focus again.
+                        searchFocused = false
+                        Task { @MainActor in searchFocused = true }
+                    } else {
+                        searchFocused = true
+                    }
                 default:
                     return
                 }
@@ -501,6 +541,19 @@ struct ShellNoteList: View {
         .id(model.interfaceRevision)
         .background(ShellStyle.background.ignoresSafeArea())
         .ignoresSafeArea(.container, edges: .top)
+    }
+
+    /// NotesTableView.restoreScrollPosition: the folder's remembered place
+    /// (`offset`, the top for one not seen yet), then the open note scrolled
+    /// into view when it is off screen. Runs once the new rows are laid out.
+    private func revealSelection(_ proxy: ScrollViewProxy, restoring offset: CGFloat?) {
+        Task { @MainActor in
+            if let offset, let scrollView = scrollBox.view {
+                scrollView.contentView.scroll(to: NSPoint(x: 0, y: offset))
+                scrollView.reflectScrolledClipView(scrollView.contentView)
+            }
+            if let url = model.selectedNoteURL { proxy.scrollTo(url) }
+        }
     }
 
     /// The folder's name, as Bear heads its list, with search one click away;
@@ -522,6 +575,9 @@ struct ShellNoteList: View {
                 ) {
                     model.searchText = ""
                     model.isSearchOpen = false
+                    // The field goes away; the list keeps the keys, so the
+                    // arrows and Command-Delete work without a click.
+                    listFocused = true
                 }
                 .onAppear { searchFocused = true }
             } else {
@@ -535,6 +591,40 @@ struct ShellNoteList: View {
                 ChromeButton(symbol: "magnifyingglass", help: "Search") { model.isSearchOpen = true }
             }
         }
+    }
+}
+
+/// The AppKit scroll view behind the note list's ScrollView, whose offset
+/// SwiftUI on macOS 14 neither reports nor sets.
+@MainActor
+private final class ShellScrollViewBox {
+    weak var view: NSScrollView?
+}
+
+/// Hands over the scroll view it sits in once it is in a window.
+@available(macOS 14, *)
+private struct ShellScrollViewProbe: NSViewRepresentable {
+    let found: (NSScrollView) -> Void
+
+    final class Probe: NSView {
+        var found: ((NSScrollView) -> Void)?
+
+        override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            if let scrollView = enclosingScrollView { found?(scrollView) }
+        }
+    }
+
+    func makeNSView(context: Context) -> Probe {
+        let view = Probe()
+        view.found = found
+        return view
+    }
+
+    func updateNSView(_ view: Probe, context: Context) {
+        view.found = found
     }
 }
 
@@ -565,14 +655,20 @@ private struct ShellNoteRow: View {
         let nameSize = CGFloat(UserDefaultsManagement.nameFontSize)
         let bodySize = nameSize - 1
         let dateSize = CGFloat(UserDefaultsManagement.dateFontSize)
+        let titleText = Text(title)
+            .font(ShellStyle.interface(nameSize, weight: ShellStyle.titleWeight))
+            .kerning(ShellStyle.tracking(nameSize))
+            .foregroundStyle(ShellStyle.text)
+            .lineLimit(1)
+            .truncationMode(.tail)
         VStack(alignment: .leading, spacing: 5) {
             HStack(spacing: 4) {
-                Text(title)
-                    .font(ShellStyle.interface(nameSize, weight: ShellStyle.titleWeight))
-                    .kerning(ShellStyle.tracking(nameSize))
-                    .foregroundStyle(ShellStyle.text)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
+                // A cut-off title shows in full on hover, as the storyboard
+                // list's expansion tooltips do; one that fits shows none.
+                ViewThatFits(in: .horizontal) {
+                    titleText
+                    titleText.help(title)
+                }
                 Spacer(minLength: 0)
                 if note.isPinned, let pin = NSImage(named: "pinNote") {
                     SwiftUI.Image(nsImage: pin)
@@ -610,6 +706,12 @@ private struct ShellNoteRow: View {
                     .padding(.vertical, 2)
             }
         }
+        // VoiceOver reads a row as one item: the title, then its date and
+        // opening; the list's tap action is its default action.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityValue([date, snippet ?? ""].filter { !$0.isEmpty }.joined(separator: ", "))
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 
     private var title: String {

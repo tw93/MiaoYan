@@ -232,10 +232,10 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         model.confirmDeleteFolder(folder)
     }
 
-    /// File ▸ Move: the storyboard's Move submenu at the pointer, the Trash
-    /// first and then every folder but the open note's own.
+    /// File ▸ Move: the storyboard's Move submenu at the open note's row, the
+    /// Trash first and then every folder but the open note's own.
     @IBAction func moveMenu(_ sender: Any?) {
-        guard let note = model.selectedNote, let window, let view = window.contentView else { return }
+        guard let note = model.selectedNote else { return }
         let menu = NSMenu()
         if !note.isTrash() {
             let trash = NSMenuItem(title: I18n.str("Trash"), action: #selector(deleteNote(_:)), keyEquivalent: "")
@@ -251,8 +251,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             item.image = NSImage(systemSymbolName: "folder", accessibilityDescription: nil)
             menu.addItem(item)
         }
-        let point = view.convert(window.mouseLocationOutsideOfEventStream, from: nil)
-        menu.popUp(positioning: nil, at: point, in: view)
+        popUpAtSelectedRow(menu)
     }
 
     @objc private func moveToFolder(_ sender: NSMenuItem) {
@@ -284,7 +283,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             || model.preview?.isSearchBarVisible == true
     }
     @IBAction func renameMenu(_ sender: Any?) { model.isRenaming = model.selectedNote != nil }
-    @IBAction func searchAndCreate(_ sender: Any?) { model.isSearchOpen = true }
+    @IBAction func searchAndCreate(_ sender: Any?) { model.focusSearch() }
 
     @IBAction func pinMenu(_ sender: Any?) {
         guard let note = model.selectedNote else { return }
@@ -442,12 +441,17 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     @IBAction func exportImage(_ sender: Any?) { model.export(.image) }
     @IBAction func exportHtml(_ sender: Any?) { model.export(.html) }
 
-    /// File ▸ Export: the formats as a menu at the open note's row, the way
-    /// the storyboard window pops its note menu's Export submenu; at the
-    /// pointer when the list is hidden or the row is scrolled away.
+    /// File ▸ Export: the formats as a menu at the open note's row.
     @IBAction func exportMenu(_ sender: Any?) {
-        guard model.selectedNote != nil, let window, let view = window.contentView else { return }
-        let menu = Self.exportFormatsMenu()
+        guard model.selectedNote != nil else { return }
+        popUpAtSelectedRow(Self.exportFormatsMenu())
+    }
+
+    /// A File menu submenu at the open note's row, the way the storyboard
+    /// window pops its note menu's submenus; at the pointer when the list is
+    /// hidden or the row is scrolled away.
+    private func popUpAtSelectedRow(_ menu: NSMenu) {
+        guard let window, let view = window.contentView else { return }
         if model.layout != .noteOnly, let row = model.selectedRowFrame,
             let items = (window.contentViewController as? NSSplitViewController)?.splitViewItems, items.count == 3,
             case let list = items[1].viewController.view,
@@ -747,6 +751,13 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
                 model.focusRequest = .list
                 return nil
             }
+            // Nothing to cancel: the storyboard window ends in its search
+            // field. It also closes the open note there, which the shell
+            // keeps: its list opens a note again on the next refresh.
+            if !model.isPresenting, (responder as? NSTextView)?.hasMarkedText() != true {
+                model.focusSearch()
+                return nil
+            }
         }
         return event
     }
@@ -929,18 +940,26 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         return event
     }
 
-    /// A right-click or Control-click on a sidebar row chooses it before its
-    /// menu opens and the list follows, as the storyboard sidebar's
-    /// willOpenMenu selects the clicked row.
+    /// A right-click or Control-click chooses the row under the pointer
+    /// before SwiftUI opens its menu, as the storyboard sidebar's
+    /// willOpenMenu and the note list's menu do: a folder switches the list,
+    /// a note outside the selection becomes the selection.
     private func handleMenuClick(_ event: NSEvent) -> NSEvent? {
         guard let window, event.window === window, window.attachedSheet == nil,
-            event.type == .rightMouseDown || event.modifierFlags.contains(.control),
-            let row = model.hoveredSidebarRow,
+            event.type == .rightMouseDown || event.modifierFlags.contains(.control)
+        else { return event }
+        if let row = model.hoveredSidebarRow,
             let sidebar = (window.contentViewController as? NSSplitViewController)?.splitViewItems.first?.viewController.view,
             !sidebar.isHiddenOrHasHiddenAncestor,
             sidebar.bounds.contains(sidebar.convert(event.locationInWindow, from: nil))
-        else { return event }
-        model.scope = row
+        {
+            model.scope = row
+        } else if let url = model.hoveredNoteURL,
+            column(of: window.contentView?.hitTest(event.locationInWindow)) == .list,
+            let note = model.notes.first(where: { $0.url == url })
+        {
+            model.selectForMenu(note)
+        }
         return event
     }
 
@@ -1201,14 +1220,20 @@ final class ShellSplitViewController: NSSplitViewController {
         guard items.count == 3 else { return }
         let sidebarCollapsed = layout != .all
         let listCollapsed = layout == .noteOnly
-        guard items[0].isCollapsed != sidebarCollapsed || items[1].isCollapsed != listCollapsed else { return }
+        guard items[0].isCollapsed != sidebarCollapsed || items[1].isCollapsed != listCollapsed else {
+            model.layoutDidSettle()
+            return
+        }
         isApplyingLayout = true
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.2
             items[0].animator().isCollapsed = sidebarCollapsed
             items[1].animator().isCollapsed = listCollapsed
         } completionHandler: { [weak self] in
-            Task { @MainActor in self?.isApplyingLayout = false }
+            Task { @MainActor in
+                self?.isApplyingLayout = false
+                self?.model.layoutDidSettle()
+            }
         }
     }
 
