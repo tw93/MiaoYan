@@ -47,9 +47,9 @@ Suddenly a White Rabbit with pink eyes ran close by her.
 
 Alice found herself falling down a `very deep well`.
 
-H~2~O is what Alice might have encountered in her adventures.
+H<sub>2</sub>O is what Alice might have encountered in her adventures.
 
-The tea party happened on the 26^th^ day of the month.
+The tea party happened on the 26<sup>th</sup> day of the month.
 
 ---
 
