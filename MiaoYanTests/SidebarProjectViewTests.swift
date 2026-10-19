@@ -164,6 +164,50 @@ final class SidebarProjectViewTests: XCTestCase {
         XCTAssertNil(outlineView.revealRow(forProjectPath: root.appendingPathComponent("Gone").path))
     }
 
+    /// The MiaoYan lockup is a mark, not a place: All Notes is its own row
+    /// under it, and a row number that lands on the lockup (one saved before
+    /// it existed, or a removal falling back to row 0) selects All Notes.
+    @MainActor
+    func testTheBrandRowCannotBeSelectedAndFallsBackToAllNotes() throws {
+        let list = Sidebar().getList().compactMap { $0 as? SidebarItem }
+        XCTAssertEqual(list.prefix(2).map(\.type), [.Brand, .All])
+        XCTAssertFalse(list[0].isSelectable())
+        XCTAssertTrue(list[1].isSelectable())
+        XCTAssertEqual(list[1].name, I18n.str("All Notes"))
+
+        let outlineView = SidebarProjectView(frame: NSRect(x: 0, y: 0, width: 200, height: 300))
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("sidebar"))
+        outlineView.addTableColumn(column)
+        outlineView.outlineTableColumn = column
+        outlineView.dataSource = outlineView
+        let work = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanSidebar-\(UUID().uuidString)")
+        outlineView.sidebarItems = [
+            SidebarItem(name: "MiaoYan", type: .Brand),
+            SidebarItem(name: "All Notes", type: .All),
+            SidebarItem(name: "Work", project: Project(url: work, label: "Work"), type: .Category),
+        ]
+        outlineView.reloadData()
+
+        XCTAssertFalse(outlineView.outlineView(outlineView, shouldSelectItem: try XCTUnwrap(outlineView.item(atRow: 0))))
+        outlineView.selectRowIndexes([0], byExtendingSelection: false)
+        XCTAssertEqual(outlineView.selectedRow, 1)
+        outlineView.selectRowIndexes([2], byExtendingSelection: false)
+        XCTAssertEqual(outlineView.selectedRow, 2)
+    }
+
+    /// The SwiftUI sidebar draws the lockup over its rows; the rows start at
+    /// All Notes and never include the lockup.
+    @available(macOS 14, *)
+    @MainActor
+    func testShellSidebarRowsStartAtAllNotes() {
+        let model = ShellModel()
+        model.reload()
+        XCTAssertEqual(model.sidebarRows.first?.id, .all)
+        XCTAssertEqual(model.sidebarRows.first?.title, I18n.str("All Notes"))
+        XCTAssertFalse(model.sidebarRows.contains { $0.kind == .Brand })
+        XCTAssertFalse(model.brandTitle.isEmpty)
+    }
+
     /// Left arrow on a closed subfolder in the SwiftUI shell goes to the row
     /// it sits under, as NSOutlineView does; a top-level row has none.
     @available(macOS 14, *)
@@ -173,7 +217,7 @@ final class SidebarProjectViewTests: XCTestCase {
             ShellModel.SidebarRow(id: .project(URL(fileURLWithPath: path)), title: path, kind: .Category, depth: depth)
         }
         let rows = [
-            ShellModel.SidebarRow(id: .all, title: "MiaoYan", kind: .All),
+            ShellModel.SidebarRow(id: .all, title: "All Notes", kind: .All),
             folder("/Work", depth: 0),
             folder("/Work/A", depth: 1),
             folder("/Work/A/Deep", depth: 2),

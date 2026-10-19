@@ -135,6 +135,8 @@ final class ShellModel {
     }
 
     private(set) var sidebarRows: [SidebarRow] = []
+    /// The wordmark over the sidebar rows, which is not a row of its own.
+    private(set) var brandTitle = ""
     private(set) var notes: [Note] = []
     private(set) var sections: [NoteSection] = []
     /// Plain-text openings for list rows, read off the main thread on demand.
@@ -401,6 +403,8 @@ final class ShellModel {
         for item in Sidebar().getList() {
             guard let item = item as? SidebarItem else { continue }
             switch item.type {
+            case .Brand:
+                brandTitle = item.getName()
             case .All:
                 rows.append(SidebarRow(id: .all, title: item.getName(), kind: .All))
             case .Trash:

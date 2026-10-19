@@ -16,7 +16,7 @@ class SidebarItem {
 
     public func getName() -> String { name }
 
-    public func isSelectable() -> Bool { true }
+    public func isSelectable() -> Bool { type != .Brand }
 
     public func isTrash() -> Bool { type == .Trash }
 
@@ -44,7 +44,7 @@ class SidebarItem {
         if type == .Category || type == .Trash {
             return project?.url == other.project?.url
         }
-        if type == .All {
+        if type == .All || type == .Brand {
             return true
         }
         return name == other.name

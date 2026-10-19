@@ -1197,6 +1197,13 @@ class ViewController:
             items.indices.contains(lastSidebarItem)
         {
             targetSidebarItem = items[lastSidebarItem] as? SidebarItem
+            // Row 0 meant All Notes before the brand row took it.
+            if targetSidebarItem?.isSelectable() == false,
+                let allIndex = items.firstIndex(where: { ($0 as? SidebarItem)?.type == .All })
+            {
+                lastSidebarItem = allIndex
+                targetSidebarItem = items[allIndex] as? SidebarItem
+            }
         }
 
         var projects = targetProject.map { [$0] }

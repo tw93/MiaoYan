@@ -4,7 +4,7 @@ import Foundation
 
 @MainActor
 private enum UIConstants {
-    static let allItemRowHeight: CGFloat = 52
+    static let brandRowHeight: CGFloat = 52
     static let defaultRowHeight: CGFloat = 32
 }
 
@@ -229,8 +229,9 @@ class SidebarProjectView: NSOutlineView,
             return false
         }
 
-        // Don't allow moving before first item (MiaoYan)
-        guard targetIndex > 0 else {
+        // Folders stay below the brand and All Notes
+        let leadingFixed = sidebarItems.prefix { ($0 as? SidebarItem)?.type != .Category }.count
+        guard targetIndex >= leadingFixed else {
             return false
         }
 
@@ -559,7 +560,7 @@ class SidebarProjectView: NSOutlineView,
         let accentFont = createAccentFont(from: baseFont)
 
         switch sidebarItem.type {
-        case .All:
+        case .Brand:
             cell.icon.image = NSImage(imageLiteralResourceName: "home")
             cell.icon.image?.isTemplate = true
             cell.icon.contentTintColor = accentColor
@@ -584,6 +585,11 @@ class SidebarProjectView: NSOutlineView,
                     break
                 }
             }
+
+        case .All:
+            cell.icon.image = NSImage(imageLiteralResourceName: "allNotes")
+            cell.icon.image?.isTemplate = true
+            cell.icon.contentTintColor = Theme.sidebarActionColor
 
         case .Trash:
             cell.icon.image = NSImage(imageLiteralResourceName: "deleteNote")
@@ -610,7 +616,7 @@ class SidebarProjectView: NSOutlineView,
     private func applyFinalStyling(_ cell: SidebarCellView, sidebarItem: SidebarItem, accentColor: NSColor) {
         cell.label.addCharacterSpacing()
 
-        let color = sidebarItem.type == .All ? accentColor : Theme.textColor
+        let color = sidebarItem.type == .Brand ? accentColor : Theme.textColor
         applyLabelColor(cell, color: color)
     }
 
@@ -642,8 +648,8 @@ class SidebarProjectView: NSOutlineView,
 
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
         if let sidebarItem = item as? SidebarItem {
-            if sidebarItem.type == .All {
-                return UIConstants.allItemRowHeight
+            if sidebarItem.type == .Brand {
+                return UIConstants.brandRowHeight
             }
             return UIConstants.defaultRowHeight
         }
@@ -808,10 +814,25 @@ class SidebarProjectView: NSOutlineView,
     }
 
     override func selectRowIndexes(_ indexes: IndexSet, byExtendingSelection extend: Bool) {
-        guard indexes.first != nil else {
+        guard let first = indexes.first else {
+            return
+        }
+        // A row number saved before the brand row existed, or a removal that
+        // falls back to the first row, lands on All Notes, not on the brand.
+        if indexes.count == 1, let item = item(atRow: first) as? SidebarItem, !item.isSelectable() {
+            guard let all = rowForSidebarSelection(type: .All, projectURL: nil, name: nil) else { return }
+            super.selectRowIndexes([all], byExtendingSelection: extend)
             return
         }
         super.selectRowIndexes(indexes, byExtendingSelection: extend)
+    }
+
+    override func menu(for event: NSEvent) -> NSMenu? {
+        let row = row(at: convert(event.locationInWindow, from: nil))
+        if row >= 0, let item = item(atRow: row) as? SidebarItem, !item.isSelectable() {
+            return nil
+        }
+        return super.menu(for: event)
     }
 
     private func isChangedSelectedProjectsState() -> Bool {
@@ -1259,6 +1280,8 @@ class SidebarProjectView: NSOutlineView,
             }
 
             switch type {
+            case .Brand:
+                return nil
             case .All:
                 return row
             case .Category, .Trash:

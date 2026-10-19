@@ -158,6 +158,8 @@ struct ShellSidebar: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(spacing: 1) {
+                        ShellSidebarBrand(title: model.brandTitle)
+                        SwiftUI.Color.clear.frame(height: 6)
                         ForEach(model.sidebarRows) { row in
                             ShellSidebarRow(model: model, row: row, isSelected: model.scope == row.id)
                                 .id(row.id)
@@ -167,9 +169,6 @@ struct ShellSidebar: View {
                                     focused = true
                                 }
                                 .accessibilityAction { model.scope = row.id }
-                            if row.kind == .All {
-                                SwiftUI.Color.clear.frame(height: 6)
-                            }
                         }
                     }
                     .padding(.horizontal, 8)
@@ -224,21 +223,20 @@ private struct ShellSidebarRow: View {
         return AppEnvironment.current.storage.getProjects().first { $0.url == url }
     }
 
-    private var isBrand: Bool { row.kind == .All }
     private var isRenaming: Bool {
         guard case .project(let url) = row.id else { return false }
         return model.renamingFolderURL == url
     }
-    private var fontSize: CGFloat { CGFloat(UserDefaultsManagement.nameFontSize) + (isBrand ? 1 : 0) }
+    private var fontSize: CGFloat { CGFloat(UserDefaultsManagement.nameFontSize) }
 
     var body: some View {
-        HStack(spacing: isBrand ? 5 : 9) {
+        HStack(spacing: 9) {
             SwiftUI.Image(nsImage: icon)
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .frame(width: isBrand ? 22 : 15, height: isBrand ? 22 : 15)
-                .foregroundStyle(isBrand ? brandTint : ShellStyle.icon)
+                .frame(width: 15, height: 15)
+                .foregroundStyle(ShellStyle.icon)
             if let folder, model.renamingFolderURL == folder.url {
                 TextField("", text: $draft)
                     .textFieldStyle(.plain)
@@ -254,21 +252,15 @@ private struct ShellSidebarRow: View {
                         if !focused, model.renamingFolderURL == folder.url { model.renameFolder(folder, to: draft) }
                     }
             } else {
-                Group {
-                    if isBrand {
-                        Text(row.title).font(ShellStyle.brandWordmark(fontSize + 1))
-                    } else {
-                        Text(row.title)
-                            .font(ShellStyle.interface(fontSize))
-                            .kerning(ShellStyle.tracking(fontSize))
-                    }
-                }
-                .foregroundStyle(isBrand ? brandTint : ShellStyle.text)
-                .lineLimit(1)
-                .truncationMode(.tail)
-                // A long name cut short shows in full on hover, as the
-                // storyboard outline's expansion tooltips do.
-                .help(isBrand ? "" : row.title)
+                Text(row.title)
+                    .font(ShellStyle.interface(fontSize))
+                    .kerning(ShellStyle.tracking(fontSize))
+                    .foregroundStyle(ShellStyle.text)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    // A long name cut short shows in full on hover, as the
+                    // storyboard outline's expansion tooltips do.
+                    .help(row.title)
             }
             Spacer(minLength: 0)
             if row.hasChildren, let folder {
@@ -283,9 +275,9 @@ private struct ShellSidebarRow: View {
                     }
             }
         }
-        .padding(.leading, (isBrand ? 8 : 11) + CGFloat(row.depth) * 16)
+        .padding(.leading, 11 + CGFloat(row.depth) * 16)
         .padding(.trailing, 8)
-        .frame(height: isBrand ? 36 : 30)
+        .frame(height: 30)
         .background(
             RoundedRectangle(cornerRadius: 7, style: .continuous)
                 .fill(isSelected || isDropTarget ? ShellStyle.sidebarSelection : .clear)
@@ -303,8 +295,8 @@ private struct ShellSidebarRow: View {
             }
         }
         // The storyboard sidebar's menu, which shows per row only what
-        // applies: no New Folder on a folder, Open in Terminal on the brand
-        // row for the library, Show in Finder alone on the Trash.
+        // applies: no New Folder on a folder, Open in Terminal on All Notes
+        // for the library, Show in Finder alone on the Trash.
         .contextMenu {
             if let folder {
                 item("New Subfolder", "folder.badge.plus") { model.promptNewFolder(parent: folder) }
@@ -361,20 +353,13 @@ private struct ShellSidebarRow: View {
         }
     }
 
-    /// The brand row stands for all notes: chosen, it takes the sand plate
-    /// like any folder and turns green, falling back to grey while a folder
-    /// is open.
-    private var brandTint: SwiftUI.Color {
-        isSelected ? ShellStyle.accent : ShellStyle.icon
-    }
-
     private func item(_ title: String, _ symbol: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Label(I18n.str(title), systemImage: symbol)
         }
     }
 
-    /// The row's folder, or the library from the brand row.
+    /// The row's folder, or the library from All Notes.
     private func openInTerminal() {
         model.scope = row.id
         NSApp.sendAction(#selector(ShellWindowController.openInTerminal(_:)), to: nil, from: nil)
@@ -383,11 +368,42 @@ private struct ShellSidebarRow: View {
     private var icon: NSImage {
         let name: String
         switch row.kind {
-        case .All: name = "home"
+        case .Brand: name = "home"
+        case .All: name = "allNotes"
         case .Trash: name = "deleteNote"
         case .Category: name = "project"
         }
         return NSImage(named: name) ?? NSImage()
+    }
+}
+
+/// The MiaoYan lockup over the sidebar rows, the storyboard sidebar's brand
+/// row: a mark, not a place, so it takes no clicks, plate or menu, and All
+/// Notes sits under it (maintainer, 2026-10-19).
+@available(macOS 14, *)
+private struct ShellSidebarBrand: View {
+    let title: String
+
+    var body: some View {
+        let size = CGFloat(UserDefaultsManagement.nameFontSize) + 2
+        HStack(spacing: 5) {
+            SwiftUI.Image(nsImage: NSImage(named: "home") ?? NSImage())
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 22, height: 22)
+            Text(title)
+                .font(ShellStyle.brandWordmark(size))
+                .lineLimit(1)
+                .truncationMode(.tail)
+            Spacer(minLength: 0)
+        }
+        .foregroundStyle(ShellStyle.accent)
+        .padding(.leading, 8)
+        .padding(.trailing, 8)
+        .frame(height: 36)
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
     }
 }
 

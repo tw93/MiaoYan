@@ -13,8 +13,8 @@ class Sidebar {
         var system = [SidebarItem]()
 
         let appName = getLocalizedAppName()
-        let notes = SidebarItem(name: appName, type: .All, icon: getImage(named: "home\(night).png"))
-        system.append(notes)
+        system.append(SidebarItem(name: appName, type: .Brand, icon: getImage(named: "home\(night).png")))
+        system.append(SidebarItem(name: I18n.str("All Notes"), type: .All, icon: getImage(named: "allNotes")))
 
         if !system.isEmpty {
             list = system

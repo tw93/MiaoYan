@@ -26,8 +26,9 @@ class SidebarTableRowView: ThemedTableRowView {
     }
 
     override func drawSelection(in dirtyRect: NSRect) {
-        // The brand row takes the plate too while all notes are shown, so the
-        // sidebar always marks what the list holds (maintainer, 2026-10-15).
+        // Every selectable row takes the plate, All Notes included, so the
+        // sidebar always marks what the list holds; the brand row above it
+        // cannot be selected (maintainer, 2026-10-19).
         guard isSelected else { return }
 
         let selectionRect = selectionRect()
