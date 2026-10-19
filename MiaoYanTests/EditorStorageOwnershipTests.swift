@@ -56,6 +56,37 @@ final class EditorStorageOwnershipTests: XCTestCase {
         XCTAssertNotEqual(font?.familyName, "Menlo")
     }
 
+    /// Every tag takes the text face and the markup colour, nested ones too
+    /// (`<source>` inside `<video>` went unstyled); an autolink is not a tag.
+    @MainActor
+    func testEveryHTMLTagTakesTheTextFaceAndMarkupColour() throws {
+        let body = "Text <video width=\"800\"><source src=\"v.mp4\"></video> and <https://mole.fit/zh>"
+        let note = makeNote("tags.md", body: body)
+        let storage = NSMutableAttributedString(string: body)
+        MarkdownRuleHighlighter.highlightMarkdown(attributedString: storage, note: note)
+
+        let light = try XCTUnwrap(NSAppearance(named: .aqua))
+        func resolved(_ color: Any?) -> NSColor? {
+            (color as? NSColor)?.resolvedColor(for: light).usingColorSpace(.sRGB)
+        }
+        let markup = try XCTUnwrap(resolved(NotesTextProcessor.syntaxColor))
+        let text = body as NSString
+        for tag in ["<video", "<source", "</video>"] {
+            let at = text.range(of: tag).location
+            let font = storage.attribute(.font, at: at, effectiveRange: nil) as? NSFont
+            XCTAssertEqual(font?.fontName, NotesTextProcessor.font.fontName, tag)
+            XCTAssertEqual(font?.pointSize, NotesTextProcessor.font.pointSize, tag)
+            let colour = try XCTUnwrap(resolved(storage.attribute(.foregroundColor, at: at, effectiveRange: nil)), tag)
+            XCTAssertEqual(colour.redComponent, markup.redComponent, accuracy: 0.01, tag)
+            XCTAssertEqual(colour.greenComponent, markup.greenComponent, accuracy: 0.01, tag)
+        }
+        let link = text.range(of: "mole.fit").location
+        let linkFont = storage.attribute(.font, at: link, effectiveRange: nil) as? NSFont
+        XCTAssertEqual(linkFont?.fontName, NotesTextProcessor.font.fontName)
+        let linkColour = resolved(storage.attribute(.foregroundColor, at: link, effectiveRange: nil))
+        XCTAssertFalse(linkColour.map { abs($0.redComponent - markup.redComponent) < 0.01 && abs($0.greenComponent - markup.greenComponent) < 0.01 } ?? false)
+    }
+
     @MainActor
     func testRefusesCrossNoteWholeBufferSave() {
         let noteA = makeNote("a.md", body: "AAA original")

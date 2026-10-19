@@ -397,17 +397,7 @@ enum MarkdownRuleHighlighter {
             }
         }
 
-        NotesTextProcessor.htmlRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            attributedString.fixAttributes(in: range)
-            CodeBlockHighlighter.highlightInlineHTML(attributedString: attributedString, range: range)
-        }
-
-        NotesTextProcessor.imageHtmlRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            attributedString.fixAttributes(in: range)
-            CodeBlockHighlighter.highlightInlineHTML(attributedString: attributedString, range: range)
-        }
+        CodeBlockHighlighter.highlightInlineHTML(attributedString: attributedString, range: paragraphRange)
 
         NotesTextProcessor.autolinkBracketRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }

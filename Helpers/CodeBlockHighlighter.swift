@@ -84,25 +84,34 @@ enum CodeBlockHighlighter {
         attributedString.fixAttributes(in: range)
     }
 
-    /// Sets the tags in an inline HTML span (`<img …>`, `<span>…</span>`) in
-    /// the quiet markup colour and `htmlTagFont`, leaving text between tags as
-    /// prose. Never `highlightCode`: that gave an `<img>` line the code font
-    /// and the code-block mark, and the mark then made the next keystroke
-    /// re-highlight the whole paragraph as code.
+    /// Sets every HTML tag in the editor's own text face and size, in the
+    /// quiet markup colour of `#` and `**`, leaving text between tags as
+    /// prose (maintainer's pick, 2026-10-19). Tags in a smaller system face
+    /// read as code beside the prose. Never `highlightCode`: that gave an
+    /// `<img>` line the code font and the code-block mark, and the mark then
+    /// made the next keystroke re-highlight the whole paragraph as code.
     static func highlightInlineHTML(attributedString: NSMutableAttributedString, range: NSRange) {
         guard range.length > 0, range.upperBound <= attributedString.length else { return }
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: NotesTextProcessor.htmlTagFont,
+            .font: NotesTextProcessor.font,
             .foregroundColor: NotesTextProcessor.syntaxColor,
         ]
-        let source = attributedString.string as NSString
-        htmlTagRegex.enumerateMatches(in: source as String, range: range) { match, _, _ in
-            guard let tag = match?.range, tag.upperBound <= attributedString.length else { return }
+        let source = attributedString.string
+        htmlTagRegex.enumerateMatches(in: source, range: range) { match, _, _ in
+            guard let tag = match?.range, tag.upperBound <= attributedString.length,
+                NotesTextProcessor.getSpanCodeBlockRange(content: attributedString, range: tag) == nil
+            else { return }
+            attributedString.fixAttributes(in: tag)
             attributedString.addAttributes(attributes, range: tag)
         }
     }
 
-    private static let htmlTagRegex = try! NSRegularExpression(pattern: "<[^<>]+>")
+    /// Every tag on its own, opening, closing, self-closing or a comment, so
+    /// nested and multi-line HTML (`<video><source></video>`, a `<table>`)
+    /// reads the same as a lone `<img>`. An autolink (`<https://…>`) is not a
+    /// tag: its name would run into a colon.
+    private static let htmlTagRegex = try! NSRegularExpression(
+        pattern: "<!--.*?-->|</?[A-Za-z][A-Za-z0-9-]*(?:\\s[^<>]*)?/?>")
 
     static func highlightFencedAndIndentCodeBlocks(attributedString: NSMutableAttributedString, pattern: String) {
         let range = NSRange(0..<attributedString.length)

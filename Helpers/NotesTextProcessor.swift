@@ -22,17 +22,11 @@ public class NotesTextProcessor {
     // MARK: Syntax highlight customisation
     @MainActor public static var syntaxColor: NSColor { Theme.editorMarkupColor }
 
-    /// Markdown punctuation and HTML tags are set in the system face, which
-    /// draws `<`, `>`, `*` and `"` light and small where TsangerJinKai draws
-    /// them wide and heavy. Tags go one size further down so an `<img>` line
-    /// reads as a quiet note beside the prose. Neither is the code font: a
-    /// tag is not code, and giving it the code font made it a code block.
+    /// Markdown punctuation is set in the system face, which draws `*` and
+    /// `#` light and small where TsangerJinKai draws them wide and heavy.
+    /// HTML tags take the text face instead (`highlightInlineHTML`).
     public static var markupFont: NSFont {
         NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize) - 1)
-    }
-
-    public static var htmlTagFont: NSFont {
-        NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize) - 2)
     }
 
     public static var font: NSFont {
@@ -698,13 +692,7 @@ public class NotesTextProcessor {
     fileprivate static let codeLinePattern = "(\\`\\`\\`) (?=\\S) (.+?[`]*) (?<=\\S) \\1"
     @MainActor public static let codeLineRegex = MarklightRegex(pattern: codeLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
-    // MARK: HTML
-    fileprivate static let htmlPattern = "<(\\S*)[^>]*>[^<]*<\\/(\\1)>"
-    @MainActor public static let htmlRegex = MarklightRegex(pattern: htmlPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
-
-    fileprivate static let imageHtmlPattern = "<(img|br|hr|input)[^>]*>"
-    @MainActor public static let imageHtmlRegex = MarklightRegex(pattern: imageHtmlPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
-
+    // MARK: Emoji
     @MainActor public static let emojiRegex = MarklightRegex(pattern: EmojiPattern, options: [.allowCommentsAndWhitespace])
 
     public static let englishAndSymbolPattern = "([a-zA-Z]+|[\\x21-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7B-\\x7F])"
