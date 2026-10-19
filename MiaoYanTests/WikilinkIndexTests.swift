@@ -101,4 +101,39 @@ final class WikilinkIndexTests: XCTestCase {
         XCTAssertEqual(index.getBacklinks(for: "B"), ["A"])
         resetIndex()
     }
+
+    /// Storage lists only the root's and first-level folders' notes until a
+    /// deeper folder is opened, so backlinks from deeper notes were missing.
+    /// Trash and attachment folders still do not count.
+    func testBacklinksComeFromNotesAtAnyDepth() async throws {
+        let base = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDeepLinks-\(UUID().uuidString)")
+        let manager = FileManager.default
+        defer { try? manager.removeItem(at: base) }
+        let deep = base.appendingPathComponent("Work/2024/Q1", isDirectory: true)
+        let trash = base.appendingPathComponent("Trash", isDirectory: true)
+        let images = base.appendingPathComponent("Work/i", isDirectory: true)
+        for dir in [deep, trash, images] {
+            try manager.createDirectory(at: dir, withIntermediateDirectories: true)
+        }
+        try "# Root".write(to: base.appendingPathComponent("Root.md"), atomically: true, encoding: .utf8)
+        try "Back to [[Root]].".write(to: deep.appendingPathComponent("Deep.md"), atomically: true, encoding: .utf8)
+        try "Old [[Root]] link.".write(to: trash.appendingPathComponent("Deleted.md"), atomically: true, encoding: .utf8)
+        try "Stray [[Root]] link.".write(to: images.appendingPathComponent("Stray.md"), atomically: true, encoding: .utf8)
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: base, isRoot: true)
+        _ = storage.add(project: root)
+        _ = storage.add(project: Project(url: trash, isTrash: true))
+        let rootNote = Note(url: base.appendingPathComponent("Root.md"), with: root)
+        rootNote.title = "Root"
+        storage.add(rootNote)
+
+        index.rebuildFromAllNotes(in: storage)
+        for _ in 0..<100 where index.getBacklinks(for: "Root").isEmpty {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+
+        XCTAssertEqual(index.getBacklinks(for: "Root"), ["Deep"])
+        index.rebuild(entries: [])
+    }
 }
