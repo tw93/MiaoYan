@@ -693,6 +693,14 @@ def page(key):
       caption.textContent = captions[shot];
     }});
   }});
+  // As on mole.fit, a click on the left half of the screenshot shows the previous shot, the right half the next.
+  frame.addEventListener('click', function (event) {{
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabs button'));
+    var i = tabs.findIndex(function (t) {{ return t.getAttribute('aria-pressed') === 'true'; }});
+    var box = frame.getBoundingClientRect();
+    var step = event.clientX < box.left + box.width / 2 ? tabs.length - 1 : 1;
+    tabs[(i + step) % tabs.length].click();
+  }});
 """
     cards = "".join(f'<div class="card"><h3>{esc(a)}</h3><p>{esc(t(d))}</p></div>' for a, d in c["features"])
     compare = "".join(f'<div class="card"><h3>{esc(a)}</h3><p>{esc(t(d))}</p></div>' for a, d in c["compare"])

@@ -256,7 +256,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 .section-title + .cards, .section-title + details { margin-top: 24px; }
 
 /* Gallery: tabs under a framed screenshot. */
-.gallery-frame { border-radius: 14px; overflow: hidden; background: #d9d4c7; aspect-ratio: 3244 / 2244; }
+.gallery-frame { border-radius: 14px; overflow: hidden; background: #d9d4c7; aspect-ratio: 3244 / 2244; cursor: pointer; }
 .gallery-frame img { width: 100%; height: 100%; object-fit: cover; }
 .gallery-frame img[hidden] { display: none; }
 .gallery-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; flex-wrap: wrap; }

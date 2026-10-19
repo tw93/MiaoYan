@@ -121,6 +121,14 @@
       caption.textContent = captions[shot];
     });
   });
+  // As on mole.fit, a click on the left half of the screenshot shows the previous shot, the right half the next.
+  frame.addEventListener('click', function (event) {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabs button'));
+    var i = tabs.findIndex(function (t) { return t.getAttribute('aria-pressed') === 'true'; });
+    var box = frame.getBoundingClientRect();
+    var step = event.clientX < box.left + box.width / 2 ? tabs.length - 1 : 1;
+    tabs[(i + step) % tabs.length].click();
+  });
   // iPhone and iPad open the App Store app from the region-less link, and the
   // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
   var ua = navigator.userAgent;
