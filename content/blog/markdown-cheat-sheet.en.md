@@ -56,6 +56,12 @@ print("hello")
 
 The word after the opening fence names the language and drives syntax highlighting. The same fence mechanism is how diagram tools pick up their input, with `mermaid`, `plantuml` and `markmap` as the language word.
 
+A fence is three or more backticks or three or more tildes (`~~~`), and the closing fence must use the same character and be at least as long as the opening one. That rule is how you show a fence inside a code block, as in the example above: wrap the inner three-backtick fence in an outer four-backtick one. A block of lines indented by four spaces is also a code block, but it has no language word and is easy to trigger by accident inside a list, so fences are the safer habit.
+
+In MiaoYan's preview, highlight.js colors each fenced block. With no language word it guesses the language from the content, so add the word when the colors look wrong; common short names such as `js`, `py` and `sh` work. Long lines wrap inside the block instead of scrolling sideways, so a long command stays readable without a scroll bar.
+
+To put a backtick inside inline code, wrap the span in two backticks with spaces inside: ``` `` a ` b `` ```. A fence inside a list item has to line up with the item's text, or it ends the list.
+
 ### Blockquotes and rules
 
 ```markdown
@@ -69,7 +75,16 @@ A line of three hyphens makes a horizontal rule. In MiaoYan's presentation mode,
 
 ### Paragraphs and line breaks
 
-In CommonMark, a single newline inside a paragraph is a soft break that renders as a space, and a blank line starts a new paragraph. To force a line break, end a line with two spaces or a backslash. Apps differ here. MiaoYan has a Line Break setting with two options: MiaoYan (the default, each newline starts a new line in the preview) or Github (a new line in the preview needs a blank line). If your text looks joined together or spread out in one app and not another, this is usually why.
+```markdown
+This line ends with a backslash\
+so this one starts on a new line.
+
+A blank line starts a new paragraph.
+```
+
+In CommonMark, a single newline inside a paragraph is a soft break that renders as a space, and a blank line starts a new paragraph. To force a line break without starting a paragraph, end the line with a backslash or with two spaces; both turn into a `<br>`. Apps differ here. MiaoYan has a Line Break setting in its Editor settings with two options: MiaoYan (the default, each newline starts a new line in the preview) or Github (a new line in the preview needs a blank line). In Github mode MiaoYan follows the CommonMark rule exactly, so a single newline becomes a space and the backslash or two spaces still give you a break. The preview and HTML or PDF export both follow the setting. If your text looks joined together or spread out in one app and not another, this is usually why.
+
+Two pitfalls follow from that. A note written in MiaoYan's default mode can look right in MiaoYan and run together on GitHub or in another editor, which use the soft-break rule, so switch to Github mode while writing anything you will publish elsewhere and the preview will match. And trailing spaces are invisible and often stripped by editors that trim whitespace on save, which is why the backslash is the more reliable way to break a line in a file you share.
 
 ### Escaping
 
@@ -88,14 +103,23 @@ Put a backslash before a character Markdown would otherwise read as syntax, for 
 
 The colons in the divider row set alignment: left, right, center. Column widths in the source do not need to line up, though aligning them keeps the file readable. In MiaoYan, `/table` followed by `Tab` inserts a template, and Edit > Format (`⌘⇧L`) tidies pasted plain text.
 
+A table needs a header row and a divider row with the same number of cells. If the divider row has more or fewer cells than the header, the whole block stays plain text. Body rows are more forgiving: a short row gets empty cells and extra cells are dropped. The pipes at the start and end of each row are optional.
+
+Each cell holds one line of inline Markdown, so emphasis, links, inline code and images work, while lists, code blocks and line breaks do not. Use `<br>` for a line break inside a cell, which MiaoYan renders because its preview allows raw HTML. A literal `|` inside a cell has to be written as `\|`, even inside backticks, or it splits the cell. Merged cells are not part of the syntax; write an HTML `<table>` with `colspan` if you need them.
+
+In MiaoYan's preview, a table spans the width of the note, and a table too wide to fit, for example one with a long formula or URL in a cell, scrolls sideways in its own box instead of widening the page. PDF and image exports cannot scroll, so there the table is fitted to the page width.
+
 ### Task lists
 
 ```markdown
 - [x] Draft the post
 - [ ] Add screenshots
+  - [ ] Crop the second one
 ```
 
-In MiaoYan, you can click the checkbox in preview mode to toggle it.
+A task item is a list item whose text starts with `[ ]` for an open task or `[x]` for a done one, followed by a space. The space inside the brackets matters: `[]` stays literal text, and so does `-[ ]` with no space after the hyphen. Task items nest like any other list item.
+
+In MiaoYan, you can click the checkbox in preview mode to toggle it, and the change is written back to the file as `- [x]` or `- [ ]`, so the note stays plain Markdown. To find the line to change, MiaoYan counts the `- [ ]` and `- [x]` items in the note. Write task items with a hyphen and a lowercase `x`: items written with `*`, `+`, a number or a capital `X` still show as checkboxes, but clicking one can flip a different line.
 
 ### Strikethrough
 
