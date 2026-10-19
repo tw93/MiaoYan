@@ -52,4 +52,17 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown notes from the terminal with the miao CLI](https://miaoyan.app/blog/markdown-notes-from-terminal/): Install the miao CLI, learn open, new, search, list and cat, script them, and use them with AI coding agents and the MiaoYan skill.
 - [A lighter Obsidian alternative for Mac](https://miaoyan.app/blog/obsidian-alternative-mac/): What MiaoYan has and leaves out compared with Obsidian, how to open a vault, and which syntax carries over.
 - [Markdown note version history: MiaoYan, Time Machine, git](https://miaoyan.app/blog/markdown-note-version-history/): How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.
+
+- [Mac 上怎么选 Markdown 编辑器](https://miaoyan.app/zh/blog/markdown-editor-for-mac/): 从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、VS Code 与妙言。
+- [Markdown 语法速查与 GFM 差异](https://miaoyan.app/zh/blog/markdown-cheat-sheet/): 常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。
+- [Markdown 里写 LaTeX 公式](https://miaoyan.app/zh/blog/latex-math-in-markdown/): 行内与块级公式的写法、常用 LaTeX 结构、美元符号和下划线的坑，以及妙言如何用 KaTeX 渲染。
+- [Markdown 里画 Mermaid 图](https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/): 用围栏代码块画流程图、时序图和甘特图，对比 PlantUML 与 Markmap，并说明妙言哪些图离线可用。
+- [Markdown 转幻灯片：用 --- 分页](https://miaoyan.app/zh/blog/markdown-to-slides/): 用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。
+- [Mac 上的 Typora 替代品](https://miaoyan.app/zh/blog/typora-alternative-mac/): 为什么有人离开 Typora，所见即所得与分栏预览的取舍，笔记、公式和图片能带走什么，以及两者各自强在哪里。
+- [本地优先的 Markdown 笔记怎么管](https://miaoyan.app/zh/blog/local-first-markdown-notes/): 为什么把笔记存成自己文件夹里的纯 Markdown 文件，要付出什么，以及妙言怎么读取你选的文件夹。
+- [跨设备同步 Markdown 笔记的几种做法](https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/): 用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。
+- [Markdown 笔记里的 Wikilink 与反向链接](https://miaoyan.app/zh/blog/wikilinks-and-backlinks/): [[wikilink]] 和普通 Markdown 链接有什么不同，妙言支持什么，反向链接怎么生成，可移植性上要付出什么。
+- [在终端里使用 Markdown 笔记：miao 命令行](https://miaoyan.app/zh/blog/markdown-notes-from-terminal/): 安装 miao，掌握 open、new、search、list、cat，写脚本，并配合 AI 编码 Agent 和妙言 skill 使用。
+- [Mac 上更轻的 Obsidian 替代品](https://miaoyan.app/zh/blog/obsidian-alternative-mac/): 妙言和 Obsidian 相比有什么、没有什么，怎么打开 vault，以及哪些语法能带过来。
+- [Markdown 笔记的版本历史怎么用](https://miaoyan.app/zh/blog/markdown-note-version-history/): 妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。
 <!-- blog:end -->

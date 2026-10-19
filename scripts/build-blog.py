@@ -518,7 +518,10 @@ def llms_block(posts):
         f"English posts are at {SITE}{route('en')} and Chinese ones at {SITE}{route('zh')}.",
         "",
     ]
-    lines += [f"- [{p['en']['title']}]({SITE}{route('en', p['slug'])}): {p['en']['description']}" for p in posts]
+    for lang in LANGS:
+        if lang != LANGS[0]:
+            lines.append("")
+        lines += [f"- [{p[lang]['title']}]({SITE}{route(lang, p['slug'])}): {p[lang]['description']}" for p in posts]
     return "\n" + "\n".join(lines) + "\n"
 
 
