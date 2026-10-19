@@ -13,13 +13,33 @@ class NoteRowView: ThemedTableRowView {
         )
     }
 
-    // Rows are parted by space alone, as in the shell's list: a line under
-    // each row had to be hidden next to the selection plate and flickered as
-    // the selection moved (maintainer, 2026-10-19).
+    // Rows are parted by a 0.5pt hairline inset to the title, hidden beside
+    // the selection plate (maintainer's pick, 2026-10-19). AppKit sets
+    // `isNextRowSelected` in the same selection change as `isSelected`, so
+    // the plate and the hidden lines redraw together; the selection rows the
+    // list used to track by hand redrew a step apart and the lines flashed.
+    override var isNextRowSelected: Bool {
+        didSet {
+            if oldValue != isNextRowSelected { needsDisplay = true }
+        }
+    }
+
     override func draw(_ dirtyRect: NSRect) {
         if isSelected {
             drawSelection(in: dirtyRect)
+            return
         }
+        guard !isNextRowSelected else { return }
+        let inset: CGFloat = 20
+        let height = 1 / (window?.backingScaleFactor ?? 2)
+        let rowBounds = visibleRowBounds()
+        let line = NSRect(
+            x: rowBounds.minX + inset,
+            y: bounds.height - height,
+            width: max(0, rowBounds.width - 2 * inset),
+            height: height
+        )
+        Theme.fillDivider(line, color: Theme.columnHairline, appearance: effectiveAppearance)
     }
 
     private func visibleRowBounds() -> NSRect {

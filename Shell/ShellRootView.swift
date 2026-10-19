@@ -450,12 +450,15 @@ struct ShellNoteList: View {
                             if let title = section.title {
                                 ShellSectionHeader(title: title)
                             }
-                            ForEach(section.notes, id: \.url) { note in
+                            ForEach(Array(section.notes.enumerated()), id: \.element.url) { index, note in
+                                let next = section.notes.indices.contains(index + 1) ? section.notes[index + 1] : nil
+                                let isSelected = model.isSelected(note)
                                 ShellNoteRow(
                                     note: note,
                                     snippet: model.snippet(for: note),
                                     date: ShellModel.rowDate(for: note),
-                                    isSelected: model.isSelected(note)
+                                    isSelected: isSelected,
+                                    showsDivider: !isSelected && !(next.map(model.isSelected) ?? false)
                                 )
                                 .id(note.url)
                                 .background {
@@ -661,13 +664,16 @@ private struct ShellSectionHeader: View {
 }
 
 /// A note card: the title, two lines of the note's opening and the date,
-/// parted from the next by space; the open note sits on a sand plate.
+/// parted from the next by a hairline inset to the title; the open note sits
+/// on a sand plate and the lines beside it hide, as in the storyboard list.
 @available(macOS 14, *)
 private struct ShellNoteRow: View {
     let note: Note
     let snippet: String?
     let date: String
     let isSelected: Bool
+    let showsDivider: Bool
+    @Environment(\.displayScale) private var displayScale
 
     var body: some View {
         let nameSize = CGFloat(UserDefaultsManagement.nameFontSize)
@@ -722,6 +728,13 @@ private struct ShellNoteRow: View {
                     .fill(ShellStyle.selection)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if showsDivider {
+                ShellStyle.hairline
+                    .frame(height: 1 / displayScale)
+                    .padding(.horizontal, 20)
             }
         }
         // VoiceOver reads a row as one item: the title, then its date and
