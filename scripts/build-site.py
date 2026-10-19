@@ -12,6 +12,7 @@ ships. The output is committed; Vercel serves it as static files.
 import html
 import json
 import pathlib
+import re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 APP_STORE = "https://apps.apple.com/app/id6759252269"
@@ -819,12 +820,32 @@ def page(key):
 """
 
 
+def chrome_pages():
+    """privacy.html and 404.html are hand-written, but take the same nav, footer
+    and nav scripts as every other page, so a visitor never lands on a bare bar."""
+    script = page_script(STORE_JS, LANG_JS)
+    for name in ("privacy.html", "404.html"):
+        path = ROOT / name
+        text = path.read_text()
+        text = re.sub(r'<header class="nav">.*?</header>', lambda m: header_html("en", home="/"), text, count=1, flags=re.S)
+        text = re.sub(r'\n<script>\n\(function \(\) \{\n.*?\}\)\(\);\n</script>', "", text, flags=re.S)
+        footer = footer_html("en", faq_href="/#faq")
+        if "<footer>" in text:
+            text = re.sub(r"<footer>.*?</footer>", lambda m: footer, text, count=1, flags=re.S)
+        else:
+            text = text.replace("</main>\n</div>\n", "</main>\n</div>\n" + footer + "\n", 1)
+        text = text.replace("</footer>\n", "</footer>\n" + script + "\n", 1)
+        path.write_text(text)
+    print("wrote privacy.html, 404.html chrome")
+
+
 def main():
     for key, path, *_ in LANGS:
         out = ROOT / "index.html" if path == "/" else ROOT / path.strip("/") / "index.html"
         out.parent.mkdir(exist_ok=True)
         out.write_text(page(key))
     print("wrote", ", ".join(p for _, p, *_ in LANGS))
+    chrome_pages()
     # A Chinese character missing from the font subset would fall back to the
     # system face; fail loudly so the subsets get regenerated with the copy.
     import subprocess, sys

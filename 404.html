@@ -22,6 +22,14 @@
 <header class="nav">
   <nav class="nav-bar" aria-label="Main">
     <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a><a href="/tw/" hreflang="zh-Hant" lang="zh-Hant" data-lang="tw">繁體中文</a><a href="/ja/" hreflang="ja" lang="ja" data-lang="ja">日本語</a><a href="/ko/" hreflang="ko" lang="ko" data-lang="ko">한국어</a><a href="/de/" hreflang="de" lang="de" data-lang="de">Deutsch</a><a href="/fr/" hreflang="fr" lang="fr" data-lang="fr">Français</a><a href="/es/" hreflang="es" lang="es" data-lang="es">Español</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
   </nav>
 </header>
 <main class="lost">
@@ -29,5 +37,41 @@
   <p>This page does not exist. <a href="/">Go to the home page</a>.</p>
 </main>
 </div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
 </body>
 </html>
