@@ -42,6 +42,8 @@ MiaoYan's preview turns Markdown into HTML with cmark-gfm and asks it to keep ra
 
 That has two consequences. `==highlight==` and `^sup^` stay as literal text. And the single-tilde subscript form from other editors, `H~2~O`, does not become a subscript either: the strikethrough extension accepts one tilde on each side as well as two, so it reads `~2~` as struck-through text. The syntax guide that V4.5.0 puts in its Examples folder writes `H~2~O` and `26^th^` (the Chinese guide writes `16^世纪^`), but the preview does not render them as subscript and superscript, and the [cheat sheet](/blog/markdown-cheat-sheet/) tells you to use `<sub>` and `<sup>` instead.
 
+The preview also gives two of these tags its own look. `<mark>` gets a yellow background in the light theme and a dark olive one in the dark theme, and PDF export always prints the light yellow with dark text. `<u>` and `<ins>` are drawn as a 1-pixel bottom border rather than a font underline, so the line sits below the descenders of letters such as g and y.
+
 Because the preview does not sanitize HTML, it is a good place to try an idea and a poor place to learn what other readers will see. Anything that works only because the app lets it through will break when you publish the same file somewhere stricter.
 
 ## What GitHub keeps and strips

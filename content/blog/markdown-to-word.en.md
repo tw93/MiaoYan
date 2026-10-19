@@ -26,6 +26,8 @@ The manual describes `gfm` as GitHub-Flavored Markdown. Without it, Pandoc reads
 
 Pandoc does not draw a Word document from scratch. It fills a reference document with your content, and the look comes from that document's styles. The manual lists them: paragraph styles including Normal, Body Text, First Paragraph, Compact, Title, Author, Date, Heading 1 through Heading 9, Source Code and Footnote Text, character styles such as Verbatim Char and Hyperlink, and one table style named Table.
 
+[[figure:markdown-to-word|Two routes from a Markdown note to Word: Pandoc with a reference document writes a .docx directly, while MiaoYan's HTML export can be opened in a browser and pasted into Word, and its PDF export stays a fixed page.|Pandoc writes the .docx directly and takes its styles from the reference document; MiaoYan's HTML export can only be pasted into Word, and its PDF stays a fixed page.]]
+
 So the formatting is not in the Markdown. A `##` becomes a Heading 2 paragraph, a fenced code block becomes Source Code, and what those look like is whatever the reference document says. Math is not skipped either: the manual says TeX math in docx output is rendered as OMML, Word's own equation markup, so a formula arrives as an equation you can edit in Word.
 
 ## Set the fonts, especially for Chinese
@@ -37,7 +39,7 @@ pandoc -o custom-reference.docx --print-default-data-file reference.docx
 pandoc note.md -o note.docx --reference-doc=custom-reference.docx
 ```
 
-Open `custom-reference.docx` in Word or LibreOffice and edit the styles, not the sample text: change Normal and Body Text for the body, the Heading styles for titles, and Source Code for code. For a Chinese document, set the Chinese (East Asian) font on those styles as well as the Latin one, because a style can name one face for Latin characters and another for Chinese ones. If you only change the Latin font, the Chinese text keeps whatever face the style already had and can look mismatched. The same reference file works for every note you convert, so this is a one-time job.
+Open `custom-reference.docx` in Word or LibreOffice and edit the styles, not the sample text: change Normal and Body Text for the body, the Heading styles for titles, and Source Code for code. For a Chinese document, set the Chinese (East Asian) font on those styles as well as the Latin one, because a style can name one face for Latin characters and another for Chinese ones. If you only change the Latin font, the Chinese text keeps whatever face the style already had and can look mismatched. In Pandoc's default reference document, Body Text is based on Normal, and First Paragraph, the style of the paragraph right after a heading, and Compact, used for tight list items, are both based on Body Text, so fonts set on Normal reach all of them. Headings and Title take theme heading fonts (`majorHAnsi` and `majorEastAsia` in `styles.xml`) instead, so set those styles separately. The same reference file works for every note you convert, so this is a one-time job.
 
 The default `reference.docx` also carries page size and margins. If the converted file comes out on the wrong paper, fix it once in the reference document.
 

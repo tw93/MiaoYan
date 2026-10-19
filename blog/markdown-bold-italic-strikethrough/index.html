@@ -150,6 +150,10 @@
 <p>Keep the tag on the same line as its text. A tag alone on a line starts an HTML block, and the lines inside it are not parsed as Markdown. The trade-off is portability in the other direction: a renderer that strips raw HTML drops the tags, which can leave plain text where you wanted emphasis.</p>
 <h2 id="checking-the-result">Checking the result</h2>
 <p>Open the preview and look for literal <code>*</code>, <code>_</code> or <code>~</code>. Then check in order: whitespace just inside the delimiter, punctuation touching the delimiter with a letter on the other side, an underscore in the middle of a word, unequal tilde counts, and a blank line between the opening and closing marks. If a character is still being read as syntax, escape it with a backslash.</p>
+<p>To catch the closing-side failure across a folder before you publish, search for a <code>**</code> that has punctuation on its inside and a letter on its outside:</p>
+<pre><code class="language-bash">grep -rnE '[：；，。！？、）」』”.,:;!?)]\*\*[^[:space:]*：；，。！？、）」』”.,:;!?)]' --include='*.md' .
+</code></pre>
+<p>Run on the failing and working examples in the table above plus <code>**注意**：这样可以</code>, <code>**注意：** 这样可以</code> and <code>（**括号**）继续</code>, it listed exactly the four lines cmark-gfm left as literal asterisks. It does not see the opening side, so a line it misses can still fail.</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="is-bold-two-asterisks-or-two-underscores">Is bold two asterisks or two underscores?</h3>
 <p>Both are valid. Asterisks are safer, since underscores do nothing inside words and next to Chinese text.</p>
@@ -161,7 +165,7 @@
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
-    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-comments/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown comments: HTML comments and [//]: # (note)</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/markdown-underline-and-color/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown underline, color and center text with HTML</span><span class="blog-related-meta">7 min read</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-comments/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown comments: HTML comments and [//]: # (note)</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-underline-and-color/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown underline, color and center text with HTML</span><span class="blog-related-meta">7 min read</span></a></li></ul>
   </nav>
 </main>
 </div>

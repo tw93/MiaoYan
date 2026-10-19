@@ -66,13 +66,15 @@
 <p>手册把 <code>gfm</code> 描述为 GitHub-Flavored Markdown，不加的话 Pandoc 按它自己的 Markdown 方言读，和 GFM 大部分重叠，但并不完全一样。<code>$...$</code> 公式两种读法都行，<code>tex_math_dollars</code> 扩展把两个美元符号之间的内容当作 TeX 公式，两种格式里它都是开着的。运行 <code>pandoc --list-extensions=gfm</code> 可以看到这个格式有哪些扩展，前面是 <code>+</code> 的表示默认开着。</p>
 <h2 id="格式从哪里来">格式从哪里来</h2>
 <p>Pandoc 不是从零画一份 Word 文档，而是把你的内容填进一份参考文档，外观来自这份文档的样式。手册列出了这些样式，段落样式有 Normal、Body Text、First Paragraph、Compact、Title、Author、Date、Heading 1 到 Heading 9、Source Code 和 Footnote Text，字符样式有 Verbatim Char 和 Hyperlink，表格样式只有一个叫 Table。</p>
+<figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/markdown-to-word-mobile.webp" width="600" height="1138"><img src="/img/blog/markdown-to-word.webp" width="1000" height="522" loading="lazy" alt="从 Markdown 笔记到 Word 的两条路，Pandoc 配参考文档直接写出 .docx，妙言的 HTML 导出要在浏览器里打开再粘贴进 Word，PDF 导出则是固定的页面。"></picture><figcaption>Pandoc 直接写出 .docx，样式取自参考文档，妙言的 HTML 导出只能粘贴进 Word，PDF 导出则是固定的页面。</figcaption></figure>
+
 <p>所以格式不在 Markdown 里，<code>##</code> 变成 Heading 2 段落，代码围栏变成 Source Code，它们长什么样由参考文档决定。公式也不会被丢掉，手册写明 docx 输出里的 TeX 公式会写成 OMML，也就是 Word 自己的公式格式，到了 Word 里是可以直接编辑的公式。</p>
 <h2 id="设置字体尤其是中文">设置字体，尤其是中文</h2>
 <p>先取出默认的参考文档，在 Word 里改好，再传回去：</p>
 <pre><code class="language-bash">pandoc -o custom-reference.docx --print-default-data-file reference.docx
 pandoc note.md -o note.docx --reference-doc=custom-reference.docx
 </code></pre>
-<p>用 Word 或 LibreOffice 打开 <code>custom-reference.docx</code>，改的是样式而不是示例文字，正文改 Normal 和 Body Text，标题改各级 Heading，代码改 Source Code。中文文档要把这些样式里的中文（东亚）字体也设上，不只设西文字体，因为一个样式可以给西文字符和中文字符分别指定字体，只改西文的话，中文还是样式原来的字体，和西文放在一起可能不协调。同一份参考文件对每篇笔记都适用，只需要做一次。</p>
+<p>用 Word 或 LibreOffice 打开 <code>custom-reference.docx</code>，改的是样式而不是示例文字，正文改 Normal 和 Body Text，标题改各级 Heading，代码改 Source Code。中文文档要把这些样式里的中文（东亚）字体也设上，不只设西文字体，因为一个样式可以给西文字符和中文字符分别指定字体，只改西文的话，中文还是样式原来的字体，和西文放在一起可能不协调。Pandoc 默认参考文档里，Body Text 基于 Normal，First Paragraph（标题下面第一段用的样式）和 Compact（紧凑列表项用的样式）又都基于 Body Text，所以字体设在 Normal 上，这几种段落都会跟着变，各级 Heading 和 Title 用的是主题里的标题字体（<code>styles.xml</code> 里的 <code>majorHAnsi</code> 和 <code>majorEastAsia</code>），要单独去改。同一份参考文件对每篇笔记都适用，只需要做一次。</p>
 <p>默认的 <code>reference.docx</code> 也带着页面大小和页边距，转出来纸张不对，就在参考文档里改一次。</p>
 <h2 id="走妙言的导出">走妙言的导出</h2>
 <p>妙言的文件 &gt; 导出子菜单有 HTML、图片、PDF 和妙言 PPT PDF，没有一个是 Word 格式，也不能替代 Pandoc 去编辑，适合的情形是读的人要的是渲染后的样子，而不是可编辑文字。</p>
@@ -151,7 +153,7 @@ pandoc note.md -o note.docx --reference-doc=custom-reference.docx
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-to-html/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 HTML：命令行与妙言导出</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-to-html/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 HTML：命令行与妙言导出</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

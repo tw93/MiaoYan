@@ -48,6 +48,8 @@ Two options cover most cases.
 
 MiaoYan, in its V4.5.0 release, declares itself in its Info.plist as an editor for Markdown files with the extensions `md` and `markdown`, under the type `net.daringfireball.markdown`. That is what lets it appear in Open With and in the Open with pop-up of Get Info. It does not list `mdown`, `mkd` or other rarer extensions itself, so whether macOS offers it for those files depends on what other installed apps declare.
 
+Terminal shows the same thing. `mdls -name kMDItemContentType note.md` prints the type macOS gave the file, `net.daringfireball.markdown` for a `.md` file, while an extension that no installed app declares comes back as a value starting with `dyn.`, as `.mdown` and `.mkd` did on a Mac with MiaoYan installed. `open -a MiaoYan note.md` opens one file in MiaoYan without changing any default, and `open -e note.md` opens it in TextEdit.
+
 Double-clicking a file starts what the app calls Single Mode, whose menu item is File > Single Mode (`⌘O`), in Chinese 「单独模式」. The same mode starts when you choose that menu item and pick a file or folder. The note list shows the files that sit next to the one you opened. The app's own prompt says to leave this mode with `Command+Shift+W`.
 
 Which neighbors appear depends on the extension. In V4.5.0 the list is built from files ending in `md`, `markdown` or `txt`, and the code compares that text exactly, with the case you typed. A file named `README.MD` is therefore not matched by that scan, so if a file with an uppercase extension does not show up next to its neighbors, rename it to lowercase `.md`. When it reads a folder, MiaoYan also skips files that macOS does not identify as text and files of 100 MB or more.

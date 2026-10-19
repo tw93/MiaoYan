@@ -26,6 +26,8 @@ pandoc -f gfm note.md -o note.docx
 
 Pandoc 不是从零画一份 Word 文档，而是把你的内容填进一份参考文档，外观来自这份文档的样式。手册列出了这些样式，段落样式有 Normal、Body Text、First Paragraph、Compact、Title、Author、Date、Heading 1 到 Heading 9、Source Code 和 Footnote Text，字符样式有 Verbatim Char 和 Hyperlink，表格样式只有一个叫 Table。
 
+[[figure:markdown-to-word|从 Markdown 笔记到 Word 的两条路，Pandoc 配参考文档直接写出 .docx，妙言的 HTML 导出要在浏览器里打开再粘贴进 Word，PDF 导出则是固定的页面。|Pandoc 直接写出 .docx，样式取自参考文档，妙言的 HTML 导出只能粘贴进 Word，PDF 导出则是固定的页面。]]
+
 所以格式不在 Markdown 里，`##` 变成 Heading 2 段落，代码围栏变成 Source Code，它们长什么样由参考文档决定。公式也不会被丢掉，手册写明 docx 输出里的 TeX 公式会写成 OMML，也就是 Word 自己的公式格式，到了 Word 里是可以直接编辑的公式。
 
 ## 设置字体，尤其是中文
@@ -37,7 +39,7 @@ pandoc -o custom-reference.docx --print-default-data-file reference.docx
 pandoc note.md -o note.docx --reference-doc=custom-reference.docx
 ```
 
-用 Word 或 LibreOffice 打开 `custom-reference.docx`，改的是样式而不是示例文字，正文改 Normal 和 Body Text，标题改各级 Heading，代码改 Source Code。中文文档要把这些样式里的中文（东亚）字体也设上，不只设西文字体，因为一个样式可以给西文字符和中文字符分别指定字体，只改西文的话，中文还是样式原来的字体，和西文放在一起可能不协调。同一份参考文件对每篇笔记都适用，只需要做一次。
+用 Word 或 LibreOffice 打开 `custom-reference.docx`，改的是样式而不是示例文字，正文改 Normal 和 Body Text，标题改各级 Heading，代码改 Source Code。中文文档要把这些样式里的中文（东亚）字体也设上，不只设西文字体，因为一个样式可以给西文字符和中文字符分别指定字体，只改西文的话，中文还是样式原来的字体，和西文放在一起可能不协调。Pandoc 默认参考文档里，Body Text 基于 Normal，First Paragraph（标题下面第一段用的样式）和 Compact（紧凑列表项用的样式）又都基于 Body Text，所以字体设在 Normal 上，这几种段落都会跟着变，各级 Heading 和 Title 用的是主题里的标题字体（`styles.xml` 里的 `majorHAnsi` 和 `majorEastAsia`），要单独去改。同一份参考文件对每篇笔记都适用，只需要做一次。
 
 默认的 `reference.docx` 也带着页面大小和页边距，转出来纸张不对，就在参考文档里改一次。
 

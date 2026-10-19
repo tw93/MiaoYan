@@ -81,6 +81,7 @@ A note whose first line is `---` is treated as front matter up to the next line 
 - **The top of the note vanished.** The note starts with `---` and a later line is exactly `---`, so everything between was read as front matter.
 - **A slide split in the wrong place.** In PPT mode every `---` line is a boundary. Replace dividers with `***` or `<hr>`.
 - **No line in an app other than MiaoYan.** The renderer may filter raw `<hr>`. Use `---` with a blank line above it.
+- **Pandoc drops the line, makes a one-cell table or stops.** Pandoc's own Markdown, the reader behind a [Word conversion](/blog/markdown-to-word/), takes a `---` with text directly below it as the start of a YAML metadata block, which its manual allows anywhere after a blank line. With Pandoc 3.12.1, `---`, `key: value`, `---` vanished from the output, the same fence around lines that are not YAML stopped the run with `Error parsing YAML metadata`, and one line of text between two rules came out as a one-cell table. A blank line below the rule as well as above it fixes all three, which is what the manual recommends.
 
 For the broader picture of what CommonMark and GFM each define, see [CommonMark vs GFM](/blog/commonmark-vs-gfm/), and for the rest of the syntax, the [Markdown cheat sheet](/blog/markdown-cheat-sheet/).
 

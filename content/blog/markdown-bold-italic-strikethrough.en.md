@@ -65,6 +65,14 @@ Keep the tag on the same line as its text. A tag alone on a line starts an HTML 
 
 Open the preview and look for literal `*`, `_` or `~`. Then check in order: whitespace just inside the delimiter, punctuation touching the delimiter with a letter on the other side, an underscore in the middle of a word, unequal tilde counts, and a blank line between the opening and closing marks. If a character is still being read as syntax, escape it with a backslash.
 
+To catch the closing-side failure across a folder before you publish, search for a `**` that has punctuation on its inside and a letter on its outside:
+
+```bash
+grep -rnE '[：；，。！？、）」』”.,:;!?)]\*\*[^[:space:]*：；，。！？、）」』”.,:;!?)]' --include='*.md' .
+```
+
+Run on the failing and working examples in the table above plus `**注意**：这样可以`, `**注意：** 这样可以` and `（**括号**）继续`, it listed exactly the four lines cmark-gfm left as literal asterisks. It does not see the opening side, so a line it misses can still fail.
+
 ## FAQ
 
 ### Is bold two asterisks or two underscores?

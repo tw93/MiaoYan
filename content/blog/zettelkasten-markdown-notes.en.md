@@ -65,6 +65,18 @@ Half an hour is enough once the habit sticks, and the order matters: write first
 - **Renaming notes.** In MiaoYan, links in other notes keep the old title, and the missing target shows a message that the title does not exist. Search for the old title and fix the links.
 - **Two notes with the same title in different folders.** MiaoYan then starts a search instead of opening one, so keep titles unique.
 
+To list every link whose target no longer exists, run this from the notes folder:
+
+```bash
+grep -rhoE '\[\[[^]]+\]\]' --include='*.md' --include='*.markdown' --include='*.txt' . |
+  sed -E 's/^\[\[//; s/\]\]$//; s/#.*$//' | sort -u |
+  while IFS= read -r t; do
+    [ -n "$(find . \( -name "$t.md" -o -name "$t.markdown" -o -name "$t.txt" \) -print -quit)" ] || echo "missing: $t"
+  done
+```
+
+It uses the same `[[...]]` pattern as MiaoYan's backlinks index drops a `#heading` part, and compares names with exact case, and each `missing:` line is a title to search for and fix. Links inside code blocks are counted too.
+
 ## FAQ
 
 ### Do I need an app for Zettelkasten?

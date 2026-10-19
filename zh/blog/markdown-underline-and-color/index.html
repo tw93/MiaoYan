@@ -118,6 +118,7 @@
 <h2 id="妙言能渲染什么">妙言能渲染什么</h2>
 <p>妙言的预览用 cmark-gfm 把 Markdown 转成 HTML，并让它保留原始 HTML（<code>CMARK_OPT_UNSAFE</code> 这个选项），所以 <code>&lt;u&gt;</code>、<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;span style="..."&gt;</code> 都会原样交给预览的 web view，由浏览器引擎绘制。解析器打开了四个扩展，分别是表格、脚注、删除线和任务列表，没有一个提供下划线、高亮、上标或下标。</p>
 <p>这带来两个结果。<code>==高亮==</code> 和 <code>^上标^</code> 会按字面显示；其他编辑器里常见的单波浪线下标 <code>H~2~O</code> 也不会变成下标，删除线扩展除了两个波浪线，也接受前后各一个波浪线，于是 <code>~2~</code> 会被读成删除线。V4.5.0 放在 <code>Examples</code> 文件夹里的语法指南写了 <code>H~2~O</code> 和 <code>26^th^</code>（中文版写的是 <code>16^世纪^</code>），但预览并不会把它们渲染成下标和上标，<a href="/zh/blog/markdown-cheat-sheet/">语法速查</a>里也建议改用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code>。</p>
+<p>预览还给其中两个标签定了自己的样子，<code>&lt;mark&gt;</code> 在浅色主题里是黄色底，在深色主题里是暗橄榄色底，导出 PDF 时一律印成浅色主题的黄底深色字，<code>&lt;u&gt;</code> 和 <code>&lt;ins&gt;</code> 画的是一条 1 像素的下边框，不是字体自带的下划线，所以这条线落在 g、y 这类字母的下伸部分下面。</p>
 <p>预览不会过滤 HTML，所以它适合试写法，不适合用来判断别人看到的样子，只因为软件放行才生效的标签，换到更严格的地方发布就会失效。</p>
 <h2 id="github-保留什么去掉什么">GitHub 保留什么、去掉什么</h2>
 <p>GitHub 在基础格式文档里列了三个，<code>&lt;sub&gt;</code>、<code>&lt;sup&gt;</code> 和 <code>&lt;ins&gt;</code>，最后一个用来做下划线。它的 markup 项目还说明，渲染出的 HTML 会经过过滤，行内样式会被去掉。拿一段示例交给 GitHub 的 Markdown API 渲染，结果是这样：</p>
@@ -184,7 +185,7 @@
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-bold-italic-strikethrough/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 加粗、斜体与删除线的写法和坑</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-bold-italic-strikethrough/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 加粗、斜体与删除线的写法和坑</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

@@ -6,6 +6,8 @@ Parsers give you a fragment by default, a pile of `<h1>`, `<p>` and `<ul>` eleme
 
 Pandoc is explicit about it. Its manual says "By default, pandoc produces a document fragment", and `-s` or `--standalone` produces a complete document with a `<head>` and `<body>`. `--css` should be used together with `-s`, because the link to the stylesheet goes in the document header.
 
+A full page also needs a `<title>`. With Pandoc 3.12.1, a note with no title metadata got its file name, so `note.md` became a tab titled note. `--metadata title="My Note"` sets it but also adds a title block with its own `<h1>` above the note's `# My Note`, so the heading appears twice. `-V pagetitle="My Note"` sets only the tab title, and `--shift-heading-level-by=-1` turns the opening `#` heading into the document title, which the manual describes, at the cost of moving every `##` up to level 1.
+
 ## Command-line routes
 
 ```bash

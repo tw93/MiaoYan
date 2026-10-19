@@ -81,6 +81,7 @@ hr {
 - **笔记开头不见了。** 笔记以 `---` 开头，后面某行正好是 `---`，中间的内容被当成了 front matter。
 - **幻灯片在不该分的地方分了。** PPT 模式下每一行 `---` 都是边界，分隔线换成 `***` 或 `<hr>`。
 - **在妙言以外的应用里没有线。** 渲染器可能过滤了 `<hr>`，改用 `---` 并在上面留空行。
+- **Pandoc 把线吞掉、变成单格表格，或者直接报错。** Pandoc 自己的 Markdown，也就是[转 Word](/zh/blog/markdown-to-word/) 时读文件的那一套，看到 `---` 下面紧贴着文字，会当成 YAML 元数据块的开头，手册写明这种块只要前面有空行，放在文档哪里都行。用 Pandoc 3.12.1 试过，`---`、`key: value`、`---` 这三行在输出里整个消失，同样的围栏里放不是 YAML 的文字，转换直接停在 `Error parsing YAML metadata`，两条线中间夹一行普通文字，出来的是一个只有一格的表格。分割线下面也留一个空行，三种情况都能避开，手册本身就是这么建议的。
 
 CommonMark 和 GFM 各自规定了什么，见 [CommonMark 与 GFM 的区别](/zh/blog/commonmark-vs-gfm/)，其余语法见 [Markdown 语法速查](/zh/blog/markdown-cheat-sheet/)。
 

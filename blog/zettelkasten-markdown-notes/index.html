@@ -98,6 +98,14 @@
 <li><strong>Renaming notes.</strong> In MiaoYan, links in other notes keep the old title, and the missing target shows a message that the title does not exist. Search for the old title and fix the links.</li>
 <li><strong>Two notes with the same title in different folders.</strong> MiaoYan then starts a search instead of opening one, so keep titles unique.</li>
 </ul>
+<p>To list every link whose target no longer exists, run this from the notes folder:</p>
+<pre><code class="language-bash">grep -rhoE '\[\[[^]]+\]\]' --include='*.md' --include='*.markdown' --include='*.txt' . |
+  sed -E 's/^\[\[//; s/\]\]$//; s/#.*$//' | sort -u |
+  while IFS= read -r t; do
+    [ -n &quot;$(find . \( -name &quot;$t.md&quot; -o -name &quot;$t.markdown&quot; -o -name &quot;$t.txt&quot; \) -print -quit)&quot; ] || echo &quot;missing: $t&quot;
+  done
+</code></pre>
+<p>It uses the same <code>[[...]]</code> pattern as MiaoYan's backlinks index drops a <code>#heading</code> part, and compares names with exact case, and each <code>missing:</code> line is a title to search for and fix. Links inside code blocks are counted too.</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="do-i-need-an-app-for-zettelkasten">Do I need an app for Zettelkasten?</h3>
 <p>No. Luhmann used paper slips. Markdown files in a folder with links by file name are enough, and an app only speeds up linking and search.</p>

@@ -99,6 +99,14 @@
 <li><strong>给笔记改名。</strong> 在妙言里其他笔记里的链接还是旧标题，找不到目标时会提示标题不存在，搜旧标题把链接改过来。</li>
 <li><strong>不同文件夹里有两条同标题的笔记。</strong> 妙言会转成搜索，不会直接打开其中一条，所以标题要唯一。</li>
 </ul>
+<p>想把目标已经不存在的链接都列出来，在笔记文件夹里跑这一段：</p>
+<pre><code class="language-bash">grep -rhoE '\[\[[^]]+\]\]' --include='*.md' --include='*.markdown' --include='*.txt' . |
+  sed -E 's/^\[\[//; s/\]\]$//; s/#.*$//' | sort -u |
+  while IFS= read -r t; do
+    [ -n &quot;$(find . \( -name &quot;$t.md&quot; -o -name &quot;$t.markdown&quot; -o -name &quot;$t.txt&quot; \) -print -quit)&quot; ] || echo &quot;missing: $t&quot;
+  done
+</code></pre>
+<p>它用的 <code>[[...]]</code> 匹配规则和妙言反向链接索引一样，会去掉 <code>#标题</code> 那部分，比较文件名时区分大小写，每一行 <code>missing:</code> 后面就是一个要去搜、去改的标题，代码块里写的链接也会被算进去。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="做卡片笔记一定要用应用吗">做卡片笔记一定要用应用吗？</h3>
 <p>不用，卢曼用的是纸质卡片。文件夹里的 Markdown 文件加按文件名写的链接就够了，应用只是让链接和搜索更快。</p>
@@ -110,7 +118,7 @@
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/local-first-markdown-notes/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">本地优先的 Markdown 笔记怎么管</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/open-md-file-mac/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Mac 上怎么打开 .md 文件</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-on-ipad/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">iPad 上写 Markdown：文件、同步和编辑器</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/local-first-markdown-notes/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">本地优先的 Markdown 笔记怎么管</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/open-md-file-mac/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Mac 上怎么打开 .md 文件</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-on-ipad/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">iPad 上写 Markdown：文件、同步和编辑器</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

@@ -48,6 +48,8 @@ Markdown 文件就是普通文本，用几个标点符号代替排版，`#` 是�
 
 妙言 V4.5.0 在 Info.plist 里把自己声明为 Markdown 文件的编辑器，扩展名是 `md` 和 `markdown`，类型是 `net.daringfireball.markdown`，所以它会出现在「打开方式」和「显示简介」的「打开方式」菜单里。`mdown`、`mkd` 这些少见的扩展名它自己没有声明，这类文件会不会推荐给它，要看 Mac 上其他应用怎么声明。
 
+在终端里也能看到这一点，`mdls -name kMDItemContentType note.md` 会打印 macOS 给这个文件认定的类型，`.md` 文件是 `net.daringfireball.markdown`，没有任何已装应用声明过的扩展名，得到的是一个以 `dyn.` 开头的值，装了妙言的 Mac 上 `.mdown` 和 `.mkd` 就是这样。`open -a MiaoYan note.md` 只用妙言打开这一个文件，不动默认设置，`open -e note.md` 则用文本编辑打开。
+
 双击文件会进入应用里的「单独模式」，菜单项是「文件 > 单独模式」（`⌘O`），从这个菜单项选文件或文件夹也一样。笔记列表里显示和你打开的文件放在一起的其他文件，应用自己的提示说退出这个模式用 `Command+Shift+W`。
 
 哪些邻居文件会出现取决于扩展名。V4.5.0 里列表只收以 `md`、`markdown`、`txt` 结尾的文件，代码按你写的大小写原样比较，所以 `README.MD` 不会被这次扫描匹配，如果大写扩展名的文件没有出现在邻居里，把它改成小写的 `.md`。读取文件夹时，妙言还会跳过 macOS 不认定为文本的文件和 100 MB 及以上的文件。
