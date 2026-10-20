@@ -509,6 +509,113 @@ def french_spacing(s):
 
 SITE = "https://miaoyan.app"
 
+
+# Author contact under the FAQ, the same block as mole.fit's (2026-10-20). The
+# counts are static: update them together with mole.fit's site/i18n copy.
+CONTACT = {
+    "en": {
+        "title": 'Get in touch',
+        "sub": 'Questions and suggestions are welcome in <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
+        "x_stat": '163K followers',
+        "x_desc": 'I make MiaoYan, Mole, Kaku, Pake, Waza, and Kami. I keep the apps updated, and you’re welcome to message me.',
+        "gh_stat": '182.6K stars',
+        "gh_desc": 'My open-source projects, with 19.4K forks and 13.5K followers. Questions and contributions are welcome.',
+        "a11y_x": 'Contact Tw93 on X',
+        "a11y_gh": 'View Tw93’s GitHub profile',
+    },
+    "zh": {
+        "title": '欢迎联系与交流',
+        "sub": '使用问题和建议，可以在 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> 里反馈',
+        "x_stat": '163K 粉丝',
+        "x_desc": '我是 MiaoYan、Mole、Kaku、Pake、Waza 和 Kami 的作者，产品一直在更新，欢迎私信。',
+        "gh_stat": '182.6K Star',
+        "gh_desc": '我的开源项目都在这里，累计 19.4K 次 Fork、13.5K 位关注者，欢迎交流和贡献。',
+        "a11y_x": '在 X 上联系 Tw93',
+        "a11y_gh": '在 GitHub 查看 Tw93 的主页',
+    },
+    "tw": {
+        "title": '歡迎聯絡與交流',
+        "sub": '使用問題和建議，可以在 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> 回報',
+        "x_stat": '163K 粉絲',
+        "x_desc": '我是 MiaoYan、Mole、Kaku、Pake、Waza 和 Kami 的作者，產品持續更新，歡迎私訊交流。',
+        "gh_stat": '182.6K Star',
+        "gh_desc": '我的開源專案都在這裡，累計 19.4K 次 Fork、13.5K 位追蹤者，歡迎交流與貢獻。',
+        "a11y_x": '在 X 上聯絡 Tw93',
+        "a11y_gh": '在 GitHub 查看 Tw93 的個人頁面',
+    },
+    "ja": {
+        "title": 'お問い合わせ・交流',
+        "sub": '使い方の質問や提案は <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> へどうぞ。',
+        "x_stat": 'フォロワー163K',
+        "x_desc": 'MiaoYan、Mole、Kaku、Pake、Waza、Kamiの作者です。アプリは継続して更新しています。DMもお気軽にどうぞ。',
+        "gh_stat": 'スター 182.6K',
+        "gh_desc": 'オープンソースのプロジェクトを公開しています。19.4Kフォーク、13.5Kフォロワー。質問や開発への参加も歓迎です。',
+        "a11y_x": 'XでTw93に連絡する',
+        "a11y_gh": 'Tw93のGitHubプロフィールを見る',
+    },
+    "ko": {
+        "title": '편하게 연락해 주세요',
+        "sub": '사용 중 궁금한 점이나 제안은 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>에 남겨 주세요.',
+        "x_stat": '팔로워 163K',
+        "x_desc": 'MiaoYan, Mole, Kaku, Pake, Waza, Kami를 만들고 꾸준히 업데이트하고 있습니다. DM으로 편하게 이야기해 주세요.',
+        "gh_stat": '스타 182.6K',
+        "gh_desc": '제 오픈 소스 프로젝트를 모아 둔 곳으로, 포크 19.4K개와 팔로워 13.5K명이 있습니다. 질문과 기여 모두 환영합니다.',
+        "a11y_x": 'X에서 Tw93에게 연락하기',
+        "a11y_gh": 'Tw93의 GitHub 프로필 보기',
+    },
+    "de": {
+        "title": 'Kontakt und Austausch',
+        "sub": 'Fragen und Vorschläge sind in den <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> willkommen.',
+        "x_stat": '163K Follower',
+        "x_desc": 'Ich entwickle MiaoYan, Mole, Kaku, Pake, Waza und Kami und halte die Apps aktuell. Schreiben Sie mir gern.',
+        "gh_stat": '182,6K Sterne',
+        "gh_desc": 'Hier finden Sie meine Open-Source-Projekte: 19,4K Forks und 13,5K Follower. Fragen und Beiträge sind willkommen.',
+        "a11y_x": 'Tw93 auf X kontaktieren',
+        "a11y_gh": 'Das GitHub-Profil von Tw93 ansehen',
+    },
+    "fr": {
+        "title": 'Restons en contact',
+        "sub": 'Questions et suggestions sont les bienvenues dans les <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
+        "x_stat": '163K abonnés',
+        "x_desc": 'Je développe MiaoYan, Mole, Kaku, Pake, Waza et Kami et continue à les mettre à jour. Vous pouvez m’écrire en privé.',
+        "gh_stat": '182,6K étoiles',
+        "gh_desc": 'Mes projets open source, avec 19,4K forks et 13,5K abonnés. Vos questions et contributions sont les bienvenues.',
+        "a11y_x": 'Contacter Tw93 sur X',
+        "a11y_gh": 'Voir le profil GitHub de Tw93',
+    },
+    "es": {
+        "title": 'Hablemos',
+        "sub": 'Puedes dejar preguntas y sugerencias en <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
+        "x_stat": '163K seguidores',
+        "x_desc": 'Soy el creador de MiaoYan, Mole, Kaku, Pake, Waza y Kami. Sigo actualizando las apps y puedes escribirme por privado.',
+        "gh_stat": '182,6K estrellas',
+        "gh_desc": 'Aquí están mis proyectos de código abierto, con 19,4K forks y 13,5K seguidores. Puedes preguntar o contribuir.',
+        "a11y_x": 'Contactar con Tw93 en X',
+        "a11y_gh": 'Ver el perfil de Tw93 en GitHub',
+    },
+}
+
+
+def contact_html(key):
+    c = CONTACT[key]
+    t = french_spacing if key == "fr" else (lambda s: s)
+    avatar = '<img class="contact-avatar" src="/assets/tw93.png" width="44" height="44" alt="" loading="lazy" decoding="async">'
+    x_glyph = '<svg class="contact-glyph" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
+    gh_glyph = GITHUB_MARK.replace('<svg ', '<svg class="contact-glyph" width="22" height="22" ', 1).replace(' aria-hidden="true"', "")
+
+    def card(href, label, glyph, name, handle, stat, desc):
+        return (f'<a class="contact-card" href="{href}" target="_blank" rel="noopener" aria-label="{esc(label)}">'
+                f'<span class="contact-head"><span class="contact-channel" aria-hidden="true">{glyph}{avatar}</span>'
+                f'<span class="contact-meta"><b>{name}</b><span class="contact-handle">{handle}</span></span>'
+                f'<span class="contact-stat">{esc(stat)}</span></span><p class="contact-desc">{esc(t(desc))}</p></a>')
+
+    return ('<div class="contact"><div class="contact-heading">'
+            '<img class="contact-author" src="/assets/tw93.png" width="28" height="28" alt="Tw93" loading="lazy" decoding="async">'
+            f'<p class="contact-title">{esc(c["title"])}</p></div><p class="contact-sub">{t(c["sub"])}</p><div class="contact-cards">'
+            + card("https://x.com/HiTw93", c["a11y_x"], x_glyph, "X", "@HiTw93", c["x_stat"], c["x_desc"])
+            + card("https://github.com/tw93", c["a11y_gh"], gh_glyph, "GitHub", "@tw93", c["gh_stat"], c["gh_desc"])
+            + "</div></div>")
+
 # The blog is written in English and Simplified Chinese. Every footer links to
 # it, Traditional Chinese to the Simplified one; only the two home pages whose
 # language the blog is written in put it in the top nav. scripts/build-blog.py
@@ -809,6 +916,7 @@ def page(key):
   <section id="faq" class="faq" aria-labelledby="faq-title">
     <h2 class="section-title" id="faq-title">{esc(c['faq_title'])}</h2>
     {faq}
+    {contact_html(key)}
   </section>
 </main>
 </div>
