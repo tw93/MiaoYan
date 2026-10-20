@@ -392,8 +392,17 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 .foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
 @media (hover: hover) { .foot-col a:hover { color: #fff; } }
 
-@media (max-width: 999px) {
+/* Tablets keep the links that fit in every language with Android's Noto Serif
+   (no Charter there) and the App Store pill showing: all five from 820, then
+   Features, FAQ and Blog down to 621 (Chinese in Georgia needs 611), so OPPO Pad mini portrait (640) and every
+   iPad keep a menu. GitHub stays in the footer. Phones drop the links. */
+@media (max-width: 819px) {
+  .nav-links a:is([href*="github.com"], [href$="#devices"]) { display: none; }
+}
+@media (max-width: 620px) {
   .nav-links { display: none; }
+}
+@media (max-width: 999px) {
   .blog-cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 881px) {
