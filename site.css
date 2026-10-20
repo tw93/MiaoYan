@@ -411,7 +411,9 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .device.pad { width: min(460px, 62%); }
   .device.phone { width: min(230px, 32%); }
   .foot { flex-direction: column; }
-  .foot-cols { gap: 32px; flex-wrap: wrap; }
+  /* Stacked under the brand, the columns share the full width as on mole.fit;
+     at their natural widths they huddled left of an empty half (OPPO Pad mini). */
+  .foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 16px; align-self: stretch; }
 }
 @media (max-width: 680px) {
   :root { --inset: 18px; }
