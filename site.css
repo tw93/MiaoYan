@@ -111,7 +111,7 @@ body > :is(.wrap, footer) { width: 100%; }
 body > footer { margin-top: auto; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) body { line-height: 1.75; }
 html[lang="de"] :is(.section-lede, .card p, .faq p) { hyphens: auto; -webkit-hyphens: auto; }
-a { color: inherit; }
+a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; height: auto; }
 
 .wrap { max-width: calc(var(--page) + var(--inset) * 2); margin: 0 auto; padding: 0 var(--inset); }
@@ -245,15 +245,17 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { l
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 158px;
   font-size: 15px; letter-spacing: 0.2px; text-decoration: none;
-  padding: 13px 28px; border-radius: 999px; border: 1.5px solid var(--brand);
+  line-height: 1.55; padding: 13px 28px; border-radius: 999px; border: 1px solid var(--brand);
   transition: background 0.15s, border-color 0.15s, transform 0.15s;
 }
 .btn svg { width: 16px; height: 16px; flex: none; margin-top: -1px; }
-.btn-primary { background: var(--brand); color: #fff; font-weight: 600; }
+.btn-primary { background: var(--brand); color: #fff; font-weight: 500; }
 .btn-primary:hover { background: var(--brand-light); border-color: var(--brand-light); transform: translateY(-1px); }
-/* The secondary action is a plain link beside the button, not a second pill. */
-.btn-ghost { color: var(--brand); background: transparent; font-weight: 500; border-color: transparent; min-width: 0; padding-left: 12px; padding-right: 12px; }
-.btn-ghost:hover { text-decoration: underline; text-underline-offset: 4px; }
+/* The family's secondary button (2026-10-20): an ivory pill with a hairline. It
+   replaced the plain text link, which itself replaced a brand outline that read
+   as heavy; the hairline pill is quiet without dropping the button shape. */
+.btn-ghost { color: var(--near-black); background: var(--ivory); font-weight: 500; border-color: var(--line); }
+.btn-ghost:hover { background: var(--warm-sand); }
 
 /* Sections */
 section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
@@ -358,7 +360,9 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.85; text-w
 .blog-body li { margin-bottom: 6px; }
 .blog-body h2 { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.3; color: var(--near-black); margin: 48px 0 14px; scroll-margin-top: 100px; }
 .blog-body h3 { font-weight: 600; font-size: 17px; line-height: 1.4; color: var(--near-black); margin: 32px 0 10px; scroll-margin-top: 100px; }
-.blog-body a { color: var(--brand); text-underline-offset: 3px; }
+/* Links read by colour alone, no underline, as on every family site (maintainer 2026-10-20). */
+:is(.blog-body, .legal) a { color: var(--brand); }
+:is(.blog-body, .legal) a:hover { color: var(--brand-light); }
 .blog-body strong { color: var(--near-black); }
 .blog-body code { font-family: "SF Mono", Menlo, monospace; font-size: 0.85em; background: var(--warm-sand); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
 .blog-body pre { background: var(--ivory); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; overflow-x: auto; line-height: 1.6; }
@@ -443,6 +447,11 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .nav-end { gap: 10px; }
   .hero h1 { font-size: clamp(48px, 13vw, 60px); }
   .btn { width: 100%; }
+  /* Phone hero buttons share one row, each as wide as its label plus an equal
+     share of the rest, and wrap to two full rows when a long label (German
+     Windows) does not fit. Height stays the desktop 51px. */
+  .hero-cta { gap: 8px; }
+  .hero-cta .btn { width: auto; flex: 1 1 auto; min-width: 0; padding: 13px 16px; white-space: nowrap; }
 }
 
 /* Readers who ask the system for less motion get state changes without the
