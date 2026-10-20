@@ -425,6 +425,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 
 .blog-body { font-size: 17px; line-height: 1.75; color: var(--dark-warm); overflow-wrap: break-word; }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.85; text-wrap: pretty; line-break: strict; }
+/* Chinese blog text tracks at 0.02em, as on mole.fit (maintainer 2026-10-21: zero tracking read cramped);
+   headings resolve it at their own size instead of the Latin -0.3px, code keeps 0. */
+html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index), html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index) :is(h1, h2, h3) { letter-spacing: 0.02em; }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index) :is(pre, code, kbd) { letter-spacing: 0; }
 .blog-body > :first-child { margin-top: 0; }
 .blog-body :is(p, ul, ol, table, pre, blockquote) { margin: 0 0 20px; }
 .blog-body :is(ul, ol) { padding-left: 22px; }
