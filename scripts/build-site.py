@@ -595,25 +595,75 @@ CONTACT = {
     },
 }
 
+CONTACT_JS = r'''(function () {
+  // The contact counts are written in at build time and refreshed from
+  // mole.fit's cached endpoint once the cards near the viewport; when it
+  // is unreachable the written numbers stay.
+  var stats = document.querySelectorAll('[data-community-stat]');
+  if (!stats.length || typeof fetch !== 'function') return;
+
+  function compact(value, sample) {
+    var n = Number(value);
+    if (value === null || value === undefined || value === '' || !Number.isSafeInteger(n) || n < 0) return null;
+    if (n < 1000) return String(n);
+    var s = (n / 1000).toFixed(1).replace(/\.0$/, '');
+    if (/^(de|es|fr)(-|$)/i.test(document.documentElement.lang || '')) s = s.replace('.', ',');
+    return s + (/k/.test(sample) ? 'k' : 'K');
+  }
+
+  function update(kind, value) {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-community-stat="' + kind + '"]'), function (el) {
+      var match = (el.textContent || '').match(/\d+(?:[.,]\d+)?\s*[kK]?/);
+      var next = match && compact(value, match[0]);
+      if (next) el.textContent = el.textContent.replace(match[0], next);
+    });
+  }
+
+  function refresh() {
+    fetch('https://mole.fit/api/community-stats', {
+      credentials: 'omit',
+      headers: { Accept: 'application/json' }
+    }).then(function (response) {
+      if (!response.ok) throw new Error('community stats unavailable');
+      return response.json();
+    }).then(function (data) {
+      update('x-followers', data.xFollowers);
+      update('github-profile-stars', data.githubProfileStars);
+      update('github-profile-forks', data.githubProfileForks);
+      update('github-profile-followers', data.githubProfileFollowers);
+    }).catch(function () {});
+  }
+
+  if (typeof IntersectionObserver !== 'function') return refresh();
+  var observer = new IntersectionObserver(function (entries) {
+    if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+    observer.disconnect();
+    refresh();
+  }, { rootMargin: '700px 0px' });
+  observer.observe(stats[0]);
+})();'''
+
 
 def contact_html(key):
     c = CONTACT[key]
+    keys = iter(["github-profile-forks", "github-profile-followers"])
     t = french_spacing if key == "fr" else (lambda s: s)
     avatar = '<img class="contact-avatar" src="/assets/tw93.png" width="44" height="44" alt="" loading="lazy" decoding="async">'
     x_glyph = '<svg class="contact-glyph" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
+    gh_desc = re.sub(r"\d+(?:[.,]\d+)?K", lambda m: f'<span data-community-stat="{next(keys)}">{m.group(0)}</span>', esc(t(c["gh_desc"])), count=2)
     gh_glyph = GITHUB_MARK.replace('<svg ', '<svg class="contact-glyph" width="22" height="22" ', 1).replace(' aria-hidden="true"', "")
 
-    def card(href, label, glyph, name, handle, stat, desc):
+    def card(href, label, glyph, name, handle, key, stat, desc):
         return (f'<a class="contact-card" href="{href}" target="_blank" rel="noopener" aria-label="{esc(label)}">'
                 f'<span class="contact-head"><span class="contact-channel" aria-hidden="true">{glyph}{avatar}</span>'
                 f'<span class="contact-meta"><b>{name}</b><span class="contact-handle">{handle}</span></span>'
-                f'<span class="contact-stat">{esc(stat)}</span></span><p class="contact-desc">{esc(t(desc))}</p></a>')
+                f'<span class="contact-stat" data-community-stat="{key}">{esc(stat)}</span></span><p class="contact-desc">{desc}</p></a>')
 
     return ('<div class="contact"><div class="contact-heading">'
             '<img class="contact-author" src="/assets/tw93.png" width="28" height="28" alt="Tw93" loading="lazy" decoding="async">'
             f'<p class="contact-title">{esc(c["title"])}</p></div><p class="contact-sub">{t(c["sub"])}</p><div class="contact-cards">'
-            + card("https://x.com/HiTw93", c["a11y_x"], x_glyph, "X", "@HiTw93", c["x_stat"], c["x_desc"])
-            + card("https://github.com/tw93", c["a11y_gh"], gh_glyph, "GitHub", "@tw93", c["gh_stat"], c["gh_desc"])
+            + card("https://x.com/HiTw93", c["a11y_x"], x_glyph, "X", "@HiTw93", "x-followers", c["x_stat"], esc(t(c["x_desc"])))
+            + card("https://github.com/tw93", c["a11y_gh"], gh_glyph, "GitHub", "@tw93", "github-profile-stars", c["gh_stat"], gh_desc)
             + "</div></div>")
 
 # The blog is written in English and Simplified Chinese. Every footer links to
@@ -921,7 +971,7 @@ def page(key):
 </main>
 </div>
 {footer_html(key)}
-{page_script(gallery_js, STORE_JS, HIDE_CTA_JS, LANG_JS)}
+{page_script(gallery_js, STORE_JS, HIDE_CTA_JS, LANG_JS, CONTACT_JS)}
 {ANALYTICS}
 </body>
 </html>
