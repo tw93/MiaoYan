@@ -487,6 +487,12 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
                 guard !Task.isCancelled, self.formatRequestID == requestID, let note = EditTextView.note, note.url == noteURL,
                     self.textView.storageNote === note
                 else { return }
+                // Typing while Prettier ran: applying its output would drop
+                // those keystrokes, so the edit wins and the format is cancelled.
+                guard self.textView.string == content else {
+                    host?.toast(message: I18n.str("Formatting cancelled"))
+                    return
+                }
                 self.apply(output, original: content, note: note, top: top)
                 host?.toast(message: I18n.str("Automatic typesetting succeeded~"), style: .success)
             } catch is CancellationError {

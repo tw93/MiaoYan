@@ -159,6 +159,34 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(note.content.string, "removed text")
     }
 
+    /// Prettier runs off the main thread; text typed meanwhile was replaced
+    /// by the formatted copy of the older text when the result came back.
+    @available(macOS 14, *)
+    @MainActor
+    func testTypingWhileFormattingKeepsTheTypedText() {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let note = makeLoadedNote("format.md", body: "#   Title\n\n*   item")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let host = NSViewController()
+        host.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        let finished = expectation(description: "format finished")
+        controller.onFormattingChange = { running in
+            if !running { finished.fulfill() }
+        }
+
+        controller.format(in: host)
+        let end = (controller.textView.string as NSString).length
+        controller.textView.insertText(" typed", replacementRange: NSRange(location: end, length: 0))
+        wait(for: [finished], timeout: 20)
+
+        XCTAssertEqual(controller.textView.string, "#   Title\n\n*   item typed")
+        XCTAssertEqual(note.content.string, "#   Title\n\n*   item typed")
+    }
+
     /// The shell's text view is made in code; it must carry what the
     /// storyboard's EditTextView sets in Main.storyboard and ViewController.
     @available(macOS 14, *)

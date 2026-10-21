@@ -883,6 +883,16 @@ extension ViewController {
             return
         }
 
+        // Typing while Prettier ran: applying its output would drop those
+        // keystrokes, so the edit wins and the format is cancelled.
+        guard editArea.string == content else {
+            isFormatting = false
+            updateFormatButtonState(isFormatting: false)
+            formatTask = nil
+            toast(message: I18n.str("Formatting cancelled"))
+            return
+        }
+
         let restoredContent = HtmlManager.restoreHTMLTags(in: output.formattedString, with: output.placeholders)
         var newContent = restoredContent
         let originalLines = content.components(separatedBy: .newlines)
