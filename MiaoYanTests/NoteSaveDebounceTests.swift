@@ -452,6 +452,31 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("Work.md").path))
     }
 
+    /// Backlinks were rebuilt only at launch: a renamed note kept listing its
+    /// links under the old title, a removed one kept appearing as a backlink,
+    /// and a body changed by another device never reached the index.
+    @MainActor
+    func testBacklinksFollowRenameRemovalAndDiskReloads() throws {
+        let index = WikilinkIndex.shared
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let url = tempDir.appendingPathComponent("Source.md")
+        try "see [[Target]]".write(to: url, atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: project)
+        note.load()
+        XCTAssertEqual(index.getBacklinks(for: "Target"), ["Source"])
+
+        XCTAssertTrue(note.renameFile(to: "Renamed"))
+        XCTAssertEqual(index.getBacklinks(for: "Target"), ["Renamed"])
+
+        try "now [[Elsewhere]]".write(to: note.url, atomically: true, encoding: .utf8)
+        note.forceReload()
+        XCTAssertTrue(index.getBacklinks(for: "Target").isEmpty)
+        XCTAssertEqual(index.getBacklinks(for: "Elsewhere"), ["Renamed"])
+
+        note.retireAfterRemoval()
+        XCTAssertTrue(index.getBacklinks(for: "Elsewhere").isEmpty)
+    }
+
     /// A note in a folder whose group the user cannot set (wheel, as under
     /// /private/tmp) saved its text and then reported "Save Failed" while
     /// putting the old owner and group back.

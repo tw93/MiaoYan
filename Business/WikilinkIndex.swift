@@ -156,6 +156,8 @@ final class WikilinkIndex: ObservableObject {
         }
     }
 
+    /// Drops what the note links to. Links other notes still write to its
+    /// title stay, so a note recreated under that title finds them again.
     func removeNote(title: String) {
         if let links = outlinks[title] {
             for target in links {
@@ -163,6 +165,16 @@ final class WikilinkIndex: ObservableObject {
             }
         }
         outlinks.removeValue(forKey: title)
-        inlinks.removeValue(forKey: title)
+    }
+
+    /// The renamed note keeps its outlinks under the new title; notes that
+    /// wrote `[[old]]` still point at the old title, which no longer exists.
+    func renameNote(from old: String, to new: String) {
+        guard old != new, let links = outlinks.removeValue(forKey: old) else { return }
+        for target in links {
+            inlinks[target]?.remove(old)
+            inlinks[target, default: []].insert(new)
+        }
+        outlinks[new] = links
     }
 }

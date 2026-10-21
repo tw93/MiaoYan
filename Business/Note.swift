@@ -131,9 +131,7 @@ public class Note: NSObject {
 
     func load() {
         if let attributedString = getContent() {
-            content = NSMutableAttributedString(attributedString: attributedString)
-            isContentLoaded = true
-            loadFailed = false
+            adoptReadContent(attributedString)
             loadModifiedLocalAt()
             return
         }
@@ -142,13 +140,22 @@ public class Note: NSObject {
 
     func loadAsync() async {
         if let attributedString = await getContentAsync() {
-            content = NSMutableAttributedString(attributedString: attributedString)
-            isContentLoaded = true
-            loadFailed = false
+            adoptReadContent(attributedString)
             loadModifiedLocalAt()
             return
         }
         markLoadFailure(context: "Note.loadAsync")
+    }
+
+    /// Every successful read goes through here, so a body changed on disk by
+    /// another app or device also refreshes the backlinks it contributes.
+    private func adoptReadContent(_ attributedString: NSAttributedString) {
+        content = NSMutableAttributedString(attributedString: attributedString)
+        isContentLoaded = true
+        loadFailed = false
+        if !isTrash() {
+            WikilinkIndex.shared.updateNote(title: title, content: content.string)
+        }
     }
 
     /// A missing file is a new or deleted note, not a failed read; only a
@@ -168,9 +175,7 @@ public class Note: NSObject {
 
         if modifiedAt != modifiedLocalAt {
             if let attributedString = getContent() {
-                content = NSMutableAttributedString(attributedString: attributedString)
-                isContentLoaded = true
-                loadFailed = false
+                adoptReadContent(attributedString)
             } else {
                 markLoadFailure(context: "Note.reload")
             }
@@ -183,9 +188,7 @@ public class Note: NSObject {
 
     public func forceReload() {
         if let attributedString = getContent() {
-            content = NSMutableAttributedString(attributedString: attributedString)
-            isContentLoaded = true
-            loadFailed = false
+            adoptReadContent(attributedString)
             return
         }
         markLoadFailure(context: "Note.forceReload")
@@ -778,6 +781,7 @@ public class Note: NSObject {
     func retireAfterRemoval() {
         guard !isRetired else { return }
         isRetired = true
+        WikilinkIndex.shared.removeNote(title: title)
         hasUnpersistedChanges = false
         saveWorkItem?.cancel()
         saveWorkItem = nil
@@ -1287,7 +1291,10 @@ public class Note: NSObject {
         let current = getFileName()
         let dst = project.url.appendingPathComponent(fileName).appendingPathExtension(url.pathExtension)
         let isCaseChange = current.lowercased() == title.lowercased() && current != title
+        // move(to:) retitles the note from its new file name.
+        let oldTitle = self.title
         guard (!FileManager.default.fileExists(atPath: dst.path) || isCaseChange) && move(to: dst) else { return false }
+        WikilinkIndex.shared.renameNote(from: oldTitle, to: title)
         self.title = title
         return true
     }
