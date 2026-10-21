@@ -14,6 +14,7 @@ final class NotePreviewTests: XCTestCase {
             NotePreview.cardText(from: "| Day | Morning |\n| --- | :---: |\n| Mon | Run |"),
             "Day Morning Mon Run")
         XCTAssertEqual(NotePreview.cardText(from: "Intro\n\n```swift\nlet a = 1"), "Intro")
+        XCTAssertEqual(NotePreview.cardText(from: "See the note[^1].\n\n[^1]: Taken at dawn."), "See the note. Taken at dawn.")
         let snippet = NotePreview.stripNoise("<!-- transition: slide\nnext\n```swift\nlet value = 1\n```")
         XCTAssertFalse(snippet.contains("<!--"))
         XCTAssertFalse(snippet.contains("`"))

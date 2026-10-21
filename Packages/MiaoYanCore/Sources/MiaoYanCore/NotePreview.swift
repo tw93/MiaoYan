@@ -48,6 +48,9 @@ public enum NotePreview {
         pattern: "\\|", options: [])
     private static let hrUnderscoreRegex = try? NSRegularExpression(
         pattern: "^_{3,}$", options: [.anchorsMatchLines])
+    /// `[^1]` references and the `[^1]:` that opens a footnote's text.
+    private static let footnoteRegex = try? NSRegularExpression(
+        pattern: "\\[\\^[^\\]\\s]+\\]:?", options: [])
     private static let htmlEntityRegex = try? NSRegularExpression(
         pattern: "&[a-zA-Z]+;|&#\\d+;", options: [])
 
@@ -71,6 +74,9 @@ public enum NotePreview {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
         }
         if let re = htmlEntityRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        if let re = footnoteRegex {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
         }
         if let re = wikilinkRegex {
