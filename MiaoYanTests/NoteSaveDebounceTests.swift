@@ -436,6 +436,22 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(try String(contentsOf: tempDir.appendingPathComponent("Other.md"), encoding: .utf8), "other")
     }
 
+    /// A title of spaces trimmed to an empty file name, which resolved to the
+    /// folder's own path plus `.md` and moved the note out of its folder.
+    @MainActor
+    func testATitleOfSpacesLeavesTheNoteWhereItIs() throws {
+        let folder = tempDir.appendingPathComponent("Work")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let url = folder.appendingPathComponent("Plan.md")
+        try "body".write(to: url, atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: Project(url: folder, label: "Work"))
+
+        XCTAssertFalse(note.renameFile(to: "   "))
+        XCTAssertEqual(note.url.lastPathComponent, "Plan.md")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: url.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("Work.md").path))
+    }
+
     /// A note in a folder whose group the user cannot set (wheel, as under
     /// /private/tmp) saved its text and then reported "Save Failed" while
     /// putting the old owner and group back.

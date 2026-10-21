@@ -1092,7 +1092,7 @@ final class ShellModel {
     @discardableResult
     func rename(_ note: Note, to title: String) -> Bool {
         let title = title.trimmingCharacters(in: .newlines)
-        guard !title.isEmpty, title != note.getFileName() else { return true }
+        guard !title.trimmingCharacters(in: .whitespaces).isEmpty, title != note.getFileName() else { return true }
         // A rename committed because another note was clicked keeps that
         // note selected.
         let wasSelected = selectedNoteURL == note.url

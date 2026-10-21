@@ -1274,14 +1274,16 @@ public class Note: NSObject {
 
     /// Renames the file after `title`, as the title bar does: `:` becomes
     /// `-` and `/` becomes Finder's `:`, a case-only change is allowed, and a
-    /// name another file already has is refused. Returns false when the file
-    /// was not moved.
+    /// name another file already has is refused, and so is a title of spaces,
+    /// whose empty name resolved to the folder itself plus `.md` and moved the
+    /// note out of its folder. Returns false when the file was not moved.
     func renameFile(to title: String) -> Bool {
         let fileName =
             title
             .trimmingCharacters(in: CharacterSet.whitespaces)
             .replacingOccurrences(of: ":", with: "-")
             .replacingOccurrences(of: "/", with: ":")
+        guard !fileName.isEmpty else { return false }
         let current = getFileName()
         let dst = project.url.appendingPathComponent(fileName).appendingPathExtension(url.pathExtension)
         let isCaseChange = current.lowercased() == title.lowercased() && current != title

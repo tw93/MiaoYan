@@ -1538,7 +1538,7 @@ extension ViewController {
         guard let note = targetNote else { return }
 
         let newTitle = titleToSave.trimmingCharacters(in: NSCharacterSet.newlines)
-        guard !newTitle.isEmpty else { return }
+        guard !newTitle.trimmingCharacters(in: .whitespaces).isEmpty else { return }
 
         let currentName = note.getFileName()
         guard currentName != newTitle else { return }
@@ -1549,7 +1549,7 @@ extension ViewController {
 
     public func saveTitle(_ title: String, to note: Note) {
         let newTitle = title.trimmingCharacters(in: NSCharacterSet.newlines)
-        guard !newTitle.isEmpty else { return }
+        guard !newTitle.trimmingCharacters(in: .whitespaces).isEmpty else { return }
 
         let currentName = note.getFileName()
         guard currentName != newTitle else { return }
