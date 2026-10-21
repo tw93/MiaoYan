@@ -53,4 +53,31 @@ final class EditorMenuRoutingTests: XCTestCase {
 
         XCTAssertEqual(clean.keyEquivalentModifierMask, [.command, .option, .shift])
     }
+
+    /// The note list's context menu lives in the Editor scene, and an action
+    /// wired to an object of another scene reaches nothing: MiaoYan PPT pointed
+    /// at the Application scene's stand-in ViewController and showed greyed
+    /// out in 4.5.0 (#571). Every item must target an object of its own scene.
+    func testNoteListContextMenuTargetsItsOwnScene() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let xml = try String(contentsOf: root.appendingPathComponent("Resources/Localization/Base.lproj/Main.storyboard"), encoding: .utf8)
+        let menuStart = try XCTUnwrap(xml.range(of: "<menu id=\"AaK-Xd-i52\">"))
+        let sceneStart = try XCTUnwrap(xml.range(of: "<scene ", options: .backwards, range: xml.startIndex..<menuStart.lowerBound))
+        let sceneEnd = try XCTUnwrap(xml.range(of: "</scene>", range: menuStart.upperBound..<xml.endIndex))
+        let scene = String(xml[sceneStart.lowerBound..<sceneEnd.upperBound])
+        let menu = String(xml[menuStart.lowerBound..<sceneEnd.lowerBound])
+
+        func captures(_ pattern: String, in text: String) throws -> [String] {
+            let regex = try NSRegularExpression(pattern: pattern)
+            return regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).compactMap {
+                Range($0.range(at: 1), in: text).map { String(text[$0]) }
+            }
+        }
+        let sceneIDs = Set(try captures(" id=\"([^\"]+)\"", in: scene))
+        let actions = try captures("<action selector=\"([^\"]+:)\" target=\"[^\"]+\"", in: menu)
+        XCTAssertTrue(actions.contains("toggleMagicPPT:"))
+        for (action, target) in zip(actions, try captures("<action selector=\"[^\"]+\" target=\"([^\"]+)\"", in: menu)) {
+            XCTAssertTrue(sceneIDs.contains(target), "\(action) targets \(target), outside the note list's scene")
+        }
+    }
 }
