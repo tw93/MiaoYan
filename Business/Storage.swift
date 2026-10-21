@@ -1409,19 +1409,30 @@ class Storage {
         }
         let folders = projects.filter { !$0.isTrash }
         let folderURLs = folders.map(\.url)
+        // Trash notes are listed only once the Trash is opened.
+        let trashFolders = projects.filter(\.isTrash)
+        let trashURLs = trashFolders.map(\.url)
         let extensions = allowedExtensions
 
         Task { @MainActor in
             // A folder can be registered (the sidebar lists its subfolders)
             // before its notes are loaded. Every folder whose attachments are
             // scanned must also have every note in it counted, listed or not.
-            let listings = await Task.detached(priority: .userInitiated) {
-                folderURLs.map { Storage.attachmentListing(of: $0, extensions: extensions) }
+            let (listings, trashFiles) = await Task.detached(priority: .userInitiated) {
+                (
+                    folderURLs.map { Storage.attachmentListing(of: $0, extensions: extensions) },
+                    trashURLs.map { Storage.noteFiles(in: $0, extensions: extensions) }
+                )
             }.value
             var attachmentFolders: [URL] = []
             for (project, listing) in zip(folders, listings) where !listing.attachmentFolders.isEmpty {
                 attachmentFolders += listing.attachmentFolders
                 for url in listing.noteFiles where !listed.contains(url.standardizedFileURL.path) {
+                    unloaded.append(Note(url: url, with: project))
+                }
+            }
+            for (project, files) in zip(trashFolders, trashFiles) {
+                for url in files where !listed.contains(url.standardizedFileURL.path) {
                     unloaded.append(Note(url: url, with: project))
                 }
             }
@@ -1463,8 +1474,12 @@ class Storage {
             return folderURL
         }
         guard !attachmentFolders.isEmpty else { return ([], []) }
+        return (attachmentFolders, noteFiles(in: folder, extensions: extensions))
+    }
+
+    nonisolated private static func noteFiles(in folder: URL, extensions: [String]) -> [URL] {
         let items = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
-        return (attachmentFolders, items.filter { extensions.contains($0.pathExtension.lowercased()) })
+        return items.filter { extensions.contains($0.pathExtension.lowercased()) }
     }
 
     nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {

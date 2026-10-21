@@ -54,6 +54,41 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertTrue(names.contains("unused.png"), "an image nothing references is still found")
     }
 
+    /// Trash notes are listed only once the Trash is opened, and the scan
+    /// skipped the Trash folder, so an image only a trashed note used was
+    /// cleaned and the note came back from the Trash without it.
+    @MainActor
+    func testImagesOfUnopenedTrashNotesAreKept() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let trash = tempDir.appendingPathComponent(".Trash", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: trash, withIntermediateDirectories: true)
+        try "# Kept\n".write(to: work.appendingPathComponent("kept.md"), atomically: true, encoding: .utf8)
+        try "# Old\n\n![](/i/old.png)\n".write(to: trash.appendingPathComponent("old.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/old.png"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+        _ = storage.add(project: Project(url: trash, isTrash: true))
+        _ = storage.subfolders(of: root)
+        XCTAssertTrue(storage.getAllTrash().isEmpty, "the Trash has not been opened")
+
+        let done = expectation(description: "orphan scan")
+        var result: [URL]?
+        storage.findOrphanAttachments { urls in
+            result = urls
+            done.fulfill()
+        }
+        await fulfillment(of: [done], timeout: 10)
+
+        let names = Set((result ?? []).map(\.lastPathComponent))
+        XCTAssertFalse(names.contains("old.png"), "a trashed note can still be restored with its image")
+        XCTAssertTrue(names.contains("unused.png"))
+    }
+
     // MARK: - Which folders are listed
 
     /// `assets` is hidden as an image folder, but a folder of notes that
