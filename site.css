@@ -409,7 +409,6 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 }
 .blog-card:active, .blog-related-list a:active { background: var(--parchment); }
 
-.blog-article, .blog-related { max-width: 720px; margin-left: auto; margin-right: auto; }
 .blog-crumb { font-size: 13px; margin: 0 0 14px; }
 .blog-crumb a { color: var(--stone); text-decoration: none; }
 .blog-title { font-family: var(--serif); font-weight: 500; color: var(--near-black); font-size: 32px; line-height: 1.25; letter-spacing: -0.3px; margin: 0 0 14px; text-wrap: balance; }
