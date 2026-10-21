@@ -3,6 +3,23 @@ import XCTest
 import MiaoYanCore
 
 final class NotePreviewTests: XCTestCase {
+    /// What the iPhone cards and search showed for the demo notes: a slide
+    /// deck's leading comment, a table's separator row and a code fence
+    /// whose closing line fell past the bytes a card reads.
+    func testCardTextHidesCommentsTableRulesAndFences() {
+        XCTAssertEqual(
+            NotePreview.cardText(from: "<!--\ntransition: slide\n-->\n\nOpening line"),
+            "Opening line")
+        XCTAssertEqual(
+            NotePreview.cardText(from: "| Day | Morning |\n| --- | :---: |\n| Mon | Run |"),
+            "Day Morning Mon Run")
+        XCTAssertEqual(NotePreview.cardText(from: "Intro\n\n```swift\nlet a = 1"), "Intro")
+        let snippet = NotePreview.stripNoise("<!-- transition: slide\nnext\n```swift\nlet value = 1\n```")
+        XCTAssertFalse(snippet.contains("<!--"))
+        XCTAssertFalse(snippet.contains("`"))
+        XCTAssertTrue(snippet.contains("let value = 1"), "a search hit inside code still shows")
+    }
+
     func testCardTextDropsMarkupAndKeepsTwoLines() {
         let text = "---\ntitle: x\n---\n# Heading\n\n![cover](i/a.png)\nSee [the docs](https://example.com) and `code`.\n\n```swift\nlet a = 1\n```\n- **third** line\n"
         XCTAssertEqual(NotePreview.cardText(from: text), "Heading See the docs and code.")

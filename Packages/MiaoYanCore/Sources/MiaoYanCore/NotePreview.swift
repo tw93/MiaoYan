@@ -19,8 +19,16 @@ public enum NotePreview {
         pattern: "https?://\\S+", options: [])
     private static let inlineCodeRegex = try? NSRegularExpression(
         pattern: "`([^`]+)`", options: [])
+    /// A fence the read stopped before closing runs to the end.
     private static let codeBlockRegex = try? NSRegularExpression(
-        pattern: "```.*?```", options: [.dotMatchesLineSeparators])
+        pattern: "```.*?(?:```|\\z)", options: [.dotMatchesLineSeparators])
+    /// Fence lines alone, for snippets that keep the code a search hit.
+    private static let fenceLineRegex = try? NSRegularExpression(
+        pattern: "^[ \\t]*(?:```|~~~)[^\\n]*$", options: [.anchorsMatchLines])
+    /// A slide deck's settings comment; one never closed loses only its
+    /// opening line, so a search hit after it still shows.
+    private static let htmlCommentRegex = try? NSRegularExpression(
+        pattern: "<!--(?:.*?-->|[^\\n]*)", options: [.dotMatchesLineSeparators])
     private static let mdMarkerRegex = try? NSRegularExpression(
         pattern: "^[#>*+\\-]+\\s*", options: [.anchorsMatchLines])
     private static let mdOrderedListRegex = try? NSRegularExpression(
@@ -33,8 +41,9 @@ public enum NotePreview {
         pattern: "\\[[ xX]\\]\\s*", options: [])
     private static let wikilinkRegex = try? NSRegularExpression(
         pattern: "\\[\\[(?:[^\\]|]*\\|)?([^\\]]*)\\]\\]", options: [])
+    /// `|---|`, `| --- | :---: |` and the like.
     private static let tableSepRegex = try? NSRegularExpression(
-        pattern: "^[\\|\\-:]+$", options: [.anchorsMatchLines])
+        pattern: "^(?=[^\\n]*-)(?=[^\\n]*\\|)[ \\t|:\\-]+$", options: [.anchorsMatchLines])
     private static let tablePipeRegex = try? NSRegularExpression(
         pattern: "\\|", options: [])
     private static let hrUnderscoreRegex = try? NSRegularExpression(
@@ -54,6 +63,10 @@ public enum NotePreview {
     public static func stripNoise(_ input: String) -> String {
         var s = input
         let full = { (str: String) in NSRange(location: 0, length: (str as NSString).length) }
+        s = stripComments(s)
+        if let re = fenceLineRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
         if let re = htmlTagRegex {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
         }
@@ -126,10 +139,16 @@ public enum NotePreview {
         return re.stringByReplacingMatches(in: input, range: full, withTemplate: "")
     }
 
+    /// Runs before the line markers, which would eat a comment's `-->`.
+    static func stripComments(_ input: String) -> String {
+        guard let re = htmlCommentRegex else { return input }
+        return re.stringByReplacingMatches(in: input, range: NSRange(location: 0, length: (input as NSString).length), withTemplate: "")
+    }
+
     /// Strip Markdown line-start markers: `# `, `## `, `> `, `- `,
     /// `* `, `+ `, `1. ` etc. Keeps the text content.
     public static func stripMarkdownMarkers(_ input: String) -> String {
-        var s = input
+        var s = stripComments(input)
         let full = { (str: String) in NSRange(location: 0, length: (str as NSString).length) }
         if let re = mdMarkerRegex {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
@@ -204,8 +223,9 @@ public enum NotePreview {
         s = stripNoise(s)
         s = stripEmphasisMarkers(s)
 
+        // Table cells part by the spaces their pipes left behind.
         let lines = s.components(separatedBy: .newlines)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .map { $0.split(whereSeparator: { $0 == " " || $0 == "\t" }).joined(separator: " ") }
             .filter { !$0.isEmpty }
         return lines.prefix(2).joined(separator: " ")
     }
