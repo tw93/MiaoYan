@@ -64,6 +64,29 @@ final class NoteTextTests: XCTestCase {
             XCTAssertEqual(NoteText.decode(data), text, "\(encoding)")
         }
     }
+
+    /// A mostly English note with a few CJK characters was detected as a
+    /// Western or Cyrillic code page and saved back as mojibake. The user's
+    /// language settles it, without pulling other CJK encodings its way.
+    func testMostlyEnglishLegacyNotesFollowTheUsersLanguage() throws {
+        struct Sample {
+            let text: String
+            let encoding: String.Encoding
+            let languages: [String]
+        }
+        let samples = [
+            Sample(text: "# Weekly\n\n- Fix the sidebar\n- Ship 4.6\n- 周报", encoding: Self.encoding(.GB_18030_2000), languages: ["zh-Hans-CN", "en"]),
+            Sample(text: "# Weekly\n\n- Fix the sidebar\n- Ship 4.6\n- 週報", encoding: Self.encoding(.big5), languages: ["zh-Hant-TW"]),
+            Sample(text: "# Memo\n\n- Fix sidebar\n- 메모", encoding: Self.encoding(.EUC_KR), languages: ["ko-KR"]),
+            Sample(text: "今日はいい天気ですね。散歩に行きましょう。", encoding: .shiftJIS, languages: ["zh-Hans-CN"]),
+            Sample(text: "Café au lait, résumé, naïve façade.", encoding: .windowsCP1252, languages: ["zh-Hans-CN"]),
+            Sample(text: "Café au lait, résumé, naïve façade.", encoding: .windowsCP1252, languages: ["en-US"]),
+        ]
+        for sample in samples {
+            let data = try XCTUnwrap(sample.text.data(using: sample.encoding))
+            XCTAssertEqual(NoteText.decode(data, preferredLanguages: sample.languages), sample.text, "\(sample.encoding) \(sample.languages)")
+        }
+    }
 }
 
 final class NoteContentMatcherTests: XCTestCase {
