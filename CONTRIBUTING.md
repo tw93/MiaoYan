@@ -4,14 +4,8 @@
 
 ## Branch Workflow
 
-```txt
-main        <--- Releases / production builds
- ↑
-dev         <--- Default branch for all PRs
-```
-
-- `dev` holds day-to-day development. Please branch from the latest `dev` and target your PRs back to it.
-- `main` is the release branch. We tag releases from `main`. Small documentation-only fixes can target `main` directly, but most changes should flow through `dev` first.
+- `main` holds day-to-day development and every release is tagged from it. Branch from the latest `main` and target your PRs back to it.
+- `vercel` publishes the miaoyan.app website; app changes do not go there.
 
 ## Prerequisites
 
@@ -21,7 +15,7 @@ dev         <--- Default branch for all PRs
 
 ## Local Setup
 
-1. Clone the repository and check out the latest `dev` branch.
+1. Clone the repository and check out the latest `main` branch.
 2. Resolve Swift Package Manager dependencies once via Xcode (`File → Packages → Resolve Package Versions`) or `xcodebuild -resolvePackageDependencies`.
 3. Open `MiaoYan.xcodeproj` in Xcode **or** work from VS Code using the tracked `.vscode/launch.json` and `.vscode/tasks.json`.
 
@@ -63,9 +57,9 @@ Build artifacts land in `.vscode/DerivedData/` (VS Code) or your default Derived
 
 ## Commit & Pull Requests
 
-- Use the emoji-based commit convention from <https://github.com/tw93/cz-emoji-chinese> (or run Commitizen with that adapter).
+- Start commit subjects with a lowercase type such as `fix:`, `feat:`, `test:` or `docs:`, as the history does.
 - Squash unrelated changes into separate commits/PRs.
-- Ensure your branch is rebased on the latest `dev` before requesting review.
+- Ensure your branch is rebased on the latest `main` before requesting review.
 - Fill in the PR template and describe testing steps (manual or automated).
 
 ## Issues & Feature Ideas
@@ -76,28 +70,19 @@ Build artifacts land in `.vscode/DerivedData/` (VS Code) or your default Derived
 
 ## Release Build
 
-MiaoYan 4.0 ships on both distribution lanes: App Store/TestFlight and
-direct-download GitHub Releases. Keep the tag, release notes, DMG, ZIP, and
-Sparkle appcast aligned before announcing the release.
-
-### App Store Release
-
-```bash
-./scripts/build-appstore.sh
-```
-
-The version comes from `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in
-`MiaoYan.xcodeproj/project.pbxproj`. Submit the resulting archive via Xcode
-Organizer or Transporter.
+This repository ships the direct-download Mac app: GitHub Release assets
+plus a Sparkle appcast entry, also picked up by Homebrew. The App Store builds
+for iPhone, iPad and Mac are packaged elsewhere from this repository's `main`.
+Keep the tag, release notes, DMG, ZIP, and Sparkle appcast aligned before
+announcing the release.
 
 ### Release Checklist
 
-1. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` across macOS and iOS configurations
+1. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` to the same version; Sparkle compares `CURRENT_PROJECT_VERSION`
 2. Confirm `.github/RELEASE_NOTES.md` matches the intended uppercase tag, for example `Vx.y.z`
 3. Create Git tag: `git tag V<version> && git push origin V<version>`
-4. Build and notarize the direct-download DMG and ZIP, then update the Sparkle appcast
+4. Build and notarize the direct-download DMG and ZIP with `scripts/build.sh`, then update the Sparkle appcast
 5. Create GitHub Release with release notes plus the DMG and ZIP assets
-6. Submit App Store build via Transporter or Xcode Organizer
 
 > **Self-build path still works.** `scripts/build.sh` produces a runnable Release build for local use or CI. Sparkle integration remains active for direct-download users.
 
