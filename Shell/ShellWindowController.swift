@@ -582,7 +582,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             // Reveal's deck has no table of contents.
             return hasNote && model.editorMode != .edit && !model.isPPT
         case #selector(formatText(_:)), #selector(cleanTypography(_:)):
-            return hasNote && model.editorMode != .preview && !model.isPresenting
+            return hasNote && model.editorMode != .preview && !model.isPresenting && !model.isExporting
         // Removing the note being exported would leave the export nothing to write.
         case #selector(deleteNote(_:)):
             return hasNote && !model.isPresenting && !model.isExporting

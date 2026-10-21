@@ -847,6 +847,9 @@ struct ShellDetail: View {
                     }
                     ChromeButton(image: "icon_presentation", help: "Presentation") { model.setPresenting(true) }
                 }
+                // An export drives the preview itself; a mode switch midway
+                // captured the wrong pane, as the menu items already know.
+                .disabled(model.isExporting)
                 .opacity(showsButtons ? 1 : 0)
                 .animation(.easeOut(duration: 0.2), value: showsButtons)
             }

@@ -583,14 +583,14 @@ final class ShellModel {
     }
 
     func togglePreview() {
-        guard !isPresenting else { return }
+        guard !isPresenting, !isExporting else { return }
         setMode(editorMode == .preview ? modeAfterPreview : .preview)
     }
 
     /// From preview, the storyboard window flips split and leaves preview
     /// into whichever mode that gives.
     func toggleSplit() {
-        guard !isPresenting else { return }
+        guard !isPresenting, !isExporting else { return }
         if editorMode == .preview {
             setMode(modeAfterPreview == .split ? .edit : .split)
         } else {
@@ -695,7 +695,7 @@ final class ShellModel {
     private(set) var isFormatting = false
 
     func format() {
-        guard let host else { return }
+        guard let host, !isExporting else { return }
         guard editorMode != .preview else {
             host.toast(message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure)
             return

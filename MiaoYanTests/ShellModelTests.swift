@@ -219,6 +219,26 @@ final class ShellModelTests: XCTestCase {
         try await body(model, folder, notes)
     }
 
+    /// The header's mode buttons reached these while an export drove the
+    /// preview itself, so a click midway captured the wrong pane.
+    @MainActor
+    func testModeSwitchesWaitForAnExport() {
+        let previousPreview = UserDefaultsManagement.preview
+        let previousSplit = UserDefaultsManagement.splitViewMode
+        defer {
+            UserDefaultsManagement.preview = previousPreview
+            UserDefaultsManagement.splitViewMode = previousSplit
+        }
+        let model = ShellModel()
+        let mode = model.editorMode
+        model.isExporting = true
+
+        model.togglePreview()
+        model.toggleSplit()
+
+        XCTAssertEqual(model.editorMode, mode)
+    }
+
     private func urls(_ count: Int) -> [URL] {
         (0..<count).map { URL(fileURLWithPath: "/tmp/note-\($0).md") }
     }
