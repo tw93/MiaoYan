@@ -87,6 +87,41 @@ final class StorageRelocationTests: XCTestCase {
         }
     }
 
+    /// A library opened through a symlink: storage may record folders and
+    /// notes under either spelling, and a rename must move both.
+    @MainActor
+    func testRenamingAFolderInASymlinkedLibraryMovesItsNotes() throws {
+        let base = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanSymlinkRename-\(UUID().uuidString)")
+        let realRoot = base.appendingPathComponent("Real", isDirectory: true)
+        let work = realRoot.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("Nested"), withIntermediateDirectories: true)
+        try "top".write(to: work.appendingPathComponent("top.md"), atomically: true, encoding: .utf8)
+        try "deep".write(to: work.appendingPathComponent("Nested/deep.md"), atomically: true, encoding: .utf8)
+        let link = base.appendingPathComponent("Link", isDirectory: true)
+        try FileManager.default.createSymbolicLink(at: link, withDestinationURL: realRoot)
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: link, isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        defer {
+            for project in storage.getProjects() { storage.removeBy(project: project) }
+            try? FileManager.default.removeItem(at: base)
+        }
+        let folder = try XCTUnwrap(storage.getChildProjects(project: root).first { $0.url.lastPathComponent == "Work" })
+        storage.loadMissingNotes(for: folder)
+        for sub in storage.subfolders(of: folder) { storage.loadMissingNotes(for: sub) }
+        let notes = storage.noteList.filter { ["top.md", "deep.md"].contains($0.url.lastPathComponent) }
+        XCTAssertEqual(notes.count, 2)
+
+        _ = try XCTUnwrap(storage.renameFolder(folder, to: "Play"))
+
+        for note in notes {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: note.url.path), note.url.path)
+        }
+        for project in storage.getProjects() where project.url.path.hasPrefix(base.path) || project.url.path.hasPrefix(base.resolvingSymlinksInPath().path) {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: project.url.path), project.url.path)
+        }
+    }
+
     @MainActor
     func testPromotingFolderToLibraryRootUpdatesParent() async throws {
         try await withMoveLibrary { storage, root, source, _ in
