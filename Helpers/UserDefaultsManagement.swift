@@ -134,6 +134,7 @@ public enum UserDefaultsManagement {
         static let LastSelectedPath = "lastSelectedPath"
         static let LastProject = "lastProject"
         static let LastProjectPath = "lastProjectPath"
+        static let SidebarRowsIncludeBrand = "sidebarRowsIncludeBrand"
         static let LineSpacingEditorKey = "lineSpacingEditor"
         static let LineWidthKey = "lineWidth"
         static let MarginSizeKey = "marginSize"
@@ -225,6 +226,19 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.LastProjectPath)
         }
     }
+    /// V4.5.0 kept only a row number, counted with All Notes at row 0. The
+    /// brand row now sits above All Notes, so such a number would reopen the
+    /// folder above the one that was left. Runs once; a folder saved by path
+    /// needs no shift, and row 0 already falls back to All Notes.
+    static func migrateLegacySidebarRow(_ defaults: UserDefaults = .standard) {
+        guard !defaults.bool(forKey: Constants.SidebarRowsIncludeBrand) else { return }
+        defaults.set(true, forKey: Constants.SidebarRowsIncludeBrand)
+        guard defaults.string(forKey: Constants.LastProjectPath) == nil,
+            let row = defaults.object(forKey: Constants.LastProject) as? Int, row > 0
+        else { return }
+        defaults.set(row + 1, forKey: Constants.LastProject)
+    }
+
     static var defaultLanguage: Int {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.DefaultLanguageKey) as? Int {

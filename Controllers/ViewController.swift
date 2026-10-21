@@ -1144,6 +1144,7 @@ class ViewController:
     }
 
     func configureNotesList() {
+        UserDefaultsManagement.migrateLegacySidebarRow()
         var lastSidebarItem = UserDefaultsManagement.lastProject
         var shouldSelectSidebarItem = true
         var targetProject: Project?

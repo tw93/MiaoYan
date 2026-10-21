@@ -230,4 +230,27 @@ final class SidebarProjectViewTests: XCTestCase {
         XCTAssertNil(ShellModel.parentRow(of: 5, in: rows))
         XCTAssertNil(ShellModel.parentRow(of: 0, in: rows))
     }
+
+    /// V4.5.0 saved only a row number with All Notes at row 0; after the
+    /// brand row took row 0 that number reopened the folder above.
+    @MainActor
+    func testAV450SidebarRowMovesDownOnceForTheBrandRow() throws {
+        let suite = "miaoyan-sidebar-row-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(3, forKey: "lastProject")
+
+        UserDefaultsManagement.migrateLegacySidebarRow(defaults)
+        XCTAssertEqual(defaults.integer(forKey: "lastProject"), 4)
+        UserDefaultsManagement.migrateLegacySidebarRow(defaults)
+        XCTAssertEqual(defaults.integer(forKey: "lastProject"), 4, "the shift runs once")
+
+        let pathSuite = "miaoyan-sidebar-path-\(UUID().uuidString)"
+        let withPath = try XCTUnwrap(UserDefaults(suiteName: pathSuite))
+        defer { withPath.removePersistentDomain(forName: pathSuite) }
+        withPath.set(3, forKey: "lastProject")
+        withPath.set("/tmp/Work", forKey: "lastProjectPath")
+        UserDefaultsManagement.migrateLegacySidebarRow(withPath)
+        XCTAssertEqual(withPath.integer(forKey: "lastProject"), 3, "a folder saved by path is restored by path")
+    }
 }
