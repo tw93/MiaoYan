@@ -253,7 +253,8 @@ class ViewController:
                 DispatchQueue.main.async {
                     NSAnimationContext.runAnimationGroup(
                         { context in
-                            context.duration = 0.20
+                            context.duration = Theme.Motion.feedback
+                            context.timingFunction = Theme.Motion.curve
                             self?.titleBarAdditionalView.alphaValue = 0
                         }, completionHandler: nil)
                 }
@@ -265,7 +266,8 @@ class ViewController:
                 DispatchQueue.main.async {
                     NSAnimationContext.runAnimationGroup(
                         { context in
-                            context.duration = 0.20
+                            context.duration = Theme.Motion.feedback
+                            context.timingFunction = Theme.Motion.curve
                             self?.titleBarAdditionalView.alphaValue = 1
                         }, completionHandler: nil)
                 }
@@ -282,7 +284,8 @@ class ViewController:
                 DispatchQueue.main.async {
                     NSAnimationContext.runAnimationGroup(
                         { context in
-                            context.duration = 0.20
+                            context.duration = Theme.Motion.feedback
+                            context.timingFunction = Theme.Motion.curve
                             self?.addProjectButton.alphaValue = 0
                         }, completionHandler: nil)
                 }
@@ -294,7 +297,8 @@ class ViewController:
                 DispatchQueue.main.async {
                     NSAnimationContext.runAnimationGroup(
                         { context in
-                            context.duration = 0.20
+                            context.duration = Theme.Motion.feedback
+                            context.timingFunction = Theme.Motion.curve
                             self?.addProjectButton.alphaValue = 1
                         }, completionHandler: nil)
                 }
@@ -1392,7 +1396,8 @@ class ViewController:
     func revealEditor() {
         guard editAreaScroll.alphaValue == 0 else { return }
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = 0.3
+            context.duration = Theme.Motion.change
+            context.timingFunction = Theme.Motion.curve
             self.editAreaScroll.animator().alphaValue = 1
             self.titleLabel.animator().alphaValue = 1
         }

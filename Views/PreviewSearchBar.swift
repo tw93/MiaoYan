@@ -117,7 +117,7 @@ class PreviewSearchBar: NSView {
         matchLabel.isEditable = false
         matchLabel.isBordered = false
         matchLabel.drawsBackground = false
-        matchLabel.font = NSFont.systemFont(ofSize: 11)
+        matchLabel.font = NSFont.systemFont(ofSize: 12)
         matchLabel.textColor = .secondaryLabelColor
         matchLabel.alignment = .center
         matchLabel.stringValue = ""
@@ -416,17 +416,7 @@ extension PreviewSearchBar {
 
     fileprivate func updateShadowAppearance(for color: NSColor) {
         guard wantsLayer, PreviewSearchBar.luminance(of: color) != nil else { return }
-        if PreviewSearchBar.isDarkPanel(color) {
-            layer?.shadowColor = NSColor.black.cgColor
-            layer?.shadowOpacity = 0.3
-            layer?.shadowRadius = 8
-            layer?.shadowOffset = NSSize(width: 0, height: -2)
-        } else {
-            layer?.shadowColor = NSColor.black.cgColor
-            layer?.shadowOpacity = 0.1
-            layer?.shadowRadius = 6
-            layer?.shadowOffset = NSSize(width: 0, height: -1.5)
-        }
+        Theme.FloatingShadow.apply(to: layer, onDarkSurface: PreviewSearchBar.isDarkPanel(color))
     }
 
     fileprivate func applyCornerMask() {

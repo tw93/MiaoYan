@@ -271,7 +271,7 @@ private struct ShellSidebarRow: View {
                     .frame(width: 18, height: 22)
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        withAnimation(.easeOut(duration: 0.15)) { model.toggleExpanded(folder.url) }
+                        withAnimation(.easeOut(duration: Theme.Motion.change)) { model.toggleExpanded(folder.url) }
                     }
             }
         }
@@ -851,7 +851,7 @@ struct ShellDetail: View {
                 // captured the wrong pane, as the menu items already know.
                 .disabled(model.isExporting)
                 .opacity(showsButtons ? 1 : 0)
-                .animation(.easeOut(duration: 0.2), value: showsButtons)
+                .animation(.easeOut(duration: Theme.Motion.feedback), value: showsButtons)
             }
         }
         .padding(.leading, ShellStyle.noteTextInset)

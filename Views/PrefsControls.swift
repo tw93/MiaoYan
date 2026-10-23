@@ -27,7 +27,7 @@ enum PrefsMetrics {
 
     static let titleFont = NSFont.systemFont(ofSize: 14, weight: .medium)
     static let detailFont = NSFont.systemFont(ofSize: 12)
-    static let controlFont = NSFont.systemFont(ofSize: 11, weight: .semibold)
+    static let controlFont = NSFont.systemFont(ofSize: 12, weight: .semibold)
     static let tabFont = NSFont.systemFont(ofSize: 13, weight: .medium)
 }
 

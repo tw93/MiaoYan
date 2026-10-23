@@ -1,9 +1,10 @@
 import XCTest
 
-/// The preview follows the family's visual standard: quotes and alerts carry
-/// no left stripe, nothing glows, and motion eases out at 0.12s for feedback
-/// on the control under the pointer and 0.25s for what the page shows.
-final class PreviewStyleGateTests: XCTestCase {
+/// The app follows the family's visual standard (Kata `sumi`): quotes and
+/// alerts carry no left stripe, nothing glows, and motion eases out at 0.12s
+/// for feedback on the control under the pointer and 0.25s for what the
+/// window shows, in the preview CSS and through `Theme.Motion` in Swift.
+final class VisualRulesGateTests: XCTestCase {
     private let sheets = ["typography.css", "base.css", "theme-light.css", "theme-dark.css", "tocbot.css"]
 
     private func source(_ path: String) throws -> String {
@@ -31,6 +32,25 @@ final class PreviewStyleGateTests: XCTestCase {
             // A zero-offset blur is a glow; a floating layer's shadow drops.
             for line in text.components(separatedBy: .newlines) where line.contains("box-shadow") {
                 XCTAssertNil(line.range(of: #"(:|,)\s*0\s+0\s+[1-9]"#, options: .regularExpression), "\(name): \(line)")
+            }
+        }
+    }
+
+    func testSwiftAnimationsUseThemeMotion() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let patterns = [
+            #"context\.duration\s*=\s*[0-9]"#, #"easeOut\(duration:\s*[0-9]"#, #"easeInOut|\.easeIn\b|name:\s*\.easeIn\b"#,
+        ]
+        for folder in ["Controllers", "Views", "Shell", "Helpers"] {
+            let files = FileManager.default.enumerator(at: root.appendingPathComponent(folder), includingPropertiesForKeys: nil)
+            while let url = files?.nextObject() as? URL {
+                guard url.pathExtension == "swift" else { continue }
+                let lines = try String(contentsOf: url, encoding: .utf8).components(separatedBy: .newlines)
+                for (index, line) in lines.enumerated() {
+                    for pattern in patterns where line.range(of: pattern, options: .regularExpression) != nil {
+                        XCTFail("\(folder)/\(url.lastPathComponent):\(index + 1): \(line.trimmingCharacters(in: .whitespaces))")
+                    }
+                }
             }
         }
     }

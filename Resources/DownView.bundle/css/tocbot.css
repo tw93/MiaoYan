@@ -72,7 +72,8 @@ body.darkmode .toc-hover-trigger {
   z-index: 100;
   opacity: 0;
   pointer-events: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Theme.FloatingShadow, the find bar's shadow */
+  box-shadow: 0 1.5px 6px rgba(0, 0, 0, 0.1);
   transition: opacity 0.25s ease-out;
 }
 
@@ -84,7 +85,7 @@ body.darkmode .toc-hover-trigger {
 body.darkmode .toc-nav {
   background: #282828;
   border: 0.5px solid var(--border-color, #454545);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 /* TOC Scrollbar */
 .toc-nav::-webkit-scrollbar {

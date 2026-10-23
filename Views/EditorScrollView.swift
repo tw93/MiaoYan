@@ -154,7 +154,8 @@ class EditorContentSplitView: NSSplitView {
 
         if animated {
             NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.25
+                context.duration = Theme.Motion.change
+                context.timingFunction = Theme.Motion.curve
                 context.allowsImplicitAnimation = true
                 action()
                 self.layoutSubtreeIfNeeded()

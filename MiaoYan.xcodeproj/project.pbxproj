@@ -90,7 +90,8 @@
 		33F1E2FF1B56462C8C96769E /* MiaoYanTests/PrefsWindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */; };
 		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
 		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
-		64A7C3AC4CF3AB1BD56C6515 /* MiaoYanTests/PreviewStyleGateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/PreviewStyleGateTests.swift */; };
+		1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */; };
+		64A7C3AC4CF3AB1BD56C6515 /* MiaoYanTests/VisualRulesGateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/VisualRulesGateTests.swift */; };
 		208618D6E6F786129ABEB179 /* MiaoYanTests/ExportToastTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D261038886E1F40B8FD6C68E /* MiaoYanTests/ExportToastTests.swift */; };
 		5A1E7C0B3D2F4A6B8C9D0E20 /* MiaoYanTests/ShellModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1E7C0B3D2F4A6B8C9D0E1F /* MiaoYanTests/ShellModelTests.swift */; };
 		9936A9F60F92423A8A483182 /* MiaoYanTests/ShellEditorParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E100B73E40475D9E9FE2AC /* MiaoYanTests/ShellEditorParityTests.swift */; };
@@ -228,21 +229,21 @@
 		276312602E7580B5007BB5E9 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		276312662E75813D007BB5E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ContentViewController.xib; sourceTree = "<group>"; };
 		276312682E75813D007BB5E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/ContentViewController.strings; sourceTree = "<group>"; };
-		276312692E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/ContentViewController.strings"; sourceTree = "<group>"; };
 		37632F310446AC46BD160A83 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/ContentViewController.strings; sourceTree = "<group>"; };
+		276312692E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/ContentViewController.strings"; sourceTree = "<group>"; };
 		2763126A2E75813D007BB5E9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/ContentViewController.strings"; sourceTree = "<group>"; };
 		276312702E75813D007BB5E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		276312712E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		FCED506276231D5A7CC70AEE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		276312712E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		276312722E75813D007BB5E9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		276312752E75813D007BB5E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		276312762E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E0C26ACF86EB525BA43E6762 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		276312762E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		276312772E75813D007BB5E9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		276312792E75813D007BB5E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2763127B2E75813D007BB5E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
-		2763127C2E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		D02FF98FDEDA83F00234E4FC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		2763127C2E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		2763127D2E75813D007BB5E9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
 		2763128A2E75E26C007BB5E9 /* BasePrefsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePrefsViewController.swift; sourceTree = "<group>"; };
 		2763128C2E766CE3007BB5E9 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -292,7 +293,8 @@
 		D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsWindowControllerTests.swift; sourceTree = SOURCE_ROOT; };
 		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
 		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
-		971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/PreviewStyleGateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PreviewStyleGateTests.swift; sourceTree = SOURCE_ROOT; };
+		0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsFitTests.swift; sourceTree = SOURCE_ROOT; };
+		971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/VisualRulesGateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/VisualRulesGateTests.swift; sourceTree = SOURCE_ROOT; };
 		D261038886E1F40B8FD6C68E /* MiaoYanTests/ExportToastTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ExportToastTests.swift; sourceTree = SOURCE_ROOT; };
 		5A1E7C0B3D2F4A6B8C9D0E1F /* MiaoYanTests/ShellModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ShellModelTests.swift; sourceTree = SOURCE_ROOT; };
 		09E100B73E40475D9E9FE2AC /* MiaoYanTests/ShellEditorParityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ShellEditorParityTests.swift; sourceTree = SOURCE_ROOT; };
@@ -476,7 +478,8 @@
 				B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */,
 				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
 				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
-				971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/PreviewStyleGateTests.swift */,
+				0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */,
+				971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/VisualRulesGateTests.swift */,
 				D261038886E1F40B8FD6C68E /* MiaoYanTests/ExportToastTests.swift */,
 				5A1E7C0B3D2F4A6B8C9D0E1F /* MiaoYanTests/ShellModelTests.swift */,
 				09E100B73E40475D9E9FE2AC /* MiaoYanTests/ShellEditorParityTests.swift */,
@@ -839,7 +842,8 @@
 				BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */,
 				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
 				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
-				64A7C3AC4CF3AB1BD56C6515 /* MiaoYanTests/PreviewStyleGateTests.swift in Sources */,
+				1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */,
+				64A7C3AC4CF3AB1BD56C6515 /* MiaoYanTests/VisualRulesGateTests.swift in Sources */,
 				208618D6E6F786129ABEB179 /* MiaoYanTests/ExportToastTests.swift in Sources */,
 				5A1E7C0B3D2F4A6B8C9D0E20 /* MiaoYanTests/ShellModelTests.swift in Sources */,
 				9936A9F60F92423A8A483182 /* MiaoYanTests/ShellEditorParityTests.swift in Sources */,
@@ -994,33 +998,33 @@
 			children = (
 				276312662E75813D007BB5E9 /* Base */,
 				276312682E75813D007BB5E9 /* ja */,
+				37632F310446AC46BD160A83 /* es */,
 				276312692E75813D007BB5E9 /* zh-Hans */,
 				2763126A2E75813D007BB5E9 /* zh-Hant */,
 			);
 			name = ContentViewController.xib;
-				37632F310446AC46BD160A83 /* es */,
 			sourceTree = "<group>";
 		};
 		276312732E75813D007BB5E9 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				276312702E75813D007BB5E9 /* ja */,
+				FCED506276231D5A7CC70AEE /* es */,
 				276312712E75813D007BB5E9 /* zh-Hans */,
 				276312722E75813D007BB5E9 /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
-				FCED506276231D5A7CC70AEE /* es */,
 			sourceTree = "<group>";
 		};
 		276312782E75813D007BB5E9 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				276312752E75813D007BB5E9 /* ja */,
+				E0C26ACF86EB525BA43E6762 /* es */,
 				276312762E75813D007BB5E9 /* zh-Hans */,
 				276312772E75813D007BB5E9 /* zh-Hant */,
 			);
 			name = Localizable.strings;
-				E0C26ACF86EB525BA43E6762 /* es */,
 			sourceTree = "<group>";
 		};
 		2763127E2E75813D007BB5E9 /* Main.storyboard */ = {
@@ -1028,11 +1032,11 @@
 			children = (
 				276312792E75813D007BB5E9 /* Base */,
 				2763127B2E75813D007BB5E9 /* ja */,
+				D02FF98FDEDA83F00234E4FC /* es */,
 				2763127C2E75813D007BB5E9 /* zh-Hans */,
 				2763127D2E75813D007BB5E9 /* zh-Hant */,
 			);
 			name = Main.storyboard;
-				D02FF98FDEDA83F00234E4FC /* es */,
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

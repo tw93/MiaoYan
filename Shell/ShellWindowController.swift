@@ -1330,7 +1330,8 @@ final class ShellSplitViewController: NSSplitViewController {
         }
         isApplyingLayout = true
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = 0.2
+            context.duration = Theme.Motion.change
+            context.timingFunction = Theme.Motion.curve
             items[0].animator().isCollapsed = sidebarCollapsed
             items[1].animator().isCollapsed = listCollapsed
         } completionHandler: { [weak self] in

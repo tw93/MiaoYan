@@ -171,7 +171,8 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         // Wait slightly to ensure WebView layout is finalized (run loop cycle)
         DispatchQueue.main.async {
             NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.25
+                context.duration = Theme.Motion.change
+                context.timingFunction = Theme.Motion.curve
                 window.animator().alphaValue = 1
             }
         }

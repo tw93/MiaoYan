@@ -184,8 +184,8 @@ class ImagePreviewWindow: NSWindow {
             alphaValue = 0
             makeKeyAndOrderFront(nil)
             NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.25
-                context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                context.duration = Theme.Motion.change
+                context.timingFunction = Theme.Motion.curve
                 animator().alphaValue = 1
             })
         }
@@ -304,8 +304,8 @@ class ImagePreviewWindow: NSWindow {
             alphaValue = 0
             makeKeyAndOrderFront(nil)
             NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.12
-                context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                context.duration = Theme.Motion.feedback
+                context.timingFunction = Theme.Motion.curve
                 animator().alphaValue = 1
             })
         }
@@ -335,8 +335,8 @@ class ImagePreviewWindow: NSWindow {
         if isVisible {
             NSAnimationContext.runAnimationGroup(
                 { context in
-                    context.duration = 0.15
-                    context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                    context.duration = Theme.Motion.feedback
+                    context.timingFunction = Theme.Motion.curve
                     animator().alphaValue = 0
                 },
                 completionHandler: { [weak self] in

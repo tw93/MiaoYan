@@ -6,6 +6,18 @@ enum Theme {
     typealias Color = NSColor
     private static let noTintProminenceRawValue = 1
 
+    /// The two animation lengths, both eased out: feedback on the control
+    /// under the pointer, and a change to what the window shows (panels,
+    /// disclosure, collapse, a window appearing).
+    enum Motion {
+        static let feedback: TimeInterval = 0.12
+        static let change: TimeInterval = 0.25
+        /// Shorter on purpose: switching notes in preview waits for this
+        /// fade-out before loading, so it is a load gate more than an effect.
+        static let previewFade: TimeInterval = 0.08
+        static var curve: CAMediaTimingFunction { CAMediaTimingFunction(name: .easeOut) }
+    }
+
     /// Shared layout metrics for the list / sidebar surfaces. Seeded with the
     /// values we actively tune so future tweaks have one home instead of
     /// scattered literals. Editor and preferences internals keep their own
@@ -143,24 +155,52 @@ enum Theme {
         rect.fill(using: .sourceOver)
     }
 
+    /// The one shadow, for layers that float over the page (the find bar,
+    /// and the preview's TOC panel in `tocbot.css`), heavier on a dark
+    /// surface where a light one would not read.
+    enum FloatingShadow {
+        static func apply(to layer: CALayer?, onDarkSurface dark: Bool) {
+            layer?.shadowColor = NSColor.black.cgColor
+            layer?.shadowOpacity = dark ? 0.3 : 0.1
+            layer?.shadowRadius = dark ? 8 : 6
+            layer?.shadowOffset = NSSize(width: 0, height: dark ? -2 : -1.5)
+        }
+    }
+
+    /// Kami's warm text greys, read by the shell and the Settings window
+    /// alike: primary to read, secondary for supporting text, tertiary for
+    /// meta and icons.
+    enum Ink {
+        static let primary = dynamic(0x141413, 0xF2F0EA)
+        static let secondary = dynamic(0x504E49, 0xB5B1A7)
+        static let tertiary = dynamic(0x6B6A64, 0x8E8B83)
+    }
+
+    /// The warm paper every column and window sits on.
+    nonisolated static let paper = dynamic(0xFDFCF9, 0x1E1D1B)
+    /// MiaoYan green, lifted in dark mode.
+    nonisolated static let brand = dynamic(0x1C5D33, 0x54C59F)
+    /// Kami's warm sand, the selection plate.
+    nonisolated static let sand = dynamic(0xE8E6DC, 0xFFFFFF, darkAlpha: 0.08)
+
     /// The Settings window's colours: the shell's warm paper, Kami's warm
     /// greys and sand, and MiaoYan green for switches and actions. Opaque on
     /// purpose; a translucent settings surface reads like the rejected glass
     /// sidebar.
     @MainActor
     enum Settings {
-        static let background = dynamic(0xFDFCF9, 0x1E1D1B)
-        static let primaryText = dynamic(0x141413, 0xF2F0EA)
-        static let secondaryText = dynamic(0x504E49, 0xB5B1A7)
-        static let tertiaryText = dynamic(0x6B6A64, 0x8E8B83)
-        static let tabSelection = dynamic(0xE8E6DC, 0xFFFFFF, darkAlpha: 0.08)
+        static let background = paper
+        static let primaryText = Ink.primary
+        static let secondaryText = Ink.secondary
+        static let tertiaryText = Ink.tertiary
+        static let tabSelection = sand
         static let controlFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.06, darkAlpha: 0.07)
         static let controlHoverFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.09, darkAlpha: 0.10)
         static let switchOffFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.14, darkAlpha: 0.16)
         /// Between sections, and the fainter one between rows of a section.
         static let sectionHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.12, darkAlpha: 0.12)
         static let rowHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.065, darkAlpha: 0.065)
-        static let accent = dynamic(0x1C5D33, 0x54C59F)
+        static let accent = brand
     }
 
     static var panelBackgroundColor: Color {

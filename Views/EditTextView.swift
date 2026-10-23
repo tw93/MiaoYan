@@ -38,10 +38,6 @@ struct FillOptions {
 
 @MainActor
 class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
-    private enum PreviewRevealTiming {
-        static let initialDelay: TimeInterval = 0
-        static let fadeDuration: TimeInterval = 0.08
-    }
     public static var note: Note? {
         didSet {  // AXDocument tells trackers such as Hina which note is open; representedURL adds a title bar icon
             let document = note?.url.absoluteString
@@ -713,7 +709,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             let epoch = fillEpoch
             NSAnimationContext.runAnimationGroup(
                 { context in
-                    context.duration = 0.08
+                    context.duration = Theme.Motion.previewFade
+                    context.timingFunction = Theme.Motion.curve
                     previewView.animator().alphaValue = 0
                 },
                 completionHandler: { [weak self] in
@@ -721,7 +718,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                         guard let self, self.fillEpoch == epoch else { return }
                         previewView.load(note: note, force: options.force)
                         NSAnimationContext.runAnimationGroup({ context in
-                            context.duration = 0.12
+                            context.duration = Theme.Motion.feedback
+                            context.timingFunction = Theme.Motion.curve
                             previewView.animator().alphaValue = 1.0
                         })
                     }
@@ -745,7 +743,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 }
                 previewView.load(note: note, force: options.force) {
                     if shouldGateReveal {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) { [weak self] in
+                        DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
                             guard let self = self else { return }
                             let shouldShowPreview =
                                 self.isPreviewModeActive
@@ -755,7 +753,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                             guard shouldShowPreview else { return }
                             previewView.isHidden = false
                             NSAnimationContext.runAnimationGroup({ context in
-                                context.duration = PreviewRevealTiming.fadeDuration
+                                context.duration = Theme.Motion.previewFade
+                                context.timingFunction = Theme.Motion.curve
                                 previewView.animator().alphaValue = 1.0
                             })
                         }

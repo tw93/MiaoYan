@@ -69,7 +69,7 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
         backlinksListView = NSTextView()
         backlinksListView.isEditable = false
         backlinksListView.isSelectable = true
-        backlinksListView.font = NSFont.systemFont(ofSize: 11.5)
+        backlinksListView.font = NSFont.systemFont(ofSize: 12)
         backlinksListView.drawsBackground = false
         backlinksListView.textContainerInset = NSSize(width: 0, height: 2)
         scrollView.documentView = backlinksListView

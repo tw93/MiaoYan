@@ -30,8 +30,8 @@ class EditorSplitView: ThemedSplitView {
             if proposedPosition < Theme.Metrics.noteListCollapseSnapWidth && proposedPosition > 0 {
                 if let vc = AppContext.shared.viewController {
                     NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.2
-                        context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                        context.duration = Theme.Motion.change
+                        context.timingFunction = Theme.Motion.curve
                         vc.hideNoteList("")
                     })
                 }
