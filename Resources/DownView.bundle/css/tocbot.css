@@ -11,7 +11,7 @@
   height: 85%;
   background-color: rgba(0, 0, 0, 0.15);
   border-radius: 1px;
-  transition: background-color 0.25s ease-out;
+  transition: background-color 0.12s ease-out;
 }
 
 .toc-nav .is-active-link::before {
@@ -42,7 +42,7 @@ body.darkmode .toc-nav .toc-link:hover::before {
   border-radius: 3px;
   background: var(--primary-color, #1C5D33);
   opacity: 0.12;
-  transition: opacity 0.25s ease-out;
+  transition: opacity 0.12s ease-out;
 }
 
 .toc-hover-trigger.hidden {
@@ -71,15 +71,13 @@ body.darkmode .toc-hover-trigger {
   line-height: 1.55;
   z-index: 100;
   opacity: 0;
-  transform: translateX(8px) translateY(0);
   pointer-events: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+  transition: opacity 0.25s ease-out;
 }
 
 .toc-nav.active {
   opacity: 1;
-  transform: translateX(0) translateY(0);
   pointer-events: auto;
 }
 
@@ -176,7 +174,7 @@ body.darkmode .toc-nav .is-active-link {
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  transition: opacity 0.25s ease-out, background-color 0.25s ease-out;
+  transition: opacity 0.12s ease-out, background-color 0.12s ease-out;
 }
 
 .toc-pin-btn:hover {
@@ -206,5 +204,5 @@ body.darkmode .toc-nav.pinned .toc-pin-btn {
 }
 
 .pin-icon {
-  transition: transform 0.25s ease-out;
+  transition: transform 0.12s ease-out;
 }

@@ -145,12 +145,13 @@ string is the only breadcrumb the maintainer has when triaging.
 ## 产品偏好
 
 - **付费用户视角**: 默认按 App Store 付费版的精致度做。每次视觉 / 交互改动思考"对得起付费用户吗"。能精致一分就精致一分。
+- The preview CSS follows the family visual standard (Kata `sumi` skill): quotes are muted indented text and GitHub alerts a light tint with a coloured title, neither with a left stripe; nothing glows; transitions ease out at 0.12s for feedback on the control under the pointer and 0.25s for what the page shows, and floating panels fade in place. `PreviewStyleGateTests` enforces these.
 - Preview images, videos and iframes must stay within `max-width: 100%`. Wide tables may scroll inside `.table-scroll`, but must not widen the page. PDF and PNG exports must fit tables to the output width because exported content cannot scroll. Recheck these bounds when adding raw HTML rendering; verify initial rendering, incremental updates and repeated exports when changing table layout.
 - **设计参考**: UI / CSS 抄不出来时去看 `~/www/weekly` 和 `~/www/tw93.github.io`, 那里有维护者已经满意的样式。不要凭空发挥。
 - **目标视觉风格**: macOS 26 风格的 sidebar (玻璃态、透明、SF Symbols 最新一代) 是长期方向, 不是经典 Big Sur 风格。
 - **不要再提议整套 macOS 26 / Liquid Glass 重设计**。一次实机改造 (侧栏换原生 `.sidebar` 半透明材质 + 选中态改强调色玻璃 pill + 图标整体迁 SF Symbols + 自绘 pill `ChromeToolbarButton`) 已被维护者否决, 原话"还不如之前好看, 不强求这个"。要打磨侧栏 / 按钮就在现有不透明设计上做小步增量: 间距、对齐、hover、focus、字重。不要整体换材质或换图标体系, 除非维护者在当前回合明确要求。
 - **App 图标保持原插画 (维护者 2026-10-14)**: `Resources/app.icon` 用 `Assets/43.png` 的完整红雀插画 (太阳、红雀、树枝、叶子)。同日试过两次简化都被否: 去掉太阳和叶子后尖冠孤零零戳在底色上「太尖」, 只放回太阳后像一顶「太阳帽」。原图里右上的太阳和右下的叶子互相配平, 拆掉一半就失衡。要再动图标, 在完整插画上一次只改一个属性 (底色、比例、玻璃), 并排渲染给维护者挑, 改前先读 `~/www/Kata/rules/icon.md`。
-- **设置窗口按 Mole 的排布 (维护者 2026-10-15)**: 一个固定尺寸的普通窗口 (568pt 宽, 所有标签同一高度, 内容超出就在窗口内滚动), 标题栏居中三个标签 通用 · 编辑器 · 字体, 选中用沙色底; 不要侧栏, 不要半透明材质。分区只用细线隔开, 不加标题和卡片; 每一行左边是标题加一行说明, 右边是控件, 控件只有小开关、胶囊下拉框、小按钮三种。需要重启的设置在行内出「重启」按钮, 不弹窗。新增设置照这个行结构加, 标题和说明在五种语言下都要一行放得下。实现在 `Controllers/*PrefsViewController.swift` 和 `Views/PrefsControls.swift`, 颜色在 `Theme.Settings`。
+- **设置窗口按 Mole 的排布 (维护者 2026-10-15)**: 一个固定尺寸的普通窗口 (568pt 宽, 所有标签同一高度, 内容超出就在窗口内滚动), 标题栏居中三个标签 通用 · 编辑器 · 字体, 选中用沙色底; 不要侧栏, 不要半透明材质。分区只用细线隔开, 不加标题和卡片; 每一行左边是标题, 右边是控件, 控件只有小开关、胶囊下拉框、小按钮三种; 标题下的一行说明只写标题说不出的后果或范围 (重启后生效、只作用于代码块), 复述标题的说明删掉, 没有说明的行标题对着控件垂直居中 (维护者 2026-10-23, 按 sumi 第 2 条)。需要重启的设置在行内出「重启」按钮, 不弹窗。新增设置照这个行结构加, 标题和说明在五种语言下都要一行放得下。实现在 `Controllers/*PrefsViewController.swift` 和 `Views/PrefsControls.swift`, 颜色在 `Theme.Settings`。
 - **README 首屏 GIF 按语言分开是有意的**: `README_CN.md` 和 `README_TW.md` 用中文界面的 `newmiaoyan.gif`, 其余语言用英文界面的 `miaoyan.gif`, 审查和改稿时不要统一成一张 (维护者 2026-10-10)。
 - **cmd-数字快捷键已占满 0-5**, 不要冲突: 1 侧栏, 2 笔记列表, 3 Toggle Preview, 4 Toggle Presentation, 5 TOC, 0 Actual Size。`⌘\` 只给 Toggle Split View, 用户已经记住了, 不要改; Window 菜单的 Main Window 原先也绑 `⌘\`, 被分栏抢先从来触发不了, 2026-10-11 改为 `⌥⌘0`。新增前先 `grep 'keyEquivalent="N"' Resources/Localization/Base.lproj/Main.storyboard` 核对, 绑定只存在于 storyboard, 代码里没有 keyBindings 表。打字机滚动 / 链接相关另开模式或子开关即可。
 

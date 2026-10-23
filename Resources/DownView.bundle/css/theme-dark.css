@@ -94,7 +94,7 @@
 }
 
 .darkmode input[type='checkbox'] {
-  border: 0.5px solid white;
+  border: 1px solid white;
 }
 
 .darkmode img[loading="lazy"] {
