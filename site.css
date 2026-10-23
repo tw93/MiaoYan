@@ -107,6 +107,9 @@ body {
   display: flex;
   flex-direction: column;
 }
+/* No paragraph or list item ends on one lone character, as on mole.fit
+   (maintainer 2026-10-23); class rules that balance still win. */
+p, li, dd, figcaption, blockquote { text-wrap: pretty; }
 body > :is(.wrap, footer) { width: 100%; }
 body > footer { margin-top: auto; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) body { line-height: 1.75; }
