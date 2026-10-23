@@ -332,8 +332,8 @@
 "Presentation Font Size" = "演示字号";
 "Used for MiaoYan PPT slides" = "用于妙言 PPT 幻灯片";
 "All Notes" = "全部笔记";
-"Move the folder “%@” and everything in it to the Trash?" = "将文件夹“%@”及其中的全部文件移到废纸篓？";
-"Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移到废纸篓？";
+"Move the folder “%@” and everything in it to the Trash?" = "将文件夹“%@”及其中的全部文件移入废纸篓？";
+"Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移入废纸篓？";
 "No unused attachments" = "没有未使用的附件";
 "Title not saved. Click it again to rename" = "标题未保存，再点一次标题即可重命名";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在访达中可见。";
