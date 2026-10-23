@@ -300,7 +300,7 @@
 
 /* Settings window */
 "Restart" = "Reiniciar";
-"Change…" = "Cambiar…";
+"Change" = "Cambiar";
 "Follow the system, or stay light or dark" = "Sigue al sistema o queda claro u oscuro";
 "Takes effect after MiaoYan restarts" = "Se aplica al reiniciar MiaoYan";
 "Button Display" = "Mostrar botones";

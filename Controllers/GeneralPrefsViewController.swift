@@ -33,7 +33,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     }
 
     override func setupUI() {
-        let changeButton = PrefsPillButton(title: I18n.str("Change…"), target: self, action: #selector(changeStorageLocation(_:)))
+        let changeButton = PrefsPillButton(title: I18n.str("Change"), target: self, action: #selector(changeStorageLocation(_:)))
         storageRestartButton = makeRestartButton()
         storageRow = PrefsRowView(
             title: I18n.str("Note Location"), detail: "", controls: [storageRestartButton, changeButton], detailTruncation: .byTruncatingMiddle)

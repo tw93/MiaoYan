@@ -21,7 +21,10 @@ enum PrefsMetrics {
     static let pillHorizontalPadding: CGFloat = 12
     static let tabHeight: CGFloat = 28
     static let tabHorizontalPadding: CGFloat = 14
-    static let shortcutWidth: CGFloat = 120
+    /// The shortcut capsule fits what it shows, with room on each side for
+    /// the clear button so the keys stay centred.
+    static let shortcutSideRoom: CGFloat = 26
+    static let shortcutMinWidth: CGFloat = 80
     static let fontDropdownMaxWidth: CGFloat = 196
     static let dropdownMaxWidth: CGFloat = 220
 
@@ -613,6 +616,7 @@ private final class PrefsTabButton: NSButton {
 final class PrefsShortcutRecorder: NSView {
     private let recorder: KeyboardShortcuts.RecorderCocoa
     private var isRecording = false
+    private var widthConstraint: NSLayoutConstraint!
 
     init(for name: KeyboardShortcuts.Name) {
         recorder = KeyboardShortcuts.RecorderCocoa(for: name)
@@ -638,8 +642,9 @@ final class PrefsShortcutRecorder: NSView {
         }
         addSubview(recorder)
 
+        widthConstraint = widthAnchor.constraint(equalToConstant: PrefsMetrics.shortcutMinWidth)
         NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalToConstant: PrefsMetrics.shortcutWidth),
+            widthConstraint,
             heightAnchor.constraint(equalToConstant: PrefsMetrics.controlHeight),
             recorder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4),
             recorder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
@@ -669,6 +674,17 @@ final class PrefsShortcutRecorder: NSView {
         updateAppearance()
     }
 
+    override func layout() {
+        super.layout()
+        // The recorder sets its text itself, so take the width from whatever
+        // it shows now: the keys, or the placeholder when nothing is set.
+        let shown = recorder.stringValue.isEmpty ? (recorder.placeholderString ?? "") : recorder.stringValue
+        let width = max(PrefsMetrics.shortcutMinWidth, textWidth(shown, font: PrefsMetrics.controlFont) + PrefsMetrics.shortcutSideRoom * 2)
+        if abs(widthConstraint.constant - width) > 0.5 {
+            widthConstraint.constant = width
+        }
+    }
+
     override func hitTest(_ point: NSPoint) -> NSView? {
         // The whole capsule starts recording, not only the text field in it.
         guard let hit = super.hitTest(point) else { return nil }
@@ -679,6 +695,7 @@ final class PrefsShortcutRecorder: NSView {
         guard let isActive = notification.userInfo?["isActive"] as? Bool else { return }
         isRecording = isActive
         updateAppearance()
+        needsLayout = true
     }
 
     private func updateAppearance() {

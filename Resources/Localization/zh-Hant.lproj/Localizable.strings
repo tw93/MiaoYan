@@ -277,7 +277,7 @@
 
 /* Settings window */
 "Restart" = "重新啟動";
-"Change…" = "更改…";
+"Change" = "更改";
 "Follow the system, or stay light or dark" = "跟隨系統，或固定淺色、深色";
 "Takes effect after MiaoYan restarts" = "重新啟動妙言後生效";
 "Button Display" = "按鈕顯示";

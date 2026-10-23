@@ -300,7 +300,7 @@
 
 /* Settings window */
 "Restart" = "再起動";
-"Change…" = "変更…";
+"Change" = "変更";
 "Follow the system, or stay light or dark" = "システムに合わせるか、ライトかダークに固定";
 "Takes effect after MiaoYan restarts" = "MiaoYan の再起動後に反映";
 "Button Display" = "ボタン表示";

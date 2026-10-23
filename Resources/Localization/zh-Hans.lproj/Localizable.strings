@@ -301,7 +301,7 @@
 
 /* Settings window */
 "Restart" = "重新启动";
-"Change…" = "更改…";
+"Change" = "更改";
 "Appearance" = "外观";
 "Follow the system, or stay light or dark" = "跟随系统，或固定浅色、深色";
 "Language" = "语言";
