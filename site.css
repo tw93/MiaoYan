@@ -321,8 +321,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
    The X and GitHub counts are static: update them together with mole.fit's. */
 .contact { margin-top: 48px; text-align: left; }
 .contact-heading { display: flex; align-items: center; gap: 12px; }
-.contact-author { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.contact .contact-title { margin: 0; padding: 0; font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.3; color: var(--brand); }
+.contact-author { display: block; flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.contact .contact-title { margin: 0; padding: 0; font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.2; color: var(--dark-warm); transform: translateY(1.5px); }
 .contact .contact-sub { margin: 8px 0 0; padding: 0; font-family: var(--serif); font-size: 15px; line-height: 1.55; color: var(--olive); }
 .contact-sub a { color: var(--brand); text-decoration: none; }
 .contact-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }

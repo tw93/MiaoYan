@@ -113,7 +113,7 @@ COPY = {
             "edit": "纯 Markdown 编辑，标题、链接与代码各有色彩，层次分明",
             "preview": "排版如书，图片、表格和代码按最终阅读形态呈现",
             "split": "左边写右边实时预览，60fps 双向滚动与 Mermaid 流程图随手即得",
-            "ppt": "用 --- 分页，同一篇笔记瞬间化作精美幻灯片",
+            "ppt": "用 --- 分页，同一篇笔记直接变成幻灯片放映",
             "dark": "跟随系统昼夜轮转，专为夜间书写调校的暖调深色",
         },
         "alts": {
@@ -136,7 +136,7 @@ COPY = {
         ],
         "compare_title": "妙言适合谁",
         "compare": [
-            ("和 Typora 相比", "妙言不做所见即所得编辑，而是保留纯 Markdown 源码编辑与独立预览。更适合希望直接掌控源文件，又需要即时预览的人。"),
+            ("和 Typora 相比", "妙言不做所见即所得编辑，而是保留纯 Markdown 源码编辑与独立预览。更适合习惯直接编辑源文件、又需要即时看到排版效果的人。"),
             ("和 Obsidian 相比", "妙言没有 Electron 运行时，也不以插件生态为中心。更适合想要原生、轻量、纯本地文件和开箱即用核心功能的人。"),
         ],
         "faq_title": "常见问题",
@@ -169,7 +169,7 @@ COPY = {
             "edit": "純 Markdown 編輯，標題、連結與程式碼各有色彩，層次分明",
             "preview": "排版如書，圖片、表格和程式碼按最終閱讀形態呈現",
             "split": "左邊寫右邊即時預覽，60fps 雙向捲動與 Mermaid 流程圖隨手即得",
-            "ppt": "用 --- 分頁，同一篇筆記瞬間化作精美投影片",
+            "ppt": "用 --- 分頁，同一篇筆記直接變成投影片放映",
             "dark": "跟隨系統晝夜輪轉，專為夜間書寫調校的暖調深色",
         },
         "alts": {
@@ -192,7 +192,7 @@ COPY = {
         ],
         "compare_title": "妙言適合誰",
         "compare": [
-            ("和 Typora 相比", "妙言不做所見即所得編輯，而是保留純 Markdown 原始檔編輯與獨立預覽。更適合希望直接掌控原始檔，又需要即時預覽的人。"),
+            ("和 Typora 相比", "妙言不做所見即所得編輯，而是保留純 Markdown 原始檔編輯與獨立預覽。更適合習慣直接編輯原始檔、又需要即時看到排版效果的人。"),
             ("和 Obsidian 相比", "妙言沒有 Electron 執行環境，也不以外掛生態為中心。更適合想要原生、輕量、純本地檔案和開箱即用核心功能的人。"),
         ],
         "faq_title": "常見問題",
@@ -517,7 +517,7 @@ CONTACT = {
         "title": 'Get in touch',
         "sub": 'Questions and suggestions are welcome in <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
         "x_stat": '163K followers',
-        "x_desc": 'I make MiaoYan, Mole, Kaku, Pake, Waza, and Kami. I keep the apps updated, and you’re welcome to message me.',
+        "x_desc": 'I make MiaoYan, Mole, Hina, Kaku, Pake, and Kami. I keep the apps updated, and you’re welcome to message me.',
         "gh_stat": '182.6K stars',
         "gh_desc": 'My open-source projects, with 19.4K forks and 13.5K followers. Questions and contributions are welcome.',
         "a11y_x": 'Contact Tw93 on X',
@@ -527,7 +527,7 @@ CONTACT = {
         "title": '欢迎联系与交流',
         "sub": '使用问题和建议，可以在 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> 里反馈',
         "x_stat": '163K 粉丝',
-        "x_desc": '我是 MiaoYan、Mole、Kaku、Pake、Waza 和 Kami 的作者，产品一直在更新，欢迎私信。',
+        "x_desc": '我是 MiaoYan、Mole、Hina、Kaku、Pake 和 Kami 的作者，产品一直在更新，欢迎私信。',
         "gh_stat": '182.6K Star',
         "gh_desc": '我的开源项目都在这里，累计 19.4K 次 Fork、13.5K 位关注者，欢迎交流和贡献。',
         "a11y_x": '在 X 上联系 Tw93',
@@ -537,7 +537,7 @@ CONTACT = {
         "title": '歡迎聯絡與交流',
         "sub": '使用問題和建議，可以在 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> 回報',
         "x_stat": '163K 粉絲',
-        "x_desc": '我是 MiaoYan、Mole、Kaku、Pake、Waza 和 Kami 的作者，產品持續更新，歡迎私訊交流。',
+        "x_desc": '我是 MiaoYan、Mole、Hina、Kaku、Pake 和 Kami 的作者，產品持續更新，歡迎私訊交流。',
         "gh_stat": '182.6K Star',
         "gh_desc": '我的開源專案都在這裡，累計 19.4K 次 Fork、13.5K 位追蹤者，歡迎交流與貢獻。',
         "a11y_x": '在 X 上聯絡 Tw93',
@@ -547,7 +547,7 @@ CONTACT = {
         "title": 'お問い合わせ・交流',
         "sub": '使い方の質問や提案は <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> へどうぞ。',
         "x_stat": 'フォロワー163K',
-        "x_desc": 'MiaoYan、Mole、Kaku、Pake、Waza、Kamiの作者です。アプリは継続して更新しています。DMもお気軽にどうぞ。',
+        "x_desc": 'MiaoYan、Mole、Hina、Kaku、Pake、Kamiの作者です。アプリは継続して更新しています。DMもお気軽にどうぞ。',
         "gh_stat": 'スター 182.6K',
         "gh_desc": 'オープンソースのプロジェクトを公開しています。19.4Kフォーク、13.5Kフォロワー。質問や開発への参加も歓迎です。',
         "a11y_x": 'XでTw93に連絡する',
@@ -557,7 +557,7 @@ CONTACT = {
         "title": '편하게 연락해 주세요',
         "sub": '사용 중 궁금한 점이나 제안은 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>에 남겨 주세요.',
         "x_stat": '팔로워 163K',
-        "x_desc": 'MiaoYan, Mole, Kaku, Pake, Waza, Kami를 만들고 꾸준히 업데이트하고 있습니다. DM으로 편하게 이야기해 주세요.',
+        "x_desc": 'MiaoYan, Mole, Hina, Kaku, Pake, Kami를 만들고 꾸준히 업데이트하고 있습니다. DM으로 편하게 이야기해 주세요.',
         "gh_stat": '스타 182.6K',
         "gh_desc": '제 오픈 소스 프로젝트를 모아 둔 곳으로, 포크 19.4K개와 팔로워 13.5K명이 있습니다. 질문과 기여 모두 환영합니다.',
         "a11y_x": 'X에서 Tw93에게 연락하기',
@@ -567,7 +567,7 @@ CONTACT = {
         "title": 'Kontakt und Austausch',
         "sub": 'Fragen und Vorschläge sind in den <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> willkommen.',
         "x_stat": '163K Follower',
-        "x_desc": 'Ich entwickle MiaoYan, Mole, Kaku, Pake, Waza und Kami und halte die Apps aktuell. Schreiben Sie mir gern.',
+        "x_desc": 'Ich entwickle MiaoYan, Mole, Hina, Kaku, Pake und Kami und halte die Apps aktuell. Schreiben Sie mir gern.',
         "gh_stat": '182,6K Sterne',
         "gh_desc": 'Hier finden Sie meine Open-Source-Projekte: 19,4K Forks und 13,5K Follower. Fragen und Beiträge sind willkommen.',
         "a11y_x": 'Tw93 auf X kontaktieren',
@@ -577,7 +577,7 @@ CONTACT = {
         "title": 'Restons en contact',
         "sub": 'Questions et suggestions sont les bienvenues dans les <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
         "x_stat": '163K abonnés',
-        "x_desc": 'Je développe MiaoYan, Mole, Kaku, Pake, Waza et Kami et continue à les mettre à jour. Vous pouvez m’écrire en privé.',
+        "x_desc": 'Je développe MiaoYan, Mole, Hina, Kaku, Pake et Kami et continue à les mettre à jour. Vous pouvez m’écrire en privé.',
         "gh_stat": '182,6K étoiles',
         "gh_desc": 'Mes projets open source, avec 19,4K forks et 13,5K abonnés. Vos questions et contributions sont les bienvenues.',
         "a11y_x": 'Contacter Tw93 sur X',
@@ -587,7 +587,7 @@ CONTACT = {
         "title": 'Hablemos',
         "sub": 'Puedes dejar preguntas y sugerencias en <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
         "x_stat": '163K seguidores',
-        "x_desc": 'Soy el creador de MiaoYan, Mole, Kaku, Pake, Waza y Kami. Sigo actualizando las apps y puedes escribirme por privado.',
+        "x_desc": 'Soy el creador de MiaoYan, Mole, Hina, Kaku, Pake y Kami. Sigo actualizando las apps y puedes escribirme por privado.',
         "gh_stat": '182,6K estrellas',
         "gh_desc": 'Aquí están mis proyectos de código abierto, con 19,4K forks y 13,5K seguidores. Puedes preguntar o contribuir.',
         "a11y_x": 'Contactar con Tw93 en X',
@@ -661,7 +661,7 @@ def contact_html(key):
 
     return ('<div class="contact"><div class="contact-heading">'
             '<img class="contact-author" src="/assets/tw93.png" width="28" height="28" alt="Tw93" loading="lazy" decoding="async">'
-            f'<p class="contact-title">{esc(c["title"])}</p></div><p class="contact-sub">{t(c["sub"])}</p><div class="contact-cards">'
+            f'<p class="contact-title">{esc(c["title"])}</p></div><div class="contact-cards">'
             + card("https://x.com/HiTw93", c["a11y_x"], x_glyph, "X", "@HiTw93", "x-followers", c["x_stat"], esc(t(c["x_desc"])))
             + card("https://github.com/tw93", c["a11y_gh"], gh_glyph, "GitHub", "@tw93", "github-profile-stars", c["gh_stat"], gh_desc)
             + "</div></div>")
