@@ -52,54 +52,54 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-links-and-anchors.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 链接的写法是 <code>[文字](目的地)</code>，目的地可以是网址、指向另一个文件的相对路径，或者 <code>#某处</code> 这样的文内跳转。前两种有标准，第三种没有，CommonMark 没规定标题怎么变成锚点，所以 <code>#my-heading</code> 在 GitHub 上能用，在别处看工具，在妙言的预览里则有自己的规则，下面会说。</p>
+<p>Markdown 链接的写法是 <code>[文字](目的地)</code>，目的地可以是网址、指向另一个文件的相对路径，或者 <code>#某处</code> 这样的文内跳转。前两种有标准，第三种没有，CommonMark 没规定标题怎么变成锚点，所以 <code>#my-heading</code> 在 GitHub 上能用，在别处看工具，在妙言的预览里则有自己的规则，下面<span class="nobr">会说。</span></p>
 <h2 id="几种链接写法">几种链接写法</h2>
-<p>行内链接把目的地紧跟在文字后面，可以再加一个引号包起来的标题：</p>
+<p>行内链接把目的地紧跟在文字后面，可以再加一个引号包起来的<span class="nobr">标题：</span></p>
 <pre><code class="language-markdown">[妙言 GitHub](https://github.com/tw93/MiaoYan &quot;源码和发布&quot;)
 </code></pre>
-<p>标题可以用双引号、单引号或小括号，和目的地之间要有空格。多数渲染器把它显示成悬停提示，读者必须知道的内容不要只放在这里。</p>
-<p>引用式链接把目的地挪出正文，长网址不会打乱段落，几个链接也能共用一个地址：</p>
+<p>标题可以用双引号、单引号或小括号，和目的地之间要有空格。多数渲染器把它显示成悬停提示，读者必须知道的内容不要只放在<span class="nobr">这里。</span></p>
+<p>引用式链接把目的地挪出正文，长网址不会打乱段落，几个链接也能共用一个<span class="nobr">地址：</span></p>
 <pre><code class="language-markdown">先读 [规范][cm]，再读 [GFM 规范][gfm]。
 
 [cm]: https://spec.commonmark.org/
 [gfm]: https://github.github.com/gfm/ &quot;GitHub Flavored Markdown&quot;
 </code></pre>
-<p>定义本身不会被渲染，放在用到它的链接之前或之后都行，所以很多人把它们集中放在笔记末尾。自动链接是把网址放进尖括号，<code>&lt;https://example.com&gt;</code>，网址本身就是显示文字。</p>
+<p>定义本身不会被渲染，放在用到它的链接之前或之后都行，所以很多人把它们集中放在笔记末尾。自动链接是把网址放进尖括号，<code>&lt;https://example.com&gt;</code>，网址本身就是显示<span class="nobr">文字。</span></p>
 <h2 id="裸网址不等于链接">裸网址不等于链接</h2>
 <p>GitHub 会把单独的 <code>https://example.com</code> 变成链接，因为 GFM 在 CommonMark 之上加了自动链接扩展，但不是每个渲染器都带这个扩展。妙言的渲染器挂了四个 GFM 扩展，表格、脚注、删除线和任务列表，没有自动链接，所以预览和 HTML 导出里的裸网址只是普通文字，而编辑区确实会把它变成可点击的链接，打字时能点的网址，渲染之后就不是链接了。想让网址在哪里都可点，就写成 <code>&lt;https://example.com&gt;</code> 或 <code>[文字](https://example.com)</code>。</p>
 <h2 id="目的地里的空格和括号">目的地里的空格和括号</h2>
-<p>目的地里不能直接有空格，除非整个目的地包在尖括号里，括号则只能成对出现，或者用反斜杠转义。同一个文件名有三种写法：</p>
+<p>目的地里不能直接有空格，除非整个目的地包在尖括号里，括号则只能成对出现，或者用反斜杠转义。同一个文件名有三种<span class="nobr">写法：</span></p>
 <pre><code class="language-markdown">[报告](&lt;Q3 报告 (终稿).md&gt;)
 [报告](Q3%20报告%20%28终稿%29.md)
 [报告](Q3%20报告%20\(终稿\).md)
 </code></pre>
-<p>尖括号最好读，百分号编码在所有渲染器里都能用，但看不出原来的名字。打算互相链接的笔记，文件名里尽量不要有空格和括号，问题就自己消失了。</p>
+<p>尖括号最好读，百分号编码在所有渲染器里都能用，但看不出原来的名字。打算互相链接的笔记，文件名里尽量不要有空格和括号，问题就自己消<span class="nobr">失了。</span></p>
 <h2 id="链接到标题">链接到标题</h2>
 <p>CommonMark 规范里标题没有锚点，各家自己决定。GitHub 公开了规则，字母转小写，空格换成连字符，其他标点和空白去掉，格式标记去掉只留内容，首尾空白去掉，重复的标题依次加 <code>-1</code>、<code>-2</code>。它自己的例子里，标题 "This'll be a <em>Helpful</em> Section About the Greek Letter Θ!" 对应的链接是 <code>#thisll-be-a-helpful-section-about-the-greek-letter-Θ</code>。这个例子把希腊字母 Θ 留在了锚点里，说明非 ASCII 字母不会被去掉，中文标题「快速开始」应该链接成 <code>#快速开始</code>。</p>
 <pre><code class="language-markdown">## 在 Mac 上安装
 
 [跳到安装](#在-mac-上安装)
 </code></pre>
-<p>想看 GitHub 实际生成的锚点，把鼠标放到标题上，点出现的链接图标，地址栏里就是。如果想要一个改标题也不变的目标，GitHub 还支持写成 <code>&lt;a name="unique-name"&gt;&lt;/a&gt;</code> 的自定义锚点，用 <code>#unique-name</code> 链接，它不会出现在自动生成的目录里。</p>
+<p>想看 GitHub 实际生成的锚点，把鼠标放到标题上，点出现的链接图标，地址栏里就是。如果想要一个改标题也不变的目标，GitHub 还支持写成 <code>&lt;a name="unique-name"&gt;&lt;/a&gt;</code> 的自定义锚点，用 <code>#unique-name</code> 链接，它不会出现在自动生成的目<span class="nobr">录里。</span></p>
 <h2 id="妙言预览怎么处理锚点">妙言预览怎么处理锚点</h2>
-<p>预览用的不是 GitHub 的写法。预览脚本给每个标题设置一个 <code>id</code>，值就是标题可见文字去掉首尾空白，重复的标题依次加 <code>-1</code>、<code>-2</code>。以 <code>#</code> 开头的链接被点击时会被拦截，片段先做 URL 解码，再平滑滚动到它选中的元素。</p>
-<p>按 V4.5.0 源码读下来有三个后果。GitHub 风格的 <code>#在-mac-上安装</code> 对不上 id 为 <code>在 Mac 上安装</code> 的标题。带空格的片段，比如解码后的 <code>#在 Mac 上安装</code>，会被当成嵌套元素的选择器，什么也选不中，所以多个单词的标题在预览里没有可靠的片段链接。只有一个词的标题，或者不带空格的中文标题，按原样写就行，<code>#Install</code> 或 <code>#快速开始</code>。需要多词目标时，在标题上方写 <code>&lt;a id="install"&gt;&lt;/a&gt;</code>，再链接到 <code>#install</code>，原始 HTML 会被放行，预览选的正是 id。GitHub 文档里自定义锚点用的是 <code>name</code> 属性，笔记要两边都能用就把两个属性都写上。</p>
-<p>这是笔记在妙言里看着没问题、放到 GitHub 上就失效的主要地方，反过来也一样，所以链接要在最终阅读的地方点一遍。</p>
+<p>预览用的不是 GitHub 的写法。预览脚本给每个标题设置一个 <code>id</code>，值就是标题可见文字去掉首尾空白，重复的标题依次加 <code>-1</code>、<code>-2</code>。以 <code>#</code> 开头的链接被点击时会被拦截，片段先做 URL 解码，再平滑滚动到它选中的<span class="nobr">元素。</span></p>
+<p>按 V4.5.0 源码读下来有三个后果。GitHub 风格的 <code>#在-mac-上安装</code> 对不上 id 为 <code>在 Mac 上安装</code> 的标题。带空格的片段，比如解码后的 <code>#在 Mac 上安装</code>，会被当成嵌套元素的选择器，什么也选不中，所以多个单词的标题在预览里没有可靠的片段链接。只有一个词的标题，或者不带空格的中文标题，按原样写就行，<code>#Install</code> 或 <code>#快速开始</code>。需要多词目标时，在标题上方写 <code>&lt;a id="install"&gt;&lt;/a&gt;</code>，再链接到 <code>#install</code>，原始 HTML 会被放行，预览选的正是 id。GitHub 文档里自定义锚点用的是 <code>name</code> 属性，笔记要两边都能用就把两个属性都<span class="nobr">写上。</span></p>
+<p>这是笔记在妙言里看着没问题、放到 GitHub 上就失效的主要地方，反过来也一样，所以链接要在最终阅读的地方点<span class="nobr">一遍。</span></p>
 <h2 id="相对路径和笔记之间的跳转">相对路径和笔记之间的跳转</h2>
-<p>在 GitHub 上，<code>[指南](docs/guide.md)</code> 这样的相对链接按当前文件解析，并随你查看的分支改写，以 <code>/</code> 开头的路径相对仓库根目录，所以仓库里的文件互相引用时，用相对链接最合适，链接文字必须在同一行。</p>
+<p>在 GitHub 上，<code>[指南](docs/guide.md)</code> 这样的相对链接按当前文件解析，并随你查看的分支改写，以 <code>/</code> 开头的路径相对仓库根目录，所以仓库里的文件互相引用时，用相对链接最合适，链接文字必须在同<span class="nobr">一行。</span></p>
 <p>妙言的预览是一个网页视图，加载的是应用缓存文件夹里那份预览文件的副本，不是笔记所在的文件夹，点击的链接会交给 macOS 去打开。网址会用默认浏览器打开，指向另一个 <code>.md</code> 文件的相对路径在预览里不会按笔记所在文件夹解析，用它在笔记之间跳转并不可靠。本地图片则不同，预览会按笔记所在的项目文件夹改写路径，见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
-<p>笔记之间的跳转，妙言用的是 wikilink，写成 <code>[[笔记标题]]</code>。在编辑区里点击它会打开标题完全一致的那篇笔记，预览在渲染前也会把它改写成 <code>miaoyan://goto/</code> 链接，所以在预览里同样能点。它不是标准 Markdown，不认识它的查看器会显示方括号。取舍见<a href="/zh/blog/wikilinks-and-backlinks/">Wikilink 与反向链接</a>。如果这些笔记还要在 GitHub 上当文件用，那里就用相对路径的 Markdown 链接，接受它们只给 GitHub 用，不用来在妙言里点。</p>
+<p>笔记之间的跳转，妙言用的是 wikilink，写成 <code>[[笔记标题]]</code>。在编辑区里点击它会打开标题完全一致的那篇笔记，预览在渲染前也会把它改写成 <code>miaoyan://goto/</code> 链接，所以在预览里同样能点。它不是标准 Markdown，不认识它的查看器会显示方括号。取舍见<a href="/zh/blog/wikilinks-and-backlinks/">Wikilink 与反向链接</a>。如果这些笔记还要在 GitHub 上当文件用，那里就用相对路径的 Markdown 链接，接受它们只给 GitHub 用，不用来在妙言<span class="nobr">里点。</span></p>
 <h2 id="怎么检查链接">怎么检查链接</h2>
 <p>打开渲染后的页面逐个点。在妙言里点预览中的标题链接，没有滚动就说明片段对不上任何 id；在 GitHub 上从标题的链接图标复制锚点，不要自己猜 slug。链接里混着标点、空格和非 ASCII 文字时，给目的地加尖括号或做编码，标题尽量短，slug 才好预测。妙言还能渲染哪些语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="markdown-怎么链接到某个标题">Markdown 怎么链接到某个标题？</h3>
-<p>写 <code>[文字](#标题slug)</code>。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪里读。</p>
+<p>写 <code>[文字](#标题slug)</code>。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪<span class="nobr">里读。</span></p>
 <h3 id="为什么锚点链接在妙言里不好用">为什么锚点链接在妙言里不好用？</h3>
 <p>预览用标题文字当 id，不是小写 slug，带空格的片段也选不中。只有一个词的标题按原样链接，或者在标题上方加 <code>&lt;a id="name"&gt;&lt;/a&gt;</code>。</p>
 <h3 id="markdown-链接里有空格怎么办">Markdown 链接里有空格怎么办？</h3>
 <p>把目的地放进尖括号，<code>[文字](&lt;my file.md&gt;)</code>，或者每个空格写成 <code>%20</code>。</p>
 <h3 id="裸网址会变成链接吗">裸网址会变成链接吗？</h3>
-<p>GitHub 会，妙言的预览不会，用尖括号包起来。</p>
+<p>GitHub 会，妙言的预览不会，用尖括号包<span class="nobr">起来。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

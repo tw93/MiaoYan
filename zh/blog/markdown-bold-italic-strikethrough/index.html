@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-bold-italic-strikethrough.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>加粗写 <code>**加粗**</code>，斜体写 <code>*斜体*</code>，删除线写 <code>~~删除线~~</code>。星号放在词中间也能用，下划线不行，删除线是 GitHub Flavored Markdown 的扩展，不属于 CommonMark 的核心。强调失败、页面上留下原样的星号，几乎都是因为紧贴分隔符的那个字符，<code>**</code> 开头紧挨标点、或者结尾紧跟在标点后面，它和相邻文字之间就必须隔一个空格或者再隔一个标点，这在中文里最容易踩到，比如 <code>**注意：**这样不行</code>。妙言 V4.5.0 在「格式」菜单里有粗体、斜体和删除线，规则卡住的时候可以退回 <code>&lt;b&gt;</code> 和 <code>&lt;del&gt;</code> 标签。</p>
+<p>加粗写 <code>**加粗**</code>，斜体写 <code>*斜体*</code>，删除线写 <code>~~删除线~~</code>。星号放在词中间也能用，下划线不行，删除线是 GitHub Flavored Markdown 的扩展，不属于 CommonMark 的核心。强调失败、页面上留下原样的星号，几乎都是因为紧贴分隔符的那个字符，<code>**</code> 开头紧挨标点、或者结尾紧跟在标点后面，它和相邻文字之间就必须隔一个空格或者再隔一个标点，这在中文里最容易踩到，比如 <code>**注意：**这样不行</code>。妙言 V4.5.0 在「格式」菜单里有粗体、斜体和删除线，规则卡住的时候可以退回 <code>&lt;b&gt;</code> 和 <code>&lt;del&gt;</code> <span class="nobr">标签。</span></p>
 <h2 id="星号下划线与组合">星号、下划线与组合</h2>
 <pre><code class="language-markdown">*斜体* 或 _斜体_
 **粗体** 或 __粗体__
@@ -60,11 +60,11 @@
 **粗体里有 *斜体* 一段**
 ~~**又删除又加粗**~~
 </code></pre>
-<p>两种字符生成的 HTML 一样，一个是 <code>&lt;em&gt;</code>，两个是 <code>&lt;strong&gt;</code>，三个是粗体外面再包一层斜体，嵌套顺序随意，<code>**_x_**</code> 和 <code>***x***</code> 都是粗斜体。一段强调不能跨过空行，<code>**粗体</code>、一个空行、<code>断开**</code> 三者合起来还是原样的星号。强调在标题、列表项、表格单元格、链接文字里都能用，也可以包住行内代码。</p>
-<p>区别在词中间的行为。<code>un*frigging*believable</code> 中间会变斜体，<code>un_frigging_believable</code> 和 <code>snake_case_name</code> 则保持原样，因为 CommonMark 不允许 <code>_</code> 在词内部开启或结束强调。这样标识符是安全的，不过单独成词的 <code>__init__</code> 仍然会变成粗体的 init，代码要放进反引号里。默认用 <code>*</code> 可以同时躲开这两个麻烦，因为它在词内和中文旁边的行为一致。</p>
+<p>两种字符生成的 HTML 一样，一个是 <code>&lt;em&gt;</code>，两个是 <code>&lt;strong&gt;</code>，三个是粗体外面再包一层斜体，嵌套顺序随意，<code>**_x_**</code> 和 <code>***x***</code> 都是粗斜体。一段强调不能跨过空行，<code>**粗体</code>、一个空行、<code>断开**</code> 三者合起来还是原样的星号。强调在标题、列表项、表格单元格、链接文字里都能用，也可以包住行内<span class="nobr">代码。</span></p>
+<p>区别在词中间的行为。<code>un*frigging*believable</code> 中间会变斜体，<code>un_frigging_believable</code> 和 <code>snake_case_name</code> 则保持原样，因为 CommonMark 不允许 <code>_</code> 在词内部开启或结束强调。这样标识符是安全的，不过单独成词的 <code>__init__</code> 仍然会变成粗体的 init，代码要放进反引号里。默认用 <code>*</code> 可以同时躲开这两个麻烦，因为它在词内和中文旁边的行为<span class="nobr">一致。</span></p>
 <h2 id="为什么有些强调会失效">为什么有些强调会失效</h2>
-<p>CommonMark 看的是 <code>*</code> 或 <code>_</code> 这一串字符两侧的字符。用大白话说，一串分隔符要能开启强调，后面不能是空白，而且后面如果是标点，前面必须是空白或标点，要能结束强调，前面不能是空白，而且前面如果是标点，后面必须是空白或标点，规范里把这两种叫作左侧夹持和右侧夹持，下划线在此之上再加一条词内规则。</p>
-<p>下面这些例子在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里跑过，四个扩展也都打开了：</p>
+<p>CommonMark 看的是 <code>*</code> 或 <code>_</code> 这一串字符两侧的字符。用大白话说，一串分隔符要能开启强调，后面不能是空白，而且后面如果是标点，前面必须是空白或标点，要能结束强调，前面不能是空白，而且前面如果是标点，后面必须是空白或标点，规范里把这两种叫作左侧夹持和右侧夹持，下划线在此之上再加一条词内<span class="nobr">规则。</span></p>
+<p>下面这些例子在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里跑过，四个扩展也都打<span class="nobr">开了：</span></p>
 <table>
 <thead>
 <tr>
@@ -107,14 +107,14 @@
 </tr>
 </tbody>
 </table>
-<p>失败的几行形状相同，分隔符的里侧是标点，外侧是普通字符。全角的 <code>：</code>、<code>“</code>、<code>（</code> 都算标点，而中文又没有空格来满足规则。有三种改法在同一轮测试里都成立，把标点挪到外面，<code>**注意**：这样可以</code>，在分隔符旁边加空格或者再放一个标点，<code>**注意：** 这样可以</code> 或者 <code>（**括号**）继续</code>，再就是改用 <code>&lt;strong&gt;</code> 标签。</p>
-<p>还有一点取决于引擎。CommonMark 0.31.2 规范把 <code>¥</code> 这类符号也算作标点，而妙言用的这版 cmark-gfm 仍然把 <code>价格**¥100**元</code> 渲染成粗体，所以在妙言里正常的笔记，换成按 0.31 规则实现的解析器可能就坏了，要发布到哪里就在哪里测一遍。妙言的编辑区也用自己的正则给粗体和斜体上色，并不走 cmark，那条正则只要求标记内侧不是空白，所以像 <code>**注意：**这样</code> 这样的片段在编辑区里会被染成粗体，预览里却显示星号，所以以预览为准。</p>
+<p>失败的几行形状相同，分隔符的里侧是标点，外侧是普通字符。全角的 <code>：</code>、<code>“</code>、<code>（</code> 都算标点，而中文又没有空格来满足规则。有三种改法在同一轮测试里都成立，把标点挪到外面，<code>**注意**：这样可以</code>，在分隔符旁边加空格或者再放一个标点，<code>**注意：** 这样可以</code> 或者 <code>（**括号**）继续</code>，再就是改用 <code>&lt;strong&gt;</code> <span class="nobr">标签。</span></p>
+<p>还有一点取决于引擎。CommonMark 0.31.2 规范把 <code>¥</code> 这类符号也算作标点，而妙言用的这版 cmark-gfm 仍然把 <code>价格**¥100**元</code> 渲染成粗体，所以在妙言里正常的笔记，换成按 0.31 规则实现的解析器可能就坏了，要发布到哪里就在哪里测一遍。妙言的编辑区也用自己的正则给粗体和斜体上色，并不走 cmark，那条正则只要求标记内侧不是空白，所以像 <code>**注意：**这样</code> 这样的片段在编辑区里会被染成粗体，预览里却显示星号，所以以预览<span class="nobr">为准。</span></p>
 <h2 id="删除线">删除线</h2>
-<p><code>~~文字~~</code> 是 GFM 的扩展，妙言 V4.5.0 已经启用。GFM 规范写的是一个或两个波浪线都行，GitHub 文档里列的是 <code>~~ ~~</code> 或 <code>~ ~</code>。测试里 <code>~one~</code> 会划掉，但数量不一致的 <code>~~a~</code>，以及行中间的三个波浪线，都保持原样。</p>
-<p>单个波浪线对中文和技术文字是个坑。<code>3~5 天，6~10 天</code> 渲染出来是 <code>3</code>、被划掉的「5 天，6」、再加 <code>10 天</code>。<code>~5</code> 和 <code>~10</code> 这种前面带空格的写法没事，<code>~/Documents</code> 也保持原样。表示范围就写 <code>3-5</code>，或者用全角的 <code>～</code>，或者写成 <code>\~</code>，其余可转义的字符见 <a href="/zh/blog/markdown-escape-characters/">转义字符</a>。想要删除线时写两个波浪线更稳。编辑区自己的删除线正则只认两个波浪线，所以单波浪线的删除线只在预览里生效，编辑区里看不到样式。</p>
-<p>删除线不在 CommonMark 规范里，不带这个扩展的解析器会把波浪线直接打出来，<a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM</a> 里列了其他差异，文字要送到这类渲染器的话，用 <code>&lt;del&gt;</code> 或 <code>&lt;s&gt;</code> 更保险。</p>
+<p><code>~~文字~~</code> 是 GFM 的扩展，妙言 V4.5.0 已经启用。GFM 规范写的是一个或两个波浪线都行，GitHub 文档里列的是 <code>~~ ~~</code> 或 <code>~ ~</code>。测试里 <code>~one~</code> 会划掉，但数量不一致的 <code>~~a~</code>，以及行中间的三个波浪线，都保持<span class="nobr">原样。</span></p>
+<p>单个波浪线对中文和技术文字是个坑。<code>3~5 天，6~10 天</code> 渲染出来是 <code>3</code>、被划掉的「5 天，6」、再加 <code>10 天</code>。<code>~5</code> 和 <code>~10</code> 这种前面带空格的写法没事，<code>~/Documents</code> 也保持原样。表示范围就写 <code>3-5</code>，或者用全角的 <code>～</code>，或者写成 <code>\~</code>，其余可转义的字符见 <a href="/zh/blog/markdown-escape-characters/">转义字符</a>。想要删除线时写两个波浪线更稳。编辑区自己的删除线正则只认两个波浪线，所以单波浪线的删除线只在预览里生效，编辑区里看不到<span class="nobr">样式。</span></p>
+<p>删除线不在 CommonMark 规范里，不带这个扩展的解析器会把波浪线直接打出来，<a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM</a> 里列了其他差异，文字要送到这类渲染器的话，用 <code>&lt;del&gt;</code> 或 <code>&lt;s&gt;</code> 更<span class="nobr">保险。</span></p>
 <h2 id="妙言里的菜单和快捷键">妙言里的菜单和快捷键</h2>
-<p>V4.5.0 里「格式」菜单有这几项：</p>
+<p>V4.5.0 里「格式」菜单有这<span class="nobr">几项：</span></p>
 <table>
 <thead>
 <tr>
@@ -147,21 +147,21 @@
 </table>
 <p>选中文字时命令会把它包起来，光标停在结尾标记后面，没选中时插入一对空标记，光标落在中间。它只包不切换，在已经加粗的文字上再按一次 <code>⌘B</code> 会多包一层变成 <code>****文字****</code>，要自己手动删掉。这些命令需要编辑区有焦点，预览模式下什么也不做。同一个菜单里还有下划线，写出来是 <code>&lt;u&gt;文字&lt;/u&gt;</code>，因为 Markdown 没有下划线语法。其余语法的对应关系见 <a href="/zh/blog/markdown-cheat-sheet/">速查表</a>。</p>
 <h2 id="什么时候用-html">什么时候用 HTML</h2>
-<p>预览会渲染原始 HTML，所以 <code>&lt;b&gt;</code>、<code>&lt;strong&gt;</code>、<code>&lt;del&gt;</code> 和 <code>&lt;s&gt;</code> 都能用，分隔符贴着标点或中文又加不了空格的时候就用它们。行内标签里的 Markdown 仍然会解析，<code>&lt;b&gt;*x*&lt;/b&gt;</code> 得到的是粗体里包斜体。</p>
-<p>标签要和文字放在同一行，单独占一行的标签会开启 HTML 块，块里面的行不再按 Markdown 解析。代价在另一头，会剥掉原始 HTML 的渲染器会丢掉这些标签，你想要强调的地方就只剩普通文字。</p>
+<p>预览会渲染原始 HTML，所以 <code>&lt;b&gt;</code>、<code>&lt;strong&gt;</code>、<code>&lt;del&gt;</code> 和 <code>&lt;s&gt;</code> 都能用，分隔符贴着标点或中文又加不了空格的时候就用它们。行内标签里的 Markdown 仍然会解析，<code>&lt;b&gt;*x*&lt;/b&gt;</code> 得到的是粗体里包<span class="nobr">斜体。</span></p>
+<p>标签要和文字放在同一行，单独占一行的标签会开启 HTML 块，块里面的行不再按 Markdown 解析。代价在另一头，会剥掉原始 HTML 的渲染器会丢掉这些标签，你想要强调的地方就只剩普通<span class="nobr">文字。</span></p>
 <h2 id="怎么检查">怎么检查</h2>
-<p>打开预览，找有没有残留的 <code>*</code>、<code>_</code> 或 <code>~</code>，然后依次排查，分隔符内侧是不是有空白，分隔符是不是一侧挨着标点、另一侧是字符，下划线是不是在词中间，波浪线数量是否一致，开头和结尾标记之间是不是有空行。字符还是被当成语法的话，就用反斜杠转义。</p>
+<p>打开预览，找有没有残留的 <code>*</code>、<code>_</code> 或 <code>~</code>，然后依次排查，分隔符内侧是不是有空白，分隔符是不是一侧挨着标点、另一侧是字符，下划线是不是在词中间，波浪线数量是否一致，开头和结尾标记之间是不是有空行。字符还是被当成语法的话，就用反斜杠<span class="nobr">转义。</span></p>
 <p>发布前想把整个文件夹里收尾一侧失效的加粗都找出来，可以搜内侧是标点、外侧是文字的 <code>**</code>：</p>
 <pre><code class="language-bash">grep -rnE '[：；，。！？、）」』”.,:;!?)]\*\*[^[:space:]*：；，。！？、）」』”.,:;!?)]' --include='*.md' .
 </code></pre>
-<p>拿上面表格里成功和失败的例子，再加上 <code>**注意**：这样可以</code>、<code>**注意：** 这样可以</code> 和 <code>（**括号**）继续</code> 一起试，它列出来的正好是 cmark-gfm 留成字面星号的那四行，开头一侧它看不到，所以没被列出的行也不保证一定没问题。</p>
+<p>拿上面表格里成功和失败的例子，再加上 <code>**注意**：这样可以</code>、<code>**注意：** 这样可以</code> 和 <code>（**括号**）继续</code> 一起试，它列出来的正好是 cmark-gfm 留成字面星号的那四行，开头一侧它看不到，所以没被列出的行也不保证一定没<span class="nobr">问题。</span></p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="粗体是两个星号还是两个下划线">粗体是两个星号还是两个下划线？</h3>
-<p>两种都合法，星号更稳，因为下划线在词内和中文旁边不起作用。</p>
+<p>两种都合法，星号更稳，因为下划线在词内和中文旁边不起<span class="nobr">作用。</span></p>
 <h3 id="为什么加粗后面紧跟中文标点时会显示星号">为什么加粗后面紧跟中文标点时会显示星号？</h3>
 <p>结尾的 <code>**</code> 前面是标点、后面是字符，无法闭合，把标点挪到外面、加一个空格，或者改用 <code>&lt;strong&gt;</code>。</p>
 <h3 id="github-支持单波浪线的删除线吗">GitHub 支持单波浪线的删除线吗？</h3>
-<p>它的文档列出了 <code>~~text~~</code> 和 <code>~text~</code>，GFM 规范也写的是一个或两个波浪线。</p>
+<p>它的文档列出了 <code>~~text~~</code> 和 <code>~text~</code>，GFM 规范也写的是一个或两个波<span class="nobr">浪线。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

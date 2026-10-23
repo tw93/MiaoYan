@@ -52,21 +52,21 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 9 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-cheat-sheet.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>日常写 Markdown 用到的语法一屏就放得下，用 <code>#</code> 写标题，用 <code>*</code> 和 <code>**</code> 写强调，再加上列表、链接、图片、代码块、引用和表格。容易让人踩坑的是 Markdown 并不是单一标准，CommonMark 定义了核心部分，GitHub Flavored Markdown（GFM）在上面加了表格、任务列表、删除线和自动链接，脚注、公式、图表这些就要看各个应用自己怎么实现。这份速查按核心语法和扩展语法分开写，每条带示例，并标出妙言实际能渲染什么。</p>
+<p>日常写 Markdown 用到的语法一屏就放得下，用 <code>#</code> 写标题，用 <code>*</code> 和 <code>**</code> 写强调，再加上列表、链接、图片、代码块、引用和表格。容易让人踩坑的是 Markdown 并不是单一标准，CommonMark 定义了核心部分，GitHub Flavored Markdown（GFM）在上面加了表格、任务列表、删除线和自动链接，脚注、公式、图表这些就要看各个应用自己怎么实现。这份速查按核心语法和扩展语法分开写，每条带示例，并标出妙言实际能渲染<span class="nobr">什么。</span></p>
 <h2 id="核心语法commonmark">核心语法（CommonMark）</h2>
 <h3 id="标题">标题</h3>
 <pre><code class="language-markdown"># 一级标题
 ## 二级标题
 ### 三级标题
 </code></pre>
-<p><code>#</code> 后面要留一个空格，一共六级，从 <code>#</code> 到 <code>######</code>。一篇笔记里最好只放一个 <code>#</code> 标题，其余层级用来分章节，大纲和目录都是靠它们生成的。妙言里有至少两个标题的笔记会自动生成目录，用 <code>⌘5</code> 打开。</p>
+<p><code>#</code> 后面要留一个空格，一共六级，从 <code>#</code> 到 <code>######</code>。一篇笔记里最好只放一个 <code>#</code> 标题，其余层级用来分章节，大纲和目录都是靠它们生成的。妙言里有至少两个标题的笔记会自动生成目录，用 <code>⌘5</code> <span class="nobr">打开。</span></p>
 <h3 id="强调和行内代码">强调和行内代码</h3>
 <pre><code class="language-markdown">*斜体* 或 _斜体_
 **粗体** 或 __粗体__
 ***粗斜体***
 `行内代码`
 </code></pre>
-<p>命令、文件名、设置项这类读者要照着敲或照着找的东西，都放进反引号里。</p>
+<p>命令、文件名、设置项这类读者要照着敲或照着找的东西，都放进反引<span class="nobr">号里。</span></p>
 <h3 id="列表">列表</h3>
 <pre><code class="language-markdown">- 无序项
 - 另一项
@@ -76,21 +76,21 @@
 2. 第二
 3. 第三
 </code></pre>
-<p>嵌套项要和上一级文字的起始位置对齐，在妙言列表里按 <code>return</code> 会接着写下一项，连按两次 <code>return</code> 就退出列表。</p>
+<p>嵌套项要和上一级文字的起始位置对齐，在妙言列表里按 <code>return</code> 会接着写下一项，连按两次 <code>return</code> 就退出<span class="nobr">列表。</span></p>
 <h3 id="链接和图片">链接和图片</h3>
 <pre><code class="language-markdown">[链接文字](https://example.com)
 ![图片说明](/i/photo.png)
 </code></pre>
-<p>图片语法就是链接语法前面多一个 <code>!</code>。妙言把本地附件放在笔记旁边的 <code>i/</code> 文件夹里，写成 <code>/i/&lt;文件名&gt;</code>，所以整个目录搬走以后笔记照样能用。</p>
+<p>图片语法就是链接语法前面多一个 <code>!</code>。妙言把本地附件放在笔记旁边的 <code>i/</code> 文件夹里，写成 <code>/i/&lt;文件名&gt;</code>，所以整个目录搬走以后笔记照样<span class="nobr">能用。</span></p>
 <h3 id="代码块">代码块</h3>
 <pre><code class="language-markdown">```python
 print(&quot;hello&quot;)
 ```
 </code></pre>
-<p>起始围栏后面的单词是语言名，决定语法高亮，图表工具也是靠同样的围栏拿到输入，语言名写成 <code>mermaid</code>、<code>plantuml</code> 或 <code>markmap</code> 即可。</p>
-<p>围栏是三个或更多反引号，也可以是三个或更多波浪线 <code>~~~</code>，结束围栏要用同一种字符，长度不能比开头短，想在代码块里展示一段围栏就是靠这条规则，像上面的例子那样，外面用四个反引号把里面三个反引号的围栏包起来。每行缩进四个空格也能形成代码块，但它没法写语言名，在列表里还容易误触发，所以平时用围栏更稳。</p>
-<p>妙言的预览用 highlight.js 给围栏代码块上色，没写语言名时会根据内容猜一个，颜色看着不对就把语言名补上，<code>js</code>、<code>py</code>、<code>sh</code> 这类常见简写都认得。预览里过长的行会在代码块内自动折行，不会出现横向滚动条，长命令也能一眼看完。</p>
-<p>行内代码里要放反引号时，外面改用两个反引号并在里面留空格，写成 <code>`` a ` b ``</code>。列表项里的围栏要和这一项的文字对齐，没对齐的话列表会在这里提前结束。</p>
+<p>起始围栏后面的单词是语言名，决定语法高亮，图表工具也是靠同样的围栏拿到输入，语言名写成 <code>mermaid</code>、<code>plantuml</code> 或 <code>markmap</code> <span class="nobr">即可。</span></p>
+<p>围栏是三个或更多反引号，也可以是三个或更多波浪线 <code>~~~</code>，结束围栏要用同一种字符，长度不能比开头短，想在代码块里展示一段围栏就是靠这条规则，像上面的例子那样，外面用四个反引号把里面三个反引号的围栏包起来。每行缩进四个空格也能形成代码块，但它没法写语言名，在列表里还容易误触发，所以平时用围栏<span class="nobr">更稳。</span></p>
+<p>妙言的预览用 highlight.js 给围栏代码块上色，没写语言名时会根据内容猜一个，颜色看着不对就把语言名补上，<code>js</code>、<code>py</code>、<code>sh</code> 这类常见简写都认得。预览里过长的行会在代码块内自动折行，不会出现横向滚动条，长命令也能一眼<span class="nobr">看完。</span></p>
+<p>行内代码里要放反引号时，外面改用两个反引号并在里面留空格，写成 <code>`` a ` b ``</code>。列表项里的围栏要和这一项的文字对齐，没对齐的话列表会在这里提前<span class="nobr">结束。</span></p>
 <h3 id="引用和分隔线">引用和分隔线</h3>
 <pre><code class="language-markdown">&gt; 一行引用。
 &gt; 同一段引用里的另一行。
@@ -104,10 +104,10 @@ print(&quot;hello&quot;)
 
 空一行就是新段落。
 </code></pre>
-<p>CommonMark 里段落中间的单个换行是软换行，渲染出来是一个空格，空一行才是新段落，想换行又不想分段，要在行尾加一个反斜杠或两个空格，两种写法都会变成 <code>&lt;br&gt;</code>。各个应用在这里并不一致，妙言的编辑设置里有一项换行方式，可以选「妙言」（默认，预览中每次换行都会另起一行）或「Github」（预览中需要空一行才会换行），选 Github 时妙言完全按 CommonMark 处理，单个换行变成空格，行尾的反斜杠和两个空格照样能换行，预览和导出的 HTML、PDF 都跟着这项设置走。同一段文字在一个应用里连成一团、在另一个应用里却散开，多半就是这个原因。</p>
-<p>这里有两个常见的坑。一是在妙言默认模式下写的笔记，自己看着排得好好的，放到 GitHub 或别的编辑器里就连成一整段，因为它们用的是软换行规则，所以要发到别处的文章，写的时候先切到 Github 模式，预览看到的就和发出去的一致。二是中文在 Github 模式下分行写，两行接上的地方会多出一个空格，读起来像断了一下，中文段落最好一段写在一行里。另外行尾的两个空格肉眼看不见，很多编辑器保存时还会顺手删掉，要分享出去的文件用反斜杠换行更可靠。</p>
+<p>CommonMark 里段落中间的单个换行是软换行，渲染出来是一个空格，空一行才是新段落，想换行又不想分段，要在行尾加一个反斜杠或两个空格，两种写法都会变成 <code>&lt;br&gt;</code>。各个应用在这里并不一致，妙言的编辑设置里有一项换行方式，可以选「妙言」（默认，预览中每次换行都会另起一行）或「Github」（预览中需要空一行才会换行），选 Github 时妙言完全按 CommonMark 处理，单个换行变成空格，行尾的反斜杠和两个空格照样能换行，预览和导出的 HTML、PDF 都跟着这项设置走。同一段文字在一个应用里连成一团、在另一个应用里却散开，多半就是这个<span class="nobr">原因。</span></p>
+<p>这里有两个常见的坑。一是在妙言默认模式下写的笔记，自己看着排得好好的，放到 GitHub 或别的编辑器里就连成一整段，因为它们用的是软换行规则，所以要发到别处的文章，写的时候先切到 Github 模式，预览看到的就和发出去的一致。二是中文在 Github 模式下分行写，两行接上的地方会多出一个空格，读起来像断了一下，中文段落最好一段写在一行里。另外行尾的两个空格肉眼看不见，很多编辑器保存时还会顺手删掉，要分享出去的文件用反斜杠换行更<span class="nobr">可靠。</span></p>
 <h3 id="转义">转义</h3>
-<p>在会被 Markdown 当作语法的字符前面加反斜杠，比如 <code>\*不是斜体\*</code> 或 <code>\# 不是标题</code>，行内代码和代码块里面不需要转义。</p>
+<p>在会被 Markdown 当作语法的字符前面加反斜杠，比如 <code>\*不是斜体\*</code> 或 <code>\# 不是标题</code>，行内代码和代码块里面不需要<span class="nobr">转义。</span></p>
 <h2 id="gfm-扩展">GFM 扩展</h2>
 <h3 id="表格">表格</h3>
 <pre><code class="language-markdown">| 品名 | 价格 | 有货 |
@@ -115,8 +115,8 @@ print(&quot;hello&quot;)
 | 茶   | 2.50 | 是   |
 | 果酱 | 0.50 | 否   |
 </code></pre>
-<p>分隔行里的冒号决定对齐方式，分别是靠左、靠右、居中。源码里各列宽度不用对齐，不过对齐了文件更好读。妙言里输入 <code>/table</code> 再按 <code>Tab</code> 会插入模板，粘贴纯文本之后用「编辑 &gt; 文档排版」（<code>⌘⇧L</code>）可以整理格式。</p>
-<p>一张表至少要有表头行和分隔行，两行的单元格数量必须一样，分隔行多一格或少一格，整块内容都会保持纯文本，正文行就宽松得多，少的格子会补成空格子，多出来的直接丢掉。每行开头和结尾的竖线可以省略。</p>
+<p>分隔行里的冒号决定对齐方式，分别是靠左、靠右、居中。源码里各列宽度不用对齐，不过对齐了文件更好读。妙言里输入 <code>/table</code> 再按 <code>Tab</code> 会插入模板，粘贴纯文本之后用「编辑 &gt; 文档排版」（<code>⌘⇧L</code>）可以整理<span class="nobr">格式。</span></p>
+<p>一张表至少要有表头行和分隔行，两行的单元格数量必须一样，分隔行多一格或少一格，整块内容都会保持纯文本，正文行就宽松得多，少的格子会补成空格子，多出来的直接丢掉。每行开头和结尾的竖线可以<span class="nobr">省略。</span></p>
 <p>每个单元格只能放一行行内内容，粗体、链接、行内代码和图片都可以，列表、代码块和直接回车换行都不行，格子里要换行就写 <code>&lt;br&gt;</code>，妙言的预览允许原生 HTML，所以能正常显示。格子里要出现竖线本身得写成 <code>\|</code>，放在反引号里也一样，不然会被当成分列。合并单元格不在语法里，真要合并就直接写 HTML 的 <code>&lt;table&gt;</code> 加 <code>colspan</code>。</p>
 <p>妙言预览里的表格会铺满笔记宽度，格子里有长公式或长网址，实在挤不下的表格会在自己的框里横向滚动，不会把整个页面撑宽，导出 PDF 和图片时没法滚动，表格会缩到页面宽度以内，导出 PDF 的其他细节见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
 <h3 id="任务列表">任务列表</h3>
@@ -124,27 +124,27 @@ print(&quot;hello&quot;)
 - [ ] 补截图
   - [ ] 裁一下第二张
 </code></pre>
-<p>任务项就是文字以 <code>[ ]</code>（未完成）或 <code>[x]</code>（已完成）开头、后面再跟一个空格的列表项，方括号里那个空格不能省，写成 <code>[]</code> 会原样显示，<code>-[ ]</code> 这种短横线后面没空格的也一样，任务项也能像普通列表一样嵌套。</p>
-<p>妙言的预览模式里可以直接点复选框切换状态，改动会以 <code>- [x]</code> 或 <code>- [ ]</code> 写回文件，笔记还是普通的 Markdown。妙言是靠数笔记里 <code>- [ ]</code> 和 <code>- [x]</code> 的个数来找到要改哪一行的，所以任务项最好统一用短横线加小写 <code>x</code>，用 <code>*</code>、<code>+</code>、数字序号或大写 <code>X</code> 写的任务项虽然也会显示成复选框，点下去却可能改到别的行。</p>
+<p>任务项就是文字以 <code>[ ]</code>（未完成）或 <code>[x]</code>（已完成）开头、后面再跟一个空格的列表项，方括号里那个空格不能省，写成 <code>[]</code> 会原样显示，<code>-[ ]</code> 这种短横线后面没空格的也一样，任务项也能像普通列表一样<span class="nobr">嵌套。</span></p>
+<p>妙言的预览模式里可以直接点复选框切换状态，改动会以 <code>- [x]</code> 或 <code>- [ ]</code> 写回文件，笔记还是普通的 Markdown。妙言是靠数笔记里 <code>- [ ]</code> 和 <code>- [x]</code> 的个数来找到要改哪一行的，所以任务项最好统一用短横线加小写 <code>x</code>，用 <code>*</code>、<code>+</code>、数字序号或大写 <code>X</code> 写的任务项虽然也会显示成复选框，点下去却可能改到别<span class="nobr">的行。</span></p>
 <h3 id="删除线">删除线</h3>
 <pre><code class="language-markdown">~~删掉的文字~~
 </code></pre>
 <h3 id="自动链接">自动链接</h3>
-<p>GFM 会把纯文本网址变成链接，不过妙言的解析器只打开了 table、footnotes、strikethrough 和 tasklist 这几个扩展，autolink 不在其中，重要的网址写成 <code>&lt;https://example.com&gt;</code> 或普通链接更稳妥。</p>
+<p>GFM 会把纯文本网址变成链接，不过妙言的解析器只打开了 table、footnotes、strikethrough 和 tasklist 这几个扩展，autolink 不在其中，重要的网址写成 <code>&lt;https://example.com&gt;</code> 或普通链接更<span class="nobr">稳妥。</span></p>
 <h2 id="gfm-之外">GFM 之外</h2>
 <h3 id="脚注">脚注</h3>
 <pre><code class="language-markdown">这个说法需要出处。[^1]
 
 [^1]: 出处在这里。
 </code></pre>
-<p>GFM 规范里没有脚注，所以把它当作应用自己的功能，妙言开启了脚注解析。</p>
+<p>GFM 规范里没有脚注，所以把它当作应用自己的功能，妙言开启了脚注<span class="nobr">解析。</span></p>
 <h3 id="公式和图表">公式和图表</h3>
 <p>行内公式写 <code>$E = mc^2$</code>，块级公式写 <code>$$ ... $$</code>，图表用 <code>mermaid</code> 围栏代码块。这两样都属于渲染器的功能，见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
 <h3 id="提示块">提示块</h3>
 <pre><code class="language-markdown">&gt; [!NOTE]
 &gt; 补充说明。
 </code></pre>
-<p>妙言认得 <code>NOTE</code>、<code>TIP</code>、<code>IMPORTANT</code>、<code>WARNING</code> 和 <code>CAUTION</code>，别的应用里这些多半只显示成普通引用。</p>
+<p>妙言认得 <code>NOTE</code>、<code>TIP</code>、<code>IMPORTANT</code>、<code>WARNING</code> 和 <code>CAUTION</code>，别的应用里这些多半只显示成普通<span class="nobr">引用。</span></p>
 <h3 id="原生-html-和折叠区域">原生 HTML 和折叠区域</h3>
 <pre><code class="language-html">&lt;details&gt;
 &lt;summary&gt;展开&lt;/summary&gt;
@@ -153,29 +153,29 @@ print(&quot;hello&quot;)
 
 &lt;/details&gt;
 </code></pre>
-<p>妙言的预览会渲染原生 HTML，输入 <code>/fold</code> 再按 <code>Tab</code> 就能插入这段结构。</p>
+<p>妙言的预览会渲染原生 HTML，输入 <code>/fold</code> 再按 <code>Tab</code> 就能插入这段<span class="nobr">结构。</span></p>
 <h3 id="双链和-frontmatter">双链和 frontmatter</h3>
-<p><code>[[项目计划]]</code> 按标题原文链接到另一篇笔记，不带 <code>.md</code> 后缀，妙言会据此生成反链。笔记最开头夹在两行 <code>---</code> 之间的块会当作 frontmatter，在渲染预览里隐藏。</p>
+<p><code>[[项目计划]]</code> 按标题原文链接到另一篇笔记，不带 <code>.md</code> 后缀，妙言会据此生成反链。笔记最开头夹在两行 <code>---</code> 之间的块会当作 frontmatter，在渲染预览里<span class="nobr">隐藏。</span></p>
 <h3 id="上下标">上下标</h3>
-<p>妙言自带的语法指南里写了 <code>H~2~O</code> 和 <code>16^世纪^</code>，但妙言会把 <code>~2~</code> 当成删除线，<code>^世纪^</code> 原样显示，需要上下标的话用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code> 这两个 HTML 标签。</p>
+<p>妙言自带的语法指南里写了 <code>H~2~O</code> 和 <code>16^世纪^</code>，但妙言会把 <code>~2~</code> 当成删除线，<code>^世纪^</code> 原样显示，需要上下标的话用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code> 这两个 HTML <span class="nobr">标签。</span></p>
 <h2 id="这些东西怎么拼在一起">这些东西怎么拼在一起</h2>
-<p>Markdown 源码先经过解析器变成 HTML，CommonMark 规定核心语法怎么对应到 HTML，GFM 在上面再加一些规则。妙言的预览用的是 cmark-gfm 的 Swift 移植版，挂了 table、footnotes、strikethrough 和 tasklist 四个扩展，生成的 HTML 再装进网页视图，由 KaTeX 完成公式排版，由图表库把围栏代码块变成 SVG。大多数意外都能这样拆开看，在解析器这一步出问题说明语法写错或者不被支持，在后面出问题就是渲染器的事，比如公式有错误或者图表拼写有误。</p>
+<p>Markdown 源码先经过解析器变成 HTML，CommonMark 规定核心语法怎么对应到 HTML，GFM 在上面再加一些规则。妙言的预览用的是 cmark-gfm 的 Swift 移植版，挂了 table、footnotes、strikethrough 和 tasklist 四个扩展，生成的 HTML 再装进网页视图，由 KaTeX 完成公式排版，由图表库把围栏代码块变成 SVG。大多数意外都能这样拆开看，在解析器这一步出问题说明语法写错或者不被支持，在后面出问题就是渲染器的事，比如公式有错误或者图表拼写<span class="nobr">有误。</span></p>
 <h2 id="常见错误">常见错误</h2>
 <ul>
-<li><code>#</code> 或 <code>-</code> 后面没有空格，这一行会保持纯文本。</li>
-<li>表格缺了分隔行，也会保持纯文本。</li>
-<li>嵌套列表一处用制表符、一处用空格缩进。</li>
-<li>代码围栏没有成对，会把后面整篇笔记都吞进去，数一数反引号行有几行。</li>
-<li>紧贴在文字下面的单独一个 <code>---</code>，有些解析器会把它当成标题下划线。</li>
+<li><code>#</code> 或 <code>-</code> 后面没有空格，这一行会保持纯<span class="nobr">文本。</span></li>
+<li>表格缺了分隔行，也会保持纯<span class="nobr">文本。</span></li>
+<li>嵌套列表一处用制表符、一处用空格<span class="nobr">缩进。</span></li>
+<li>代码围栏没有成对，会把后面整篇笔记都吞进去，数一数反引号行有<span class="nobr">几行。</span></li>
+<li>紧贴在文字下面的单独一个 <code>---</code>，有些解析器会把它当成标题下<span class="nobr">划线。</span></li>
 </ul>
-<p>检查一篇笔记时切到预览，看页面上有没有残留的语法字符，它们就是解析器没读懂的那几行。</p>
+<p>检查一篇笔记时切到预览，看页面上有没有残留的语法字符，它们就是解析器没读懂的那<span class="nobr">几行。</span></p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="commonmark-和-gfm-有什么区别">CommonMark 和 GFM 有什么区别</h3>
-<p>CommonMark 是对核心语法的精确规范，GFM 是它的超集，加了表格、任务列表、删除线、自动链接，以及对原生 HTML 的一条限制规则。</p>
+<p>CommonMark 是对核心语法的精确规范，GFM 是它的超集，加了表格、任务列表、删除线、自动链接，以及对原生 HTML 的一条限制<span class="nobr">规则。</span></p>
 <h3 id="行尾一定要加两个空格吗">行尾一定要加两个空格吗</h3>
-<p>只有应用严格遵循 CommonMark、而你又想换行不分段的时候才需要。妙言默认的换行方式是每次换行都另起一行。</p>
+<p>只有应用严格遵循 CommonMark、而你又想换行不分段的时候才需要。妙言默认的换行方式是每次换行都另起<span class="nobr">一行。</span></p>
 <h3 id="能把这份速查贴进妙言试一下吗">能把这份速查贴进妙言试一下吗</h3>
-<p>可以，应用自带的 Examples 文件夹里有一份妙言 Markdown 语法指南，覆盖了上面每一种写法，完整应用可以在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 和 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> 找到。</p>
+<p>可以，应用自带的 Examples 文件夹里有一份妙言 Markdown 语法指南，覆盖了上面每一种写法，完整应用可以在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 和 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> <span class="nobr">找到。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

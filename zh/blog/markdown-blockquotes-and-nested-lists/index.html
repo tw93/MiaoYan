@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-blockquotes-and-nested-lists.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>引用就是行首的 <code>&gt;</code>，再加一个 <code>&gt;</code> 就是嵌套引用。嵌套列表要看父项文字从哪一列开始，子项的标记必须落在这一列或更靠后，<code>-</code> 下面缩进 2 个空格，<code>1.</code> 下面 3 个，<code>10.</code> 下面 4 个。缩进放错地方，四个空格会把一行变成代码块，而 Markdown 本身没有段落首行缩进的语法。妙言 V4.5.0 会把 <code>&gt; [!NOTE]</code> 渲染成和 GitHub 一样的提示框，编辑器里按 <code>Tab</code> 缩进两个空格，上一行是编号项时缩进三个，编号到 10 之前都够用。</p>
+<p>引用就是行首的 <code>&gt;</code>，再加一个 <code>&gt;</code> 就是嵌套引用。嵌套列表要看父项文字从哪一列开始，子项的标记必须落在这一列或更靠后，<code>-</code> 下面缩进 2 个空格，<code>1.</code> 下面 3 个，<code>10.</code> 下面 4 个。缩进放错地方，四个空格会把一行变成代码块，而 Markdown 本身没有段落首行缩进的语法。妙言 V4.5.0 会把 <code>&gt; [!NOTE]</code> 渲染成和 GitHub 一样的提示框，编辑器里按 <code>Tab</code> 缩进两个空格，上一行是编号项时缩进三个，编号到 10 之前都<span class="nobr">够用。</span></p>
 <h2 id="引用的写法">引用的写法</h2>
 <pre><code class="language-markdown">&gt; 一句引用。
 &gt; 同一个引用的第二行。
@@ -60,7 +60,7 @@
 &gt; 第二段，仍然在引用里面。
 </code></pre>
 <p><code>&gt;</code> 后面的空格可以省，前面最多可以有三个空格，写成四个空格这一行就成了缩进代码，<code>&gt; 文字</code> 会把 <code>&gt;</code> 原样打出来。不带 <code>&gt;</code> 的空行会结束引用，后面再写 <code>&gt; ...</code> 就是另一个引用，想要一个引用里有两段，空行上留一个单独的 <code>&gt;</code>。</p>
-<p>标题、列表、围栏代码和再一层引用都可以放进引用里，前提是每一行都以 <code>&gt;</code> 开头，围栏的上下两行也一样：</p>
+<p>标题、列表、围栏代码和再一层引用都可以放进引用里，前提是每一行都以 <code>&gt;</code> 开头，围栏的上下两行也<span class="nobr">一样：</span></p>
 <pre><code class="language-markdown">&gt; ## 引用里的标题
 &gt;
 &gt; 1. 第一步
@@ -71,8 +71,8 @@
 &gt; ```
 </code></pre>
 <h2 id="懒惰延续">懒惰延续</h2>
-<p>CommonMark 允许一个段落的后几行省掉 <code>&gt;</code>，<code>&gt; a</code> 后面跟一行没有 <code>&gt;</code> 的 <code>lazy</code>，仍然是同一个引用里的段落「a lazy」。这条规则只管段落文字，空行会把它截断，<code>&gt; - foo</code> 后面跟一行没有 <code>&gt;</code> 的 <code>- bar</code>，引用在第一行就结束了。</p>
-<p>预览里的样子还取决于换行设置，cmark-gfm 会用空格连接懒惰行，妙言默认把每个换行渲染成 <code>&lt;br&gt;</code>，所以同样两行在妙言里分开显示，到 GitHub 的 <code>.md</code> 文件里就连成一行，这个设置在 <a href="/zh/blog/markdown-line-breaks/">Markdown 换行</a> 里讲过。要发布的内容每行都写 <code>&gt;</code>，就不用想这件事。</p>
+<p>CommonMark 允许一个段落的后几行省掉 <code>&gt;</code>，<code>&gt; a</code> 后面跟一行没有 <code>&gt;</code> 的 <code>lazy</code>，仍然是同一个引用里的段落「a lazy」。这条规则只管段落文字，空行会把它截断，<code>&gt; - foo</code> 后面跟一行没有 <code>&gt;</code> 的 <code>- bar</code>，引用在第一行就结<span class="nobr">束了。</span></p>
+<p>预览里的样子还取决于换行设置，cmark-gfm 会用空格连接懒惰行，妙言默认把每个换行渲染成 <code>&lt;br&gt;</code>，所以同样两行在妙言里分开显示，到 GitHub 的 <code>.md</code> 文件里就连成一行，这个设置在 <a href="/zh/blog/markdown-line-breaks/">Markdown 换行</a> 里讲过。要发布的内容每行都写 <code>&gt;</code>，就不用想这<span class="nobr">件事。</span></p>
 <h2 id="嵌套引用与提示框">嵌套引用与提示框</h2>
 <pre><code class="language-markdown">&gt; 外层引用。
 &gt;
@@ -80,17 +80,17 @@
 &gt;
 &gt; 回到外层。
 </code></pre>
-<p>每多一个 <code>&gt;</code> 就深一层，<code>&gt; &gt;</code> 和 <code>&gt;&gt;</code> 等价，「回到外层」前面那行单独的 <code>&gt;</code> 不能省，否则这句话会接在内层段落后面。</p>
-<p>提示框是第一行带标记的引用，妙言 V4.5.0 认五种，大小写都行：</p>
+<p>每多一个 <code>&gt;</code> 就深一层，<code>&gt; &gt;</code> 和 <code>&gt;&gt;</code> 等价，「回到外层」前面那行单独的 <code>&gt;</code> 不能省，否则这句话会接在内层段落<span class="nobr">后面。</span></p>
+<p>提示框是第一行带标记的引用，妙言 V4.5.0 认五种，大小写<span class="nobr">都行：</span></p>
 <pre><code class="language-markdown">&gt; [!NOTE]
 &gt; 补充说明。
 
 &gt; [!WARNING]
 &gt; 删除之前先确认这一点。
 </code></pre>
-<p>其余三种是 <code>TIP</code>、<code>IMPORTANT</code> 和 <code>CAUTION</code>，预览里会画出带图标的彩色框，标题行写的是英文的 Note、Tip、Important、Warning 或 Caution。标记必须独占一行，<code>&gt; [!NOTE]: 文字</code> 和 <code>[!DANGER]</code> 这类不认识的词仍然是普通引用，围栏代码块里的标记不会被动，提示框里再嵌一个普通引用也还是引用。GitHub 文档列的是同样五种，并提醒每篇最多用一两个，另外提示框不能嵌在别的元素里面。不支持提示框的应用会显示成一个以 <code>[!NOTE]</code> 开头的普通引用，<a href="/zh/blog/markdown-cheat-sheet/">速查表</a> 把它归在扩展语法里。妙言是在渲染完以后再转提示框的，只要某个引用的第一段以标记开头就会转换，不管这条不能嵌套的规定，所以缩进在列表项下面的 <code>&gt; [!WARNING]</code> 在妙言里是一个警告框，同样几行放到 GitHub 上只是一段以 <code>[!WARNING]</code> 开头的普通引用，笔记也要在 GitHub 上看的话，提示框就放在最外层。</p>
+<p>其余三种是 <code>TIP</code>、<code>IMPORTANT</code> 和 <code>CAUTION</code>，预览里会画出带图标的彩色框，标题行写的是英文的 Note、Tip、Important、Warning 或 Caution。标记必须独占一行，<code>&gt; [!NOTE]: 文字</code> 和 <code>[!DANGER]</code> 这类不认识的词仍然是普通引用，围栏代码块里的标记不会被动，提示框里再嵌一个普通引用也还是引用。GitHub 文档列的是同样五种，并提醒每篇最多用一两个，另外提示框不能嵌在别的元素里面。不支持提示框的应用会显示成一个以 <code>[!NOTE]</code> 开头的普通引用，<a href="/zh/blog/markdown-cheat-sheet/">速查表</a> 把它归在扩展语法里。妙言是在渲染完以后再转提示框的，只要某个引用的第一段以标记开头就会转换，不管这条不能嵌套的规定，所以缩进在列表项下面的 <code>&gt; [!WARNING]</code> 在妙言里是一个警告框，同样几行放到 GitHub 上只是一段以 <code>[!WARNING]</code> 开头的普通引用，笔记也要在 GitHub 上看的话，提示框就放在最<span class="nobr">外层。</span></p>
 <h2 id="嵌套列表的缩进怎么算">嵌套列表的缩进怎么算</h2>
-<p>一个列表项会收下后面缩进到它内容列的行，内容列就是标记后面文字开始的那一列，子列表的标记从这一列或更靠后开始就算嵌套，所以要缩进多少取决于父项的标记：</p>
+<p>一个列表项会收下后面缩进到它内容列的行，内容列就是标记后面文字开始的那一列，子列表的标记从这一列或更靠后开始就算嵌套，所以要缩进多少取决于父项的<span class="nobr">标记：</span></p>
 <table>
 <thead>
 <tr>
@@ -117,9 +117,9 @@
 </tr>
 </tbody>
 </table>
-<p>GitHub 的文档给的也是这个办法，数一数项目文字前面有几个字符，就打几个空格。这些例子在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里跑过，扩展和选项也一样。<code>1. one</code> 下面跟两个空格的 <code>- sub</code>，得到的是两个并列的列表，没有嵌套，<code>- a</code> 下面只缩进一个空格，子项变成同级，<code>10. one</code> 下面缩进三个空格是一个独立的无序列表，缩进四个才嵌进去。所以无序列表缩进 2 到 5 个空格都行，6 个以上会变成文字或代码，「两个空格还是四个」的争论只在数字列表下面有意义，那里要的是标记的宽度。</p>
+<p>GitHub 的文档给的也是这个办法，数一数项目文字前面有几个字符，就打几个空格。这些例子在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里跑过，扩展和选项也一样。<code>1. one</code> 下面跟两个空格的 <code>- sub</code>，得到的是两个并列的列表，没有嵌套，<code>- a</code> 下面只缩进一个空格，子项变成同级，<code>10. one</code> 下面缩进三个空格是一个独立的无序列表，缩进四个才嵌进去。所以无序列表缩进 2 到 5 个空格都行，6 个以上会变成文字或代码，「两个空格还是四个」的争论只在数字列表下面有意义，那里要的是标记的<span class="nobr">宽度。</span></p>
 <p>标记还决定列表从哪里开始、到哪里结束，<code>-</code>、<code>*</code>、<code>+</code> 之间换用，或者 <code>.</code> 和 <code>)</code> 之间换用，都会另起一个列表。起始数字由第一项决定，<code>3.</code> 接 <code>4.</code> 会从 3 开始排，<code>0.</code> 也可以，后面的数字被忽略，所以每行都写 <code>1.</code> 也会正确递增。标记是一到九位数字，只有以 <code>1</code> 开头的列表才能打断段落，段落中间的 <code>2024. was a year</code> 因此仍是文字，放在行首要怎么处理见 <a href="/zh/blog/markdown-escape-characters/">转义字符</a>。</p>
-<p>想在列表项后面接一个段落或代码，空一行以后缩进到同一列：</p>
+<p>想在列表项后面接一个段落或代码，空一行以后缩进到同<span class="nobr">一列：</span></p>
 <pre><code class="language-markdown">- 第一步
 
   第一步的第二段。
@@ -129,28 +129,28 @@
   ```
 - 第二步
 </code></pre>
-<p>围栏如果写在第 0 列，就会把列表截断。</p>
+<p>围栏如果写在第 0 列，就会把列表<span class="nobr">截断。</span></p>
 <h2 id="为什么四个空格会变成代码块">为什么四个空格会变成代码块</h2>
 <p>缩进代码块就是空行之后、行首有四个或更多空格的内容，顶层的空行后面写 <code>text</code> 就是代码，在列表里面这四个空格从内容列起算，<code>-</code> 下面的代码要六个。普通文字后面紧跟缩进行不会开启代码，只会接在段落后面。所以缩进要对齐内容列，而不是固定写四个，代码尽量用围栏，参见 <a href="/zh/blog/markdown-code-blocks/">Markdown 代码块</a>。</p>
 <h2 id="段落首行缩进">段落首行缩进</h2>
-<p>段落开头的空格会被丢掉，四个空格又会变成代码，办法是让这一行以一个不是空格的字符开头：</p>
+<p>段落开头的空格会被丢掉，四个空格又会变成代码，办法是让这一行以一个不是空格的字符<span class="nobr">开头：</span></p>
 <pre><code class="language-markdown">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;An indented paragraph.
 
 　　中文段落的首行缩进，用两个全角空格。
 </code></pre>
-<p><code>&amp;nbsp;</code> 实体会渲染成真正的空格，全角空格（U+3000）对解析器来说是普通字符，不会触发代码块。代价是缩进写在了文字里，每一段都得自己加。</p>
+<p><code>&amp;nbsp;</code> 实体会渲染成真正的空格，全角空格（U+3000）对解析器来说是普通字符，不会触发代码块。代价是缩进写在了文字里，每一段都得自<span class="nobr">己加。</span></p>
 <h2 id="在妙言编辑器里缩进">在妙言编辑器里缩进</h2>
-<p>V4.5.0 里 <code>Tab</code> 会让当前行或所有选中的行缩进两个空格，<code>Shift+Tab</code> 每次去掉最多三个行首空格或一个制表符，「格式」菜单里也有这一对命令，<code>⌘]</code> 增加缩进，<code>⌘[</code> 减少缩进。如果上一行是编号项，<code>Tab</code> 改缩进三个空格，同时把这一行的编号改成 <code>1</code>，所以 <code>2. two</code> 会变成 <code>1. two</code>，正好是嵌套编号列表的开头。</p>
-<p>宽度看的是上一行，不是父项标记的宽度，所以在 <code>10. item</code> 下面只会缩进三个空格，前面的表格说过这是同级的列表，再补一个空格并看预览。列表或引用行末尾按 <code>Return</code> 会带出同样的标记，数字加一，在空标记上再按一次 <code>Return</code> 会清掉它。只有第一个标记会被带出，所以在 <code>&gt; &gt;</code> 引用里第二个 <code>&gt;</code> 要自己打。</p>
+<p>V4.5.0 里 <code>Tab</code> 会让当前行或所有选中的行缩进两个空格，<code>Shift+Tab</code> 每次去掉最多三个行首空格或一个制表符，「格式」菜单里也有这一对命令，<code>⌘]</code> 增加缩进，<code>⌘[</code> 减少缩进。如果上一行是编号项，<code>Tab</code> 改缩进三个空格，同时把这一行的编号改成 <code>1</code>，所以 <code>2. two</code> 会变成 <code>1. two</code>，正好是嵌套编号列表的<span class="nobr">开头。</span></p>
+<p>宽度看的是上一行，不是父项标记的宽度，所以在 <code>10. item</code> 下面只会缩进三个空格，前面的表格说过这是同级的列表，再补一个空格并看预览。列表或引用行末尾按 <code>Return</code> 会带出同样的标记，数字加一，在空标记上再按一次 <code>Return</code> 会清掉它。只有第一个标记会被带出，所以在 <code>&gt; &gt;</code> 引用里第二个 <code>&gt;</code> 要自<span class="nobr">己打。</span></p>
 <h2 id="出问题时怎么查">出问题时怎么查</h2>
-<p>看预览，不看编辑器。子项和父项同级，说明缩进对这个标记来说不够；一行变成等宽字体，是空行之后缩进过多；出现原样的 <code>&gt;</code>，是前面有四个以上空格；列表从 1 重新开始，是标记字符换了。</p>
+<p>看预览，不看编辑器。子项和父项同级，说明缩进对这个标记来说不够；一行变成等宽字体，是空行之后缩进过多；出现原样的 <code>&gt;</code>，是前面有四个以上空格；列表从 1 重新开始，是标记字符<span class="nobr">换了。</span></p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="引用可以放在列表项里面吗">引用可以放在列表项里面吗？</h3>
-<p>可以。把 <code>&gt;</code> 行缩进到该项的内容列，<code>-</code> 下面就是两个空格，每一行都带同样的缩进。</p>
+<p>可以。把 <code>&gt;</code> 行缩进到该项的内容列，<code>-</code> 下面就是两个空格，每一行都带同样的<span class="nobr">缩进。</span></p>
 <h3 id="为什么我的引用丢了第二行">为什么我的引用丢了第二行？</h3>
 <p>那一行不算段落延续，比如它开启了列表，或者前面有空行。每行行首都写 <code>&gt;</code>。</p>
 <h3 id="所有-markdown-应用都支持提示框吗">所有 Markdown 应用都支持提示框吗？</h3>
-<p>不是。GitHub 和妙言 V4.5.0 会渲染，别的应用会显示成以 <code>[!NOTE]</code> 开头的普通引用。</p>
+<p>不是。GitHub 和妙言 V4.5.0 会渲染，别的应用会显示成以 <code>[!NOTE]</code> 开头的普通<span class="nobr">引用。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

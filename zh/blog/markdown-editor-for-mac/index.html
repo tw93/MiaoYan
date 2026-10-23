@@ -52,18 +52,18 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-editor-for-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>好用的 Mac Markdown 编辑器，大致就是笔记以普通 <code>.md</code> 文件放在你自己指定的文件夹里，写的时候能顺手看到渲染结果，公式和图表这类常用的扩展也能正常显示，其余基本是口味问题。真正要选的是三种风格，Typora 这样的所见即所得，Obsidian 这样靠插件撑起来的笔记库，以及妙言或者带预览窗格的代码编辑器这样左边写源码右边看效果的做法。下面先讲怎么挑，再讲几个常见选项，最后说妙言适合什么、不适合什么。</p>
+<p>好用的 Mac Markdown 编辑器，大致就是笔记以普通 <code>.md</code> 文件放在你自己指定的文件夹里，写的时候能顺手看到渲染结果，公式和图表这类常用的扩展也能正常显示，其余基本是口味问题。真正要选的是三种风格，Typora 这样的所见即所得，Obsidian 这样靠插件撑起来的笔记库，以及妙言或者带预览窗格的代码编辑器这样左边写源码右边看效果的做法。下面先讲怎么挑，再讲几个常见选项，最后说妙言适合什么、不适合<span class="nobr">什么。</span></p>
 <h2 id="挑编辑器看什么">挑编辑器看什么</h2>
 <h3 id="纯文件还是私有存储">纯文件还是私有存储</h3>
-<p>Markdown 本身就是纯文本，最稳的用法是每篇笔记就是普通文件夹里的一个 <code>.md</code> 文件，可以在访达里直接打开，用 Time Machine 备份，用 <code>grep</code> 搜索，哪天想换编辑器也只是换个应用打开同一个文件夹。Obsidian 官网写的是笔记以纯文本 Markdown 文件存在本地。Bear 官网没有说明笔记是数据库还是单个文件，所以如果打算长期用，先试一下它的导出流程再决定。这一条决定了以后迁移有多麻烦，建议放在第一位看。</p>
+<p>Markdown 本身就是纯文本，最稳的用法是每篇笔记就是普通文件夹里的一个 <code>.md</code> 文件，可以在访达里直接打开，用 Time Machine 备份，用 <code>grep</code> 搜索，哪天想换编辑器也只是换个应用打开同一个文件夹。Obsidian 官网写的是笔记以纯文本 Markdown 文件存在本地。Bear 官网没有说明笔记是数据库还是单个文件，所以如果打算长期用，先试一下它的导出流程再决定。这一条决定了以后迁移有多麻烦，建议放在第一<span class="nobr">位看。</span></p>
 <h3 id="所见即所得还是源码加预览">所见即所得还是源码加预览</h3>
-<p>所见即所得编辑器里格式边写边渲染，平时几乎看不到语法符号，Typora 官网的说法是真正的实时预览，没有单独的预览窗口和模式切换。源码加预览则是一边敲原始 Markdown，一边看渲染后的页面，前者写起来更顺眼，后者能让你清楚看到文件里到底是什么，贴表格、修坏掉的列表、查某个标题为什么没渲染出来的时候尤其有用。更详细的对比放在 <a href="/zh/blog/typora-alternative-mac/">Mac 上的 Typora 替代品</a> 里。</p>
+<p>所见即所得编辑器里格式边写边渲染，平时几乎看不到语法符号，Typora 官网的说法是真正的实时预览，没有单独的预览窗口和模式切换。源码加预览则是一边敲原始 Markdown，一边看渲染后的页面，前者写起来更顺眼，后者能让你清楚看到文件里到底是什么，贴表格、修坏掉的列表、查某个标题为什么没渲染出来的时候尤其有用。更详细的对比放在 <a href="/zh/blog/typora-alternative-mac/">Mac 上的 Typora 替代品</a>&nbsp;里。</p>
 <h3 id="公式和图表">公式和图表</h3>
 <p>写技术笔记的话主要看三件事，<code>$...$</code> 公式能不能渲染，Mermaid 代码块能不能渲染，两者是否依赖网络。Typora 官网列出了 MathJax、Mermaid、flowchart.js 和时序图。VS Code 的 Markdown 文档说它内置预览用 KaTeX 渲染公式，也能渲染 <code>mermaid</code> 代码块。妙言的 KaTeX 和 Mermaid 文件都打包在应用里。细节见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
 <h3 id="同步">同步</h3>
-<p>Mac 上多数 Markdown 编辑器自己不做同步，只读一个文件夹，文件交给网盘客户端去搬。iCloud 云盘、Dropbox、坚果云，只要能同步文件夹的都行，出了问题也是网盘的问题，能自己去查。也有应用卖自己的同步，比如 Obsidian Sync 提供端到端加密和一年的版本历史，Bear 的 iCloud 同步则被它列为 Pro 功能。要先想清楚自己要的是应用自带的服务，还是一个文件夹。</p>
+<p>Mac 上多数 Markdown 编辑器自己不做同步，只读一个文件夹，文件交给网盘客户端去搬。iCloud 云盘、Dropbox、坚果云，只要能同步文件夹的都行，出了问题也是网盘的问题，能自己去查。也有应用卖自己的同步，比如 Obsidian Sync 提供端到端加密和一年的版本历史，Bear 的 iCloud 同步则被它列为 Pro 功能。要先想清楚自己要的是应用自带的服务，还是一个文<span class="nobr">件夹。</span></p>
 <h3 id="性能">性能</h3>
-<p>妙言是 Swift 原生应用，官网说明不带 Electron 运行时。各家编辑器的速度很难靠公开数字来比，最好自己试，把手上最大的一篇笔记在每个候选里打开，在中间敲字看是否流畅。</p>
+<p>妙言是 Swift 原生应用，官网说明不带 Electron 运行时。各家编辑器的速度很难靠公开数字来比，最好自己试，把手上最大的一篇笔记在每个候选里打开，在中间敲字看是否<span class="nobr">流畅。</span></p>
 <h2 id="主要选项">主要选项</h2>
 <table>
 <thead>
@@ -113,35 +113,35 @@
 </tr>
 </tbody>
 </table>
-<p>表里厂商的说法都来自各自官网，核对日期是 2026-10-18，价格会变，所以这里不写价格。</p>
+<p>表里厂商的说法都来自各自官网，核对日期是 2026-10-18，价格会变，所以这里不写<span class="nobr">价格。</span></p>
 <p>想要最干净的所见即所得，并且会在 macOS、Windows 和 Linux 之间切换，选 Typora。想要一个互相链接的知识库，并且不介意自己维护插件，选 Obsidian。想要几乎没有界面的纯文字写作，不需要公式，选 iA Writer。日常就泡在 VS Code 里，笔记和代码放在一起，选 VS Code。</p>
 <h2 id="妙言适合什么">妙言适合什么</h2>
-<p>妙言是原生的 Mac 本地 Markdown 笔记应用，界面是文件夹、笔记列表和编辑器三栏，在偏好设置（<code>⌘,</code>）里指定存储位置，笔记就是这个文件夹里的 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code> 文件。分栏模式把编辑区和预览区并排放，按 <code>⌘\</code> 切换，也可以在偏好设置里把「编辑模式」设成「分栏模式」。README 解释过为什么不做所见即所得，原生 Swift 做这个很重也难保证稳定，分栏模式能让你一直对着 Markdown 原文写。</p>
-<p>内置的有 KaTeX 公式、Mermaid、PlantUML 和 Markmap 图表、带反链的 <code>[[双链]]</code>、每篇笔记的版本历史、自动排版（<code>⌘⇧L</code>）、HTML、PDF 和图片导出、<code>miao</code> 命令行工具，还有把带 <code>---</code> 分隔符的笔记变成幻灯片的演示模式（见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>）。没有插件系统，没有的功能没办法自己加。</p>
-<p>App Store 买一次就覆盖 Mac、iPhone 和 iPad，三端打开同一个笔记文件夹，比如放在 iCloud 云盘里的那个。Mac 版是 MIT 协议，源码在 GitHub 公开，可以从 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store 页面</a> 获取，也可以直接看 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a> 上的代码。</p>
+<p>妙言是原生的 Mac 本地 Markdown 笔记应用，界面是文件夹、笔记列表和编辑器三栏，在偏好设置（<code>⌘,</code>）里指定存储位置，笔记就是这个文件夹里的 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code> 文件。分栏模式把编辑区和预览区并排放，按 <code>⌘\</code> 切换，也可以在偏好设置里把「编辑模式」设成「分栏模式」。README 解释过为什么不做所见即所得，原生 Swift 做这个很重也难保证稳定，分栏模式能让你一直对着 Markdown 原<span class="nobr">文写。</span></p>
+<p>内置的有 KaTeX 公式、Mermaid、PlantUML 和 Markmap 图表、带反链的 <code>[[双链]]</code>、每篇笔记的版本历史、自动排版（<code>⌘⇧L</code>）、HTML、PDF 和图片导出、<code>miao</code> 命令行工具，还有把带 <code>---</code> 分隔符的笔记变成幻灯片的演示模式（见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>）。没有插件系统，没有的功能没办法自<span class="nobr">己加。</span></p>
+<p>App Store 买一次就覆盖 Mac、iPhone 和 iPad，三端打开同一个笔记文件夹，比如放在 iCloud 云盘里的那个。Mac 版是 MIT 协议，源码在 GitHub 公开，可以从 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store 页面</a> 获取，也可以直接看 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a> 上的<span class="nobr">代码。</span></p>
 <h2 id="妙言不适合什么">妙言不适合什么</h2>
 <ul>
-<li>你想要所见即所得，妙言给不了，Typora 可以。</li>
-<li>你想要插件生态、图谱定制或者看板，这是 Obsidian 的地盘。</li>
-<li>你需要 Windows 或 Linux，妙言只有 Mac、iPhone 和 iPad，Mac 上要求 macOS 12 及以上。</li>
+<li>你想要所见即所得，妙言给不了，Typora <span class="nobr">可以。</span></li>
+<li>你想要插件生态、图谱定制或者看板，这是 Obsidian 的<span class="nobr">地盘。</span></li>
+<li>你需要 Windows 或 Linux，妙言只有 Mac、iPhone 和 iPad，Mac 上要求 macOS 12 及<span class="nobr">以上。</span></li>
 <li>你需要 DOCX 这类文字处理格式，Typora 官网列了 DOCX 和 EPUB，妙言的导出菜单是 HTML、PDF 和图片，另外还有演示文稿用的 PPT PDF，PDF 能改什么、不能改什么见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</li>
-<li>你需要完全离线的 PlantUML，妙言会把 PlantUML 文本发到公共的 plantuml.com 服务器去渲染，这点在图表那篇里有展开。</li>
+<li>你需要完全离线的 PlantUML，妙言会把 PlantUML 文本发到公共的 plantuml.com 服务器去渲染，这点在图表那篇里有<span class="nobr">展开。</span></li>
 </ul>
 <h2 id="选之前怎么验证">选之前怎么验证</h2>
 <ol>
-<li>建三篇笔记，一篇有表格和任务列表，一篇有 <code>$$</code> 公式和 Mermaid 代码块，一篇有图片。</li>
-<li>在访达里打开这个文件夹，确认每篇都是能直接读的 <code>.md</code>，图片是旁边的普通文件。</li>
-<li>用第二个编辑器打开同一个文件夹，如果两边显示都对，就说明没有被锁住。</li>
-<li>把手上最大的一篇笔记粘进去，在中间敲几个字。</li>
+<li>建三篇笔记，一篇有表格和任务列表，一篇有 <code>$$</code> 公式和 Mermaid 代码块，一篇有<span class="nobr">图片。</span></li>
+<li>在访达里打开这个文件夹，确认每篇都是能直接读的 <code>.md</code>，图片是旁边的普通<span class="nobr">文件。</span></li>
+<li>用第二个编辑器打开同一个文件夹，如果两边显示都对，就说明没有被<span class="nobr">锁住。</span></li>
+<li>把手上最大的一篇笔记粘进去，在中间敲几<span class="nobr">个字。</span></li>
 </ol>
-<p>四条都过了，不管选哪个编辑器，都可以放心当作笔记的默认入口。在不同工具之间真正能带走的是语法，所以手边放一份 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 是值得的。</p>
+<p>四条都过了，不管选哪个编辑器，都可以放心当作笔记的默认入口。在不同工具之间真正能带走的是语法，所以手边放一份 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 是值<span class="nobr">得的。</span></p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="各个编辑器里的-markdown-一样吗">各个编辑器里的 Markdown 一样吗</h3>
-<p>核心部分一样，标题、强调、列表、链接和代码遵循 CommonMark。表格、任务列表和删除线来自 GitHub Flavored Markdown，脚注、公式和图表则取决于编辑器，依赖它们之前先实测一下。</p>
+<p>核心部分一样，标题、强调、列表、链接和代码遵循 CommonMark。表格、任务列表和删除线来自 GitHub Flavored Markdown，脚注、公式和图表则取决于编辑器，依赖它们之前先实测<span class="nobr">一下。</span></p>
 <h3 id="妙言能和-obsidian-或-typora-一起用吗">妙言能和 Obsidian 或 Typora 一起用吗</h3>
-<p>可以，它们都能读一个放着 <code>.md</code> 文件的文件夹。同一时间只让一个编辑器在写，避免同步冲突，图片路径先在副本上试一遍。</p>
+<p>可以，它们都能读一个放着 <code>.md</code> 文件的文件夹。同一时间只让一个编辑器在写，避免同步冲突，图片路径先在副本上试<span class="nobr">一遍。</span></p>
 <h3 id="原生应用就一定更好吗">原生应用就一定更好吗</h3>
-<p>不一定。原生应用不用带一个浏览器引擎，但更该问的是它能不能渲染你写的语法、文件是不是一直在你手里。妙言没有插件系统，自带什么就是什么。</p>
+<p>不一定。原生应用不用带一个浏览器引擎，但更该问的是它能不能渲染你写的语法、文件是不是一直在你手里。妙言没有插件系统，自带什么就是<span class="nobr">什么。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

@@ -52,70 +52,70 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-code-blocks.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>用三个反引号（或三个波浪线）把代码包起来，在开头的围栏后面写语言名，结尾用同一种字符、长度不短于开头的围栏收住；代码里本身带围栏时，外层就用更长的围栏。语言名是高亮器判断怎么上色的唯一线索，所以要权衡的是，你写的这个块是到哪都能用，还是只在自己的预览里好看。</p>
+<p>用三个反引号（或三个波浪线）把代码包起来，在开头的围栏后面写语言名，结尾用同一种字符、长度不短于开头的围栏收住；代码里本身带围栏时，外层就用更长的围栏。语言名是高亮器判断怎么上色的唯一线索，所以要权衡的是，你写的这个块是到哪都能用，还是只在自己的预览里<span class="nobr">好看。</span></p>
 <h2 id="围栏代码块和缩进代码块">围栏代码块和缩进代码块</h2>
-<p>围栏块以三个或更多反引号或波浪线开头，并以一行匹配的围栏结束。</p>
+<p>围栏块以三个或更多反引号或波浪线开头，并以一行匹配的围栏<span class="nobr">结束。</span></p>
 <pre><code class="language-markdown">```python
 def greet(name):
     return f&quot;hello {name}&quot;
 ```
 </code></pre>
-<p>开头围栏后面的文字叫信息串，第一个词约定俗成是语言名，CommonMark 规范会把它渲染成 <code>&lt;code&gt;</code> 上的 <code>language-python</code> 类，高亮器认的就是这个类。反引号围栏的信息串里不能再出现反引号，波浪线围栏则可以，这也是少数几个值得选 <code>~~~</code> 的理由。</p>
-<p>缩进代码块是空行之后、每行缩进四个空格的那一段。</p>
+<p>开头围栏后面的文字叫信息串，第一个词约定俗成是语言名，CommonMark 规范会把它渲染成 <code>&lt;code&gt;</code> 上的 <code>language-python</code> 类，高亮器认的就是这个类。反引号围栏的信息串里不能再出现反引号，波浪线围栏则可以，这也是少数几个值得选 <code>~~~</code> 的<span class="nobr">理由。</span></p>
+<p>缩进代码块是空行之后、每行缩进四个空格的那<span class="nobr">一段。</span></p>
 <pre><code class="language-markdown">    make build
     make test
 </code></pre>
-<p>它在所有解析器里都能用，但没有信息串，没法指定语言，也很容易误触发，比如在列表项下面缩进写续段的时候。收尾方式也不同，缩进块遇到第一个没缩进的非空行就结束，而围栏漏了结尾会一直吞到文末，所以少一个结尾围栏，下面所有内容都会变成代码。</p>
-<p>反引号和波浪线围栏行为一致，只有一条规则，结尾围栏必须与开头用同一种字符，并且不能比开头短，<code>~~~</code> 关不掉反引号围栏，反过来也一样。CommonMark 和 GFM 都定义了这两种写法，反引号更常见，写给别的工具里的人看时更保险。</p>
+<p>它在所有解析器里都能用，但没有信息串，没法指定语言，也很容易误触发，比如在列表项下面缩进写续段的时候。收尾方式也不同，缩进块遇到第一个没缩进的非空行就结束，而围栏漏了结尾会一直吞到文末，所以少一个结尾围栏，下面所有内容都会变成<span class="nobr">代码。</span></p>
+<p>反引号和波浪线围栏行为一致，只有一条规则，结尾围栏必须与开头用同一种字符，并且不能比开头短，<code>~~~</code> 关不掉反引号围栏，反过来也一样。CommonMark 和 GFM 都定义了这两种写法，反引号更常见，写给别的工具里的人看时更<span class="nobr">保险。</span></p>
 <h2 id="围栏里再放围栏">围栏里再放围栏</h2>
-<p>要展示一段本身带代码块的 Markdown，就让外层围栏比里面任何围栏都长。本文的例子外层用四个反引号，里层用三个。</p>
+<p>要展示一段本身带代码块的 Markdown，就让外层围栏比里面任何围栏都长。本文的例子外层用四个反引号，里层用<span class="nobr">三个。</span></p>
 <pre><code class="language-markdown">````markdown
 ```js
 console.log(&quot;inner&quot;);
 ```
 ````
 </code></pre>
-<p>里层围栏比外层短，关不掉外层；如果连四个反引号的写法也要展示，外层就用五个。换成波浪线也能避开冲突，外层 <code>~~~</code>、里层反引号，因为结尾字符必须匹配，互相不会干扰。</p>
+<p>里层围栏比外层短，关不掉外层；如果连四个反引号的写法也要展示，外层就用五个。换成波浪线也能避开冲突，外层 <code>~~~</code>、里层反引号，因为结尾字符必须匹配，互相不会<span class="nobr">干扰。</span></p>
 <h2 id="行内代码里带反引号">行内代码里带反引号</h2>
-<p>行内代码是一串反引号包住的文字。文字里有反引号时，用更长的一串来开头和结尾，并在内容两侧各补一个空格，免得分隔符贴到内容上。</p>
+<p>行内代码是一串反引号包住的文字。文字里有反引号时，用更长的一串来开头和结尾，并在内容两侧各补一个空格，免得分隔符贴到内<span class="nobr">容上。</span></p>
 <pre><code class="language-markdown">用 `` `git log` `` 查看历史。
 </code></pre>
-<p>按 CommonMark 规范，内容两端都是空格且不全是空格时，会各去掉一个空格，所以补的空格不会出现在渲染结果里。行内代码里的反斜杠转义不生效，反斜杠后面跟星号会原样显示两个字符。</p>
+<p>按 CommonMark 规范，内容两端都是空格且不全是空格时，会各去掉一个空格，所以补的空格不会出现在渲染结果里。行内代码里的反斜杠转义不生效，反斜杠后面跟星号会原样显示两个<span class="nobr">字符。</span></p>
 <h2 id="diff-代码块">diff 代码块</h2>
-<p>语言名写 <code>diff</code>，以 <code>+</code> 和 <code>-</code> 开头的行会分别按新增和删除上色。</p>
+<p>语言名写 <code>diff</code>，以 <code>+</code> 和 <code>-</code> 开头的行会分别按新增和删除<span class="nobr">上色。</span></p>
 <pre><code class="language-markdown">```diff
 - timeout: 30
 + timeout: 60
 ```
 </code></pre>
-<p>这是高亮器对文本约定的着色，不是 Markdown 的语法，所以只在高亮器带有 diff 定义的地方有效；妙言内置的高亮器里 <code>patch</code> 也是它的别名。</p>
+<p>这是高亮器对文本约定的着色，不是 Markdown 的语法，所以只在高亮器带有 diff 定义的地方有效；妙言内置的高亮器里 <code>patch</code> 也是它的<span class="nobr">别名。</span></p>
 <h2 id="妙言怎么渲染代码块">妙言怎么渲染代码块</h2>
-<p>妙言用 cmark-gfm 解析 Markdown，围栏块会变成 <code>&lt;pre&gt;&lt;code class="language-..."&gt;</code>，预览再加载 highlight.js 11.5.1（V4.5.0 里 vendor 清单记录的版本）给每个 <code>pre code</code> 上色。下面三个行为都来自这个库本身的工作方式。</p>
-<p>第一，内置的是裁剪过的版本，不是 highlight.js 的完整语言库，一共注册了 34 种语言定义，Bash、C、C++、C#、CSS、Diff、Go、HTML 和 XML、INI 和 TOML、Java、JavaScript、JSON、Kotlin、Less、Lua、Makefile、Markdown、Objective-C、Perl、PHP、PHP 模板、纯文本、Python、Python REPL、R、Ruby、Rust、SCSS、Shell 会话、SQL、Swift、TypeScript、Visual Basic .NET 和 YAML。<code>js</code>、<code>ts</code>、<code>py</code>、<code>sh</code>、<code>yml</code>、<code>md</code>、<code>rs</code>、<code>rb</code> 这些常见短名是别名，像 Dockerfile 和 GraphQL 就不在里面。</p>
-<p>第二，写了一个库里不认识的语言名，这个块会关闭高亮，按普通等宽字体显示；不写语言名则是另一种情况，highlight.js 会根据内容猜，临时贴代码时省事，但内容很短时猜得不准，颜色不对就补上语言名。</p>
-<p>第三，长行会换行而不是横向滚动，样式表给代码块设了 <code>white-space: pre-wrap</code>，长命令不用拖滚动条也能读完，代价是换行出来的行和真正的新行不太好区分。</p>
-<p>编辑区的代码着色是另一套高亮器，而且只认反引号写的围栏，波浪线围栏和四个反引号的嵌套写法在预览里渲染正确，编辑区里的着色可能对不上。单个代码块超过 3000 个字符时它会跳过着色，一篇笔记里围栏块超过 20 个时整篇都不再着色，最终导出成什么样，以预览为准。</p>
+<p>妙言用 cmark-gfm 解析 Markdown，围栏块会变成 <code>&lt;pre&gt;&lt;code class="language-..."&gt;</code>，预览再加载 highlight.js 11.5.1（V4.5.0 里 vendor 清单记录的版本）给每个 <code>pre code</code> 上色。下面三个行为都来自这个库本身的工作<span class="nobr">方式。</span></p>
+<p>第一，内置的是裁剪过的版本，不是 highlight.js 的完整语言库，一共注册了 34 种语言定义，Bash、C、C++、C#、CSS、Diff、Go、HTML 和 XML、INI 和 TOML、Java、JavaScript、JSON、Kotlin、Less、Lua、Makefile、Markdown、Objective-C、Perl、PHP、PHP 模板、纯文本、Python、Python REPL、R、Ruby、Rust、SCSS、Shell 会话、SQL、Swift、TypeScript、Visual Basic .NET 和 YAML。<code>js</code>、<code>ts</code>、<code>py</code>、<code>sh</code>、<code>yml</code>、<code>md</code>、<code>rs</code>、<code>rb</code> 这些常见短名是别名，像 Dockerfile 和 GraphQL 就不在<span class="nobr">里面。</span></p>
+<p>第二，写了一个库里不认识的语言名，这个块会关闭高亮，按普通等宽字体显示；不写语言名则是另一种情况，highlight.js 会根据内容猜，临时贴代码时省事，但内容很短时猜得不准，颜色不对就补上语<span class="nobr">言名。</span></p>
+<p>第三，长行会换行而不是横向滚动，样式表给代码块设了 <code>white-space: pre-wrap</code>，长命令不用拖滚动条也能读完，代价是换行出来的行和真正的新行不太好<span class="nobr">区分。</span></p>
+<p>编辑区的代码着色是另一套高亮器，而且只认反引号写的围栏，波浪线围栏和四个反引号的嵌套写法在预览里渲染正确，编辑区里的着色可能对不上。单个代码块超过 3000 个字符时它会跳过着色，一篇笔记里围栏块超过 20 个时整篇都不再着色，最终导出成什么样，以预览<span class="nobr">为准。</span></p>
 <h2 id="mermaidplantumlmarkmap-和公式">Mermaid、PlantUML、Markmap 和公式</h2>
 <p>有些语言名做的不只是上色，<code>mermaid</code>、<code>plantuml</code> 和 <code>markmap</code> 会被妙言的图表脚本接管，换成一张图。Mermaid 和 Markmap 用内置的 JavaScript 渲染，PlantUML 则会生成指向 plantuml.com 公共服务的链接，需要联网，图的文本也会离开你的 Mac。Mermaid 解析失败时，预览会把源码留在块里，不会弹出错误页，细节见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
 <p>公式不是围栏语法，美元符号包起来的公式在代码之外处理。妙言的公式处理会跳过行内代码和围栏块，所以代码块里的 <code>$</code> 是安全的，写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
 <h2 id="复制和导出">复制和导出</h2>
-<p>V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反过来，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的围栏。</p>
-<p>「导出」子菜单里有 HTML、图片和 PDF，PDF 的细节见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。导出的 HTML 文件会从妙言的 CDN 加载高亮和图表脚本，所以打开那个文件时，要联网才有颜色和图。</p>
+<p>V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反过来，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的<span class="nobr">围栏。</span></p>
+<p>「导出」子菜单里有 HTML、图片和 PDF，PDF 的细节见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。导出的 HTML 文件会从妙言的 CDN 加载高亮和图表脚本，所以打开那个文件时，要联网才有颜色<span class="nobr">和图。</span></p>
 <h2 id="容易出错的地方">容易出错的地方</h2>
 <ul>
-<li>漏写结尾围栏，后面整篇笔记都会变成代码，看到文字突然变成等宽字体就去数围栏。</li>
-<li>列表项里的围栏要和列表文字对齐，否则列表会在这里断开。</li>
-<li>语言名高亮器不认识就没有颜色，换成短别名试试，或对照上面的语言列表。</li>
-<li>不同应用颜色不一样，因为各自带的高亮器和主题不同，Markdown 本身可移植，颜色不可移植。</li>
+<li>漏写结尾围栏，后面整篇笔记都会变成代码，看到文字突然变成等宽字体就去数<span class="nobr">围栏。</span></li>
+<li>列表项里的围栏要和列表文字对齐，否则列表会在这里<span class="nobr">断开。</span></li>
+<li>语言名高亮器不认识就没有颜色，换成短别名试试，或对照上面的语言<span class="nobr">列表。</span></li>
+<li>不同应用颜色不一样，因为各自带的高亮器和主题不同，Markdown 本身可移植，颜色不可<span class="nobr">移植。</span></li>
 </ul>
 <p>其余语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="一定要写语言名吗">一定要写语言名吗？</h3>
-<p>不用，不写也会渲染成代码块，想要颜色稳定再补上，因为妙言没有语言名时会根据内容去猜。</p>
+<p>不用，不写也会渲染成代码块，想要颜色稳定再补上，因为妙言没有语言名时会根据内容<span class="nobr">去猜。</span></p>
 <h3 id="可以用波浪线代替反引号吗">可以用波浪线代替反引号吗？</h3>
-<p>可以，前提是结尾围栏也用波浪线，代码里带反引号围栏时，波浪线特别方便。</p>
+<p>可以，前提是结尾围栏也用波浪线，代码里带反引号围栏时，波浪线特别<span class="nobr">方便。</span></p>
 <h3 id="为什么我的代码没有颜色">为什么我的代码没有颜色？</h3>
-<p>要么没写语言名而且猜错了，要么写的语言名高亮器不认识。妙言的内置库注册了 34 种语言，Dockerfile 这类不在其中的语言会按普通等宽字体显示。</p>
+<p>要么没写语言名而且猜错了，要么写的语言名高亮器不认识。妙言的内置库注册了 34 种语言，Dockerfile 这类不在其中的语言会按普通等宽字体<span class="nobr">显示。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

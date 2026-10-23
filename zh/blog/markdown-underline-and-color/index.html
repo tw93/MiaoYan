@@ -52,10 +52,10 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-underline-and-color.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 本身没有下划线、文字颜色、居中、字号、上标、下标和高亮的语法，要用就借 HTML，下划线写 <code>&lt;u&gt;</code> 或 <code>&lt;ins&gt;</code>，上下标写 <code>&lt;sup&gt;</code> 和 <code>&lt;sub&gt;</code>，高亮写 <code>&lt;mark&gt;</code>，颜色写 <code>&lt;span style="color:red"&gt;</code>，居中写 <code>&lt;p align="center"&gt;</code>。麻烦在于笔记最后显示的地方未必认所有标签，比如 GitHub 会保留 <code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;ins&gt;</code>，却会丢掉 <code>style</code> 属性；妙言的预览会放行原始 HTML，但不认 <code>==高亮==</code> 和 <code>^上标^</code>。所以写之前先想清楚这篇笔记最终在哪里读，再挑能活下来的那种写法。</p>
+<p>Markdown 本身没有下划线、文字颜色、居中、字号、上标、下标和高亮的语法，要用就借 HTML，下划线写 <code>&lt;u&gt;</code> 或 <code>&lt;ins&gt;</code>，上下标写 <code>&lt;sup&gt;</code> 和 <code>&lt;sub&gt;</code>，高亮写 <code>&lt;mark&gt;</code>，颜色写 <code>&lt;span style="color:red"&gt;</code>，居中写 <code>&lt;p align="center"&gt;</code>。麻烦在于笔记最后显示的地方未必认所有标签，比如 GitHub 会保留 <code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;ins&gt;</code>，却会丢掉 <code>style</code> 属性；妙言的预览会放行原始 HTML，但不认 <code>==高亮==</code> 和 <code>^上标^</code>。所以写之前先想清楚这篇笔记最终在哪里读，再挑能活下来的那种<span class="nobr">写法。</span></p>
 <h2 id="为什么-markdown-不提供这些">为什么 Markdown 不提供这些</h2>
-<p>John Gruber 最初的 Markdown 文档里说得很明白，它的语法只覆盖纯文本里就能表达的东西，Markdown 是写作格式，HTML 是发布格式，Markdown 没覆盖的标记直接写 HTML 就行。加粗和斜体在纯文本邮件里本来就是强调的写法，所以有语法；颜色、字号和对齐属于排版，一篇满是排版标记的笔记，源码就不好读了。</p>
-<p>下划线还有个额外的问题，网页上带下划线的文字通常就是链接。MDN 对 <code>&lt;u&gt;</code> 的说明里提醒过，不要让它默认的下划线和超链接混淆，而且这个元素的本意是标注非文本层面的记号，比如标出拼写错误，并不是通用的强调。想突出一个词，加粗或斜体多半更合适，下划线留给真的需要的场合。</p>
+<p>John Gruber 最初的 Markdown 文档里说得很明白，它的语法只覆盖纯文本里就能表达的东西，Markdown 是写作格式，HTML 是发布格式，Markdown 没覆盖的标记直接写 HTML 就行。加粗和斜体在纯文本邮件里本来就是强调的写法，所以有语法；颜色、字号和对齐属于排版，一篇满是排版标记的笔记，源码就不好<span class="nobr">读了。</span></p>
+<p>下划线还有个额外的问题，网页上带下划线的文字通常就是链接。MDN 对 <code>&lt;u&gt;</code> 的说明里提醒过，不要让它默认的下划线和超链接混淆，而且这个元素的本意是标注非文本层面的记号，比如标出拼写错误，并不是通用的强调。想突出一个词，加粗或斜体多半更合适，下划线留给真的需要的<span class="nobr">场合。</span></p>
 <h2 id="html-替代写法">HTML 替代写法</h2>
 <table>
 <thead>
@@ -103,7 +103,7 @@
 </tr>
 </tbody>
 </table>
-<p>行内标签写在段落里就行，不需要空行；<code>&lt;p&gt;</code>、<code>&lt;div&gt;</code> 这类块级标签会开启一个 HTML 块，到下一个空行才结束，这一点在下一节会用到。</p>
+<p>行内标签写在段落里就行，不需要空行；<code>&lt;p&gt;</code>、<code>&lt;div&gt;</code> 这类块级标签会开启一个 HTML 块，到下一个空行才结束，这一点在下一节会<span class="nobr">用到。</span></p>
 <h2 id="居中与空行规则">居中与空行规则</h2>
 <pre><code class="language-markdown">&lt;p align=&quot;center&quot;&gt;一行居中的文字。&lt;/p&gt;
 
@@ -113,25 +113,25 @@
 
 &lt;/div&gt;
 </code></pre>
-<p>按 CommonMark 的规则，以 <code>&lt;div</code> 或 <code>&lt;p</code> 开头的行会开启 HTML 块，直到第一个空行之前的内容都会原样当作 HTML 输出，不再做 Markdown 解析，所以 <code>&lt;div align="center"&gt;</code> 紧接着写 <code>**加粗**</code>，星号会原样显示。在开标签后面和闭标签前面各留一个空行，中间的内容就又会被当成 Markdown 解析了。<a href="/zh/blog/markdown-collapsible-sections/">折叠区块</a>那篇里的 <code>&lt;details&gt;</code> 也是同一条规则。</p>
-<p>在妙言的预览里，<code>&lt;p align="center"&gt;</code> 和 <code>&lt;div align="center"&gt;</code> 里的段落会居中，<code>left</code> 和 <code>right</code> 同理，预览样式表默认把段落设成左对齐，并给这三个 <code>align</code> 值单独写了规则。<code>&lt;center&gt;</code> 和 <code>&lt;font&gt;</code> 是很老的标签，GitHub 会把它们去掉只留文字，居中还是用 <code>align</code> 更稳。</p>
+<p>按 CommonMark 的规则，以 <code>&lt;div</code> 或 <code>&lt;p</code> 开头的行会开启 HTML 块，直到第一个空行之前的内容都会原样当作 HTML 输出，不再做 Markdown 解析，所以 <code>&lt;div align="center"&gt;</code> 紧接着写 <code>**加粗**</code>，星号会原样显示。在开标签后面和闭标签前面各留一个空行，中间的内容就又会被当成 Markdown 解析了。<a href="/zh/blog/markdown-collapsible-sections/">折叠区块</a>那篇里的 <code>&lt;details&gt;</code> 也是同一条<span class="nobr">规则。</span></p>
+<p>在妙言的预览里，<code>&lt;p align="center"&gt;</code> 和 <code>&lt;div align="center"&gt;</code> 里的段落会居中，<code>left</code> 和 <code>right</code> 同理，预览样式表默认把段落设成左对齐，并给这三个 <code>align</code> 值单独写了规则。<code>&lt;center&gt;</code> 和 <code>&lt;font&gt;</code> 是很老的标签，GitHub 会把它们去掉只留文字，居中还是用 <code>align</code> <span class="nobr">更稳。</span></p>
 <h2 id="妙言能渲染什么">妙言能渲染什么</h2>
-<p>妙言的预览用 cmark-gfm 把 Markdown 转成 HTML，并让它保留原始 HTML（<code>CMARK_OPT_UNSAFE</code> 这个选项），所以 <code>&lt;u&gt;</code>、<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;span style="..."&gt;</code> 都会原样交给预览的 web view，由浏览器引擎绘制。解析器打开了四个扩展，分别是表格、脚注、删除线和任务列表，没有一个提供下划线、高亮、上标或下标。</p>
+<p>妙言的预览用 cmark-gfm 把 Markdown 转成 HTML，并让它保留原始 HTML（<code>CMARK_OPT_UNSAFE</code> 这个选项），所以 <code>&lt;u&gt;</code>、<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;span style="..."&gt;</code> 都会原样交给预览的 web view，由浏览器引擎绘制。解析器打开了四个扩展，分别是表格、脚注、删除线和任务列表，没有一个提供下划线、高亮、上标或<span class="nobr">下标。</span></p>
 <p>这带来两个结果。<code>==高亮==</code> 和 <code>^上标^</code> 会按字面显示；其他编辑器里常见的单波浪线下标 <code>H~2~O</code> 也不会变成下标，删除线扩展除了两个波浪线，也接受前后各一个波浪线，于是 <code>~2~</code> 会被读成删除线。V4.5.0 放在 <code>Examples</code> 文件夹里的语法指南写了 <code>H~2~O</code> 和 <code>26^th^</code>（中文版写的是 <code>16^世纪^</code>），但预览并不会把它们渲染成下标和上标，<a href="/zh/blog/markdown-cheat-sheet/">语法速查</a>里也建议改用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code>。</p>
-<p>预览还给其中两个标签定了自己的样子，<code>&lt;mark&gt;</code> 在浅色主题里是黄色底，在深色主题里是暗橄榄色底，导出 PDF 时一律印成浅色主题的黄底深色字，<code>&lt;u&gt;</code> 和 <code>&lt;ins&gt;</code> 画的是一条 1 像素的下边框，不是字体自带的下划线，所以这条线落在 g、y 这类字母的下伸部分下面。</p>
-<p>预览不会过滤 HTML，所以它适合试写法，不适合用来判断别人看到的样子，只因为软件放行才生效的标签，换到更严格的地方发布就会失效。</p>
+<p>预览还给其中两个标签定了自己的样子，<code>&lt;mark&gt;</code> 在浅色主题里是黄色底，在深色主题里是暗橄榄色底，导出 PDF 时一律印成浅色主题的黄底深色字，<code>&lt;u&gt;</code> 和 <code>&lt;ins&gt;</code> 画的是一条 1 像素的下边框，不是字体自带的下划线，所以这条线落在 g、y 这类字母的下伸部分<span class="nobr">下面。</span></p>
+<p>预览不会过滤 HTML，所以它适合试写法，不适合用来判断别人看到的样子，只因为软件放行才生效的标签，换到更严格的地方发布就会<span class="nobr">失效。</span></p>
 <h2 id="github-保留什么去掉什么">GitHub 保留什么、去掉什么</h2>
-<p>GitHub 在基础格式文档里列了三个，<code>&lt;sub&gt;</code>、<code>&lt;sup&gt;</code> 和 <code>&lt;ins&gt;</code>，最后一个用来做下划线。它的 markup 项目还说明，渲染出的 HTML 会经过过滤，行内样式会被去掉。拿一段示例交给 GitHub 的 Markdown API 渲染，结果是这样：</p>
+<p>GitHub 在基础格式文档里列了三个，<code>&lt;sub&gt;</code>、<code>&lt;sup&gt;</code> 和 <code>&lt;ins&gt;</code>，最后一个用来做下划线。它的 markup 项目还说明，渲染出的 HTML 会经过过滤，行内样式会被去掉。拿一段示例交给 GitHub 的 Markdown API 渲染，结果是<span class="nobr">这样：</span></p>
 <ul>
-<li><code>&lt;ins&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;mark&gt;</code> 会保留。</li>
-<li><code>&lt;u&gt;</code> 和 <code>&lt;small&gt;</code> 的标签被去掉，文字还在，下划线和小字号没了。</li>
-<li><code>&lt;span style="color:red"&gt;</code> 文字还在，颜色没了。</li>
-<li><code>align="center"</code> 会保留，所以 README 里居中的 logo 才能正常显示。</li>
-<li><code>H~2~O</code> 在那里同样变成删除线，GitHub 也把单个波浪线当作删除线。</li>
+<li><code>&lt;ins&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;sub&gt;</code> 和 <code>&lt;mark&gt;</code> 会<span class="nobr">保留。</span></li>
+<li><code>&lt;u&gt;</code> 和 <code>&lt;small&gt;</code> 的标签被去掉，文字还在，下划线和小字号<span class="nobr">没了。</span></li>
+<li><code>&lt;span style="color:red"&gt;</code> 文字还在，颜色<span class="nobr">没了。</span></li>
+<li><code>align="center"</code> 会保留，所以 README 里居中的 logo 才能正常<span class="nobr">显示。</span></li>
+<li><code>H~2~O</code> 在那里同样变成删除线，GitHub 也把单个波浪线当作删<span class="nobr">除线。</span></li>
 </ul>
-<p>GitHub 自己提供的颜色功能只有一个，在 issue、PR 和讨论里，把 HEX、RGB 或 HSL 写进反引号，比如 <code>#0969DA</code>，旁边会出现一个小色块。它是在标示一个颜色，并不会给文字上色。作为对比，Typora 的参考页直接说可以用 <code>&lt;span style="color:red"&gt;</code> 上色、用 <code>&lt;u&gt;</code> 加下划线。</p>
+<p>GitHub 自己提供的颜色功能只有一个，在 issue、PR 和讨论里，把 HEX、RGB 或 HSL 写进反引号，比如 <code>#0969DA</code>，旁边会出现一个小色块。它是在标示一个颜色，并不会给文字上色。作为对比，Typora 的参考页直接说可以用 <code>&lt;span style="color:red"&gt;</code> 上色、用 <code>&lt;u&gt;</code> 加下<span class="nobr">划线。</span></p>
 <h2 id="其他编辑器里的简写">其他编辑器里的简写</h2>
-<p>有些编辑器自己定义了短语法，只有渲染器打开了才有效：</p>
+<p>有些编辑器自己定义了短语法，只有渲染器打开了才<span class="nobr">有效：</span></p>
 <table>
 <thead>
 <tr>
@@ -163,24 +163,24 @@
 </tr>
 </tbody>
 </table>
-<p>Pandoc 手册还补了一条，<code>^...^</code> 或 <code>~...~</code> 里如果有空格，要用反斜杠转义，比如 <code>P~a\ cat~</code>。这些写法敲起来整齐，但对不认识它们的工具来说完全没法读，要在多个软件之间搬笔记的话，HTML 写法更稳。</p>
+<p>Pandoc 手册还补了一条，<code>^...^</code> 或 <code>~...~</code> 里如果有空格，要用反斜杠转义，比如 <code>P~a\ cat~</code>。这些写法敲起来整齐，但对不认识它们的工具来说完全没法读，要在多个软件之间搬笔记的话，HTML 写法<span class="nobr">更稳。</span></p>
 <h2 id="用公式写上下标">用公式写上下标</h2>
 <p>笔记里本来就有公式的话，<code>$x^2$</code> 和 <code>$x_i$</code> 不用任何 HTML 就能得到上标和下标，妙言用内置的 KaTeX 渲染。KaTeX 还支持 <code>\mathrm{}</code> 写正体、<code>\textcolor{blue}{...}</code> 上色，所以 <code>$\textcolor{blue}{F=ma}$</code> 能给公式着色。公式场景用它合适，写普通文字就别扭了，因为数学模式用的是数学字体和间距。分隔符和常见的坑见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
 <h2 id="让笔记保持可移植">让笔记保持可移植</h2>
 <ul>
-<li>优先用语义化的 HTML（<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;ins&gt;</code>），少用 <code>style</code> 属性，因为保留前者的渲染器更多。</li>
-<li>如果浅色和深色主题都会用，避免写死颜色，为白底调好的深红色放到深色背景上可能就看不见了。</li>
-<li>只是想强调，用加粗或斜体，颜色留给真正需要的少数场合。</li>
-<li>在最严格的显示环境里测一下，比如 GitHub 的预览，再决定能不能依赖某个标签。</li>
+<li>优先用语义化的 HTML（<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;ins&gt;</code>），少用 <code>style</code> 属性，因为保留前者的渲染器<span class="nobr">更多。</span></li>
+<li>如果浅色和深色主题都会用，避免写死颜色，为白底调好的深红色放到深色背景上可能就看不<span class="nobr">见了。</span></li>
+<li>只是想强调，用加粗或斜体，颜色留给真正需要的少数<span class="nobr">场合。</span></li>
+<li>在最严格的显示环境里测一下，比如 GitHub 的预览，再决定能不能依赖某个<span class="nobr">标签。</span></li>
 <li>不想被解析的字符要转义，见<a href="/zh/blog/markdown-escape-characters/">转义字符</a>。</li>
 </ul>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="markdown-有下划线语法吗">Markdown 有下划线语法吗？</h3>
 <p>没有，CommonMark 和 GFM 都没定义。用 <code>&lt;u&gt;</code> 或 <code>&lt;ins&gt;</code>，用 Pandoc 转换时也可以写 <code>[文字]{.underline}</code>。</p>
 <h3 id="为什么我的红色文字在-github-上是黑的">为什么我的红色文字在 GitHub 上是黑的？</h3>
-<p>GitHub 的过滤器会移除 <code>style</code> 属性，span 还在，颜色没了。改用加粗或引用块，或者把笔记发布到保留行内样式的地方。</p>
+<p>GitHub 的过滤器会移除 <code>style</code> 属性，span 还在，颜色没了。改用加粗或引用块，或者把笔记发布到保留行内样式的<span class="nobr">地方。</span></p>
 <h3 id="在妙言里能写真正的-h₂o-下标吗">在妙言里能写真正的 H₂O 下标吗？</h3>
-<p>可以，写 <code>H&lt;sub&gt;2&lt;/sub&gt;O</code>，已经在公式里的话写 <code>$\mathrm{H_2O}$</code>。<code>H~2~O</code> 在妙言里会被读成删除线。</p>
+<p>可以，写 <code>H&lt;sub&gt;2&lt;/sub&gt;O</code>，已经在公式里的话写 <code>$\mathrm{H_2O}$</code>。<code>H~2~O</code> 在妙言里会被读成删<span class="nobr">除线。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

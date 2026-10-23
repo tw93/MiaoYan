@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/latex-math-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>行内公式写在单个美元符号之间，比如 <code>$E = mc^2$</code>，块级公式写在各占一行的双美元符号之间。Markdown 本身没有数学语法，靠应用的渲染器识别出这些定界符，再交给 TeX 引擎排版，常见的引擎是 KaTeX 或 MathJax。妙言用的是 KaTeX 0.16.0，随应用打包，所以公式渲染不需要联网。最常见的几类问题是美元符号被当成公式、某些环境需要套一层外壳，以及下划线在引擎看到之前就被 Markdown 吃掉了。</p>
+<p>行内公式写在单个美元符号之间，比如 <code>$E = mc^2$</code>，块级公式写在各占一行的双美元符号之间。Markdown 本身没有数学语法，靠应用的渲染器识别出这些定界符，再交给 TeX 引擎排版，常见的引擎是 KaTeX 或 MathJax。妙言用的是 KaTeX 0.16.0，随应用打包，所以公式渲染不需要联网。最常见的几类问题是美元符号被当成公式、某些环境需要套一层外壳，以及下划线在引擎看到之前就被 Markdown 吃<span class="nobr">掉了。</span></p>
 <h2 id="行内公式和块级公式">行内公式和块级公式</h2>
 <pre><code class="language-markdown">静止时的能量是 $E = mc^2$。
 
@@ -60,8 +60,8 @@ $$
 \int_0^1 x^2 \, dx = \frac{1}{3}
 $$
 </code></pre>
-<p>行内公式嵌在句子里，排版紧凑，块级公式单独居中，运算符是完整大小，求和与积分的上下限会放在符号的上下方。公式只是句子的一部分就用行内，想让读者专门看它就用块级。</p>
-<p>妙言识别四对定界符，分别是 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，后两种是 LaTeX 原生写法。可以混用，不过行内和块级各自固定一套写法，笔记在不同应用之间搬运会省心很多。</p>
+<p>行内公式嵌在句子里，排版紧凑，块级公式单独居中，运算符是完整大小，求和与积分的上下限会放在符号的上下方。公式只是句子的一部分就用行内，想让读者专门看它就用<span class="nobr">块级。</span></p>
+<p>妙言识别四对定界符，分别是 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，后两种是 LaTeX 原生写法。可以混用，不过行内和块级各自固定一套写法，笔记在不同应用之间搬运会省心<span class="nobr">很多。</span></p>
 <h2 id="最常用的写法">最常用的写法</h2>
 <table>
 <thead>
@@ -105,7 +105,7 @@ $$
 </tr>
 </tbody>
 </table>
-<p><code>\frac</code>、<code>\sum</code>、<code>\int</code>、<code>\sqrt</code> 和 <code>\text</code> 在 KaTeX 文档里都列为支持。<code>dx</code> 前面的 <code>\,</code> 加一个细空格，这是积分常见的排版习惯。</p>
+<p><code>\frac</code>、<code>\sum</code>、<code>\int</code>、<code>\sqrt</code> 和 <code>\text</code> 在 KaTeX 文档里都列为支持。<code>dx</code> 前面的 <code>\,</code> 加一个细空格，这是积分常见的排版<span class="nobr">习惯。</span></p>
 <h3 id="矩阵分段函数和对齐公式">矩阵、分段函数和对齐公式</h3>
 <pre><code class="language-markdown">$$
 \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix}
@@ -122,25 +122,25 @@ a &amp;= b + c \\
 \end{aligned}
 $$
 </code></pre>
-<p>用 <code>&amp;</code> 分列，用 <code>\\</code> 换行。KaTeX 把 <code>matrix</code>、<code>pmatrix</code>、<code>bmatrix</code>、<code>cases</code>、<code>align</code>、<code>aligned</code> 等列为支持的环境。在妙言里要把 <code>aligned</code> 套在 <code>$$</code> 里面。KaTeX 的 auto-render 扩展默认能识别裸写的 <code>\begin{align}</code>，但妙言的定界符只有上面这四对，裸写的 <code>\begin{align}</code> 在这里不会被识别成公式，套一层 <code>$$</code> 的写法在更多应用里也都能用。</p>
+<p>用 <code>&amp;</code> 分列，用 <code>\\</code> 换行。KaTeX 把 <code>matrix</code>、<code>pmatrix</code>、<code>bmatrix</code>、<code>cases</code>、<code>align</code>、<code>aligned</code> 等列为支持的环境。在妙言里要把 <code>aligned</code> 套在 <code>$$</code> 里面。KaTeX 的 auto-render 扩展默认能识别裸写的 <code>\begin{align}</code>，但妙言的定界符只有上面这四对，裸写的 <code>\begin{align}</code> 在这里不会被识别成公式，套一层 <code>$$</code> 的写法在更多应用里也都<span class="nobr">能用。</span></p>
 <h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
-<p>Markdown 解析器并不知道什么是公式，看到 <code>a_b_c</code> 可能把下划线当成强调，看到 <code>\\</code> 可能把一个反斜杠当成转义，所以应用必须在 Markdown 解析之前先把公式保护起来，之后再把原文交给 TeX 引擎。</p>
-<p>妙言分两步做这件事。先用一个预处理找出代码段和代码块之外的公式范围，跳过被转义的定界符，把里面的内容挡在解析器之外。解析后的 HTML 再装进网页视图，由 KaTeX 的 auto-render 脚本扫描四对定界符，替换成排好版的结果。KaTeX 默认忽略 <code>code</code> 和 <code>pre</code> 标签，所以代码块里的公式不会被渲染。</p>
-<p>引擎之间的差别也在这里。KaTeX 快，同步渲染，支持 LaTeX 的一个子集。MathJax 是另一个常见引擎，Typora 官网说它支持大部分 MathJax 扩展，包括 mhchem 和 AMSmath。公式如果来自用了冷门宏包的论文，先在编辑器里实测，再决定能不能依赖。妙言内置的 KaTeX 0.16.0 完全从应用内文件运行。</p>
+<p>Markdown 解析器并不知道什么是公式，看到 <code>a_b_c</code> 可能把下划线当成强调，看到 <code>\\</code> 可能把一个反斜杠当成转义，所以应用必须在 Markdown 解析之前先把公式保护起来，之后再把原文交给 TeX <span class="nobr">引擎。</span></p>
+<p>妙言分两步做这件事。先用一个预处理找出代码段和代码块之外的公式范围，跳过被转义的定界符，把里面的内容挡在解析器之外。解析后的 HTML 再装进网页视图，由 KaTeX 的 auto-render 脚本扫描四对定界符，替换成排好版的结果。KaTeX 默认忽略 <code>code</code> 和 <code>pre</code> 标签，所以代码块里的公式不会被<span class="nobr">渲染。</span></p>
+<p>引擎之间的差别也在这里。KaTeX 快，同步渲染，支持 LaTeX 的一个子集。MathJax 是另一个常见引擎，Typora 官网说它支持大部分 MathJax 扩展，包括 mhchem 和 AMSmath。公式如果来自用了冷门宏包的论文，先在编辑器里实测，再决定能不能依赖。妙言内置的 KaTeX 0.16.0 完全从应用内文件<span class="nobr">运行。</span></p>
 <h2 id="美元符号和价格">美元符号和价格</h2>
-<p>单个 <code>$</code> 同时也是货币符号，这是最常见的坑。妙言对此有一道保护，美元符号后面跟着数字，数字后面又不是数学的延续字符，就当作货币处理，所以 <code>It costs $5 today</code> 保持纯文本，<code>$2+2$</code> 仍然是公式，因为数字后面的 <code>+</code> 算作数学延续。别的编辑器未必有这道保护，笔记要在各处都正常显示的话，最好手动加上反斜杠转义。</p>
+<p>单个 <code>$</code> 同时也是货币符号，这是最常见的坑。妙言对此有一道保护，美元符号后面跟着数字，数字后面又不是数学的延续字符，就当作货币处理，所以 <code>It costs $5 today</code> 保持纯文本，<code>$2+2$</code> 仍然是公式，因为数字后面的 <code>+</code> 算作数学延续。别的编辑器未必有这道保护，笔记要在各处都正常显示的话，最好手动加上反斜杠<span class="nobr">转义。</span></p>
 <pre><code class="language-markdown">门票 \$5，升级版 \$10。
 </code></pre>
-<p>美元符号前面加反斜杠就是告诉渲染器不要动它。妙言开启了转义处理，预处理也会跳过被转义的定界符。</p>
+<p>美元符号前面加反斜杠就是告诉渲染器不要动它。妙言开启了转义处理，预处理也会跳过被转义的定<span class="nobr">界符。</span></p>
 <h2 id="出问题怎么查">出问题怎么查</h2>
 <ol>
-<li><strong>什么都没渲染，美元符号原样显示。</strong> 结束定界符缺失，或者跨过了代码段，公式不能在代码段里开始、在外面结束。</li>
-<li><strong>公式在某个下划线处被截断。</strong> 文本被当成了 Markdown，妙言已经做了保护，其他应用里可以写成 <code>\_</code> 或改用块级。</li>
-<li><strong>块级公式留在段落里并多出换行。</strong> 让 <code>$$</code> 各占一行，前后空一行。妙言也会清理单段 <code>$$</code> 块里的换行。</li>
-<li><strong>花括号错误。</strong> 每个 <code>{</code> 都要有对应的 <code>}</code>，括号不配对时引擎不会排版。</li>
+<li><strong>什么都没渲染，美元符号原样显示。</strong> 结束定界符缺失，或者跨过了代码段，公式不能在代码段里开始、在外面<span class="nobr">结束。</span></li>
+<li><strong>公式在某个下划线处被截断。</strong> 文本被当成了 Markdown，妙言已经做了保护，其他应用里可以写成 <code>\_</code> 或改用<span class="nobr">块级。</span></li>
+<li><strong>块级公式留在段落里并多出换行。</strong> 让 <code>$$</code> 各占一行，前后空一行。妙言也会清理单段 <code>$$</code> 块里的<span class="nobr">换行。</span></li>
+<li><strong>花括号错误。</strong> 每个 <code>{</code> 都要有对应的 <code>}</code>，括号不配对时引擎不会<span class="nobr">排版。</span></li>
 <li><strong>某个命令没有效果。</strong> 该命令可能不在 KaTeX 的支持列表里，先查 KaTeX 的 Supported Functions 页面，再判断是不是 bug。</li>
 </ol>
-<p>想确认公式渲染是否正常，新建一篇笔记贴上下面三段，按 <code>⌘3</code> 进入预览或按 <code>⌘\</code> 打开分栏。</p>
+<p>想确认公式渲染是否正常，新建一篇笔记贴上下面三段，按 <code>⌘3</code> 进入预览或按 <code>⌘\</code> 打开<span class="nobr">分栏。</span></p>
 <pre><code class="language-markdown">行内：$\sqrt{2}$
 
 $$
@@ -152,19 +152,19 @@ $$
 <p>看到根号、带上下限的求和以及普通文本 <code>$5</code>，就说明引擎和转义都在正常工作。妙言的演示模式里公式同样可用，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>，其余语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。</p>
 <h2 id="需要知道的限制">需要知道的限制</h2>
 <ul>
-<li>KaTeX 覆盖笔记里的大部分需求，但不是全部 LaTeX，像导言区里用 <code>\newcommand</code> 定义的宏和宏包在 Markdown 笔记里无法使用。</li>
-<li>公式在预览里渲染，编辑区显示的是源码。</li>
+<li>KaTeX 覆盖笔记里的大部分需求，但不是全部 LaTeX，像导言区里用 <code>\newcommand</code> 定义的宏和宏包在 Markdown 笔记里无法<span class="nobr">使用。</span></li>
+<li>公式在预览里渲染，编辑区显示的是<span class="nobr">源码。</span></li>
 <li>PDF、HTML 和图片导出都来自渲染后的预览，重要的公式导出后要看一眼，导出 PDF 的细节见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</li>
 </ul>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="妙言的公式需要联网吗">妙言的公式需要联网吗</h3>
-<p>不需要，KaTeX 随应用打包。这一类功能里需要联网的是 PlantUML，它会发到公共服务器渲染。</p>
+<p>不需要，KaTeX 随应用打包。这一类功能里需要联网的是 PlantUML，它会发到公共服务器<span class="nobr">渲染。</span></p>
 <h3 id="katex-和-mathjax-怎么选">KaTeX 和 MathJax 怎么选</h3>
-<p>需要某个只有 MathJax 才有的扩展，就用提供它的编辑器。普通的代数、微积分、矩阵和对齐公式，KaTeX 够用而且渲染快。</p>
+<p>需要某个只有 MathJax 才有的扩展，就用提供它的编辑器。普通的代数、微积分、矩阵和对齐公式，KaTeX 够用而且渲<span class="nobr">染快。</span></p>
 <h3 id="怎么写出美元符号本身">怎么写出美元符号本身</h3>
-<p>前面加反斜杠写成 <code>\$5</code>，或者放进行内代码。</p>
+<p>前面加反斜杠写成 <code>\$5</code>，或者放进行内<span class="nobr">代码。</span></p>
 <h3 id="公式能自动编号吗">公式能自动编号吗</h3>
-<p>Typora 官网说开启后可以自动给公式编号。妙言没有公式编号的设置，KaTeX 在部分环境里支持用 <code>\tag{1}</code> 给行加标签，可以手动编号。</p>
+<p>Typora 官网说开启后可以自动给公式编号。妙言没有公式编号的设置，KaTeX 在部分环境里支持用 <code>\tag{1}</code> 给行加标签，可以手动<span class="nobr">编号。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

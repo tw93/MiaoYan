@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/mermaid-diagrams-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>在 Markdown 里画图，做法是把图的文字描述放进语言名为 <code>mermaid</code> 的围栏代码块，支持 Mermaid 的预览会把它渲染成 SVG 图片，PlantUML 和 Markmap 的思路一样，各自用自己的语言名。妙言里 Mermaid 和 Markmap 跑的是随应用打包的 JavaScript，所以离线也能用，PlantUML 不行，它会把图的文字发到公共的 plantuml.com 服务器去渲染，图如果是私密的，这一点要先想清楚。</p>
+<p>在 Markdown 里画图，做法是把图的文字描述放进语言名为 <code>mermaid</code> 的围栏代码块，支持 Mermaid 的预览会把它渲染成 SVG 图片，PlantUML 和 Markmap 的思路一样，各自用自己的语言名。妙言里 Mermaid 和 Markmap 跑的是随应用打包的 JavaScript，所以离线也能用，PlantUML 不行，它会把图的文字发到公共的 plantuml.com 服务器去渲染，图如果是私密的，这一点要先想<span class="nobr">清楚。</span></p>
 <h2 id="流程图">流程图</h2>
 <pre><code class="language-markdown">```mermaid
 flowchart LR
@@ -61,8 +61,8 @@ flowchart LR
     Review --&gt;|no| Draft
 ```
 </code></pre>
-<p>第一行指定图的类型和方向，<code>TD</code> 或 <code>TB</code> 是从上到下，<code>LR</code> 是从左到右，<code>BT</code> 和 <code>RL</code> 是反方向，<code>graph</code> 可以当 <code>flowchart</code> 的同义词。单独一个词就是一个方框节点，<code>Review{Approved?}</code> 会画成菱形，圆角框、圆形、圆柱等其他形状各有括号写法，列在 Mermaid 的流程图文档里，<code>--&gt;|yes|</code> 是给连线加标签。</p>
-<p>用 <code>subgraph</code> 块把节点分组，以 <code>end</code> 结尾。</p>
+<p>第一行指定图的类型和方向，<code>TD</code> 或 <code>TB</code> 是从上到下，<code>LR</code> 是从左到右，<code>BT</code> 和 <code>RL</code> 是反方向，<code>graph</code> 可以当 <code>flowchart</code> 的同义词。单独一个词就是一个方框节点，<code>Review{Approved?}</code> 会画成菱形，圆角框、圆形、圆柱等其他形状各有括号写法，列在 Mermaid 的流程图文档里，<code>--&gt;|yes|</code> 是给连线加<span class="nobr">标签。</span></p>
+<p>用 <code>subgraph</code> 块把节点分组，以 <code>end</code> <span class="nobr">结尾。</span></p>
 <pre><code class="language-markdown">```mermaid
 flowchart TD
     subgraph Editor
@@ -82,7 +82,7 @@ sequenceDiagram
     B--&gt;&gt;A: Hi Alice
 ```
 </code></pre>
-<p><code>-&gt;&gt;</code> 是带箭头的实线，<code>--&gt;&gt;</code> 是带箭头的虚线，通常用来表示回复。<code>participant X as Name</code> 给简短的 id 配一个好读的名字，备注用 <code>Note right of</code>、<code>left of</code> 或 <code>over</code> 放置，写法见 Mermaid 的时序图文档。</p>
+<p><code>-&gt;&gt;</code> 是带箭头的实线，<code>--&gt;&gt;</code> 是带箭头的虚线，通常用来表示回复。<code>participant X as Name</code> 给简短的 id 配一个好读的名字，备注用 <code>Note right of</code>、<code>left of</code> 或 <code>over</code> 放置，写法见 Mermaid 的时序图<span class="nobr">文档。</span></p>
 <h2 id="甘特图">甘特图</h2>
 <pre><code class="language-markdown">```mermaid
 gantt
@@ -92,9 +92,9 @@ gantt
     Develop :after a1, 5d
 ```
 </code></pre>
-<p><code>dateFormat</code> 说明任务行里日期的写法，Mermaid 文档给出的默认值是 <code>YYYY-MM-DD</code>，每个 <code>section</code> 把任务分组，任务行是标题、冒号，再接 id、起始日期或 <code>after &lt;id&gt;</code>、时长这样的元数据，示例里的日期只是示意。</p>
+<p><code>dateFormat</code> 说明任务行里日期的写法，Mermaid 文档给出的默认值是 <code>YYYY-MM-DD</code>，每个 <code>section</code> 把任务分组，任务行是标题、冒号，再接 id、起始日期或 <code>after &lt;id&gt;</code>、时长这样的元数据，示例里的日期只是<span class="nobr">示意。</span></p>
 <h2 id="plantuml-和-markmap-作为补充">PlantUML 和 Markmap 作为补充</h2>
-<p>Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时选它。</p>
+<p>Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时<span class="nobr">选它。</span></p>
 <pre><code class="language-markdown">```plantuml
 @startuml
 participant A
@@ -103,7 +103,7 @@ A -&gt; B: message
 @enduml
 ```
 </code></pre>
-<p>Markmap 不太一样，它把普通的 Markdown 大纲变成可交互的思维导图，标题和列表的层级就是分支。</p>
+<p>Markmap 不太一样，它把普通的 Markdown 大纲变成可交互的思维导图，标题和列表的层级就是<span class="nobr">分支。</span></p>
 <pre><code class="language-markdown">```markmap
 # Release plan
 - Design
@@ -114,30 +114,30 @@ A -&gt; B: message
 ```
 </code></pre>
 <p>想梳理一棵树的时候用 Markmap，关心方框之间谁调用谁、谁接着谁的时候用 Mermaid。</p>
-<p>妙言里不用背这些围栏，输入 <code>/mermaid</code>、<code>/plantuml</code> 或 <code>/markmap</code> 再按 <code>Tab</code> 就会插入模板，也可以在菜单栏「格式」里选「Tab快捷输入」。</p>
+<p>妙言里不用背这些围栏，输入 <code>/mermaid</code>、<code>/plantuml</code> 或 <code>/markmap</code> 再按 <code>Tab</code> 就会插入模板，也可以在菜单栏「格式」里选「Tab快捷<span class="nobr">输入」。</span></p>
 <h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
-<p>带语言名的围栏块对 Markdown 解析器来说只是文本，会输出一个带 <code>language-mermaid</code> 类名的 HTML code 元素。页面加载完以后，预览里的脚本去找这些类名，Mermaid 就调用打包的库把文本变成 SVG 并替换掉代码块，Markmap 用打包的 Markmap 和 d3 文件渲染在同一个位置，PlantUML 则是把文本编码进一个网址，作为图片地址指向 <code>https://www.plantuml.com/plantuml/svg/</code>，图片是从那台服务器取回来的。</p>
+<p>带语言名的围栏块对 Markdown 解析器来说只是文本，会输出一个带 <code>language-mermaid</code> 类名的 HTML code 元素。页面加载完以后，预览里的脚本去找这些类名，Mermaid 就调用打包的库把文本变成 SVG 并替换掉代码块，Markmap 用打包的 Markmap 和 d3 文件渲染在同一个位置，PlantUML 则是把文本编码进一个网址，作为图片地址指向 <code>https://www.plantuml.com/plantuml/svg/</code>，图片是从那台服务器取回<span class="nobr">来的。</span></p>
 <p>最后这一步是要特别留意的。文本是放在网址里传出去的，图里的任何内容，比如内部服务的名字，在预览渲染的时候都会离开你的 Mac。PlantUML 官方文档说可以自建服务器，但我在妙言的源码里看到公共地址是直接写在预览脚本里的，没有找到可以更改它的设置。私密的架构图就用 Mermaid。</p>
 <p>预览还会让图的配色跟随浅色或深色外观，并且按图的文本缓存渲染好的 Mermaid SVG。</p>
 <h2 id="出问题怎么查">出问题怎么查</h2>
 <ul>
-<li><strong>图一直显示成代码。</strong> Mermaid 的话多半是语法错误，妙言在渲染失败时会把原始围栏源码留在原位，不会往页面里塞错误信息，所以看着像普通代码的块就是信号，可以把源码贴到 Mermaid 在线编辑器里，或者对着文档检查。</li>
+<li><strong>图一直显示成代码。</strong> Mermaid 的话多半是语法错误，妙言在渲染失败时会把原始围栏源码留在原位，不会往页面里塞错误信息，所以看着像普通代码的块就是信号，可以把源码贴到 Mermaid 在线编辑器里，或者对着文档<span class="nobr">检查。</span></li>
 <li><strong>流程图被某个节点搞坏。</strong> 检查有没有小写的 <code>end</code>、括号不配对，或者标签里有特殊字符，必要时给标签加引号，比如 <code>A["Cost (USD)"]</code>。</li>
-<li><strong>PlantUML 先显示「Failed to load diagram」然后显示代码。</strong> 服务器连不上或者处于离线状态时，妙言会改为显示源码文本。</li>
-<li><strong>Markmap 是空的。</strong> 块里至少要有一个标题或一个列表，根节点通常是第一个 <code>#</code> 标题。</li>
-<li><strong>大图看不清。</strong> 拆开，两张小图比一张四十个节点的图讲得更清楚。</li>
+<li><strong>PlantUML 先显示「Failed to load diagram」然后显示代码。</strong> 服务器连不上或者处于离线状态时，妙言会改为显示源码<span class="nobr">文本。</span></li>
+<li><strong>Markmap 是空的。</strong> 块里至少要有一个标题或一个列表，根节点通常是第一个 <code>#</code> <span class="nobr">标题。</span></li>
+<li><strong>大图看不清。</strong> 拆开，两张小图比一张四十个节点的图讲得更<span class="nobr">清楚。</span></li>
 </ul>
-<p>快速测试一下，输入 <code>/mermaid</code> 再按 <code>Tab</code>，按 <code>⌘3</code> 切到预览或按 <code>⌘\</code> 打开分栏，确认出现三个相连的方框，再断开 Wi-Fi 重新加载，确认 Mermaid 还在渲染而 PlantUML 不再渲染。</p>
+<p>快速测试一下，输入 <code>/mermaid</code> 再按 <code>Tab</code>，按 <code>⌘3</code> 切到预览或按 <code>⌘\</code> 打开分栏，确认出现三个相连的方框，再断开 Wi-Fi 重新加载，确认 Mermaid 还在渲染而 PlantUML 不再<span class="nobr">渲染。</span></p>
 <h2 id="限制">限制</h2>
 <p>Mermaid 的效果取决于应用打包的版本，而版本号没有记录在应用的清单里，所以较新的图类型可能缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次，PDF 怎么分页见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。做演示文稿时三种图表在演示模式里都会初始化，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
 <p>相关阅读有讲围栏语法的 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 和讲公式的 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。妙言在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 上，源码在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="没有网络能画图吗">没有网络能画图吗</h3>
-<p>在妙言里用 Mermaid 或 Markmap 可以，PlantUML 需要公共服务器。</p>
+<p>在妙言里用 Mermaid 或 Markmap 可以，PlantUML 需要公共服<span class="nobr">务器。</span></p>
 <h3 id="先学哪个">先学哪个</h3>
-<p>先学 Mermaid，覆盖面最广、语法最短，包括 VS Code 内置预览在内的很多 Markdown 工具都能渲染。</p>
+<p>先学 Mermaid，覆盖面最广、语法最短，包括 VS Code 内置预览在内的很多 Markdown 工具都能<span class="nobr">渲染。</span></p>
 <h3 id="别的编辑器能渲染同样的围栏吗">别的编辑器能渲染同样的围栏吗</h3>
-<p>大多都可以，Typora 官网列了 Mermaid、flowchart.js 和时序图，VS Code 内置预览能渲染 <code>mermaid</code> 块，PlantUML 和 Markmap 的支持各家不一，搬笔记之前先确认。</p>
+<p>大多都可以，Typora 官网列了 Mermaid、flowchart.js 和时序图，VS Code 内置预览能渲染 <code>mermaid</code> 块，PlantUML 和 Markmap 的支持各家不一，搬笔记之前先<span class="nobr">确认。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

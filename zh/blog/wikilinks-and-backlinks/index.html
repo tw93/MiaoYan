@@ -52,10 +52,10 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/wikilinks-and-backlinks.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Wikilink 就是把笔记标题写在双层方括号里，比如 <code>[[项目计划]]</code>。在妙言里这样写会链接到文件名恰好是这个标题的笔记，被链接的笔记则会把指向它的笔记列为反向链接。好处是链接又短又好读，代价是 wikilink 不属于标准 Markdown，并且妙言只按标题匹配，所以重命名会让链接失效，别名和标题链接也不支持。</p>
+<p>Wikilink 就是把笔记标题写在双层方括号里，比如 <code>[[项目计划]]</code>。在妙言里这样写会链接到文件名恰好是这个标题的笔记，被链接的笔记则会把指向它的笔记列为反向链接。好处是链接又短又好读，代价是 wikilink 不属于标准 Markdown，并且妙言只按标题匹配，所以重命名会让链接失效，别名和标题链接也不<span class="nobr">支持。</span></p>
 <h2 id="wikilink-和普通-markdown-链接">Wikilink 和普通 Markdown 链接</h2>
-<p>标准 Markdown 链接带一个文字标签和一个目标，比如 <code>[项目计划](Projects/项目计划.md)</code>，目标是路径，文件一搬就断，空格还要做 URL 编码，好处是所有 Markdown 渲染器都认。</p>
-<p>Wikilink 去掉了路径和标签，写成 <code>[[项目计划]]</code>，你只说名字，应用自己去找。把这种写法带火的 Obsidian 在文档里也讲了同样的区分，wikilink 用双层方括号，因为更紧凑所以默认生成，Markdown 链接需要 URL 编码，关掉「Use [[Wikilinks]]」就能切换过去。</p>
+<p>标准 Markdown 链接带一个文字标签和一个目标，比如 <code>[项目计划](Projects/项目计划.md)</code>，目标是路径，文件一搬就断，空格还要做 URL 编码，好处是所有 Markdown 渲染器<span class="nobr">都认。</span></p>
+<p>Wikilink 去掉了路径和标签，写成 <code>[[项目计划]]</code>，你只说名字，应用自己去找。把这种写法带火的 Obsidian 在文档里也讲了同样的区分，wikilink 用双层方括号，因为更紧凑所以默认生成，Markdown 链接需要 URL 编码，关掉「Use [[Wikilinks]]」就能切换<span class="nobr">过去。</span></p>
 <table>
 <thead>
 <tr>
@@ -97,44 +97,44 @@
 </tr>
 </tbody>
 </table>
-<p>可移植性才是真正的代价。把同一个文件夹交给不认识 wikilink 的查看器，<code>[[项目计划]]</code> 会原样显示成文字，如果要把笔记发布到 GitHub 或静态站点，也得先转换。</p>
+<p>可移植性才是真正的代价。把同一个文件夹交给不认识 wikilink 的查看器，<code>[[项目计划]]</code> 会原样显示成文字，如果要把笔记发布到 GitHub 或静态站点，也得先<span class="nobr">转换。</span></p>
 <h2 id="在妙言里怎么写">在妙言里怎么写</h2>
-<p>在双层方括号里写笔记标题，不带 <code>.md</code> 扩展名：</p>
+<p>在双层方括号里写笔记标题，不带 <code>.md</code> 扩<span class="nobr">展名：</span></p>
 <pre><code class="language-markdown">下一步见 [[项目计划]]，背景见 [[会议记录 2026-10]]。
 </code></pre>
-<p>标题是去掉扩展名的文件名，所以 <code>项目计划.md</code> 对应 <code>[[项目计划]]</code>。匹配是精确的，大小写有区别，多一个字符也会失败。妙言的 Agent skill 也是这个要求，目标文字要和笔记标题保持一致，不要自己发明别名、标题或块引用语法。</p>
-<p>这一点和 Obsidian 不一样。Obsidian 文档里有显示文字用的 <code>[[Example|Custom name]]</code>，链接到标题的 <code>[[Note#Heading]]</code>，还有块引用的 <code>#^block-id</code>，妙言一个都没有实现，索引把括号之间的全部内容当作标题，所以 <code>[[项目计划|计划]]</code> 是指向一篇叫「项目计划|计划」的笔记，而这篇笔记并不存在。</p>
+<p>标题是去掉扩展名的文件名，所以 <code>项目计划.md</code> 对应 <code>[[项目计划]]</code>。匹配是精确的，大小写有区别，多一个字符也会失败。妙言的 Agent skill 也是这个要求，目标文字要和笔记标题保持一致，不要自己发明别名、标题或块引用<span class="nobr">语法。</span></p>
+<p>这一点和 Obsidian 不一样。Obsidian 文档里有显示文字用的 <code>[[Example|Custom name]]</code>，链接到标题的 <code>[[Note#Heading]]</code>，还有块引用的 <code>#^block-id</code>，妙言一个都没有实现，索引把括号之间的全部内容当作标题，所以 <code>[[项目计划|计划]]</code> 是指向一篇叫「项目计划|计划」的笔记，而这篇笔记并不<span class="nobr">存在。</span></p>
 <h2 id="妙言是怎么实现的">妙言是怎么实现的</h2>
-<p>下面是从源码里读出来的机制。</p>
-<p><strong>一个写法，两份工作。</strong> 编辑器和索引都会匹配 <code>[[</code> 与 <code>]]</code> 之间的文字，编辑器负责把标题高亮成链接样式，索引则用另一套规则提取不含右方括号的字符，去掉两端空格后作为目标标题。</p>
-<p><strong>索引。</strong> 笔记列表每次刷新时，妙言会用列表里的笔记重建索引，为每个标题记下它指向的标题集合（出链）和指向它的标题集合（入链）。它读的是每篇笔记已经载入的文字，启动后没打开过的笔记还没有载入，所以它里面的链接要等你打开或保存它之后才算数。保存笔记时会更新这一篇的条目。</p>
-<p><strong>点击链接。</strong> Wikilink 会变成 <code>miaoyan://goto/&lt;标题&gt;</code> 这样的地址，和 <code>miao open</code> 命令用的是同一个 URL scheme。妙言查找标题完全一致的笔记，找到一篇就打开，找不到会提示「请确定你填写的标题是否存在~」并且不会新建，找到多篇时，比如两个文件夹里都有 <code>会议记录.md</code>，会以这个标题发起搜索，并提示「发现这里有多个标题，使用搜索能力~」。所以标题唯一不只是整洁，它决定链接有没有歧义。</p>
-<p><strong>预览和导出。</strong> 渲染预览之前，妙言把每个 wikilink 改写成 <code>[标题](miaoyan://goto/标题)</code> 这种普通 Markdown 链接，行内代码和围栏代码块里的内容会被跳过，所以代码示例里的 <code>[[example]]</code> 仍然是文字。导出走的是同一套处理，所以导出的文件里带着 <code>miaoyan://</code> 链接，只有装了妙言的 Mac 上才有作用。</p>
-<p><strong>复制外链。</strong> 笔记的「复制外链」命令放进剪贴板的也是这个地址，可以把某篇笔记的链接贴到别的应用里。</p>
+<p>下面是从源码里读出来的<span class="nobr">机制。</span></p>
+<p><strong>一个写法，两份工作。</strong> 编辑器和索引都会匹配 <code>[[</code> 与 <code>]]</code> 之间的文字，编辑器负责把标题高亮成链接样式，索引则用另一套规则提取不含右方括号的字符，去掉两端空格后作为目标<span class="nobr">标题。</span></p>
+<p><strong>索引。</strong> 笔记列表每次刷新时，妙言会用列表里的笔记重建索引，为每个标题记下它指向的标题集合（出链）和指向它的标题集合（入链）。它读的是每篇笔记已经载入的文字，启动后没打开过的笔记还没有载入，所以它里面的链接要等你打开或保存它之后才算数。保存笔记时会更新这一篇的<span class="nobr">条目。</span></p>
+<p><strong>点击链接。</strong> Wikilink 会变成 <code>miaoyan://goto/&lt;标题&gt;</code> 这样的地址，和 <code>miao open</code> 命令用的是同一个 URL scheme。妙言查找标题完全一致的笔记，找到一篇就打开，找不到会提示「请确定你填写的标题是否存在~」并且不会新建，找到多篇时，比如两个文件夹里都有 <code>会议记录.md</code>，会以这个标题发起搜索，并提示「发现这里有多个标题，使用搜索能力~」。所以标题唯一不只是整洁，它决定链接有没有<span class="nobr">歧义。</span></p>
+<p><strong>预览和导出。</strong> 渲染预览之前，妙言把每个 wikilink 改写成 <code>[标题](miaoyan://goto/标题)</code> 这种普通 Markdown 链接，行内代码和围栏代码块里的内容会被跳过，所以代码示例里的 <code>[[example]]</code> 仍然是文字。导出走的是同一套处理，所以导出的文件里带着 <code>miaoyan://</code> 链接，只有装了妙言的 Mac 上才有<span class="nobr">作用。</span></p>
+<p><strong>复制外链。</strong> 笔记的「复制外链」命令放进剪贴板的也是这个地址，可以把某篇笔记的链接贴到别的应<span class="nobr">用里。</span></p>
 <h2 id="反向链接">反向链接</h2>
 <p>反向链接回答「谁链接到了这里」。妙言把它显示在文档属性面板里，用 Command Option I 打开，位置在字数和创建、修改日期旁边，显示为「反向链接：」加数量，然后每行一个标题，没有笔记指向它时显示「无」。</p>
-<p>列表是纯文本，只告诉你哪些笔记链接过来，不能在列表里点开，需要跳转就用搜索找标题。</p>
+<p>列表是纯文本，只告诉你哪些笔记链接过来，不能在列表里点开，需要跳转就用搜索找<span class="nobr">标题。</span></p>
 <h2 id="出问题时怎么查">出问题时怎么查</h2>
 <ul>
-<li><strong>链接打开了别的笔记或者发起了搜索。</strong> 说明有两篇笔记同名，文件名就是唯一标识，把其中一篇改名即可。</li>
+<li><strong>链接打开了别的笔记或者发起了搜索。</strong> 说明有两篇笔记同名，文件名就是唯一标识，把其中一篇改名<span class="nobr">即可。</span></li>
 <li><strong>提示「请确定你填写的标题是否存在~」。</strong> 目标和任何文件名都不完全一致，检查一下大小写、空格和标点，<code>项目计划.md</code> 对应的就是 <code>项目计划</code>。</li>
-<li><strong>重命名之后别处的链接失效了。</strong> 妙言在重命名文件时不会联动修改其他笔记里的链接，用搜索框搜旧标题，它会同时查标题和正文，然后逐个改掉即可。</li>
-<li><strong>反向链接看起来不全。</strong> 索引只统计当前列表里已经载入文字的笔记，也就是启动后打开过或保存过的笔记，打开或保存一下带链接的那篇，反向链接就会出现。</li>
+<li><strong>重命名之后别处的链接失效了。</strong> 妙言在重命名文件时不会联动修改其他笔记里的链接，用搜索框搜旧标题，它会同时查标题和正文，然后逐个改掉<span class="nobr">即可。</span></li>
+<li><strong>反向链接看起来不全。</strong> 索引只统计当前列表里已经载入文字的笔记，也就是启动后打开过或保存过的笔记，打开或保存一下带链接的那篇，反向链接就会<span class="nobr">出现。</span></li>
 <li><strong>为其他应用写的链接显示成文字。</strong> 别名、标题链接和 <code>![[image.png]]</code> 这样的嵌入是 Obsidian 的语法，妙言没有处理，改成纯标题或标准 Markdown。</li>
 </ul>
 <h2 id="什么时候用普通链接">什么时候用普通链接</h2>
-<p>笔记要在妙言之外阅读时，比如 GitHub 仓库、静态站点或 README，用标准 Markdown 链接。个人知识库只在一个应用里使用时，用 wikilink，标题短，写起来快。两种混用也没问题，妙言都能渲染。</p>
-<p>相关阅读，<a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记</a> 讲了标题就是文件名和文件夹结构，<a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记</a> 演示了用标题的 <code>miao open</code>，<a href="/zh/blog/obsidian-alternative-mac/">Mac 上的 Obsidian 替代品</a> 列出了从 vault 迁移时能带走什么。</p>
+<p>笔记要在妙言之外阅读时，比如 GitHub 仓库、静态站点或 README，用标准 Markdown 链接。个人知识库只在一个应用里使用时，用 wikilink，标题短，写起来快。两种混用也没问题，妙言都能<span class="nobr">渲染。</span></p>
+<p>相关阅读，<a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记</a> 讲了标题就是文件名和文件夹结构，<a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记</a> 演示了用标题的 <code>miao open</code>，<a href="/zh/blog/obsidian-alternative-mac/">Mac 上的 Obsidian 替代品</a> 列出了从 vault 迁移时能带走<span class="nobr">什么。</span></p>
 <p>妙言 Mac 版在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> 开源，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本覆盖 Mac、iPhone 和 iPad。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="妙言的-wikilink-需要写-md-扩展名吗">妙言的 wikilink 需要写 .md 扩展名吗？</h3>
 <p>不需要，只写标题，比如 <code>[[项目计划]]</code>。</p>
 <h3 id="支持-笔记别名-或-笔记标题-吗">支持 <code>[[笔记|别名]]</code> 或 <code>[[笔记#标题]]</code> 吗？</h3>
-<p>不支持，括号之间的全部文字都会被当作标题，这些写法无法解析。</p>
+<p>不支持，括号之间的全部文字都会被当作标题，这些写法无法<span class="nobr">解析。</span></p>
 <h3 id="代码块里的-wikilink-会生效吗">代码块里的 wikilink 会生效吗？</h3>
-<p>不会生效，在行内代码和围栏代码块里它们保持为纯文本。</p>
+<p>不会生效，在行内代码和围栏代码块里它们保持为纯<span class="nobr">文本。</span></p>
 <h3 id="有关系图谱吗">有关系图谱吗？</h3>
-<p>没有，Mac 版不带关系图谱，反向链接以列表的形式显示在文档属性面板里。</p>
+<p>没有，Mac 版不带关系图谱，反向链接以列表的形式显示在文档属性面<span class="nobr">板里。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

@@ -229,7 +229,27 @@ def render_body(slug, lang):
     out = re.sub(r'<a href="(https?://(?!miaoyan\.app)[^"]+)">', r'<a href="\1" target="_blank" rel="noopener">', out)
     if DOWNLOAD_RE.search(out):
         raise BuildError(f"{where}: links to a download; the site links only to the App Store and GitHub")
-    return out
+    return glue_cjk_tails(out)
+
+
+# Keep a paragraph or list item from ending on one Chinese or Japanese
+# character. `text-wrap: pretty` handles most lines, but Chromium gives up in
+# paragraphs with long unbreakable tokens or `box-decoration-break: clone` code
+# chips, and Firefox has no `pretty`; so the last two characters and closing
+# punctuation stay on one line, or a lone one is bound to the word before it
+# (same helper on every product site, maintainer 2026-10-23).
+GLUE_BLOCK_RE = re.compile(r'(<(p|li)\b[^>]*>)((?:(?!<(?:p|li)\b).)*?)(</\2>)', re.S)
+CJK_TAIL_RE = re.compile(r'[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]{2}[。，、；：！？」』）”]*$')
+CJK_LONE_RE = re.compile(r' ([\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff][。，、；：！？」』）”]*)$')
+
+
+def glue_cjk_tails(page):
+    def glue(m):
+        inner, glued = CJK_TAIL_RE.subn(lambda t: f'<span class="nobr">{t.group(0)}</span>', m.group(3))
+        if not glued:
+            inner = CJK_LONE_RE.sub(r'&nbsp;\1', inner)
+        return m.group(1) + inner + m.group(4)
+    return GLUE_BLOCK_RE.sub(glue, page)
 
 
 def plain(fragment):

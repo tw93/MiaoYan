@@ -52,9 +52,9 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-line-breaks.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>在 CommonMark 里，段落中间单独按一次回车并不是换行，而是软换行，渲染出来是一个空格，所以上下两行文字会连成一行。想强制断行，就在行尾加反斜杠（或两个空格、<code>&lt;br&gt;</code>），想另起一段就空一行。麻烦在于各家软件对单个回车的理解不一样，妙言自己的默认值也不是 CommonMark 的规则。</p>
+<p>在 CommonMark 里，段落中间单独按一次回车并不是换行，而是软换行，渲染出来是一个空格，所以上下两行文字会连成一行。想强制断行，就在行尾加反斜杠（或两个空格、<code>&lt;br&gt;</code>），想另起一段就空一行。麻烦在于各家软件对单个回车的理解不一样，妙言自己的默认值也不是 CommonMark 的<span class="nobr">规则。</span></p>
 <h2 id="软换行硬换行和分段">软换行、硬换行和分段</h2>
-<p>CommonMark 里有三样东西在编辑器里看着差不多。行尾没有两个以上空格、也没有反斜杠的普通换行是软换行，规范允许渲染器把它输出成换行符或空格，浏览器里两者看起来都是一个空格。行尾的反斜杠，或者行尾两个以上的空格，是硬换行，会渲染成 <code>&lt;br /&gt;</code>。空一行则结束当前段落并开始新段落，段间距也是完整的。</p>
+<p>CommonMark 里有三样东西在编辑器里看着差不多。行尾没有两个以上空格、也没有反斜杠的普通换行是软换行，规范允许渲染器把它输出成换行符或空格，浏览器里两者看起来都是一个空格。行尾的反斜杠，或者行尾两个以上的空格，是硬换行，会渲染成 <code>&lt;br /&gt;</code>。空一行则结束当前段落并开始新段落，段间距也是完<span class="nobr">整的。</span></p>
 <pre><code class="language-markdown">软换行：这一行
 接着在同一行里继续。
 
@@ -67,39 +67,39 @@
 HTML 换行：这一行到此为止&lt;br&gt;
 这一行从下面开始。
 </code></pre>
-<p>示例里的两个圆点代表两个真实的空格。行内 HTML 会被原样放行，所以在表格单元格里想断行，通常就是写 <code>&lt;br&gt;</code>，见<a href="/zh/blog/markdown-tables/">Markdown 表格</a>。分段和硬换行的区别在间距上，空行会留出完整的段间距，<code>&lt;br&gt;</code> 还在同一个段落里，行高正常。</p>
-<p>规范还提到，渲染器可以提供把软换行渲染成硬换行的选项。「我的换行怎么不见了」这类问题大多出在这里，因为不同工具选的默认值不同。</p>
+<p>示例里的两个圆点代表两个真实的空格。行内 HTML 会被原样放行，所以在表格单元格里想断行，通常就是写 <code>&lt;br&gt;</code>，见<a href="/zh/blog/markdown-tables/">Markdown 表格</a>。分段和硬换行的区别在间距上，空行会留出完整的段间距，<code>&lt;br&gt;</code> 还在同一个段落里，行高<span class="nobr">正常。</span></p>
+<p>规范还提到，渲染器可以提供把软换行渲染成硬换行的选项。「我的换行怎么不见了」这类问题大多出在这里，因为不同工具选的默认值<span class="nobr">不同。</span></p>
 <h2 id="同一个文件为什么在不同地方不一样">同一个文件为什么在不同地方不一样</h2>
-<p>GitHub 的文档说明了两种行为。在 issue、pull request 和 discussion 里，单个回车会自动渲染成换行；在 <code>.md</code> 文件里同样的文字会挤在一行，需要行尾两个空格、反斜杠或 <code>&lt;br /&gt;</code> 才会断开。所以在 issue 里写好的草稿贴进 README 会变样，反过来也一样。</p>
+<p>GitHub 的文档说明了两种行为。在 issue、pull request 和 discussion 里，单个回车会自动渲染成换行；在 <code>.md</code> 文件里同样的文字会挤在一行，需要行尾两个空格、反斜杠或 <code>&lt;br /&gt;</code> 才会断开。所以在 issue 里写好的草稿贴进 README 会变样，反过来也<span class="nobr">一样。</span></p>
 <p>其他编辑器各选一边。有的预览严格按规范，有的像聊天框一样每个回车都断行，也有的给一个开关。文本文件本身没有变，变的只是渲染器的那个开关，这也是为什么符合规范的解析器和笔记软件对同一个文件可能给出不同结果，而双方都没有 bug。</p>
 <h2 id="妙言的换行方式设置">妙言的换行方式设置</h2>
-<p>妙言把这个开关放了出来。打开「偏好设置」，进入「编辑器」，找到「换行方式」这一行（英文界面是 <code>Line Break:</code>）。它是一个下拉菜单，有两个值，「妙言」和 <code>Github</code>，英文界面里第一个值是 <code>MiaoYan</code>。默认值是「妙言」。</p>
-<p>从 V4.5.0 的源码看，两个值对应 cmark-gfm 的两种渲染标志。「妙言」会把每个回车都渲染成 <code>&lt;br&gt;</code>，上下两行各占一行，空一行仍然开始新段落。<code>Github</code> 把软换行渲染成空格，也就是上一节说的 <code>.md</code> 文件规则。两种模式下，行尾反斜杠、两个空格和裸 <code>&lt;br&gt;</code> 都照样断行，因为它们是硬换行或行内 HTML，不是软换行。</p>
-<p>这个标签容易看岔。<code>Github</code> 不是「像 GitHub 评论那样」，评论是每个回车都断行，反而更接近妙言的默认值，<code>Github</code> 指的是「像 GitHub 上的 <code>.md</code> 文件那样」，也就是严格规则。</p>
-<p>预览和 HTML 导出渲染时都会读这个设置，PDF 导出打印的是已经渲染好的预览，所以三者都跟着它走。笔记里的文字不会被改动，文件里还是你打的原样，变的只是转成 HTML 的方式。编辑区显示的是原始文本，不受影响，软换行在那里本来就看不出来。</p>
+<p>妙言把这个开关放了出来。打开「偏好设置」，进入「编辑器」，找到「换行方式」这一行（英文界面是 <code>Line Break:</code>）。它是一个下拉菜单，有两个值，「妙言」和 <code>Github</code>，英文界面里第一个值是 <code>MiaoYan</code>。默认值是「<span class="nobr">妙言」。</span></p>
+<p>从 V4.5.0 的源码看，两个值对应 cmark-gfm 的两种渲染标志。「妙言」会把每个回车都渲染成 <code>&lt;br&gt;</code>，上下两行各占一行，空一行仍然开始新段落。<code>Github</code> 把软换行渲染成空格，也就是上一节说的 <code>.md</code> 文件规则。两种模式下，行尾反斜杠、两个空格和裸 <code>&lt;br&gt;</code> 都照样断行，因为它们是硬换行或行内 HTML，不是软<span class="nobr">换行。</span></p>
+<p>这个标签容易看岔。<code>Github</code> 不是「像 GitHub 评论那样」，评论是每个回车都断行，反而更接近妙言的默认值，<code>Github</code> 指的是「像 GitHub 上的 <code>.md</code> 文件那样」，也就是严格<span class="nobr">规则。</span></p>
+<p>预览和 HTML 导出渲染时都会读这个设置，PDF 导出打印的是已经渲染好的预览，所以三者都跟着它走。笔记里的文字不会被改动，文件里还是你打的原样，变的只是转成 HTML 的方式。编辑区显示的是原始文本，不受影响，软换行在那里本来就看不<span class="nobr">出来。</span></p>
 <h2 id="该选哪一种">该选哪一种</h2>
-<p>看文字最后会去哪里。笔记只留在妙言里，默认值更省事，打一行、按回车、看到新的一行，不用管不可见的字符。如果这篇笔记要变成 README、文档页、静态站文章，或者任何用 CommonMark 渲染的地方，写的时候先切到 <code>Github</code>，预览就和读者看到的一致，段落之间空一行，想在段内断行就用反斜杠。</p>
-<p>在默认模式下读着没问题，但段落之间没有空行的笔记，到别处都会连成一片。最快的办法是补一个空行，它在所有渲染器里表现一致。接手别人写的笔记时，先问清对方假设的是哪种模式，文件本身看不出来。</p>
+<p>看文字最后会去哪里。笔记只留在妙言里，默认值更省事，打一行、按回车、看到新的一行，不用管不可见的字符。如果这篇笔记要变成 README、文档页、静态站文章，或者任何用 CommonMark 渲染的地方，写的时候先切到 <code>Github</code>，预览就和读者看到的一致，段落之间空一行，想在段内断行就用反<span class="nobr">斜杠。</span></p>
+<p>在默认模式下读着没问题，但段落之间没有空行的笔记，到别处都会连成一片。最快的办法是补一个空行，它在所有渲染器里表现一致。接手别人写的笔记时，先问清对方假设的是哪种模式，文件本身看不<span class="nobr">出来。</span></p>
 <h2 id="要分享的文件该用哪种断行">要分享的文件该用哪种断行</h2>
-<p>想分段就空一行，想在段内断行就用反斜杠。行尾两个空格虽然合法，但看不见，也很容易被工具删掉。EditorConfig 定义了 <code>trim_trailing_whitespace</code>，设为 true 时会删掉每个换行符前面的所有空白，套用它的编辑器或格式化工具会悄悄把你的硬换行变成软换行。反斜杠看得见，不怕被裁掉，也在 CommonMark 规范里。<code>&lt;br&gt;</code> 留给表格单元格这类必须断行的地方，它是 HTML，在不渲染 HTML 的工具里会原样露出来。</p>
-<p>还有一种边界情况。CommonMark 规范说，两种硬换行写法都不能出现在段落或标题等块的末尾，因为后面没有下一行可断，代码里的反斜杠也只是普通字符。</p>
+<p>想分段就空一行，想在段内断行就用反斜杠。行尾两个空格虽然合法，但看不见，也很容易被工具删掉。EditorConfig 定义了 <code>trim_trailing_whitespace</code>，设为 true 时会删掉每个换行符前面的所有空白，套用它的编辑器或格式化工具会悄悄把你的硬换行变成软换行。反斜杠看得见，不怕被裁掉，也在 CommonMark 规范里。<code>&lt;br&gt;</code> 留给表格单元格这类必须断行的地方，它是 HTML，在不渲染 HTML 的工具里会原样露<span class="nobr">出来。</span></p>
+<p>还有一种边界情况。CommonMark 规范说，两种硬换行写法都不能出现在段落或标题等块的末尾，因为后面没有下一行可断，代码里的反斜杠也只是普通<span class="nobr">字符。</span></p>
 <h2 id="怎么判断渲染器用哪种换行模式">怎么判断渲染器用哪种换行模式</h2>
-<p>从文件里看不出来，只能测渲染器。在草稿笔记里写三行短句，中间不留空行：</p>
+<p>从文件里看不出来，只能测渲染器。在草稿笔记里写三行短句，中间不留<span class="nobr">空行：</span></p>
 <pre><code class="language-markdown">one
 two
 three
 </code></pre>
-<p>预览显示三行，说明渲染器每个回车都断行；显示 <code>one two three</code>，说明它按严格规则处理。在妙言里把「换行方式」在两个值之间切换，对比预览。想测断行符号，就在 <code>one</code> 后面加一个反斜杠，看严格模式下 <code>one</code> 和 <code>two</code> 会不会分开。</p>
+<p>预览显示三行，说明渲染器每个回车都断行；显示 <code>one two three</code>，说明它按严格规则处理。在妙言里把「换行方式」在两个值之间切换，对比预览。想测断行符号，就在 <code>one</code> 后面加一个反斜杠，看严格模式下 <code>one</code> 和 <code>two</code> 会不会<span class="nobr">分开。</span></p>
 <p>共享的文件显示不对时，按顺序查三件事：查看器对回车的规则，格式化工具或保存钩子是否删了行尾空格，反斜杠后面是否多打了一个空格，那样它就是一个普通的反斜杠，不是断行。GFM 和 CommonMark 的其他差异见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>，导出的具体内容见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="为什么我的-markdown-换行没有生效">为什么我的 Markdown 换行没有生效？</h3>
-<p>渲染器把单个回车当成软换行，渲染成了空格。在行尾加反斜杠，或者空一行。</p>
+<p>渲染器把单个回车当成软换行，渲染成了空格。在行尾加反斜杠，或者空<span class="nobr">一行。</span></p>
 <h3 id="反斜杠和两个空格哪个更好">反斜杠和两个空格哪个更好？</h3>
-<p>反斜杠。两者都是合法的 CommonMark 硬换行，但行尾空格看不见，保存或格式化时又常被删掉。</p>
+<p>反斜杠。两者都是合法的 CommonMark 硬换行，但行尾空格看不见，保存或格式化时又常被<span class="nobr">删掉。</span></p>
 <h3 id="妙言的换行方式会改动我的文件吗">妙言的换行方式会改动我的文件吗？</h3>
-<p>不会，它只影响预览、HTML 导出和 PDF 导出的渲染方式，笔记里还是你打的文字。</p>
+<p>不会，它只影响预览、HTML 导出和 PDF 导出的渲染方式，笔记里还是你打的<span class="nobr">文字。</span></p>
 <h3 id="github-评论和-readme-的换行一样吗">GitHub 评论和 README 的换行一样吗？</h3>
-<p>不一样。GitHub 在 issue、pull request 和 discussion 里把单个回车渲染成换行，在 <code>.md</code> 文件里则渲染成空格。</p>
+<p>不一样。GitHub 在 issue、pull request 和 discussion 里把单个回车渲染成换行，在 <code>.md</code> 文件里则渲染成<span class="nobr">空格。</span></p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
