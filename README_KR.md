@@ -79,11 +79,9 @@ miao update              # CLI 업데이트
 - MiaoYan이 유용했다면 Star를 누르거나, [공유](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%EB%A1%9C%EC%BB%AC%20%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4%20%EB%85%B8%ED%8A%B8%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EB%84%A4%EC%9D%B4%ED%8B%B0%EB%B8%8C%20Mac%20%EC%95%B1)하거나, 이슈 및 PR을 남겨주세요
 - 탕위안(TangYuan)과 콜라(Coke)라는 두 마리의 고양이를 키우고 있습니다. MiaoYan이 즐거움을 주었다면 <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">캔 간식 🥩</a>을 후원해 주세요
 
-<details>
-<summary>후원해 주신 분들 🐱</summary>
-<br/>
+후원해 주신 분들 🐱
+
 <a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
-</details>
 
 ## 감사의 글
 

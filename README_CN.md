@@ -78,11 +78,9 @@ miao update             # 更新 CLI
 - 如果你喜欢妙言，欢迎给它一个 Star，推荐给身边喜欢纯文本的朋友，[分享出去](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BD%BB%E7%81%B5%E7%9A%84%20Markdown%20%E7%AC%94%E8%AE%B0%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%86%99%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
 - 我有两只猫，汤圆和可乐，如果妙言让你开心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">请她们吃罐头 🥩</a>
 
-<details>
-<summary>这些可爱的朋友已经投喂过了 🐱</summary>
-<br/>
+这些可爱的朋友已经投喂过了 🐱
+
 <a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
-</details>
 
 ## 致谢
 

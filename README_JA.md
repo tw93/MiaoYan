@@ -79,11 +79,9 @@ miao update                 # CLI をアップデート
 - MiaoYan が役に立ったら、Star を付けたり、[共有](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%20Markdown%20%E3%83%8E%E3%83%BC%E3%83%88%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E3%83%8D%E3%82%A4%E3%83%86%E3%82%A3%E3%83%96%20Mac%20%E3%82%A2%E3%83%97%E3%83%AA)したり、Issue や PR をお寄せください
 - 私にはタンユエン（湯円）とコーラ（可楽）という2匹の猫がいます。もし MiaoYan を気に入っていただけたら、<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">缶詰 🥩</a> をプレゼントしていただけると嬉しいです
 
-<details>
-<summary>支援してくださった方々 🐱</summary>
-<br/>
+支援してくださった方々 🐱
+
 <a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
-</details>
 
 ## 謝辞
 

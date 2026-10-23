@@ -79,11 +79,9 @@ Installez le skill officiel avec `npx skills add tw93/MiaoYan/skills/miaoyan -g`
 - Si MiaoYan vous est utile, laissez une étoile, [partagez-le](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Une%20app%20Mac%20native%20pour%20vos%20notes%20Markdown%20locales) ou ouvrez une issue ou une PR
 - J'ai deux chats, TangYuan et Coke. Si MiaoYan vous apporte satisfaction, vous pouvez leur offrir de la <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">pâtée 🥩</a>
 
-<details>
-<summary>Ces personnes l'ont déjà fait 🐱</summary>
-<br/>
+Ces personnes l'ont déjà fait 🐱
+
 <a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
-</details>
 
 ## Remerciements
 
