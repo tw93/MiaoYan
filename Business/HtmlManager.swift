@@ -67,7 +67,6 @@ class HtmlManager {
                 :root {
                     --pdf-ink: #26231d;
                     --pdf-muted: #6a6256;
-                    --pdf-accent: #2f744c;
                     --pdf-hairline: rgba(38, 35, 29, 0.13);
                     --pdf-code-bg: #f6f2ea;
                     --pdf-quote-bg: #f3f7f2;
@@ -163,8 +162,8 @@ class HtmlManager {
                 blockquote {
                     color: var(--pdf-muted) !important;
                     background: var(--pdf-quote-bg) !important;
-                    border-left: 3px solid var(--pdf-accent) !important;
-                    border-radius: 0 6px 6px 0 !important;
+                    border-left: none !important;
+                    border-radius: 6px !important;
                     padding: 0.5em 0.9em !important;
                 }
                 code {

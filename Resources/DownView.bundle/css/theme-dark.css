@@ -11,7 +11,6 @@
   --border-color: #3A3936;
   --code-bg: #282724;
   --diagram-bg: #282724;
-  --blockquote-border-color: #545454;
 
   /* Mermaid Diagram */
   --mermaid-node-bg: #2B2A27;
@@ -55,28 +54,34 @@
   border-color: var(--border-color);
 }
 
-.darkmode .heti blockquote {
-  border-left-color: var(--blockquote-border-color);
-}
-
 .darkmode .heti .markdown-alert-note {
   --alert-color: #4493f8;
+  --alert-bg: rgba(68, 147, 248, 0.1);
 }
 
 .darkmode .heti .markdown-alert-tip {
   --alert-color: #3fb950;
+  --alert-bg: rgba(63, 185, 80, 0.1);
 }
 
 .darkmode .heti .markdown-alert-important {
   --alert-color: #ab7df8;
+  --alert-bg: rgba(171, 125, 248, 0.1);
 }
 
 .darkmode .heti .markdown-alert-warning {
   --alert-color: #d29922;
+  --alert-bg: rgba(210, 153, 34, 0.1);
 }
 
 .darkmode .heti .markdown-alert-caution {
   --alert-color: #f85149;
+  --alert-bg: rgba(248, 81, 73, 0.1);
+}
+
+.darkmode .heti blockquote,
+.darkmode .heti blockquote * {
+  color: var(--text-secondary);
 }
 
 /* .darkmode * forces --text-color on every element; restate the title color */
@@ -89,7 +94,7 @@
 }
 
 .darkmode input[type='checkbox'] {
-  border: 1px solid white;
+  border: 0.5px solid white;
 }
 
 .darkmode img[loading="lazy"] {

@@ -138,10 +138,6 @@ pre code {
 }
 
 /* ==================== Blockquote ==================== */
-.heti blockquote {
-  border-left-color: var(--blockquote-border-color);
-}
-
 .heti blockquote ol,
 .heti blockquote ul {
   margin-block-end: 0.4em !important;
@@ -160,7 +156,7 @@ pre code {
 
 /* ==================== Form Elements ==================== */
 input[type='checkbox'] {
-  border: 1px solid var(--border-color);
+  border: 0.5px solid var(--border-color);
 }
 
 /* ==================== Code Line Numbers ==================== */
@@ -401,7 +397,6 @@ img.border {
     --border-color: #3A3936;
     --code-bg: #282724;
     --diagram-bg: #282724;
-    --blockquote-border-color: #545454;
   }
 
   html {
@@ -414,10 +409,6 @@ img.border {
 
   .heti hr {
     background-color: var(--border-color);
-  }
-
-  .heti blockquote {
-    border-left-color: var(--blockquote-border-color);
   }
 
   .heti pre,

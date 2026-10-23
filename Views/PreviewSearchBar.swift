@@ -418,14 +418,14 @@ extension PreviewSearchBar {
         guard wantsLayer, PreviewSearchBar.luminance(of: color) != nil else { return }
         if PreviewSearchBar.isDarkPanel(color) {
             layer?.shadowColor = NSColor.black.cgColor
-            layer?.shadowOpacity = 0.45
-            layer?.shadowRadius = 12
-            layer?.shadowOffset = NSSize(width: 0, height: -4)
+            layer?.shadowOpacity = 0.3
+            layer?.shadowRadius = 8
+            layer?.shadowOffset = NSSize(width: 0, height: -2)
         } else {
-            layer?.shadowColor = NSColor.black.withAlphaComponent(0.35).cgColor
-            layer?.shadowOpacity = 0.35
-            layer?.shadowRadius = 9
-            layer?.shadowOffset = NSSize(width: 0, height: -2.5)
+            layer?.shadowColor = NSColor.black.cgColor
+            layer?.shadowOpacity = 0.1
+            layer?.shadowRadius = 6
+            layer?.shadowOffset = NSSize(width: 0, height: -1.5)
         }
     }
 

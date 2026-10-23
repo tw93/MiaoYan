@@ -11,7 +11,7 @@
   height: 85%;
   background-color: rgba(0, 0, 0, 0.15);
   border-radius: 1px;
-  transition: background-color 0.25s ease;
+  transition: background-color 0.25s ease-out;
 }
 
 .toc-nav .is-active-link::before {
@@ -40,10 +40,9 @@ body.darkmode .toc-nav .toc-link:hover::before {
   z-index: 999;
   cursor: pointer;
   border-radius: 3px;
-  background: linear-gradient(to bottom, rgba(28, 93, 51, 0.85), rgba(28, 93, 51, 0.45));
-  box-shadow: 0 0 0 1px rgba(28, 93, 51, 0.30), 0 0 6px rgba(28, 93, 51, 0.35);
+  background: var(--primary-color, #1C5D33);
   opacity: 0.12;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.25s ease-out;
 }
 
 .toc-hover-trigger.hidden {
@@ -52,8 +51,7 @@ body.darkmode .toc-nav .toc-link:hover::before {
 }
 
 body.darkmode .toc-hover-trigger {
-  background: linear-gradient(to bottom, rgba(84, 197, 159, 0.95), rgba(84, 197, 159, 0.52));
-  box-shadow: 0 0 0 1px rgba(84, 197, 159, 0.55), 0 0 10px rgba(84, 197, 159, 0.65);
+  background: #54C59F;
   opacity: 0.12;
 }
 /* TOC Navigation Container */
@@ -66,7 +64,7 @@ body.darkmode .toc-hover-trigger {
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--bg-color, #FFFFFF);
-  border: 1px solid var(--border-color, #e6e6e6);
+  border: 0.5px solid var(--border-color, #e6e6e6);
   border-radius: 10px;
   padding: 36px 8px 14px 14px;
   font-size: 13px;
@@ -75,8 +73,8 @@ body.darkmode .toc-hover-trigger {
   opacity: 0;
   transform: translateX(8px) translateY(0);
   pointer-events: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.45s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
 }
 
 .toc-nav.active {
@@ -87,8 +85,8 @@ body.darkmode .toc-hover-trigger {
 
 body.darkmode .toc-nav {
   background: #282828;
-  border: 1px solid var(--border-color, #454545);
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.40);
+  border: 0.5px solid var(--border-color, #454545);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 /* TOC Scrollbar */
 .toc-nav::-webkit-scrollbar {
@@ -178,7 +176,7 @@ body.darkmode .toc-nav .is-active-link {
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  transition: opacity 0.2s ease, background-color 0.2s ease;
+  transition: opacity 0.25s ease-out, background-color 0.25s ease-out;
 }
 
 .toc-pin-btn:hover {
@@ -208,5 +206,5 @@ body.darkmode .toc-nav.pinned .toc-pin-btn {
 }
 
 .pin-icon {
-  transition: transform 0.2s ease;
+  transition: transform 0.25s ease-out;
 }
