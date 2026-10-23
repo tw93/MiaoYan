@@ -387,8 +387,7 @@ enum MiaoYanAlert {
         alert.messageText = message
         alert.informativeText = informativeText ?? ""
         alert.alertStyle = style
-        // The bird on a round sand disc, the way Mole's mark sits, rather
-        // than the app icon with its tile and shadow.
+        // The bird alone on the paper, without the app icon's tile and shadow.
         if let bird = NSImage(named: "alertIcon") {
             alert.icon = bird
         }
