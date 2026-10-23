@@ -168,7 +168,7 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         let alert = MiaoYanAlert.make(
             message: I18n.str("Install the font first"), informativeText: I18n.str(guidance),
             buttons: [I18n.str("Download Font"), I18n.str("Cancel")])
-        MiaoYanAlert.softenTitle(of: alert)
+        MiaoYanAlert.style(alert)
         guard alert.runModal() == .alertFirstButtonReturn,
             let url = URL(string: FontCatalog.retiredBundledDownloadURL)
         else { return }

@@ -27,7 +27,7 @@ extension ShellModel {
             message: I18n.str("New project"), style: .informational, buttons: [I18n.str("Add"), I18n.str("Cancel")])
         alert.accessoryView = field
         alert.window.initialFirstResponder = field
-        MiaoYanAlert.softenTitle(of: alert)
+        MiaoYanAlert.style(alert)
         alert.beginSheetModal(for: window) { [weak self] response in
             guard response == .alertFirstButtonReturn else { return }
             self?.createFolder(named: field.stringValue, parent: parent)

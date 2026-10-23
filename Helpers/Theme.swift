@@ -387,7 +387,7 @@ enum MiaoYanAlert {
         alert.messageText = message
         alert.informativeText = informativeText ?? ""
         alert.alertStyle = style
-        // The bird on a round paper disc, the way Mole's mark sits, rather
+        // The bird on a round sand disc, the way Mole's mark sits, rather
         // than the app icon with its tile and shadow.
         if let bird = NSImage(named: "alertIcon") {
             alert.icon = bird
@@ -407,10 +407,11 @@ enum MiaoYanAlert {
         return alert
     }
 
-    /// NSAlert sets its title in label black; take it down to the shell's
-    /// primary ink. The title field is found by its text, so if AppKit ever
-    /// lays the alert out differently this simply does nothing.
-    static func softenTitle(of alert: NSAlert) {
+    /// Puts the alert on the app's paper: the title in the shell's primary
+    /// ink instead of label black, and, on macOS 26, the paper over the
+    /// grey glass the alert sits on. Views are found by their text and type,
+    /// so if AppKit lays the alert out differently this simply does nothing.
+    static func style(_ alert: NSAlert) {
         alert.layout()
         guard let content = alert.window.contentView else { return }
         var stack = [content]
@@ -422,10 +423,21 @@ enum MiaoYanAlert {
                 title.addAttribute(.foregroundColor, value: Theme.Ink.primary, range: NSRange(location: 0, length: title.length))
                 field.attributedStringValue = title
                 field.textColor = Theme.Ink.primary
-                return
+                break
             }
             stack.append(contentsOf: view.subviews)
         }
+        // The glass is a sibling under the content; matching its corner keeps
+        // the system's shape and shadow while the paper covers the grey.
+        let cornerKey = "cornerRadius"
+        guard
+            let glass = content.superview?.subviews.first(where: { String(describing: type(of: $0)).contains("Glass") }),
+            let radius = glass.value(forKey: cornerKey) as? CGFloat
+        else { return }
+        content.wantsLayer = true
+        content.layer?.backgroundColor = Theme.paper.resolvedColor(for: alert.window.effectiveAppearance).cgColor
+        content.layer?.cornerRadius = radius
+        content.layer?.cornerCurve = .continuous
     }
 
     static func present(
@@ -433,7 +445,7 @@ enum MiaoYanAlert {
         for window: NSWindow?,
         completion: @escaping (NSApplication.ModalResponse) -> Void
     ) {
-        softenTitle(of: alert)
+        style(alert)
         if let window, window.isVisible {
             alert.beginSheetModal(for: window, completionHandler: completion)
         } else {
