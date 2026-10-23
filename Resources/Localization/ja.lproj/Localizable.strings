@@ -334,3 +334,9 @@
 "No unused attachments" = "未使用の添付ファイルはありません";
 "Title not saved. Click it again to rename" = "タイトルは保存されていません。もう一度クリックすると名前を変更できます";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "MiaoYan はこのフォルダを読み取れません。クラウドドライブにある場合は、そのアプリを開いて Finder にフォルダが表示されていることを確認してください。";
+"Keep this window above other apps" = "ウインドウを常に他のアプリより手前に表示";
+"Where the preview starts when you open it" = "プレビューを開いたときの表示位置";
+"How wide the text runs in the preview" = "プレビューで本文が広がる最大幅";
+"Used in the editor" = "エディタで使用";
+"Used in the preview and exports" = "プレビューと書き出しで使用";
+"The folder your notes are stored in" = "ノートを保存するフォルダ";

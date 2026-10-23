@@ -311,3 +311,9 @@
 "No unused attachments" = "沒有未使用的附件";
 "Title not saved. Click it again to rename" = "標題未儲存，再點一次標題即可重新命名";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言無法讀取這個檔案夾，如果它在雲端硬碟裡，開啟雲端硬碟 App 並確認它在 Finder 中可見。";
+"Keep this window above other apps" = "視窗始終顯示在其他 App 上方";
+"Where the preview starts when you open it" = "打開預覽時從哪裡開始顯示";
+"How wide the text runs in the preview" = "預覽中內文的最大寬度";
+"Used in the editor" = "用於編輯區";
+"Used in the preview and exports" = "用於預覽和匯出";
+"The folder your notes are stored in" = "筆記所在的檔案夾";

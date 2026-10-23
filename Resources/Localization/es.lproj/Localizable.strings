@@ -334,3 +334,9 @@
 "No unused attachments" = "No hay archivos adjuntos sin usar";
 "Title not saved. Click it again to rename" = "Título no guardado. Haz clic de nuevo para renombrarlo";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "MiaoYan no puede leer esta carpeta. Si está en una unidad en la nube, abre su app y confirma que la carpeta aparece en Finder.";
+"Keep this window above other apps" = "La ventana queda por encima de otras apps";
+"Where the preview starts when you open it" = "Dónde empieza la vista previa al abrirla";
+"How wide the text runs in the preview" = "Ancho máximo del texto en la vista previa";
+"Used in the editor" = "Para el editor";
+"Used in the preview and exports" = "Para la vista previa y las exportaciones";
+"The folder your notes are stored in" = "La carpeta donde se guardan tus notas";

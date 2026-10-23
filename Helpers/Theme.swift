@@ -169,9 +169,10 @@ enum Theme {
 
     /// Kami's warm text greys, read by the shell and the Settings window
     /// alike: primary to read, secondary for supporting text, tertiary for
-    /// meta and icons.
+    /// meta and icons. Primary is the product sites' 长石灰 `#363433`;
+    /// `#141413` read too black on the paper.
     enum Ink {
-        static let primary = dynamic(0x141413, 0xF2F0EA)
+        static let primary = dynamic(0x363433, 0xF2F0EA)
         static let secondary = dynamic(0x504E49, 0xB5B1A7)
         static let tertiary = dynamic(0x6B6A64, 0x8E8B83)
     }
@@ -386,11 +387,11 @@ enum MiaoYanAlert {
         alert.messageText = message
         alert.informativeText = informativeText ?? ""
         alert.alertStyle = style
-
         // The bird alone, without the app icon's tile and its shadow.
         if let bird = NSImage(named: "alertIcon") {
             alert.icon = bird
         }
+
         for title in buttons {
             alert.addButton(withTitle: title)
         }
@@ -405,7 +406,6 @@ enum MiaoYanAlert {
         return alert
     }
 
-    static func present(
     /// NSAlert sets its title in label black; take it down to the shell's
     /// primary ink. The title field is found by its text, so if AppKit ever
     /// lays the alert out differently this simply does nothing.
@@ -427,12 +427,13 @@ enum MiaoYanAlert {
         }
     }
 
+    static func present(
         _ alert: NSAlert,
         for window: NSWindow?,
         completion: @escaping (NSApplication.ModalResponse) -> Void
     ) {
-        if let window, window.isVisible {
         softenTitle(of: alert)
+        if let window, window.isVisible {
             alert.beginSheetModal(for: window, completionHandler: completion)
         } else {
             completion(alert.runModal())

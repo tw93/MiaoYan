@@ -59,8 +59,8 @@ final class EditorPrefsViewController: BasePrefsViewController {
             ],
             [
                 lineBreakRow,
-                PrefsRowView(title: I18n.str("Open Preview At"), detail: "", controls: [previewLocationDropdown]),
-                PrefsRowView(title: I18n.str("Preview Width"), detail: "", controls: [previewWidthDropdown]),
+                PrefsRowView(title: I18n.str("Open Preview At"), detail: I18n.str("Where the preview starts when you open it"), controls: [previewLocationDropdown]),
+                PrefsRowView(title: I18n.str("Preview Width"), detail: I18n.str("How wide the text runs in the preview"), controls: [previewWidthDropdown]),
             ],
         ])
     }

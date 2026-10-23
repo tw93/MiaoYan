@@ -71,7 +71,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
                 PrefsRowView(title: I18n.str("Button Display"), detail: I18n.str("When the title bar buttons show"), controls: [buttonDisplayDropdown]),
             ],
             [
-                PrefsRowView(title: I18n.str("Always On Top"), detail: "", controls: [alwaysOnTopSwitch]),
+                PrefsRowView(title: I18n.str("Always On Top"), detail: I18n.str("Keep this window above other apps"), controls: [alwaysOnTopSwitch]),
                 PrefsRowView(title: I18n.str("Activate Shortcut"), detail: I18n.str("Bring MiaoYan to the front from any app"), controls: [shortcutRecorder]),
             ],
         ])
@@ -93,7 +93,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     /// path, with the middle truncated when it is still too long.
     private func showStoragePath(_ path: String?) {
         guard let path, !path.isEmpty else {
-            storageRow.detail = ""
+            storageRow.detail = I18n.str("The folder your notes are stored in")
             return
         }
         let home = FileManager.default.homeDirectoryForCurrentUser.path

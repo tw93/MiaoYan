@@ -19,8 +19,8 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
 
         addSections([
             [
-                PrefsRowView(title: I18n.str("Editor Font"), detail: "", controls: [editorFont, editorSizePopUp]),
-                PrefsRowView(title: I18n.str("Preview Font"), detail: "", controls: [previewFont, previewSizePopUp]),
+                PrefsRowView(title: I18n.str("Editor Font"), detail: I18n.str("Used in the editor"), controls: [editorFont, editorSizePopUp]),
+                PrefsRowView(title: I18n.str("Preview Font"), detail: I18n.str("Used in the preview and exports"), controls: [previewFont, previewSizePopUp]),
                 PrefsRowView(title: I18n.str("Code Font"), detail: I18n.str("Used in fenced code blocks"), controls: [codeFont]),
                 PrefsRowView(title: I18n.str("Interface Font"), detail: I18n.str("Used in the sidebar and note list"), controls: [windowFont]),
             ],
@@ -160,8 +160,6 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
     }
 
     private func presentRetiredFontGuidance() {
-        let alert = NSAlert()
-        alert.messageText = I18n.str("Install the font first")
         // Joined at runtime into the exact key the strings files use.
         let guidance =
             "MiaoYan does not bundle this font. "

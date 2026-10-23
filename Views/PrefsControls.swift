@@ -27,7 +27,7 @@ enum PrefsMetrics {
 
     static let titleFont = NSFont.systemFont(ofSize: 14, weight: .medium)
     static let detailFont = NSFont.systemFont(ofSize: 12)
-    static let controlFont = NSFont.systemFont(ofSize: 12, weight: .semibold)
+    static let controlFont = NSFont.systemFont(ofSize: 12)
     static let tabFont = NSFont.systemFont(ofSize: 13, weight: .medium)
 }
 
@@ -189,7 +189,7 @@ private final class HoverTracker {
 
 // MARK: - Dropdown
 
-/// A capsule dropdown: the selected value in 11pt semibold and a small
+/// A capsule dropdown: the selected value in 12pt regular and a small
 /// chevron on a 6% fill. It stays an `NSPopUpButton`, so menus, sections,
 /// disabled headings and `menuNeedsUpdate` work as before; only the drawing
 /// is ours.
@@ -219,6 +219,9 @@ final class PrefsDropdown: NSPopUpButton {
 
     override func drawFocusRingMask() { PrefsFocusRing.capsule(in: bounds) }
     override var focusRingMaskBounds: NSRect { bounds }
+    /// The pop-up bezel's insets would widen the frame past what `draw`
+    /// fills and push the chevron away from the value.
+    override var alignmentRectInsets: NSEdgeInsets { NSEdgeInsetsZero }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
@@ -321,7 +324,8 @@ final class PrefsDropdown: NSPopUpButton {
 
 // MARK: - Pill button
 
-/// The compact action button: accent text on a 12% accent capsule.
+/// The compact action button, in the dropdown's grey capsule so every
+/// control in the column reads alike.
 @MainActor
 final class PrefsPillButton: NSButton {
     private let hover = HoverTracker()
@@ -356,11 +360,9 @@ final class PrefsPillButton: NSButton {
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        let accent = Theme.Settings.accent.resolvedColor(for: effectiveAppearance)
-        let pressed = isHighlighted
         let rect = NSRect(x: 0, y: (bounds.height - PrefsMetrics.controlHeight) / 2, width: bounds.width, height: PrefsMetrics.controlHeight)
-        drawCapsule(in: rect, color: accent.withAlphaComponent(pressed ? 0.24 : isHovered ? 0.18 : 0.12))
-        drawCentredText(title, in: rect, color: accent, font: PrefsMetrics.controlFont)
+        drawCapsule(in: rect, color: isHighlighted || isHovered ? Theme.Settings.controlHoverFill : Theme.Settings.controlFill)
+        drawCentredText(title, in: rect, color: Theme.Settings.secondaryText, font: PrefsMetrics.controlFont)
     }
 
     override func updateTrackingAreas() {
