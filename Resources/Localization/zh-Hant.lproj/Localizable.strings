@@ -306,7 +306,7 @@
 "Presentation Font Size" = "簡報字體大小";
 "Used for MiaoYan PPT slides" = "用於妙言 PPT 投影片";
 "All Notes" = "全部筆記";
-"Move the folder “%@” and everything in it to the Trash?" = "將檔案夾「%@」及其中的全部檔案移入廢紙簍？";
+"Move the folder “%@” and everything in it to the Trash?" = "將「%@」檔案夾連同裡面的內容一起移入廢紙簍？";
 "Move %d unused attachment(s) to Trash?" = "將 %d 個未使用的附件移入廢紙簍？";
 "No unused attachments" = "沒有未使用的附件";
 "Title not saved. Click it again to rename" = "標題未儲存，再點一次標題即可重新命名";

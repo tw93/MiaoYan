@@ -1107,6 +1107,7 @@ class SidebarProjectView: NSOutlineView,
         )
         alert.accessoryView = field
         alert.window.initialFirstResponder = field
+        MiaoYanAlert.softenTitle(of: alert)
         alert.beginSheetModal(for: window) { [weak self] (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 self?.addChild(field: field, project: parentProject)

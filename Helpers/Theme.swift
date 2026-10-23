@@ -387,6 +387,10 @@ enum MiaoYanAlert {
         alert.informativeText = informativeText ?? ""
         alert.alertStyle = style
 
+        // The bird alone, without the app icon's tile and its shadow.
+        if let bird = NSImage(named: "alertIcon") {
+            alert.icon = bird
+        }
         for title in buttons {
             alert.addButton(withTitle: title)
         }
@@ -402,11 +406,33 @@ enum MiaoYanAlert {
     }
 
     static func present(
+    /// NSAlert sets its title in label black; take it down to the shell's
+    /// primary ink. The title field is found by its text, so if AppKit ever
+    /// lays the alert out differently this simply does nothing.
+    static func softenTitle(of alert: NSAlert) {
+        alert.layout()
+        guard let content = alert.window.contentView else { return }
+        var stack = [content]
+        while let view = stack.popLast() {
+            if let field = view as? NSTextField, field.stringValue == alert.messageText {
+                // The title carries its own colour in its attributed string,
+                // which wins over `textColor`.
+                let title = NSMutableAttributedString(attributedString: field.attributedStringValue)
+                title.addAttribute(.foregroundColor, value: Theme.Ink.primary, range: NSRange(location: 0, length: title.length))
+                field.attributedStringValue = title
+                field.textColor = Theme.Ink.primary
+                return
+            }
+            stack.append(contentsOf: view.subviews)
+        }
+    }
+
         _ alert: NSAlert,
         for window: NSWindow?,
         completion: @escaping (NSApplication.ModalResponse) -> Void
     ) {
         if let window, window.isVisible {
+        softenTitle(of: alert)
             alert.beginSheetModal(for: window, completionHandler: completion)
         } else {
             completion(alert.runModal())

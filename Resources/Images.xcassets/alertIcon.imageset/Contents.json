@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "filename" : "alertIcon.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "alertIcon@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
