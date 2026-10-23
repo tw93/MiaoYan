@@ -917,13 +917,12 @@ final class ShellModel {
                 return
             }
             guard !orphans.isEmpty else {
-                host.toast(message: I18n.str("No orphan attachments found"))
+                host.toast(message: I18n.str("No unused attachments"))
                 return
             }
             MiaoYanAlert.confirm(
-                message: I18n.str("Clean Orphan Attachments"),
-                informativeText: String(format: I18n.str("Detected %d unused attachment(s). Move them to Trash?"), orphans.count),
-                confirmTitle: I18n.str("Clean"),
+                message: String(format: I18n.str("Move %d unused attachment(s) to Trash?"), orphans.count),
+                confirmTitle: I18n.str("Move to Trash"),
                 for: host.view.window
             ) { confirmed in
                 guard confirmed else { return }

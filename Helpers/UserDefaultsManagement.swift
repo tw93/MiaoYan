@@ -76,7 +76,7 @@ enum StorageLocationValidationError: Error {
         case .notDirectory:
             return I18n.str("Selected storage folder is not a folder.")
         case .cannotRead:
-            return I18n.str("MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder.")
+            return I18n.str("MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder.")
         case .cannotWrite:
             return I18n.str("MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app.")
         }

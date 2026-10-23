@@ -489,14 +489,13 @@ extension ViewController {
                 return
             }
             if orphanAttachments.isEmpty {
-                vc.toast(message: I18n.str("No orphan attachments found"))
+                vc.toast(message: I18n.str("No unused attachments"))
                 return
             }
 
             MiaoYanAlert.confirm(
-                message: I18n.str("Clean Orphan Attachments"),
-                informativeText: String(format: I18n.str("Detected %d unused attachment(s). Move them to Trash?"), orphanAttachments.count),
-                confirmTitle: I18n.str("Clean"),
+                message: String(format: I18n.str("Move %d unused attachment(s) to Trash?"), orphanAttachments.count),
+                confirmTitle: I18n.str("Move to Trash"),
                 for: vc.view.window
             ) { confirmed in
                 guard confirmed else { return }

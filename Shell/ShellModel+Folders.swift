@@ -136,9 +136,8 @@ extension ShellModel {
     func confirmDeleteFolder(_ project: Project) {
         guard !project.isDefault, !project.isRoot, !isExporting, let window = host?.view.window else { return }
         MiaoYanAlert.confirm(
-            message: String(format: I18n.str("Are you sure you want to remove project \"%@\" and all files inside?"), project.label),
-            informativeText: I18n.str("This action cannot be undone."),
-            confirmTitle: I18n.str("Remove"),
+            message: String(format: I18n.str("Move the folder \u{201C}%@\u{201D} and everything in it to the Trash?"), project.label),
+            confirmTitle: I18n.str("Move to Trash"),
             for: window
         ) { [weak self] confirmed in
             guard confirmed, let self, let trashURL = self.storage.trashItem(url: project.url) else { return }

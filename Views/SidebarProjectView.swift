@@ -1051,12 +1051,9 @@ class SidebarProjectView: NSOutlineView,
                 return
             }
 
-            let messageText = I18n.str("Are you sure you want to remove project \"%@\" and all files inside?")
-
             MiaoYanAlert.confirm(
-                message: String(format: messageText, project.label),
-                informativeText: I18n.str("This action cannot be undone."),
-                confirmTitle: I18n.str("Remove"),
+                message: String(format: I18n.str("Move the folder \u{201C}%@\u{201D} and everything in it to the Trash?"), project.label),
+                confirmTitle: I18n.str("Move to Trash"),
                 for: w
             ) { [weak vc, weak v] confirmed in
                 guard let vc = vc, let v = v else { return }

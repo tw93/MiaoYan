@@ -8,7 +8,6 @@
 "Move %d note(s) to the system Trash?" = "¿Mover %d nota(s) a la Papelera del sistema?";
 
 /* No comment provided by engineer. */
-"Are you sure you want to remove project \"%@\" and all files inside?" = "¿Estás seguro de que deseas eliminar el proyecto \"%@\" y todos los archivos en su interior?";
 
 /* Delete menu */
 "Cancel" = "Cancelar";
@@ -113,7 +112,6 @@
 "Quit MiaoYan" = "Salir de MiaoYan";
 
 /* Delete menu */
-"Remove" = "Eliminar";
 
 /* No comment provided by engineer. */
 "Move to Trash" = "Mover a la Papelera";
@@ -134,7 +132,6 @@
 /* Delete menu */
 
 /* Delete menu */
-"This action cannot be undone." = "Esta acción no se puede deshacer.";
 
 /* No comment provided by engineer. */
 "Toggle Preview" = "Alternar Vista Previa";
@@ -170,7 +167,6 @@
 "Exit preview to format" = "El formato solo es posible después de salir del modo de vista previa";
 "Saved to Downloads" = "Guardado en la carpeta de Descargas";
 "Saved" = "Guardado";
-"Click the title again to rename" = "Título no guardado. Haz clic en el título y vuelve a editarlo";
 "Changed on disk. Your version was backed up" = "Cambio externo detectado. Copia local respaldada";
 "Can't switch notes while exporting" = "No se puede cambiar de nota durante la exportación";
 "Couldn't move %d note(s) to Trash" = "No se pudo mover %d nota(s) a la Papelera";
@@ -211,9 +207,6 @@
 "Replace All" = "Reemplazar Todo";
 
 /* Clean attachments */
-"Clean Orphan Attachments" = "Limpiar Archivos Adjuntos Huérfanos";
-"Detected %d unused attachment(s). Move them to Trash?" = "Se detectaron %d archivo(s) adjunto(s) sin usar. ¿Moverlos a la Papelera?";
-"No orphan attachments found" = "No se encontraron archivos adjuntos huérfanos";
 "Removed %d unused attachment(s)" = "Se eliminaron %d archivo(s) adjunto(s) sin usar";
 "Some attachments could not be removed" = "Algunos archivos adjuntos no pudieron ser eliminados";
 "Some notes could not be read, so no attachments were cleaned" = "No se pudieron leer algunas notas, así que no se limpió ningún adjunto";
@@ -253,7 +246,6 @@
 "No Markdown files to import" = "No se encontraron archivos Markdown importables";
 "Could not use this folder" = "No se pudo usar esta carpeta";
 "Selected storage folder is not a folder." = "La ubicación seleccionada no es una carpeta.";
-"MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "MiaoYan no puede leer esta carpeta. Si es una unidad en la nube, abre la app del proveedor y confirma que la carpeta aparece en Finder.";
 "MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "MiaoYan no puede escribir en esta carpeta. Elige una carpeta editable o activa el acceso sin conexión en la app de la nube.";
 
 /* Reload Note */
@@ -337,3 +329,8 @@
 "Presentation Font Size" = "Tamaño de fuente de presentación";
 "Used for MiaoYan PPT slides" = "Para las diapositivas de MiaoYan PPT";
 "All Notes" = "Todas las notas";
+"Move the folder “%@” and everything in it to the Trash?" = "¿Mover la carpeta “%@” y todo su contenido a la Papelera?";
+"Move %d unused attachment(s) to Trash?" = "¿Mover %d archivo(s) adjunto(s) sin usar a la Papelera?";
+"No unused attachments" = "No hay archivos adjuntos sin usar";
+"Title not saved. Click it again to rename" = "Título no guardado. Haz clic de nuevo para renombrarlo";
+"MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "MiaoYan no puede leer esta carpeta. Si está en una unidad en la nube, abre su app y confirma que la carpeta aparece en Finder.";

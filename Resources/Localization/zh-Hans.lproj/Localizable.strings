@@ -8,7 +8,6 @@
 "Move %d note(s) to the system Trash?" = "将 %d 篇笔记移入系统废纸篓？";
 
 /* No comment provided by engineer. */
-"Are you sure you want to remove project \"%@\" and all files inside?" = "确定要删除文件夹“%@”及其包含的所有文件吗？";
 
 /* Delete menu */
 "Cancel" = "取消";
@@ -74,7 +73,6 @@
 "Quit MiaoYan" = "退出妙言";
 
 /* Delete menu */
-"Remove" = "移除";
 
 /* No comment provided by engineer. */
 "Move to Trash" = "移入废纸篓";
@@ -96,7 +94,6 @@
 /* Delete menu */
 
 /* Delete menu */
-"This action cannot be undone." = "此操作无法恢复。";
 
 /* No comment provided by engineer. */
 "Toggle Preview" = "预览";
@@ -121,9 +118,6 @@
 
 
 /* Clean attachments */
-"Clean Orphan Attachments" = "清理孤立附件";
-"Detected %d unused attachment(s). Move them to Trash?" = "检测到 %d 个未被引用的附件，是否移入废纸篓？";
-"No orphan attachments found" = "没有检测到孤立附件";
 "Removed %d unused attachment(s)" = "已清理%d个无引用附件";
 "Some attachments could not be removed" = "部分附件无法清理";
 "Some notes could not be read, so no attachments were cleaned" = "部分笔记读取失败，这次没有清理附件";
@@ -143,7 +137,6 @@
 "Exit preview to format" = "退出预览后才能排版";
 "Saved to Downloads" = "已导出到下载文件夹";
 "Saved" = "已保存";
-"Click the title again to rename" = "标题未保存，请再次点击标题后修改";
 "Changed on disk. Your version was backed up" = "检测到外部修改，本地内容已备份";
 "Can't switch notes while exporting" = "导出过程中无法切换笔记";
 "Couldn't move %d note(s) to Trash" = "%d 篇笔记未能移入废纸篓，可能受权限或同步限制";
@@ -256,7 +249,6 @@
 "No Markdown files to import" = "没有可导入的 Markdown 文件";
 "Could not use this folder" = "无法使用这个文件夹";
 "Selected storage folder is not a folder." = "所选存储位置不是文件夹。";
-"MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "妙言无法读取这个文件夹。如果这是云盘目录，请打开云盘应用，确认该文件夹已在访达中可见。";
 "MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "妙言无法写入这个文件夹。请选择可写文件夹，或在云盘应用中开启离线访问。";
 
 /* Reload Note */
@@ -340,3 +332,8 @@
 "Presentation Font Size" = "演示字号";
 "Used for MiaoYan PPT slides" = "用于妙言 PPT 幻灯片";
 "All Notes" = "全部笔记";
+"Move the folder “%@” and everything in it to the Trash?" = "将文件夹“%@”及其中的全部文件移到废纸篓？";
+"Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移到废纸篓？";
+"No unused attachments" = "没有未使用的附件";
+"Title not saved. Click it again to rename" = "标题未保存，再点一次标题即可重命名";
+"MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在访达中可见。";

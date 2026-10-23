@@ -13,7 +13,6 @@
 "Exit preview to format" = "退出預覽後才能排版";
 "Saved to Downloads" = "已經輸出到下載目錄";
 "Saved" = "已儲存";
-"Click the title again to rename" = "標題未儲存，請再次點擊標題後修改";
 "Changed on disk. Your version was backed up" = "檢測到外部修改，本地內容已備份";
 "Can't switch notes while exporting" = "匯出過程中無法切換筆記";
 "Couldn't move %d note(s) to Trash" = "%d 篇筆記未能移入垃圾桶，可能受權限或同步限制";
@@ -38,7 +37,6 @@
 "Move %d note(s) to the system Trash?" = "將 %d 篇筆記移入系統廢紙簍？";
 
 /* No comment provided by engineer. */
-"Are you sure you want to remove project \"%@\" and all files inside?" = "您確定要刪除「%@」專案及其所有檔案嗎？";
 
 /* Delete menu */
 "Cancel" = "取消";
@@ -117,7 +115,6 @@
 "Auto" = "自動";
 
 /* Delete menu */
-"Remove" = "移除";
 
 /* No comment provided by engineer. */
 "Remove Link" = "移除連結";
@@ -143,7 +140,6 @@
 /* Delete menu */
 
 /* Delete menu */
-"This action cannot be undone." = "本動作不可復原。";
 
 /* Sidebar label */
 "Trash" = "垃圾桶";
@@ -190,9 +186,6 @@
 "Replace All" = "全部取代";
 
 /* Clean attachments */
-"Clean Orphan Attachments" = "清理孤立附件";
-"Detected %d unused attachment(s). Move them to Trash?" = "檢測到%d個未被引用的附件，是否移至垃圾桶？";
-"No orphan attachments found" = "沒有檢測到孤立附件";
 "Removed %d unused attachment(s)" = "已清理%d個無引用附件";
 "Some attachments could not be removed" = "部分附件無法清理";
 "Some notes could not be read, so no attachments were cleaned" = "部分筆記讀取失敗，這次沒有清理附件";
@@ -232,7 +225,6 @@
 "No Markdown files to import" = "沒有找到可匯入的 Markdown 檔案";
 "Could not use this folder" = "無法使用這個檔案夾";
 "Selected storage folder is not a folder." = "所選儲存位置不是檔案夾。";
-"MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "妙言無法讀取這個檔案夾。如果這是雲端硬碟目錄，請開啟雲端硬碟 App，確認該檔案夾已在 Finder 中可見。";
 "MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "妙言無法寫入這個檔案夾。請選擇可寫入的檔案夾，或在雲端硬碟 App 中開啟離線存取。";
 
 /* Reload Note */
@@ -314,3 +306,8 @@
 "Presentation Font Size" = "簡報字體大小";
 "Used for MiaoYan PPT slides" = "用於妙言 PPT 投影片";
 "All Notes" = "全部筆記";
+"Move the folder “%@” and everything in it to the Trash?" = "將檔案夾「%@」及其中的全部檔案移到廢紙簍？";
+"Move %d unused attachment(s) to Trash?" = "將 %d 個未使用的附件移到廢紙簍？";
+"No unused attachments" = "沒有未使用的附件";
+"Title not saved. Click it again to rename" = "標題未儲存，再點一次標題即可重新命名";
+"MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言無法讀取這個檔案夾，如果它在雲端硬碟裡，開啟雲端硬碟 App 並確認它在 Finder 中可見。";

@@ -1538,7 +1538,7 @@ extension ViewController {
                 let currentNoteTitle = note.getTitleWithoutLabel()
                 if titleToSave != currentNoteTitle {
                     if !titleToSave.isEmpty {
-                        toast(message: I18n.str("Click the title again to rename"), style: .failure)
+                        toast(message: I18n.str("Title not saved. Click it again to rename"), style: .failure)
                     }
                     return
                 }
