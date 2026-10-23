@@ -933,7 +933,16 @@ class Storage {
     }
 
     private func directoryContentModifiedAt(_ url: URL) -> Date? {
-        (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
+        Self.contentModifiedAt(url)
+    }
+
+    /// A URL caches its resource values, and a project keeps one URL for its
+    /// whole life: read without clearing, the date never moved, so a local
+    /// folder looked unchanged and `loadMissingNotes` skipped its rescan.
+    nonisolated static func contentModifiedAt(_ url: URL) -> Date? {
+        var url = url
+        url.removeAllCachedResourceValues()
+        return (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
     }
 
     private struct DirectoryReadResult {
