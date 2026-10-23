@@ -333,7 +333,7 @@ class FileSystemEventManager {
             let editorString = buffer.text
             if editorString != fsContent.string {
                 writeConflictBackup(for: note, editorContent: editorString)
-                delegate?.fsToast(I18n.str("External change detected. Local copy backed up~"), style: .failure)
+                delegate?.fsToast(I18n.str("Changed on disk. Your version was backed up"), style: .failure)
             }
         }
 

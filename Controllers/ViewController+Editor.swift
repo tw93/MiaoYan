@@ -600,7 +600,7 @@ extension ViewController {
         }
         if !sessionIsExportingPPT {
             DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
-                self.toast(message: I18n.str("Press ESC key to exit~"))
+                self.toast(message: I18n.str("Press Esc to exit"))
             }
         }
     }
@@ -664,7 +664,7 @@ extension ViewController {
             return true
         }
         if needToast {
-            toast(message: I18n.str("No delimiter --- identification, Cannot use MiaoYan PPT~"), style: .failure)
+            toast(message: I18n.str("Separate slides with --- to present"), style: .failure)
         }
         return false
     }
@@ -734,7 +734,7 @@ extension ViewController {
         }
         if !sessionIsExportingPPT {
             DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) { [self] in
-                toast(message: I18n.str("Press ESC key to exit~"))
+                toast(message: I18n.str("Press Esc to exit"))
             }
         }
     }
@@ -806,7 +806,7 @@ extension ViewController {
     func formatText() {
         if sessionPreviewMode {
             toast(
-                message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure
+                message: I18n.str("Exit preview to format"), style: .failure
             )
             return
         }
@@ -859,7 +859,7 @@ extension ViewController {
                     await MainActor.run {
                         guard self.formatRequestID == requestID else { return }
                         AppDelegate.trackError(error, context: "ViewController+Editor.format")
-                        self.toast(message: I18n.str("Formatting failed, please try again"), style: .failure)
+                        self.toast(message: I18n.str("Formatting failed"), style: .failure)
                         self.isFormatting = false
                         self.updateFormatButtonState(isFormatting: false)
                         self.formatTask = nil
@@ -911,7 +911,7 @@ extension ViewController {
 
         restoreEditorScrollPosition(top)
 
-        toast(message: I18n.str("Automatic typesetting succeeded~"), style: .success)
+        toast(message: I18n.str("Formatted"), style: .success)
 
         if sessionSplitMode, let previewView = editArea.markdownView {
             previewView.updateContent(note: note)
@@ -951,7 +951,7 @@ extension ViewController {
     @IBAction func cleanTypography(_ sender: Any?) {
         if sessionPreviewMode {
             toast(
-                message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure
+                message: I18n.str("Exit preview to format"), style: .failure
             )
             return
         }
@@ -964,7 +964,7 @@ extension ViewController {
         let content = editArea.textStorage?.string ?? note.content.string
         let cleaned = TypographyCleaner.clean(content)
         guard cleaned != content else {
-            toast(message: I18n.str("Typography is already clean~"))
+            toast(message: I18n.str("Typography is already clean"))
             return
         }
 
@@ -981,7 +981,7 @@ extension ViewController {
         editArea.setSelectedRange(NSRange(location: min(cursor, (cleaned as NSString).length), length: 0))
         formatContent = cleaned
         restoreEditorScrollPosition(top)
-        toast(message: I18n.str("Typography cleaned up~"), style: .success)
+        toast(message: I18n.str("Typography cleaned up"), style: .success)
 
         if sessionSplitMode, let previewView = editArea.markdownView {
             previewView.updateContent(note: note)
@@ -1538,7 +1538,7 @@ extension ViewController {
                 let currentNoteTitle = note.getTitleWithoutLabel()
                 if titleToSave != currentNoteTitle {
                     if !titleToSave.isEmpty {
-                        toast(message: I18n.str("Click the title again to rename~"), style: .failure)
+                        toast(message: I18n.str("Click the title again to rename"), style: .failure)
                     }
                     return
                 }
@@ -1594,8 +1594,7 @@ extension ViewController {
 
     private func showAlert(for title: String) {
         MiaoYanAlert.show(
-            message: I18n.str("Please change the title"),
-            informativeText: String(format: I18n.str("This %@ under this folder already exists!"), title),
+            message: String(format: I18n.str("\u{201C}%@\u{201D} already exists in this folder"), title),
             for: view.window
         )
     }

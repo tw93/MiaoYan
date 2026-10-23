@@ -41,7 +41,7 @@ extension ViewController {
 
     public func toastExport(status: Bool) {
         if status {
-            toast(message: I18n.str("Saved to Downloads folder~"), style: .success)
+            toast(message: I18n.str("Saved to Downloads"), style: .success)
         } else {
             toast(message: I18n.str("Export failed"), style: .failure)
         }
@@ -60,22 +60,22 @@ extension ViewController {
     }
 
     public func toastNoTitle() {
-        toast(message: I18n.str("Please make sure your title exists~"), style: .failure)
+        toast(message: I18n.str("No note has this title"), style: .failure)
     }
 
     public func toastMoreTitle() {
-        toast(message: I18n.str("Found that there are multiple titles of this~"), style: .failure)
+        toast(message: I18n.str("Several notes share this title. Showing search results"), style: .failure)
     }
 
     public func toastImageSet(name: String) {
-        toast(message: String(format: I18n.str("Please make sure your Mac is installed %@ ~"), name), style: .failure)
+        toast(message: String(format: I18n.str("Install and set up %@ first"), name), style: .failure)
     }
 
     public func toastUpload(status: Bool) {
         if status {
-            toast(message: I18n.str("Image upload in progress~"))
+            toast(message: I18n.str("Uploading image…"))
         } else {
-            toast(message: I18n.str("Image upload failed, Use local~"), style: .failure)
+            toast(message: I18n.str("Upload failed. The local image was kept"), style: .failure)
         }
     }
 }

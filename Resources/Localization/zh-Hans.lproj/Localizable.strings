@@ -5,7 +5,7 @@
 "Add" = "添加";
 
 /* No comment provided by engineer. */
-"Are you sure you want to move %d note(s) to the system Trash?" = "确定要将%d个笔记移入系统废纸篓？";
+"Move %d note(s) to the system Trash?" = "将 %d 篇笔记移入系统废纸篓？";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "确定要删除文件夹“%@”及其包含的所有文件吗？";
@@ -94,7 +94,6 @@
 "Strikethrough" = "删除线";
 
 /* Delete menu */
-"The note(s) will be moved to the system Trash and can be recovered." = "笔记将被移入系统废纸篓，可在废纸篓中找回。";
 
 /* Delete menu */
 "This action cannot be undone." = "此操作无法恢复。";
@@ -137,31 +136,30 @@
 
 
 /* Toast messages without emoji prefix */
-"Automatic typesetting succeeded~" = "自动化排版完成~";
-"Typography cleaned up~" = "排版净化完成~";
-"Typography is already clean~" = "排版已经很干净了~";
-"Press ESC key to exit~" = "按 ESC 键退出演示~";
-"Format is only possible after exiting preview mode~" = "文档排版需要退出预览模式才可使用~";
-"Saved to Downloads folder~" = "已导出到下载目录~";
-"Saved~" = "已保存~";
-"Click the title again to rename~" = "标题未保存，请再次点击标题后修改";
-"External change detected. Local copy backed up~" = "检测到外部修改，本地内容已备份";
-"Switching notes is disabled during export~" = "导出过程中无法切换笔记~";
-"Failed to move %d note(s) to Trash~" = "%d 篇笔记未能移入废纸篓，可能受权限或同步限制";
-"Image upload in progress~" = "图片上传中~";
-"Image upload failed, Use local~" = "图片上传失败，已保留本地路径";
-"Please make sure your Mac is installed %@ ~" = "请确保你的 Mac 已安装并配置好 %@";
-"In single open mode, Exit with Command+Shift+W ~" = "独立编辑模式下，可按 ⌘⇧W 退出";
-"Please make sure your title exists~" = "未找到对应标题的笔记，请核对后重试";
-"Found that there are multiple titles of this~" = "存在多篇同名笔记，已为你发起搜索";
-"URL is successfully copied, Use it anywhere~" = "笔记链接已拷贝到剪贴板";
-"Path is successfully copied~" = "文件路径已拷贝到剪贴板";
-"No delimiter --- identification, Cannot use MiaoYan PPT~" = "未检测到 --- 分页符，无法开启幻灯片演示";
-"Formatting failed, please try again" = "排版失败，请重试";
+"Formatted" = "排版完成";
+"Typography cleaned up" = "排版已清理";
+"Typography is already clean" = "排版无需清理";
+"Press Esc to exit" = "按 Esc 退出演示";
+"Exit preview to format" = "退出预览后才能排版";
+"Saved to Downloads" = "已导出到下载文件夹";
+"Saved" = "已保存";
+"Click the title again to rename" = "标题未保存，请再次点击标题后修改";
+"Changed on disk. Your version was backed up" = "检测到外部修改，本地内容已备份";
+"Can't switch notes while exporting" = "导出过程中无法切换笔记";
+"Couldn't move %d note(s) to Trash" = "%d 篇笔记未能移入废纸篓，可能受权限或同步限制";
+"Uploading image…" = "图片上传中…";
+"Upload failed. The local image was kept" = "图片上传失败，已保留本地路径";
+"Install and set up %@ first" = "请先安装并配置 %@";
+"Press ⌘⇧W to leave single-file mode" = "按 ⌘⇧W 退出独立编辑模式";
+"No note has this title" = "没有找到这个标题的笔记";
+"Several notes share this title. Showing search results" = "有多篇同名笔记，已显示搜索结果";
+"Note link copied" = "已拷贝笔记链接";
+"File path copied" = "已拷贝文件路径";
+"Separate slides with --- to present" = "用 --- 分隔幻灯片后才能演示";
+"Formatting failed" = "排版失败";
+"“%@” already exists in this folder" = "这个文件夹里已有「%@」";
 "Formatting cancelled" = "已取消排版";
 
-"This %@ under this folder already exists!" = "当前文件夹下已存在同名 %@！";
-"Please change the title" = "请换一个标题";
 
 "Edit Link…" = "编辑链接";
 "Remove Link" = "移除链接";
@@ -212,7 +210,6 @@
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "图片上传成功";
-"Image upload failed, using local path" = "图片上传失败，使用本地路径";
 
 /* Image Preview Tip */
 "Hold ⌘ Command key to preview images" = "按住 ⌘ Command 键可预览图片";
@@ -256,7 +253,7 @@
 "Note \"%@\" already exists" = "笔记 \"%@\" 已存在";
 "Please select default storage directory" = "请选择默认存储目录";
 "Select Markdown files or folders to import" = "选择要导入的 Markdown 文件或文件夹";
-"No importable Markdown files found~" = "没有找到可导入的 Markdown 文件~";
+"No Markdown files to import" = "没有可导入的 Markdown 文件";
 "Could not use this folder" = "无法使用这个文件夹";
 "Selected storage folder is not a folder." = "所选存储位置不是文件夹。";
 "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "妙言无法读取这个文件夹。如果这是云盘目录，请打开云盘应用，确认该文件夹已在访达中可见。";
@@ -266,7 +263,7 @@
 "Reload Note" = "重新加载";
 "You have unsaved changes. Reload will discard them." = "你有未保存的更改，重新加载将丢弃它们。";
 "Reload" = "重新加载";
-"Note reloaded~" = "笔记已刷新~";
+"Note reloaded" = "笔记已刷新";
 "Font size: %d" = "字体大小：%d";
 
 /* Version History */
@@ -275,7 +272,6 @@
 "Restore to This Version" = "恢复到此版本";
 "Restored to version from %@" = "已恢复到 %@ 的版本";
 "No Version History" = "暂无历史版本";
-"Versions are saved automatically every 5 minutes while editing" = "编辑时每 5 分钟自动保存一个版本";
 "Words" = "字数";
 "Modified" = "修改";
 "Created" = "创建";
@@ -320,7 +316,6 @@
 "Takes effect after MiaoYan restarts" = "重新启动妙言后生效";
 "Button Display" = "按钮显示";
 "When the title bar buttons show" = "标题栏按钮什么时候出现";
-"Keep MiaoYan above other windows" = "妙言窗口始终在其他窗口之上";
 "Activate Shortcut" = "唤起快捷键";
 "Bring MiaoYan to the front from any app" = "在任何应用里呼出妙言";
 "Default Mode" = "默认模式";
@@ -335,13 +330,9 @@
 "Open Preview At" = "预览打开位置";
 "Top" = "顶部";
 "Current Position" = "当前位置";
-"Where the preview starts when you open it" = "打开预览时从哪里开始显示";
 "Preview Width" = "预览宽度";
-"Maximum width of the text in the preview" = "预览中正文的最大宽度";
 "Editor Font" = "编辑字体";
-"Typeface and size for writing" = "写作时的字体和字号";
 "Preview Font" = "预览字体";
-"Typeface and size for the preview" = "预览时的字体和字号";
 "Code Font" = "代码字体";
 "Used in fenced code blocks" = "用于代码块";
 "Interface Font" = "界面字体";

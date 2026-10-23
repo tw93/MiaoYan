@@ -131,7 +131,7 @@ extension ViewController {
                 let files = ViewController.collectImportableFiles(from: pickedUrls, allowedExtensions: extensions)
                 DispatchQueue.main.async {
                     guard !files.isEmpty else {
-                        ViewController.shared()?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
+                        ViewController.shared()?.toast(message: I18n.str("No Markdown files to import"), style: .failure)
                         return
                     }
                     guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else { return }
@@ -384,7 +384,7 @@ extension ViewController {
         notesTableView.reloadRow(note: note)
 
         // Toast feedback
-        toast(message: I18n.str("Note reloaded~"), style: .success)
+        toast(message: I18n.str("Note reloaded"), style: .success)
     }
 
     private func findChangeEndPosition(oldContent: String, newContent: String) -> Int {
@@ -437,7 +437,7 @@ extension ViewController {
             DispatchQueue.main.async { [weak vc] in
                 guard let vc = vc else { return }
                 vc.toast(
-                    message: String(format: I18n.str("Failed to move %d note(s) to Trash~"), failedCount),
+                    message: String(format: I18n.str("Couldn't move %d note(s) to Trash"), failedCount),
                     style: .failure
                 )
             }
@@ -589,7 +589,7 @@ extension ViewController {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
-            toast(message: I18n.str("URL is successfully copied, Use it anywhere~"), style: .success)
+            toast(message: I18n.str("Note link copied"), style: .success)
         }
     }
 
@@ -632,7 +632,7 @@ extension ViewController {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(paths, forType: .string)
-        toast(message: I18n.str("Path is successfully copied~"), style: .success)
+        toast(message: I18n.str("File path copied"), style: .success)
     }
 
     private func responder(_ responder: NSResponder, belongsTo view: NSView?) -> Bool {
@@ -972,8 +972,7 @@ extension ViewController {
         guard let window = MainWindowController.shared() else { return }
 
         MiaoYanAlert.confirm(
-            message: String(format: I18n.str("Are you sure you want to move %d note(s) to the system Trash?"), notes.count),
-            informativeText: I18n.str("The note(s) will be moved to the system Trash and can be recovered."),
+            message: String(format: I18n.str("Move %d note(s) to the system Trash?"), notes.count),
             confirmTitle: I18n.str("Move to Trash"),
             for: window
         ) { confirmed in
@@ -982,7 +981,7 @@ extension ViewController {
                 let onPartialFailure: (Int) -> Void = { failedCount in
                     DispatchQueue.main.async {
                         vc.toast(
-                            message: String(format: I18n.str("Failed to move %d note(s) to Trash~"), failedCount),
+                            message: String(format: I18n.str("Couldn't move %d note(s) to Trash"), failedCount),
                             style: .failure
                         )
                     }
@@ -1567,7 +1566,7 @@ extension ViewController {
             // Force flush of the 1.5s debounce queue so the user can rely
             // on Cmd+S as a hard-save point instead of a rename shortcut.
             // Toast only when something was actually flushed; otherwise a
-            // user spamming Cmd+S sees a constant stream of "Saved~" toasts
+            // user spamming Cmd+S sees a constant stream of "Saved" toasts
             // even when there is nothing pending.
             if let activeNote = EditTextView.note {
                 editArea.saveTextStorageContent(to: activeNote)
@@ -1575,7 +1574,7 @@ extension ViewController {
             let hadUnsavedChanges = storage.noteList.contains { $0.needsSave }
             let allSaved = storage.flushPendingSaves()
             if hadUnsavedChanges, allSaved {
-                toast(message: I18n.str("Saved~"), style: .success)
+                toast(message: I18n.str("Saved"), style: .success)
             }
             return false
         }
@@ -1608,6 +1607,6 @@ extension ViewController {
     }
 
     func toastInSingleMode() {
-        toast(message: I18n.str("In single open mode, Exit with Command+Shift+W ~"))
+        toast(message: I18n.str("Press ⌘⇧W to leave single-file mode"))
     }
 }

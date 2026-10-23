@@ -6,36 +6,36 @@
 
 
 /* Toast messages without emoji prefix */
-"Automatic typesetting succeeded~" = "自動排版完成～";
-"Typography cleaned up~" = "排版淨化完成～";
-"Typography is already clean~" = "排版已經很乾淨了～";
-"Press ESC key to exit~" = "按 ESC 鍵結束簡報模式～";
-"Format is only possible after exiting preview mode~" = "文件排版得結束預覽模式才能使用～";
-"Saved to Downloads folder~" = "已經輸出到下載目錄～";
-"Saved~" = "已儲存～";
-"Click the title again to rename~" = "標題未儲存，請再次點擊標題後修改～";
-"External change detected. Local copy backed up~" = "檢測到外部修改，本地內容已備份～";
-"Switching notes is disabled during export~" = "匯出過程中無法切換筆記～";
-"Failed to move %d note(s) to Trash~" = "%d 篇筆記未能移入垃圾桶，可能受權限或同步限制～";
-"Image upload in progress~" = "正在上傳圖片～";
-"Image upload failed, Use local~" = "圖片上傳失敗，改放在本機端，可手動上傳～";
-"Please make sure your Mac is installed %@ ~" = "請確定你的 Mac 已經安裝並設定好 %@～";
-"In single open mode, Exit with Command+Shift+W ~" = "在單獨編輯器模式中，可以敲下 Command+Shift+W 結束～";
-"Please make sure your title exists~" = "請確定填寫的標題是否存在～";
-"Found that there are multiple titles of this~" = "這裡有好幾個標題，使用搜尋能力～";
-"URL is successfully copied, Use it anywhere~" = "成功複製外部連結，可以在其他地方使用了～";
-"Path is successfully copied~" = "路徑成功複製～";
-"No delimiter --- identification, Cannot use MiaoYan PPT~" = "沒有分隔符號 --- 標示，無法使用妙言 PPT～";
-"Formatting failed, please try again" = "排版失敗，請重試";
+"Formatted" = "排版完成";
+"Typography cleaned up" = "排版已清理";
+"Typography is already clean" = "排版無需清理";
+"Press Esc to exit" = "按 ESC 鍵結束簡報模式";
+"Exit preview to format" = "退出預覽後才能排版";
+"Saved to Downloads" = "已經輸出到下載目錄";
+"Saved" = "已儲存";
+"Click the title again to rename" = "標題未儲存，請再次點擊標題後修改";
+"Changed on disk. Your version was backed up" = "檢測到外部修改，本地內容已備份";
+"Can't switch notes while exporting" = "匯出過程中無法切換筆記";
+"Couldn't move %d note(s) to Trash" = "%d 篇筆記未能移入垃圾桶，可能受權限或同步限制";
+"Uploading image…" = "正在上傳圖片";
+"Upload failed. The local image was kept" = "圖片上傳失敗，改放在本機端，可手動上傳";
+"Install and set up %@ first" = "請確定你的 Mac 已經安裝並設定好 %@";
+"Press ⌘⇧W to leave single-file mode" = "在單獨編輯器模式中，可以敲下 Command+Shift+W 結束";
+"No note has this title" = "請確定填寫的標題是否存在";
+"Several notes share this title. Showing search results" = "這裡有好幾個標題，使用搜尋能力";
+"Note link copied" = "成功複製外部連結，可以在其他地方使用了";
+"File path copied" = "路徑成功複製";
+"Separate slides with --- to present" = "沒有分隔符號 --- 標示，無法使用妙言 PPT";
+"Formatting failed" = "排版失敗";
+"“%@” already exists in this folder" = "這個資料夾裡已有「%@」";
 "Formatting cancelled" = "已取消排版";
 
-"PDF export failed, please try again~" = "PDF 匯出失敗，請重新試試～";
 
 /* No comment provided by engineer. */
 "Add" = "加入";
 
 /* No comment provided by engineer. */
-"Are you sure you want to move %d note(s) to the system Trash?" = "您確定要將 %d 篇筆記移入系統廢紙簍嗎？";
+"Move %d note(s) to the system Trash?" = "將 %d 篇筆記移入系統廢紙簍？";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "您確定要刪除「%@」專案及其所有檔案嗎？";
@@ -74,7 +74,6 @@
 "New project" = "建立專案";
 
 /* No comment provided by engineer. */
-"Please change the title" = "請更改標題";
 
 /* No comment provided by engineer. */
 "Preferences" = "偏好設定";
@@ -140,10 +139,8 @@
 "Sort by" = "排序方式";
 
 /* No comment provided by engineer. */
-"This %@ under this folder already exists!" = "此檔案夾下的 $@ 已經存在！";
 
 /* Delete menu */
-"The note(s) will be moved to the system Trash and can be recovered." = "筆記將被移入系統廢紙簍，可在廢紙簍中找回。";
 
 /* Delete menu */
 "This action cannot be undone." = "本動作不可復原。";
@@ -161,7 +158,6 @@
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "圖片上傳成功";
-"Image upload failed, using local path" = "圖片上傳失敗，使用本地路徑";
 
 /* Image Preview Tip */
 "Hold ⌘ Command key to preview images" = "按住 ⌘ Command 鍵可預覽圖片";
@@ -233,7 +229,7 @@
 "Note \"%@\" already exists" = "筆記 \"%@\" 已存在";
 "Please select default storage directory" = "請選擇預設儲存目錄";
 "Select Markdown files or folders to import" = "選擇要匯入的 Markdown 檔案或資料夾";
-"No importable Markdown files found~" = "沒有找到可匯入的 Markdown 檔案～";
+"No Markdown files to import" = "沒有找到可匯入的 Markdown 檔案";
 "Could not use this folder" = "無法使用這個檔案夾";
 "Selected storage folder is not a folder." = "所選儲存位置不是檔案夾。";
 "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "妙言無法讀取這個檔案夾。如果這是雲端硬碟目錄，請開啟雲端硬碟 App，確認該檔案夾已在 Finder 中可見。";
@@ -243,7 +239,7 @@
 "Reload Note" = "重新載入";
 "You have unsaved changes. Reload will discard them." = "你有未儲存的更改，重新載入將會丟棄它們。";
 "Reload" = "重新載入";
-"Note reloaded~" = "筆記已重新載入~";
+"Note reloaded" = "筆記已重新載入";
 "Font size: %d" = "字體大小：%d";
 
 /* Version History */
@@ -252,7 +248,6 @@
 "Restore to This Version" = "還原到此版本";
 "Restored to version from %@" = "已還原到 %@ 的版本";
 "No Version History" = "暫無歷史版本";
-"Versions are saved automatically every 5 minutes while editing" = "編輯時每 5 分鐘自動儲存一個版本";
 "Words" = "字數";
 "Modified" = "修改";
 "Created" = "建立";
@@ -295,7 +290,6 @@
 "Takes effect after MiaoYan restarts" = "重新啟動妙言後生效";
 "Button Display" = "按鈕顯示";
 "When the title bar buttons show" = "標題列按鈕什麼時候出現";
-"Keep MiaoYan above other windows" = "妙言視窗始終在其他視窗之上";
 "Activate Shortcut" = "喚起快速鍵";
 "Bring MiaoYan to the front from any app" = "在任何 App 裡叫出妙言";
 "Default Mode" = "預設模式";
@@ -310,13 +304,9 @@
 "Open Preview At" = "預覽開啟位置";
 "Top" = "頂部";
 "Current Position" = "目前位置";
-"Where the preview starts when you open it" = "開啟預覽時從哪裡開始顯示";
 "Preview Width" = "預覽寬度";
-"Maximum width of the text in the preview" = "預覽中正文的最大寬度";
 "Editor Font" = "編輯字體";
-"Typeface and size for writing" = "寫作時的字體和大小";
 "Preview Font" = "預覽字體";
-"Typeface and size for the preview" = "預覽時的字體和大小";
 "Code Font" = "程式碼字體";
 "Used in fenced code blocks" = "用於程式碼區塊";
 "Interface Font" = "介面字體";

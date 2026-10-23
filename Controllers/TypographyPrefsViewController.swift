@@ -19,8 +19,8 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
 
         addSections([
             [
-                PrefsRowView(title: I18n.str("Editor Font"), detail: I18n.str("Typeface and size for writing"), controls: [editorFont, editorSizePopUp]),
-                PrefsRowView(title: I18n.str("Preview Font"), detail: I18n.str("Typeface and size for the preview"), controls: [previewFont, previewSizePopUp]),
+                PrefsRowView(title: I18n.str("Editor Font"), detail: "", controls: [editorFont, editorSizePopUp]),
+                PrefsRowView(title: I18n.str("Preview Font"), detail: "", controls: [previewFont, previewSizePopUp]),
                 PrefsRowView(title: I18n.str("Code Font"), detail: I18n.str("Used in fenced code blocks"), controls: [codeFont]),
                 PrefsRowView(title: I18n.str("Interface Font"), detail: I18n.str("Used in the sidebar and note list"), controls: [windowFont]),
             ],

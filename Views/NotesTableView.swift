@@ -248,7 +248,7 @@ class NotesTableView: NSTableView {
             {
                 self.selectRowIndexes([row], byExtendingSelection: false)
             }
-            vc.toast(message: I18n.str("Switching notes is disabled during export~"), style: .failure)
+            vc.toast(message: I18n.str("Can't switch notes while exporting"), style: .failure)
             return
         }
 

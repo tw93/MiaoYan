@@ -270,7 +270,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
                 }.value
                 guard let self else { return }
                 guard !files.isEmpty else {
-                    self.model.host?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
+                    self.model.host?.toast(message: I18n.str("No Markdown files to import"), style: .failure)
                     return
                 }
                 self.model.importNotes(files)
@@ -1453,7 +1453,7 @@ extension ShellSplitViewController: ExportHost {
 
     func toastExport(status: Bool) {
         if status {
-            toast(message: I18n.str("Saved to Downloads folder~"), style: .success)
+            toast(message: I18n.str("Saved to Downloads"), style: .success)
         } else {
             toast(message: I18n.str("Export failed"), style: .failure)
         }

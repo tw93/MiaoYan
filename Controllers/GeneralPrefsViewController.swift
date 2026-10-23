@@ -71,7 +71,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
                 PrefsRowView(title: I18n.str("Button Display"), detail: I18n.str("When the title bar buttons show"), controls: [buttonDisplayDropdown]),
             ],
             [
-                PrefsRowView(title: I18n.str("Always On Top"), detail: I18n.str("Keep MiaoYan above other windows"), controls: [alwaysOnTopSwitch]),
+                PrefsRowView(title: I18n.str("Always On Top"), detail: "", controls: [alwaysOnTopSwitch]),
                 PrefsRowView(title: I18n.str("Activate Shortcut"), detail: I18n.str("Bring MiaoYan to the front from any app"), controls: [shortcutRecorder]),
             ],
         ])

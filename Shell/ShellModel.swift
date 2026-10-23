@@ -182,7 +182,7 @@ final class ShellModel {
                 isRestoringSelection = true
                 scope = oldValue
                 isRestoringSelection = false
-                host?.toast(message: I18n.str("Switching notes is disabled during export~"), style: .failure)
+                host?.toast(message: I18n.str("Can't switch notes while exporting"), style: .failure)
                 return
             }
             if !isSingleMode {
@@ -234,7 +234,7 @@ final class ShellModel {
                 isRestoringSelection = true
                 selectedNoteURL = oldValue
                 isRestoringSelection = false
-                host?.toast(message: I18n.str("Switching notes is disabled during export~"), style: .failure)
+                host?.toast(message: I18n.str("Can't switch notes while exporting"), style: .failure)
                 return
             }
             // Moving the selection any other way (arrows, new note, a link)
@@ -522,7 +522,7 @@ final class ShellModel {
     func cleanTypography() {
         guard let host else { return }
         guard editorMode != .preview else {
-            host.toast(message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure)
+            host.toast(message: I18n.str("Exit preview to format"), style: .failure)
             return
         }
         commitPendingRename()
@@ -697,7 +697,7 @@ final class ShellModel {
     func format() {
         guard let host, !isExporting else { return }
         guard editorMode != .preview else {
-            host.toast(message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure)
+            host.toast(message: I18n.str("Exit preview to format"), style: .failure)
             return
         }
         commitPendingRename()
@@ -717,7 +717,7 @@ final class ShellModel {
                 guard let note = selectedNote else { return }
                 note.ensureContentLoaded()
                 guard note.content.string.contains("---") else {
-                    host?.toast(message: I18n.str("No delimiter --- identification, Cannot use MiaoYan PPT~"), style: .failure)
+                    host?.toast(message: I18n.str("Separate slides with --- to present"), style: .failure)
                     return
                 }
             }
@@ -746,7 +746,7 @@ final class ShellModel {
             if !UserDefaultsManagement.isOnExportPPT {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
                     guard let self, self.isPresenting else { return }
-                    self.host?.toast(message: I18n.str("Press ESC key to exit~"))
+                    self.host?.toast(message: I18n.str("Press Esc to exit"))
                 }
             }
         } else {
@@ -952,10 +952,10 @@ final class ShellModel {
         let matches = storage.noteList.filter { $0.title == title && !$0.isTrash() }
         guard matches.count == 1, let note = matches.first else {
             if matches.isEmpty {
-                host?.toast(message: I18n.str("Please make sure your title exists~"), style: .failure)
+                host?.toast(message: I18n.str("No note has this title"), style: .failure)
             } else {
                 search(for: title)
-                host?.toast(message: I18n.str("Found that there are multiple titles of this~"), style: .failure)
+                host?.toast(message: I18n.str("Several notes share this title. Showing search results"), style: .failure)
             }
             return
         }
@@ -986,8 +986,7 @@ final class ShellModel {
         }
         guard let window = host?.view.window else { return }
         MiaoYanAlert.confirm(
-            message: String(format: I18n.str("Are you sure you want to move %d note(s) to the system Trash?"), removing.count),
-            informativeText: I18n.str("The note(s) will be moved to the system Trash and can be recovered."),
+            message: String(format: I18n.str("Move %d note(s) to the system Trash?"), removing.count),
             confirmTitle: I18n.str("Move to Trash"),
             for: window
         ) { [weak self] confirmed in
@@ -1016,7 +1015,7 @@ final class ShellModel {
             partialFailure: { [weak self] count in
                 Task { @MainActor in
                     self?.host?.toast(
-                        message: String(format: I18n.str("Failed to move %d note(s) to Trash~"), count), style: .failure)
+                        message: String(format: I18n.str("Couldn't move %d note(s) to Trash"), count), style: .failure)
                 }
             }
         ) { [weak self] urls in
@@ -1098,8 +1097,7 @@ final class ShellModel {
         let wasSelected = selectedNoteURL == note.url
         guard note.renameFile(to: title) else {
             MiaoYanAlert.show(
-                message: I18n.str("Please change the title"),
-                informativeText: String(format: I18n.str("This %@ under this folder already exists!"), title),
+                message: String(format: I18n.str("\u{201C}%@\u{201D} already exists in this folder"), title),
                 for: host?.view.window)
             return false
         }
@@ -1228,7 +1226,7 @@ final class ShellModel {
             }.value
             guard let self else { return }
             guard !files.isEmpty else {
-                self.host?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
+                self.host?.toast(message: I18n.str("No Markdown files to import"), style: .failure)
                 return
             }
             self.importNotes(files, into: project)
@@ -1268,7 +1266,7 @@ final class ShellModel {
         isSingleMode = true
         let file = FileManager.default.directoryExists(atUrl: url) ? nil : url.resolvingSymlinksInPath()
         switchStorage(selecting: file)
-        host?.toast(message: I18n.str("In single open mode, Exit with Command+Shift+W ~"))
+        host?.toast(message: I18n.str("Press ⌘⇧W to leave single-file mode"))
     }
 
     /// Back to the library, on the note that was open before.
@@ -1462,7 +1460,7 @@ final class ShellModel {
                 self.editor.reload(note)
             }
             self.noteChangedOnDisk(note)
-            self.host?.toast(message: I18n.str("Note reloaded~"), style: .success)
+            self.host?.toast(message: I18n.str("Note reloaded"), style: .success)
         }
         let editorHasOther = note.needsSave
         guard editorHasOther, let window = host?.view.window else {
@@ -1484,7 +1482,7 @@ final class ShellModel {
         else { return }
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString("miaoyan://goto/\(title)", forType: .string)
-        host?.toast(message: I18n.str("URL is successfully copied, Use it anywhere~"), style: .success)
+        host?.toast(message: I18n.str("Note link copied"), style: .success)
     }
 
     /// One path a line, for every selected note, as the storyboard's copyPath.
@@ -1492,7 +1490,7 @@ final class ShellModel {
         guard !copying.isEmpty else { return }
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(copying.map(\.url.path).joined(separator: "\n"), forType: .string)
-        host?.toast(message: I18n.str("Path is successfully copied~"), style: .success)
+        host?.toast(message: I18n.str("File path copied"), style: .success)
     }
 
     func revealInFinder(_ revealing: [Note]) {
@@ -1501,14 +1499,14 @@ final class ShellModel {
     }
 
     /// Command-S: the editor's text and every debounced save written now,
-    /// with "Saved~" only when something was waiting, as the storyboard
+    /// with "Saved" only when something was waiting, as the storyboard
     /// window's handler does.
     func saveNow() {
         copyLiveEditorBuffer()
         let hadUnsavedChanges = storage.noteList.contains { $0.needsSave }
         let allSaved = storage.flushPendingSaves()
         if hadUnsavedChanges, allSaved {
-            host?.toast(message: I18n.str("Saved~"), style: .success)
+            host?.toast(message: I18n.str("Saved"), style: .success)
         }
     }
 

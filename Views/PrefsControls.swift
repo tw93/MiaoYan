@@ -41,8 +41,15 @@ final class PrefsRowView: NSView {
 
     var detail: String {
         get { detailLabel.stringValue }
-        set { detailLabel.stringValue = newValue }
+        set {
+            detailLabel.stringValue = newValue
+            updateDetailLayout()
+        }
     }
+
+    /// A row without a description centres its title on the control.
+    private var detailConstraints: [NSLayoutConstraint] = []
+    private var titleOnlyConstraints: [NSLayoutConstraint] = []
 
     init(title: String, detail: String, controls: [NSView], detailTruncation: NSLineBreakMode = .byTruncatingTail) {
         titleLabel = PrefsRowView.makeLabel(title, font: PrefsMetrics.titleFont, color: Theme.Settings.primaryText, truncation: .byTruncatingTail)
@@ -63,19 +70,40 @@ final class PrefsRowView: NSView {
         addSubview(controlStack)
 
         let padding = PrefsMetrics.rowVerticalPadding
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+        detailConstraints = [
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding),
-            detailLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             detailLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: PrefsMetrics.titleDetailSpacing),
             detailLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
+        ]
+        titleOnlyConstraints = [
+            titleLabel.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: padding),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            controlStack.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: padding),
+            heightAnchor.constraint(greaterThanOrEqualTo: titleLabel.heightAnchor, constant: padding * 2),
+            {
+                let shortest = heightAnchor.constraint(equalToConstant: 0)
+                shortest.priority = .defaultLow
+                return shortest
+            }(),
+        ]
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            detailLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             controlStack.trailingAnchor.constraint(equalTo: trailingAnchor),
             controlStack.centerYAnchor.constraint(equalTo: centerYAnchor),
             controlStack.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: PrefsMetrics.rowControlGap),
             controlStack.leadingAnchor.constraint(greaterThanOrEqualTo: detailLabel.trailingAnchor, constant: PrefsMetrics.rowControlGap),
         ])
+        updateDetailLayout()
 
         setAccessibilityElement(false)
+    }
+
+    private func updateDetailLayout() {
+        let hasDetail = !detailLabel.stringValue.isEmpty
+        detailLabel.isHidden = !hasDetail
+        NSLayoutConstraint.deactivate(hasDetail ? titleOnlyConstraints : detailConstraints)
+        NSLayoutConstraint.activate(hasDetail ? detailConstraints : titleOnlyConstraints)
     }
 
     @available(*, unavailable)

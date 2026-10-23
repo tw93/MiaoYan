@@ -239,15 +239,7 @@ final class VersionHistoryViewController: NSViewController {
         label.textColor = Theme.secondaryTextColor
         label.alignment = .center
 
-        let hint = NSTextField(labelWithString: I18n.str("Versions are saved automatically every 5 minutes while editing"))
-        hint.translatesAutoresizingMaskIntoConstraints = false
-        hint.font = .systemFont(ofSize: 11)
-        hint.textColor = Theme.secondaryTextColor.withAlphaComponent(0.6)
-        hint.alignment = .center
-        hint.maximumNumberOfLines = 2
-        hint.preferredMaxLayoutWidth = 280
-
-        let stack = NSStackView(views: [icon, label, hint])
+        let stack = NSStackView(views: [icon, label])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.orientation = .vertical
         stack.alignment = .centerX
@@ -275,7 +267,7 @@ final class VersionHistoryViewController: NSViewController {
 
         let sub = NSTextField(labelWithString: I18n.str("Version History"))
         sub.translatesAutoresizingMaskIntoConstraints = false
-        sub.font = .systemFont(ofSize: 11)
+        sub.font = .systemFont(ofSize: 12)
         sub.textColor = Theme.secondaryTextColor
 
         let textStack = NSStackView(views: [title, sub])
@@ -598,12 +590,12 @@ private final class VersionHistoryCellView: NSView {
         dotView.layer?.cornerRadius = 3.5
 
         primaryField.translatesAutoresizingMaskIntoConstraints = false
-        primaryField.font = .systemFont(ofSize: 12.5)
+        primaryField.font = .systemFont(ofSize: 13)
         primaryField.textColor = Theme.textColor
         primaryField.lineBreakMode = .byTruncatingTail
 
         secondaryField.translatesAutoresizingMaskIntoConstraints = false
-        secondaryField.font = .systemFont(ofSize: 10.5)
+        secondaryField.font = .systemFont(ofSize: 12)
         secondaryField.textColor = Theme.secondaryTextColor
         secondaryField.lineBreakMode = .byTruncatingTail
 
@@ -646,7 +638,7 @@ private final class VersionHistoryCellView: NSView {
 
     private func applyStyle(selected: Bool) {
         let active = isCurrent || selected
-        primaryField.font = active ? .boldSystemFont(ofSize: 12.5) : .systemFont(ofSize: 12.5)
+        primaryField.font = active ? .boldSystemFont(ofSize: 13) : .systemFont(ofSize: 13)
         dotView.layer?.backgroundColor =
             active
             ? Theme.accentColor.cgColor

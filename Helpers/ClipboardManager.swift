@@ -166,7 +166,7 @@ class ClipboardManager {
 
             // Only Support PicGo and PicList via HTTP
             if picType == "PicGo" || picType == "PicList" {
-                host?.toast(message: I18n.str("Image upload in progress~"))
+                host?.toast(message: I18n.str("Uploading image…"))
                 // The local link holds the spot until the upload finishes:
                 // inserting the link at the cursor afterwards dropped it wherever
                 // the cursor had moved. The file name is unique, and a quit or a
@@ -186,7 +186,7 @@ class ClipboardManager {
                             if let error {
                                 AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
                             }
-                            textView.window?.contentViewController?.toast(message: I18n.str("Image upload failed, Use local~"), style: .failure)
+                            textView.window?.contentViewController?.toast(message: I18n.str("Upload failed. The local image was kept"), style: .failure)
                         }
                     }
                 }
@@ -341,7 +341,7 @@ class ClipboardManager {
                         note: note
                     )
                     if let viewController = textView.window?.contentViewController {
-                        viewController.toast(message: I18n.str("Image upload failed, using local path"), style: .failure)
+                        viewController.toast(message: I18n.str("Upload failed. The local image was kept"), style: .failure)
                     }
                 }
             }

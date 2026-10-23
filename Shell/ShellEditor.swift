@@ -433,7 +433,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         let content = textView.textStorage?.string ?? note.content.string
         let cleaned = TypographyCleaner.clean(content)
         guard cleaned != content else {
-            host.toast(message: I18n.str("Typography is already clean~"))
+            host.toast(message: I18n.str("Typography is already clean"))
             return
         }
         let cursor = textView.selectedRange().location
@@ -447,7 +447,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         textView.setSelectedRange(NSRange(location: min(cursor, (cleaned as NSString).length), length: 0))
         scrollView.contentView.scroll(to: NSPoint(x: 0, y: top))
         scrollView.reflectScrolledClipView(scrollView.contentView)
-        host.toast(message: I18n.str("Typography cleaned up~"), style: .success)
+        host.toast(message: I18n.str("Typography cleaned up"), style: .success)
         refreshSplitPreview()
         onContentChange?()
     }
@@ -494,12 +494,12 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
                     return
                 }
                 self.apply(output, original: content, note: note, top: top)
-                host?.toast(message: I18n.str("Automatic typesetting succeeded~"), style: .success)
+                host?.toast(message: I18n.str("Formatted"), style: .success)
             } catch is CancellationError {
             } catch {
                 AppDelegate.trackError(error, context: "ShellEditorController.format")
                 guard self.formatRequestID == requestID else { return }
-                host?.toast(message: I18n.str("Formatting failed, please try again"), style: .failure)
+                host?.toast(message: I18n.str("Formatting failed"), style: .failure)
             }
         }
         onFormattingChange?(true)

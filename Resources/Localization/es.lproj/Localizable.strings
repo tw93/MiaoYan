@@ -5,7 +5,7 @@
 "Add" = "Añadir";
 
 /* No comment provided by engineer. */
-"Are you sure you want to move %d note(s) to the system Trash?" = "¿Estás seguro de que deseas mover %d nota(s) a la Papelera del sistema?";
+"Move %d note(s) to the system Trash?" = "¿Mover %d nota(s) a la Papelera del sistema?";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "¿Estás seguro de que deseas eliminar el proyecto \"%@\" y todos los archivos en su interior?";
@@ -132,7 +132,6 @@
 "Strikethrough" = "Tachado";
 
 /* Delete menu */
-"The note(s) will be moved to the system Trash and can be recovered." = "Las notas se moverán a la Papelera del sistema y podrán recuperarse.";
 
 /* Delete menu */
 "This action cannot be undone." = "Esta acción no se puede deshacer.";
@@ -162,33 +161,31 @@
 
 "%d MiaoYan" = "%d MiaoYan";
 
-"PDF export failed, please try again~" = "Falló la exportación a PDF, por favor inténtalo de nuevo~";
 
 /* Toast messages without emoji prefix */
-"Automatic typesetting succeeded~" = "Composición tipográfica automática exitosa~";
-"Typography cleaned up~" = "Tipografía limpiada~";
-"Typography is already clean~" = "La tipografía ya está limpia~";
-"Press ESC key to exit~" = "Presiona la tecla ESC para salir~";
-"Format is only possible after exiting preview mode~" = "El formato solo es posible después de salir del modo de vista previa~";
-"Saved to Downloads folder~" = "Guardado en la carpeta de Descargas~";
-"Saved~" = "Guardado~";
-"Click the title again to rename~" = "Título no guardado. Haz clic en el título y vuelve a editarlo~";
-"External change detected. Local copy backed up~" = "Cambio externo detectado. Copia local respaldada~";
-"Switching notes is disabled during export~" = "No se puede cambiar de nota durante la exportación~";
-"Failed to move %d note(s) to Trash~" = "No se pudo mover %d nota(s) a la Papelera~";
-"Image upload in progress~" = "Subida de imagen en progreso~";
-"Image upload failed, Use local~" = "Falló la subida de imagen, usando local~";
-"Please make sure your Mac is installed %@ ~" = "Por favor asegúrate de que tu Mac tenga instalado %@ ~";
-"In single open mode, Exit with Command+Shift+W ~" = "En el modo de apertura única, sal con Command+Shift+W ~";
-"Please make sure your title exists~" = "Por favor asegúrate de que tu título exista~";
-"Found that there are multiple titles of this~" = "Se encontró que hay múltiples títulos de esto~";
-"URL is successfully copied, Use it anywhere~" = "La URL se copió correctamente, úsala en cualquier lugar~";
-"No delimiter --- identification, Cannot use MiaoYan PPT~" = "No hay identificador de delimitador ---, no se puede usar MiaoYan PPT~";
-"Formatting failed, please try again" = "El formato falló, por favor inténtalo de nuevo";
+"Formatted" = "Composición tipográfica automática exitosa";
+"Typography cleaned up" = "Tipografía limpiada";
+"Typography is already clean" = "La tipografía ya está limpia";
+"Press Esc to exit" = "Presiona la tecla ESC para salir";
+"Exit preview to format" = "El formato solo es posible después de salir del modo de vista previa";
+"Saved to Downloads" = "Guardado en la carpeta de Descargas";
+"Saved" = "Guardado";
+"Click the title again to rename" = "Título no guardado. Haz clic en el título y vuelve a editarlo";
+"Changed on disk. Your version was backed up" = "Cambio externo detectado. Copia local respaldada";
+"Can't switch notes while exporting" = "No se puede cambiar de nota durante la exportación";
+"Couldn't move %d note(s) to Trash" = "No se pudo mover %d nota(s) a la Papelera";
+"Uploading image…" = "Subida de imagen en progreso";
+"Upload failed. The local image was kept" = "Falló la subida de imagen, usando local";
+"Install and set up %@ first" = "Por favor asegúrate de que tu Mac tenga instalado %@";
+"Press ⌘⇧W to leave single-file mode" = "En el modo de apertura única, sal con Command+Shift+W";
+"No note has this title" = "Por favor asegúrate de que tu título exista";
+"Several notes share this title. Showing search results" = "Se encontró que hay múltiples títulos de esto";
+"Note link copied" = "La URL se copió correctamente, úsala en cualquier lugar";
+"Separate slides with --- to present" = "No hay identificador de delimitador ---, no se puede usar MiaoYan PPT";
+"Formatting failed" = "No se pudo dar formato";
+"“%@” already exists in this folder" = "Ya existe «%@» en esta carpeta";
 "Formatting cancelled" = "Formato cancelado";
 
-"This %@ under this folder already exists!" = "¡Este %@ bajo esta carpeta ya existe!";
-"Please change the title" = "Por favor cambia el título";
 
 "Edit Link…" = "Editar Enlace…";
 "Remove Link" = "Eliminar Enlace";
@@ -198,7 +195,6 @@
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "Imagen subida exitosamente";
-"Image upload failed, using local path" = "Falló la subida de la imagen, usando ruta local";
 
 /* Image Preview Tip */
 "Hold ⌘ Command key to preview images" = "Mantén la tecla ⌘ Command para previsualizar imágenes";
@@ -254,7 +250,7 @@
 "Note \"%@\" already exists" = "La nota \"%@\" ya existe";
 "Please select default storage directory" = "Por favor, selecciona el directorio de almacenamiento por defecto";
 "Select Markdown files or folders to import" = "Selecciona archivos Markdown o carpetas para importar";
-"No importable Markdown files found~" = "No se encontraron archivos Markdown importables~";
+"No Markdown files to import" = "No se encontraron archivos Markdown importables";
 "Could not use this folder" = "No se pudo usar esta carpeta";
 "Selected storage folder is not a folder." = "La ubicación seleccionada no es una carpeta.";
 "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "MiaoYan no puede leer esta carpeta. Si es una unidad en la nube, abre la app del proveedor y confirma que la carpeta aparece en Finder.";
@@ -264,7 +260,7 @@
 "Reload Note" = "Recargar Nota";
 "You have unsaved changes. Reload will discard them." = "Tienes cambios sin guardar. Recargar los descartará.";
 "Reload" = "Recargar";
-"Note reloaded~" = "Nota recargada~";
+"Note reloaded" = "Nota recargada";
 "Font size: %d" = "Tamaño de fuente: %d";
 
 /* Version History */
@@ -273,7 +269,6 @@
 "Restore to This Version" = "Restaurar a esta versión";
 "Restored to version from %@" = "Restaurado a la versión del %@";
 "No Version History" = "Sin historial de versiones";
-"Versions are saved automatically every 5 minutes while editing" = "Las versiones se guardan automáticamente cada 5 minutos al editar";
 "Words" = "Palabras";
 "Modified" = "Modificado";
 "Created" = "Creado";
@@ -293,7 +288,7 @@
 "Image" = "Imagen";
 "This note could not be read, so it was left as it is" = "No se pudo leer esta nota, así que se ha dejado como estaba";
 "Open in Terminal" = "Abrir en Terminal";
-"Path is successfully copied~" = "Ruta copiada~";
+"File path copied" = "Ruta copiada";
 "Version" = "Versión";
 "Show Info" = "Mostrar Información";
 "Copy URL" = "Copiar URL";
@@ -318,7 +313,6 @@
 "Takes effect after MiaoYan restarts" = "Se aplica al reiniciar MiaoYan";
 "Button Display" = "Mostrar botones";
 "When the title bar buttons show" = "Cuándo aparecen los botones de la barra de título";
-"Keep MiaoYan above other windows" = "Mantiene MiaoYan sobre las demás ventanas";
 "Activate Shortcut" = "Atajo de activación";
 "Bring MiaoYan to the front from any app" = "Trae MiaoYan al frente desde cualquier app";
 "Default Mode" = "Modo predeterminado";
@@ -333,13 +327,9 @@
 "Open Preview At" = "Abrir la vista previa en";
 "Top" = "Inicio";
 "Current Position" = "Posición actual";
-"Where the preview starts when you open it" = "Dónde empieza la vista previa al abrirla";
 "Preview Width" = "Ancho de la vista previa";
-"Maximum width of the text in the preview" = "Ancho máximo del texto en la vista previa";
 "Editor Font" = "Fuente del editor";
-"Typeface and size for writing" = "Tipo y tamaño para escribir";
 "Preview Font" = "Fuente de la vista previa";
-"Typeface and size for the preview" = "Tipo y tamaño de la vista previa";
 "Code Font" = "Fuente del código";
 "Used in fenced code blocks" = "Para los bloques de código";
 "Interface Font" = "Fuente de la interfaz";

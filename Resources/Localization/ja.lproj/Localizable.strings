@@ -5,7 +5,7 @@
 "Add" = "追加";
 
 /* No comment provided by engineer. */
-"Are you sure you want to move %d note(s) to the system Trash?" = "%d件のメモをシステムのゴミ箱に移動しますか？";
+"Move %d note(s) to the system Trash?" = "%d件のメモをシステムのゴミ箱に移動しますか？";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "フォルダ\"%@\"と中の全てファイルを削除してもよろしいですか?";
@@ -133,7 +133,6 @@
 "Strikethrough" = "取り消し線";
 
 /* Delete menu */
-"The note(s) will be moved to the system Trash and can be recovered." = "メモはシステムのゴミ箱に移動され、後で復元できます。";
 
 /* Delete menu */
 "This action cannot be undone." = "この操作は元に戻せません。宜しいでしょうか？";
@@ -163,34 +162,32 @@
 
 "%d MiaoYan" = "%d つ妙言";
 
-"PDF export failed, please try again~" = "PDFエクスポートに失敗しました。もう一度お試しください。";
 
 /* Toast messages without emoji prefix */
-"Automatic typesetting succeeded~" = "自動組版完了しました。";
-"Typography cleaned up~" = "組版をクリーンアップしました。";
-"Typography is already clean~" = "組版はすでにきれいです。";
-"Press ESC key to exit~" = "ESC キーを押して終了します。";
-"Format is only possible after exiting preview mode~" = "フォーマットの為に、プレビューモードを終了してください。";
-"Saved to Downloads folder~" = "ダウンロードフォルダに保存されました。";
-"Saved~" = "保存しました。";
-"Click the title again to rename~" = "タイトル未保存。タイトルをもう一度クリックしてから編集してください。";
-"External change detected. Local copy backed up~" = "外部からの変更を検出しました。ローカルの内容をバックアップしました。";
-"Switching notes is disabled during export~" = "エクスポート中はノートを切り替えできません。";
-"Failed to move %d note(s) to Trash~" = "%d 件のノートをゴミ箱に移動できませんでした。";
-"Image upload in progress~" = "画像アップロード中~";
-"Image upload failed, Use local~" = "画像のアップロードに失敗しました。ローカルを使用してください";
-"Please make sure your Mac is installed %@ ~" = "Macに %@ をインストールされていることを確認してください。";
-"In single open mode, Exit with Command+Shift+W ~" = "シングルモードでは、Command+Shift+W で終了します";
-"Please make sure your title exists~" = "タイトルが既にあることを確認してください";
-"Found that there are multiple titles of this~" = "複数のタイトルが見つかりました、検索を利用ください。";
-"URL is successfully copied, Use it anywhere~" = "URLがコピーされました。ご利用ください。";
-"Path is successfully copied~" = "パスがコピーされました。";
-"No delimiter --- identification, Cannot use MiaoYan PPT~" = "区切り「---」がなければ、MiaoYan PPT使えません。";
-"Formatting failed, please try again" = "フォーマットに失敗しました。もう一度お試しください";
+"Formatted" = "自動組版完了しました。";
+"Typography cleaned up" = "組版をクリーンアップしました。";
+"Typography is already clean" = "組版はすでにきれいです。";
+"Press Esc to exit" = "ESC キーを押して終了します。";
+"Exit preview to format" = "フォーマットの為に、プレビューモードを終了してください。";
+"Saved to Downloads" = "ダウンロードフォルダに保存されました。";
+"Saved" = "保存しました。";
+"Click the title again to rename" = "タイトル未保存。タイトルをもう一度クリックしてから編集してください。";
+"Changed on disk. Your version was backed up" = "外部からの変更を検出しました。ローカルの内容をバックアップしました。";
+"Can't switch notes while exporting" = "エクスポート中はノートを切り替えできません。";
+"Couldn't move %d note(s) to Trash" = "%d 件のノートをゴミ箱に移動できませんでした。";
+"Uploading image…" = "画像アップロード中";
+"Upload failed. The local image was kept" = "画像のアップロードに失敗しました。ローカルを使用してください";
+"Install and set up %@ first" = "Macに %@ をインストールされていることを確認してください。";
+"Press ⌘⇧W to leave single-file mode" = "シングルモードでは、Command+Shift+W で終了します";
+"No note has this title" = "タイトルが既にあることを確認してください";
+"Several notes share this title. Showing search results" = "複数のタイトルが見つかりました、検索を利用ください。";
+"Note link copied" = "URLがコピーされました。ご利用ください。";
+"File path copied" = "パスがコピーされました。";
+"Separate slides with --- to present" = "区切り「---」がなければ、MiaoYan PPT使えません。";
+"Formatting failed" = "フォーマットに失敗しました";
+"“%@” already exists in this folder" = "このフォルダにはすでに「%@」があります";
 "Formatting cancelled" = "フォーマットをキャンセルしました";
 
-"This %@ under this folder already exists!" = "このフォルダの下に %@ は既に存在します";
-"Please change the title" = "タイトルを変更してください。";
 
 "Edit Link…" = "リンクを編集";
 "Remove Link" = "リンクを削除";
@@ -200,7 +197,6 @@
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "画像のアップロードが成功しました";
-"Image upload failed, using local path" = "画像のアップロードに失敗しました、ローカルパスを使用します";
 
 /* Image Preview Tip */
 "Hold ⌘ Command key to preview images" = "⌘ Command キーを押しながら画像をプレビュー";
@@ -256,7 +252,7 @@
 "Note \"%@\" already exists" = "ノート \"%@\" は既に存在します";
 "Please select default storage directory" = "デフォルトの保存先ディレクトリを選択してください";
 "Select Markdown files or folders to import" = "読み込む Markdown ファイルまたはフォルダを選択してください";
-"No importable Markdown files found~" = "読み込める Markdown ファイルが見つかりませんでした。";
+"No Markdown files to import" = "読み込める Markdown ファイルが見つかりませんでした。";
 "Could not use this folder" = "このフォルダを使用できません";
 "Selected storage folder is not a folder." = "選択した保存先はフォルダではありません。";
 "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "MiaoYan はこのフォルダを読み取れません。クラウドドライブの場合は、提供元アプリを開き、Finder にフォルダが表示されていることを確認してください。";
@@ -266,7 +262,7 @@
 "Reload Note" = "再読み込み";
 "You have unsaved changes. Reload will discard them." = "未保存の変更があります。再読み込みすると破棄されます。";
 "Reload" = "再読み込み";
-"Note reloaded~" = "ノートを再読み込みしました~";
+"Note reloaded" = "ノートを再読み込みしました";
 "Font size: %d" = "文字サイズ：%d";
 
 /* Version History */
@@ -275,7 +271,6 @@
 "Restore to This Version" = "このバージョンに復元";
 "Restored to version from %@" = "%@ のバージョンに復元しました";
 "No Version History" = "バージョン履歴はありません";
-"Versions are saved automatically every 5 minutes while editing" = "編集中は5分ごとに自動保存されます";
 "Words" = "文字数";
 "Modified" = "更新";
 "Created" = "作成";
@@ -318,7 +313,6 @@
 "Takes effect after MiaoYan restarts" = "MiaoYan の再起動後に反映";
 "Button Display" = "ボタン表示";
 "When the title bar buttons show" = "タイトルバーのボタンを表示するタイミング";
-"Keep MiaoYan above other windows" = "MiaoYan をほかのウインドウより手前に表示";
 "Activate Shortcut" = "呼び出しショートカット";
 "Bring MiaoYan to the front from any app" = "どのアプリからでも MiaoYan を呼び出す";
 "Default Mode" = "標準のモード";
@@ -333,13 +327,9 @@
 "Open Preview At" = "プレビューの開始位置";
 "Top" = "先頭";
 "Current Position" = "現在の位置";
-"Where the preview starts when you open it" = "プレビューを開いたときの表示位置";
 "Preview Width" = "プレビューの幅";
-"Maximum width of the text in the preview" = "プレビューの本文の最大幅";
 "Editor Font" = "エディタのフォント";
-"Typeface and size for writing" = "書くときの書体とサイズ";
 "Preview Font" = "プレビューのフォント";
-"Typeface and size for the preview" = "プレビューの書体とサイズ";
 "Code Font" = "コードのフォント";
 "Used in fenced code blocks" = "コードブロックで使用";
 "Interface Font" = "インターフェイスのフォント";

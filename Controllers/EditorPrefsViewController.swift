@@ -59,8 +59,8 @@ final class EditorPrefsViewController: BasePrefsViewController {
             ],
             [
                 lineBreakRow,
-                PrefsRowView(title: I18n.str("Open Preview At"), detail: I18n.str("Where the preview starts when you open it"), controls: [previewLocationDropdown]),
-                PrefsRowView(title: I18n.str("Preview Width"), detail: I18n.str("Maximum width of the text in the preview"), controls: [previewWidthDropdown]),
+                PrefsRowView(title: I18n.str("Open Preview At"), detail: "", controls: [previewLocationDropdown]),
+                PrefsRowView(title: I18n.str("Preview Width"), detail: "", controls: [previewWidthDropdown]),
             ],
         ])
     }
@@ -131,7 +131,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
         } else if #available(macOS 14, *),
             let shell = (NSApp.delegate as? AppDelegate)?.shellWindowController as? ShellWindowController
         {
-            shell.model.host?.toast(message: String(format: I18n.str("Please make sure your Mac is installed %@ ~"), service), style: .failure)
+            shell.model.host?.toast(message: String(format: I18n.str("Install and set up %@ first"), service), style: .failure)
         }
     }
 }
