@@ -104,7 +104,7 @@
 <h2 id="妙言-v450-的做法">妙言 V4.5.0 的做法</h2>
 <p>妙言用 cmark-gfm 的 Swift 包渲染 Markdown。V4.5.0 的 <code>Business/Markdown.swift</code> 里，解析器创建时打开了脚注选项，然后按名字挂上四个语法扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>，所以脚注是默认开启的，没有设置项。解析结果以允许原始 HTML 的方式转成 HTML，再交给网页视图显示，HTML 导出和 PDF 导出也建立在同一套渲染上，预览里能用的脚注在导出里同样能用。cmark-gfm 会把每个标记变成指向脚注的上标数字，把定义收进文末 <code>footnotes</code> 区块里的编号列表，每条后面带一个返回正文的链接。在预览里点标记会滚动到对应的<span class="nobr">脚注。</span></p>
 <p>应用自带的语法指南里也有「Footnotes」一节，带五条定义，可以照着复制。预览资源包里没有脚注专用的样式，外观就是页面的默认<span class="nobr">样式。</span></p>
-<p>幻灯片模式是例外。这时妙言把笔记交给 reveal.js 的 Markdown 插件，插件用的是 <code>marked</code> 而不是 cmark-gfm，V4.5.0 的插件源码里没有脚注处理，所以不要指望脚注在幻灯片里渲染。要在幻灯片里放出处，可以把来源写成观点下面的小字，做法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p>幻灯片模式是例外。这时妙言把笔记交给 reveal.js 的 Markdown 插件，插件用的是 <code>marked</code> 而不是 cmark-gfm，V4.5.0 的插件源码里没有脚注处理，所以不要指望脚注在幻灯片里渲染。要在幻灯片里放出处，可以把来源写成观点下面的小字，做法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻<span class="nobr">灯片</span></a>。</p>
 <h2 id="脚注没有渲染时">脚注没有渲染时</h2>
 <ul>
 <li><strong>方括号原样显示。</strong> 处理器没有脚注扩展，或者你在 GitHub wiki 里，对照上面的<span class="nobr">表格。</span></li>
@@ -112,7 +112,7 @@
 <li><strong>长脚注后面的正文被吞掉。</strong> Pandoc 里不缩进的段落会结束脚注，下一段前留一个空行，缩进保持<span class="nobr">一致。</span></li>
 <li><strong>编号和标签对不上。</strong> Pandoc 不管标签写什么都按顺序编号，<code>[^7]</code> 可能显示成 1，标签只是键，不是最终显示的<span class="nobr">数字。</span></li>
 </ul>
-<p>导出 PDF 时妙言打印的是预览，所以脚注会出现在文末的列表里；想换一种版式，可以改走 Pandoc，流程见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。其他依赖具体软件的语法，比如提示块和公式，可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
+<p>导出 PDF 时妙言打印的是预览，所以脚注会出现在文末的列表里；想换一种版式，可以改走 Pandoc，流程见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。其他依赖具体软件的语法，比如提示块和公式，可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM <span class="nobr">差异</span></a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="github-的-readme-支持脚注吗">GitHub 的 README 支持脚注吗？</h3>
 <p>支持。GitHub 语法页记录了 <code>[^1]</code> 标记加定义的写法，渲染在文件底部，同时写明 wiki 不支持<span class="nobr">脚注。</span></p>

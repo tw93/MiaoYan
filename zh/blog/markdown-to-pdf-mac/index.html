@@ -58,7 +58,7 @@
 <p>焦点在笔记列表上，而且没有开着幻灯片模式时，<code>Control + Shift + P</code> 导出 PDF，<code>Control + Shift + I</code> 导出图片，<code>Option + Control + Shift + P</code> 导出妙言 PPT PDF。幻灯片模式开着的时候这几个键会被<span class="nobr">忽略。</span></p>
 <p>PDF 和图片如果当时没开预览，会先打开预览，等一秒再导出，这次导出打开的预览，结束时再关掉。提示先显示带百分比的「正在导出」，成功是「已导出到下载目录~」，失败是「导出失败」。文件名用笔记标题，标题里的 <code>/</code> 换成 <code>_</code>，再加 <code>.pdf</code>，标题如果还是一串 UUID，会变成「无标题」。下载目录里已有同名文件时，后面补 <code>_yyyy-MM-dd_HH-mm-ss</code>，写不进去就弹出存储面板。用预览打开这份 PDF，核对插入的标题、页脚的 <code>1 / N</code>，以及 h1 到 h3 的大纲，同一菜单里的图片写出的是同一份预览的 PNG。</p>
 <h2 id="pdf-里有什么">PDF 里有什么</h2>
-<p>公式用随应用打包的 KaTeX，定界符是 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，这个引擎接受哪些写法，见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<p>公式用随应用打包的 KaTeX，定界符是 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，这个引擎接受哪些写法，见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX <span class="nobr">公式</span></a>。</p>
 <p>围栏代码用 highlight.js 11.5.1 上色，打印样式给 <code>pre</code> 设了 <code>white-space: pre-wrap</code>，长行会折回来。又给 <code>pre</code>、表格、<code>figure</code>、引用、Mermaid 块和图表面板设了 <code>page-break-inside: avoid</code>，标题则是 <code>page-break-after: avoid</code>。</p>
 <p>Mermaid 和 Markmap 跑的是应用里自带的脚本，打印前会等到 Mermaid 块带上 <code>data-processed</code>，Markmap 块带上 <code>data-markmap-rendered</code>，图片宽度也不再是 0。一共等 80 次，每次 120 毫秒，源码注释里写成 9.6 秒，到点就照样写出 PDF。Mermaid 渲染失败时留下源代码，错误文字不会写进<span class="nobr">页面。</span></p>
 <p>PlantUML 向 <code>https://www.plantuml.com/plantuml/svg/</code> 要图，所以需要网络，图的原文也会离开这台 Mac。三种图怎么区分，写在 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
@@ -66,7 +66,7 @@
 <p>纸张是 A4，595.2 乘 841.8 点，边距上 40 点、下 48 点、左右各 45 点，打印设置旁的注释写成上 14 毫米、下 17 毫米、左右 16 毫米。打印面板不出现，过宽的内容缩到页宽以内，预览是深色时纸面仍然是白的。文字用设置里的预览字体，中文由后面的 PingFang SC 和 Hiragino Sans GB <span class="nobr">接上。</span></p>
 <p>h1 到 h3 写成 PDF 大纲，每条书签落在哪一页，按标题在不分页的整篇文档里的高度估算，图片或者被要求整块保留的内容会让它偏一页。页脚是 8.5 磅的灰色字，内容是 <code>1 / N</code>，PDF 标题用导出标题，creator 字段写成 MiaoYan。</p>
 <h2 id="幻灯片是另一份-pdf">幻灯片是另一份 PDF</h2>
-<p>笔记文本里出现 <code>---</code> 时，导出菜单里的妙言 PPT PDF 会写出 <code>标题_PPT.pdf</code>，没有这三个字符就提示「没有分隔符 --- 标识，无法使用妙言 PPT~」。这个判断是子串搜索，表格行 <code>|---|</code> 也能通过。一行 <code>---</code> 怎样变成一页，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p>笔记文本里出现 <code>---</code> 时，导出菜单里的妙言 PPT PDF 会写出 <code>标题_PPT.pdf</code>，没有这三个字符就提示「没有分隔符 --- 标识，无法使用妙言 PPT~」。这个判断是子串搜索，表格行 <code>|---|</code> 也能通过。一行 <code>---</code> 怎样变成一页，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻<span class="nobr">灯片</span></a>。</p>
 <p><code>Command + Option + P</code> 用来开关妙言 PPT。选妙言 PPT PDF 时如果幻灯片模式没开，会先打开它，窗口当时不是全屏幕就进入全屏幕，等 1.2 秒，按 reveal.js 的打印布局抓取，并把 <code>pdfMaxPagesPerSlide</code> 设成 1，若是这次导出打开的模式，抓完再<span class="nobr">关掉。</span></p>
 <p>这份文件来自网页视图的 PDF 快照，不走文章导出那套 A4 边距，也不画 <code>1 / N</code> 页脚。幻灯片模式已经开着时再选 PDF，拿到的也是幻灯片的网页快照，文件名是 <code>标题.pdf</code>，同样没有<span class="nobr">页脚。</span></p>
 <h2 id="这一页是怎么排出来的">这一页是怎么排出来的</h2>
@@ -81,7 +81,7 @@
 <pre><code class="language-bash">pandoc note.md -o note.pdf --pdf-engine=weasyprint
 </code></pre>
 <p>行内 TeX 会交给 LaTeX 写入器，所以 <code>\newpage</code> 能在这条路上分页，WeasyPrint 收不到这条命令。YAML 里的 <code>papersize</code> 可以写 <code>a4</code> 或 <code>letter</code>，<code>geometry</code> 可以写手册示例里的 <code>top=30mm</code> 和 <code>left=20mm</code>。设置了 <code>CJKmainfont</code> 之后，<code>xelatex</code> 需要 <code>xeCJK</code>，<code>xelatex</code> 或 <code>lualatex</code> 需要 <code>fontspec</code>，PingFang SC 就是妙言打印字体栈里已经写上的中文<span class="nobr">字体。</span></p>
-<p>Typora 支持页上的导出入口是 File &gt; Export &gt; PDF，也能导出 HTML 和图片。偏好设置里 Export 下面的 PDF，可以改纸张，包括 A4、A5 或自定义尺寸，以及边距、导出主题、一级标题之间的分页、页眉和页脚，页脚示例是 <code>No. ${pageNo} / ${pageCount}</code>，Windows 和 Linux 上的 PDF 导出只支持浅色主题。PDF (LaTeX / Pandoc) 要自己加进导出列表才会出现，并且要装好 Pandoc，<code>PATH</code> 上还要有一个引擎，或者填上引擎的完整路径。编辑器之间怎么选，见 <a href="/zh/blog/typora-alternative-mac/">Mac 上的 Typora 替代品</a>。</p>
+<p>Typora 支持页上的导出入口是 File &gt; Export &gt; PDF，也能导出 HTML 和图片。偏好设置里 Export 下面的 PDF，可以改纸张，包括 A4、A5 或自定义尺寸，以及边距、导出主题、一级标题之间的分页、页眉和页脚，页脚示例是 <code>No. ${pageNo} / ${pageCount}</code>，Windows 和 Linux 上的 PDF 导出只支持浅色主题。PDF (LaTeX / Pandoc) 要自己加进导出列表才会出现，并且要装好 Pandoc，<code>PATH</code> 上还要有一个引擎，或者填上引擎的完整路径。编辑器之间怎么选，见 <a href="/zh/blog/typora-alternative-mac/">Mac 上的 Typora 替<span class="nobr">代品</span></a>。</p>
 <p>VS Code 里，yzane 的 Markdown PDF 扩展把 <code>markdown-pdf: Export (pdf)</code> 放在编辑器的右键菜单里，用 F1 打开的命令面板里也有这一项。打印经过本机的 Chrome、Edge、Chromium，或者扩展自己下载的 Chromium。公式用 KaTeX，不需要网络，Mermaid 围栏也包含在导出里，不过 Mermaid 脚本默认从 CDN 加载（<code>markdown-pdf.mermaidServer</code>），<code>markdown-pdf.displayHeaderFooter</code> 的默认值是 true。</p>
 <p>妙言没有「打印」命令，这条路要在另一个能打开笔记的应用里走。Apple 的 Mac 使用手册给的办法是，在能打印的文稿里从文件菜单选打印，再打开 PDF 弹出式菜单，选取保存为 PDF，纸张大小也在同一个打印对话框里定。妙言导出的 HTML 不适合拿到浏览器里打印，文件的 base URL 是 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>，本地图片也不会像预览那样改成 <code>file://</code>，<code>images/fig.png</code> 会被拿到这个 CDN 上去找，加载不<span class="nobr">出来。</span></p>
 <h2 id="对不上的时候">对不上的时候</h2>

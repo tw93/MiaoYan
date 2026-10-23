@@ -145,7 +145,7 @@
 </tr>
 </tbody>
 </table>
-<p>选中文字时命令会把它包起来，光标停在结尾标记后面，没选中时插入一对空标记，光标落在中间。它只包不切换，在已经加粗的文字上再按一次 <code>⌘B</code> 会多包一层变成 <code>****文字****</code>，要自己手动删掉。这些命令需要编辑区有焦点，预览模式下什么也不做。同一个菜单里还有下划线，写出来是 <code>&lt;u&gt;文字&lt;/u&gt;</code>，因为 Markdown 没有下划线语法。其余语法的对应关系见 <a href="/zh/blog/markdown-cheat-sheet/">速查表</a>。</p>
+<p>选中文字时命令会把它包起来，光标停在结尾标记后面，没选中时插入一对空标记，光标落在中间。它只包不切换，在已经加粗的文字上再按一次 <code>⌘B</code> 会多包一层变成 <code>****文字****</code>，要自己手动删掉。这些命令需要编辑区有焦点，预览模式下什么也不做。同一个菜单里还有下划线，写出来是 <code>&lt;u&gt;文字&lt;/u&gt;</code>，因为 Markdown 没有下划线语法。其余语法的对应关系见 <a href="/zh/blog/markdown-cheat-sheet/">速<span class="nobr">查表</span></a>。</p>
 <h2 id="什么时候用-html">什么时候用 HTML</h2>
 <p>预览会渲染原始 HTML，所以 <code>&lt;b&gt;</code>、<code>&lt;strong&gt;</code>、<code>&lt;del&gt;</code> 和 <code>&lt;s&gt;</code> 都能用，分隔符贴着标点或中文又加不了空格的时候就用它们。行内标签里的 Markdown 仍然会解析，<code>&lt;b&gt;*x*&lt;/b&gt;</code> 得到的是粗体里包<span class="nobr">斜体。</span></p>
 <p>标签要和文字放在同一行，单独占一行的标签会开启 HTML 块，块里面的行不再按 Markdown 解析。代价在另一头，会剥掉原始 HTML 的渲染器会丢掉这些标签，你想要强调的地方就只剩普通<span class="nobr">文字。</span></p>

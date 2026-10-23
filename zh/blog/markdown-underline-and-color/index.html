@@ -165,14 +165,14 @@
 </table>
 <p>Pandoc 手册还补了一条，<code>^...^</code> 或 <code>~...~</code> 里如果有空格，要用反斜杠转义，比如 <code>P~a\ cat~</code>。这些写法敲起来整齐，但对不认识它们的工具来说完全没法读，要在多个软件之间搬笔记的话，HTML 写法<span class="nobr">更稳。</span></p>
 <h2 id="用公式写上下标">用公式写上下标</h2>
-<p>笔记里本来就有公式的话，<code>$x^2$</code> 和 <code>$x_i$</code> 不用任何 HTML 就能得到上标和下标，妙言用内置的 KaTeX 渲染。KaTeX 还支持 <code>\mathrm{}</code> 写正体、<code>\textcolor{blue}{...}</code> 上色，所以 <code>$\textcolor{blue}{F=ma}$</code> 能给公式着色。公式场景用它合适，写普通文字就别扭了，因为数学模式用的是数学字体和间距。分隔符和常见的坑见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<p>笔记里本来就有公式的话，<code>$x^2$</code> 和 <code>$x_i$</code> 不用任何 HTML 就能得到上标和下标，妙言用内置的 KaTeX 渲染。KaTeX 还支持 <code>\mathrm{}</code> 写正体、<code>\textcolor{blue}{...}</code> 上色，所以 <code>$\textcolor{blue}{F=ma}$</code> 能给公式着色。公式场景用它合适，写普通文字就别扭了，因为数学模式用的是数学字体和间距。分隔符和常见的坑见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX <span class="nobr">公式</span></a>。</p>
 <h2 id="让笔记保持可移植">让笔记保持可移植</h2>
 <ul>
 <li>优先用语义化的 HTML（<code>&lt;mark&gt;</code>、<code>&lt;sup&gt;</code>、<code>&lt;ins&gt;</code>），少用 <code>style</code> 属性，因为保留前者的渲染器<span class="nobr">更多。</span></li>
 <li>如果浅色和深色主题都会用，避免写死颜色，为白底调好的深红色放到深色背景上可能就看不<span class="nobr">见了。</span></li>
 <li>只是想强调，用加粗或斜体，颜色留给真正需要的少数<span class="nobr">场合。</span></li>
 <li>在最严格的显示环境里测一下，比如 GitHub 的预览，再决定能不能依赖某个<span class="nobr">标签。</span></li>
-<li>不想被解析的字符要转义，见<a href="/zh/blog/markdown-escape-characters/">转义字符</a>。</li>
+<li>不想被解析的字符要转义，见<a href="/zh/blog/markdown-escape-characters/">转义<span class="nobr">字符</span></a>。</li>
 </ul>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="markdown-有下划线语法吗">Markdown 有下划线语法吗？</h3>

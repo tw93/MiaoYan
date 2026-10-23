@@ -73,7 +73,7 @@ npx markdown-it note.md -o note.html
 <p>cmark-gfm 是妙言用的 C 解析器，它的 README 说库默认会清除原始 HTML 和有风险的链接，命令行加 <code>--unsafe</code> 才放行。它负责把 Markdown 渲染成 HTML，页面的 head、样式表和脚本要你自<span class="nobr">己加。</span></p>
 <h2 id="它到底是怎么转的">它到底是怎么转的</h2>
 <p>Markdown 是文本格式，所有工具走的是同一条流水线，块解析器判断每一行是段落、标题、列表还是代码围栏，行内解析器处理其中的强调、链接和代码片段，结果是一棵树，渲染器遍历这棵树再打印标签。CommonMark 规定了核心语法对应的 HTML，GFM 在上面加了表格和任务列表，所以两个启用了不同扩展的工具，对同一个文件可能输出不同的 HTML，这就是同一张表在一个工具里是表格、在另一个里是一堆竖线的<span class="nobr">原因。</span></p>
-<p>「转换好的页面」里其他东西都是渲染之后才加的，head、样式表，以及画公式和图表的脚本。转换器替不替你加，才是工具之间真正的差别。CommonMark 和 GFM 各规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的区别</a>。</p>
+<p>「转换好的页面」里其他东西都是渲染之后才加的，head、样式表，以及画公式和图表的脚本。转换器替不替你加，才是工具之间真正的差别。CommonMark 和 GFM 各规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的<span class="nobr">区别</span></a>。</p>
 <h2 id="妙言的-html-导出">妙言的 HTML 导出</h2>
 <p>在妙言 V4.5.0 里选中一篇笔记，点文件 &gt; 导出 &gt; HTML，或者在妙言窗口里按 <code>Control + Shift + H</code>，不需要先打开预览。文件以 <code>标题.html</code> 写进下载目录，标题里的 <code>/</code> 换成 <code>_</code>，重名时在后面加时间戳，下载目录写不进去时会弹出保存面板，提示是「已导出到下载目录~」。</p>
 <p>文件里有<span class="nobr">什么：</span></p>
@@ -83,7 +83,7 @@ npx markdown-it note.md -o note.html
 <li>页面用的是预览的模板，字体取你设置的预览字体，正文宽度限制在 760 像素，颜色按当前主题的浅色或<span class="nobr">深色。</span></li>
 <li>它不内联任何东西。一个 <code>&lt;base&gt;</code> 标签指向 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>，模板里排版、KaTeX、highlight.js、Mermaid 和 Markmap 的样式与脚本都从那里加载，离线打开时，写在页面里的背景色、文字颜色和正文宽度还在，排版样式表加载不到，公式和图表也画不<span class="nobr">出来。</span></li>
 </ul>
-<p>最容易让人意外的是图片。HTML 导出渲染 Markdown 时没有走预览和 PDF 导出用来查找本地图片的那一步，而 <code>&lt;base&gt;</code> 标签又让所有相对路径都按 CDN 地址解析，<code>/i/photo.png</code> 变成 <code>https://cdn.miaoyan.app/i/photo.png</code>，<code>images/fig.png</code> 变成那边 <code>DownView.bundle/</code> 下的路径，都不存在，把图片拷到 HTML 旁边也没用，<code>https://</code> 开头的远程图片可以正常加载。要分享的文件，要么笔记里用远程图片地址，要么导出 PDF，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>，图片路径的细节见 <a href="/zh/blog/markdown-images/">Markdown 图片</a>。</p>
+<p>最容易让人意外的是图片。HTML 导出渲染 Markdown 时没有走预览和 PDF 导出用来查找本地图片的那一步，而 <code>&lt;base&gt;</code> 标签又让所有相对路径都按 CDN 地址解析，<code>/i/photo.png</code> 变成 <code>https://cdn.miaoyan.app/i/photo.png</code>，<code>images/fig.png</code> 变成那边 <code>DownView.bundle/</code> 下的路径，都不存在，把图片拷到 HTML 旁边也没用，<code>https://</code> 开头的远程图片可以正常加载。要分享的文件，要么笔记里用远程图片地址，要么导出 PDF，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>，图片路径的细节见 <a href="/zh/blog/markdown-images/">Markdown <span class="nobr">图片</span></a>。</p>
 <h2 id="放到网上">放到网上</h2>
 <p>不需要服务器的文件可以放到任何静态托管上。比如 GitHub Pages，会把仓库里的 HTML、CSS 和 JavaScript 文件发布成网站，入口文件找的是 <code>index.html</code>，要放在发布目录的最顶层。把转换好的页面命名为 <code>index.html</code>，图片放在旁边，Markdown 里用相对路径，搬过去之后路径仍然<span class="nobr">成立。</span></p>
 <p>用 Pandoc 的 <code>--embed-resources</code> 得到的是一个文件，发邮件或上传都不会漏东西；用妙言导出的要记得 CDN 这层依赖，页面放到你的站点上，样式仍然来自 <code>cdn.miaoyan.app</code>。</p>

@@ -65,7 +65,7 @@
 <p>嵌套和普通列表一样，子项在连字符下缩进两个空格即可，规范自带的示例也是这样。子项全部勾完以后父项不会自动勾上，在文件里每个框彼此<span class="nobr">独立。</span></p>
 <h2 id="无序和有序待办">无序和有序待办</h2>
 <p>列表符号可以是 <code>-</code>、<code>*</code> 或 <code>+</code>，规范对列表项的描述也适用于 <code>1. [ ] 第一步</code> 这样的有序项，妙言预览背后的 cmark-gfm 会把它画成带复选框的编号列表，适合步骤有先后的<span class="nobr">清单。</span></p>
-<p>这是标准层面的说法，具体编辑器写回文件时可以更严格，所以连字符在这里有分量。妙言自己的点击逻辑（下面会讲）只认 <code>- [ ]</code> 和 <code>- [x]</code>，想让点击稳定，就用连字符加小写 <code>x</code>。GFM 的其他补充可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
+<p>这是标准层面的说法，具体编辑器写回文件时可以更严格，所以连字符在这里有分量。妙言自己的点击逻辑（下面会讲）只认 <code>- [ ]</code> 和 <code>- [x]</code>，想让点击稳定，就用连字符加小写 <code>x</code>。GFM 的其他补充可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM <span class="nobr">差异</span></a>。</p>
 <h2 id="各处渲染差异">各处渲染差异</h2>
 <ul>
 <li><strong>GitHub。</strong> GitHub 的格式指南用的就是这套写法，在 issue 和评论里，官方文档说待办会渲染成可以点击的复选框。这个点击是 GitHub 的功能，不属于 Markdown <span class="nobr">本身。</span></li>
@@ -89,7 +89,7 @@
 <p><code>-F</code> 把模式当固定字符串，方括号不会被当成正则字符类，<code>--</code> 防止开头的连字符被当成选项。缩进的子任务同样能匹配，因为这个字符串可以出现在一行的任何位置，已完成的换成 <code>'- [x]'</code>。用 <code>grep</code> 的<span class="nobr">话是：</span></p>
 <pre><code class="language-bash">grep -rn --include='*.md' -F -- '- [ ]' ~/Notes
 </code></pre>
-<p>想按文件统计未完成数量就加 <code>-c</code>。这也是坚持一种写法的最大理由，如果有些笔记写的是 <code>* [ ]</code>，一次搜索就会漏掉它们。更多在命令行里处理笔记的办法见 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里处理 Markdown 笔记</a>。</p>
+<p>想按文件统计未完成数量就加 <code>-c</code>。这也是坚持一种写法的最大理由，如果有些笔记写的是 <code>* [ ]</code>，一次搜索就会漏掉它们。更多在命令行里处理笔记的办法见 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里处理 Markdown <span class="nobr">笔记</span></a>。</p>
 <h2 id="局限与更合适的工具">局限与更合适的工具</h2>
 <p>待办列表只是清单，不是任务管理器，没有截止日期、提醒和重复，状态只有未完成和已完成两种。购物清单、发布检查表和笔记里的当日计划，用它刚好。需要截止日期和提醒时，换专门的工具，笔记留作<span class="nobr">参考。</span></p>
 <h2 id="常见问题">常见问题</h2>

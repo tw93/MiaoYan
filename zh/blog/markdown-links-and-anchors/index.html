@@ -90,7 +90,7 @@
 <p>妙言的预览是一个网页视图，加载的是应用缓存文件夹里那份预览文件的副本，不是笔记所在的文件夹，点击的链接会交给 macOS 去打开。网址会用默认浏览器打开，指向另一个 <code>.md</code> 文件的相对路径在预览里不会按笔记所在文件夹解析，用它在笔记之间跳转并不可靠。本地图片则不同，预览会按笔记所在的项目文件夹改写路径，见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
 <p>笔记之间的跳转，妙言用的是 wikilink，写成 <code>[[笔记标题]]</code>。在编辑区里点击它会打开标题完全一致的那篇笔记，预览在渲染前也会把它改写成 <code>miaoyan://goto/</code> 链接，所以在预览里同样能点。它不是标准 Markdown，不认识它的查看器会显示方括号。取舍见<a href="/zh/blog/wikilinks-and-backlinks/">Wikilink 与反向链接</a>。如果这些笔记还要在 GitHub 上当文件用，那里就用相对路径的 Markdown 链接，接受它们只给 GitHub 用，不用来在妙言<span class="nobr">里点。</span></p>
 <h2 id="怎么检查链接">怎么检查链接</h2>
-<p>打开渲染后的页面逐个点。在妙言里点预览中的标题链接，没有滚动就说明片段对不上任何 id；在 GitHub 上从标题的链接图标复制锚点，不要自己猜 slug。链接里混着标点、空格和非 ASCII 文字时，给目的地加尖括号或做编码，标题尽量短，slug 才好预测。妙言还能渲染哪些语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。</p>
+<p>打开渲染后的页面逐个点。在妙言里点预览中的标题链接，没有滚动就说明片段对不上任何 id；在 GitHub 上从标题的链接图标复制锚点，不要自己猜 slug。链接里混着标点、空格和非 ASCII 文字时，给目的地加尖括号或做编码，标题尽量短，slug 才好预测。妙言还能渲染哪些语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法<span class="nobr">速查</span></a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="markdown-怎么链接到某个标题">Markdown 怎么链接到某个标题？</h3>
 <p>写 <code>[文字](#标题slug)</code>。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪<span class="nobr">里读。</span></p>

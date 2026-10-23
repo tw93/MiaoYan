@@ -97,7 +97,7 @@ console.log(&quot;inner&quot;);
 <p>编辑区的代码着色是另一套高亮器，而且只认反引号写的围栏，波浪线围栏和四个反引号的嵌套写法在预览里渲染正确，编辑区里的着色可能对不上。单个代码块超过 3000 个字符时它会跳过着色，一篇笔记里围栏块超过 20 个时整篇都不再着色，最终导出成什么样，以预览<span class="nobr">为准。</span></p>
 <h2 id="mermaidplantumlmarkmap-和公式">Mermaid、PlantUML、Markmap 和公式</h2>
 <p>有些语言名做的不只是上色，<code>mermaid</code>、<code>plantuml</code> 和 <code>markmap</code> 会被妙言的图表脚本接管，换成一张图。Mermaid 和 Markmap 用内置的 JavaScript 渲染，PlantUML 则会生成指向 plantuml.com 公共服务的链接，需要联网，图的文本也会离开你的 Mac。Mermaid 解析失败时，预览会把源码留在块里，不会弹出错误页，细节见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
-<p>公式不是围栏语法，美元符号包起来的公式在代码之外处理。妙言的公式处理会跳过行内代码和围栏块，所以代码块里的 <code>$</code> 是安全的，写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<p>公式不是围栏语法，美元符号包起来的公式在代码之外处理。妙言的公式处理会跳过行内代码和围栏块，所以代码块里的 <code>$</code> 是安全的，写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX <span class="nobr">公式</span></a>。</p>
 <h2 id="复制和导出">复制和导出</h2>
 <p>V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反过来，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的<span class="nobr">围栏。</span></p>
 <p>「导出」子菜单里有 HTML、图片和 PDF，PDF 的细节见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。导出的 HTML 文件会从妙言的 CDN 加载高亮和图表脚本，所以打开那个文件时，要联网才有颜色<span class="nobr">和图。</span></p>
@@ -108,7 +108,7 @@ console.log(&quot;inner&quot;);
 <li>语言名高亮器不认识就没有颜色，换成短别名试试，或对照上面的语言<span class="nobr">列表。</span></li>
 <li>不同应用颜色不一样，因为各自带的高亮器和主题不同，Markdown 本身可移植，颜色不可<span class="nobr">移植。</span></li>
 </ul>
-<p>其余语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
+<p>其余语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM <span class="nobr">差异</span></a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="一定要写语言名吗">一定要写语言名吗？</h3>
 <p>不用，不写也会渲染成代码块，想要颜色稳定再补上，因为妙言没有语言名时会根据内容<span class="nobr">去猜。</span></p>

@@ -111,7 +111,7 @@
 <p><strong>出现了一篇笔记的两份副本。</strong> 两份都打开，把需要的内容复制到要保留的那份，删掉另一份。同步服务会给多出来的文件加标记，比如 Dropbox 的「conflicted copy」，搜这几个字就能<span class="nobr">找到。</span></p>
 <p><strong>妙言提示检测到外部修改。</strong> 同步服务拉下了你正打开的笔记的新版本时，妙言会从磁盘重新加载，如果你没保存的编辑内容和磁盘上的不同，它会先把你的文字存进笔记库顶层隐藏的 <code>.miaoyan-conflicts</code> 文件夹，并提示「检测到外部修改，本地内容已备份~」，备份至少保留最近的 100 份，以及 30 天以内的所有文件。怀疑文字丢了的时候，先看一下这个文<span class="nobr">件夹。</span></p>
 <p><strong>某篇笔记是空的。</strong> 文件可能还没下载完，在访达里打开文件夹，把文件设为离线可用，等同步<span class="nobr">结束。</span></p>
-<p><strong>版本历史不在云端。</strong> 妙言把快照存在自己的支持目录里，不在笔记文件夹中，所以不会同步，见 <a href="/zh/blog/markdown-note-version-history/">Markdown 笔记的版本历史</a>。</p>
+<p><strong>版本历史不在云端。</strong> 妙言把快照存在自己的支持目录里，不在笔记文件夹中，所以不会同步，见 <a href="/zh/blog/markdown-note-version-history/">Markdown 笔记的版本<span class="nobr">历史</span></a>。</p>
 <p><strong>用 git 配合妙言。</strong> 在笔记库文件夹里提交，把 <code>.miaoyan-conflicts/</code> 加进 <code>.gitignore</code>，避免备份文件被提交，另外除非你清楚后果，不要在同一个文件夹上同时跑 git 和网盘<span class="nobr">同步。</span></p>
 <h2 id="能避免大多数冲突的习惯">能避免大多数冲突的习惯</h2>
 <ul>
@@ -120,7 +120,7 @@
 <li>一个文件夹只用一种同步<span class="nobr">机制。</span></li>
 <li>在同步工具之外再留一份副本，比如 Time Machine 备份，因为同步会把错误和成果一样忠实地复制<span class="nobr">过去。</span></li>
 </ul>
-<p>想知道纯文件夹为什么值得这些麻烦，看 <a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记</a>，想对同步后的文件夹写脚本，看 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记</a>。</p>
+<p>想知道纯文件夹为什么值得这些麻烦，看 <a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记</a>，想对同步后的文件夹写脚本，看 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown <span class="nobr">笔记</span></a>。</p>
 <p>妙言 Mac 版在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> 开源，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本一次购买覆盖 Mac、iPhone 和 iPad。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="妙言有自己的同步服务吗">妙言有自己的同步服务吗？</h3>

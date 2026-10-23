@@ -116,7 +116,7 @@ tags = [&quot;markdown&quot;, &quot;notes&quot;]
 </ul>
 <p>妙言不会读这些键，那一段也不会按 YAML 解析，所以一篇笔记只要顶部恰好有两行 <code>---</code> 夹着一些文字，预览里这些文字也会消失。同样没有 YAML 校验，能让 Jekyll 报错的笔误在妙言里看不<span class="nobr">出来。</span></p>
 <h2 id="幻灯片模式和-分隔符">幻灯片模式和 <code>---</code> 分隔符</h2>
-<p>幻灯片模式里 <code>---</code> 同时是分页符。V4.5.0 在文本交给幻灯片渲染之前就去掉了 front matter，所以顶部的元数据块不会变成一页。要留意以 <code>---</code> 当分隔符开头的幻灯片，如果后面还有一行 <code>---</code>，两行之间的内容会被当成 front matter 而消失。幻灯片从标题开始写，元数据放进一个干净的块里。分隔符本身的用法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p>幻灯片模式里 <code>---</code> 同时是分页符。V4.5.0 在文本交给幻灯片渲染之前就去掉了 front matter，所以顶部的元数据块不会变成一页。要留意以 <code>---</code> 当分隔符开头的幻灯片，如果后面还有一行 <code>---</code>，两行之间的内容会被当成 front matter 而消失。幻灯片从标题开始写，元数据放进一个干净的块里。分隔符本身的用法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻<span class="nobr">灯片</span></a>。</p>
 <h2 id="没有生效时">没有生效时</h2>
 <ul>
 <li><strong>预览里显示出元数据。</strong> 第一个 <code>---</code> 前面有空行或空格，结尾行是 <code>----</code> 或 <code>...</code>，或者这个块用的是 <code>+++</code>。</li>

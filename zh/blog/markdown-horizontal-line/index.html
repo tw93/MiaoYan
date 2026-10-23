@@ -94,7 +94,7 @@ ___
 <h2 id="妙言里-的另外两个用途">妙言里 <code>---</code> 的另外两个用途</h2>
 <h3 id="幻灯片分页符">幻灯片分页符</h3>
 <p>在 PPT 模式（<code>Command + Option + P</code>）里，妙言把笔记交给 reveal.js，它的 Markdown 插件按 <code>\r?\n---\r?\n</code> 这个模式切页，也就是前后各有换行的一行 <code>---</code>。这带来三个结果，一行 <code>---</code> 就是一张幻灯片的边界，所以不能拿它在一页里当分隔线；<code>----</code> 或者 <code>---</code> 后面跟了空格，都匹配不上；setext 的坑在幻灯片里也不存在，因为切分发生在解析器看到这一行之前，<code>---</code> 上面紧贴的文字只是上一页的结尾，不会变成<span class="nobr">标题。</span></p>
-<p><code>***</code>、<code>___</code> 和 <code>&lt;hr&gt;</code> 匹配不上这个模式，会留在当前这页里，和其他行一样交给 reveal 的 Markdown 渲染器，一页内要分隔线就试它们，演示前在 PPT 模式里看一眼这一页。完整流程见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p><code>***</code>、<code>___</code> 和 <code>&lt;hr&gt;</code> 匹配不上这个模式，会留在当前这页里，和其他行一样交给 reveal 的 Markdown 渲染器，一页内要分隔线就试它们，演示前在 PPT 模式里看一眼这一页。完整流程见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻<span class="nobr">灯片</span></a>。</p>
 <p>快捷键只检查笔记里有没有 <code>---</code> 这三个字符，表格分隔行 <code>|---|---|</code> 里就含有，所以只有表格、没有真正分页符的笔记也会启动 PPT <span class="nobr">模式。</span></p>
 <h3 id="front-matter-围栏">front matter 围栏</h3>
 <p>笔记第一行是 <code>---</code> 时，妙言会往下找下一个以三个短横线开头的行，这一行正好是 <code>---</code>，两行之间的内容就当成 front matter，在预览、PPT 模式和导出里隐藏，如果是 <code>----</code> 或者短横线后面还有别的字，就什么都不隐藏。笔记中间的三个短横线仍然是普通分割线。所以开头写一条装饰性的 <code>---</code> 会让第一段消失，开头先写标题，或者顶上那条用 <code>***</code>。完整规则见 <a href="/zh/blog/markdown-front-matter/">Markdown front matter</a>。</p>
@@ -107,7 +107,7 @@ ___
 <li><strong>在妙言以外的应用里没有线。</strong> 渲染器可能过滤了 <code>&lt;hr&gt;</code>，改用 <code>---</code> 并在上面留<span class="nobr">空行。</span></li>
 <li><strong>Pandoc 把线吞掉、变成单格表格，或者直接报错。</strong> Pandoc 自己的 Markdown，也就是<a href="/zh/blog/markdown-to-word/">转 Word</a> 时读文件的那一套，看到 <code>---</code> 下面紧贴着文字，会当成 YAML 元数据块的开头，手册写明这种块只要前面有空行，放在文档哪里都行。用 Pandoc 3.12.1 试过，<code>---</code>、<code>key: value</code>、<code>---</code> 这三行在输出里整个消失，同样的围栏里放不是 YAML 的文字，转换直接停在 <code>Error parsing YAML metadata</code>，两条线中间夹一行普通文字，出来的是一个只有一格的表格。分割线下面也留一个空行，三种情况都能避开，手册本身就是这么建<span class="nobr">议的。</span></li>
 </ul>
-<p>CommonMark 和 GFM 各自规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的区别</a>，其余语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。</p>
+<p>CommonMark 和 GFM 各自规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的区别</a>，其余语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法<span class="nobr">速查</span></a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="三种写法该用哪个">三种写法该用哪个？</h3>
 <p><code>---</code> 最常见，纯文本里最好读。线可能紧贴在段落下面时用 <code>***</code>，它不会变成<span class="nobr">标题。</span></p>

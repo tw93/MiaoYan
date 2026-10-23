@@ -70,7 +70,7 @@
 | 1    | 打开文件&lt;br&gt;按保存          |
 </code></pre>
 <p>渲染器允许行内 HTML 时才有效，妙言的预览允许。行尾的反斜杠在这里帮不上忙，因为单元格后面没有下一行源码可以续。如果查看器把 HTML 转义了，<code>&lt;br&gt;</code> 会原样显示出来，这时更好的办法是调整数据<span class="nobr">结构。</span></p>
-<p><strong>行内代码和公式。</strong> 行内代码除了竖线规则之外没有别的限制。公式方面，妙言的渲染器在表格解析之前，会把 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code> 里的每个字符都先遮蔽起来，所以单元格里的 <code>$n$</code> 是安全的，按源码来看公式里的 <code>|</code> 同样会被遮蔽。这是这个渲染器自己的行为，换一个工具不要想当然，写绝对值这类符号，用 <code>\vert</code> 在任何 KaTeX 渲染器里都不用担心。分隔符见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<p><strong>行内代码和公式。</strong> 行内代码除了竖线规则之外没有别的限制。公式方面，妙言的渲染器在表格解析之前，会把 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code> 里的每个字符都先遮蔽起来，所以单元格里的 <code>$n$</code> 是安全的，按源码来看公式里的 <code>|</code> 同样会被遮蔽。这是这个渲染器自己的行为，换一个工具不要想当然，写绝对值这类符号，用 <code>\vert</code> 在任何 KaTeX 渲染器里都不用担心。分隔符见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX <span class="nobr">公式</span></a>。</p>
 <h2 id="表格做不到的事">表格做不到的事</h2>
 <p>没有合并单元格，没有跨行，没有多段落单元格，单元格里不能放列表，也不能设置列宽，这套语法描述的只是一个普通网格。需要合并表头或者单元格里放列表时，就用 HTML 写<span class="nobr">表格：</span></p>
 <pre><code class="language-markdown">&lt;table&gt;
@@ -85,7 +85,7 @@
 <p>PDF 和图片导出没法滚动，所以导出样式会撤掉这一层。滚动容器不再裁剪，表格被设成页面宽度的固定布局，各列等宽。结果是一列很长、几列很短的表格，在纸上会被压成等宽的几列。导出的表格显得局促时，缩短最长的单元格、删一列，或者把表格拆开。导出的步骤见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。打印样式还要求表格不要跨页<span class="nobr">拆开。</span></p>
 <h2 id="把电子表格里的数据做成表格">把电子表格里的数据做成表格</h2>
 <p>妙言没有 CSV 或 TSV 导入，也不会在粘贴时把制表符分隔的文字变成竖线表格。它转换的是 HTML，粘贴带 <code>&lt;table&gt;</code> 的富文本，比如网页上的表格，会写成竖线表格。没有 <code>&lt;th&gt;</code> 时第一行当表头，单元格里的竖线转义成 <code>\|</code>，单元格内部的换行变成空格。如果来源应用只在剪贴板里放了制表符分隔的纯文本，粘贴出来的是制表符，不是<span class="nobr">竖线。</span></p>
-<p>对于 CSV 或 TSV 文件，Pandoc 的输入格式里有 <code>csv</code> 和 <code>tsv</code>，输出格式里有 <code>gfm</code>，所以转换大致是 <code>pandoc -f csv -t gfm data.csv</code>，得到的竖线表格可以贴进笔记，只是单元格长了源码会参差不齐。用命令行创建笔记见<a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记：miao 命令行</a>。</p>
+<p>对于 CSV 或 TSV 文件，Pandoc 的输入格式里有 <code>csv</code> 和 <code>tsv</code>，输出格式里有 <code>gfm</code>，所以转换大致是 <code>pandoc -f csv -t gfm data.csv</code>，得到的竖线表格可以贴进笔记，只是单元格长了源码会参差不齐。用命令行创建笔记见<a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记：miao 命<span class="nobr">令行</span></a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="为什么我的-markdown-表格没有渲染">为什么我的 Markdown 表格没有渲染？</h3>
 <p>多半是分隔行的单元格数和表头行不一致，把两行的数量改成相同<span class="nobr">即可。</span></p>

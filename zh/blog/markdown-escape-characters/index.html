@@ -75,7 +75,7 @@
 <p>转义在自动链接（<code>&lt;https://example.com?find=\*&gt;</code>）和原始 HTML 属性里不生效，但在链接地址、链接标题和围栏代码块的信息串里<span class="nobr">生效。</span></p>
 <h2 id="妙言里的美元符号">妙言里的美元符号</h2>
 <p>妙言用 KaTeX 渲染公式，<code>$...$</code> 是行内公式，<code>$$...$$</code> 是块级公式，每次预览都会运行，所以正文里的美元符号可能开启一个公式。普通价格有两层保护，Swift 这一层把 <code>$</code> 后面跟数字、可选小数部分、再接一个不是字母、数字或数学运算符的字符判为货币，预览脚本里有类似的规则，所以 <code>costs $5 or $10.</code> 保持<span class="nobr">文字。</span></p>
-<p>保护在字母和运算符处就停了，<code>$5M and $10M</code> 会被读成两个美元符号之间的公式，<code>$5-10</code> 也可能被当成数学。反斜杠在这里帮不上忙，<code>\$</code> 是普通的 Markdown 转义，解析器会先把它变成裸的 <code>$</code>，等预览脚本和 KaTeX 扫描美元符号时已经看不到反斜杠，<code>\$5M and \$10M</code> 照样会变成公式。更稳妥的做法有两个，把金额放进行内代码，比如 <code>$5M</code>，或者改写成 500 万美元，公式处理会跳过行内代码和围栏代码块。公式的写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<p>保护在字母和运算符处就停了，<code>$5M and $10M</code> 会被读成两个美元符号之间的公式，<code>$5-10</code> 也可能被当成数学。反斜杠在这里帮不上忙，<code>\$</code> 是普通的 Markdown 转义，解析器会先把它变成裸的 <code>$</code>，等预览脚本和 KaTeX 扫描美元符号时已经看不到反斜杠，<code>\$5M and \$10M</code> 照样会变成公式。更稳妥的做法有两个，把金额放进行内代码，比如 <code>$5M</code>，或者改写成 500 万美元，公式处理会跳过行内代码和围栏代码块。公式的写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX <span class="nobr">公式</span></a>。</p>
 <h2 id="不同渲染器的差异">不同渲染器的差异</h2>
 <p>转义由 CommonMark 定义，所以上面的反斜杠规则在 GitHub 和其他符合规范的解析器里一致，差别在于什么算语法。GFM 增加了表格和删除线，所以 <code>|</code> 和 <code>~</code> 在 GFM 里要转义，严格的 CommonMark 里不用。美元符号公式不属于这两个标准，妙言会渲染，别的工具不一定，大量出现 <code>$</code> 的笔记在不同工具里看起来可能不同。原始 HTML 也是一处分歧，妙言放行，有些托管平台会去掉，所以 <code>\&lt;div&gt;</code> 是哪里都能用的<span class="nobr">写法。</span></p>
 <h2 id="检查结果">检查结果</h2>
