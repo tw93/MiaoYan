@@ -81,7 +81,7 @@ Installez le skill officiel avec `npx skills add tw93/MiaoYan/skills/miaoyan -g`
 
 Ces personnes l'ont déjà fait 🐱
 
-<a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
+<a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://raw.githubusercontent.com/tw93/sponsors/main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
 
 ## Remerciements
 
