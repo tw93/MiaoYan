@@ -30,23 +30,25 @@ const MiaoYanCommon = {
   // paste "## Title" when only the title's words were wanted.
   selectionPayload() {
     const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return { text: '', html: '' };
-    let text = selection.toString() || '';
+    if (!selection || selection.rangeCount === 0) return { text: '', html: '', heading: false };
+    const text = selection.toString() || '';
     const container = document.createElement('div');
     container.appendChild(selection.getRangeAt(0).cloneContents());
     const only = container.children.length === 1 ? container.children[0] : null;
     if (only && /^H[1-6]$/.test(only.tagName) && container.textContent.trim() === only.textContent.trim()) {
-      return { text: text.trim(), html: only.innerHTML };
+      return { text: text.trim(), html: only.innerHTML, heading: true };
     }
-    return { text: text, html: container.innerHTML || '' };
+    return { text: text, html: container.innerHTML || '', heading: false };
   },
 
   setupTextSelection() {
     // Edit > Copy goes through MPreviewView.copySelectionToPasteboard; the
-    // context menu's Copy reaches the page as a copy event.
+    // context menu's Copy reaches the page as a copy event. Only a lone
+    // heading is rewritten there: any other selection keeps WebKit's own copy,
+    // whose HTML carries the styles that rich-text apps paste.
     document.addEventListener('copy', (e) => {
       const payload = MiaoYanCommon.selectionPayload();
-      if (!payload.text || !e.clipboardData) return;
+      if (!payload.heading || !payload.text || !e.clipboardData) return;
       e.preventDefault();
       e.clipboardData.setData('text/plain', payload.text);
       if (payload.html) e.clipboardData.setData('text/html', payload.html);
