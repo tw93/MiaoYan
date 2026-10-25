@@ -150,12 +150,14 @@ pre code {
 }
 
 /* Images cut by the top edge while scrolling keep their rounded corners:
-   two paper-coloured corner pieces sit over the column's top corners while
-   the page is scrolled (MiaoYanCommon.setupScrollCorners). */
+   two paper-coloured corner pieces sit on the top corners of the image
+   crossing that edge (MiaoYanCommon.setupScrollCorners sets the position
+   and --corner-radius from the image itself). */
 .scroll-corners {
+  --corner-radius: var(--border-radius-lg);
   position: fixed;
   top: 0;
-  height: var(--border-radius-lg);
+  height: var(--corner-radius);
   pointer-events: none;
   z-index: 5;
   display: none;
@@ -170,18 +172,18 @@ pre code {
   content: "";
   position: absolute;
   top: 0;
-  width: var(--border-radius-lg);
-  height: var(--border-radius-lg);
+  width: var(--corner-radius);
+  height: var(--corner-radius);
 }
 
 .scroll-corners::before {
   left: 0;
-  background: radial-gradient(circle at 100% 100%, transparent calc(var(--border-radius-lg) - 0.5px), var(--bg-color) var(--border-radius-lg));
+  background: radial-gradient(circle at 100% 100%, transparent calc(var(--corner-radius) - 0.5px), var(--bg-color) var(--corner-radius));
 }
 
 .scroll-corners::after {
   right: 0;
-  background: radial-gradient(circle at 0 100%, transparent calc(var(--border-radius-lg) - 0.5px), var(--bg-color) var(--border-radius-lg));
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--corner-radius) - 0.5px), var(--bg-color) var(--corner-radius));
 }
 
 @media print {

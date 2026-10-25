@@ -205,24 +205,40 @@ const MiaoYanCommon = {
     }
   },
 
-  // Pins two corner pieces over the column's top corners while the page is
-  // scrolled, so an image passing under the title bar keeps its rounded
-  // corners instead of ending in a straight cut. Hidden at the top of the
-  // page, which is also where PNG export captures.
+  // While an image runs under the top edge, two paper-coloured corner pieces
+  // sit on its top corners, so it keeps its rounded corners there instead of
+  // ending in a straight cut. They follow that image's own left edge, width
+  // and radius, so narrow and indented images are covered too, and stay
+  // hidden at the top of the page, which is also where PNG export captures.
   setupScrollCorners() {
-    const write = document.getElementById('write');
-    if (!write || document.querySelector('.scroll-corners')) return;
+    if (document.querySelector('.scroll-corners')) return;
     const corners = document.createElement('div');
     corners.className = 'scroll-corners';
     document.body.appendChild(corners);
+    let shown = '';
     const place = () => {
-      const rect = write.getBoundingClientRect();
-      const style = getComputedStyle(write);
-      const left = rect.left + parseFloat(style.paddingLeft);
-      const width = rect.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-      corners.style.left = left + 'px';
-      corners.style.width = width + 'px';
-      corners.classList.toggle('visible', window.scrollY > 0);
+      let target = null;
+      if (window.scrollY > 0) {
+        for (const media of document.querySelectorAll('#write img, #write video')) {
+          const rect = media.getBoundingClientRect();
+          if (rect.top < 0 && rect.bottom > 0 && rect.width > 0) {
+            target = { rect, radius: parseFloat(getComputedStyle(media).borderTopLeftRadius) || 0 };
+            break;
+          }
+        }
+      }
+      // Reads first, then at most one write, and none while nothing changed.
+      const next = target && target.radius > 0 ? `${target.rect.left}|${target.rect.width}|${target.radius}` : '';
+      if (next === shown) return;
+      shown = next;
+      if (!next) {
+        corners.classList.remove('visible');
+        return;
+      }
+      corners.style.left = target.rect.left + 'px';
+      corners.style.width = target.rect.width + 'px';
+      corners.style.setProperty('--corner-radius', target.radius + 'px');
+      corners.classList.add('visible');
     };
     window.addEventListener('scroll', place, { passive: true });
     window.addEventListener('resize', place);
