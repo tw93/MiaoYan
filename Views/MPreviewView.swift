@@ -433,6 +433,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
     func copySelectionToPasteboard() {
         let script = """
                 (function() {
+                    if (window.MiaoYanCommon && MiaoYanCommon.selectionPayload) {
+                        return MiaoYanCommon.selectionPayload();
+                    }
                     const selection = window.getSelection();
                     if (!selection || selection.rangeCount === 0) {
                         return { text: "", html: "" };

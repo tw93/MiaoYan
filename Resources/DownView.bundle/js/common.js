@@ -24,7 +24,34 @@ const MiaoYanCommon = {
     });
   },
 
+  // The selection as plain text and HTML for the clipboard. A selection that
+  // is one heading, as a triple-click makes it, loses its <h1>-<h6> wrapper:
+  // apps that turn pasted HTML into Markdown, the editor included, otherwise
+  // paste "## Title" when only the title's words were wanted.
+  selectionPayload() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return { text: '', html: '' };
+    let text = selection.toString() || '';
+    const container = document.createElement('div');
+    container.appendChild(selection.getRangeAt(0).cloneContents());
+    const only = container.children.length === 1 ? container.children[0] : null;
+    if (only && /^H[1-6]$/.test(only.tagName) && container.textContent.trim() === only.textContent.trim()) {
+      return { text: text.trim(), html: only.innerHTML };
+    }
+    return { text: text, html: container.innerHTML || '' };
+  },
+
   setupTextSelection() {
+    // Edit > Copy goes through MPreviewView.copySelectionToPasteboard; the
+    // context menu's Copy reaches the page as a copy event.
+    document.addEventListener('copy', (e) => {
+      const payload = MiaoYanCommon.selectionPayload();
+      if (!payload.text || !e.clipboardData) return;
+      e.preventDefault();
+      e.clipboardData.setData('text/plain', payload.text);
+      if (payload.html) e.clipboardData.setData('text/html', payload.html);
+    });
+
     function getSelectionAndSendMessage() {
       const txt = document.getSelection().toString();
       window.webkit?.messageHandlers.newSelectionDetected?.postMessage(txt);
