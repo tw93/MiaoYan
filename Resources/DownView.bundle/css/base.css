@@ -149,6 +149,47 @@ pre code {
   line-height: 1.74 !important;
 }
 
+/* Images cut by the top edge while scrolling keep their rounded corners:
+   two paper-coloured corner pieces sit over the column's top corners while
+   the page is scrolled (MiaoYanCommon.setupScrollCorners). */
+.scroll-corners {
+  position: fixed;
+  top: 0;
+  height: var(--border-radius-lg);
+  pointer-events: none;
+  z-index: 5;
+  display: none;
+}
+
+.scroll-corners.visible {
+  display: block;
+}
+
+.scroll-corners::before,
+.scroll-corners::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: var(--border-radius-lg);
+  height: var(--border-radius-lg);
+}
+
+.scroll-corners::before {
+  left: 0;
+  background: radial-gradient(circle at 100% 100%, transparent calc(var(--border-radius-lg) - 0.5px), var(--bg-color) var(--border-radius-lg));
+}
+
+.scroll-corners::after {
+  right: 0;
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--border-radius-lg) - 0.5px), var(--bg-color) var(--border-radius-lg));
+}
+
+@media print {
+  .scroll-corners {
+    display: none !important;
+  }
+}
+
 /* ==================== HR ==================== */
 .heti hr {
   background-color: var(--border-color);

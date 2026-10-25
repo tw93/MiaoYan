@@ -176,6 +176,30 @@ const MiaoYanCommon = {
     }
   },
 
+  // Pins two corner pieces over the column's top corners while the page is
+  // scrolled, so an image passing under the title bar keeps its rounded
+  // corners instead of ending in a straight cut. Hidden at the top of the
+  // page, which is also where PNG export captures.
+  setupScrollCorners() {
+    const write = document.getElementById('write');
+    if (!write || document.querySelector('.scroll-corners')) return;
+    const corners = document.createElement('div');
+    corners.className = 'scroll-corners';
+    document.body.appendChild(corners);
+    const place = () => {
+      const rect = write.getBoundingClientRect();
+      const style = getComputedStyle(write);
+      const left = rect.left + parseFloat(style.paddingLeft);
+      const width = rect.width - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      corners.style.left = left + 'px';
+      corners.style.width = width + 'px';
+      corners.classList.toggle('visible', window.scrollY > 0);
+    };
+    window.addEventListener('scroll', place, { passive: true });
+    window.addEventListener('resize', place);
+    place();
+  },
+
   setupImageZoom() {
     const zoomImgs = document.querySelectorAll('#write>img, #write>p>img, #write>table img');
     if (zoomImgs.length > 0 && window.Lightense) {
