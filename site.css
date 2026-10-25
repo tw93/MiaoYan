@@ -45,7 +45,7 @@
        url("/fonts/miaoyan-serif-sc-regular.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
-  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
@@ -53,7 +53,7 @@
        url("/fonts/miaoyan-serif-sc-semibold.woff2") format("woff2");
   font-weight: 500 700;
   font-display: swap;
-  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
@@ -61,7 +61,7 @@
        url("/fonts/miaoyan-serif-tc-regular.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
-  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
@@ -69,24 +69,32 @@
        url("/fonts/miaoyan-serif-tc-semibold.woff2") format("woff2");
   font-weight: 500 700;
   font-display: swap;
-  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
+/* The Chinese face leads so the curly quotes and the ellipsis in its range are
+   Chinese marks (Charter drew them narrow against the Han); Latin still falls
+   to Charter, as on mole.fit (2026-10-25). */
 html[lang="zh-CN"] {
-  --serif: Charter, Georgia, "MiaoYan Serif SC", "Songti SC", serif;
+  --serif: "MiaoYan Serif SC", Charter, Georgia, "Songti SC", serif;
   --sans: var(--serif);
 }
 html[lang="zh-Hant"] {
-  --serif: Charter, Georgia, "MiaoYan Serif TC", "Songti TC", serif;
+  --serif: "MiaoYan Serif TC", Charter, Georgia, "Songti TC", serif;
   --sans: var(--serif);
 }
 html[lang="ja"] {
   --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", Georgia, serif;
   --sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
 }
+/* Korean is set in the system sans, as on mole.fit: iOS has no Myeongjo, so an
+   iPhone drew Georgia Latin beside sans Hangul. The wordmark keeps Charter. */
 html[lang="ko"] {
-  --serif: "AppleMyungjo", "Nanum Myeongjo", "Noto Serif CJK KR", Georgia, serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Nanum Gothic", "Malgun Gothic", sans-serif;
+  --serif: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --sans: var(--serif);
 }
+html[lang="ko"] :is(.hero h1, .foot-name) { font-family: Charter, Georgia, serif; }
+/* Korean breaks between words, never inside one. */
+html[lang="ko"] body { word-break: keep-all; overflow-wrap: break-word; }
 
 * { box-sizing: border-box; }
 /* Below a short page's footer the canvas shows the footer's night, not parchment. */
@@ -116,6 +124,8 @@ p, li, dd, figcaption, blockquote { text-wrap: pretty; }
 body > :is(.wrap, footer) { width: 100%; }
 body > footer { margin-top: auto; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) body { line-height: 1.75; }
+/* Leads 1.6, prose 1.75, articles 1.8 (below), as on mole.fit. */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .section-lede { line-height: 1.6; }
 html[lang="de"] :is(.section-lede, .card p, .faq p) { hyphens: auto; -webkit-hyphens: auto; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; height: auto; }
@@ -429,7 +439,13 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 .blog-cover img { width: 100%; height: 100%; object-fit: cover; }
 
 .blog-body { font-size: 17px; line-height: 1.75; color: var(--dark-warm); overflow-wrap: break-word; }
-html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.85; text-wrap: pretty; line-break: strict; }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.8; text-wrap: pretty; line-break: strict; }
+/* CJK titles take no Latin -0.3px, which pressed full-em glyphs together. */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title { letter-spacing: 0; }
+/* Phones step Chinese body and articles to 1.7. */
+@media (max-width: 640px) {
+  html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(body, .blog-body) { line-height: 1.7; }
+}
 /* Chinese blog text tracks at 0.02em, as on mole.fit (maintainer 2026-10-21: zero tracking read cramped);
    headings resolve it at their own size instead of the Latin -0.3px, code keeps 0. */
 html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index), html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index) :is(h1, h2, h3) { letter-spacing: 0.02em; }

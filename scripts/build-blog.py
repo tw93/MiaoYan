@@ -241,7 +241,7 @@ def render_body(slug, lang):
 # (same helper on every product site, maintainer 2026-10-23).
 GLUE_BLOCK_RE = re.compile(r'(<(p|li)\b[^>]*>)((?:(?!<(?:p|li)\b).)*?)(</\2>)', re.S)
 CJK_TAIL_RE = re.compile(r'[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]{2}[。，、；：！？」』）”]*$')
-CJK_LONE_RE = re.compile(r' ([\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff][。，、；：！？」』）”]*)$')
+CJK_LONE_RE = re.compile(r'([^\s<>]{1,20} [\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff][。，、；：！？」』）”]*)$')
 CJK_LINKED_RE = re.compile(r'([\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]{2})((?:</(?:a|strong|em|b)>)+[。，、；：！？」』）”]*)$')
 
 
@@ -251,7 +251,7 @@ def glue_cjk_tails(page):
         if not glued:  # the last two inside a link, emphasis or bold: glue them there
             inner, glued = CJK_LINKED_RE.subn(r'<span class="nobr">\1</span>\2', inner)
         if not glued:
-            inner = CJK_LONE_RE.sub(r'&nbsp;\1', inner)
+            inner = CJK_LONE_RE.sub(r'<span class="nobr">\1</span>', inner)
         return m.group(1) + inner + m.group(4)
     return GLUE_BLOCK_RE.sub(glue, page)
 
