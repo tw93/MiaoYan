@@ -124,6 +124,25 @@ final class EditorStorageOwnershipTests: XCTestCase {
         }
     }
 
+    /// Links were marked a run-loop turn after the fill, so switching notes
+    /// drew the URL inside an `<img>` tag in the code colour for one frame and
+    /// then in the link's. They are now in place when `fill` returns.
+    @MainActor
+    func testFillMarksLinksBeforeTheFirstDraw() async throws {
+        let body = "Text <img src=\"https://miaoyan.app/cat.png\" width=\"300\"> after"
+        let note = makeNote("img-link.md", body: body)
+        await note.ensureContentLoadedAsync()
+        XCTAssertTrue(note.isContentLoaded)
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 480, height: 320))
+        editor.isShellHosted = true
+        editor.fill(note: note)
+
+        let storage = try XCTUnwrap(editor.textStorage)
+        XCTAssertEqual(storage.string, body)
+        let at = (body as NSString).range(of: "https://").location
+        XCTAssertNotNil(storage.attribute(.link, at: at, effectiveRange: nil))
+    }
+
     @MainActor
     func testRefusesCrossNoteWholeBufferSave() {
         let noteA = makeNote("a.md", body: "AAA original")

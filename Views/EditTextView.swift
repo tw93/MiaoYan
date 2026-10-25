@@ -683,7 +683,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             processor.highlightKeyword(search: search)
             isHighlighted = true
         }
-        fillHighlightLinks()
+        // Links in this same pass: deferred, an <img> URL flashed the code colour first.
+        NotesTextProcessor(storage: storage, range: NSRange(0..<storage.length)).highlightLinks()
         textStorage?.updateParagraphStyle()
         // Apply letter spacing after all formatting is complete
         if let storage = textStorage {
