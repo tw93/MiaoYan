@@ -69,6 +69,9 @@ enum CodeBlockHighlighter {
             }
 
             attributedString.addAttributes(attrs, range: fixedRange)
+            if let colour = attrs[.foregroundColor] as? NSColor {
+                attributedString.addAttribute(.foregroundColor, value: editorColor(forThemeColour: colour), range: fixedRange)
+            }
             if let font = NotesTextProcessor.codeFont {
                 attributedString.addAttribute(.font, value: font, range: fixedRange)
             }
@@ -85,8 +88,8 @@ enum CodeBlockHighlighter {
     }
 
     /// Sets every HTML tag in the editor's own text face and size, in the
-    /// quiet markup colour of `#` and `**`, leaving text between tags as
-    /// prose (maintainer's pick, 2026-10-19). Tags in a smaller system face
+    /// code colour, leaving text between tags as prose (face picked
+    /// 2026-10-19, colour 2026-10-25). Tags in a smaller system face
     /// read as code beside the prose. Never `highlightCode`: that gave an
     /// `<img>` line the code font and the code-block mark, and the mark then
     /// made the next keystroke re-highlight the whole paragraph as code.
@@ -94,7 +97,7 @@ enum CodeBlockHighlighter {
         guard range.length > 0, range.upperBound <= attributedString.length else { return }
         let attributes: [NSAttributedString.Key: Any] = [
             .font: NotesTextProcessor.font,
-            .foregroundColor: NotesTextProcessor.syntaxColor,
+            .foregroundColor: NotesTextProcessor.codeColor,
         ]
         let source = attributedString.string
         htmlTagRegex.enumerateMatches(in: source, range: range) { match, _, _ in
@@ -131,6 +134,27 @@ enum CodeBlockHighlighter {
         }
     }
 
+    /// Highlightr draws with atom-one-light or tomorrow-night-blue, whose
+    /// plain text is a grey and whose comments turn blue in dark. Each role is
+    /// moved onto the editor's code colours: comments to the markup grey,
+    /// keywords, types, numbers and titles to purple, the rest (plain text,
+    /// strings) to the code gold.
+    static func editorColor(forThemeColour colour: NSColor) -> NSColor {
+        guard let srgb = colour.usingColorSpace(.sRGB) else { return NotesTextProcessor.codeColor }
+        let hex =
+            Int(round(srgb.redComponent * 255)) << 16 | Int(round(srgb.greenComponent * 255)) << 8
+            | Int(round(srgb.blueComponent * 255))
+        switch hex {
+        case 0xA0A1A7, 0x7285B7:
+            return NotesTextProcessor.syntaxColor
+        case 0xA626A4, 0x986801, 0x0184BB, 0x4078F2, 0xC18401, 0xE45649,
+            0xEBBBFF, 0xFFC58F, 0xFFEEAD, 0xBBDAFF, 0xFF9DA4:
+            return Theme.editorCodeKeywordColor
+        default:
+            return NotesTextProcessor.codeColor
+        }
+    }
+
     private static func applyBasicCodeStyle(attributedString: NSMutableAttributedString, range: NSRange) {
         guard range.upperBound <= attributedString.length,
             let codeFont = NotesTextProcessor.codeFont
@@ -138,13 +162,8 @@ enum CodeBlockHighlighter {
             return
         }
 
-        let codeColor =
-            AppEnvironment.current.userData.isDark
-            ? NSColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
-            : NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
-
         attributedString.addAttribute(.font, value: codeFont, range: range)
-        attributedString.addAttribute(.foregroundColor, value: codeColor, range: range)
+        attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.codeColor, range: range)
         attributedString.addAttribute(.codeBlock, value: true, range: range)
         attributedString.removeAttribute(.codeLanguage, range: range)
         attributedString.fixAttributes(in: range)

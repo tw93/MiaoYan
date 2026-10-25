@@ -59,7 +59,7 @@ final class EditorStorageOwnershipTests: XCTestCase {
     /// Every tag takes the text face and the markup colour, nested ones too
     /// (`<source>` inside `<video>` went unstyled); an autolink is not a tag.
     @MainActor
-    func testEveryHTMLTagTakesTheTextFaceAndMarkupColour() throws {
+    func testEveryHTMLTagTakesTheTextFaceAndCodeColour() throws {
         let body = "Text <video width=\"800\"><source src=\"v.mp4\"></video> and <https://mole.fit/zh>"
         let note = makeNote("tags.md", body: body)
         let storage = NSMutableAttributedString(string: body)
@@ -69,7 +69,7 @@ final class EditorStorageOwnershipTests: XCTestCase {
         func resolved(_ color: Any?) -> NSColor? {
             (color as? NSColor)?.resolvedColor(for: light).usingColorSpace(.sRGB)
         }
-        let markup = try XCTUnwrap(resolved(NotesTextProcessor.syntaxColor))
+        let markup = try XCTUnwrap(resolved(NotesTextProcessor.codeColor))
         let text = body as NSString
         for tag in ["<video", "<source", "</video>"] {
             let at = text.range(of: tag).location
@@ -85,6 +85,43 @@ final class EditorStorageOwnershipTests: XCTestCase {
         XCTAssertEqual(linkFont?.fontName, NotesTextProcessor.font.fontName)
         let linkColour = resolved(storage.attribute(.foregroundColor, at: link, effectiveRange: nil))
         XCTAssertFalse(linkColour.map { abs($0.redComponent - markup.redComponent) < 0.01 && abs($0.greenComponent - markup.greenComponent) < 0.01 } ?? false)
+    }
+
+    /// Code-block text was Highlightr's grey (`#383A42`), a command with no
+    /// keywords came out grey from end to end, and dark comments were blue.
+    /// Every run now lands on the code gold, the keyword purple or, for a
+    /// comment, the markup grey, in both themes.
+    @MainActor
+    func testCodeBlockTakesTheEditorCodeColours() throws {
+        let body = "```swift\n// load\nlet name = \"MiaoYan\"\n```\n\n```bash\nbrew install --cask miaoyan\n```\n"
+        let previous = AppEnvironment.current.userData.isDark
+        defer {
+            AppEnvironment.current.userData.isDark = previous
+            NotesTextProcessor.hl = nil
+        }
+        for dark in [false, true] {
+            AppEnvironment.current.userData.isDark = dark
+            NotesTextProcessor.hl = nil
+            let appearance = try XCTUnwrap(NSAppearance(named: dark ? .darkAqua : .aqua))
+            func hex(_ color: Any?) -> Int? {
+                guard let c = (color as? NSColor)?.resolvedColor(for: appearance).usingColorSpace(.sRGB) else { return nil }
+                return Int(round(c.redComponent * 255)) << 16 | Int(round(c.greenComponent * 255)) << 8 | Int(round(c.blueComponent * 255))
+            }
+            let storage = NSMutableAttributedString(string: body)
+            NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
+
+            let code = try XCTUnwrap(hex(NotesTextProcessor.codeColor))
+            let keyword = try XCTUnwrap(hex(Theme.editorCodeKeywordColor))
+            let comment = try XCTUnwrap(hex(NotesTextProcessor.syntaxColor))
+            let text = body as NSString
+            XCTAssertEqual(hex(storage.attribute(.foregroundColor, at: text.range(of: "brew").location, effectiveRange: nil)), code, "dark: \(dark)")
+            XCTAssertEqual(hex(storage.attribute(.foregroundColor, at: text.range(of: "let").location, effectiveRange: nil)), keyword, "dark: \(dark)")
+            XCTAssertEqual(hex(storage.attribute(.foregroundColor, at: text.range(of: "load").location, effectiveRange: nil)), comment, "dark: \(dark)")
+            storage.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: storage.length)) { value, range, _ in
+                guard storage.attribute(.codeBlock, at: range.location, effectiveRange: nil) != nil else { return }
+                XCTAssertTrue([code, keyword, comment].contains(hex(value) ?? -1), "\(text.substring(with: range)) dark: \(dark)")
+            }
+        }
     }
 
     @MainActor

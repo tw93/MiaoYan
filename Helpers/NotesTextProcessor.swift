@@ -22,6 +22,8 @@ public class NotesTextProcessor {
     // MARK: Syntax highlight customisation
     @MainActor public static var syntaxColor: NSColor { Theme.editorMarkupColor }
 
+    @MainActor public static var codeColor: NSColor { Theme.editorCodeColor }
+
     /// Markdown punctuation is set in the system face, which draws `*` and
     /// `#` light and small where TsangerJinKai draws them wide and heavy.
     /// HTML tags take the text face instead (`highlightInlineHTML`).

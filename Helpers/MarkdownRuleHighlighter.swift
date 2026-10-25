@@ -35,10 +35,7 @@ enum MarkdownRuleHighlighter {
             regex.enumerateMatches(in: string, options: [], range: range) { result, _, _ in
                 guard let codeRange = result?.range, codeRange.upperBound <= attributedString.length else { return }
 
-                let codeColor =
-                    AppEnvironment.current.userData.isDark
-                    ? NSColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
-                    : NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+                let codeColor = NotesTextProcessor.codeColor
 
                 if let codeFont = NotesTextProcessor.codeFont {
                     attributedString.addAttribute(.font, value: codeFont, range: codeRange)

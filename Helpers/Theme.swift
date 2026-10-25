@@ -257,6 +257,18 @@ enum Theme {
         UserDefaultsManagement.appearanceType == .Custom ? textColor : dynamic(0x7A7872, 0x8E8B83)
     }
 
+    /// Code in the editor, HTML tags and code-block text alike, takes inline
+    /// code's gold lightened, with keywords in Kaku's purple. Both are mixed toward the
+    /// paper, 30% in light and 15% in dark (maintainer's pick, 2026-10-25):
+    /// at full strength a whole block read loud beside the prose.
+    static var editorCodeColor: Color {
+        UserDefaultsManagement.appearanceType == .Custom ? textColor : dynamic(0xB89D4B, 0xBE9868)
+    }
+
+    static var editorCodeKeywordColor: Color {
+        dynamic(0x8E76C8, 0x7D5EBC)
+    }
+
     static var titleColor: Color {
         NSColor(named: "title") ?? textColor
     }
