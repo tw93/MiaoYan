@@ -245,18 +245,32 @@ a {
   right: -6px;
 }
 
-/* Blockquote */
+/* Blockquote: muted text beside a thin warm bar with round ends, which
+   starts and stops with the text rather than running the block's height
+   (maintainer's pick, 2026-10-25; muted indent alone did not read as a quote) */
 .heti blockquote {
+  position: relative;
   margin: 0;
   margin-block-start: 0.8em;
   margin-block-end: 1.6em;
-  padding: 0 0 0 1.2em;
+  padding: 0 0 0 1.1em;
   color: var(--text-secondary);
   line-height: 1;
   overflow: hidden;
   box-sizing: border-box;
   width: fit-content;
   max-width: 100%;
+}
+
+.heti blockquote::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  bottom: 0.55em;
+  width: 3px;
+  border-radius: 1.5px;
+  background: var(--quote-bar);
 }
 
 .heti blockquote p {

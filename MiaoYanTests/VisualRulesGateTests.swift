@@ -1,7 +1,7 @@
 import XCTest
 
-/// The app follows the family's visual standard (Kata `sumi`): quotes and
-/// alerts carry no left stripe, nothing glows, and motion eases out at 0.12s
+/// The app follows the family's visual standard (Kata `sumi`): alerts carry
+/// no left stripe and a quote only its thin warm bar, nothing glows, and motion eases out at 0.12s
 /// for feedback on the control under the pointer and 0.25s for what the
 /// window shows, in the preview CSS and through `Theme.Motion` in Swift.
 final class VisualRulesGateTests: XCTestCase {
@@ -14,6 +14,21 @@ final class VisualRulesGateTests: XCTestCase {
 
     private func css(_ name: String) throws -> String {
         try source("Resources/DownView.bundle/css/\(name)")
+    }
+
+    /// The quote bar is a 3px rounded pill drawn by `::before` in a warm grey
+    /// that starts and stops with the text, not the 4px full-height border it
+    /// replaced (maintainer's pick, 2026-10-25).
+    func testQuoteBarIsTheThinRoundedPill() throws {
+        let text = try css("typography.css")
+        let rule = try XCTUnwrap(text.range(of: #"\.heti blockquote::before\s*\{[^}]*\}"#, options: .regularExpression))
+        let body = String(text[rule])
+        XCTAssertNotNil(body.range(of: #"width:\s*3px"#, options: .regularExpression), body)
+        XCTAssertNotNil(body.range(of: #"border-radius:\s*1\.5px"#, options: .regularExpression), body)
+        XCTAssertNotNil(body.range(of: #"background:\s*var\(--quote-bar\)"#, options: .regularExpression), body)
+        for name in ["theme-light.css", "theme-dark.css"] {
+            XCTAssertNotNil(try css(name).range(of: #"--quote-bar:\s*#"#, options: .regularExpression), name)
+        }
     }
 
     func testQuotesAndAlertsHaveNoLeftStripe() throws {
