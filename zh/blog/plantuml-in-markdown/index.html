@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/plantuml-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>想在 Markdown 里画 UML 图，做法是在语言名为 <code>plantuml</code> 的围栏代码块里，把 PlantUML 文本写在 <code>@startuml</code> 和 <code>@enduml</code> 之间。妙言会把这个块变成图片，但不是在你的 Mac 上画的，V4.5.0 的预览会把图的文字编码进一个网址，再从 <code>www.plantuml.com</code> 这个公共服务器加载图片。所以它必须联网才能显示，而且每个预览过的 PlantUML 块的文字都会发到那台服务器。图如果是私密的，可以在同一篇笔记里改用 Mermaid，或者用 PlantUML 自己在本地渲染，再把生成的 SVG 插进<span class="nobr">笔记。</span></p>
+<p>想在 Markdown 里画 UML 图，做法是在语言名为 <code>plantuml</code> 的围栏代码块里，把 PlantUML 文本写在 <code>@startuml</code> 和 <code>@enduml</code> 之间。妙言会把这个块变成图片，但不是在你的 Mac 上画的，V4.5.0 的预览会把图的文字编码进一个网址，再从 <code>www.plantuml.com</code> 这个公共服务器加载图片。所以它必须联网才能显示，而且每个预览过的 PlantUML 块的文字都会发到那台服务器。图如果是私密的，可以在同一篇笔记里改用 Mermaid，或者用 PlantUML 自己在本地渲染，再把生成的 SVG 插进笔记。</p>
 <h2 id="写法">写法</h2>
 <pre><code class="language-markdown">```plantuml
 @startuml
@@ -73,7 +73,7 @@ ArrayList : size()
 @enduml
 ```
 </code></pre>
-<p><code>&lt;|--</code> 表示继承，以类名、冒号和成员开头的一行会把这个成员加到类里，<code>*--</code> 和 <code>o--</code> 分别是组合和聚合，这些都列在类图文档<span class="nobr">页里。</span></p>
+<p><code>&lt;|--</code> 表示继承，以类名、冒号和成员开头的一行会把这个成员加到类里，<code>*--</code> 和 <code>o--</code> 分别是组合和聚合，这些都列在类图文档页里。</p>
 <h3 id="活动图">活动图</h3>
 <pre><code class="language-markdown">```plantuml
 @startuml
@@ -87,44 +87,44 @@ stop
 @enduml
 ```
 </code></pre>
-<p>新版活动图语法里，<code>:文字;</code> 是一个动作，<code>if (...) then (yes) ... else (no) ... endif</code> 是分支，两头用 <code>start</code> 和 <code>stop</code>，写法和 PlantUML 活动图文档页一致。<code>@startuml</code> 和 <code>@enduml</code> 是 PlantUML 自己的输入格式，围栏里要<span class="nobr">保留。</span></p>
-<p>妙言里可以输入 <code>/plantuml</code> 再按 <code>Tab</code>，也可以在「格式」菜单的「Tab快捷输入」子菜单里选 <code>/plantuml</code> 那一项，会插入一个有两个参与者的时序图，消息文字处于选中状态，占位文字是<span class="nobr">中文。</span></p>
+<p>新版活动图语法里，<code>:文字;</code> 是一个动作，<code>if (...) then (yes) ... else (no) ... endif</code> 是分支，两头用 <code>start</code> 和 <code>stop</code>，写法和 PlantUML 活动图文档页一致。<code>@startuml</code> 和 <code>@enduml</code> 是 PlantUML 自己的输入格式，围栏里要保留。</p>
+<p>妙言里可以输入 <code>/plantuml</code> 再按 <code>Tab</code>，也可以在「格式」菜单的「Tab快捷输入」子菜单里选 <code>/plantuml</code> 那一项，会插入一个有两个参与者的时序图，消息文字处于选中状态，占位文字是中文。</p>
 <h2 id="妙言是怎么渲染的">妙言是怎么渲染的</h2>
-<p><code>plantuml</code> 围栏到达预览时是一个类名为 <code>language-plantuml</code> 的 code 元素，预览脚本（<code>diagram-handler.js</code>）对每一个按下面几步<span class="nobr">处理：</span></p>
+<p><code>plantuml</code> 围栏到达预览时是一个类名为 <code>language-plantuml</code> 的 code 元素，预览脚本（<code>diagram-handler.js</code>）对每一个按下面几步处理：</p>
 <ol>
-<li>读取块里的<span class="nobr">文字。</span></li>
-<li>删掉所有 <code>skinparam</code> 指令，从这个词一直删到行尾，再在前面加上自己的一组 <code>skinparam</code>，涵盖背景、文字颜色、角色、参与者、类、箭头等，按浅色或深色外观<span class="nobr">选择。</span></li>
-<li>用打包的 <code>plantuml-encoder</code> 库压缩并编码<span class="nobr">结果。</span></li>
-<li>创建一个 <code>img</code> 元素，地址是 <code>https://www.plantuml.com/plantuml/svg/~1</code> 加上编码后的文字，同时隐藏代<span class="nobr">码块。</span></li>
+<li>读取块里的文字。</li>
+<li>删掉所有 <code>skinparam</code> 指令，从这个词一直删到行尾，再在前面加上自己的一组 <code>skinparam</code>，涵盖背景、文字颜色、角色、参与者、类、箭头等，按浅色或深色外观选择。</li>
+<li>用打包的 <code>plantuml-encoder</code> 库压缩并编码结果。</li>
+<li>创建一个 <code>img</code> 元素，地址是 <code>https://www.plantuml.com/plantuml/svg/~1</code> 加上编码后的文字，同时隐藏代码块。</li>
 </ol>
 <figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/plantuml-in-markdown-mobile.webp" width="600" height="1360"><img src="/img/blog/plantuml-in-markdown.webp" width="1000" height="432" loading="lazy" alt="plantuml 代码块由预览脚本读出、编码进网址，向公共的 plantuml.com 服务器请求 SVG，请求失败时显示源码。"></picture><figcaption>图的文字会随图片网址发到 plantuml.com，回来的只有渲染好的 SVG，请求失败时预览回退成源码。</figcaption></figure>
 
-<p>这个网址写死在预览脚本里，没有设置可以改，所以没法把预览指向你自己的服务器。第 2 步带来两个实际后果，一是你自己写的 <code>skinparam</code> 会被丢掉，没法在笔记里给图改样式；二是删除是逐行进行的，带花括号的多行 <code>skinparam</code> 块会丢掉第一行而留下其余部分，服务器随之返回一张语法错误图，所以在妙言里避免这种<span class="nobr">写法。</span></p>
+<p>这个网址写死在预览脚本里，没有设置可以改，所以没法把预览指向你自己的服务器。第 2 步带来两个实际后果，一是你自己写的 <code>skinparam</code> 会被丢掉，没法在笔记里给图改样式；二是删除是逐行进行的，带花括号的多行 <code>skinparam</code> 块会丢掉第一行而留下其余部分，服务器随之返回一张语法错误图，所以在妙言里避免这种写法。</p>
 <h2 id="隐私">隐私</h2>
-<p>编码后的文字放在一个普通 HTTPS 请求的路径里，PlantUML 的编码只是 Deflate 压缩加一套类似 base64 的字符表，不是加密。所以每次预览渲染时，服务器都能读到你的图内容，类名、服务名、主机名和箭头上的标签都在里面，外加你的 IP 地址这类常规请求信息。PlantUML 的服务器页面没有说公共服务器会把收到的内容保留多久，所以应当把内容视为已经共享给了第<span class="nobr">三方。</span></p>
-<p>PlantUML 的服务器页面也讲了怎么自己部署服务器，各家应用的区别在于是否允许你选择地址，妙言 V4.5.0 不<span class="nobr">允许。</span></p>
+<p>编码后的文字放在一个普通 HTTPS 请求的路径里，PlantUML 的编码只是 Deflate 压缩加一套类似 base64 的字符表，不是加密。所以每次预览渲染时，服务器都能读到你的图内容，类名、服务名、主机名和箭头上的标签都在里面，外加你的 IP 地址这类常规请求信息。PlantUML 的服务器页面没有说公共服务器会把收到的内容保留多久，所以应当把内容视为已经共享给了第三方。</p>
+<p>PlantUML 的服务器页面也讲了怎么自己部署服务器，各家应用的区别在于是否允许你选择地址，妙言 V4.5.0 不允许。</p>
 <h2 id="在本地运行-plantuml">在本地运行 PlantUML</h2>
-<p>图不应该离开你的电脑时，就自己渲染再嵌入图片。PlantUML 命令行文档里写<span class="nobr">的是：</span></p>
+<p>图不应该离开你的电脑时，就自己渲染再嵌入图片。PlantUML 命令行文档里写的是：</p>
 <pre><code class="language-bash">java -jar plantuml.jar --svg diagram.puml
 cat diagram.puml | java -jar plantuml.jar --svg -pipe &gt; diagram.svg
 </code></pre>
-<p>然后把 <code>diagram.svg</code> 当普通图片引用到笔记里，代价是图每改一次就要手动再跑一遍。PlantUML 的服务器文档还提到可以把 <code>plantuml.war</code> 部署到 Tomcat 10，地址形式是 <code>/plantuml/svg/ENCODED</code>，也提到可以在本机跑 PicoWeb 服务器，这些适合允许设置服务器地址的工具，妙言的预览不读这样的设置。命令行文档里还写了 <code>java -jar plantuml.jar --check-graphviz</code> 用来检查 Graphviz 是否安装，部分图在本地渲染时要用<span class="nobr">到它。</span></p>
+<p>然后把 <code>diagram.svg</code> 当普通图片引用到笔记里，代价是图每改一次就要手动再跑一遍。PlantUML 的服务器文档还提到可以把 <code>plantuml.war</code> 部署到 Tomcat 10，地址形式是 <code>/plantuml/svg/ENCODED</code>，也提到可以在本机跑 PicoWeb 服务器，这些适合允许设置服务器地址的工具，妙言的预览不读这样的设置。命令行文档里还写了 <code>java -jar plantuml.jar --check-graphviz</code> 用来检查 Graphviz 是否安装，部分图在本地渲染时要用到它。</p>
 <h2 id="什么时候-mermaid-更合适">什么时候 Mermaid 更合适</h2>
-<p>Mermaid 跑的是应用里打包的 JavaScript，离线可用，它覆盖流程图、时序图、类图和甘特图，和 PlantUML 一样放在笔记的围栏里。PlantUML 的长处是长年积累的 UML 覆盖，以及手上已有大量 <code>.puml</code> 源文件。如果你有这些源文件，或者需要 Mermaid 画不好的图类型，用 PlantUML 是有道理的，只是要接受上面的隐私代价。没有这类需求的新图，先用 Mermaid，见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>；各种图表语言的围栏名在 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a> 里列了<span class="nobr">出来。</span></p>
+<p>Mermaid 跑的是应用里打包的 JavaScript，离线可用，它覆盖流程图、时序图、类图和甘特图，和 PlantUML 一样放在笔记的围栏里。PlantUML 的长处是长年积累的 UML 覆盖，以及手上已有大量 <code>.puml</code> 源文件。如果你有这些源文件，或者需要 Mermaid 画不好的图类型，用 PlantUML 是有道理的，只是要接受上面的隐私代价。没有这类需求的新图，先用 Mermaid，见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>；各种图表语言的围栏名在 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a> 里列了出来。</p>
 <h2 id="出问题和导出">出问题和导出</h2>
 <ul>
-<li><strong>显示「Failed to load diagram」然后变回源码。</strong> 服务器连不上，或者你处于离线状态，这行提示显示两秒左右，预览随后重新显示代<span class="nobr">码块。</span></li>
-<li><strong>一张黑底的 PlantUML 报错图。</strong> 语法错误时服务器返回的是报错图而不是正常的图，图里引用的文字上面带着妙言加的 <code>skinparam</code>，报出来的行号也把这些行算了进去，所以看引用的文字，别按行号找。先检查 <code>@startuml</code> 和 <code>@enduml</code> 两行、引号是否成对以及箭头<span class="nobr">写法。</span></li>
-<li><strong>颜色和你写的不一样。</strong> 你写的 <code>skinparam</code> 行已被删除，原因见<span class="nobr">上面。</span></li>
-<li><strong>图出现得晚。</strong> 图片是页面渲染后从网络加载的，网速慢的时候会先显示一会儿加载<span class="nobr">状态。</span></li>
-<li><strong>导出。</strong> 导出 PDF 时，妙言会等页面上所有图片加载完再打印，其中包括 PlantUML 的图片，最多等十秒左右，超时照样打印，离线时导出文件里是代码块而不是图，所以导出以后看一次<span class="nobr">文件。</span></li>
+<li><strong>显示「Failed to load diagram」然后变回源码。</strong> 服务器连不上，或者你处于离线状态，这行提示显示两秒左右，预览随后重新显示代码块。</li>
+<li><strong>一张黑底的 PlantUML 报错图。</strong> 语法错误时服务器返回的是报错图而不是正常的图，图里引用的文字上面带着妙言加的 <code>skinparam</code>，报出来的行号也把这些行算了进去，所以看引用的文字，别按行号找。先检查 <code>@startuml</code> 和 <code>@enduml</code> 两行、引号是否成对以及箭头写法。</li>
+<li><strong>颜色和你写的不一样。</strong> 你写的 <code>skinparam</code> 行已被删除，原因见上面。</li>
+<li><strong>图出现得晚。</strong> 图片是页面渲染后从网络加载的，网速慢的时候会先显示一会儿加载状态。</li>
+<li><strong>导出。</strong> 导出 PDF 时，妙言会等页面上所有图片加载完再打印，其中包括 PlantUML 的图片，最多等十秒左右，超时照样打印，离线时导出文件里是代码块而不是图，所以导出以后看一次文件。</li>
 </ul>
-<p>验证的办法是插入模板，联网预览一次，再关掉 Wi-Fi，重新加载预览，看代码块有没有<span class="nobr">回来。</span></p>
+<p>验证的办法是插入模板，联网预览一次，再关掉 Wi-Fi，重新加载预览，看代码块有没有回来。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="妙言里的-plantuml-能离线用吗">妙言里的 PlantUML 能离线用吗？</h3>
-<p>不能，图片来自 <code>www.plantuml.com</code>，没有网络时看到的是源<span class="nobr">文本。</span></p>
+<p>不能，图片来自 <code>www.plantuml.com</code>，没有网络时看到的是源文本。</p>
 <h3 id="妙言里能用自己的-plantuml-服务器吗">妙言里能用自己的 PlantUML 服务器吗？</h3>
-<p>V4.5.0 里不能，地址写死在预览脚<span class="nobr">本里。</span></p>
+<p>V4.5.0 里不能，地址写死在预览脚本里。</p>
 <h3 id="哪些图不该发到公共服务器">哪些图不该发到公共服务器？</h3>
 <p>带内部服务名、客户数据或未发布架构的图，这些用 Mermaid 或本地渲染的 SVG。</p>
     </div>

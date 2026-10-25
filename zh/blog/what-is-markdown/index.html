@@ -52,10 +52,10 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/what-is-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 是在纯文本文件里写出带格式文字的一种办法，用几个普通字符当记号，<code>#</code> 表示标题，词两边的 <code>*</code> 表示强调，<code>-</code> 表示列表项，由程序读懂这些记号再转成 HTML，但文件本身不需要任何程序也读得懂，这是大家用它的主要原因。它适合笔记、文档和文章，不适合依赖精确版面的东西。覆盖大多数写作的记号只有十个，十分钟左右就能<span class="nobr">学会。</span></p>
+<p>Markdown 是在纯文本文件里写出带格式文字的一种办法，用几个普通字符当记号，<code>#</code> 表示标题，词两边的 <code>*</code> 表示强调，<code>-</code> 表示列表项，由程序读懂这些记号再转成 HTML，但文件本身不需要任何程序也读得懂，这是大家用它的主要原因。它适合笔记、文档和文章，不适合依赖精确版面的东西。覆盖大多数写作的记号只有十个，十分钟左右就能学会。</p>
 <h2 id="它是怎么来的">它是怎么来的</h2>
-<p>John Gruber 在 2004 年发布了 Markdown，他的<a href="https://daringfireball.net/projects/markdown/" target="_blank" rel="noopener">项目页面</a>把它说成两样东西，一种纯文本格式语法，加一个把这种语法转成 HTML 的 Perl 工具。这些记号取自大家在邮件和 Usenet 帖子里本来就在用的习惯，所以源文件看起来就像你随手敲的一封纯文本<span class="nobr">邮件。</span></p>
-<p>原始说明在一些地方写得含糊，各家实现不一致。2014 年前后 <a href="https://commonmark.org/" target="_blank" rel="noopener">CommonMark 项目</a>写出了一份没有歧义的规范，GitHub 随后发布了 GitHub Flavored Markdown（GFM），在它的基础上加入了表格和任务列表。<a href="https://spec.commonmark.org/0.31.2/" target="_blank" rel="noopener">CommonMark 规范</a>里提到 Reddit、StackOverflow 和 GitHub 上有几百万人在用 Markdown，大致就是你会碰到它的地方。有了这段历史，今天说的「Markdown」指的是一个定义清楚的核心，加上各个应用不一样的扩展，细节见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 有什么<span class="nobr">区别</span></a>。</p>
+<p>John Gruber 在 2004 年发布了 Markdown，他的<a href="https://daringfireball.net/projects/markdown/" target="_blank" rel="noopener">项目页面</a>把它说成两样东西，一种纯文本格式语法，加一个把这种语法转成 HTML 的 Perl 工具。这些记号取自大家在邮件和 Usenet 帖子里本来就在用的习惯，所以源文件看起来就像你随手敲的一封纯文本邮件。</p>
+<p>原始说明在一些地方写得含糊，各家实现不一致。2014 年前后 <a href="https://commonmark.org/" target="_blank" rel="noopener">CommonMark 项目</a>写出了一份没有歧义的规范，GitHub 随后发布了 GitHub Flavored Markdown（GFM），在它的基础上加入了表格和任务列表。<a href="https://spec.commonmark.org/0.31.2/" target="_blank" rel="noopener">CommonMark 规范</a>里提到 Reddit、StackOverflow 和 GitHub 上有几百万人在用 Markdown，大致就是你会碰到它的地方。有了这段历史，今天说的「Markdown」指的是一个定义清楚的核心，加上各个应用不一样的扩展，细节见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 有什么区别</a>。</p>
 <h2 id="覆盖大多数写作的十个记号">覆盖大多数写作的十个记号</h2>
 <pre><code class="language-markdown"># Heading
 ## Subheading
@@ -77,36 +77,36 @@ A paragraph with *italic* and **bold** text and `inline code`.
 print(&quot;a code block&quot;)
 ```
 </code></pre>
-<p>从上往下读，<code>#</code> 开头是标题，个数决定级别，最多六级；空行分隔段落；单个星号或下划线是斜体，两个是粗体，反引号标出代码；行首的连字符是无序列表，数字加句点是有序列表；链接是方括号写文字、圆括号写地址，图片则是前面多一个 <code>!</code>；以 <code>&gt;</code> 开头的行是引用；三个反引号开始和结束一个代码块，开头三个反引号后面的单词指定语言，用来给代码<span class="nobr">上色。</span></p>
-<p>接下来很快会用到的还有两个，表格用 <code>|</code> 分列、表头下面一行连字符，任务列表写成 <code>- [ ]</code> 和 <code>- [x]</code>，两者都来自 GFM，不是原始 Markdown 的内容。<a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>把它们连同容易踩的坑都列了<span class="nobr">出来。</span></p>
+<p>从上往下读，<code>#</code> 开头是标题，个数决定级别，最多六级；空行分隔段落；单个星号或下划线是斜体，两个是粗体，反引号标出代码；行首的连字符是无序列表，数字加句点是有序列表；链接是方括号写文字、圆括号写地址，图片则是前面多一个 <code>!</code>；以 <code>&gt;</code> 开头的行是引用；三个反引号开始和结束一个代码块，开头三个反引号后面的单词指定语言，用来给代码上色。</p>
+<p>接下来很快会用到的还有两个，表格用 <code>|</code> 分列、表头下面一行连字符，任务列表写成 <code>- [ ]</code> 和 <code>- [x]</code>，两者都来自 GFM，不是原始 Markdown 的内容。<a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>把它们连同容易踩的坑都列了出来。</p>
 <h2 id="渲染器怎么把它变成-html">渲染器怎么把它变成 HTML</h2>
-<p>Markdown 文件自己什么也不做。一个叫解析器的程序读它，找出记号，建立由标题、段落和列表组成的结构，再由渲染器把这个结构写出来，通常写成 HTML，<code># Heading</code> 变成 <code>&lt;h1&gt;Heading&lt;/h1&gt;</code>，<code>**bold**</code> 变成 <code>&lt;strong&gt;bold&lt;/strong&gt;</code>。然后浏览器或网页视图拿样式表把 HTML 画出来，字体、间距和颜色都由样式表<span class="nobr">决定。</span></p>
+<p>Markdown 文件自己什么也不做。一个叫解析器的程序读它，找出记号，建立由标题、段落和列表组成的结构，再由渲染器把这个结构写出来，通常写成 HTML，<code># Heading</code> 变成 <code>&lt;h1&gt;Heading&lt;/h1&gt;</code>，<code>**bold**</code> 变成 <code>&lt;strong&gt;bold&lt;/strong&gt;</code>。然后浏览器或网页视图拿样式表把 HTML 画出来，字体、间距和颜色都由样式表决定。</p>
 <figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/what-is-markdown-mobile.webp" width="600" height="1022"><img src="/img/blog/what-is-markdown.webp" width="1000" height="310" loading="lazy" alt="Markdown 文件先由解析器读出结构，渲染器写成 HTML，浏览器再配上样式表画出最终页面。"></picture><figcaption>文件本身不变，解析器决定记号的含义，样式表决定最终的外观。</figcaption></figure>
 
-<p>这个分工解释了新手常见的两件事。一是同一个文件在不同应用里看起来不一样，因为解析器、支持哪些扩展、用什么样式表都是应用自己的选择。二是排版问题基本只有两类，一类是解析器没读懂你的记号，在页面上表现为原样露出的星号或井号，另一类是样式表让它长成了现在这样，这一类改样式就行，不用动<span class="nobr">文件。</span></p>
+<p>这个分工解释了新手常见的两件事。一是同一个文件在不同应用里看起来不一样，因为解析器、支持哪些扩展、用什么样式表都是应用自己的选择。二是排版问题基本只有两类，一类是解析器没读懂你的记号，在页面上表现为原样露出的星号或井号，另一类是样式表让它长成了现在这样，这一类改样式就行，不用动文件。</p>
 <h2 id="为什么文件一直读得懂">为什么文件一直读得懂</h2>
-<p>拿 <code>**重要：** 先备份</code> 和同一句话在文字处理软件的文件格式里对比，Markdown 的版本是任何编辑器都能打开的纯文本，可以用任何工具搜索，可以放进 git 仓库，应用没了十年后照样读得出来；文字处理文档是需要对应程序的打包格式。Markdown 文件只是文本，所以体积小，好做 diff，不关心渲染效果的时候，直接复制进邮件或聊天窗口<span class="nobr">也行。</span></p>
-<p>把笔记存成自己文件夹里的普通文件，也是同一个理由，见 <a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记怎<span class="nobr">么管</span></a>。</p>
+<p>拿 <code>**重要：** 先备份</code> 和同一句话在文字处理软件的文件格式里对比，Markdown 的版本是任何编辑器都能打开的纯文本，可以用任何工具搜索，可以放进 git 仓库，应用没了十年后照样读得出来；文字处理文档是需要对应程序的打包格式。Markdown 文件只是文本，所以体积小，好做 diff，不关心渲染效果的时候，直接复制进邮件或聊天窗口也行。</p>
+<p>把笔记存成自己文件夹里的普通文件，也是同一个理由，见 <a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记怎么管</a>。</p>
 <h2 id="哪里会用到">哪里会用到</h2>
-<p>GitHub 会把 README、issue 和评论里的 Markdown 渲染出来，很多人是在那里第一次碰到它。文档站、笔记应用和其他工具也会读它，每个工具支持哪些扩展以各自的文档为准，因为核心是通用的，额外的部分<span class="nobr">不是。</span></p>
+<p>GitHub 会把 README、issue 和评论里的 Markdown 渲染出来，很多人是在那里第一次碰到它。文档站、笔记应用和其他工具也会读它，每个工具支持哪些扩展以各自的文档为准，因为核心是通用的，额外的部分不是。</p>
 <h2 id="它不擅长什么">它不擅长什么</h2>
 <p>Markdown 描述的是结构，不是外观。它没法说某张图要离页边 2 厘米，没法做分栏，没法指定精确字号，也没法把文字放到某一页的某个位置，表格只能是简单的行和列，要合并单元格得写 HTML。需要精确版面时，用排版工具再导出，或者先写 Markdown 再用能处理样式的程序转换，想从笔记得到可以打印的文件，见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
-<p>很多应用里 Markdown 还可以夹带原始 HTML，碰到特殊情况多了一条路，代价是文件的可移植性<span class="nobr">变差。</span></p>
+<p>很多应用里 Markdown 还可以夹带原始 HTML，碰到特殊情况多了一条路，代价是文件的可移植性变差。</p>
 <h2 id="在妙言里开始">在妙言里开始</h2>
-<p>妙言是一款 Mac 上的 Markdown 编辑器，每篇笔记都是一个普通的 <code>.md</code> 文件，三步就能得到第一篇渲染好的<span class="nobr">笔记。</span></p>
+<p>妙言是一款 Mac 上的 Markdown 编辑器，每篇笔记都是一个普通的 <code>.md</code> 文件，三步就能得到第一篇渲染好的笔记。</p>
 <ol>
-<li>选择「文件」菜单里的「新建」，或者按 <code>⌘N</code> 新建笔记，用上面的记号写一个标题和几<span class="nobr">行字。</span></li>
-<li>选择「视图」菜单里的「切换预览」，或者按 <code>⌘3</code>，编辑区会变成渲染后的页面，再按一次回到源码；「切换分栏」（<code>⌘\</code>）可以把源码和预览并<span class="nobr">排放。</span></li>
-<li>看预览页上有没有残留的记号，比如多出来的 <code>**</code> 或 <code>#</code>，它们标出解析器没读懂的<span class="nobr">位置。</span></li>
+<li>选择「文件」菜单里的「新建」，或者按 <code>⌘N</code> 新建笔记，用上面的记号写一个标题和几行字。</li>
+<li>选择「视图」菜单里的「切换预览」，或者按 <code>⌘3</code>，编辑区会变成渲染后的页面，再按一次回到源码；「切换分栏」（<code>⌘\</code>）可以把源码和预览并排放。</li>
+<li>看预览页上有没有残留的记号，比如多出来的 <code>**</code> 或 <code>#</code>，它们标出解析器没读懂的位置。</li>
 </ol>
-<p>妙言 4.5.0 通过 cmark-gfm 解析器渲染 CommonMark 加表格、任务列表、删除线和脚注，预览里另外有公式、提示框和图表。首次启动且资料库为空时，还会生成几篇示例笔记，其中有一篇「妙言 Markdown 语法指南」，可以当范例读。选编辑器可以对照 <a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编<span class="nobr">辑器</span></a>。</p>
+<p>妙言 4.5.0 通过 cmark-gfm 解析器渲染 CommonMark 加表格、任务列表、删除线和脚注，预览里另外有公式、提示框和图表。首次启动且资料库为空时，还会生成几篇示例笔记，其中有一篇「妙言 Markdown 语法指南」，可以当范例读。选编辑器可以对照 <a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编辑器</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="markdown-是编程语言吗">Markdown 是编程语言吗？</h3>
-<p>不是，它是文本的标记语法，没有变量和逻辑，只有解析器转成 HTML 的<span class="nobr">记号。</span></p>
+<p>不是，它是文本的标记语法，没有变量和逻辑，只有解析器转成 HTML 的记号。</p>
 <h3 id="要先学-html-吗">要先学 HTML 吗？</h3>
-<p>不用。只有想要 Markdown 表达不了的东西时才会碰到 HTML，大多数笔记一辈子用<span class="nobr">不上。</span></p>
+<p>不用。只有想要 Markdown 表达不了的东西时才会碰到 HTML，大多数笔记一辈子用不上。</p>
 <h3 id="用什么扩展名">用什么扩展名？</h3>
-<p>最常见的是 <code>.md</code>，妙言新建的笔记就是<span class="nobr">这个。</span></p>
+<p>最常见的是 <code>.md</code>，妙言新建的笔记就是这个。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

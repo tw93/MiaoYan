@@ -52,30 +52,30 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-images.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 本身没有图片尺寸的语法。图片写成 <code>![替代文字](路径 "可选标题")</code>，需要指定宽度时，把这一张改成 HTML：<code>&lt;img src="/i/photo.png" width="320" alt="替代文字"&gt;</code>。在妙言 V4.5.0 里，HTML 写法在预览中有效，因为预览允许原始 HTML，设置的宽度最多只会被限制在正文栏宽以内。图片放在笔记旁边并用相对路径引用，因为笔记一搬家，最先坏的就是<span class="nobr">路径。</span></p>
+<p>Markdown 本身没有图片尺寸的语法。图片写成 <code>![替代文字](路径 "可选标题")</code>，需要指定宽度时，把这一张改成 HTML：<code>&lt;img src="/i/photo.png" width="320" alt="替代文字"&gt;</code>。在妙言 V4.5.0 里，HTML 写法在预览中有效，因为预览允许原始 HTML，设置的宽度最多只会被限制在正文栏宽以内。图片放在笔记旁边并用相对路径引用，因为笔记一搬家，最先坏的就是路径。</p>
 <h2 id="图片语法替代文字和标题">图片语法、替代文字和标题</h2>
-<p>图片就是链接语法前面加一个 <code>!</code>。CommonMark 规范把方括号里的部分叫作图片描述，并说渲染成 HTML 时它通常用作 <code>alt</code> 属性；路径后面用引号写的标题会变成 <code>title</code> 属性，浏览器会把它显示为悬停<span class="nobr">提示。</span></p>
+<p>图片就是链接语法前面加一个 <code>!</code>。CommonMark 规范把方括号里的部分叫作图片描述，并说渲染成 HTML 时它通常用作 <code>alt</code> 属性；路径后面用引号写的标题会变成 <code>title</code> 属性，浏览器会把它显示为悬停提示。</p>
 <pre><code class="language-markdown">![港口的日落](/i/harbor.jpg &quot;在码头拍的&quot;)
 </code></pre>
-<p>描述要写给看不到图的人，写图里有什么，而不是「图片」或文件名。空描述 <code>![](...)</code> 是合法的，妙言粘贴图片时写进去的就是空描述，笔记要公开发布的话，事后<span class="nobr">补上。</span></p>
+<p>描述要写给看不到图的人，写图里有什么，而不是「图片」或文件名。空描述 <code>![](...)</code> 是合法的，妙言粘贴图片时写进去的就是空描述，笔记要公开发布的话，事后补上。</p>
 <h2 id="图片文件放在哪里">图片文件放在哪里</h2>
-<p>往笔记里粘贴图片，或者通过文件选择器插入图片文件时，妙言 V4.5.0 会把它复制到笔记所在文件夹下的 <code>i/</code> 目录，目录不存在就先创建，然后在正文里写入 <code>![](/i/&lt;文件名&gt;)</code>。文件夹名 <code>i</code> 是固定的，不是图片的文件放进 <code>files/</code>，方式相同。图片文件保留原名，只是把字母、数字、<code>-</code> 和 <code>_</code> 以外的连续字符换成一个 <code>-</code>。粘贴的截图没有文件名，会存成 JPEG，用小写 UUID 当名字，重名时同样改用 UUID。移动端编辑器写进同一个 <code>i/</code> 目录，所以同步之后在另一个应用里打开同一篇笔记也能找<span class="nobr">到图。</span></p>
-<p>预览时妙言把 <code>/i/harbor.jpg</code> 解析到笔记所在的文件夹，而不是磁盘根目录，所以开头的斜杠在这里和网站服务器上的含义不一样。GitHub 的语法页给出的相对链接示例里，同一分支的 <code>.md</code> 文件用 <code>/assets/images/electrocat.png</code>，并建议仓库里的图片优先用相对链接而不是绝对<span class="nobr">链接。</span></p>
+<p>往笔记里粘贴图片，或者通过文件选择器插入图片文件时，妙言 V4.5.0 会把它复制到笔记所在文件夹下的 <code>i/</code> 目录，目录不存在就先创建，然后在正文里写入 <code>![](/i/&lt;文件名&gt;)</code>。文件夹名 <code>i</code> 是固定的，不是图片的文件放进 <code>files/</code>，方式相同。图片文件保留原名，只是把字母、数字、<code>-</code> 和 <code>_</code> 以外的连续字符换成一个 <code>-</code>。粘贴的截图没有文件名，会存成 JPEG，用小写 UUID 当名字，重名时同样改用 UUID。移动端编辑器写进同一个 <code>i/</code> 目录，所以同步之后在另一个应用里打开同一篇笔记也能找到图。</p>
+<p>预览时妙言把 <code>/i/harbor.jpg</code> 解析到笔记所在的文件夹，而不是磁盘根目录，所以开头的斜杠在这里和网站服务器上的含义不一样。GitHub 的语法页给出的相对链接示例里，同一分支的 <code>.md</code> 文件用 <code>/assets/images/electrocat.png</code>，并建议仓库里的图片优先用相对链接而不是绝对链接。</p>
 <h2 id="预览怎么解析路径">预览怎么解析路径</h2>
-<p>对每个 <code>&lt;img&gt;</code>，预览先看 <code>src</code>。以 <code>http://</code> 或 <code>https://</code> 开头的地址不动。以 <code>/</code> 开头但不是 <code>/i/</code> 的路径被当作系统绝对路径，文件存在才会使用。其余的，包括 <code>/i/...</code> 和 <code>images/fig.png</code>，都按笔记所在文件夹查找并转成 <code>file://</code> 地址。文件不存在时，妙言会把整张图换成一个灰色方框，上面写着 <code>Image Not Found</code>。第一张图立即加载，后面的随滚动懒加载，段落里的图点击可以<span class="nobr">放大。</span></p>
+<p>对每个 <code>&lt;img&gt;</code>，预览先看 <code>src</code>。以 <code>http://</code> 或 <code>https://</code> 开头的地址不动。以 <code>/</code> 开头但不是 <code>/i/</code> 的路径被当作系统绝对路径，文件存在才会使用。其余的，包括 <code>/i/...</code> 和 <code>images/fig.png</code>，都按笔记所在文件夹查找并转成 <code>file://</code> 地址。文件不存在时，妙言会把整张图换成一个灰色方框，上面写着 <code>Image Not Found</code>。第一张图立即加载，后面的随滚动懒加载，段落里的图点击可以放大。</p>
 <figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/markdown-images-mobile.webp" width="600" height="1204"><img src="/img/blog/markdown-images.webp" width="1000" height="484" loading="lazy" alt="粘贴的图片被复制进 i/ 文件夹并在笔记里写下路径，预览按笔记所在文件夹找到它，PDF 导出打印预览，HTML 导出找不到本地图片。"></picture><figcaption>粘贴会把文件复制进 i/ 并把路径写进笔记，预览和 PDF 能找到它，HTML 导出则找不到。</figcaption></figure>
 
-<p>用 <code>/i/harbor.jpg</code> 或 <code>i/harbor.jpg</code> 的笔记，只要 <code>i/</code> 文件夹跟着笔记走，在任何一台 Mac 上都能显示；用 <code>/Users/you/Pictures/harbor.jpg</code> 的笔记只有那台有这个文件的 Mac 能显示，换到别处就是占<span class="nobr">位框。</span></p>
+<p>用 <code>/i/harbor.jpg</code> 或 <code>i/harbor.jpg</code> 的笔记，只要 <code>i/</code> 文件夹跟着笔记走，在任何一台 Mac 上都能显示；用 <code>/Users/you/Pictures/harbor.jpg</code> 的笔记只有那台有这个文件的 Mac 能显示，换到别处就是占位框。</p>
 <h2 id="为什么笔记一搬图片就坏">为什么笔记一搬图片就坏</h2>
 <ul>
-<li><strong>只搬了 <code>.md</code> 文件。</strong> <code>i/</code> 文件夹留在原地，所有相对路径都指向空处。把文件夹和笔记一起搬，或者把整个笔记目录当作一个整体<span class="nobr">同步。</span></li>
-<li><strong>改了文件夹名或文件名。</strong> 笔记里的路径只是文字，不会有人替你<span class="nobr">更新。</span></li>
-<li><strong>路径是绝对路径。</strong> 它指的是某一台机器上的<span class="nobr">位置。</span></li>
-<li><strong>链接是远程的，页面搬了家或站点禁止盗链。</strong> 这时笔记依赖的是别人的服<span class="nobr">务器。</span></li>
+<li><strong>只搬了 <code>.md</code> 文件。</strong> <code>i/</code> 文件夹留在原地，所有相对路径都指向空处。把文件夹和笔记一起搬，或者把整个笔记目录当作一个整体同步。</li>
+<li><strong>改了文件夹名或文件名。</strong> 笔记里的路径只是文字，不会有人替你更新。</li>
+<li><strong>路径是绝对路径。</strong> 它指的是某一台机器上的位置。</li>
+<li><strong>链接是远程的，页面搬了家或站点禁止盗链。</strong> 这时笔记依赖的是别人的服务器。</li>
 </ul>
-<p>本地文件占磁盘，并且要跟着笔记搬；远程图片让笔记保持很小，但每次打开都要联网。想要远程链接又不想手动上传的话，妙言设置的「编辑器」页里有「上传服务:」，可选「无」、uPic、PicGo、Picsee 和 PicList。选 PicGo 或 PicList 时，妙言通过 HTTP 把粘贴的图片发给正在运行的工具，uPic 和 Picsee 则是直接调用装在 <code>/Applications</code> 里的应用来上传。上传成功时笔记里写入远程地址并删掉本地副本，失败时保留本地 <code>/i/</code> 路径，并弹出上传失败的<span class="nobr">提示。</span></p>
+<p>本地文件占磁盘，并且要跟着笔记搬；远程图片让笔记保持很小，但每次打开都要联网。想要远程链接又不想手动上传的话，妙言设置的「编辑器」页里有「上传服务:」，可选「无」、uPic、PicGo、Picsee 和 PicList。选 PicGo 或 PicList 时，妙言通过 HTTP 把粘贴的图片发给正在运行的工具，uPic 和 Picsee 则是直接调用装在 <code>/Applications</code> 里的应用来上传。上传成功时笔记里写入远程地址并删掉本地副本，失败时保留本地 <code>/i/</code> 路径，并弹出上传失败的提示。</p>
 <h2 id="调整图片大小">调整图片大小</h2>
-<p>CommonMark 和 GFM 都没有尺寸语法，可选方式都在核心<span class="nobr">之外：</span></p>
+<p>CommonMark 和 GFM 都没有尺寸语法，可选方式都在核心之外：</p>
 <table>
 <thead>
 <tr>
@@ -97,26 +97,26 @@
 </tr>
 </tbody>
 </table>
-<p>妙言的预览给每张图加了 <code>max-width: 100%</code> 和 <code>height: auto</code>。所以 <code>width="320"</code> 得到 320 像素宽的图，<code>width="2000"</code> 会被缩到栏宽，<code>height</code> 属性会被覆盖，比例保持不变。Pandoc 的 <code>{width=50%}</code> 写法妙言不解析，因为解析器只挂了表格、脚注、删除线和任务列表四个扩展，花括号会作为文字出现在图片后面。Pandoc 手册记录了这种属性写法，单位支持 <code>px</code>、<code>cm</code>、<code>mm</code>、<code>in</code>、<code>inch</code> 和 <code>%</code>。<code>&lt;img&gt;</code> 标签的 <code>src</code> 要用双引号，妙言只解析这种写法里的本地<span class="nobr">路径。</span></p>
-<p>GitHub 的语法页记录了 <code>![]()</code> 写法和 <code>&lt;picture&gt;</code> 元素，没有讲尺寸，所以在 README 里依赖 <code>width</code> 之前，先看一下<span class="nobr">预览。</span></p>
+<p>妙言的预览给每张图加了 <code>max-width: 100%</code> 和 <code>height: auto</code>。所以 <code>width="320"</code> 得到 320 像素宽的图，<code>width="2000"</code> 会被缩到栏宽，<code>height</code> 属性会被覆盖，比例保持不变。Pandoc 的 <code>{width=50%}</code> 写法妙言不解析，因为解析器只挂了表格、脚注、删除线和任务列表四个扩展，花括号会作为文字出现在图片后面。Pandoc 手册记录了这种属性写法，单位支持 <code>px</code>、<code>cm</code>、<code>mm</code>、<code>in</code>、<code>inch</code> 和 <code>%</code>。<code>&lt;img&gt;</code> 标签的 <code>src</code> 要用双引号，妙言只解析这种写法里的本地路径。</p>
+<p>GitHub 的语法页记录了 <code>![]()</code> 写法和 <code>&lt;picture&gt;</code> 元素，没有讲尺寸，所以在 README 里依赖 <code>width</code> 之前，先看一下预览。</p>
 <p>还有一种边界情况，文件缺失时，<code>Image Not Found</code> 的替换会丢掉整个标签，包括其中的 <code>width</code>。</p>
 <h2 id="pdf-和-html-导出里的图片">PDF 和 HTML 导出里的图片</h2>
 <p>PDF 导出打印的是预览。它会等图片有了宽度，并把懒加载占位符换回真实地址，所以本地 <code>/i/</code> 图片会出现在 PDF 里。细节见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
 <p>V4.5.0 的 HTML 导出不一样。它渲染 Markdown 时没有走本地图片那一步，并加了 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code> 作为基础地址。所以从「下载」文件夹打开的文件找不到 <code>/i/harbor.jpg</code> 或 <code>images/fig.png</code>。远程图片可以正常加载。眼下要分享单个文件，就在笔记里用远程图片地址，或者导出 PDF。</p>
 <h2 id="检查结果">检查结果</h2>
 <ol>
-<li>打开预览，确认每张图都显示，没有 <code>Image Not Found</code> <span class="nobr">方框。</span></li>
-<li>把笔记和它的 <code>i/</code> 文件夹复制到另一个位置再<span class="nobr">打开。</span></li>
-<li>网络图片则断网看看还剩<span class="nobr">什么。</span></li>
+<li>打开预览，确认每张图都显示，没有 <code>Image Not Found</code> 方框。</li>
+<li>把笔记和它的 <code>i/</code> 文件夹复制到另一个位置再打开。</li>
+<li>网络图片则断网看看还剩什么。</li>
 </ol>
-<p>其他随软件而异的语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。要在多台设备间共用笔记，文件夹需要整体同步，做法见 <a href="/zh/blog/sync-markdown-notes-across-devices/">跨设备同步 Markdown 笔记的几种<span class="nobr">做法</span></a>。</p>
+<p>其他随软件而异的语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。要在多台设备间共用笔记，文件夹需要整体同步，做法见 <a href="/zh/blog/sync-markdown-notes-across-devices/">跨设备同步 Markdown 笔记的几种做法</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="纯-markdown-能设置图片尺寸吗">纯 Markdown 能设置图片尺寸吗？</h3>
-<p>不能。CommonMark 规范只定义了描述、路径和标题。用 HTML 的 <code>&lt;img&gt;</code> 标签，文件由 Pandoc 渲染时也可以用它的属性<span class="nobr">语法。</span></p>
+<p>不能。CommonMark 规范只定义了描述、路径和标题。用 HTML 的 <code>&lt;img&gt;</code> 标签，文件由 Pandoc 渲染时也可以用它的属性语法。</p>
 <h3 id="用相对路径还是绝对路径">用相对路径还是绝对路径？</h3>
-<p>相对路径。绝对路径指的是某一台机器的磁盘，GitHub 的文档也建议仓库里的图片用相对<span class="nobr">链接。</span></p>
+<p>相对路径。绝对路径指的是某一台机器的磁盘，GitHub 的文档也建议仓库里的图片用相对链接。</p>
 <h3 id="为什么我的图片显示-image-not-found">为什么我的图片显示 <code>Image Not Found</code>？</h3>
-<p>文件不在路径写的位置，通常是 <code>i/</code> 文件夹没有跟笔记一起搬，或者文件被改<span class="nobr">了名。</span></p>
+<p>文件不在路径写的位置，通常是 <code>i/</code> 文件夹没有跟笔记一起搬，或者文件被改了名。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

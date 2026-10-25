@@ -52,47 +52,47 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/commonmark-vs-gfm.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言 4.5.0 用的是 cmark-gfm 解析器，打开了四个扩展，然后在预览里另外加上公式、提示框和<span class="nobr">图表。</span></p>
+<p>CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言 4.5.0 用的是 cmark-gfm 解析器，打开了四个扩展，然后在预览里另外加上公式、提示框和图表。</p>
 <h2 id="为什么会有这么多方言">为什么会有这么多方言</h2>
-<p>John Gruber 在 2004 年发布 Markdown，当时是一份语法说明加一个 Perl 脚本 Markdown.pl。按 <a href="https://commonmark.org/" target="_blank" rel="noopener">CommonMark 官网</a>的说法，这份说明并没有把语法写得没有歧义，实现者只好照着 Markdown.pl 的行为来，而它有不少 bug，最后一次更新是 2004 年 12 月。到 2014 年已经有几十种实现，各家渐渐跑偏，同一个文件换个网站渲染就可能不<span class="nobr">一样。</span></p>
-<p><a href="https://spec.commonmark.org/0.31.2/" target="_blank" rel="noopener">CommonMark 规范</a>把规则连同大量示例写了下来，当前版本是 2024 年 1 月的 0.31.2。<a href="https://github.github.com/gfm/" target="_blank" rel="noopener">GFM 规范</a>以它为基础，并明确写了 GFM 是 CommonMark 的严格超集，最新发布的版本是 2019 年 4 月的 0.29-gfm，是一个快照，不是一直在动的<span class="nobr">目标。</span></p>
-<p>所谓方言大致就是这三层，一个现在已经定义清楚的核心，GitHub 标准化的一小批扩展，以及每个应用各玩各的<span class="nobr">长尾。</span></p>
+<p>John Gruber 在 2004 年发布 Markdown，当时是一份语法说明加一个 Perl 脚本 Markdown.pl。按 <a href="https://commonmark.org/" target="_blank" rel="noopener">CommonMark 官网</a>的说法，这份说明并没有把语法写得没有歧义，实现者只好照着 Markdown.pl 的行为来，而它有不少 bug，最后一次更新是 2004 年 12 月。到 2014 年已经有几十种实现，各家渐渐跑偏，同一个文件换个网站渲染就可能不一样。</p>
+<p><a href="https://spec.commonmark.org/0.31.2/" target="_blank" rel="noopener">CommonMark 规范</a>把规则连同大量示例写了下来，当前版本是 2024 年 1 月的 0.31.2。<a href="https://github.github.com/gfm/" target="_blank" rel="noopener">GFM 规范</a>以它为基础，并明确写了 GFM 是 CommonMark 的严格超集，最新发布的版本是 2019 年 4 月的 0.29-gfm，是一个快照，不是一直在动的目标。</p>
+<p>所谓方言大致就是这三层，一个现在已经定义清楚的核心，GitHub 标准化的一小批扩展，以及每个应用各玩各的长尾。</p>
 <h2 id="每一层定义了什么">每一层定义了什么</h2>
-<p><strong>CommonMark</strong> 管标题、强调、列表、引用块、行内代码和围栏代码块、链接、图片、原始 HTML、软硬换行和反斜杠转义。段落里单独一个换行是软换行，渲染成一个空格，想硬换行要在行尾加反斜杠或者两个<span class="nobr">空格。</span></p>
-<p><strong>GFM</strong> 在规范里标明的扩展有这<span class="nobr">几项。</span></p>
+<p><strong>CommonMark</strong> 管标题、强调、列表、引用块、行内代码和围栏代码块、链接、图片、原始 HTML、软硬换行和反斜杠转义。段落里单独一个换行是软换行，渲染成一个空格，想硬换行要在行尾加反斜杠或者两个空格。</p>
+<p><strong>GFM</strong> 在规范里标明的扩展有这几项。</p>
 <ul>
-<li>表格，需要表头行和由连字符组成的分隔行，冒号用来指定<span class="nobr">对齐。</span></li>
+<li>表格，需要表头行和由连字符组成的分隔行，冒号用来指定对齐。</li>
 <li>任务列表项，写成 <code>- [ ]</code> 和 <code>- [x]</code>。</li>
 <li>删除线 <code>~~text~~</code>。</li>
-<li>扩展自动链接，裸写的 <code>www.example.com</code> 或 <code>https://example.com</code> 不加尖括号也会变成<span class="nobr">链接。</span></li>
+<li>扩展自动链接，裸写的 <code>www.example.com</code> 或 <code>https://example.com</code> 不加尖括号也会变成链接。</li>
 <li>禁用的原始 HTML，输出 HTML 时把 <code>&lt;title&gt;</code>、<code>&lt;textarea&gt;</code>、<code>&lt;style&gt;</code>、<code>&lt;xmp&gt;</code>、<code>&lt;iframe&gt;</code>、<code>&lt;noembed&gt;</code>、<code>&lt;noframes&gt;</code>、<code>&lt;script&gt;</code>、<code>&lt;plaintext&gt;</code> 开头的 <code>&lt;</code> 改成 <code>&amp;lt;</code>。</li>
 </ul>
-<p><strong>应用扩展</strong>就是其余的一切。脚注、美元符号公式、<code>&gt; [!NOTE]</code> 提示框、双链、Mermaid 图表都很常见，但没有一个写在 CommonMark 或 GFM 规范里。GitHub 自己的语法文档里写了脚注和提示框，那是 GitHub 的功能，不属于已发布的 GFM <span class="nobr">规范。</span></p>
+<p><strong>应用扩展</strong>就是其余的一切。脚注、美元符号公式、<code>&gt; [!NOTE]</code> 提示框、双链、Mermaid 图表都很常见，但没有一个写在 CommonMark 或 GFM 规范里。GitHub 自己的语法文档里写了脚注和提示框，那是 GitHub 的功能，不属于已发布的 GFM 规范。</p>
 <h2 id="妙言-450-实现到哪一层">妙言 4.5.0 实现到哪一层</h2>
-<p>妙言用 cmark-gfm 渲染 Markdown。4.5.0 的源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来<span class="nobr">两点。</span></p>
+<p>妙言用 cmark-gfm 渲染 Markdown。4.5.0 的源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。</p>
 <ul>
-<li>扩展自动链接没有挂上，所以裸 URL 不会被解析器变成链接，要写 <code>&lt;https://example.com&gt;</code> 或者普通<span class="nobr">链接。</span></li>
-<li>tagfilter 也没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，<code>&lt;details&gt;</code> 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的<span class="nobr">笔记。</span></li>
+<li>扩展自动链接没有挂上，所以裸 URL 不会被解析器变成链接，要写 <code>&lt;https://example.com&gt;</code> 或者普通链接。</li>
+<li>tagfilter 也没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，<code>&lt;details&gt;</code> 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。</li>
 </ul>
-<p>解析之前，妙言会先保护公式，<code>$$ ... $$</code>、<code>$ ... $</code>、<code>\( ... \)</code> 和 <code>\[ ... \]</code> 里的下划线和星号不会被当成强调，预览里再由 KaTeX 排版。解析之后有一步后处理，把 <code>&gt; [!NOTE]</code>、<code>[!TIP]</code>、<code>[!IMPORTANT]</code>、<code>[!WARNING]</code>、<code>[!CAUTION]</code> 这五种引用块变成提示框，和 GitHub 的写法一致。预览页的脚本再把围栏里的 <code>mermaid</code>、<code>plantuml</code>、<code>markmap</code> 画出来，用 highlight.js 给代码上色，文件开头的 <code>---</code> front matter 在预览里会被<span class="nobr">去掉。</span></p>
+<p>解析之前，妙言会先保护公式，<code>$$ ... $$</code>、<code>$ ... $</code>、<code>\( ... \)</code> 和 <code>\[ ... \]</code> 里的下划线和星号不会被当成强调，预览里再由 KaTeX 排版。解析之后有一步后处理，把 <code>&gt; [!NOTE]</code>、<code>[!TIP]</code>、<code>[!IMPORTANT]</code>、<code>[!WARNING]</code>、<code>[!CAUTION]</code> 这五种引用块变成提示框，和 GitHub 的写法一致。预览页的脚本再把围栏里的 <code>mermaid</code>、<code>plantuml</code>、<code>markmap</code> 画出来，用 highlight.js 给代码上色，文件开头的 <code>---</code> front matter 在预览里会被去掉。</p>
 <figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/commonmark-vs-gfm-mobile.webp" width="600" height="1282"><img src="/img/blog/commonmark-vs-gfm.webp" width="1000" height="336" loading="lazy" alt="Markdown 笔记依次经过公式保护、带四个扩展的 cmark-gfm 解析器、提示框改写，再由运行 KaTeX、图表脚本和 highlight.js 的网页视图生成预览。"></picture><figcaption>解析器负责 CommonMark 加表格、脚注、删除线和任务列表，公式、提示框和图表是在它前后额外加的。</figcaption></figure>
 
-<p>妙言设置里还有一项「换行方式」，两个选项是「妙言」和「Github」，底层是在「每个换行都当成换行」和「换行当成空格」之间切换，后者就是 CommonMark 的规则，实际效果在<a href="/zh/blog/markdown-cheat-sheet/">语法速查</a>里<span class="nobr">有讲。</span></p>
-<p>妙言会索引双链（<code>[[项目计划]]</code>）来生成反向链接，见<a href="/zh/blog/wikilinks-and-backlinks/">双链与反向链接</a>，双链不在 CommonMark 或 GFM 里，没实现的渲染器会把方括号原样<span class="nobr">显示。</span></p>
+<p>妙言设置里还有一项「换行方式」，两个选项是「妙言」和「Github」，底层是在「每个换行都当成换行」和「换行当成空格」之间切换，后者就是 CommonMark 的规则，实际效果在<a href="/zh/blog/markdown-cheat-sheet/">语法速查</a>里有讲。</p>
+<p>妙言会索引双链（<code>[[项目计划]]</code>）来生成反向链接，见<a href="/zh/blog/wikilinks-and-backlinks/">双链与反向链接</a>，双链不在 CommonMark 或 GFM 里，没实现的渲染器会把方括号原样显示。</p>
 <h2 id="怎么写出可移植的-markdown">怎么写出可移植的 Markdown</h2>
-<p>可移植的意思是文件当纯文本读也顺，在你会用到的应用里渲染一致，几个习惯就够<span class="nobr">用了。</span></p>
+<p>可移植的意思是文件当纯文本读也顺，在你会用到的应用里渲染一致，几个习惯就够用了。</p>
 <ol>
-<li>代码用带语言名的围栏，不用<span class="nobr">缩进。</span></li>
-<li>列表、表格和代码围栏前后各留一个<span class="nobr">空行。</span></li>
-<li>无序列表用 <code>-</code>，任务项里的 x 用<span class="nobr">小写。</span></li>
-<li>URL 写成 <code>&lt;https://example.com&gt;</code> 或 <code>[文字](链接)</code>，不要<span class="nobr">裸写。</span></li>
-<li>要硬换行就在行尾加反斜杠，行尾空格看不见，很多编辑器保存时还会<span class="nobr">去掉。</span></li>
-<li>把脚注、公式、提示框和图表当成扩展，笔记要在纯文本查看器里读的话，关键信息别只放在它们<span class="nobr">里面。</span></li>
+<li>代码用带语言名的围栏，不用缩进。</li>
+<li>列表、表格和代码围栏前后各留一个空行。</li>
+<li>无序列表用 <code>-</code>，任务项里的 x 用小写。</li>
+<li>URL 写成 <code>&lt;https://example.com&gt;</code> 或 <code>[文字](链接)</code>，不要裸写。</li>
+<li>要硬换行就在行尾加反斜杠，行尾空格看不见，很多编辑器保存时还会去掉。</li>
+<li>把脚注、公式、提示框和图表当成扩展，笔记要在纯文本查看器里读的话，关键信息别只放在它们里面。</li>
 <li>除非确认对方应用允许，尽量不用原始 HTML。</li>
 </ol>
-<p>用到应用专有功能时先想一下丢掉它能不能接受，提示框退化成带 <code>[!NOTE]</code> 的引用块，对自己的笔记没关系，放进 README 就不太<span class="nobr">合适。</span></p>
+<p>用到应用专有功能时先想一下丢掉它能不能接受，提示框退化成带 <code>[!NOTE]</code> 的引用块，对自己的笔记没关系，放进 README 就不太合适。</p>
 <h2 id="用一个测试文件检查任何应用">用一个测试文件检查任何应用</h2>
-<p>把下面这段贴进要检查的应用里新建的笔记，对照后面的说明看<span class="nobr">预览。</span></p>
+<p>把下面这段贴进要检查的应用里新建的笔记，对照后面的说明看预览。</p>
 <pre><code class="language-markdown"># Heading
 Line one
 Line two
@@ -124,18 +124,18 @@ graph LR
   A --&gt; B
 ```
 </code></pre>
-<p>结果这样读。两行连成一行说明应用遵循 CommonMark 的软换行规则，两行分开说明它在每个换行处断行；表格或任务框显示成文字，说明缺 GFM 扩展；<code>www.example.com</code> 有没有变成链接，能看出有没有扩展自动链接；引用块里还显示着 <code>[!NOTE]</code>，说明没有提示框；美元符号原样出现，说明没有公式渲染；代码块里显示 Mermaid 源码，说明没有图表<span class="nobr">渲染。</span></p>
-<p>在妙言 4.5.0 里，表格、任务框和删除线会渲染，<code>www.example.com</code> 保持纯文本，脚注、提示框、公式和图表会渲染，两行是连起来还是分开取决于换行方式<span class="nobr">设置。</span></p>
+<p>结果这样读。两行连成一行说明应用遵循 CommonMark 的软换行规则，两行分开说明它在每个换行处断行；表格或任务框显示成文字，说明缺 GFM 扩展；<code>www.example.com</code> 有没有变成链接，能看出有没有扩展自动链接；引用块里还显示着 <code>[!NOTE]</code>，说明没有提示框；美元符号原样出现，说明没有公式渲染；代码块里显示 Mermaid 源码，说明没有图表渲染。</p>
+<p>在妙言 4.5.0 里，表格、任务框和删除线会渲染，<code>www.example.com</code> 保持纯文本，脚注、提示框、公式和图表会渲染，两行是连起来还是分开取决于换行方式设置。</p>
 <h2 id="其他工具有什么不同">其他工具有什么不同</h2>
-<p>GitHub 渲染 GFM 规范，它的<a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax" target="_blank" rel="noopener">语法文档</a>另外写了脚注和五种提示框，GFM 规范本身也说明 GitHub 在转成 HTML 之后还会做后处理和<span class="nobr">净化。</span></p>
-<p>别的编辑器各自挑扩展，版本间也会变，所以想知道某个工具到底怎么样，上面的测试文件最可靠。选编辑器的话看 <a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编<span class="nobr">辑器</span></a>。</p>
+<p>GitHub 渲染 GFM 规范，它的<a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax" target="_blank" rel="noopener">语法文档</a>另外写了脚注和五种提示框，GFM 规范本身也说明 GitHub 在转成 HTML 之后还会做后处理和净化。</p>
+<p>别的编辑器各自挑扩展，版本间也会变，所以想知道某个工具到底怎么样，上面的测试文件最可靠。选编辑器的话看 <a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编辑器</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="gfm-和-commonmark-是一回事吗">GFM 和 CommonMark 是一回事吗？</h3>
-<p>不是。GFM 包含全部 CommonMark，再加上上面列的扩展，所以合法的 CommonMark 笔记也是合法的 GFM，反过来不<span class="nobr">成立。</span></p>
+<p>不是。GFM 包含全部 CommonMark，再加上上面列的扩展，所以合法的 CommonMark 笔记也是合法的 GFM，反过来不成立。</p>
 <h3 id="为什么我的表格显示成纯文本">为什么我的表格显示成纯文本？</h3>
-<p>表格需要表头行和单元格数相同的分隔行，只实现 CommonMark 的应用永远不会渲<span class="nobr">染它。</span></p>
+<p>表格需要表头行和单元格数相同的分隔行，只实现 CommonMark 的应用永远不会渲染它。</p>
 <h3 id="妙言支持脚注和公式吗">妙言支持脚注和公式吗？</h3>
-<p>4.5.0 支持，脚注由解析器处理，公式在预览里由 KaTeX 排版，见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX <span class="nobr">公式</span></a>。</p>
+<p>4.5.0 支持，脚注由解析器处理，公式在预览里由 KaTeX 排版，见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

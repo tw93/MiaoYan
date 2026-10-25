@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-slides.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>把 Markdown 变成幻灯片，做法是在每两页之间单独写一行 <code>---</code>，再用支持这种分页的工具打开。在妙言里按 <code>Command + Option + P</code>，笔记里至少要有一行 <code>---</code>。reveal.js、Marp 和 Slidev 用的是同一个约定，给其中一个写的稿子大多能搬到另一个，区别在主题、导出格式，以及要装多少<span class="nobr">东西。</span></p>
+<p>把 Markdown 变成幻灯片，做法是在每两页之间单独写一行 <code>---</code>，再用支持这种分页的工具打开。在妙言里按 <code>Command + Option + P</code>，笔记里至少要有一行 <code>---</code>。reveal.js、Marp 和 Slidev 用的是同一个约定，给其中一个写的稿子大多能搬到另一个，区别在主题、导出格式，以及要装多少东西。</p>
 <h2 id="基本格式">基本格式</h2>
 <pre><code class="language-markdown"># 季度回顾
 
@@ -72,18 +72,18 @@
 1. 同步
 2. 导出
 </code></pre>
-<p>分隔符之间的每一块就是一页，第一块是开场页，所以一个一级标题加一行副标题就是封面。<code>---</code> 要独占一行，同一行不能有别的字符。妙言自带的 PPT 指南和 Agent skill 都写明，一页里面不能再放横线，因为同样的字符会被当作分<span class="nobr">页符。</span></p>
-<p>如果在没有 <code>---</code> 的笔记上按快捷键，妙言会提示「没有分隔符 --- 标识，无法使用妙言 PPT」，幻灯片不会<span class="nobr">打开。</span></p>
+<p>分隔符之间的每一块就是一页，第一块是开场页，所以一个一级标题加一行副标题就是封面。<code>---</code> 要独占一行，同一行不能有别的字符。妙言自带的 PPT 指南和 Agent skill 都写明，一页里面不能再放横线，因为同样的字符会被当作分页符。</p>
+<p>如果在没有 <code>---</code> 的笔记上按快捷键，妙言会提示「没有分隔符 --- 标识，无法使用妙言 PPT」，幻灯片不会打开。</p>
 <h2 id="在妙言里怎么用">在妙言里怎么用</h2>
 <ol>
 <li>打开或新建一篇笔记，在页与页之间加上 <code>---</code>。</li>
 <li>按 <code>Command + Option + P</code>。</li>
-<li>按 Enter 预览幻灯片大纲，按 ESC 退出，自带的 PPT 笔记里是这样<span class="nobr">写的。</span></li>
+<li>按 Enter 预览幻灯片大纲，按 ESC 退出，自带的 PPT 笔记里是这样写的。</li>
 <li>想要文件的话，用导出菜单里的妙言 PPT PDF。</li>
 </ol>
-<p>新用户安装后会有一篇带可运行示例的妙言 PPT 笔记，老用户可以自己建一篇同名笔记，把稿子贴<span class="nobr">进去。</span></p>
+<p>新用户安装后会有一篇带可运行示例的妙言 PPT 笔记，老用户可以自己建一篇同名笔记，把稿子贴进去。</p>
 <h3 id="用注释配置">用注释配置</h3>
-<p>在笔记最开头写一段由 <code>key: value</code> 行组成的 HTML 注释，如果有 YAML frontmatter 就放在它<span class="nobr">后面。</span></p>
+<p>在笔记最开头写一段由 <code>key: value</code> 行组成的 HTML 注释，如果有 YAML frontmatter 就放在它后面。</p>
 <pre><code class="language-markdown">&lt;!--
 transition: slide
 slideNumber: c/t
@@ -91,7 +91,7 @@ controls: true
 progress: true
 --&gt;
 </code></pre>
-<p>这些键直接对应 reveal.js 的配置项，值会被识别成布尔值、数字、<code>null</code>、方括号列表或字符串，<code>highlight.lineNumbers</code> 这样带点的键会设置嵌套选项，渲染之前妙言会把这段注释去掉。默认值是滑动切换、显示控制按钮和进度条、用网址哈希导航、不显示页码、页面内容不垂直<span class="nobr">居中。</span></p>
+<p>这些键直接对应 reveal.js 的配置项，值会被识别成布尔值、数字、<code>null</code>、方括号列表或字符串，<code>highlight.lineNumbers</code> 这样带点的键会设置嵌套选项，渲染之前妙言会把这段注释去掉。默认值是滑动切换、显示控制按钮和进度条、用网址哈希导航、不显示页码、页面内容不垂直居中。</p>
 <h3 id="单页的额外设置">单页的额外设置</h3>
 <pre><code class="language-markdown">&lt;!-- .slide: data-background=&quot;#F8CB9E&quot; --&gt;
 ## 自定义背景
@@ -105,19 +105,19 @@ let b = 2
 ```
 </code></pre>
 <p><code>.slide:</code> 注释设置这一页的属性，比如背景色、渐变或图片。某一行末尾的 <code>.element:</code> 注释给那个元素加属性，<code>class="fragment"</code> 表示点一下再显示。语言围栏后面跟 <code>[1|2-3]</code> 会逐步高亮对应的行，这些都是 reveal.js 的功能，文档在 revealjs.com/markdown。</p>
-<p>幻灯片里可以用 <code>$...$</code> 和 <code>$$...$$</code> 写公式，Mermaid、PlantUML 和 Markmap 块在演示模式里同样会渲染。要做两栏，可以用带 <code>display: flex</code> 的原生 HTML，每个 <code>div</code> 里面留一个空行，这样里面的 Markdown 才会照常<span class="nobr">解析。</span></p>
-<p>写成 <code>/i/photo.png</code> 的本地图片会被改写成幻灯片能加载的路径，所以同一张图在普通笔记和演示稿里都<span class="nobr">能用。</span></p>
+<p>幻灯片里可以用 <code>$...$</code> 和 <code>$$...$$</code> 写公式，Mermaid、PlantUML 和 Markmap 块在演示模式里同样会渲染。要做两栏，可以用带 <code>display: flex</code> 的原生 HTML，每个 <code>div</code> 里面留一个空行，这样里面的 Markdown 才会照常解析。</p>
+<p>写成 <code>/i/photo.png</code> 的本地图片会被改写成幻灯片能加载的路径，所以同一张图在普通笔记和演示稿里都能用。</p>
 <h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
-<p>妙言的 PPT 模式就是一个 reveal.js 页面。笔记正文放进一个 markdown 区段，由 reveal 的 Markdown 插件按分隔符拆开，默认的分隔写法是前后都有换行的 <code>---</code>。需要第二种分隔符的纵向幻灯片，在 reveal.js 里默认关闭，妙言的 PPT 页面也没有启用，所以得到的是一串平铺的横向页面。文本进入插件之前，妙言会先保护公式、转义反斜杠和美元符号，再改写图片路径，主题会跟随妙言的浅色或深色外观在 reveal 的 white 和 night 样式之间<span class="nobr">切换。</span></p>
-<p>既然是 reveal.js，演讲者备注也遵循它的约定，以 <code>Note:</code> 开头的行是这一页的备注。正式演讲之前，先把演讲者视图试<span class="nobr">一遍。</span></p>
+<p>妙言的 PPT 模式就是一个 reveal.js 页面。笔记正文放进一个 markdown 区段，由 reveal 的 Markdown 插件按分隔符拆开，默认的分隔写法是前后都有换行的 <code>---</code>。需要第二种分隔符的纵向幻灯片，在 reveal.js 里默认关闭，妙言的 PPT 页面也没有启用，所以得到的是一串平铺的横向页面。文本进入插件之前，妙言会先保护公式、转义反斜杠和美元符号，再改写图片路径，主题会跟随妙言的浅色或深色外观在 reveal 的 white 和 night 样式之间切换。</p>
+<p>既然是 reveal.js，演讲者备注也遵循它的约定，以 <code>Note:</code> 开头的行是这一页的备注。正式演讲之前，先把演讲者视图试一遍。</p>
 <h2 id="任何工具都适用的结构建议">任何工具都适用的结构建议</h2>
 <ul>
-<li>一页只讲一件事，一页需要滚动就<span class="nobr">拆开。</span></li>
+<li>一页只讲一件事，一页需要滚动就拆开。</li>
 <li>用标题当页标题，普通页用 <code>##</code>，章节开头页用 <code>#</code>。</li>
-<li>要点控制在四五条，只有顺序重要时才把长列表做成逐条<span class="nobr">出现。</span></li>
-<li>结论放前面，第二页就说出答案，整套稿子更<span class="nobr">好跟。</span></li>
-<li>图片写上说明文字，并且放在同一个文件夹里，搬家时路径不<span class="nobr">会断。</span></li>
-<li>按实际演示的尺寸预览一次，代码和表格缩小后很容易看<span class="nobr">不清。</span></li>
+<li>要点控制在四五条，只有顺序重要时才把长列表做成逐条出现。</li>
+<li>结论放前面，第二页就说出答案，整套稿子更好跟。</li>
+<li>图片写上说明文字，并且放在同一个文件夹里，搬家时路径不会断。</li>
+<li>按实际演示的尺寸预览一次，代码和表格缩小后很容易看不清。</li>
 </ul>
 <h2 id="其他做幻灯片的办法">其他做幻灯片的办法</h2>
 <table>
@@ -156,23 +156,23 @@ let b = 2
 </tr>
 </tbody>
 </table>
-<p>表里的信息来自 marp.app、revealjs.com 和 sli.dev，核对日期是 2026-10-18。需要给别人一个 <code>.pptx</code> 文件，选 Marp。想在 YAML 里按页设置布局和背景，并且不介意搭它的工具链，选 Slidev。想完全掌控页面，直接用 reveal.js。演示稿只是平时笔记的副产品，想用一个快捷键就开讲，选妙言的这个<span class="nobr">模式。</span></p>
+<p>表里的信息来自 marp.app、revealjs.com 和 sli.dev，核对日期是 2026-10-18。需要给别人一个 <code>.pptx</code> 文件，选 Marp。想在 YAML 里按页设置布局和背景，并且不介意搭它的工具链，选 Slidev。想完全掌控页面，直接用 reveal.js。演示稿只是平时笔记的副产品，想用一个快捷键就开讲，选妙言的这个模式。</p>
 <h2 id="出问题时怎么查">出问题时怎么查</h2>
 <ul>
 <li><strong>按快捷键只弹出一条提示。</strong> 笔记里没有 <code>---</code> 行，妙言会提示「没有分隔符 --- 标识，无法使用妙言 PPT」。</li>
-<li><strong>第一页不见了。</strong> 笔记如果以一行 <code>---</code> 开头，到下一行 <code>---</code> 为止的内容都会被当作 frontmatter 隐藏，所以演示稿要从标题开始写，不要以分隔符<span class="nobr">开头。</span></li>
-<li><strong>一页里想放横线。</strong> 换成标题或者<span class="nobr">留白。</span></li>
-<li><strong>图片不显示。</strong> 笔记里改用 <code>/i/&lt;文件名&gt;</code> 或 <code>https://</code> 地址，不要用 <code>file://</code> <span class="nobr">路径。</span></li>
+<li><strong>第一页不见了。</strong> 笔记如果以一行 <code>---</code> 开头，到下一行 <code>---</code> 为止的内容都会被当作 frontmatter 隐藏，所以演示稿要从标题开始写，不要以分隔符开头。</li>
+<li><strong>一页里想放横线。</strong> 换成标题或者留白。</li>
+<li><strong>图片不显示。</strong> 笔记里改用 <code>/i/&lt;文件名&gt;</code> 或 <code>https://</code> 地址，不要用 <code>file://</code> 路径。</li>
 <li><strong>需要 PowerPoint 文件。</strong> 妙言导出的是 PPT PDF，不是 <code>.pptx</code>。</li>
 </ul>
 <p>相关阅读可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>，应用可以在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 下载，源码托管在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="能导出成-powerpoint-吗">能导出成 PowerPoint 吗</h3>
-<p>妙言不支持，PPT 模式导出的是 PDF，Marp 列出了 PowerPoint <span class="nobr">输出。</span></p>
+<p>妙言不支持，PPT 模式导出的是 PDF，Marp 列出了 PowerPoint 输出。</p>
 <h3 id="需要懂-revealjs-吗">需要懂 reveal.js 吗</h3>
-<p>写基础演示稿不需要，不过了解它的属性注释对设置背景和逐步显示有<span class="nobr">帮助。</span></p>
+<p>写基础演示稿不需要，不过了解它的属性注释对设置背景和逐步显示有帮助。</p>
 <h3 id="同一个文件能在别的工具里用吗">同一个文件能在别的工具里用吗</h3>
-<p><code>---</code> 分隔符可以带到 Marp 和 Slidev，但 <code>&lt;!-- .slide: --&gt;</code> 这类注释是 reveal.js 专<span class="nobr">用的。</span></p>
+<p><code>---</code> 分隔符可以带到 Marp 和 Slidev，但 <code>&lt;!-- .slide: --&gt;</code> 这类注释是 reveal.js 专用的。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

@@ -52,11 +52,11 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 8 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-html.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 转 HTML 分两步，解析器先读懂 Markdown 并建出文档树，渲染器再把这棵树写成 HTML 标签。临时转一个页面，命令行里用 Pandoc（<code>pandoc -s note.md -o note.html</code>）就能得到一份完整的、放哪儿都能用的文件；在妙言 V4.5.0 里，文件 &gt; 导出 &gt; HTML 在应用里做同样的事，只有一个限制要先知道，导出的文件从妙言的 CDN 加载样式和脚本，并且不带本地<span class="nobr">图片。</span></p>
+<p>Markdown 转 HTML 分两步，解析器先读懂 Markdown 并建出文档树，渲染器再把这棵树写成 HTML 标签。临时转一个页面，命令行里用 Pandoc（<code>pandoc -s note.md -o note.html</code>）就能得到一份完整的、放哪儿都能用的文件；在妙言 V4.5.0 里，文件 &gt; 导出 &gt; HTML 在应用里做同样的事，只有一个限制要先知道，导出的文件从妙言的 CDN 加载样式和脚本，并且不带本地图片。</p>
 <h2 id="片段还是完整页面">片段还是完整页面</h2>
 <p>解析器默认给的是片段，一堆 <code>&lt;h1&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;ul&gt;</code>，没有 <code>&lt;html&gt;</code> 和 <code>&lt;body&gt;</code>，要把 HTML 放进模板、CMS 或邮件时，要的就是它。完整页面则需要在片段外面包一层带字符集、标题和样式表链接的 head。</p>
-<p>Pandoc 的手册写得很明确，默认只生成文档片段，加 <code>-s</code> 或 <code>--standalone</code> 才生成带 <code>&lt;head&gt;</code> 和 <code>&lt;body&gt;</code> 的完整文档，<code>--css</code> 要和 <code>-s</code> 一起用，因为样式表的链接是写进文档头<span class="nobr">部的。</span></p>
-<p>完整页面还要有 <code>&lt;title&gt;</code>。用 Pandoc 3.12.1 试过，没有标题元数据的笔记会拿文件名顶上，<code>note.md</code> 的标签页标题就是 note。加 <code>--metadata title="我的笔记"</code> 能设上，但它同时会在笔记自己的 <code># 我的笔记</code> 上面再放一个带 <code>&lt;h1&gt;</code> 的标题块，标题就出现了两次，只想改标签页标题用 <code>-V pagetitle="我的笔记"</code>，<code>--shift-heading-level-by=-1</code> 则会把开头那个 <code>#</code> 标题提成文档标题，手册里写了这个用法，代价是所有 <code>##</code> 也跟着升成<span class="nobr">一级。</span></p>
+<p>Pandoc 的手册写得很明确，默认只生成文档片段，加 <code>-s</code> 或 <code>--standalone</code> 才生成带 <code>&lt;head&gt;</code> 和 <code>&lt;body&gt;</code> 的完整文档，<code>--css</code> 要和 <code>-s</code> 一起用，因为样式表的链接是写进文档头部的。</p>
+<p>完整页面还要有 <code>&lt;title&gt;</code>。用 Pandoc 3.12.1 试过，没有标题元数据的笔记会拿文件名顶上，<code>note.md</code> 的标签页标题就是 note。加 <code>--metadata title="我的笔记"</code> 能设上，但它同时会在笔记自己的 <code># 我的笔记</code> 上面再放一个带 <code>&lt;h1&gt;</code> 的标题块，标题就出现了两次，只想改标签页标题用 <code>-V pagetitle="我的笔记"</code>，<code>--shift-heading-level-by=-1</code> 则会把开头那个 <code>#</code> 标题提成文档标题，手册里写了这个用法，代价是所有 <code>##</code> 也跟着升成一级。</p>
 <h2 id="命令行的几条路">命令行的几条路</h2>
 <pre><code class="language-bash"># Pandoc：完整页面，链接外部样式表
 pandoc -s note.md -o note.html --css style.css
@@ -69,42 +69,42 @@ npm install markdown-it
 npx markdown-it note.md -o note.html
 </code></pre>
 <p>Pandoc 的 <code>--embed-resources</code> 生成没有任何外部依赖的独立 HTML 文件，只对 HTML 输出有效，旧的 <code>--self-contained</code> 是 <code>--embed-resources --standalone</code> 的弃用同义词。Pandoc 自己的 Markdown 已经能读管道表格、任务列表和删除线，加 <code>-f gfm</code>（手册里描述为 GitHub-Flavored Markdown）则按 GitHub 的规则读，还会打开 <code>&gt; [!NOTE]</code> 这类提示块。Pandoc 的数学公式默认用 MathML，<code>--math-method=katex</code> 可以切到 KaTeX。</p>
-<p>markdown-it 的命令行读文件，不给文件时读标准输入，不加 <code>-o</code> 就写到标准输出，参数里有关闭内嵌 HTML 的 <code>--no-html</code>、自动识别链接的 <code>-l</code> 和排版替换的 <code>-t</code>。它的 README 把「Safe by default」列在特性里，库的默认选项也确实是 <code>html: false</code>，但命令行不加 <code>--no-html</code> 就会打开内嵌 HTML，转不是自己写的文本时记得加上这个<span class="nobr">参数。</span></p>
-<p>cmark-gfm 是妙言用的 C 解析器，它的 README 说库默认会清除原始 HTML 和有风险的链接，命令行加 <code>--unsafe</code> 才放行。它负责把 Markdown 渲染成 HTML，页面的 head、样式表和脚本要你自<span class="nobr">己加。</span></p>
+<p>markdown-it 的命令行读文件，不给文件时读标准输入，不加 <code>-o</code> 就写到标准输出，参数里有关闭内嵌 HTML 的 <code>--no-html</code>、自动识别链接的 <code>-l</code> 和排版替换的 <code>-t</code>。它的 README 把「Safe by default」列在特性里，库的默认选项也确实是 <code>html: false</code>，但命令行不加 <code>--no-html</code> 就会打开内嵌 HTML，转不是自己写的文本时记得加上这个参数。</p>
+<p>cmark-gfm 是妙言用的 C 解析器，它的 README 说库默认会清除原始 HTML 和有风险的链接，命令行加 <code>--unsafe</code> 才放行。它负责把 Markdown 渲染成 HTML，页面的 head、样式表和脚本要你自己加。</p>
 <h2 id="它到底是怎么转的">它到底是怎么转的</h2>
-<p>Markdown 是文本格式，所有工具走的是同一条流水线，块解析器判断每一行是段落、标题、列表还是代码围栏，行内解析器处理其中的强调、链接和代码片段，结果是一棵树，渲染器遍历这棵树再打印标签。CommonMark 规定了核心语法对应的 HTML，GFM 在上面加了表格和任务列表，所以两个启用了不同扩展的工具，对同一个文件可能输出不同的 HTML，这就是同一张表在一个工具里是表格、在另一个里是一堆竖线的<span class="nobr">原因。</span></p>
-<p>「转换好的页面」里其他东西都是渲染之后才加的，head、样式表，以及画公式和图表的脚本。转换器替不替你加，才是工具之间真正的差别。CommonMark 和 GFM 各规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的<span class="nobr">区别</span></a>。</p>
+<p>Markdown 是文本格式，所有工具走的是同一条流水线，块解析器判断每一行是段落、标题、列表还是代码围栏，行内解析器处理其中的强调、链接和代码片段，结果是一棵树，渲染器遍历这棵树再打印标签。CommonMark 规定了核心语法对应的 HTML，GFM 在上面加了表格和任务列表，所以两个启用了不同扩展的工具，对同一个文件可能输出不同的 HTML，这就是同一张表在一个工具里是表格、在另一个里是一堆竖线的原因。</p>
+<p>「转换好的页面」里其他东西都是渲染之后才加的，head、样式表，以及画公式和图表的脚本。转换器替不替你加，才是工具之间真正的差别。CommonMark 和 GFM 各规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的区别</a>。</p>
 <h2 id="妙言的-html-导出">妙言的 HTML 导出</h2>
 <p>在妙言 V4.5.0 里选中一篇笔记，点文件 &gt; 导出 &gt; HTML，或者在妙言窗口里按 <code>Control + Shift + H</code>，不需要先打开预览。文件以 <code>标题.html</code> 写进下载目录，标题里的 <code>/</code> 换成 <code>_</code>，重名时在后面加时间戳，下载目录写不进去时会弹出保存面板，提示是「已导出到下载目录~」。</p>
-<p>文件里有<span class="nobr">什么：</span></p>
+<p>文件里有什么：</p>
 <ul>
-<li>正文是 cmark-gfm 的输出，原始 HTML 放行，所以你写的标签会保留，笔记开头的 front matter 会先被<span class="nobr">去掉。</span></li>
-<li>妙言会在顶部补一个笔记标题的 <code>&lt;h1&gt;</code>，本来笔记以 <code>#</code> 标题开头时应该跳过，但 V4.5.0 里这个判断从来不成立，所以你自己的标题上面也会再加一行，两者相同时标题就出现两次，介意的话在导出的文件里删掉<span class="nobr">一个。</span></li>
-<li>页面用的是预览的模板，字体取你设置的预览字体，正文宽度限制在 760 像素，颜色按当前主题的浅色或<span class="nobr">深色。</span></li>
-<li>它不内联任何东西。一个 <code>&lt;base&gt;</code> 标签指向 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>，模板里排版、KaTeX、highlight.js、Mermaid 和 Markmap 的样式与脚本都从那里加载，离线打开时，写在页面里的背景色、文字颜色和正文宽度还在，排版样式表加载不到，公式和图表也画不<span class="nobr">出来。</span></li>
+<li>正文是 cmark-gfm 的输出，原始 HTML 放行，所以你写的标签会保留，笔记开头的 front matter 会先被去掉。</li>
+<li>妙言会在顶部补一个笔记标题的 <code>&lt;h1&gt;</code>，本来笔记以 <code>#</code> 标题开头时应该跳过，但 V4.5.0 里这个判断从来不成立，所以你自己的标题上面也会再加一行，两者相同时标题就出现两次，介意的话在导出的文件里删掉一个。</li>
+<li>页面用的是预览的模板，字体取你设置的预览字体，正文宽度限制在 760 像素，颜色按当前主题的浅色或深色。</li>
+<li>它不内联任何东西。一个 <code>&lt;base&gt;</code> 标签指向 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>，模板里排版、KaTeX、highlight.js、Mermaid 和 Markmap 的样式与脚本都从那里加载，离线打开时，写在页面里的背景色、文字颜色和正文宽度还在，排版样式表加载不到，公式和图表也画不出来。</li>
 </ul>
-<p>最容易让人意外的是图片。HTML 导出渲染 Markdown 时没有走预览和 PDF 导出用来查找本地图片的那一步，而 <code>&lt;base&gt;</code> 标签又让所有相对路径都按 CDN 地址解析，<code>/i/photo.png</code> 变成 <code>https://cdn.miaoyan.app/i/photo.png</code>，<code>images/fig.png</code> 变成那边 <code>DownView.bundle/</code> 下的路径，都不存在，把图片拷到 HTML 旁边也没用，<code>https://</code> 开头的远程图片可以正常加载。要分享的文件，要么笔记里用远程图片地址，要么导出 PDF，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>，图片路径的细节见 <a href="/zh/blog/markdown-images/">Markdown <span class="nobr">图片</span></a>。</p>
+<p>最容易让人意外的是图片。HTML 导出渲染 Markdown 时没有走预览和 PDF 导出用来查找本地图片的那一步，而 <code>&lt;base&gt;</code> 标签又让所有相对路径都按 CDN 地址解析，<code>/i/photo.png</code> 变成 <code>https://cdn.miaoyan.app/i/photo.png</code>，<code>images/fig.png</code> 变成那边 <code>DownView.bundle/</code> 下的路径，都不存在，把图片拷到 HTML 旁边也没用，<code>https://</code> 开头的远程图片可以正常加载。要分享的文件，要么笔记里用远程图片地址，要么导出 PDF，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>，图片路径的细节见 <a href="/zh/blog/markdown-images/">Markdown 图片</a>。</p>
 <h2 id="放到网上">放到网上</h2>
-<p>不需要服务器的文件可以放到任何静态托管上。比如 GitHub Pages，会把仓库里的 HTML、CSS 和 JavaScript 文件发布成网站，入口文件找的是 <code>index.html</code>，要放在发布目录的最顶层。把转换好的页面命名为 <code>index.html</code>，图片放在旁边，Markdown 里用相对路径，搬过去之后路径仍然<span class="nobr">成立。</span></p>
+<p>不需要服务器的文件可以放到任何静态托管上。比如 GitHub Pages，会把仓库里的 HTML、CSS 和 JavaScript 文件发布成网站，入口文件找的是 <code>index.html</code>，要放在发布目录的最顶层。把转换好的页面命名为 <code>index.html</code>，图片放在旁边，Markdown 里用相对路径，搬过去之后路径仍然成立。</p>
 <p>用 Pandoc 的 <code>--embed-resources</code> 得到的是一个文件，发邮件或上传都不会漏东西；用妙言导出的要记得 CDN 这层依赖，页面放到你的站点上，样式仍然来自 <code>cdn.miaoyan.app</code>。</p>
 <h2 id="原始-html-与安全">原始 HTML 与安全</h2>
-<p>Markdown 允许内嵌 HTML，放行 HTML 的转换器也会放行 <code>&lt;script&gt;</code> 标签。Pandoc 手册对它的 Markdown 读取器写明了后果，启用 <code>raw_html</code> 时用户可以注入任意 HTML，建议把所有来自不可信输入的 HTML 都过一遍 HTML 净化器。可以用 <code>-f markdown-raw_html</code> 关掉这个扩展，但同一节也提醒，链接和属性里照样能放危险内容，对用户提交的文本还是要过净<span class="nobr">化器。</span></p>
+<p>Markdown 允许内嵌 HTML，放行 HTML 的转换器也会放行 <code>&lt;script&gt;</code> 标签。Pandoc 手册对它的 Markdown 读取器写明了后果，启用 <code>raw_html</code> 时用户可以注入任意 HTML，建议把所有来自不可信输入的 HTML 都过一遍 HTML 净化器。可以用 <code>-f markdown-raw_html</code> 关掉这个扩展，但同一节也提醒，链接和属性里照样能放危险内容，对用户提交的文本还是要过净化器。</p>
 <p>DOMPurify 自称是只依赖 DOM 的 HTML、MathML 和 SVG 的 XSS 净化器，用法是 <code>DOMPurify.sanitize(dirty)</code>，在服务器上运行需要 jsdom 这类 DOM 实现。转自己的笔记时这些都不要紧，Markdown 来自别人时才要紧，因为妙言的预览和导出都保留原始 HTML。</p>
 <h2 id="常见问题的排查">常见问题的排查</h2>
 <ul>
-<li><strong>页面没有样式。</strong> Pandoc 的页面不加 <code>--css</code> 就没有你自己的样式表，妙言导出的文件离线打开则加载不到它的<span class="nobr">样式。</span></li>
+<li><strong>页面没有样式。</strong> Pandoc 的页面不加 <code>--css</code> 就没有你自己的样式表，妙言导出的文件离线打开则加载不到它的样式。</li>
 <li><strong>图片是坏的。</strong> 妙言导出里的本地路径会按妙言的 CDN 地址解析，改用远程地址，或者在 Pandoc 里用 <code>--embed-resources</code>。</li>
-<li><strong>表格显示成竖线。</strong> 用的是没有表格扩展的纯 CommonMark 解析器，Pandoc 和 markdown-it 默认就能读管道表格，cmark-gfm 要挂上表格扩展<span class="nobr">才行。</span></li>
-<li><strong>公式显示成原始的美元符号。</strong> 页面没有公式渲染器，妙言导出的页面需要 CDN 能<span class="nobr">访问。</span></li>
-<li><strong>托管后 404。</strong> 入口文件不叫 <code>index.html</code>，或者不在发布目录的<span class="nobr">顶层。</span></li>
+<li><strong>表格显示成竖线。</strong> 用的是没有表格扩展的纯 CommonMark 解析器，Pandoc 和 markdown-it 默认就能读管道表格，cmark-gfm 要挂上表格扩展才行。</li>
+<li><strong>公式显示成原始的美元符号。</strong> 页面没有公式渲染器，妙言导出的页面需要 CDN 能访问。</li>
+<li><strong>托管后 404。</strong> 入口文件不叫 <code>index.html</code>，或者不在发布目录的顶层。</li>
 </ul>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="一定要托管吗">一定要托管吗？</h3>
-<p>不需要，用浏览器从磁盘直接打开就行，只是妙言导出的文件要联网才能加载样式和<span class="nobr">脚本。</span></p>
+<p>不需要，用浏览器从磁盘直接打开就行，只是妙言导出的文件要联网才能加载样式和脚本。</p>
 <h3 id="哪个工具输出的-html-最干净">哪个工具输出的 HTML 最干净？</h3>
-<p>cmark-gfm 和 markdown-it 给的是朴素的片段，Pandoc 加 <code>-s</code> 给完整页面，输出取决于你启用了哪些<span class="nobr">扩展。</span></p>
+<p>cmark-gfm 和 markdown-it 给的是朴素的片段，Pandoc 加 <code>-s</code> 给完整页面，输出取决于你启用了哪些扩展。</p>
 <h3 id="妙言能整个文件夹一起转吗">妙言能整个文件夹一起转吗？</h3>
-<p>导出菜单只作用于选中的那一篇<span class="nobr">笔记。</span></p>
+<p>导出菜单只作用于选中的那一篇笔记。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

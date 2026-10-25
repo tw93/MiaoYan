@@ -115,12 +115,11 @@ body {
   display: flex;
   flex-direction: column;
 }
-/* No paragraph or list item ends on one lone character, as on mole.fit
-   (maintainer 2026-10-23); class rules that balance still win. */
-p, li, dd, figcaption, blockquote { text-wrap: pretty; }
-/* The last two characters of a Chinese paragraph, glued by the generator's
-   glue_cjk_tails so no line holds one character alone. */
-.nobr { white-space: nowrap; }
+/* Every line fills the column, as on mole.fit (maintainer 2026-10-25): no
+   pretty, balance, strict breaking, CJK keep-all or glued tails, which all
+   wrapped phone lines early. A comma or full stop that does not fit hangs at
+   the edge (WebKit). */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"]) body { hanging-punctuation: allow-end; }
 body > :is(.wrap, footer) { width: 100%; }
 body > footer { margin-top: auto; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) body { line-height: 1.75; }
@@ -249,8 +248,8 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 @keyframes mark-orbit {
   to { --mark-orbit: 360deg; }
 }
-.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; text-wrap: balance; }
-html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
+.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; }
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; }
 .lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
 .tagline + .trust { margin-top: 18px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
@@ -278,7 +277,6 @@ section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
 /* The family's section head: 32px dark-warm title (26px under 880px), 16px olive lede 12px below. */
 .section-title { font-family: var(--serif); font-weight: 500; color: var(--dark-warm); font-size: 32px; line-height: 1.2; margin: 0 0 12px; }
 .section-lede { font-size: 16px; color: var(--olive); margin: 0 0 24px; }
-html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { text-wrap: pretty; line-break: strict; }
 .section-title + .cards, .section-title + details { margin-top: 24px; }
 
 /* Gallery: tabs under a framed screenshot. */
@@ -427,7 +425,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 
 .blog-crumb { font-size: 13px; margin: 0 0 14px; }
 .blog-crumb a { color: var(--stone); text-decoration: none; }
-.blog-title { font-family: var(--serif); font-weight: 500; color: var(--near-black); font-size: 32px; line-height: 1.25; letter-spacing: -0.3px; margin: 0 0 14px; text-wrap: balance; }
+.blog-title { font-family: var(--serif); font-weight: 500; color: var(--near-black); font-size: 32px; line-height: 1.25; letter-spacing: -0.3px; margin: 0 0 14px; }
 .blog-meta { display: flex; flex-wrap: wrap; gap: 2px 0; font-size: 13px; letter-spacing: 0.2px; color: var(--stone); margin: 0 0 32px; }
 .blog-meta > span { white-space: nowrap; }
 .blog-meta > span + span::before { content: "\00B7"; margin: 0 10px; opacity: 0.6; }
@@ -439,7 +437,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 .blog-cover img { width: 100%; height: 100%; object-fit: cover; }
 
 .blog-body { font-size: 17px; line-height: 1.75; color: var(--dark-warm); overflow-wrap: break-word; }
-html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.8; text-wrap: pretty; line-break: strict; }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.8; }
 /* CJK titles take no Latin -0.3px, which pressed full-em glyphs together. */
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title { letter-spacing: 0; }
 /* Phones step Chinese body and articles to 1.7. */

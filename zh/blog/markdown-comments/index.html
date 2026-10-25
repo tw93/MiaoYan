@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-comments.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 自己没有注释语法，只能借用别的。最常见的是 HTML 注释 <code>&lt;!-- 备注 --&gt;</code>，单独占一行，前后各空一行，它不会出现在渲染结果里，却仍然留在源文件、导出的 HTML 文件和「查看源代码」里。另一种是链接引用定义 <code>[//]: # (备注)</code>，它在 HTML 里什么也不输出，连源码里都没有。妙言 V4.5.0 在预览和 PDF 导出里会把两种都隐藏，导出 HTML 时 HTML 注释会原样留在文件里。两种都不是私密的，密码和令牌千万别写<span class="nobr">进去。</span></p>
+<p>Markdown 自己没有注释语法，只能借用别的。最常见的是 HTML 注释 <code>&lt;!-- 备注 --&gt;</code>，单独占一行，前后各空一行，它不会出现在渲染结果里，却仍然留在源文件、导出的 HTML 文件和「查看源代码」里。另一种是链接引用定义 <code>[//]: # (备注)</code>，它在 HTML 里什么也不输出，连源码里都没有。妙言 V4.5.0 在预览和 PDF 导出里会把两种都隐藏，导出 HTML 时 HTML 注释会原样留在文件里。两种都不是私密的，密码和令牌千万别写进去。</p>
 <h2 id="两种写法">两种写法</h2>
 <pre><code class="language-markdown">可见的段落。
 
@@ -68,8 +68,8 @@
 
 又是可见的段落。
 </code></pre>
-<p>HTML 写法之所以成立，是因为原始 HTML 本来就是 Markdown 的一部分。CommonMark 把以 <code>&lt;!--</code> 开头的行当作 HTML 块的开始，遇到第一个含有 <code>--&gt;</code> 的行才结束，中间的内容原样透传，里面的空行也不会提前结束，所以多行注释里可以放列表和空行。在段落中间，<code>Hello &lt;!-- aside --&gt; world</code> 被当作行内原始 HTML，仍然留在<span class="nobr">行内。</span></p>
-<p>引用写法是另一套机制。CommonMark 定义的链接引用定义是方括号里的标签、冒号、目的地和可选的标题，标题可以用引号或圆括号，定义本身不渲染任何东西，所以 <code>//</code> 只是个标签，<code>#</code> 是目的地，你的注释是标题，<code>[//]: &lt;&gt; (text)</code> 和 <code>[note]: # "text"</code> 效果相同。标题可以跨多行，但不能含空行，定义也不能打断段落，前面要留一个空行。在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里，<code>Para</code> 后面紧跟 <code>[//]: # (x)</code>，这条定义会被当成普通文字打印出来。注释文字本身也有限制，圆括号里的标题只有在 <code>(</code> 或 <code>)</code> 前面加了反斜杠时才能包含它们，所以 <code>[//]: # (见 (x) 这里)</code> 已经不算定义，会作为一段正文打印出来，写成 <code>[//]: # (见 \(x\) 这里)</code> 才会隐藏，双引号对 <code>"</code> 也是同样的规矩，注释里没出现哪种符号，就用哪种当<span class="nobr">外壳。</span></p>
+<p>HTML 写法之所以成立，是因为原始 HTML 本来就是 Markdown 的一部分。CommonMark 把以 <code>&lt;!--</code> 开头的行当作 HTML 块的开始，遇到第一个含有 <code>--&gt;</code> 的行才结束，中间的内容原样透传，里面的空行也不会提前结束，所以多行注释里可以放列表和空行。在段落中间，<code>Hello &lt;!-- aside --&gt; world</code> 被当作行内原始 HTML，仍然留在行内。</p>
+<p>引用写法是另一套机制。CommonMark 定义的链接引用定义是方括号里的标签、冒号、目的地和可选的标题，标题可以用引号或圆括号，定义本身不渲染任何东西，所以 <code>//</code> 只是个标签，<code>#</code> 是目的地，你的注释是标题，<code>[//]: &lt;&gt; (text)</code> 和 <code>[note]: # "text"</code> 效果相同。标题可以跨多行，但不能含空行，定义也不能打断段落，前面要留一个空行。在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里，<code>Para</code> 后面紧跟 <code>[//]: # (x)</code>，这条定义会被当成普通文字打印出来。注释文字本身也有限制，圆括号里的标题只有在 <code>(</code> 或 <code>)</code> 前面加了反斜杠时才能包含它们，所以 <code>[//]: # (见 (x) 这里)</code> 已经不算定义，会作为一段正文打印出来，写成 <code>[//]: # (见 \(x\) 这里)</code> 才会隐藏，双引号对 <code>"</code> 也是同样的规矩，注释里没出现哪种符号，就用哪种当外壳。</p>
 <h2 id="两种写法各留下什么">两种写法各留下什么</h2>
 <table>
 <thead>
@@ -102,32 +102,32 @@
 </tr>
 </tbody>
 </table>
-<p>HTML 注释会进入生成的 HTML，任何人对你的笔记生成的页面点「查看源代码」都能读到。会剥掉原始 HTML 的渲染器，会把它换成 <code>&lt;!-- raw HTML omitted --&gt;</code> 这样的占位符，内容就没了。引用写法什么也不留，但它只是一种约定，不是功能，笔记里别处如果写了 <code>[//]</code>，那段文字会变成指向 <code>#</code> 的链接，同一个标签的第二条定义会被忽略，所以 <code>//</code> 只用一次，或者给每条注释一个不重复的<span class="nobr">标签。</span></p>
-<p>GitHub 文档记录了 HTML 写法，说放进 HTML 注释的内容会从渲染后的 Markdown 里隐藏，原始文件和编辑页里仍然看得到，能读这个仓库的人就能读<span class="nobr">到它。</span></p>
+<p>HTML 注释会进入生成的 HTML，任何人对你的笔记生成的页面点「查看源代码」都能读到。会剥掉原始 HTML 的渲染器，会把它换成 <code>&lt;!-- raw HTML omitted --&gt;</code> 这样的占位符，内容就没了。引用写法什么也不留，但它只是一种约定，不是功能，笔记里别处如果写了 <code>[//]</code>，那段文字会变成指向 <code>#</code> 的链接，同一个标签的第二条定义会被忽略，所以 <code>//</code> 只用一次，或者给每条注释一个不重复的标签。</p>
+<p>GitHub 文档记录了 HTML 写法，说放进 HTML 注释的内容会从渲染后的 Markdown 里隐藏，原始文件和编辑页里仍然看得到，能读这个仓库的人就能读到它。</p>
 <h2 id="哪里会漏出来">哪里会漏出来</h2>
 <ul>
-<li><strong>代码。</strong> 围栏代码块和行内代码里的 <code>&lt;!-- --&gt;</code> 会按字面显示，因为那里面什么都不解析，想展示一个注释就是这样<span class="nobr">写的。</span></li>
-<li><strong>没有闭合的注释。</strong> 块开头的 <code>&lt;!--</code> 没有 <code>--&gt;</code>，会把文档后面的所有内容吞进 HTML 块，浏览器就把它们全部<span class="nobr">隐藏。</span></li>
-<li><strong>嵌套。</strong> 注释在第一个 <code>--&gt;</code> 处结束，一个块里含有第二个注释时，内层 <code>--&gt;</code> 之后的 <code>leaked text</code> 会出现在页面上，后面还跟着一个多余的 <code>--&gt;</code>，要去掉里面那层注释标记，不要<span class="nobr">嵌套。</span></li>
-<li><strong>闭合符后面的文字。</strong> 像 <code>&lt;!-- c --&gt; **text**</code> 这样的一行，整行都属于 HTML 块，所以 <code>**text**</code> 不会加粗，注释要单独占<span class="nobr">一行。</span></li>
-<li><strong>四个空格。</strong> 空行之后缩进的 <code>&lt;!-- c --&gt;</code> 是代码块，会被打印<span class="nobr">出来。</span></li>
-<li><strong>Front matter。</strong> 妙言只在笔记以 <code>---</code> 开头时才隐藏那个块，上面放一条注释，这个块就变成一条分隔线加一个标题，注释要放在结尾的 <code>---</code> 下面，规则见 <a href="/zh/blog/markdown-front-matter/">front matter</a> <span class="nobr">一文。</span></li>
+<li><strong>代码。</strong> 围栏代码块和行内代码里的 <code>&lt;!-- --&gt;</code> 会按字面显示，因为那里面什么都不解析，想展示一个注释就是这样写的。</li>
+<li><strong>没有闭合的注释。</strong> 块开头的 <code>&lt;!--</code> 没有 <code>--&gt;</code>，会把文档后面的所有内容吞进 HTML 块，浏览器就把它们全部隐藏。</li>
+<li><strong>嵌套。</strong> 注释在第一个 <code>--&gt;</code> 处结束，一个块里含有第二个注释时，内层 <code>--&gt;</code> 之后的 <code>leaked text</code> 会出现在页面上，后面还跟着一个多余的 <code>--&gt;</code>，要去掉里面那层注释标记，不要嵌套。</li>
+<li><strong>闭合符后面的文字。</strong> 像 <code>&lt;!-- c --&gt; **text**</code> 这样的一行，整行都属于 HTML 块，所以 <code>**text**</code> 不会加粗，注释要单独占一行。</li>
+<li><strong>四个空格。</strong> 空行之后缩进的 <code>&lt;!-- c --&gt;</code> 是代码块，会被打印出来。</li>
+<li><strong>Front matter。</strong> 妙言只在笔记以 <code>---</code> 开头时才隐藏那个块，上面放一条注释，这个块就变成一条分隔线加一个标题，注释要放在结尾的 <code>---</code> 下面，规则见 <a href="/zh/blog/markdown-front-matter/">front matter</a> 一文。</li>
 </ul>
-<p>表格单元格和标题里可以放行内注释，列表项里把注释缩进到项目文字的位置也<span class="nobr">可以。</span></p>
+<p>表格单元格和标题里可以放行内注释，列表项里把注释缩进到项目文字的位置也可以。</p>
 <h2 id="妙言-v450-怎么处理">妙言 V4.5.0 怎么处理</h2>
-<p>妙言用 cmark-gfm 渲染 Markdown，并打开了原始 HTML 选项（<code>CMARK_OPT_UNSAFE</code>），所以注释会作为真正的 HTML 注释进入预览，网页视图不会把它画出来。这同一个渲染器给预览、PDF 导出和 HTML 导出供稿，预览和 PDF 导出里看不到注释文字，因为 PDF 是印出来的预览。「文件」里「导出」下的「HTML」会重新渲染笔记，把 HTML 存到下载目录，这条路径上没有哪一步会去掉注释，所以文件<span class="nobr">里有。</span></p>
-<p>编辑区的高亮对注释没有规则，V4.5.0 也没有注释的格式菜单命令或斜杠快捷输入，标记要自己敲。因为源文件里留着它们，在所有笔记里搜 <code>TODO</code> 或者 <code>&lt;!--</code> 都能找到，这也是用注释而不是直接删掉一行的主要理由，<code>grep -rn "&lt;!--" notes/</code> 可以把它们全列<span class="nobr">出来。</span></p>
+<p>妙言用 cmark-gfm 渲染 Markdown，并打开了原始 HTML 选项（<code>CMARK_OPT_UNSAFE</code>），所以注释会作为真正的 HTML 注释进入预览，网页视图不会把它画出来。这同一个渲染器给预览、PDF 导出和 HTML 导出供稿，预览和 PDF 导出里看不到注释文字，因为 PDF 是印出来的预览。「文件」里「导出」下的「HTML」会重新渲染笔记，把 HTML 存到下载目录，这条路径上没有哪一步会去掉注释，所以文件里有。</p>
+<p>编辑区的高亮对注释没有规则，V4.5.0 也没有注释的格式菜单命令或斜杠快捷输入，标记要自己敲。因为源文件里留着它们，在所有笔记里搜 <code>TODO</code> 或者 <code>&lt;!--</code> 都能找到，这也是用注释而不是直接删掉一行的主要理由，<code>grep -rn "&lt;!--" notes/</code> 可以把它们全列出来。</p>
 <h2 id="注释还是-front-matter">注释还是 front matter</h2>
-<p>两者在渲染结果里都是隐藏的，在文件里都读得到，区别在谁来使用它们。Front matter 是 Jekyll、Hugo 这类生成器会读取的元数据，比如标题、日期或 <code>draft</code> 标记，注释则是所有工具都忽略的。构建要用的字段放 front matter，给自己或编辑的备注放注释，草稿标记还能做注释做不到的事，生成器可以把这个页面排除在站点之外。一段内容如果不能发布，就挪到另一篇笔记里，不要藏在注<span class="nobr">释里。</span></p>
+<p>两者在渲染结果里都是隐藏的，在文件里都读得到，区别在谁来使用它们。Front matter 是 Jekyll、Hugo 这类生成器会读取的元数据，比如标题、日期或 <code>draft</code> 标记，注释则是所有工具都忽略的。构建要用的字段放 front matter，给自己或编辑的备注放注释，草稿标记还能做注释做不到的事，生成器可以把这个页面排除在站点之外。一段内容如果不能发布，就挪到另一篇笔记里，不要藏在注释里。</p>
 <h2 id="别把秘密写进注释">别把秘密写进注释</h2>
-<p>注释是你可能会同步、提交或导出的文件里的纯文本，笔记文件夹可能经过 iCloud 云盘、Dropbox 或 git，参见 <a href="/zh/blog/sync-markdown-notes-across-devices/">同步笔记</a>，导出的 HTML 页面会把注释带给收到它的人。内容敏感的话，就不要放进任何你要分享或发布的<span class="nobr">笔记。</span></p>
+<p>注释是你可能会同步、提交或导出的文件里的纯文本，笔记文件夹可能经过 iCloud 云盘、Dropbox 或 git，参见 <a href="/zh/blog/sync-markdown-notes-across-devices/">同步笔记</a>，导出的 HTML 页面会把注释带给收到它的人。内容敏感的话，就不要放进任何你要分享或发布的笔记。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="markdown-有官方的注释语法吗">Markdown 有官方的注释语法吗？</h3>
-<p>没有，CommonMark 和 GFM 都没有定义。HTML 注释是 Markdown 透传的原始 HTML，<code>[//]: # (text)</code> 是被借用成约定的链接引用<span class="nobr">定义。</span></p>
+<p>没有，CommonMark 和 GFM 都没有定义。HTML 注释是 Markdown 透传的原始 HTML，<code>[//]: # (text)</code> 是被借用成约定的链接引用定义。</p>
 <h3 id="该用哪一种">该用哪一种？</h3>
-<p>HTML 注释用得更广，也支持多行。输出必须保持干净，或者渲染器会剥掉原始 HTML 时，用引用<span class="nobr">写法。</span></p>
+<p>HTML 注释用得更广，也支持多行。输出必须保持干净，或者渲染器会剥掉原始 HTML 时，用引用写法。</p>
 <h3 id="注释会在-github-上显示吗">注释会在 GitHub 上显示吗？</h3>
-<p>渲染后的页面里不会，但原始文件和编辑页里看<span class="nobr">得到。</span></p>
+<p>渲染后的页面里不会，但原始文件和编辑页里看得到。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

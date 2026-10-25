@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 5 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-front-matter.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Front matter 是 Markdown 文件最顶部的一段元数据，用两行 <code>---</code> 围起来，内容写成 YAML，这样静态站点生成器在渲染正文之前就能读到标题、日期和标签。它必须放在第一行，上面不能有任何东西，结尾要有独占一行的 <code>---</code>，值里带冒号时要加引号。妙言 V4.5.0 会在预览和导出里隐藏这样的一段，前提是文件以 <code>---</code> 开头并用另一行 <code>---</code> 收尾，用 <code>+++</code> 写的 TOML front matter 不会被<span class="nobr">识别。</span></p>
+<p>Front matter 是 Markdown 文件最顶部的一段元数据，用两行 <code>---</code> 围起来，内容写成 YAML，这样静态站点生成器在渲染正文之前就能读到标题、日期和标签。它必须放在第一行，上面不能有任何东西，结尾要有独占一行的 <code>---</code>，值里带冒号时要加引号。妙言 V4.5.0 会在预览和导出里隐藏这样的一段，前提是文件以 <code>---</code> 开头并用另一行 <code>---</code> 收尾，用 <code>+++</code> 写的 TOML front matter 不会被识别。</p>
 <h2 id="写法">写法</h2>
 <pre><code class="language-markdown">---
 title: Markdown front matter
@@ -63,10 +63,10 @@ draft: false
 
 正文从这里开始。
 </code></pre>
-<p>开头的 <code>---</code> 必须是第一行。键值就是普通 YAML，列表可以像上面这样写在一行里，也可以逐行写 <code>- item</code>，值里有冒号时，比如 <code>title: "Note: a test"</code>，要加引号。Jekyll 的文档描述的也是同一种结构，也就是夹在三条短横线之间的合法 YAML，还说明只写一对空的短横线 Jekyll 同样会处理这个文件。它也提醒文件开头的 UTF-8 字节顺序标记会让它出问题，这也是看起来没错的文件有时会失效的<span class="nobr">原因。</span></p>
-<p>Pandoc 稍微宽松一些。它的手册说 YAML 元数据块以顶部的 <code>---</code> 开始，以底部的 <code>---</code> 或 <code>...</code> 结束，开头那行后面不能紧跟空行，块也可以出现在文档后面，只要前面有一个<span class="nobr">空行。</span></p>
+<p>开头的 <code>---</code> 必须是第一行。键值就是普通 YAML，列表可以像上面这样写在一行里，也可以逐行写 <code>- item</code>，值里有冒号时，比如 <code>title: "Note: a test"</code>，要加引号。Jekyll 的文档描述的也是同一种结构，也就是夹在三条短横线之间的合法 YAML，还说明只写一对空的短横线 Jekyll 同样会处理这个文件。它也提醒文件开头的 UTF-8 字节顺序标记会让它出问题，这也是看起来没错的文件有时会失效的原因。</p>
+<p>Pandoc 稍微宽松一些。它的手册说 YAML 元数据块以顶部的 <code>---</code> 开始，以底部的 <code>---</code> 或 <code>...</code> 结束，开头那行后面不能紧跟空行，块也可以出现在文档后面，只要前面有一个空行。</p>
 <h2 id="各个生成器用哪些键">各个生成器用哪些键</h2>
-<p>没有通用的键列表，每个生成器各定<span class="nobr">各的。</span></p>
+<p>没有通用的键列表，每个生成器各定各的。</p>
 <table>
 <thead>
 <tr>
@@ -93,41 +93,41 @@ draft: false
 </tr>
 </tbody>
 </table>
-<p>Hugo 的文档说它通过分隔符判断格式，<code>+++</code> 就是 TOML，并把 <code>date</code>、<code>draft</code>、<code>title</code>、<code>weight</code> 列为最常见的字段。Jekyll 的基础示例里是 <code>layout</code> 和 <code>title</code>，<code>date</code> 是文章变量，用 <code>published: false</code> 让文章不出现在生成的站点里。Astro 的 Markdown 指南说 frontmatter 用来定义标题、描述、标签这类自定义属性，再由你自己的组件<span class="nobr">读取。</span></p>
-<p>TOML 的写法是<span class="nobr">这样：</span></p>
+<p>Hugo 的文档说它通过分隔符判断格式，<code>+++</code> 就是 TOML，并把 <code>date</code>、<code>draft</code>、<code>title</code>、<code>weight</code> 列为最常见的字段。Jekyll 的基础示例里是 <code>layout</code> 和 <code>title</code>，<code>date</code> 是文章变量，用 <code>published: false</code> 让文章不出现在生成的站点里。Astro 的 Markdown 指南说 frontmatter 用来定义标题、描述、标签这类自定义属性，再由你自己的组件读取。</p>
+<p>TOML 的写法是这样：</p>
 <pre><code class="language-markdown">+++
 title = &quot;Markdown front matter&quot;
 date = 2026-10-19
 tags = [&quot;markdown&quot;, &quot;notes&quot;]
 +++
 </code></pre>
-<p>Hugo 按每个文件的分隔符选解析器，只认 <code>---</code> 写法的工具会把 <code>+++</code> 块当普通文字显示，妙言 V4.5.0 就是<span class="nobr">这样。</span></p>
+<p>Hugo 按每个文件的分隔符选解析器，只认 <code>---</code> 写法的工具会把 <code>+++</code> 块当普通文字显示，妙言 V4.5.0 就是这样。</p>
 <h2 id="github-怎么显示">GitHub 怎么显示</h2>
-<p>GitHub 在 2013 年的博客里宣布（文章 2019 年更新过），会把文档顶部的 YAML 元数据渲染成横向的表格，读起来更方便，针对的正是 GitHub Pages 上 Jekyll 站点依赖的那段元数据。这对所有 GitHub 支持的文档格式都适用，不只是 Markdown。GitHub 的写作与格式文档里没有讲 front matter，能参考的就是这篇<span class="nobr">公告。</span></p>
+<p>GitHub 在 2013 年的博客里宣布（文章 2019 年更新过），会把文档顶部的 YAML 元数据渲染成横向的表格，读起来更方便，针对的正是 GitHub Pages 上 Jekyll 站点依赖的那段元数据。这对所有 GitHub 支持的文档格式都适用，不只是 Markdown。GitHub 的写作与格式文档里没有讲 front matter，能参考的就是这篇公告。</p>
 <h2 id="妙言-v450-怎么处理">妙言 V4.5.0 怎么处理</h2>
-<p>规则写在 <code>Business/Note.swift</code> 的 <code>Note.cleanMetaData</code> 里。只有文本以 <code>---</code> 加换行开头，或者 <code>---</code> 加 Windows 换行开头，才会当作有 front matter。之后代码找下一行以 <code>---</code> 开头的位置，这一行必须独占一行，才会把这一行及之前的内容全部去掉。结果用于预览、HTML 导出和 PDF 导出（二者建立在预览之上），也用于字数统计。编辑器里仍然显示原文，所以元数据照常<span class="nobr">编辑。</span></p>
-<p>这个函数在 <code>NoteFrontmatterTests</code> 里有测试，固定了几种边界<span class="nobr">情况：</span></p>
+<p>规则写在 <code>Business/Note.swift</code> 的 <code>Note.cleanMetaData</code> 里。只有文本以 <code>---</code> 加换行开头，或者 <code>---</code> 加 Windows 换行开头，才会当作有 front matter。之后代码找下一行以 <code>---</code> 开头的位置，这一行必须独占一行，才会把这一行及之前的内容全部去掉。结果用于预览、HTML 导出和 PDF 导出（二者建立在预览之上），也用于字数统计。编辑器里仍然显示原文，所以元数据照常编辑。</p>
+<p>这个函数在 <code>NoteFrontmatterTests</code> 里有测试，固定了几种边界情况：</p>
 <ul>
-<li>开头的块不管有没有 <code>title:</code> 键都会<span class="nobr">隐藏。</span></li>
-<li>没有结尾分隔线的文件原样保留，全部<span class="nobr">显示。</span></li>
-<li>结尾行写成 <code>----</code> 不算分隔线，整篇笔记连元数据一起<span class="nobr">显示。</span></li>
-<li>只有 front matter 的文件，预览是<span class="nobr">空的。</span></li>
-<li>笔记中间的三条短横线仍然是普通水<span class="nobr">平线。</span></li>
+<li>开头的块不管有没有 <code>title:</code> 键都会隐藏。</li>
+<li>没有结尾分隔线的文件原样保留，全部显示。</li>
+<li>结尾行写成 <code>----</code> 不算分隔线，整篇笔记连元数据一起显示。</li>
+<li>只有 front matter 的文件，预览是空的。</li>
+<li>笔记中间的三条短横线仍然是普通水平线。</li>
 </ul>
-<p>妙言不会读这些键，那一段也不会按 YAML 解析，所以一篇笔记只要顶部恰好有两行 <code>---</code> 夹着一些文字，预览里这些文字也会消失。同样没有 YAML 校验，能让 Jekyll 报错的笔误在妙言里看不<span class="nobr">出来。</span></p>
+<p>妙言不会读这些键，那一段也不会按 YAML 解析，所以一篇笔记只要顶部恰好有两行 <code>---</code> 夹着一些文字，预览里这些文字也会消失。同样没有 YAML 校验，能让 Jekyll 报错的笔误在妙言里看不出来。</p>
 <h2 id="幻灯片模式和-分隔符">幻灯片模式和 <code>---</code> 分隔符</h2>
-<p>幻灯片模式里 <code>---</code> 同时是分页符。V4.5.0 在文本交给幻灯片渲染之前就去掉了 front matter，所以顶部的元数据块不会变成一页。要留意以 <code>---</code> 当分隔符开头的幻灯片，如果后面还有一行 <code>---</code>，两行之间的内容会被当成 front matter 而消失。幻灯片从标题开始写，元数据放进一个干净的块里。分隔符本身的用法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻<span class="nobr">灯片</span></a>。</p>
+<p>幻灯片模式里 <code>---</code> 同时是分页符。V4.5.0 在文本交给幻灯片渲染之前就去掉了 front matter，所以顶部的元数据块不会变成一页。要留意以 <code>---</code> 当分隔符开头的幻灯片，如果后面还有一行 <code>---</code>，两行之间的内容会被当成 front matter 而消失。幻灯片从标题开始写，元数据放进一个干净的块里。分隔符本身的用法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
 <h2 id="没有生效时">没有生效时</h2>
 <ul>
 <li><strong>预览里显示出元数据。</strong> 第一个 <code>---</code> 前面有空行或空格，结尾行是 <code>----</code> 或 <code>...</code>，或者这个块用的是 <code>+++</code>。</li>
-<li><strong>正文上方出现标题。</strong> 块没有被识别为 front matter 时，后面紧跟 <code>---</code> 的一行文字在 CommonMark 里是 setext 标题，某个键就会变成一个大<span class="nobr">标题。</span></li>
-<li><strong>生成器忽略了文件。</strong> 检查文件开头有没有字节顺序标记，值里有没有没加引号的<span class="nobr">冒号。</span></li>
-<li><strong>文字不见了。</strong> 笔记顶部的两行 <code>---</code> 在妙言里会隐藏它们之间的所有内容，即使那是想写的<span class="nobr">正文。</span></li>
+<li><strong>正文上方出现标题。</strong> 块没有被识别为 front matter 时，后面紧跟 <code>---</code> 的一行文字在 CommonMark 里是 setext 标题，某个键就会变成一个大标题。</li>
+<li><strong>生成器忽略了文件。</strong> 检查文件开头有没有字节顺序标记，值里有没有没加引号的冒号。</li>
+<li><strong>文字不见了。</strong> 笔记顶部的两行 <code>---</code> 在妙言里会隐藏它们之间的所有内容，即使那是想写的正文。</li>
 </ul>
-<p>笔记还要发布到别处的话，可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>，了解各家渲染器在 CommonMark 之外加了<span class="nobr">什么。</span></p>
+<p>笔记还要发布到别处的话，可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>，了解各家渲染器在 CommonMark 之外加了什么。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="front-matter-算-markdown-的一部分吗">Front matter 算 Markdown 的一部分吗？</h3>
-<p>不算。CommonMark 没有定义它，这是静态站点生成器和部分编辑器的约定，它们会在渲染正文之前把它<span class="nobr">剥掉。</span></p>
+<p>不算。CommonMark 没有定义它，这是静态站点生成器和部分编辑器的约定，它们会在渲染正文之前把它剥掉。</p>
 <h3 id="能在笔记开头用-当分隔线吗">能在笔记开头用 <code>---</code> 当分隔线吗？</h3>
 <p>用 <code>***</code>，或者先写一个标题。在妙言里，以 <code>---</code> 开头且后面还有另一行 <code>---</code> 的笔记会被当成 front matter。</p>
 <h3 id="github-的-readme-会显示-front-matter-吗">GitHub 的 README 会显示 front matter 吗？</h3>

@@ -52,7 +52,7 @@
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-task-lists.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 的待办列表就是一个普通列表项，开头写 <code>[ ]</code> 表示未完成，写 <code>[x]</code> 表示已完成，写法是 <code>- [ ] 买牛奶</code>。这个语法来自 GitHub 风格 Markdown（GFM），不在核心 CommonMark 里，所以不带 GFM 扩展的解析器会把方括号原样显示出来。文件里除了这几个字符以外不存任何状态，好处是容易搜索和比对差异，也说明所谓「点复选框」永远是编辑器在背后改写了一行<span class="nobr">文字。</span></p>
+<p>Markdown 的待办列表就是一个普通列表项，开头写 <code>[ ]</code> 表示未完成，写 <code>[x]</code> 表示已完成，写法是 <code>- [ ] 买牛奶</code>。这个语法来自 GitHub 风格 Markdown（GFM），不在核心 CommonMark 里，所以不带 GFM 扩展的解析器会把方括号原样显示出来。文件里除了这几个字符以外不存任何状态，好处是容易搜索和比对差异，也说明所谓「点复选框」永远是编辑器在背后改写了一行文字。</p>
 <h2 id="基本写法">基本写法</h2>
 <pre><code class="language-markdown">- [ ] 写初稿
 - [x] 想好标题
@@ -60,47 +60,47 @@
   - [ ] 裁剪第二张
   - [x] 压缩第一张
 </code></pre>
-<p>GFM 规范里，待办项是第一个块为段落、且段落以标记开头的列表项，标记之后至少要有一个空白字符才能接正文。标记由左方括号、一个空白字符或者大小写的 <code>x</code>、右方括号组成，括号里是空白就是未勾选，否则就是已勾选。规范还特别写明它不定义复选框怎么交互，所以不同软件的点击行为并不<span class="nobr">一样。</span></p>
-<p>出问题的多半是两处。右括号后面的空格不能省，<code>- [ ]买牛奶</code> 不是待办。另外括号里什么都没有的 <code>[]</code> 也不算标记，未完成要写且只写一个<span class="nobr">空格。</span></p>
-<p>嵌套和普通列表一样，子项在连字符下缩进两个空格即可，规范自带的示例也是这样。子项全部勾完以后父项不会自动勾上，在文件里每个框彼此<span class="nobr">独立。</span></p>
+<p>GFM 规范里，待办项是第一个块为段落、且段落以标记开头的列表项，标记之后至少要有一个空白字符才能接正文。标记由左方括号、一个空白字符或者大小写的 <code>x</code>、右方括号组成，括号里是空白就是未勾选，否则就是已勾选。规范还特别写明它不定义复选框怎么交互，所以不同软件的点击行为并不一样。</p>
+<p>出问题的多半是两处。右括号后面的空格不能省，<code>- [ ]买牛奶</code> 不是待办。另外括号里什么都没有的 <code>[]</code> 也不算标记，未完成要写且只写一个空格。</p>
+<p>嵌套和普通列表一样，子项在连字符下缩进两个空格即可，规范自带的示例也是这样。子项全部勾完以后父项不会自动勾上，在文件里每个框彼此独立。</p>
 <h2 id="无序和有序待办">无序和有序待办</h2>
-<p>列表符号可以是 <code>-</code>、<code>*</code> 或 <code>+</code>，规范对列表项的描述也适用于 <code>1. [ ] 第一步</code> 这样的有序项，妙言预览背后的 cmark-gfm 会把它画成带复选框的编号列表，适合步骤有先后的<span class="nobr">清单。</span></p>
-<p>这是标准层面的说法，具体编辑器写回文件时可以更严格，所以连字符在这里有分量。妙言自己的点击逻辑（下面会讲）只认 <code>- [ ]</code> 和 <code>- [x]</code>，想让点击稳定，就用连字符加小写 <code>x</code>。GFM 的其他补充可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM <span class="nobr">差异</span></a>。</p>
+<p>列表符号可以是 <code>-</code>、<code>*</code> 或 <code>+</code>，规范对列表项的描述也适用于 <code>1. [ ] 第一步</code> 这样的有序项，妙言预览背后的 cmark-gfm 会把它画成带复选框的编号列表，适合步骤有先后的清单。</p>
+<p>这是标准层面的说法，具体编辑器写回文件时可以更严格，所以连字符在这里有分量。妙言自己的点击逻辑（下面会讲）只认 <code>- [ ]</code> 和 <code>- [x]</code>，想让点击稳定，就用连字符加小写 <code>x</code>。GFM 的其他补充可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
 <h2 id="各处渲染差异">各处渲染差异</h2>
 <ul>
-<li><strong>GitHub。</strong> GitHub 的格式指南用的就是这套写法，在 issue 和评论里，官方文档说待办会渲染成可以点击的复选框。这个点击是 GitHub 的功能，不属于 Markdown <span class="nobr">本身。</span></li>
-<li><strong>不带 GFM 扩展的 CommonMark。</strong> 它就是一个普通的无序列表项，文字以 <code>[ ]</code> 开头，你看到的是方<span class="nobr">括号。</span></li>
-<li><strong>其他编辑器。</strong> 渲染出来的框能不能点击不在规范里，各家自己决定，依赖点击之前先试<span class="nobr">一次。</span></li>
+<li><strong>GitHub。</strong> GitHub 的格式指南用的就是这套写法，在 issue 和评论里，官方文档说待办会渲染成可以点击的复选框。这个点击是 GitHub 的功能，不属于 Markdown 本身。</li>
+<li><strong>不带 GFM 扩展的 CommonMark。</strong> 它就是一个普通的无序列表项，文字以 <code>[ ]</code> 开头，你看到的是方括号。</li>
+<li><strong>其他编辑器。</strong> 渲染出来的框能不能点击不在规范里，各家自己决定，依赖点击之前先试一次。</li>
 </ul>
-<p>妙言的预览用的是 Swift 版 cmark-gfm，开启了表格、脚注、删除线和待办四个扩展（V4.5.0 的 <code>Business/Markdown.swift</code>），所以待办列表在预览里是真正的 <code>input</code> 复<span class="nobr">选框。</span></p>
+<p>妙言的预览用的是 Swift 版 cmark-gfm，开启了表格、脚注、删除线和待办四个扩展（V4.5.0 的 <code>Business/Markdown.swift</code>），所以待办列表在预览里是真正的 <code>input</code> 复选框。</p>
 <h2 id="在妙言里点击复选框发生了什么">在妙言里点击复选框发生了什么</h2>
-<p>V4.5.0 的预览页脚本（<code>common.js</code>）会启用所有复选框，并按文档顺序编号。点击时把编号发给应用，应用（<code>MPreviewHandlers.swift</code> 里的 <code>HandlerCheckbox</code>）遍历笔记正文，找到对应顺位的 <code>- [ ]</code> 或 <code>- [x]</code>，换成另一种写法并保存<span class="nobr">笔记。</span></p>
-<p>边界情况都由这个机制决定。应用是按位置匹配的，预览里第 N 个复选框，被当成源文本里第 N 个 <code>- [ ]</code> 或 <code>- [x]</code>。笔记里如果有正则不统计的写法，比如 <code>* [ ]</code>、<code>+ [ ]</code>、<code>1. [ ]</code> 或大写 <code>X</code>，预览照样画出框，编号就会错位，点一下可能改到另一行。如果 <code>- [ ]</code> 出现在不会被渲染成待办的地方，比如围栏代码块或引用块里，也会错位，因为文本匹配不认识代码围栏和引用。点击改错了行时，先查这两种<span class="nobr">原因。</span></p>
-<p>编辑时可以用「格式」菜单里的「待办」（<code>⌘T</code>），当前行不是待办就插入 <code>- [ ]</code>，已经是待办就在 <code>- [ ]</code> 和 <code>- [x]</code> 之间切换。它改写的是这一行开头的六个字符，用在缩进的子任务上会把标记弄坏，子任务在预览里点框更稳。输入 <code>/task</code> 再按 <code>Tab</code> 会插入三行模板，两条未完成、一条已完成，占位文字是中文，「Tab快捷输入」菜单里也列着这<span class="nobr">一项。</span></p>
+<p>V4.5.0 的预览页脚本（<code>common.js</code>）会启用所有复选框，并按文档顺序编号。点击时把编号发给应用，应用（<code>MPreviewHandlers.swift</code> 里的 <code>HandlerCheckbox</code>）遍历笔记正文，找到对应顺位的 <code>- [ ]</code> 或 <code>- [x]</code>，换成另一种写法并保存笔记。</p>
+<p>边界情况都由这个机制决定。应用是按位置匹配的，预览里第 N 个复选框，被当成源文本里第 N 个 <code>- [ ]</code> 或 <code>- [x]</code>。笔记里如果有正则不统计的写法，比如 <code>* [ ]</code>、<code>+ [ ]</code>、<code>1. [ ]</code> 或大写 <code>X</code>，预览照样画出框，编号就会错位，点一下可能改到另一行。如果 <code>- [ ]</code> 出现在不会被渲染成待办的地方，比如围栏代码块或引用块里，也会错位，因为文本匹配不认识代码围栏和引用。点击改错了行时，先查这两种原因。</p>
+<p>编辑时可以用「格式」菜单里的「待办」（<code>⌘T</code>），当前行不是待办就插入 <code>- [ ]</code>，已经是待办就在 <code>- [ ]</code> 和 <code>- [x]</code> 之间切换。它改写的是这一行开头的六个字符，用在缩进的子任务上会把标记弄坏，子任务在预览里点框更稳。输入 <code>/task</code> 再按 <code>Tab</code> 会插入三行模板，两条未完成、一条已完成，占位文字是中文，「Tab快捷输入」菜单里也列着这一项。</p>
 <h2 id="引用块里的待办">引用块里的待办</h2>
 <pre><code class="language-markdown">&gt; - [ ] 问清截止时间
 &gt; - [x] 发出初稿
 </code></pre>
-<p>妙言 V4.5.0 用的 cmark-gfm 不会把这里画成复选框，引用块里是一个普通的无序列表，每项文字以 <code>[ ]</code> 和 <code>[x]</code> 开头，每行都带 <code>&gt;</code>、列表前再加一行空的 <code>&gt;</code> 也一样。别的渲染器可能处理得不同，笔记最终在哪里看，就在哪里试一下。在妙言里还有一层代价，点击切换照样会把引用块里的 <code>- [ ]</code> 算进去，于是笔记里排在它后面的复选框都会改错行。待办最好放在引用块外面，需要引用的背景写成列表上方的<span class="nobr">一段。</span></p>
+<p>妙言 V4.5.0 用的 cmark-gfm 不会把这里画成复选框，引用块里是一个普通的无序列表，每项文字以 <code>[ ]</code> 和 <code>[x]</code> 开头，每行都带 <code>&gt;</code>、列表前再加一行空的 <code>&gt;</code> 也一样。别的渲染器可能处理得不同，笔记最终在哪里看，就在哪里试一下。在妙言里还有一层代价，点击切换照样会把引用块里的 <code>- [ ]</code> 算进去，于是笔记里排在它后面的复选框都会改错行。待办最好放在引用块外面，需要引用的背景写成列表上方的一段。</p>
 <h2 id="在多篇笔记里找未完成事项">在多篇笔记里找未完成事项</h2>
-<p>待办是纯文本，所以搜索工具就能列出还剩什么。笔记文件夹里用 ripgrep 可以带着文件名和行号列出所有未完<span class="nobr">成项：</span></p>
+<p>待办是纯文本，所以搜索工具就能列出还剩什么。笔记文件夹里用 ripgrep 可以带着文件名和行号列出所有未完成项：</p>
 <pre><code class="language-bash">rg -n -F -- '- [ ]' ~/Notes
 </code></pre>
-<p><code>-F</code> 把模式当固定字符串，方括号不会被当成正则字符类，<code>--</code> 防止开头的连字符被当成选项。缩进的子任务同样能匹配，因为这个字符串可以出现在一行的任何位置，已完成的换成 <code>'- [x]'</code>。用 <code>grep</code> 的<span class="nobr">话是：</span></p>
+<p><code>-F</code> 把模式当固定字符串，方括号不会被当成正则字符类，<code>--</code> 防止开头的连字符被当成选项。缩进的子任务同样能匹配，因为这个字符串可以出现在一行的任何位置，已完成的换成 <code>'- [x]'</code>。用 <code>grep</code> 的话是：</p>
 <pre><code class="language-bash">grep -rn --include='*.md' -F -- '- [ ]' ~/Notes
 </code></pre>
-<p>想按文件统计未完成数量就加 <code>-c</code>。这也是坚持一种写法的最大理由，如果有些笔记写的是 <code>* [ ]</code>，一次搜索就会漏掉它们。更多在命令行里处理笔记的办法见 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里处理 Markdown <span class="nobr">笔记</span></a>。</p>
+<p>想按文件统计未完成数量就加 <code>-c</code>。这也是坚持一种写法的最大理由，如果有些笔记写的是 <code>* [ ]</code>，一次搜索就会漏掉它们。更多在命令行里处理笔记的办法见 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里处理 Markdown 笔记</a>。</p>
 <h2 id="局限与更合适的工具">局限与更合适的工具</h2>
-<p>待办列表只是清单，不是任务管理器，没有截止日期、提醒和重复，状态只有未完成和已完成两种。购物清单、发布检查表和笔记里的当日计划，用它刚好。需要截止日期和提醒时，换专门的工具，笔记留作<span class="nobr">参考。</span></p>
+<p>待办列表只是清单，不是任务管理器，没有截止日期、提醒和重复，状态只有未完成和已完成两种。购物清单、发布检查表和笔记里的当日计划，用它刚好。需要截止日期和提醒时，换专门的工具，笔记留作参考。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="为什么我的复选框显示成-文字">为什么我的复选框显示成 <code>[ ]</code> 文字？</h3>
-<p>渲染器没有 GFM 的待办扩展，或者写法有一点偏差。检查连字符后和右括号后是否有空格，以及括号之间是否正好一个<span class="nobr">字符。</span></p>
+<p>渲染器没有 GFM 的待办扩展，或者写法有一点偏差。检查连字符后和右括号后是否有空格，以及括号之间是否正好一个字符。</p>
 <h3 id="不点击能直接在文件里勾选吗">不点击能直接在文件里勾选吗？</h3>
-<p>可以，把括号里的空格改成 <code>x</code> 就行，任何编辑器里的点击做的也只是这<span class="nobr">件事。</span></p>
+<p>可以，把括号里的空格改成 <code>x</code> 就行，任何编辑器里的点击做的也只是这件事。</p>
 <h3 id="大写的-x-有效吗">大写的 <code>[X]</code> 有效吗？</h3>
-<p>GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，但妙言的点击切换只匹配小写 <code>x</code>，所以小写更<span class="nobr">稳妥。</span></p>
+<p>GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，但妙言的点击切换只匹配小写 <code>x</code>，所以小写更稳妥。</p>
 <h3 id="导出的-pdf-或-html-里待办还在吗">导出的 PDF 或 HTML 里待办还在吗？</h3>
-<p>导出是从预览生成的，所以重要的话可以检查一次导出文件。导出文件里的复选框只是笔记当时的快照，不能用来修改<span class="nobr">笔记。</span></p>
+<p>导出是从预览生成的，所以重要的话可以检查一次导出文件。导出文件里的复选框只是笔记当时的快照，不能用来修改笔记。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
