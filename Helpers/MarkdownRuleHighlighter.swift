@@ -162,7 +162,7 @@ enum MarkdownRuleHighlighter {
                 return
             }
             attributedString.fixAttributes(in: range)
-            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
+            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.codeColor, range: range)
             markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
         }
 

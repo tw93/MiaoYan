@@ -6,7 +6,10 @@
   /* Base Colors */
   --bg-color: #1E1D1B;
   --text-color: #E7E9EA;
-  --text-secondary: #ABB2BF;
+  --text-secondary: #B5B1A7;
+  --hljs-base: #BE9868;
+  --hljs-comment: #8E8B83;
+  --hljs-keyword: #7D5EBC;
   --link-color: #1D9BF0;
   --border-color: #3A3936;
   --quote-bar: #4A4843;
@@ -21,13 +24,6 @@
   --mermaid-edge-label-bg: transparent;
 
   /* Syntax Highlight - Dark */
-  --hljs-base: #ABB2BF;
-  --hljs-comment: #ABB2BF;
-  --hljs-keyword: #9B79F7;
-  --hljs-string: #8FFCCD;
-  --hljs-number: #F7CC8F;
-  --hljs-attribute: #F7CC8F;
-  --hljs-title: #99E0FC;
 }
 
 /* Dark Mode Base Styles */

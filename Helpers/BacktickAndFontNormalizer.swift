@@ -24,7 +24,7 @@ enum BacktickAndFontNormalizer {
             else {
                 return
             }
-            styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: matchRange)
+            styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.codeColor, range: matchRange)
         }
 
         if UserDefaultsManagement.fontName == "Times New Roman" {

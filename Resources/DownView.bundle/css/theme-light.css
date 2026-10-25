@@ -10,7 +10,10 @@
   /* Base Colors */
   --bg-color: #FDFCF9;
   --text-color: #262626;
-  --text-secondary: #777;
+  --text-secondary: #6B6A64;
+  --hljs-base: #B89D4B;
+  --hljs-comment: #7A7872;
+  --hljs-keyword: #8E76C8;
   --link-color: #0C6ADA;
   --border-color: #E8E6DC;
   --quote-bar: #DDD9CD;
@@ -18,13 +21,6 @@
   --diagram-bg: #F5F4ED;
 
   /* Syntax Highlight - Light */
-  --hljs-base: #24292e;
-  --hljs-comment: #6a737d;
-  --hljs-keyword: #d73a49;
-  --hljs-string: #032f62;
-  --hljs-number: #005cc5;
-  --hljs-attribute: #e36209;
-  --hljs-title: #6f42c1;
 
   /* Mermaid Diagram */
   --mermaid-node-bg: #ffffff;
