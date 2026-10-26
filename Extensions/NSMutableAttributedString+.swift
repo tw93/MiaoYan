@@ -138,3 +138,19 @@ extension NSMutableAttributedString {
         return mutableString.substring(with: adjustedRange)
     }
 }
+
+extension NSAttributedString {
+    /// Whether any character carries an attachment, the only thing the
+    /// image and checkbox unload passes act on. `containsAttachments` gives
+    /// the same answer several times slower on a long, styled buffer, and
+    /// the save path asks on every keystroke.
+    var hasAttachmentAttribute: Bool {
+        var found = false
+        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, _, stop in
+            guard value != nil else { return }
+            found = true
+            stop.pointee = true
+        }
+        return found
+    }
+}

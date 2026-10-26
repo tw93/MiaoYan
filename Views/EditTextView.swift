@@ -1031,7 +1031,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         // Runs on every keystroke. Both unload passes copy and walk the whole
         // buffer, and plain Markdown has no attachments for them to undo.
         let copy = NSMutableAttributedString(attributedString: storage)
-        note.content = copy.containsAttachments ? copy.unLoadImages().unLoadCheckboxes() : copy
+        note.content = copy.hasAttachmentAttribute ? copy.unLoadImages().unLoadCheckboxes() : copy
     }
 
     func setEditorTextColor(_ color: NSColor) {

@@ -716,6 +716,10 @@ class Storage {
 
     func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: Operation? = nil) -> [Note] {
         let hasFilter = !filter.isEmpty
+        // Read once per sort: the comparator runs n log n times and each
+        // UserDefaults read costs more than the comparison itself.
+        let sort = UserDefaultsManagement.sort
+        let sortDirection: SortDirection = UserDefaultsManagement.sortDirection ? .desc : .asc
 
         return noteList.sorted(by: {
             if let operation = operation, operation.isCancelled {
@@ -727,21 +731,17 @@ class Storage {
                 if firstMatch {
                     let secondMatch = $1.title.range(of: filter, options: [.caseInsensitive, .anchored]) != nil
                     if secondMatch {
-                        return sortQuery(note: $0, next: $1, project: project)
+                        return sortQuery(note: $0, next: $1, sort: sort, sortDirection: sortDirection)
                     }
                     return true
                 }
             }
 
-            return sortQuery(note: $0, next: $1, project: project)
+            return sortQuery(note: $0, next: $1, sort: sort, sortDirection: sortDirection)
         })
     }
 
-    private func sortQuery(note: Note, next: Note, project: Project?) -> Bool {
-        let sortDirection: SortDirection = UserDefaultsManagement.sortDirection ? .desc : .asc
-
-        let sort = UserDefaultsManagement.sort
-
+    private func sortQuery(note: Note, next: Note, sort: SortBy, sortDirection: SortDirection) -> Bool {
         if note.isPinned == next.isPinned {
             switch sort {
             case .creationDate:
@@ -955,7 +955,7 @@ class Storage {
 
         do {
             let directoryFiles =
-                try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey, .typeIdentifierKey], options: .skipsHiddenFiles)
+                try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey, .typeIdentifierKey, .fileSizeKey], options: .skipsHiddenFiles)
 
             let items =
                 directoryFiles.filter {
@@ -982,7 +982,10 @@ class Storage {
     }
 
     public func isValidUTI(url: URL) -> Bool {
-        guard url.fileSize < 100_000_000 else {
+        // A directory listing prefetches the size, so this costs no extra
+        // stat per note at launch; other URLs fall back to reading it.
+        let size = (try? url.resourceValues(forKeys: [.fileSizeKey]))?.fileSize.map { UInt64($0) } ?? url.fileSize
+        guard size < 100_000_000 else {
             return false
         }
 

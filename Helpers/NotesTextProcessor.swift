@@ -111,6 +111,13 @@ public class NotesTextProcessor {
         return foundRange
     }
 
+    /// Every fenced code block in `string`, in document order: the ranges
+    /// `getFencedCodeBlockRange` tests one at a time.
+    public static func fencedCodeBlockRanges(in string: NSAttributedString) -> [NSRange] {
+        guard let regex = getCodeBlockRegex() else { return [] }
+        return regex.matches(in: string.string, options: [], range: NSRange(0..<string.length)).map(\.range)
+    }
+
     @MainActor public static func getSpanCodeBlockRange(content: NSMutableAttributedString, range: NSRange) -> NSRange? {
         var codeSpan: NSRange?
         let paragraphRange = content.mutableString.paragraphRange(for: range)

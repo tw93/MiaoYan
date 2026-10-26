@@ -38,7 +38,7 @@ final class WikilinkIndex: ObservableObject {
                 reader.cancel()
             }
             guard !Task.isCancelled else { return }
-            rebuild(entries: entries)
+            apply(entries)
         }
     }
 
@@ -49,22 +49,27 @@ final class WikilinkIndex: ObservableObject {
     }
 
     /// Listed notes first (their loaded text wins), then every other note
-    /// file under the roots. Stops adding files from disk past
+    /// file under the roots, each with the links its text holds: the regex
+    /// runs here, off the main thread, which only fills the two maps. Stops adding files from disk past
     /// `maxWalkedNotes`, so a huge folder cannot keep the scan going for
     /// minutes; the listed notes are always included.
     nonisolated private static let maxWalkedNotes = 20_000
 
     nonisolated private static func readEntries(
         listed: [ListedNote], roots: [URL], trashPaths: Set<String>, allowedExtensions: [String]
-    ) -> [(title: String, text: String)] {
+    ) -> [(title: String, links: Set<String>)] {
+        let regex = makeWikilinkRegex()
+        func links(_ text: String) -> Set<String> {
+            extractWikilinks(from: text, regex: regex)
+        }
         func read(_ url: URL) -> String {
             (try? Data(contentsOf: url)).flatMap(NoteText.decode) ?? ""
         }
-        var entries: [(title: String, text: String)] = []
+        var entries: [(title: String, links: Set<String>)] = []
         var seen = Set<String>()
         for note in listed {
             seen.insert(note.url.resolvingSymlinksInPath().path)
-            entries.append((note.title, note.text ?? read(note.url)))
+            entries.append((note.title, links(note.text ?? read(note.url))))
         }
         let skipFolders: Set<String> = [".cache", "i", ".Trash", "files"]
         let keys: [URLResourceKey] = [.isDirectoryKey]
@@ -90,7 +95,7 @@ final class WikilinkIndex: ObservableObject {
                 else { continue }
                 walked += 1
                 let title = url.deletingPathExtension().lastPathComponent.replacingOccurrences(of: ":", with: "/")
-                entries.append((title, read(url)))
+                entries.append((title, links(read(url))))
             }
         }
         return entries
@@ -98,12 +103,14 @@ final class WikilinkIndex: ObservableObject {
 
     /// Titles with their text, for callers that read bodies from disk.
     func rebuild(entries: [(title: String, text: String)]) {
+        apply(entries.map { ($0.title, extractWikilinks(from: $0.text)) })
+    }
+
+    private func apply(_ entries: [(title: String, links: Set<String>)]) {
         outlinks.removeAll()
         inlinks.removeAll()
 
-        for (title, text) in entries {
-            let links = extractWikilinks(from: text)
-
+        for (title, links) in entries {
             outlinks[title] = links
 
             for target in links {
@@ -120,10 +127,18 @@ final class WikilinkIndex: ObservableObject {
         Array(outlinks[noteTitle] ?? []).sorted()
     }
 
-    private static let wikilinkRegex: NSRegularExpression? = try? NSRegularExpression(pattern: #"\[\[([^\]]+)\]\]"#)
+    nonisolated private static func makeWikilinkRegex() -> NSRegularExpression? {
+        try? NSRegularExpression(pattern: #"\[\[([^\]]+)\]\]"#)
+    }
+
+    private static let wikilinkRegex: NSRegularExpression? = makeWikilinkRegex()
 
     private func extractWikilinks(from text: String) -> Set<String> {
-        guard let regex = Self.wikilinkRegex else {
+        Self.extractWikilinks(from: text, regex: Self.wikilinkRegex)
+    }
+
+    nonisolated private static func extractWikilinks(from text: String, regex: NSRegularExpression?) -> Set<String> {
+        guard let regex else {
             return []
         }
 

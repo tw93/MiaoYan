@@ -401,17 +401,20 @@ enum MarkdownRuleHighlighter {
             markDelimiters(of: range, length: 1)
         }
 
+        // Fenced blocks are found once per pass, on the first emoji, rather
+        // than by rescanning the whole document for every match.
+        var fencedRanges: [NSRange]?
         NotesTextProcessor.emojiRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                NotesTextProcessor.getSpanCodeBlockRange(content: attributedString, range: range) == nil,
-                NotesTextProcessor.getFencedCodeBlockRange(paragraphRange: range, string: attributedString) == nil
+                NotesTextProcessor.getSpanCodeBlockRange(content: attributedString, range: range) == nil
             else { return }
 
-            let substring = attributedString.mutableString.substring(with: range)
-            if !substring.isNumber {
-                attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize - 2)), range: range)
-                attributedString.fixAttributes(in: range)
-            }
+            let codeRanges = fencedRanges ?? NotesTextProcessor.fencedCodeBlockRanges(in: attributedString)
+            fencedRanges = codeRanges
+            guard !codeRanges.contains(where: { $0.intersection(range) != nil }) else { return }
+
+            attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize - 2)), range: range)
+            attributedString.fixAttributes(in: range)
         }
 
         if UserDefaultsManagement.fontName == "SF Mono" {

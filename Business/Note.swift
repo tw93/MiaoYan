@@ -578,7 +578,9 @@ public class Note: NSObject {
 
     public func save(content: NSMutableAttributedString) {
         guard !isRetired else { return }
-        self.content = content.unLoad()
+        // Typing hands `note.content` here on every keystroke, already free of
+        // attachments, so the unload passes run only when there is one to undo.
+        self.content = content.hasAttachmentAttribute ? content.unLoad() : content
         hasUnpersistedChanges = true
 
         debounceSave(attributedString: self.content)

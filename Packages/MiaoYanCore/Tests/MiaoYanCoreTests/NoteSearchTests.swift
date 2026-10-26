@@ -101,6 +101,24 @@ final class NoteContentMatcherTests: XCTestCase {
         XCTAssertNil(NoteContentMatcher.priority(title: "周刊", body: { "Rust" }, terms: ["go"]))
     }
 
+    /// The body search ignores case but not accents, and finds an accented
+    /// word whether the body or the query holds it composed or decomposed,
+    /// as `lowercased()` plus `contains` did.
+    func testBodyMatchIgnoresCaseButKeepsAccentsAndCanonicalForms() {
+        func found(_ body: String, _ term: String) -> Bool {
+            NoteContentMatcher.priority(title: "", body: { body }, terms: [term]) != nil
+        }
+        XCTAssertTrue(found("The Quick FOX", "fox"))
+        XCTAssertTrue(found("妙言 MiaoYan 预览", "miaoyan 预"))
+        XCTAssertTrue(found("ＡＢＣ 全角", "ａｂｃ"))
+        XCTAssertTrue(found("Hello CAFÉ", "café"))
+        XCTAssertTrue(found("cafe\u{301} decomposed", "café"))
+        XCTAssertTrue(found("café composed", "cafe\u{301}"))
+        XCTAssertFalse(found("Hello Café", "cafe"))
+        XCTAssertFalse(found("cafe\u{301}", "cafe"))
+        XCTAssertFalse(found("妙言预览", "预览不存在"))
+    }
+
     func testBodyIsNotReadWhenTheTitleSettlesTheMatch() {
         var reads = 0
         _ = NoteContentMatcher.priority(
