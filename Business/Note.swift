@@ -1222,6 +1222,14 @@ public class Note: NSObject {
             // A multi-select move or a drag carries notes that were never
             // opened; without their text there is no list of images to carry.
             ensureContentLoaded()
+            // Without the text there is no list of images, so the note would
+            // arrive with its /i/ links pointing at a folder it left.
+            if loadFailed {
+                AppDelegate.trackError(
+                    NSError(domain: "NoteError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Note could not be read, move skipped"]),
+                    context: "Note.move(toProject:).loadFailed")
+                return
+            }
             let imagesMeta = getAllImages()
             for imageMeta in imagesMeta {
                 relocateAttachment(from: imageMeta.url, imagePath: imageMeta.path, to: project)

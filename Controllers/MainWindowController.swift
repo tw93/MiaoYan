@@ -268,7 +268,8 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     func windowWillClose(_ notification: Notification) {
         if let vc = AppContext.shared.viewController {
             vc.persistCurrentViewState()
-            if let activeNote = EditTextView.note {
+            // Preview ticks save to the note alone; see applicationWillTerminate.
+            if let activeNote = EditTextView.note, vc.shouldUseEditorTextContent {
                 vc.editArea.saveTextStorageContent(to: activeNote)
             }
             vc.storage.flushPendingSaves()

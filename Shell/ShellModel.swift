@@ -1430,6 +1430,8 @@ final class ShellModel {
             }
             _ = note.flushPendingSave()
             if !note.isContentLoaded { note.ensureContentLoaded() }
+            // An unreadable note would be copied as an empty file.
+            if note.loadFailed { continue }
             let copy = Note(name: name, project: note.project, type: note.type)
             copy.content = NSMutableAttributedString(attributedString: note.content)
             if note.type == .markdown, note.container == .none {

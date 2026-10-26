@@ -535,13 +535,15 @@ extension ViewController {
                 //   2. The active note has unsaved edits sitting in the
                 //      1.5s debounce queue; without flushing, the duplicate
                 //      contains the previous on-disk version.
-                if note === EditTextView.note {
+                if note === EditTextView.note, shouldUseEditorTextContent {
                     editArea.saveTextStorageContent(to: note)
                 }
                 note.flushPendingSave()
                 if !note.isContentLoaded {
                     note.ensureContentLoaded()
                 }
+                // An unreadable note would be copied as an empty file.
+                if note.loadFailed { continue }
 
                 let noteDupe = Note(name: name, project: note.project, type: note.type)
                 noteDupe.content = NSMutableAttributedString(attributedString: note.content)
@@ -1571,7 +1573,8 @@ extension ViewController {
             // Toast only when something was actually flushed; otherwise a
             // user spamming Cmd+S sees a constant stream of "Saved" toasts
             // even when there is nothing pending.
-            if let activeNote = EditTextView.note {
+            // In preview the hidden buffer is older than a ticked task.
+            if let activeNote = EditTextView.note, shouldUseEditorTextContent {
                 editArea.saveTextStorageContent(to: activeNote)
             }
             let hadUnsavedChanges = storage.noteList.contains { $0.needsSave }

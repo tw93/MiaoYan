@@ -279,6 +279,9 @@ class Storage {
         guard !name.isEmpty, name != project.url.lastPathComponent, !name.contains("/"), name != ".", name != ".."
         else { return nil }
         guard !isMovingFolder else { throw FolderMoveError.busy }
+        // Renaming the library root or the Trash would leave the stored
+        // location and its bookmark pointing at a folder that is gone.
+        guard !project.isRoot, !project.isDefault, !project.isTrash else { throw FolderMoveError.protectedFolder }
         let newURL = project.url.deletingLastPathComponent().appendingPathComponent(name, isDirectory: true)
         try FileManager.default.moveItem(at: project.url, to: newURL)
         relocateFolder(project, to: newURL)

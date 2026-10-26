@@ -183,7 +183,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             // Capture the current editor buffer into the active note before
             // we drain the debounce queue, otherwise an in-flight keystroke
             // from the last 1.5s would never reach Note.content.
-            if let activeNote = EditTextView.note {
+            // Only while the editor shows the note: in preview a ticked task is
+            // saved to the note alone, and the hidden buffer would undo it.
+            if let activeNote = EditTextView.note, vc.shouldUseEditorTextContent {
                 vc.editArea.saveTextStorageContent(to: activeNote)
             }
             vc.storage.flushPendingSaves()
