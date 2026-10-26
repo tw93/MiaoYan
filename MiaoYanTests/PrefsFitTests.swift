@@ -39,7 +39,10 @@ final class PrefsFitTests: XCTestCase {
                 let rows = Self.rows(in: page.view)
                 XCTAssertFalse(rows.isEmpty, "\(language) \(type(of: page))")
                 for row in rows {
-                    for label in [row.titleLabel, row.detailLabel] where !label.isHidden && !label.stringValue.isEmpty {
+                    // A middle-truncated detail is the user's own path, not copy:
+                    // it is meant to shorten, and its length depends on the Mac.
+                    for label in [row.titleLabel, row.detailLabel]
+                    where !label.isHidden && !label.stringValue.isEmpty && label.lineBreakMode != .byTruncatingMiddle {
                         XCTAssertGreaterThanOrEqual(
                             label.frame.width + 0.5, label.intrinsicContentSize.width,
                             "\(language) \(type(of: page)): \(label.stringValue)")
