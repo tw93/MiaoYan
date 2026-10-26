@@ -1010,13 +1010,17 @@ extension ViewController {
     }
 
     func pin(_ selectedRows: IndexSet) {
-        guard !selectedRows.isEmpty, let notes = filteredNoteList else {
+        guard !selectedRows.isEmpty, filteredNoteList != nil else {
             return
         }
         // Row moves are computed against what the table shows. filteredNoteList
         // keeps storage order when the filter is empty, so its indexes are not
-        // table rows and unpinning animated the wrong row.
+        // table rows and unpinning animated the wrong row. It also still holds
+        // notes a delete has just taken out of the table, so the new order is
+        // sorted from the table's own list: a resorted list one note longer
+        // than `state` sent a row past its end and trapped.
         var state = notesTableView.noteList
+        let notes = state
 
         var updatedNotes = [(Int, Note)]()
         for row in selectedRows {
