@@ -443,6 +443,8 @@ enum MiaoYanAlert {
         let cornerKey = "cornerRadius"
         guard
             let glass = content.superview?.subviews.first(where: { String(describing: type(of: $0)).contains("Glass") }),
+            // KVC on a key the view lacks raises; a future glass class may not have it.
+            glass.responds(to: NSSelectorFromString(cornerKey)),
             let radius = glass.value(forKey: cornerKey) as? CGFloat
         else { return }
         content.wantsLayer = true
