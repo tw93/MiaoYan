@@ -897,11 +897,26 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 .replacingOccurrences(of: "`", with: "\\`")
                 .replacingOccurrences(of: "$", with: "\\$")
             let now = Date().timeIntervalSince1970
-            let shouldInitializeSpecialRenderers =
-                (needsMath || needsDiagrams)
-                && (!preserveScroll || now - self.lastRendererInitializationTime > 0.8)
+            let rendererPlan = Self.specialRendererPlan(
+                needsRenderers: needsMath || needsDiagrams,
+                preserveScroll: preserveScroll,
+                now: now,
+                lastInitialization: self.lastRendererInitializationTime
+            )
+            let shouldInitializeSpecialRenderers = rendererPlan.initialize
             if shouldInitializeSpecialRenderers {
                 self.lastRendererInitializationTime = now
+            }
+            // The update below replaces the DOM with raw HTML, so a skipped
+            // KaTeX or Mermaid pass would leave the last edit's formulas and
+            // diagrams unrendered until the next keystroke. Run once more
+            // when the window ends, unless a newer update gets there first.
+            if let delay = rendererPlan.catchUpAfter {
+                Task { @MainActor [weak self, note] in
+                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                    guard let self, updateVersion == self.contentUpdateVersion else { return }
+                    self.updateContent(note: note)
+                }
             }
 
             let phase1Script = self.buildUpdateScript(
@@ -959,6 +974,20 @@ class MPreviewView: WKWebView, WKUIDelegate {
             self.isUpdatingContent = false
             self.contentUpdateWorkItem = nil
         }
+    }
+
+    /// KaTeX and Mermaid run at most once per `rendererInterval` while
+    /// typing. A skipped update gets a catch-up delay that lands just past
+    /// the end of the interval, so the last edit is always rendered.
+    nonisolated static let rendererInterval: TimeInterval = 0.8
+
+    nonisolated static func specialRendererPlan(
+        needsRenderers: Bool, preserveScroll: Bool, now: TimeInterval, lastInitialization: TimeInterval
+    ) -> (initialize: Bool, catchUpAfter: TimeInterval?) {
+        guard needsRenderers else { return (false, nil) }
+        let elapsed = now - lastInitialization
+        if !preserveScroll || elapsed > rendererInterval { return (true, nil) }
+        return (false, max(0, rendererInterval - elapsed) + 0.05)
     }
 
     // Patch image src attributes in place without rebuilding the DOM.
