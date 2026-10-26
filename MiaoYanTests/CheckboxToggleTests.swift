@@ -25,6 +25,13 @@ final class CheckboxToggleTests: XCTestCase {
         XCTAssertEqual(marker("intro\r\n- [ ] crlf", line: 2), " ")
     }
 
+    /// Text pasted from the web can carry U+2028; cmark does not end a line
+    /// there, so the preview's line 2 is the task below it.
+    func testUnicodeLineSeparatorsDoNotShiftTheLine() {
+        XCTAssertEqual(marker("intro\u{2028}still intro\n- [x] task", line: 2), "x")
+        XCTAssertEqual(marker("a\u{2029}b\u{0085}c\n- [ ] task", line: 2), " ")
+    }
+
     func testALineThatIsNotATaskIsLeftAlone() {
         XCTAssertNil(marker("plain line\n- [ ] task", line: 1))
         XCTAssertNil(marker("- [ ] task", line: 5), "a line past the end finds nothing")
