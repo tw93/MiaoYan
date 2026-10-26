@@ -58,11 +58,13 @@ class Sidebar {
 
     private func getLocalizedAppName() -> String {
         let language = UserDefaultsManagement.defaultLanguage
+        // Chinese reads the Chinese name; every other language takes the
+        // Latin one, as miaoyan.app's header does (maintainer, 2026-10-26).
         switch language {
-        case 1:  // English
-            return "MiaoYan"
-        default:  // Chinese, Japanese, etc.
+        case 0, 3:  // Simplified and Traditional Chinese
             return "妙言"
+        default:
+            return "MiaoYan"
         }
     }
 
