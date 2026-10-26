@@ -328,7 +328,8 @@
 "Used in the sidebar and note list" = "サイドバーとノート一覧で使用";
 "Presentation Font Size" = "プレゼンテーションの文字サイズ";
 "Used for MiaoYan PPT slides" = "MiaoYan PPT のスライドで使用";
-"All Notes" = "すべてのノート";
+/* Kept in English: the local name overflows the sidebar at its default width. */
+"All Notes" = "All Notes";
 "Move the folder “%@” and everything in it to the Trash?" = "フォルダ「%@」とその中のすべてのファイルをゴミ箱に移動しますか？";
 "Move %d unused attachment(s) to Trash?" = "未使用の添付ファイル %d 件をゴミ箱に移動しますか？";
 "No unused attachments" = "未使用の添付ファイルはありません";

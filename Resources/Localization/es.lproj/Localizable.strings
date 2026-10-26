@@ -328,7 +328,8 @@
 "Used in the sidebar and note list" = "Para la barra lateral y la lista de notas";
 "Presentation Font Size" = "Tamaño de fuente de presentación";
 "Used for MiaoYan PPT slides" = "Para las diapositivas de MiaoYan PPT";
-"All Notes" = "Todas las notas";
+/* Kept in English: the local name overflows the sidebar at its default width. */
+"All Notes" = "All Notes";
 "Move the folder “%@” and everything in it to the Trash?" = "¿Mover la carpeta “%@” y todo su contenido a la Papelera?";
 "Move %d unused attachment(s) to Trash?" = "¿Mover %d archivo(s) adjunto(s) sin usar a la Papelera?";
 "No unused attachments" = "No hay archivos adjuntos sin usar";
