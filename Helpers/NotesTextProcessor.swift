@@ -217,7 +217,9 @@ public class NotesTextProcessor {
         var index = 0
         while index < attributedString.length {
             var effectiveRange = NSRange(location: index, length: 0)
-            let value = attributedString.attribute(.link, at: index, effectiveRange: &effectiveRange)
+            // The longest run: the editor styles `[[`, the title and `]]`
+            // apart, and a plain effective range would convert each piece.
+            let value = attributedString.attribute(.link, at: index, longestEffectiveRange: &effectiveRange, in: fullRange)
 
             if let linkValue = value as? String,
                 linkValue.starts(with: tagQuery),

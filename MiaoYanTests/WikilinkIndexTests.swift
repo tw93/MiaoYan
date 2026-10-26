@@ -136,4 +136,19 @@ final class WikilinkIndexTests: XCTestCase {
         XCTAssertEqual(index.getBacklinks(for: "Root"), ["Deep"])
         index.rebuild(entries: [])
     }
+
+    /// The editor gives `[[`, the title and `]]` different fonts and colours,
+    /// so the link is three attribute runs; the preview showed the title once
+    /// per run until the whole link was read as one.
+    func testPreviewConvertsAHighlightedWikilinkOnce() {
+        let content = NSMutableAttributedString(string: "See [[Welcome]].")
+        content.addAttribute(.foregroundColor, value: NSColor.gray, range: NSRange(location: 4, length: 2))
+        content.addAttribute(.foregroundColor, value: NSColor.systemTeal, range: NSRange(location: 6, length: 7))
+        content.addAttribute(.foregroundColor, value: NSColor.gray, range: NSRange(location: 13, length: 2))
+        content.addAttribute(.link, value: "miaoyan://goto/Welcome", range: NSRange(location: 6, length: 7))
+
+        let converted = NotesTextProcessor.convertAppLinks(in: content).string
+
+        XCTAssertEqual(converted, "See [Welcome](miaoyan://goto/Welcome).")
+    }
 }
