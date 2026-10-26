@@ -544,11 +544,12 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .trust li { font-size: 13px; }
   .trust li + li::before { content: none; }
 }
-/* Phone type ladder shared by the product sites (2026-10-26): body 17 for
-   ledes and FAQ answers, secondary 15 for card copy, contact cards and the
-   footer, meta 13 left as is. It only lifts; desktop keeps its sizes. */
+/* Phone type ladder shared by the product sites (2026-10-26): body 16 for
+   articles, ledes and FAQ answers, secondary 15 for card copy, contact cards
+   and the footer, meta 13 left as is. Home text sits on the same 16 as the
+   articles it links to; desktop keeps its sizes. */
 @media (max-width: 640px) {
-  .section-lede, .blog-group-description, .faq p { font-size: 17px; }
+  .lede, .section-lede, .blog-group-description, .faq p, .blog-body { font-size: 16px; }
   footer, .foot-mark p.foot-about, .contact .contact-desc, .contact-head b, .blog-card-desc { font-size: 15px; }
 }
 @media (max-width: 560px) {
@@ -588,8 +589,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .lost h1 { font-weight: 500; color: var(--near-black); font-size: 44px; line-height: 1.15; letter-spacing: -0.4px; margin: 0 0 12px; }
   .lost p { font-size: 16px; color: var(--dark-warm); margin: 0 0 14px; }
   .lost a { color: var(--brand); text-underline-offset: 2px; }
-  @media (max-width: 640px) { .lost p { font-size: 17px; } }
-</style>
+  </style>
 </head>
 <body>
 <div class="wrap">
