@@ -291,7 +291,7 @@ def head(lang, *, title, desc, canonical, en_url, zh_url, og_type, image, jsonld
 <meta name="twitter:creator" content="@HiTw93">
 <meta name="twitter:image" content="{image}">
 {site.ICONS}
-{site.font_preload(lang)}<link rel="stylesheet" href="/site.css">
+{site.font_preload(lang)}{site.HEAD_ASSETS}
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
 </head>
 """

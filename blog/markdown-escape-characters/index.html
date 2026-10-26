@@ -26,7 +26,573 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="stylesheet" href="/site.css">
+<style id="site-css">
+/* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
+   the accent is MiaoYan's own green and the footer its dark paper. */
+:root {
+  --parchment: #f5f4ed;
+  --ivory: #faf9f5;
+  --warm-sand: #e8e6dc;
+  --brand: #1a6840;
+  --brand-light: #317b52;
+  --brand-tint: #ecf4ee;
+  --near-black: #363433;
+  --dark-warm: #3d3d3a;
+  --olive: #504e49;
+  --stone: #6b6a64;
+  --line: #e4e1d6;
+  --line-faint: #edebe1;
+  --night: #1e1d1b;
+  --night-ink: #f2f0ea;
+  --night-dim: #b5b1a7;
+  /* One serif face for headings; modern sans for UI and body text so CJK
+     renders crisp and never splits between serif Latin and sans CJK on iOS. */
+  --serif: Charter, Georgia, "Songti SC", serif;
+  /* One serif face for everything, as on mole.fit; CJK locales override
+     --serif below and --sans follows it. */
+  --sans: var(--serif);
+  --page: 1120px;
+  --inset: 64px;
+  --gap: 84px;
+}
+/* The Chinese pages use one face for everything, a serif: Source Han Serif cut
+   to the characters on the page (scripts/build-fonts.py) and served from
+   /fonts/, ahead of Songti, so Android and Windows, which have no Chinese
+   serif, render the same text as a Mac or an iPhone. Latin stays with Charter,
+   or Georgia where Charter is missing. */
+@font-face {
+  font-family: "MiaoYan Mark";
+  src: url("/fonts/miaoyan-mark.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+8A9E;
+}
+@font-face {
+  font-family: "MiaoYan Serif SC";
+  src: local("Source Han Serif SC"), local("Noto Serif CJK SC"),
+       url("/fonts/miaoyan-serif-sc-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif SC";
+  src: local("Source Han Serif SC SemiBold"), local("Noto Serif CJK SC SemiBold"),
+       url("/fonts/miaoyan-serif-sc-semibold.woff2") format("woff2");
+  font-weight: 500 700;
+  font-display: swap;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif TC";
+  src: local("Source Han Serif TC"), local("Noto Serif CJK TC"),
+       url("/fonts/miaoyan-serif-tc-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif TC";
+  src: local("Source Han Serif TC SemiBold"), local("Noto Serif CJK TC SemiBold"),
+       url("/fonts/miaoyan-serif-tc-semibold.woff2") format("woff2");
+  font-weight: 500 700;
+  font-display: swap;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+/* The Chinese face leads so the curly quotes and the ellipsis in its range are
+   Chinese marks (Charter drew them narrow against the Han); Latin still falls
+   to Charter, as on mole.fit (2026-10-25). */
+html[lang="zh-CN"] {
+  --serif: "MiaoYan Serif SC", Charter, Georgia, "Songti SC", serif;
+  --sans: var(--serif);
+}
+html[lang="zh-Hant"] {
+  --serif: "MiaoYan Serif TC", Charter, Georgia, "Songti TC", serif;
+  --sans: var(--serif);
+}
+html[lang="ja"] {
+  --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+}
+/* Korean is set in the system sans, as on mole.fit: iOS has no Myeongjo, so an
+   iPhone drew Georgia Latin beside sans Hangul. The wordmark keeps Charter. */
+html[lang="ko"] {
+  --serif: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --sans: var(--serif);
+}
+html[lang="ko"] :is(.hero h1, .foot-name) { font-family: Charter, Georgia, serif; }
+/* Korean breaks between words, never inside one. */
+html[lang="ko"] body { word-break: keep-all; overflow-wrap: break-word; }
+
+* { box-sizing: border-box; }
+/* Below a short page's footer the canvas shows the footer's night, not parchment. */
+html { min-height: 100%; background: linear-gradient(var(--parchment) 50%, var(--night) 50%); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--parchment);
+  color: var(--dark-warm);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  /* Short pages (404, privacy) end on parchment above the footer instead of a
+     stretch of night under it. */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+/* Every line fills the column, as on mole.fit (maintainer 2026-10-25): no
+   pretty, balance, strict breaking, CJK keep-all or glued tails, which all
+   wrapped phone lines early. A comma or full stop that does not fit hangs at
+   the edge (WebKit). */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"]) body { hanging-punctuation: allow-end; }
+body > :is(.wrap, footer) { width: 100%; }
+body > footer { margin-top: auto; }
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) body { line-height: 1.75; }
+/* Leads 1.6, prose 1.75, articles 1.8 (below), as on mole.fit. */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .section-lede { line-height: 1.6; }
+html[lang="de"] :is(.section-lede, .card p, .faq p) { hyphens: auto; -webkit-hyphens: auto; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; height: auto; }
+
+.wrap { max-width: calc(var(--page) + var(--inset) * 2); margin: 0 auto; padding: 0 var(--inset); }
+
+/* Nav: a translucent ivory pill, as on mole.fit. */
+.nav { position: sticky; top: 16px; z-index: 10; margin: 16px -14px 60px; }
+/* Covers content scrolling under the sticky pill, as mole.fit does. */
+.nav::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 100vw; height: calc(100% + 40px); z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment) 70%, transparent 100%);
+}
+.nav-bar {
+  display: flex; align-items: center; gap: 20px; min-height: 55px;
+  padding: 10px 14px; border-radius: 999px;
+  background: color-mix(in srgb, var(--ivory) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--near-black); flex: none; }
+.brand img { width: 24px; height: 24px; }
+.brand b { font-family: Charter, Georgia, serif; font-weight: 700; font-style: italic; font-size: 18px; letter-spacing: 0.2px; }
+.nav-links { display: flex; gap: 2px; margin-left: 8px; }
+.nav-links a {
+  font-size: 14px; font-weight: 500; line-height: 1; color: var(--olive); text-decoration: none;
+  padding: 8px 11px; border-radius: 999px; white-space: nowrap;
+}
+.nav-links a:hover { background: var(--warm-sand); color: var(--near-black); }
+.nav-links a[aria-current="page"] { color: var(--near-black); }
+.nav-end { margin-left: auto; display: flex; align-items: center; gap: 14px; flex: none; }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; line-height: 1; color: #fff; background: var(--brand);
+  text-decoration: none; padding: 9px 15px; border-radius: 999px; white-space: nowrap;
+  border: 1px solid var(--brand); transition: background 0.15s, border-color 0.15s;
+}
+.nav-cta svg { width: 13px; height: 13px; flex: none; margin-top: -1px; }
+.nav-cta:hover { background: var(--brand-light); border-color: var(--brand-light); }
+/* While the hero's buttons are on screen the nav keeps only its links. */
+html.js .nav-bar.hide-cta .nav-cta { display: none; }
+
+/* Language menu: a globe and the current name, opening on hover or click. */
+.lang-switch { position: relative; }
+.lang-trigger {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 4px;
+  border: 0; background: transparent; color: var(--stone); cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 500; line-height: 1;
+  transition: color 0.15s;
+}
+.lang-trigger::after {
+  content: ""; width: 4px; height: 4px; margin-top: -2px;
+  border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
+  opacity: 0.55; transform: rotate(45deg); transition: transform 0.18s ease, margin 0.18s ease;
+}
+.lang-trigger:hover, .lang-switch.is-open .lang-trigger { color: var(--brand); }
+.lang-switch.is-open .lang-trigger::after { margin-top: 2px; transform: rotate(225deg); }
+.lang-code { display: none; }
+.lang-menu {
+  position: absolute; top: calc(100% + 8px); right: 0; width: 150px;
+  display: grid; gap: 1px; padding: 6px;
+  border: 1px solid var(--line); border-radius: 8px;
+  background: color-mix(in srgb, var(--ivory) 94%, transparent);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: 0 8px 24px rgba(20, 19, 19, 0.08);
+  opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-4px);
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+}
+/* A bridge across the gap so the pointer can travel into the menu. */
+.lang-menu::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
+.lang-switch.is-open .lang-menu, .lang-switch:focus-within .lang-menu {
+  opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0);
+}
+@media (hover: hover) {
+  .lang-switch:hover .lang-menu { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
+}
+.lang-menu a {
+  display: flex; align-items: center; min-height: 32px; padding: 6px 10px; border-radius: 6px;
+  font-size: 13px; line-height: 1.35; color: var(--olive); text-decoration: none;
+}
+.lang-menu a:hover { color: var(--near-black); background: color-mix(in srgb, var(--brand-tint) 50%, transparent); }
+.lang-menu a.active { color: var(--near-black); font-weight: 600; background: color-mix(in srgb, var(--brand-tint) 70%, transparent); }
+.lang-trigger:focus-visible, .lang-menu a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+
+/* Hero */
+.hero { padding-bottom: 36px; border-bottom: 1px solid var(--line); margin-bottom: var(--gap); }
+.hero h1 {
+  font-family: var(--serif); font-weight: 500; color: var(--near-black);
+  font-size: 96px; line-height: 1.02; letter-spacing: -1.4px; margin: 0 0 28px;
+}
+.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: 18px; }
+.hero h1 .cn {
+  display: inline-block;
+  font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+/* One small dot circles 語, as mole.fit's does around 鼴; each family site
+   gets its own orbit (tilt, direction, pace) so the motion stays theirs. */
+@property --mark-orbit {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.hero h1 .cn-orbit::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--brand);
+  /* A figure eight, one continuous pen stroke across the character. */
+  transform: translate(calc(cos(var(--mark-orbit)) * 0.9em), calc(sin(var(--mark-orbit)) * cos(var(--mark-orbit)) * 0.9em));
+  animation: mark-orbit 16s linear infinite reverse;
+  pointer-events: none;
+}
+@keyframes mark-orbit {
+  to { --mark-orbit: 360deg; }
+}
+.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; }
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; }
+.lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
+.tagline + .trust { margin-top: 18px; }
+/* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
+.trust { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0 0 32px; padding: 0; list-style: none; }
+.trust li { font-size: 14px; line-height: 1.5; color: var(--stone); white-space: nowrap; }
+.trust li + li::before { content: "\00B7"; margin: 0 10px; color: var(--stone); opacity: 0.6; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px 16px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 158px;
+  font-size: 15px; letter-spacing: 0.2px; text-decoration: none;
+  line-height: 1.55; padding: 13px 28px; border-radius: 999px; border: 1px solid var(--brand);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.btn svg { width: 16px; height: 16px; flex: none; margin-top: -1px; }
+.btn-primary { background: var(--brand); color: #fff; font-weight: 500; }
+.btn-primary:hover { background: var(--brand-light); border-color: var(--brand-light); transform: translateY(-1px); }
+/* The family's secondary button (2026-10-20): an ivory pill with a hairline. It
+   replaced the plain text link, which itself replaced a brand outline that read
+   as heavy; the hairline pill is quiet without dropping the button shape. */
+.btn-ghost { color: var(--near-black); background: var(--ivory); font-weight: 500; border-color: var(--line); }
+.btn-ghost:hover { background: var(--warm-sand); }
+
+/* Sections */
+section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
+/* The family's section head: 32px dark-warm title (26px under 880px), 16px olive lede 12px below. */
+.section-title { font-family: var(--serif); font-weight: 500; color: var(--dark-warm); font-size: 32px; line-height: 1.2; margin: 0 0 12px; }
+.section-lede { font-size: 16px; color: var(--olive); margin: 0 0 24px; }
+.section-title + .cards, .section-title + details { margin-top: 24px; }
+
+/* Gallery: tabs under a framed screenshot. */
+.gallery-frame { border-radius: 14px; overflow: hidden; background: #d9d4c7; aspect-ratio: 3244 / 2244; cursor: pointer; }
+.gallery-frame img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-frame img[hidden] { display: none; }
+.gallery-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.gallery-caption { font-size: 15px; color: var(--olive); margin: 0; min-height: 1.6em; }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tabs button {
+  font: inherit; font-size: 13px; line-height: 1.35; color: var(--olive); background: transparent;
+  border: 0; padding: 6px 13px; border-radius: 999px; cursor: pointer;
+}
+.tabs button:hover { background: var(--warm-sand); color: var(--near-black); }
+.tabs button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+
+/* iPhone and iPad */
+/* Apple's product bezels, shown as is. The iPhone is drawn larger than its
+   real size next to the iPad so its text stays readable. */
+.devices { display: flex; justify-content: center; align-items: flex-end; gap: 48px; }
+.device { margin: 0; }
+.device.phone { width: 260px; }
+.device.pad { width: 520px; }
+.devices-cta { justify-content: center; margin-top: 32px; }
+.device figcaption { font-size: 13px; color: var(--stone); margin-top: 12px; text-align: center; }
+
+/* Feature cards */
+.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.card { background: var(--ivory); border: 1px solid var(--line); border-radius: 14px; padding: 24px 26px; }
+.card h3 { font-weight: 600; font-size: 19px; color: var(--near-black); margin: 0 0 8px; }
+.card p { margin: 0; font-size: 15px; color: var(--dark-warm); }
+
+/* FAQ */
+.faq details { border-top: 1px solid var(--line); padding: 16px 0; }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; font-size: 17px; color: var(--near-black); display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--stone); }
+.faq details[open] summary::after { content: "−"; }
+.faq p { margin: 0; padding-top: 10px; color: var(--dark-warm); }
+/* Open and close like the sibling sites' FAQ: the answer's height and opacity
+   ease in, where it used to snap open. The answer's gap is padding, not margin,
+   because margins sit outside the animated height and would jump. Browsers
+   without ::details-content (before Safari 18.4, Chrome 129) still open instantly. */
+.faq { interpolate-size: allow-keywords; }
+.faq details::details-content { height: 0; overflow: clip; opacity: 0; transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.26s ease, content-visibility 0.3s allow-discrete; }
+.faq details[open]::details-content { height: auto; opacity: 1; }
+
+/* Author contact under the FAQ, the same block as mole.fit's (2026-10-20).
+   The X and GitHub counts are static: update them together with mole.fit's. */
+.contact { margin-top: 48px; text-align: left; }
+.contact-heading { display: flex; align-items: center; gap: 12px; }
+.contact-author { display: block; flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.contact .contact-title { margin: 0; padding: 0; font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.2; color: var(--dark-warm); transform: translateY(1.5px); }
+.contact .contact-sub { margin: 8px 0 0; padding: 0; font-family: var(--serif); font-size: 15px; line-height: 1.55; color: var(--olive); }
+.contact-sub a { color: var(--brand); text-decoration: none; }
+.contact-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.contact-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--border-card, var(--line));
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--ivory) 100%);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.contact-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.contact-channel {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  color: var(--near-black);
+}
+.contact-glyph { width: 22px; height: 22px; transition: opacity 0.18s ease; }
+.contact-avatar { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.18s ease; }
+.contact-meta { display: flex; flex-direction: column; min-width: 0; }
+.contact-head b { font-family: var(--ui, var(--serif)); font-size: 14px; font-weight: 600; line-height: 1.3; color: var(--near-black); }
+.contact-handle { font-family: var(--ui, var(--serif)); font-size: 13px; line-height: 1.3; color: var(--stone); }
+.contact-stat {
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand);
+  font-family: var(--mono, ui-monospace, "SF Mono", Menlo, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.contact .contact-desc { margin: 4px 0 0; padding: 0; font-family: var(--serif); font-size: 14px; line-height: 1.55; color: var(--olive); }
+@media (hover: hover) {
+  .contact-card:hover { border-color: var(--line); box-shadow: 0 2px 8px rgba(20, 19, 19, 0.05); }
+  .contact-card:hover .contact-glyph { opacity: 0; }
+  .contact-card:hover .contact-avatar { opacity: 1; }
+  .contact-sub a:hover { color: var(--brand-light); }
+}
+.contact-card:active { border-color: var(--line); background: linear-gradient(180deg, var(--ivory) 0%, var(--parchment) 100%); }
+@media (prefers-reduced-motion: reduce) { .contact-glyph, .contact-avatar { transition: none; } }
+@media (max-width: 560px) { .contact-cards { grid-template-columns: 1fr; } }
+@media (max-width: 340px) {
+  .contact-head { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
+  .contact-channel { grid-column: 1; grid-row: 1 / span 2; }
+  .contact-meta { grid-column: 2; grid-row: 1; }
+  .contact-stat { grid-column: 2; grid-row: 2; margin-left: 0; justify-self: start; }
+}
+
+/* Blog (scripts/build-blog.py): mole.fit's blog in this site's tokens. The
+   index groups cards by category; an article is one centered reading column. */
+.blog-index, .blog-post { padding-bottom: var(--gap); }
+.blog-index > .section-lede { margin-bottom: 48px; }
+.blog-group { margin: 0; }
+.blog-group + .blog-group { margin-top: 56px; }
+.blog-group-title { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.3; color: var(--near-black); margin: 0 0 6px; }
+.blog-group-description { font-size: 15px; color: var(--olive); margin: 0 0 20px; }
+.blog-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.blog-card, .blog-related-list a {
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.blog-card { overflow: hidden; }
+.blog-card a { display: flex; flex-direction: column; height: 100%; text-decoration: none; }
+.blog-card-media { display: block; aspect-ratio: 16 / 9; background: var(--warm-sand); border-bottom: 1px solid var(--line-faint); overflow: hidden; }
+.blog-card-media img { width: 100%; height: 100%; object-fit: cover; }
+.blog-card-body { display: flex; flex-direction: column; flex: 1; padding: 18px 20px 20px; }
+.blog-card-title { font-weight: 600; font-size: 17px; line-height: 1.35; color: var(--near-black); margin: 0 0 6px; }
+.blog-card-desc { font-size: 14px; line-height: 1.6; color: var(--dark-warm); margin: 0 0 14px; }
+.blog-card-meta, .blog-related-meta, .blog-related-cat { font-size: 13px; color: var(--stone); }
+.blog-card-meta { margin-top: auto; }
+@media (hover: hover) {
+  .blog-card:hover, .blog-related-list a:hover { border-color: var(--warm-sand); box-shadow: 0 2px 8px rgba(20, 19, 19, 0.05); }
+}
+.blog-card:active, .blog-related-list a:active { background: var(--parchment); }
+
+.blog-crumb { font-size: 13px; margin: 0 0 14px; }
+.blog-crumb a { color: var(--stone); text-decoration: none; }
+.blog-title { font-family: var(--serif); font-weight: 500; color: var(--near-black); font-size: 32px; line-height: 1.25; letter-spacing: -0.3px; margin: 0 0 14px; }
+.blog-meta { display: flex; flex-wrap: wrap; gap: 2px 0; font-size: 13px; letter-spacing: 0.2px; color: var(--stone); margin: 0 0 32px; }
+.blog-meta > span { white-space: nowrap; }
+.blog-meta > span + span::before { content: "\00B7"; margin: 0 10px; opacity: 0.6; }
+.blog-meta a { color: inherit; text-decoration: none; }
+@media (hover: hover) {
+  :is(.blog-crumb, .blog-meta) a:hover { color: var(--brand); }
+}
+.blog-cover { margin: 0 0 36px; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--warm-sand); }
+.blog-cover img { width: 100%; height: 100%; object-fit: cover; }
+
+.blog-body { font-size: 17px; line-height: 1.75; color: var(--dark-warm); overflow-wrap: break-word; }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.8; }
+/* CJK titles take no Latin -0.3px, which pressed full-em glyphs together. */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title { letter-spacing: 0; }
+/* Phones step Chinese body and articles to 1.7. */
+@media (max-width: 640px) {
+  html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(body, .blog-body) { line-height: 1.7; }
+}
+/* Chinese blog text tracks at 0.02em, as on mole.fit (maintainer 2026-10-21: zero tracking read cramped);
+   headings resolve it at their own size instead of the Latin -0.3px, code keeps 0. */
+html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index), html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index) :is(h1, h2, h3) { letter-spacing: 0.02em; }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index) :is(pre, code, kbd) { letter-spacing: 0; }
+.blog-body > :first-child { margin-top: 0; }
+.blog-body :is(p, ul, ol, table, pre, blockquote) { margin: 0 0 20px; }
+.blog-body :is(ul, ol) { padding-left: 22px; }
+.blog-body li { margin-bottom: 6px; }
+.blog-body h2 { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.3; color: var(--near-black); margin: 48px 0 14px; scroll-margin-top: 100px; }
+.blog-body h3 { font-weight: 600; font-size: 17px; line-height: 1.4; color: var(--near-black); margin: 32px 0 10px; scroll-margin-top: 100px; }
+/* Links read by colour alone, no underline, as on every family site (maintainer 2026-10-20). */
+:is(.blog-body, .legal) a { color: var(--brand); }
+:is(.blog-body, .legal) a:hover { color: var(--brand-light); }
+.blog-body strong { color: var(--near-black); }
+.blog-body code { font-family: "SF Mono", Menlo, monospace; font-size: 0.85em; background: var(--warm-sand); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
+.blog-body pre { background: var(--ivory); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; overflow-x: auto; line-height: 1.6; }
+.blog-body pre code { background: none; padding: 0; font-size: 14px; overflow-wrap: normal; }
+.blog-body blockquote { padding-left: 20px; color: var(--olive); }
+.blog-body blockquote p { margin-bottom: 10px; }
+.blog-body table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 15px; }
+.blog-body :is(th, td) { text-align: left; padding: 8px 16px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.blog-body th { font-weight: 600; color: var(--near-black); }
+.blog-body img { border-radius: 10px; }
+.blog-figure { margin: 32px 0; }
+.blog-figure figcaption { font-size: 13px; line-height: 1.5; color: var(--stone); margin-top: 10px; }
+
+.blog-related { margin-top: 64px; }
+.blog-related-title { font-family: var(--serif); font-weight: 500; font-size: 22px; line-height: 1.3; color: var(--near-black); margin: 0 0 20px; }
+.blog-related-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.blog-related-list a { display: flex; flex-direction: column; gap: 8px; height: 100%; padding: 16px 18px 18px; text-decoration: none; }
+.blog-related-name { font-weight: 600; font-size: 15px; line-height: 1.4; color: var(--near-black); flex: 1 1 auto; }
+
+/* Footer: mole.fit's dark band in MiaoYan's night, the name and one product
+   line on the left, small titled link columns on the right, Mole's text steps. */
+footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62%, transparent); padding: 60px 0 48px; font-size: 14px; }
+.foot { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.foot-mark { max-width: 26em; }
+.foot-name { margin: 0 0 8px; color: #fff; font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.1; }
+.foot-name .cn { font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif; font-weight: 400; }
+.foot-mark p.foot-about { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
+.foot-cols { display: flex; gap: 44px; }
+.foot-col { display: grid; gap: 12px; align-content: start; }
+.foot-col-title { margin: 0 0 2px; color: color-mix(in srgb, #fff 92%, transparent); font-size: 13px; font-weight: 600; letter-spacing: 0.2px; }
+.foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
+@media (hover: hover) { .foot-col a:hover { color: #fff; } }
+
+/* Tablets keep the links that fit in every language with Android's Noto Serif
+   (no Charter there) and the App Store pill showing: all five from 820, then
+   Features, FAQ and Blog down to 621 (Chinese in Georgia needs 611), so OPPO Pad mini portrait (640) and every
+   iPad keep a menu. GitHub stays in the footer. Phones drop the links. */
+@media (max-width: 819px) {
+  .nav-links a:is([href*="github.com"], [href$="#devices"]) { display: none; }
+}
+@media (max-width: 620px) {
+  .nav-links { display: none; }
+}
+@media (max-width: 999px) {
+  .blog-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 881px) {
+  /* A CJK glyph fills its em box while Charter's x-height is about half of it,
+     so the size that reads right in English reads oversized in CJK. */
+  html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { font-size: 19px; }
+}
+@media (max-width: 880px) {
+  :root { --inset: 24px; --gap: 64px; }
+  .nav { margin: 16px -6px 40px; }
+  .hero h1 { font-size: 60px; letter-spacing: -0.8px; margin-bottom: 20px; }
+  .tagline { font-size: 20px; }
+  .section-title { font-size: 26px; }
+  .devices { gap: 32px; }
+  .device.pad { width: min(460px, 62%); }
+  .device.phone { width: min(230px, 32%); }
+  .foot { flex-direction: column; }
+  /* Stacked under the brand, the columns share the full width as on mole.fit;
+     at their natural widths they huddled left of an empty half (OPPO Pad mini). */
+  .foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 16px; align-self: stretch; }
+}
+@media (max-width: 680px) {
+  :root { --inset: 18px; }
+  .devices { flex-direction: column; align-items: center; gap: 24px; }
+  .device.pad { width: min(480px, 100%); }
+  .device.phone { width: min(260px, 70%); }
+  .cards, .blog-cards, .blog-related-list { grid-template-columns: 1fr; }
+  .trust { gap: 2px 16px; }
+  .trust li { font-size: 13px; }
+  .trust li + li::before { content: none; }
+}
+@media (max-width: 560px) {
+  .lang-name { display: none; }
+  .lang-code { display: inline; }
+}
+@media (max-width: 480px) {
+  .nav-bar { padding-left: 14px; gap: 10px; }
+  .nav-end { gap: 10px; }
+  .hero h1 { font-size: clamp(48px, 13vw, 60px); }
+  .btn { width: 100%; }
+  /* Phone hero buttons keep their label's width with 24px sides and wrap to a
+     second row when a long label (German Windows) does not fit; stretched
+     halves left a wide empty band around a short label. 44px tall, the touch
+     minimum, rather than the desktop 51 (maintainer 2026-10-23). */
+  .hero-cta { gap: 8px; }
+  .hero-cta .btn { width: auto; flex: 0 0 auto; min-width: 0; padding: 10px 24px; white-space: nowrap; }
+}
+
+/* Readers who ask the system for less motion get state changes without the
+   slide, fade and lift. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .hero h1 .cn-orbit::after { animation: none; }
+  .faq details::details-content { transition: none; }
+}
+</style>
+<script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
+<script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown escape characters: backslash, entities and code spans", "item": "https://miaoyan.app/blog/markdown-escape-characters/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-escape-characters/#article", "headline": "Markdown escape characters: backslash, entities and code spans", "description": "Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.", "url": "https://miaoyan.app/blog/markdown-escape-characters/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-escape-characters/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I escape characters inside a code block?", "acceptedAnswer": {"@type": "Answer", "text": "No. Backslash escapes do not work in code spans or code blocks, so a backslash would print."}}, {"@type": "Question", "name": "How do I show a literal backslash?", "acceptedAnswer": {"@type": "Answer", "text": "Type two: \\\\."}}, {"@type": "Question", "name": "Why does my numbered line turn into a list?", "acceptedAnswer": {"@type": "Answer", "text": "A line that starts with digits and a dot is a list marker. Escape the dot, as in 2024\\.."}}]}]}</script>
 </head>
 <body>
@@ -130,7 +696,6 @@
   });
 })();
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});(function(){function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y');var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>
 </body>
 </html>

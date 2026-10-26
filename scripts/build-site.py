@@ -679,11 +679,50 @@ ICONS = (
     '<link rel="apple-touch-icon" href="/assets/icon-180.png">'
 )
 
+# gtag.js is 168KB, so it loads once the page is idle after load instead of
+# competing with the hero shot. Consent stays denied from the first line, and a
+# page prerendered on hover waits until it is shown, so it never counts a visit
+# the reader did not make.
 ANALYTICS = (
-    '<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>\n'
     "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',"
     "{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});"
-    "gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>"
+    "(function(){function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y');"
+    "var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}"
+    "function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}"
+    "function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}"
+    "document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>"
+)
+
+SPECULATION_RULES = json.dumps(
+    {
+        "prerender": [
+            {
+                "where": {
+                    "and": [
+                        {"or": [{"href_matches": "/*/"}, {"href_matches": "/*.html"}]},
+                        {"not": {"selector_matches": "[target=_blank], [download], [data-lang]"}},
+                    ]
+                },
+                "eagerness": "moderate",
+            }
+        ]
+    },
+    separators=(",", ":"),
+)
+# Hovering an internal page link prerenders it, so the click swaps it in at once.
+# The language menu is left out: the English home redirects by the remembered
+# language, and a prerender would run that before the click stores the new one.
+# Browsers without speculation rules prefetch the hovered page after 100ms.
+# The stylesheet is inlined so first paint needs only the HTML; site.css stays
+# the one source and every page reads it at build time.
+HEAD_ASSETS = (
+    '<style id="site-css">\n' + (ROOT / "site.css").read_text().strip() + "\n</style>\n"
+    f'<script type="speculationrules">{SPECULATION_RULES}</script>\n'
+    '<script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports(\'speculationrules\'))){var done={},timer;'
+    "document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');"
+    "if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\\/$|\\.html$/.test(a.pathname))return;"
+    "clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});"
+    "document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>"
 )
 
 STORE_JS = """  // iPhone and iPad open the App Store app from the region-less link, and the
@@ -916,7 +955,7 @@ def page(key):
 <meta name="twitter:image" content="{SITE}/assets/shots/og-{og}.jpg">
 {ICONS}
 {font_preload(key)}<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
-<link rel="stylesheet" href="/site.css">
+{HEAD_ASSETS}
 <script type="application/ld+json">{ld}</script>
 </head>
 <body>
@@ -985,6 +1024,10 @@ def chrome_pages():
     for name in ("privacy.html", "404.html"):
         path = ROOT / name
         text = path.read_text()
+        text = re.sub(
+            r'<link rel="stylesheet" href="/site.css">|<style id="site-css">.*?</script>\n<script id="prefetch-fallback">.*?</script>',
+            lambda m: HEAD_ASSETS, text, count=1, flags=re.S,
+        )
         text = re.sub(r'<header class="nav">.*?</header>', lambda m: header_html("en", home="/"), text, count=1, flags=re.S)
         text = re.sub(r'\n<script>\n\(function \(\) \{\n.*?\}\)\(\);\n</script>', "", text, flags=re.S)
         footer = footer_html("en", faq_href="/#faq")
