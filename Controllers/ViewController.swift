@@ -104,6 +104,10 @@ class ViewController:
 
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
+    /// Which columns were open before a presentation, so leaving it does not
+    /// reopen a sidebar the user had hidden.
+    var presentationRestoresSidebar = true
+    var presentationRestoresNoteList = true
 
     // Check if any preview mode is active
     var shouldShowPreview: Bool {

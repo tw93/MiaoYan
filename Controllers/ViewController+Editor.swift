@@ -529,6 +529,8 @@ extension ViewController {
     private func savePresentationLayout() {
         let currentSidebarWidth = sidebarWidth
         let currentNotelistWidth = notelistWidth
+        presentationRestoresSidebar = isSidebarVisible
+        presentationRestoresNoteList = isNotelistVisible
 
         if currentSidebarWidth > Theme.Metrics.sidebarCollapseSnapWidth {
             UserDefaultsManagement.realSidebarSize = Int(currentSidebarWidth)
@@ -547,8 +549,8 @@ extension ViewController {
         toggleListButton?.isHidden = false
         toggleSplitButton?.isHidden = false
 
-        if sidebarWidth == 0 { showSidebar("") }
-        if notelistWidth == 0 { showNoteList("") }
+        if presentationRestoresNoteList { showNoteList("") }
+        if presentationRestoresSidebar { showSidebar("") }
         checkTitlebarTopConstraint()
 
         if let savedPosition = savedPresentationScrollPosition {

@@ -36,12 +36,12 @@ extension ViewController {
         return splitView.subviews[0].frame.width
     }
 
-    private var isSidebarVisible: Bool {
+    var isSidebarVisible: Bool {
         guard let sidebarView = sidebarSplitView?.subviews.first else { return false }
         return !sidebarView.isHidden && sidebarWidth > Theme.Metrics.collapsedSplitWidthEpsilon
     }
 
-    private var isNotelistVisible: Bool {
+    var isNotelistVisible: Bool {
         guard let noteListView = splitView?.subviews.first else { return false }
         return !noteListView.isHidden && notelistWidth > Theme.Metrics.collapsedSplitWidthEpsilon
     }
