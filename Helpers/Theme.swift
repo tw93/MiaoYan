@@ -18,6 +18,26 @@ enum Theme {
         static var curve: CAMediaTimingFunction { CAMediaTimingFunction(name: .easeOut) }
     }
 
+    /// The sidebar wordmark, as miaoyan.app sets the name: upright Charter for
+    /// MiaoYan, and Source Han Serif SC for 妙言 (maintainer, 2026-10-26).
+    /// Charter has no Han, so 妙言 used to fall back to whatever serif the
+    /// system picked. `MiaoYanMark.otf` is a two-glyph cut of Source Han Serif
+    /// SC, renamed as the OFL asks of a modified copy, loaded without
+    /// registering so it never shows up in the font menus.
+    static func brandWordmarkFont(for title: String, size: CGFloat) -> NSFont? {
+        if title.unicodeScalars.contains(where: { !$0.isASCII }), let mark = brandMarkDescriptor {
+            return CTFontCreateWithFontDescriptor(mark, size, nil) as NSFont
+        }
+        return NSFont(name: "Charter-Roman", size: size)
+    }
+
+    private static let brandMarkDescriptor: CTFontDescriptor? = {
+        guard let url = Bundle.main.url(forResource: "MiaoYanMark", withExtension: "otf"),
+            let data = try? Data(contentsOf: url)
+        else { return nil }
+        return CTFontManagerCreateFontDescriptorFromData(data as CFData)
+    }()
+
     /// Shared layout metrics for the list / sidebar surfaces. Seeded with the
     /// values we actively tune so future tweaks have one home instead of
     /// scattered literals. Editor and preferences internals keep their own
@@ -45,6 +65,12 @@ enum Theme {
         static let sidebarStandardLabelVerticalNudge: CGFloat = 1.5
         static let sidebarBrandLabelVerticalNudge: CGFloat = 1.5
         static let sidebarBrandIconOffsetY: CGFloat = -3.5
+        /// 妙言 in Source Han Serif sits higher in its line than Charter's
+        /// MiaoYan, so the Chinese lockup has its own pair: the bird level with
+        /// the folder rows' rhythm and the wordmark's ink centre a point below
+        /// the bird's (maintainer, 2026-10-26).
+        static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 5
+        static let sidebarBrandMarkIconOffsetY: CGFloat = -0.5
         /// Right-side gutter so long note titles truncate before the pane edge.
         /// The visible gutter inside the selection pill varies by title because
         /// truncation snaps to whole glyphs (CJK chars are ~14pt), so this is

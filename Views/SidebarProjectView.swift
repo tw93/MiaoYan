@@ -548,19 +548,25 @@ class SidebarProjectView: NSOutlineView,
     }
 
     private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
-        // The brand lockup (maintainer, 2026-10-11): an upright Charter
-        // wordmark at regular weight, two points above the folder labels with a 22pt bird, in a
+        // The brand lockup (maintainer, 2026-10-11): an upright wordmark at
+        // regular weight, two points above the folder labels with a 22pt bird, in a
         // 52pt row so the space above and below it is even and wider than the
         // gap between folders. The italic wordmark with a slanted 26pt bird
         // leaned against the upright folder names and read too large; a
         // lockup of icon 20 and font +1 was rejected earlier as too small.
+        // The bird's left edge and the wordmark's first stroke line up with the
+        // folder icons and names below (measured 2026-10-26; the bird had
+        // stood 4pt left of the icons and the wordmark 2pt left of the names).
         let accentIconSize: CGFloat = 22
-        let accentSpacing: CGFloat = 5
-        let accentIconLeading: CGFloat = -2
-        let accentFont = createAccentFont(from: baseFont)
+        let accentSpacing: CGFloat = 3
+        let accentIconLeading: CGFloat = 2
+        let accentFont = createAccentFont(for: sidebarItem.name, from: baseFont)
 
         switch sidebarItem.type {
         case .Brand:
+            let isMark = sidebarItem.name.unicodeScalars.contains { !$0.isASCII }
+            let labelNudge = isMark ? Theme.Metrics.sidebarBrandMarkLabelVerticalNudge : Theme.Metrics.sidebarBrandLabelVerticalNudge
+            let iconOffsetY = isMark ? Theme.Metrics.sidebarBrandMarkIconOffsetY : Theme.Metrics.sidebarBrandIconOffsetY
             cell.icon.image = NSImage(imageLiteralResourceName: "home")
             cell.icon.image?.isTemplate = true
             cell.icon.contentTintColor = accentColor
@@ -568,7 +574,7 @@ class SidebarProjectView: NSOutlineView,
             adjustIconSize(cell, size: accentIconSize)
             cell.label.font = accentFont
             cell.label.textColor = accentColor
-            updateLabelVerticalNudge(cell, nudge: Theme.Metrics.sidebarBrandLabelVerticalNudge)
+            updateLabelVerticalNudge(cell, nudge: labelNudge)
             updateLabelSpacing(cell, spacing: accentSpacing)
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
@@ -578,10 +584,10 @@ class SidebarProjectView: NSOutlineView,
                 let first = constraint.firstItem as? NSView
                 let second = constraint.secondItem as? NSView
                 if first === cell.icon {
-                    constraint.constant = Theme.Metrics.sidebarBrandIconOffsetY
+                    constraint.constant = iconOffsetY
                     break
                 } else if second === cell.icon {
-                    constraint.constant = -Theme.Metrics.sidebarBrandIconOffsetY
+                    constraint.constant = -iconOffsetY
                     break
                 }
             }
@@ -603,12 +609,12 @@ class SidebarProjectView: NSOutlineView,
         }
     }
 
-    /// The wordmark face: Charter at regular weight, which ships with macOS,
-    /// two points above the folder labels; the bold cut read heavy beside the
-    /// folder names. The label face stands in if Charter is ever missing.
-    private func createAccentFont(from baseFont: NSFont) -> NSFont {
-        if let charter = NSFont(name: "Charter-Roman", size: baseFont.pointSize + 2) {
-            return charter
+    /// The wordmark face (`Theme.brandWordmarkFont`) at regular weight, two
+    /// points above the folder labels; the bold cut read heavy beside the
+    /// folder names. The label face stands in if the face is ever missing.
+    private func createAccentFont(for title: String, from baseFont: NSFont) -> NSFont {
+        if let font = Theme.brandWordmarkFont(for: title, size: baseFont.pointSize + 2) {
+            return font
         }
         return NSFont(descriptor: baseFont.fontDescriptor, size: baseFont.pointSize + 2) ?? baseFont
     }

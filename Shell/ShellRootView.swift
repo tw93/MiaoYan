@@ -40,10 +40,10 @@ enum ShellStyle {
         size * UserDefaultsManagement.letterSpacingEm
     }
 
-    /// The brand wordmark, upright Charter at regular weight as in the
-    /// storyboard window's sidebar, falling back to the interface face.
-    static func brandWordmark(_ size: CGFloat) -> SwiftUI.Font {
-        if let charter = NSFont(name: "Charter-Roman", size: size) { return SwiftUI.Font(charter) }
+    /// The brand wordmark, the storyboard window's face (`Theme.brandWordmarkFont`),
+    /// falling back to the interface face.
+    static func brandWordmark(_ title: String, size: CGFloat) -> SwiftUI.Font {
+        if let font = Theme.brandWordmarkFont(for: title, size: size) { return SwiftUI.Font(font) }
         return interface(size)
     }
 
@@ -393,7 +393,7 @@ private struct ShellSidebarBrand: View {
                 .scaledToFit()
                 .frame(width: 22, height: 22)
             Text(title)
-                .font(ShellStyle.brandWordmark(size))
+                .font(ShellStyle.brandWordmark(title, size: size))
                 .lineLimit(1)
                 .truncationMode(.tail)
             Spacer(minLength: 0)
