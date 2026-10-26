@@ -331,7 +331,7 @@
 "Used in the sidebar and note list" = "用于侧栏和笔记列表";
 "Presentation Font Size" = "演示字号";
 "Used for MiaoYan PPT slides" = "用于妙言 PPT 幻灯片";
-"All Notes" = "全部笔记";
+"All Notes" = "全部";
 "Move the folder “%@” and everything in it to the Trash?" = "将“%@”文件夹连同里面的内容一起移入废纸篓？";
 "Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移入废纸篓？";
 "No unused attachments" = "没有未使用的附件";
