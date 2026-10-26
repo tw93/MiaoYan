@@ -691,6 +691,9 @@ ANALYTICS = (
     "function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}"
     "function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}"
     "document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>"
+    # GEOInflow counts page views without cookies and waits out a hover prerender itself;
+    # async, so a slow fetch never holds DOMContentLoaded.
+    '\n<script async src="https://geo.tw93.fun/geo.js" data-website-id="275f0b5b-797e-4500-a9d2-a7383b2fa236" data-domains="miaoyan.app"></script>'
 )
 
 SPECULATION_RULES = json.dumps(
