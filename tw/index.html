@@ -567,6 +567,13 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .trust li { font-size: 13px; }
   .trust li + li::before { content: none; }
 }
+/* Phone type ladder shared by the product sites (2026-10-26): body 17 for
+   ledes and FAQ answers, secondary 15 for card copy, contact cards and the
+   footer, meta 13 left as is. It only lifts; desktop keeps its sizes. */
+@media (max-width: 640px) {
+  .section-lede, .blog-group-description, .faq p { font-size: 17px; }
+  footer, .foot-mark p.foot-about, .contact .contact-desc, .contact-head b, .blog-card-desc { font-size: 15px; }
+}
 @media (max-width: 560px) {
   .lang-name { display: none; }
   .lang-code { display: inline; }
