@@ -180,8 +180,13 @@ class ClipboardManager {
                     Task { @MainActor in
                         guard let self else { return }
                         if let resultString = result {
-                            self.replacePlaceholderWithURL(placeholder: placeholderText, cloudURL: resultString, textView: textView, note: note)
-                            self.deleteImage(tempPath: tempPath)
+                            // The local link is a working image, so the file goes
+                            // only once the note points at the cloud copy: a link
+                            // edited during the upload (alt text added) is missed
+                            // by the swap and would otherwise be left broken.
+                            if self.replacePlaceholderWithURL(placeholder: placeholderText, cloudURL: resultString, textView: textView, note: note) {
+                                self.deleteImage(tempPath: tempPath)
+                            }
                         } else {
                             if let error {
                                 AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
@@ -407,13 +412,15 @@ class ClipboardManager {
         }
     }
 
-    private func replacePlaceholderWithURL(placeholder: String, cloudURL: String, textView: EditTextView, note: Note) {
-        guard let storage = textView.textStorage else { return }
+    /// Returns whether the note now holds the cloud link instead of the placeholder.
+    @discardableResult
+    private func replacePlaceholderWithURL(placeholder: String, cloudURL: String, textView: EditTextView, note: Note) -> Bool {
+        guard let storage = textView.textStorage else { return false }
 
         let replacement = "![](\(cloudURL))"
         let placeholderPattern = NSRegularExpression.escapedPattern(for: placeholder)
 
-        guard let regex = try? NSRegularExpression(pattern: placeholderPattern) else { return }
+        guard let regex = try? NSRegularExpression(pattern: placeholderPattern) else { return false }
 
         // Primary path: placeholder is still raw text in textStorage.
         // Only valid while the storage still belongs to the note the upload
@@ -438,7 +445,7 @@ class ClipboardManager {
             }
             textView.saveTextStorageContent(to: note)
             note.save()
-            return
+            return true
         }
 
         // Fallback: refillEditArea converted ![](uploading...) to an NSTextAttachment so
@@ -455,6 +462,8 @@ class ClipboardManager {
             {
                 shell.model.editor.reload(note)
             }
+            return true
         }
+        return false
     }
 }
