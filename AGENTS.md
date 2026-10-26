@@ -97,6 +97,12 @@ which makes dyld refuse to load the test bundle into the host app. `ci.yml`
 passes the same flag on every xcodebuild invocation, so it is not a
 local-only workaround.
 
+While `/Applications/MiaoYan.app` is running, which on the maintainer's Mac
+is always, the test host shares its bundle id and `xcodebuild test` ends with
+"The test runner hung before establishing connection". Add
+`PRODUCT_BUNDLE_IDENTIFIER=com.tw93.miaoyan.qa` to the local command; never
+quit the running app for a test.
+
 ## CI
 
 `.github/workflows/ci.yml` runs on every PR and push to `main`:
