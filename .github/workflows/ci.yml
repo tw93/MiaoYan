@@ -126,6 +126,26 @@ jobs:
           for f in scripts/*.sh scripts/release-ci/*.sh scripts/miaoyan; do bash -n "$f"; done
           shellcheck -S error scripts/*.sh scripts/release-ci/*.sh scripts/miaoyan
 
+  # docs/incidents.md is the eval set for review: every row must name commits
+  # that resolve, a known layer and a catcher defined in the code. Full
+  # history so the commits are resolved, not only shape-checked.
+  review-gates:
+    name: Review gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check the incident ledger
+        run: python3 scripts/check_incidents.py
+
+      - name: Test the ledger checker and risk tiers
+        run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
+
   version-consistency:
     name: Version consistency
     runs-on: ubuntu-latest

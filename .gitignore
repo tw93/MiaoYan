@@ -20,6 +20,9 @@ temp_check_keys/
 *.dSYM.zip
 *.app.dSYM.zip
 
+# Python bytecode from scripts/*.py
+__pycache__/
+
 # Swift Package Manager
 .swiftpm/
 Package.resolved.backup
@@ -95,7 +98,9 @@ package-lock.json
 appcast.xml
 
 # Documentation & Demo files
-docs/
+# docs/ stays local except the incident ledger, which CI checks.
+docs/*
+!docs/incidents.md
 index.html
 Resources/DownView.bundle/demo.html
 

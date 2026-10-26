@@ -51,6 +51,8 @@ xcodebuild test -project MiaoYan.xcodeproj -scheme MiaoYan -destination 'platfor
 swiftlint lint --strict
 swift-format lint --recursive . --strict   # --strict is what CI runs; without it a local pass can still fail CI
 swift test --package-path Packages/MiaoYanCore
+python3 scripts/check_incidents.py      # docs/incidents.md rows hold
+python3 scripts/risk_tier.py [path ...]  # extra gates a change needs, from its paths
 bash scripts/build.sh
 ruby scripts/add_tests_target.rb     # only when re-wiring MiaoYanTests after pbxproj reset
 ```
@@ -117,6 +119,8 @@ quit the running app for a test.
   `scripts/*.sh`, `scripts/release-ci/*.sh` and `scripts/miaoyan`. ShellCheck
   does not flag a helper called before its definition (the install.sh `warn`
   bug), so keep script helpers at the top.
+- Review gates: `scripts/check_incidents.py` on full history plus the unit
+  tests of it and `scripts/risk_tier.py` (`scripts/test_review_gates.py`)
 - On tag pushes (`V*`): version-triplet consistency check
   (`MARKETING_VERSION == CURRENT_PROJECT_VERSION == tag`) to prevent the
   V3.5.1 / #524 incident recurrence
@@ -264,3 +268,4 @@ This repository ships the direct-download app: GitHub Release assets plus an app
 - Release note changes: inspect `.github/RELEASE_NOTES.md` and the affected `scripts/release-ci/` renderer.
 - Export changes: verify Mermaid, images, PDF pagination, and async readiness behavior together.
 - Documentation-only changes: check links and command accuracy.
+- Incidents and risk: a fix for a defect that reached users in a release adds its `docs/incidents.md` row in the same commit, naming the earliest layer that should have caught it and the test or CI job that catches it now; `scripts/check_incidents.py` fails a row whose commits, layer or catcher do not hold, and a defect with no catcher gets a test red on the old code or stays out of the table. The verification a change needs follows its paths, not its author: `scripts/risk_tier.py` names the extra gates for release, installer, note-writing, sync, export and shared-core paths (pass your own files when the worktree holds other work), and a commit in the release or notes tier says in its body how it was verified and how to revert it.
