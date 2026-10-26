@@ -626,8 +626,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // assignment above replaces them, so what app.js set up at load time
         // is gone by now. Without the checkbox pass a task list showed list
         // bullets and its boxes no longer toggled.
+        // Code blocks are highlighted once at load (common.js initializeCore),
+        // so a split-view edit left every replaced block uncoloured.
         initScripts.append(
             """
+                if (window.hljs && typeof window.hljs.highlightAll === 'function') {
+                    window.hljs.highlightAll();
+                }
                 if (window.MiaoYanCommon && typeof window.MiaoYanCommon.wrapWideTables === 'function') {
                     window.MiaoYanCommon.wrapWideTables();
                 }
