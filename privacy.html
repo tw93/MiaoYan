@@ -161,7 +161,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--near-black); flex: none; }
 .brand img { width: 24px; height: 24px; }
-.brand b { font-family: Charter, Georgia, serif; font-weight: 700; font-style: italic; font-size: 18px; letter-spacing: 0.2px; }
+.brand b { font-family: Charter, Georgia, serif; font-weight: 700; font-size: 18px; letter-spacing: 0.2px; }
 .nav-links { display: flex; gap: 2px; margin-left: 8px; }
 .nav-links a {
   font-size: 14px; font-weight: 500; line-height: 1; color: var(--olive); text-decoration: none;
@@ -266,9 +266,13 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { l
 .lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
 .tagline + .trust { margin-top: 18px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
-.trust { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0 0 32px; padding: 0; list-style: none; }
-.trust li { font-size: 14px; line-height: 1.5; color: var(--stone); white-space: nowrap; }
-.trust li + li::before { content: "\00B7"; margin: 0 10px; color: var(--stone); opacity: 0.6; }
+/* Every item carries its dot in a left gutter the list clips, so the item
+   that starts a wrapped row loses its dot: German, French, Spanish and
+   Japanese wrap on every iPad portrait and used to open the second row with
+   a stray middot. */
+.trust { --trust-gap: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0 0 32px calc(-1 * var(--trust-gap)); padding: 0; list-style: none; clip-path: inset(0 0 0 var(--trust-gap)); }
+.trust li { position: relative; margin-left: var(--trust-gap); font-size: 14px; line-height: 1.5; color: var(--stone); white-space: nowrap; }
+.trust li::before { content: "\00B7"; position: absolute; left: calc(-1 * var(--trust-gap)); width: var(--trust-gap); text-align: center; color: var(--stone); opacity: 0.6; }
 .cta { display: flex; flex-wrap: wrap; gap: 12px 16px; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 158px;
@@ -405,9 +409,7 @@ section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
 }
 .contact-card:active { border-color: var(--line); background: linear-gradient(180deg, var(--ivory) 0%, var(--parchment) 100%); }
 @media (prefers-reduced-motion: reduce) { .contact-glyph, .contact-avatar { transition: none; } }
-/* Two cards side by side squeezed their lines into four or five rows on a
-   640 to 700 tablet; mole.fit goes to one column below 700. */
-@media (max-width: 700px) { .contact-cards { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .contact-cards { grid-template-columns: 1fr; } }
 @media (max-width: 340px) {
   .contact-head { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
   .contact-channel { grid-column: 1; grid-row: 1 / span 2; }
@@ -541,16 +543,6 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
      at their natural widths they huddled left of an empty half (OPPO Pad mini). */
   .foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 16px; align-self: stretch; }
 }
-@media (max-width: 680px) {
-  :root { --inset: 18px; }
-  .devices { flex-direction: column; align-items: center; gap: 24px; }
-  .device.pad { width: min(480px, 100%); }
-  .device.phone { width: min(260px, 70%); }
-  .cards, .blog-cards, .blog-related-list { grid-template-columns: 1fr; }
-  .trust { gap: 2px 16px; }
-  .trust li { font-size: 13px; }
-  .trust li + li::before { content: none; }
-}
 /* Phone type ladder shared by the product sites (2026-10-26): body 16 for
    articles, ledes and FAQ answers, secondary 15 for card copy, contact cards
    and the footer, meta 13 left as is. Home text sits on the same 16 as the
@@ -559,9 +551,19 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .tagline, .lede, .section-lede, .blog-group-description, .faq p, .blog-body { font-size: 16px; }
   footer, .foot-mark p.foot-about, .contact .contact-desc, .contact-head b, .blog-card-desc { font-size: 15px; }
 }
+/* Phone-only stacking starts at 560 so OPPO Pad mini portrait (640) and every
+   iPad keep two columns and the side-by-side devices (site.md). */
 @media (max-width: 560px) {
   .lang-name { display: none; }
   .lang-code { display: inline; }
+  :root { --inset: 18px; }
+  .devices { flex-direction: column; align-items: center; gap: 24px; }
+  .device.pad { width: min(480px, 100%); }
+  .device.phone { width: min(260px, 70%); }
+  .cards, .blog-cards, .blog-related-list { grid-template-columns: 1fr; }
+  .trust { --trust-gap: 16px; gap: 2px 0; }
+  .trust li { font-size: 13px; }
+  .trust li::before { content: none; }
 }
 @media (max-width: 480px) {
   .nav-bar { padding-left: 14px; gap: 10px; }
