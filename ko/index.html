@@ -585,12 +585,13 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .nav-end { gap: 10px; }
   .hero h1 { font-size: clamp(48px, 13vw, 60px); }
   .btn { width: 100%; }
-  /* Phone hero buttons keep their label's width with 24px sides and wrap to a
-     second row when a long label (German Windows) does not fit; stretched
-     halves left a wide empty band around a short label. 44px tall, the touch
-     minimum, rather than the desktop 51 (maintainer 2026-10-23). */
+  /* Phone hero buttons keep their label's width and share one row (maintainer
+     2026-10-27: 不要两行，控制一行就好了): 14px sides and a 6px icon gap fit
+     English, Chinese, Japanese, Korean and German from 360px. A label that
+     still does not fit (French, Spanish under 414) wraps rather than
+     truncates. 44px tall, the touch minimum, rather than the desktop 51. */
   .hero-cta { gap: 8px; }
-  .hero-cta .btn { width: auto; flex: 0 0 auto; min-width: 0; padding: 10px 24px; white-space: nowrap; }
+  .hero-cta .btn { width: auto; flex: 0 0 auto; min-width: 0; padding: 10px 14px; gap: 6px; white-space: nowrap; }
 }
 
 /* Readers who ask the system for less motion get state changes without the
