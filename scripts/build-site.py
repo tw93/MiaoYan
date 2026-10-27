@@ -70,6 +70,7 @@ COPY = {
         "devices_title": "On iPhone and iPad",
         "devices_lede": "The same App Store purchase runs on iPhone and iPad, opening the same iCloud Drive folder as your Mac.",
         "devices_cta": "Get it on the App Store",
+        "devices_scan": "Scan with iPhone or iPad",
         "device_alts": ("MiaoYan on iPhone reading a note", "MiaoYan on iPad showing a note with a diagram"),
         "features_title": "Why MiaoYan",
         "features": [
@@ -126,6 +127,7 @@ COPY = {
         "devices_title": "iPhone 和 iPad",
         "devices_lede": "一次 App Store 购买，Mac、iPhone 与 iPad 通用，直接打开同一个 iCloud 云盘笔记文件夹。",
         "devices_cta": "在 App Store 获取",
+        "devices_scan": "用 iPhone 或 iPad 扫码",
         "device_alts": ("妙言在 iPhone 上阅读笔记", "妙言在 iPad 上显示带流程图的笔记"),
         "features_title": "为什么选择妙言",
         "features": [
@@ -182,6 +184,7 @@ COPY = {
         "devices_title": "iPhone 和 iPad",
         "devices_lede": "一次 App Store 購買，Mac、iPhone 與 iPad 通用，直接打開同一個 iCloud 雲碟筆記檔案夾。",
         "devices_cta": "在 App Store 取得",
+        "devices_scan": "用 iPhone 或 iPad 掃碼",
         "device_alts": ("妙言在 iPhone 上閱讀筆記", "妙言在 iPad 上顯示帶流程圖的筆記"),
         "features_title": "為什麼選擇妙言",
         "features": [
@@ -238,6 +241,7 @@ COPY = {
         "devices_title": "iPhoneとiPad",
         "devices_lede": "同じApp Storeの購入でiPhoneとiPadでも使え、Macと同じiCloud Driveフォルダを開きます。",
         "devices_cta": "App Storeで入手",
+        "devices_scan": "iPhoneやiPadでスキャン",
         "device_alts": ("iPhoneでノートを読むMiaoYan", "iPadで図入りのノートを表示するMiaoYan"),
         "features_title": "MiaoYanを選ぶ理由",
         "features": [
@@ -294,6 +298,7 @@ COPY = {
         "devices_title": "iPhone과 iPad",
         "devices_lede": "같은 App Store 구매로 iPhone과 iPad에서도 쓸 수 있고, Mac과 같은 iCloud Drive 폴더를 엽니다.",
         "devices_cta": "App Store에서 받기",
+        "devices_scan": "iPhone이나 iPad로 스캔",
         "device_alts": ("iPhone에서 노트를 읽는 MiaoYan", "iPad에서 다이어그램이 있는 노트를 보여 주는 MiaoYan"),
         "features_title": "MiaoYan을 쓰는 이유",
         "features": [
@@ -350,6 +355,7 @@ COPY = {
         "devices_title": "Auf iPhone und iPad",
         "devices_lede": "Derselbe App-Store-Kauf läuft auf iPhone und iPad und öffnet denselben iCloud-Drive-Ordner wie dein Mac.",
         "devices_cta": "Im App Store laden",
+        "devices_scan": "Mit iPhone oder iPad scannen",
         "device_alts": ("MiaoYan auf dem iPhone beim Lesen einer Notiz", "MiaoYan auf dem iPad mit einer Notiz samt Diagramm"),
         "features_title": "Warum MiaoYan",
         "features": [
@@ -406,6 +412,7 @@ COPY = {
         "devices_title": "Sur iPhone et iPad",
         "devices_lede": "Le même achat App Store fonctionne sur iPhone et iPad et ouvre le même dossier iCloud Drive que votre Mac.",
         "devices_cta": "Télécharger sur l'App Store",
+        "devices_scan": "Scanner avec un iPhone ou un iPad",
         "device_alts": ("MiaoYan sur iPhone affichant une note", "MiaoYan sur iPad affichant une note avec un diagramme"),
         "features_title": "Pourquoi MiaoYan",
         "features": [
@@ -462,6 +469,7 @@ COPY = {
         "devices_title": "En iPhone y iPad",
         "devices_lede": "La misma compra en el App Store funciona en iPhone y iPad y abre la misma carpeta de iCloud Drive que tu Mac.",
         "devices_cta": "Descargar en el App Store",
+        "devices_scan": "Escanea con tu iPhone o iPad",
         "device_alts": ("MiaoYan en iPhone leyendo una nota", "MiaoYan en iPad mostrando una nota con un diagrama"),
         "features_title": "Por qué MiaoYan",
         "features": [
@@ -992,7 +1000,7 @@ def page(key):
       <figure class="device phone"><img src="/assets/shots/{shot}-iphone.webp" width="700" height="1431" loading="lazy" alt="{esc(c['device_alts'][0])}"><figcaption>iPhone</figcaption></figure>
       <figure class="device pad"><img src="/assets/shots/{shot}-ipad.webp" width="1400" height="1826" loading="lazy" alt="{esc(c['device_alts'][1])}"><figcaption>iPad</figcaption></figure>
     </div>
-    <div class="cta devices-cta"><a class="btn btn-primary" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['devices_cta'])}</a></div>
+    <div class="cta devices-cta"><a class="btn btn-primary" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['devices_cta'])}</a><div class="store-qr"><img src="/assets/qr-app-store.svg" width="74" height="74" loading="lazy" alt=""><span>{esc(c['devices_scan'])}</span></div></div>
   </section>
 
   <section aria-labelledby="why-title">

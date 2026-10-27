@@ -334,7 +334,11 @@ section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
 .device { margin: 0; }
 .device.phone { width: 260px; }
 .device.pad { width: 520px; }
-.devices-cta { justify-content: center; margin-top: 32px; }
+.devices-cta { justify-content: center; align-items: center; gap: 12px 40px; margin-top: 32px; }
+.store-qr { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--stone); }
+.store-qr img { display: block; width: 74px; height: 74px; }
+/* A phone or tablet opens the store from the button; the code is for a desktop visitor. */
+@media (hover: none), (max-width: 560px) { .store-qr { display: none; } }
 .device figcaption { font-size: 13px; color: var(--stone); margin-top: 12px; text-align: center; }
 
 /* Feature cards */
@@ -654,7 +658,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
       <figure class="device phone"><img src="/assets/shots/en-iphone.webp" width="700" height="1431" loading="lazy" alt="iPhone에서 노트를 읽는 MiaoYan"><figcaption>iPhone</figcaption></figure>
       <figure class="device pad"><img src="/assets/shots/en-ipad.webp" width="1400" height="1826" loading="lazy" alt="iPad에서 다이어그램이 있는 노트를 보여 주는 MiaoYan"><figcaption>iPad</figcaption></figure>
     </div>
-    <div class="cta devices-cta"><a class="btn btn-primary" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store에서 받기</a></div>
+    <div class="cta devices-cta"><a class="btn btn-primary" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store에서 받기</a><div class="store-qr"><img src="/assets/qr-app-store.svg" width="74" height="74" loading="lazy" alt=""><span>iPhone이나 iPad로 스캔</span></div></div>
   </section>
 
   <section aria-labelledby="why-title">

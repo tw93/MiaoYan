@@ -312,7 +312,11 @@ section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
 .device { margin: 0; }
 .device.phone { width: 260px; }
 .device.pad { width: 520px; }
-.devices-cta { justify-content: center; margin-top: 32px; }
+.devices-cta { justify-content: center; align-items: center; gap: 12px 40px; margin-top: 32px; }
+.store-qr { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--stone); }
+.store-qr img { display: block; width: 74px; height: 74px; }
+/* A phone or tablet opens the store from the button; the code is for a desktop visitor. */
+@media (hover: none), (max-width: 560px) { .store-qr { display: none; } }
 .device figcaption { font-size: 13px; color: var(--stone); margin-top: 12px; text-align: center; }
 
 /* Feature cards */
