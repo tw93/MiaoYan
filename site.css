@@ -539,7 +539,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
    and the footer, meta 13 left as is. Home text sits on the same 16 as the
    articles it links to; desktop keeps its sizes. */
 @media (max-width: 640px) {
-  .lede, .section-lede, .blog-group-description, .faq p, .blog-body { font-size: 16px; }
+  .tagline, .lede, .section-lede, .blog-group-description, .faq p, .blog-body { font-size: 16px; }
   footer, .foot-mark p.foot-about, .contact .contact-desc, .contact-head b, .blog-card-desc { font-size: 15px; }
 }
 @media (max-width: 560px) {
