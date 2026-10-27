@@ -7,6 +7,12 @@ able to fail on a known-bad sample before its pass on the real ledger counts.
 import fnmatch
 import importlib.util
 import unittest
+import datetime
+import io
+import sys
+import tempfile
+from contextlib import redirect_stdout
+from unittest import mock
 from pathlib import Path
 
 SCRIPTS = Path(__file__).resolve().parent
@@ -131,6 +137,54 @@ class RiskTierTests(unittest.TestCase):
             for pattern in patterns:
                 with self.subTest(f"{name}: {pattern}"):
                     self.assertTrue(any(fnmatch.fnmatchcase(p, pattern) for p in tracked))
+
+
+class BreakerTests(unittest.TestCase):
+    """The incident circuit breaker in risk_tier.py: counted by Reported date, shown only beside a tier."""
+
+    TODAY = datetime.date(2026, 10, 27)
+
+    def ledger(self, dates_and_layers):
+        rows = "\n".join(f"| I-{n:02d} | {day} | symptom | unknown | abc1234 | {layer} | `t` |"
+                         for n, (day, layer) in enumerate(dates_and_layers, 1))
+        text = ("# Incidents\n\n| ID | Reported | Symptom |\n|---|---|---|\n| X-01 | 2026-10-27 | outside |\n\n"
+                "## Incidents\n\n| ID | Reported | Symptom | Introduced | Fixed | Layer | Caught by |\n"
+                f"|---|---|---|---|---|---|---|\n{rows}\n")
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        path = Path(directory.name) / "incidents.md"
+        path.write_text(text, "utf-8")
+        return path
+
+    def recent(self, dates_and_layers):
+        return risk.recent_incidents(today=self.TODAY, ledger=self.ledger(dates_and_layers))
+
+    def test_only_rows_reported_in_the_last_seven_days_count(self):
+        recent = self.recent([("2026-10-27", "unit"), ("2026-10-21", "unit"), ("2026-10-20", "unit"),
+                              ("2026-10-28", "unit")])
+        # Day 0 and day 6 count; day 7 has aged out; a future date (a clock set back) is never counted.
+        self.assertEqual(["I-01", "I-02"], [ident for ident, _ in recent])
+
+    def test_it_trips_at_five_rows_and_names_the_layers_by_count(self):
+        self.assertIsNone(risk.breaker_line(self.recent([("2026-10-26", "unit")] * 4)))
+        line = risk.breaker_line(self.recent([("2026-10-26", "review")] * 3 + [("2026-10-25", "unit")] * 2))
+        self.assertIn("5 incidents in the last 7 days", line)
+        self.assertIn(risk.BREAKER_GATE, line)
+        self.assertTrue(line.endswith("(review 3, unit 2)"), line)
+
+    def test_a_missing_ledger_never_trips_it(self):
+        self.assertEqual([], risk.recent_incidents(today=self.TODAY, ledger=Path("/nonexistent/incidents.md")))
+
+    def test_it_is_printed_only_beside_a_tier(self):
+        tripped = [("I-01", "unit")] * risk.BREAKER_ROWS
+        tiered = next(p for _, _, patterns in risk.TIERS for p in patterns if "*" not in p)
+        for paths, shown in ((["zz-untiered/none.txt"], False), ([tiered], True)):
+            with self.subTest(paths=paths), \
+                    mock.patch.object(risk, "recent_incidents", return_value=tripped), \
+                    mock.patch.object(sys, "argv", ["risk_tier.py", *paths]), \
+                    redirect_stdout(io.StringIO()) as out:
+                risk.main(paths) if risk.main.__code__.co_argcount else risk.main()
+                self.assertEqual(shown, "risk: breaker" in out.getvalue(), out.getvalue())
 
 
 if __name__ == "__main__":

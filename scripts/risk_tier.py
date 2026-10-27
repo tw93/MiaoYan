@@ -12,9 +12,11 @@ holds someone else's work, pass your own files. It reads git and writes nothing.
 
 from __future__ import annotations
 
+import datetime as dt
 import fnmatch
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -71,10 +73,60 @@ def tiers_for(paths: list[str]) -> list[tuple[str, str, list[str]]]:
     return hits
 
 
+# Circuit breaker: once users met BREAKER_ROWS defects within BREAKER_DAYS (docs/incidents.md, by Reported date),
+# every change that reaches a tier also needs the full gate, and the layers those defects slipped past are named
+# so they are tightened first. It clears on its own as the rows age out; a future date is never counted.
+BREAKER_DAYS, BREAKER_ROWS = 7, 5
+BREAKER_GATE = 'the whole `xcodebuild test` and `swift test --package-path Packages/MiaoYanCore` instead of single tests, and the maintainer reading each listed fix before the next release'
+LEDGER = ROOT / 'docs/incidents.md'
+
+
+def recent_incidents(today: dt.date | None = None, ledger: Path | None = None) -> list[tuple[str, str]]:
+    """(ID, layer) of every ledger row reported within the last BREAKER_DAYS days."""
+    today = today or dt.date.today()
+    try:
+        text = (ledger or LEDGER).read_text("utf-8")
+    except OSError:
+        return []
+    header: list[str] | None = None
+    found = []
+    for line in text.split("\n## Incidents", 1)[-1].splitlines():
+        if not line.startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if header is None:
+            header = cells
+            continue
+        if set("".join(cells)) <= set("-: "):
+            continue
+        row = dict(zip(header, cells))
+        try:
+            age = (today - dt.date.fromisoformat(row.get("Reported", ""))).days
+        except ValueError:
+            continue
+        if 0 <= age < BREAKER_DAYS:
+            found.append((row.get("ID", ""), row.get("Layer", "")))
+    return found
+
+
+def breaker_line(recent: list[tuple[str, str]]) -> str | None:
+    if len(recent) < BREAKER_ROWS:
+        return None
+    ids = ", ".join(ident for ident, _ in recent)
+    layers = ", ".join(f"{layer} {count}" for layer, count in Counter(layer for _, layer in recent).most_common())
+    return (f"risk: breaker ({len(recent)} incidents in the last {BREAKER_DAYS} days: {ids}): until the rate drops "
+            f"every tiered change needs {BREAKER_GATE}; tighten first the layers they slipped past ({layers})")
+
+
 def main(argv: list[str]) -> int:
-    for name, gates, matched in tiers_for(argv or pending_paths()):
+    paths = argv or pending_paths()
+    hits = tiers_for(paths)
+    for name, gates, matched in hits:
         more = f" and {len(matched) - 1} more" if len(matched) > 1 else ""
         print(f"risk: {name} ({matched[0]}{more}) needs {gates}")
+    breaker = breaker_line(recent_incidents())
+    if hits and breaker:
+        print(breaker)
     return 0
 
 
