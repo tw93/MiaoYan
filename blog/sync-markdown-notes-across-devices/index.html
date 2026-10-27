@@ -417,7 +417,9 @@ section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
 }
 .contact-card:active { border-color: var(--line); background: linear-gradient(180deg, var(--ivory) 0%, var(--parchment) 100%); }
 @media (prefers-reduced-motion: reduce) { .contact-glyph, .contact-avatar { transition: none; } }
-@media (max-width: 560px) { .contact-cards { grid-template-columns: 1fr; } }
+/* Two cards side by side squeezed their lines into four or five rows on a
+   640 to 700 tablet; mole.fit goes to one column below 700. */
+@media (max-width: 700px) { .contact-cards { grid-template-columns: 1fr; } }
 @media (max-width: 340px) {
   .contact-head { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
   .contact-channel { grid-column: 1; grid-row: 1 / span 2; }
