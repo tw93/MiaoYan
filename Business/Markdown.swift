@@ -27,11 +27,22 @@ private let katexIgnoredHTMLRegex: NSRegularExpression = {
     return regex
 }()
 
+/// Precedes a newline inside protected math. Under the MiaoYan line-break mode
+/// cmark turns every newline in a paragraph into `<br />`, which splits a
+/// multi-line `\[ \]`, `\( \)` or mid-paragraph `$$` across text nodes, and
+/// KaTeX's auto-render never pairs delimiters across nodes. The render drops
+/// the marker together with the break it caused, so math reads the same in
+/// both line-break modes. The caller marks only notes that do not already hold
+/// this private-use scalar, so stripping it never removes the note's own text.
+private let mathLineBreakMarker: Unicode.Scalar = "\u{E000}"
+
 /// Shields math from Markdown emphasis, code, link, and raw-HTML parsing.
 /// KaTeX receives the original text because cmark/marked decode numeric HTML
 /// entities after their Markdown pass. Newlines stay literal so source line
-/// positions and the existing display-math line-break cleanup remain stable.
-func protectMarkdownMath(_ markdown: String) -> String {
+/// positions remain stable; with `marksLineBreaks` each line inside math that
+/// is not blank ends in `mathLineBreakMarker`, and a blank line still ends
+/// the paragraph as before.
+func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false) -> String {
     guard markdown.contains("$") || markdown.contains("\\(") || markdown.contains("\\[") else {
         return markdown
     }
@@ -62,8 +73,13 @@ func protectMarkdownMath(_ markdown: String) -> String {
         }
 
         appendProtectedMathScalars(delimiter.left, to: &protected)
+        var previous: Unicode.Scalar?
         for scalar in scalars[(index + delimiter.left.count)..<end] {
+            if marksLineBreaks, isLineBreak(scalar), !(previous.map(isLineBreak) ?? false) {
+                protected.unicodeScalars.append(mathLineBreakMarker)
+            }
             appendProtectedMathScalar(scalar, to: &protected)
+            previous = scalar
         }
         appendProtectedMathScalars(delimiter.right, to: &protected)
         index = end + delimiter.right.count
@@ -181,8 +197,12 @@ private func appendProtectedMathScalars(_ scalars: [Unicode.Scalar], to output: 
     }
 }
 
+private func isLineBreak(_ scalar: Unicode.Scalar) -> Bool {
+    scalar.value == 10 || scalar.value == 13
+}
+
 private func appendProtectedMathScalar(_ scalar: Unicode.Scalar, to output: inout String) {
-    if scalar.value == 10 || scalar.value == 13 {
+    if isLineBreak(scalar) {
         output.unicodeScalars.append(scalar)
     } else {
         output.append(contentsOf: "&#\(scalar.value);")
@@ -353,7 +373,8 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
         }
     }
 
-    let protectedMarkdown = protectMarkdownMath(markdown)
+    let marksMathLineBreaks = !markdown.unicodeScalars.contains(mathLineBreakMarker)
+    let protectedMarkdown = protectMarkdownMath(markdown, marksLineBreaks: marksMathLineBreaks)
     cmark_parser_feed(parser, protectedMarkdown, protectedMarkdown.utf8.count)
     guard let node = cmark_parser_finish(parser) else { return nil }
     defer { cmark_node_free(node) }
@@ -363,6 +384,10 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_NOBREAKS | CMARK_OPT_SOURCEPOS, nil))
     } else {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS | CMARK_OPT_SOURCEPOS, nil))
+    }
+    if marksMathLineBreaks {
+        let marker = String(mathLineBreakMarker)
+        res = res.replacingOccurrences(of: marker + "<br />", with: "").replacingOccurrences(of: marker, with: "")
     }
 
     // Match <p> with or without data-sourcepos attribute, capture both to preserve the attrs.

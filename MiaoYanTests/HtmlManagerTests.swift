@@ -106,6 +106,43 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertFalse(html.contains("<strong>"))
     }
 
+    func testMathLineBreaksDoNotDependOnTheLineBreakMode() throws {
+        let markdown = #"""
+            Prose one
+            prose two
+
+            \[
+            \boxed{z_{ih}^s\le y_h^s,\quad \forall i,h}\tag{6}
+            \]
+
+            Lead \(a
+            b\) tail
+            $$
+            x^2
+            $$
+
+            After
+            """#
+        for useGithubLineBreak in [false, true] {
+            let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak))
+            let mode = useGithubLineBreak ? "Github" : "MiaoYan"
+            for (open, close) in [(#"\["#, #"\]"#), (#"\("#, #"\)"#), ("$$", "$$")] {
+                let start = try XCTUnwrap(html.range(of: open), "\(mode) \(open)")
+                let end = try XCTUnwrap(html.range(of: close, range: start.upperBound..<html.endIndex), "\(mode) \(close)")
+                XCTAssertFalse(html[start.lowerBound..<end.upperBound].contains("<br"), "\(mode) \(open)")
+            }
+            XCTAssertFalse(html.unicodeScalars.contains("\u{E000}"), mode)
+            XCTAssertTrue(html.contains(#"<p data-sourcepos="14:1-14:5">After</p>"#), "\(mode): \(html)")
+            XCTAssertEqual(html.contains("Prose one<br />"), !useGithubLineBreak, mode)
+        }
+    }
+
+    func testMathLineBreakMarkerNeverStripsANotesOwnText() throws {
+        let markdown = "keep \u{E000} here\n\n$$\nx^2\n$$"
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        XCTAssertTrue(html.contains("keep \u{E000} here"))
+    }
+
     func testMathProtectionLeavesCodeEscapesAndUnclosedRangesUntouched() throws {
         let inlineCode = "`$inline_code$`"
         let fencedCode = """
@@ -291,6 +328,27 @@ final class MathRenderingRuntimeTests: XCTestCase {
         try await assertKaTeXRendered(page: try writePPTPage())
     }
 
+    @MainActor
+    func testMultiLineMathRendersInTheMiaoYanLineBreakMode() async throws {
+        let markdown = #"""
+            客户只能分配给启用站点
+
+            \[
+            \boxed{z_{ih}^s\le y_h^s,\quad \forall i,h}\tag{6}
+            \]
+
+            Lead \(a
+            b\) tail
+            $$
+            x^2
+            $$
+            """#
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        let page = try writePreviewPage(markdownHTML: html)
+        let count = try await renderedKaTeXCount(page: page)
+        XCTAssertEqual(count, 3, html)
+    }
+
     private func writePreviewPage(markdownHTML: String) throws -> URL {
         let jsDirectory = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
         let page = """
@@ -348,6 +406,25 @@ final class MathRenderingRuntimeTests: XCTestCase {
         let url = tempDirectory.appendingPathComponent("\(named).html")
         try page.write(to: url, atomically: true, encoding: .utf8)
         return url
+    }
+
+    @MainActor
+    private func renderedKaTeXCount(page: URL) async throws -> Int {
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(page, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if let done = try? await webView.evaluateJavaScript(
+                "document.readyState === 'complete' && window.__miaoyanMathDone === true") as? Bool,
+                done
+            {
+                let count = try await webView.evaluateJavaScript("document.querySelectorAll('.katex').length")
+                return try XCTUnwrap(count as? Int)
+            }
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTFail("Timed out waiting for KaTeX in \(page.lastPathComponent)")
+        return 0
     }
 
     @MainActor
