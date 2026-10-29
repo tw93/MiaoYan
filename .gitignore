@@ -111,7 +111,7 @@ fonts/
 !Resources/Fonts/
 
 # AI agent files
-# CLAUDE.md and AGENTS.md are committed (CLAUDE.md is a symlink to AGENTS.md);
+# AGENTS.md is committed (Claude Code reads it directly, no CLAUDE.md);
 # only the per-user overrides and private skills stay local.
 CLAUDE.local.md
 AGENTS.override.md

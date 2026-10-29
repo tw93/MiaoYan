@@ -1,8 +1,7 @@
 # MiaoYan Agent Guide
 
-> `CLAUDE.md` is a symlink to this file. Claude Code and Codex (and any other
-> agent reading `AGENTS.md`) share this single source so the guide stays
-> in sync.
+> Claude Code and Codex (and any other agent reading `AGENTS.md`) share this
+> single file; there is no `CLAUDE.md`.
 >
 > Claude-specific assets:
 > - 全局规则: `~/.claude/CLAUDE.md`

@@ -172,6 +172,5 @@ Bundled JS used by the preview is vendored under
 ## See Also
 
 - `AGENTS.md` - agent-facing repo guide (commands, hot files, current risk areas)
-- `CLAUDE.md` - symlink to `AGENTS.md`
 - `.claude/rules/swift.md` - project-level Swift conventions
 - `~/.claude/CLAUDE.md` - global rules (writing style, commit policy, git safety)
