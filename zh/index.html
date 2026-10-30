@@ -166,7 +166,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 .wrap { max-width: calc(var(--page) + var(--inset) * 2); margin: 0 auto; padding: 0 var(--inset); }
 
-/* Nav: a translucent ivory pill, as on mole.fit. */
+/* Nav: a solid ivory pill, as on mole.fit. */
 .nav { position: sticky; top: 16px; z-index: 10; margin: 16px -14px 60px; }
 /* Covers content scrolling under the sticky pill, as mole.fit does. */
 .nav::before {
@@ -177,8 +177,7 @@ img { display: block; max-width: 100%; height: auto; }
 .nav-bar {
   display: flex; align-items: center; gap: 20px; min-height: 55px;
   padding: 10px 14px; border-radius: 999px;
-  background: color-mix(in srgb, var(--ivory) 82%, transparent);
-  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  background: var(--ivory);
   border: 1px solid var(--line);
 }
 .brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--near-black); flex: none; }
@@ -223,8 +222,7 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   position: absolute; top: calc(100% + 8px); right: 0; width: 150px;
   display: grid; gap: 1px; padding: 6px;
   border: 1px solid var(--line); border-radius: 8px;
-  background: color-mix(in srgb, var(--ivory) 94%, transparent);
-  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  background: var(--ivory);
   box-shadow: 0 8px 24px rgba(20, 19, 19, 0.08);
   opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-4px);
   transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
