@@ -110,6 +110,7 @@ def regenerate():
             check=True,
         )
         text_file.unlink()
+        rename_reserved(out)
         print(f"  fonts/{out.name}  {len(chars)} glyphs  {out.stat().st_size / 1024:.0f} KB")
     subprocess.run(
         [
@@ -118,8 +119,52 @@ def regenerate():
         ],
         check=True,
     )
+    rename_reserved(MARK_FILE)
     print(f"  fonts/{MARK_FILE.name}  1 glyph  {MARK_FILE.stat().st_size / 1024:.0f} KB")
     return 0
+
+
+# Source is a Reserved Font Name under the OFL and a subset is a Modified
+# Version, so a cut font may not keep Adobe's names (2026-10-30). The copyright
+# and licence records (name IDs 0, 13, 14) stay as they are.
+PRODUCT = "MiaoYan"
+RESERVED = ("Source Han Serif", "SourceHanSerif")
+
+
+def _renamed(text):
+    return text.replace(RESERVED[0], f"{PRODUCT} Serif").replace(RESERVED[1], f"{PRODUCT}Serif")
+
+
+def _cff_dicts(font):
+    top = font["CFF "].cff.topDictIndex[0]
+    return [top] + list(getattr(top, "FDArray", None) or [])
+
+
+def rename_reserved(path):
+    from fontTools.ttLib import TTFont
+    font = TTFont(path, recalcTimestamp=False)
+    for rec in font["name"].names:
+        if rec.nameID not in (0, 13, 14):
+            rec.string = _renamed(rec.toUnicode())
+    if "CFF " in font:
+        cff = font["CFF "].cff
+        cff.fontNames = [_renamed(n) for n in cff.fontNames]
+        for d in _cff_dicts(font):
+            for key in ("FullName", "FamilyName", "FontName"):
+                if isinstance(getattr(d, key, None), str):
+                    setattr(d, key, _renamed(getattr(d, key)))
+    font.save(path)
+
+
+def reserved_names(path):
+    from fontTools.ttLib import TTFont
+    font = TTFont(path)
+    names = [r.toUnicode() for r in font["name"].names if r.nameID not in (0, 13, 14)]
+    if "CFF " in font:
+        names += font["CFF "].cff.fontNames
+        names += [getattr(d, k) for d in _cff_dicts(font) for k in ("FullName", "FamilyName", "FontName")
+                  if isinstance(getattr(d, k, None), str)]
+    return [n for n in names if _renamed(n) != n]
 
 
 def check():
@@ -146,6 +191,11 @@ def check():
     if not MARK_FILE.exists():
         print(f"missing font subset: fonts/{MARK_FILE.name}", file=sys.stderr)
         failed = True
+    for path in sorted(FONT_DIR.glob("*.woff2")):
+        found = reserved_names(path)
+        if found:
+            print(f"fonts/{path.name} still carries a reserved font name ({found[0]}); regenerate it", file=sys.stderr)
+            failed = True
     if failed:
         return 1
     print("site-fonts-ok")
