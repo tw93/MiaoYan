@@ -31,6 +31,27 @@ final class VisualRulesGateTests: XCTestCase {
         }
     }
 
+    /// A SwiftUI chevron takes a named size (`Theme.Metrics.rowChevron`), not a literal (sumi principle 5).
+    func testChevronsNameTheirSize() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Shell")
+        let files = try XCTUnwrap(FileManager.default.enumerator(at: root, includingPropertiesForKeys: nil))
+            .compactMap { $0 as? URL }
+            .filter { $0.pathExtension == "swift" }
+        XCTAssertGreaterThan(files.count, 4)
+        // A chevron glyph whose next line sets a literal point size.
+        let literal = try NSRegularExpression(pattern: #""chevron\.[a-z.]+"\)\s*\n\s*\.font\(\.system\(size: *[0-9]"#)
+        var found: [String] = []
+        for file in files {
+            let text = try String(contentsOf: file, encoding: .utf8)
+            let range = NSRange(text.startIndex..., in: text)
+            for match in literal.matches(in: text, range: range) {
+                found.append("\(file.lastPathComponent): \((text as NSString).substring(with: match.range))")
+            }
+        }
+        XCTAssertEqual(found, [])
+    }
+
     func testQuotesAndAlertsHaveNoLeftStripe() throws {
         let stripe = #"border-left\s*:\s*[1-9]"#
         for name in sheets {

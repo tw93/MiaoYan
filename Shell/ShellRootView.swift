@@ -265,7 +265,7 @@ private struct ShellSidebarRow: View {
             Spacer(minLength: 0)
             if row.hasChildren, let folder {
                 SwiftUI.Image(systemName: "chevron.right")
-                    .font(.system(size: 9, weight: .semibold))
+                    .font(.system(size: Theme.Metrics.rowChevron, weight: .semibold))
                     .foregroundStyle(ShellStyle.icon)
                     .rotationEffect(.degrees(model.isExpanded(folder.url) ? 90 : 0))
                     .frame(width: 18, height: 22)
