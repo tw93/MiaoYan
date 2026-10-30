@@ -570,12 +570,12 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   /* Phone hero buttons keep their label's width and share one row (maintainer
      2026-10-27: 不要两行，控制一行就好了) with a 6px icon gap, labels short
      enough for every language to fit from 360px (French from 375); a label
-     that does not fit is shortened, never truncated. 40px tall with 22px sides
-     and at least 128px wide (maintainer 2026-10-30, from rendered candidates:
+     that does not fit is shortened, never truncated. 42px tall with 22px sides,
+     at least 128px wide and 12px apart (maintainer 2026-10-30, from rendered candidates:
      44 read tall and label-width pills read narrow), 14px sides under 375px.
      The hairline stays: this site's --line is already the lighter #e4e1d6. */
-  .hero-cta { gap: 8px; }
-  .hero-cta .btn { width: auto; flex: 0 0 auto; min-width: 128px; height: 40px; padding: 0 22px; gap: 6px; white-space: nowrap; }
+  .hero-cta { gap: 12px; }
+  .hero-cta .btn { width: auto; flex: 0 0 auto; min-width: 128px; height: 42px; padding: 0 22px; gap: 6px; white-space: nowrap; }
   /* French carries the two longest labels beside their icons and keeps 14px
      sides, so it still shares one row at 393 (from 375, as before). */
   html[lang="fr"] .hero-cta .btn { padding: 0 14px; }
