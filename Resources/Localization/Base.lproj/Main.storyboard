@@ -132,7 +132,7 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Zbi-vT-xIA"/>
-                                        <menuItem title="Delete" identifier="fileMenu.delete" id="TjZ-PX-YVo">
+                                        <menuItem title="Move to Trash" identifier="fileMenu.delete" id="TjZ-PX-YVo">
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
@@ -1113,7 +1113,7 @@ CA
                                 <action selector="renameMenu:" target="XfG-lQ-9wD" id="iYK-OA-0IW"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Delete" id="fHG-zk-g0k">
+                        <menuItem title="Move to Trash" id="fHG-zk-g0k">
                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
@@ -1189,7 +1189,7 @@ CA
                                 <action selector="openInTerminal:" target="XfG-lQ-9wD" id="OiT-02-act"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Delete Folder" id="RwR-P0-ycK">
+                        <menuItem title="Move to Trash" id="RwR-P0-ycK">
                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>

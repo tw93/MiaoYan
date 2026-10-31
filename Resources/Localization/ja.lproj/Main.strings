@@ -332,8 +332,8 @@
 /* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
 "Ruw-6m-B2m.title" = "全て選択";
 
-/* Class = "NSMenuItem"; title = "Delete Folder"; ObjectID = "RwR-P0-ycK"; */
-"RwR-P0-ycK.title" = "フォルダを削除";
+/* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "RwR-P0-ycK"; */
+"RwR-P0-ycK.title" = "ゴミ箱に移動";
 
 /* Class = "NSMenuItem"; title = "Jump to Selection"; ObjectID = "S0p-oC-mLd"; */
 "S0p-oC-mLd.title" = "選択範囲にジャンプする";
@@ -359,8 +359,8 @@
 /* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "Tap-iY-hyA"; */
 "Tap-iY-hyA.title" = "フォルダ名変更";
 
-/* Class = "NSMenuItem"; title = "Delete"; ObjectID = "TjZ-PX-YVo"; */
-"TjZ-PX-YVo.title" = "削除";
+/* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "TjZ-PX-YVo"; */
+"TjZ-PX-YVo.title" = "ゴミ箱に移動";
 
 /* Class = "NSMenuItem"; title = "Picsee"; ObjectID = "Tog-9P-3TK"; */
 "Tog-9P-3TK.title" = "Picsee";
@@ -458,8 +458,8 @@
 /* Class = "NSMenuItem"; title = "26"; ObjectID = "f5H-KF-hxw"; */
 "f5H-KF-hxw.title" = "26";
 
-/* Class = "NSMenuItem"; title = "Delete"; ObjectID = "fHG-zk-g0k"; */
-"fHG-zk-g0k.title" = "削除";
+/* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "fHG-zk-g0k"; */
+"fHG-zk-g0k.title" = "ゴミ箱に移動";
 
 /* Class = "NSMenuItem"; title = "28"; ObjectID = "fNR-Rx-1mp"; */
 "fNR-Rx-1mp.title" = "28";

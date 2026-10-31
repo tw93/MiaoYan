@@ -15,7 +15,7 @@
 "Saved" = "已儲存";
 "Changed on disk. Your version was backed up" = "檢測到外部修改，本地內容已備份";
 "Can't switch notes while exporting" = "匯出過程中無法切換筆記";
-"Couldn't move %d note(s) to Trash" = "%d 篇筆記未能移入垃圾桶，可能受權限或同步限制";
+"Couldn't move %d note(s) to Trash" = "%d 篇筆記未能移到廢紙簍，可能受權限或同步限制";
 "Uploading image…" = "正在上傳圖片";
 "Upload failed. The local image was kept" = "圖片上傳失敗，改放在本機端，可手動上傳";
 "Install and set up %@ first" = "請確定你的 Mac 已經安裝並設定好 %@";
@@ -34,7 +34,7 @@
 "Add" = "加入";
 
 /* No comment provided by engineer. */
-"Move %d note(s) to the system Trash?" = "將 %d 篇筆記移入系統廢紙簍？";
+"Move %d note(s) to the system Trash?" = "將 %d 篇筆記移到系統廢紙簍？";
 
 /* No comment provided by engineer. */
 
@@ -53,10 +53,8 @@
 "Copy Plain Text" = "拷貝純文字";
 
 /* No comment provided by engineer. */
-"Delete" = "刪除";
 
 /* No comment provided by engineer. */
-"Delete Folder" = "刪除檔案夾";
 
 /* No comment provided by engineer. */
 "Edit Link…" = "編輯連結…";
@@ -120,7 +118,7 @@
 "Remove Link" = "移除連結";
 
 /* No comment provided by engineer. */
-"Move to Trash" = "移入廢紙簍";
+"Move to Trash" = "移到廢紙簍";
 
 /* No comment provided by engineer. */
 "Rename Folder" = "重新命名檔案夾";
@@ -142,7 +140,7 @@
 /* Delete menu */
 
 /* Sidebar label */
-"Trash" = "垃圾桶";
+"Trash" = "廢紙簍";
 
 /* Untitled Note */
 "Untitled Note" = "未命名筆記";
@@ -306,8 +304,8 @@
 "Presentation Font Size" = "簡報字體大小";
 "Used for MiaoYan PPT slides" = "用於妙言 PPT 投影片";
 "All Notes" = "全部";
-"Move the folder “%@” and everything in it to the Trash?" = "將「%@」檔案夾連同裡面的內容一起移入廢紙簍？";
-"Move %d unused attachment(s) to Trash?" = "將 %d 個未使用的附件移入廢紙簍？";
+"Move the folder “%@” and everything in it to the Trash?" = "將「%@」檔案夾連同裡面的內容一起移到廢紙簍？";
+"Move %d unused attachment(s) to Trash?" = "將 %d 個未使用的附件移到廢紙簍？";
 "No unused attachments" = "沒有未使用的附件";
 "Title not saved. Click it again to rename" = "標題未儲存，再點一次標題即可重新命名";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言無法讀取這個檔案夾，如果它在雲端硬碟裡，開啟雲端硬碟 App 並確認它在 Finder 中可見。";

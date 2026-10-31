@@ -202,8 +202,8 @@
 /* Class = "NSMenu"; title = "Substitutions"; ObjectID = "FeM-D8-WVr"; */
 "FeM-D8-WVr.title" = "替换";
 
-/* Class = "NSMenuItem"; title = "Delete"; ObjectID = "fHG-zk-g0k"; */
-"fHG-zk-g0k.title" = "删除";
+/* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "fHG-zk-g0k"; */
+"fHG-zk-g0k.title" = "移到废纸篓";
 
 /* Class = "NSMenuItem"; title = "Zoom"; ObjectID = "FQV-5x-ffs"; */
 "FQV-5x-ffs.title" = "缩放";
@@ -352,14 +352,14 @@
 /* Class = "NSMenuItem"; title = "System"; ObjectID = "rSZ-Wo-Rtj"; */
 "rSZ-Wo-Rtj.title" = "跟随系统";
 
-/* Class = "NSMenuItem"; title = "Delete Folder"; ObjectID = "RuM-sf-kcZ"; */
-"RuM-sf-kcZ.title" = "删除文件夹";
+/* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "RuM-sf-kcZ"; */
+"RuM-sf-kcZ.title" = "移到废纸篓";
 
 /* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
 "Ruw-6m-B2m.title" = "选择全部";
 
-/* Class = "NSMenuItem"; title = "Delete Folder"; ObjectID = "RwR-P0-ycK"; */
-"RwR-P0-ycK.title" = "删除文件夹";
+/* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "RwR-P0-ycK"; */
+"RwR-P0-ycK.title" = "移到废纸篓";
 
 /* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "rXU-X3-UjC"; */
 "rXU-X3-UjC.title" = "在 Finder 中显示";
@@ -391,8 +391,8 @@
 /* Class = "NSButtonCell"; title = "Descending"; ObjectID = "TCI-Xs-mwm"; */
 "TCI-Xs-mwm.title" = "降序";
 
-/* Class = "NSMenuItem"; title = "Delete"; ObjectID = "TjZ-PX-YVo"; */
-"TjZ-PX-YVo.title" = "删除";
+/* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "TjZ-PX-YVo"; */
+"TjZ-PX-YVo.title" = "移到废纸篓";
 
 /* Class = "NSTabViewController"; title = "Preferences"; ObjectID = "tR0-Uj-4tB"; */
 "tR0-Uj-4tB.title" = "偏好设置";

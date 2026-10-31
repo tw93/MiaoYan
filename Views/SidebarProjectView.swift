@@ -12,7 +12,7 @@ private enum UIConstants {
 private enum MenuTitles {
     static let showInFinder = I18n.str("Show in Finder")
     static let renameFolder = I18n.str("Rename Folder")
-    static let deleteFolder = I18n.str("Delete Folder")
+    static let deleteFolder = I18n.str("Move to Trash")
     static let newSubfolder = I18n.str("New Subfolder")
     static let openInTerminal = I18n.str("Open in Terminal")
 }

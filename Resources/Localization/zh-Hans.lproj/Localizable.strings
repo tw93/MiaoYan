@@ -5,7 +5,7 @@
 "Add" = "添加";
 
 /* No comment provided by engineer. */
-"Move %d note(s) to the system Trash?" = "将 %d 篇笔记移入系统废纸篓？";
+"Move %d note(s) to the system Trash?" = "将 %d 篇笔记移到系统废纸篓？";
 
 /* No comment provided by engineer. */
 
@@ -22,10 +22,8 @@
 "Copy Plain Text" = "拷贝纯文本";
 
 /* No comment provided by engineer. */
-"Delete" = "删除";
 
 /* No comment provided by engineer. */
-"Delete Folder" = "删除文件夹";
 
 /* No comment provided by engineer. */
 "MiaoYan [preview]" = "妙言 [预览]";
@@ -75,7 +73,7 @@
 /* Delete menu */
 
 /* No comment provided by engineer. */
-"Move to Trash" = "移入废纸篓";
+"Move to Trash" = "移到废纸篓";
 
 /* No comment provided by engineer. */
 "Rename Folder" = "重命名文件夹";
@@ -139,7 +137,7 @@
 "Saved" = "已保存";
 "Changed on disk. Your version was backed up" = "检测到外部修改，本地内容已备份";
 "Can't switch notes while exporting" = "导出过程中无法切换笔记";
-"Couldn't move %d note(s) to Trash" = "%d 篇笔记未能移入废纸篓，可能受权限或同步限制";
+"Couldn't move %d note(s) to Trash" = "%d 篇笔记未能移到废纸篓，可能受权限或同步限制";
 "Uploading image…" = "图片上传中…";
 "Upload failed. The local image was kept" = "图片上传失败，已保留本地路径";
 "Install and set up %@ first" = "请先安装并配置 %@";
@@ -332,8 +330,8 @@
 "Presentation Font Size" = "演示字号";
 "Used for MiaoYan PPT slides" = "用于妙言 PPT 幻灯片";
 "All Notes" = "全部";
-"Move the folder “%@” and everything in it to the Trash?" = "将“%@”文件夹连同里面的内容一起移入废纸篓？";
-"Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移入废纸篓？";
+"Move the folder “%@” and everything in it to the Trash?" = "将“%@”文件夹连同里面的内容一起移到废纸篓？";
+"Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移到废纸篓？";
 "No unused attachments" = "没有未使用的附件";
 "Title not saved. Click it again to rename" = "标题未保存，再点一次标题即可重命名";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在访达中可见。";

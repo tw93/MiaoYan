@@ -314,7 +314,7 @@ private struct ShellSidebarRow: View {
                 item("Open in Terminal", "terminal") { openInTerminal() }
                 if !folder.isDefault && !folder.isRoot {
                     Divider()
-                    item("Delete Folder", "trash") { model.confirmDeleteFolder(folder) }
+                    item("Move to Trash", "trash") { model.confirmDeleteFolder(folder) }
                 }
             } else if row.kind == .Trash, let trash = AppEnvironment.current.storage.getDefaultTrash() {
                 item("Show in Finder", "folder") { NSWorkspace.shared.activateFileViewerSelecting([trash.url]) }
@@ -1021,7 +1021,7 @@ private struct ShellNoteMenu: View {
                     model.isRenaming = true
                 }
             }
-            item("Delete", "trash") { delete() }
+            item("Move to Trash", "trash") { delete() }
             Menu {
                 item("HTML", "chevron.left.forwardslash.chevron.right") { exportSelecting(.html) }
                 item("Image", "photo") { exportSelecting(.image) }

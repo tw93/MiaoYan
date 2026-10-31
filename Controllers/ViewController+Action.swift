@@ -458,7 +458,7 @@ extension ViewController {
 
                 if let ntv = vc.notesTableView {
                     undoManager.registerUndo(withTarget: ntv, selector: #selector(ntv.unDelete), object: urls)
-                    undoManager.setActionName(I18n.str("Delete"))
+                    undoManager.setActionName(I18n.str("Move to Trash"))
                 }
 
                 UserDataService.instance.searchTrigger = false
