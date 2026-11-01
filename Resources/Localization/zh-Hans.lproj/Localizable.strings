@@ -167,7 +167,7 @@
 "Editor Behavior" = "编辑器行为";
 "Preview Settings" = "预览设置";
 "Preview" = "预览";
-"Code Background:" = "代码背景:";
+"Code Background:" = "代码背景：";
 
 /* Interface Settings */
 
@@ -229,7 +229,7 @@
 "Move Images to Trash" = "将图片移到废纸篓";
 "Restore Images" = "还原图片";
 "Quit" = "退出";
-"Formatting... click again to cancel" = "正在排版...再次点击可取消";
+"Formatting... click again to cancel" = "正在排版…再次点击可取消";
 
 /* Always On Top */
 "Window stays on top" = "窗口已置顶";
@@ -241,7 +241,7 @@
 
 /* File Operations */
 "Duplicate note name" = "笔记名称重复";
-"Note \"%@\" already exists" = "笔记 \"%@\" 已存在";
+"Note \"%@\" already exists" = "笔记「%@」已存在";
 "Please select default storage directory" = "请选择默认存储目录";
 "Select Markdown files or folders to import" = "选择要导入的 Markdown 文件或文件夹";
 "No Markdown files to import" = "没有可导入的 Markdown 文件";
@@ -330,11 +330,11 @@
 "Presentation Font Size" = "演示字号";
 "Used for MiaoYan PPT slides" = "用于妙言 PPT 幻灯片";
 "All Notes" = "全部";
-"Move the folder “%@” and everything in it to the Trash?" = "将“%@”文件夹连同里面的内容一起移到废纸篓？";
+"Move the folder “%@” and everything in it to the Trash?" = "将「%@」文件夹连同里面的内容一起移到废纸篓？";
 "Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移到废纸篓？";
 "No unused attachments" = "没有未使用的附件";
 "Title not saved. Click it again to rename" = "标题未保存，再点一次标题即可重命名";
-"MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在访达中可见。";
+"MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在 Finder 中可见。";
 "Keep this window above other apps" = "窗口始终显示在其他应用上方";
 "Where the preview starts when you open it" = "打开预览时从哪里开始显示";
 "How wide the text runs in the preview" = "预览中正文的最大宽度";

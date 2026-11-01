@@ -174,7 +174,7 @@
 "Underline" = "底線";
 "URL has been copied to clipboard" = "URL已複製到剪貼簿";
 "Preview Settings" = "預覽設定";
-"Code Background:" = "程式碼背景:";
+"Code Background:" = "程式碼背景：";
 
 /* Preview Search Bar */
 "Previous" = "上一個";
@@ -200,7 +200,7 @@
 "Move Images to Trash" = "將圖片移到廢紙簍";
 "Restore Images" = "還原圖片";
 "Quit" = "結束";
-"Formatting... click again to cancel" = "正在排版...再次點擊可取消";
+"Formatting... click again to cancel" = "正在排版…再次點擊可取消";
 "Format" = "排版";
 "Presentation" = "演示";
 "Toggle Note List" = "列表";
@@ -217,7 +217,7 @@
 
 /* File Operations */
 "Duplicate note name" = "筆記名稱重複";
-"Note \"%@\" already exists" = "筆記 \"%@\" 已存在";
+"Note \"%@\" already exists" = "筆記「%@」已存在";
 "Please select default storage directory" = "請選擇預設儲存目錄";
 "Select Markdown files or folders to import" = "選擇要匯入的 Markdown 檔案或資料夾";
 "No Markdown files to import" = "沒有找到可匯入的 Markdown 檔案";

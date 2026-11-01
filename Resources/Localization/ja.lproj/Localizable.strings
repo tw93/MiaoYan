@@ -197,7 +197,7 @@
 
 /* Missing translations */
 "Preview Settings" = "プレビュー設定";
-"Code Background:" = "コード背景:";
+"Code Background:" = "コード背景：";
 
 /* Preview Search Bar */
 "Previous" = "前へ";
@@ -224,7 +224,7 @@
 "Move Images to Trash" = "画像をゴミ箱に移動";
 "Restore Images" = "画像を復元";
 "Quit" = "終了";
-"Formatting... click again to cancel" = "整形中...もう一度クリックでキャンセル";
+"Formatting... click again to cancel" = "整形中…もう一度クリックでキャンセル";
 "Format" = "整形";
 "Presentation" = "プレゼン";
 "Toggle Note List" = "リスト";
@@ -240,7 +240,7 @@
 
 /* File Operations */
 "Duplicate note name" = "ノート名が重複しています";
-"Note \"%@\" already exists" = "ノート \"%@\" は既に存在します";
+"Note \"%@\" already exists" = "ノート「%@」は既に存在します";
 "Please select default storage directory" = "デフォルトの保存先ディレクトリを選択してください";
 "Select Markdown files or folders to import" = "読み込む Markdown ファイルまたはフォルダを選択してください";
 "No Markdown files to import" = "読み込める Markdown ファイルが見つかりませんでした。";

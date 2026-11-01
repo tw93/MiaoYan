@@ -222,7 +222,7 @@
 "Move Images to Trash" = "Mover imágenes a la Papelera";
 "Restore Images" = "Restaurar Imágenes";
 "Quit" = "Salir";
-"Formatting... click again to cancel" = "Dando formato... haz clic nuevamente para cancelar";
+"Formatting... click again to cancel" = "Dando formato… haz clic nuevamente para cancelar";
 "Format" = "Formato";
 "Presentation" = "Presentación";
 "Toggle Note List" = "Alternar Lista de Notas";
@@ -238,7 +238,7 @@
 
 /* File Operations */
 "Duplicate note name" = "Nombre de nota duplicado";
-"Note \"%@\" already exists" = "La nota \"%@\" ya existe";
+"Note \"%@\" already exists" = "La nota «%@» ya existe";
 "Please select default storage directory" = "Por favor, selecciona el directorio de almacenamiento por defecto";
 "Select Markdown files or folders to import" = "Selecciona archivos Markdown o carpetas para importar";
 "No Markdown files to import" = "No se encontraron archivos Markdown importables";
