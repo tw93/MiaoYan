@@ -1227,7 +1227,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
         if !removedImages.isEmpty {
             note.undoManager.beginUndoGrouping()
-            note.undoManager.setActionName(I18n.str("Delete Images"))
+            note.undoManager.setActionName(I18n.str("Move Images to Trash"))
             note.undoManager.registerUndo(withTarget: self, selector: #selector(unDeleteImages), object: removedImages)
             note.undoManager.endUndoGrouping()
         }
@@ -1255,7 +1255,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     @objc private func deleteRestoredImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
         note.undoManager.beginUndoGrouping()
-        note.undoManager.setActionName(I18n.str("Delete Images"))
+        note.undoManager.setActionName(I18n.str("Move Images to Trash"))
         var deletedImages = [URL: URL]()
         for (src, _) in urls {
             do {

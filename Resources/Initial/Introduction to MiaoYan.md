@@ -38,7 +38,7 @@
 - `command + r` - Rename document
 - `command + d` - Duplicate document
 - `command + o` - Open in separate window
-- `command + delete` - Delete document
+- `command + delete` - Move document to Trash
 - `command + shift + n` - New folder
 - `command + shift + l` - Auto-format
 - `command + option + r` - Show in Finder

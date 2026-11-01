@@ -207,7 +207,7 @@
 "Replace All" = "すべて置換";
 
 /* Clean attachments */
-"Removed %d unused attachment(s)" = "%d件の未使用の添付ファイルを削除しました";
+"Moved %d unused attachment(s) to Trash" = "未使用の添付ファイル %d 件をゴミ箱に移動しました";
 "Some attachments could not be removed" = "一部の添付ファイルを削除できませんでした";
 "Some notes could not be read, so no attachments were cleaned" = "一部のノートを読み込めなかったため、添付ファイルは整理しませんでした";
 "MiaoYan PPT PDF" = "妙言 スライド PDF";
@@ -221,7 +221,7 @@
 "Save Failed" = "保存に失敗しました";
 "Critical Error" = "重大なエラー";
 "Failed to initialize main window. Please restart the application." = "メインウィンドウの初期化に失敗しました。アプリを再起動してください。";
-"Delete Images" = "画像を削除";
+"Move Images to Trash" = "画像をゴミ箱に移動";
 "Restore Images" = "画像を復元";
 "Quit" = "終了";
 "Formatting... click again to cancel" = "整形中...もう一度クリックでキャンセル";

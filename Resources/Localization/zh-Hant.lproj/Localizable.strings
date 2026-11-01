@@ -184,7 +184,7 @@
 "Replace All" = "全部取代";
 
 /* Clean attachments */
-"Removed %d unused attachment(s)" = "已清理%d個無引用附件";
+"Moved %d unused attachment(s) to Trash" = "已將 %d 個未使用的附件移到廢紙簍";
 "Some attachments could not be removed" = "部分附件無法清理";
 "Some notes could not be read, so no attachments were cleaned" = "部分筆記讀取失敗，這次沒有清理附件";
 "MiaoYan PPT PDF" = "妙言 PPT PDF";
@@ -197,7 +197,7 @@
 "Save Failed" = "儲存失敗";
 "Critical Error" = "嚴重錯誤";
 "Failed to initialize main window. Please restart the application." = "初始化主視窗失敗，請重新啟動應用程式。";
-"Delete Images" = "刪除圖片";
+"Move Images to Trash" = "將圖片移到廢紙簍";
 "Restore Images" = "還原圖片";
 "Quit" = "結束";
 "Formatting... click again to cancel" = "正在排版...再次點擊可取消";

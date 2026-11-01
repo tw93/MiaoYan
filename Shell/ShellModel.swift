@@ -929,7 +929,7 @@ final class ShellModel {
                 let result = self.storage.removeAttachments(urls: orphans)
                 if !result.removed.isEmpty {
                     NSSound(named: "Pop")?.play()
-                    host.toast(message: String(format: I18n.str("Removed %d unused attachment(s)"), result.removed.count), style: .success)
+                    host.toast(message: String(format: I18n.str("Moved %d unused attachment(s) to Trash"), result.removed.count), style: .success)
                 }
                 if !result.failed.isEmpty {
                     MiaoYanAlert.show(

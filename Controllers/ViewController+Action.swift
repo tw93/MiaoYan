@@ -504,7 +504,7 @@ extension ViewController {
 
                 if !result.removed.isEmpty {
                     NSSound(named: "Pop")?.play()
-                    vc.toast(message: String(format: I18n.str("Removed %d unused attachment(s)"), result.removed.count), style: .success)
+                    vc.toast(message: String(format: I18n.str("Moved %d unused attachment(s) to Trash"), result.removed.count), style: .success)
                 }
 
                 if !result.failed.isEmpty {

@@ -116,7 +116,7 @@
 
 
 /* Clean attachments */
-"Removed %d unused attachment(s)" = "已清理%d个无引用附件";
+"Moved %d unused attachment(s) to Trash" = "已将 %d 个未使用的附件移到废纸篓";
 "Some attachments could not be removed" = "部分附件无法清理";
 "Some notes could not be read, so no attachments were cleaned" = "部分笔记读取失败，这次没有清理附件";
 "MiaoYan PPT PDF" = "妙言 PPT PDF";
@@ -226,7 +226,7 @@
 "Save Failed" = "保存失败";
 "Critical Error" = "严重错误";
 "Failed to initialize main window. Please restart the application." = "初始化主窗口失败，请重启应用。";
-"Delete Images" = "删除图片";
+"Move Images to Trash" = "将图片移到废纸篓";
 "Restore Images" = "还原图片";
 "Quit" = "退出";
 "Formatting... click again to cancel" = "正在排版...再次点击可取消";
