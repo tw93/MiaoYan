@@ -251,7 +251,7 @@
 "f5H-KF-hxw.title" = "26";
 
 /* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "fHG-zk-g0k"; */
-"fHG-zk-g0k.title" = "移到廢紙簍";
+"fHG-zk-g0k.title" = "移到垃圾桶";
 
 /* Class = "NSMenuItem"; title = "22"; ObjectID = "fjz-Rn-O5O"; */
 "fjz-Rn-O5O.title" = "22";
@@ -497,7 +497,7 @@
 "Ruw-6m-B2m.title" = "選取全部";
 
 /* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "RwR-P0-ycK"; */
-"RwR-P0-ycK.title" = "移到廢紙簍";
+"RwR-P0-ycK.title" = "移到垃圾桶";
 
 /* Class = "NSMenuItem"; title = "Reveal in finder"; ObjectID = "rXU-X3-UjC"; */
 "rXU-X3-UjC.title" = "在 Finder 中顯示";
@@ -530,7 +530,7 @@
 "Tap-iY-hyA.title" = "重新命名檔案夾";
 
 /* Class = "NSMenuItem"; title = "Move to Trash"; ObjectID = "TjZ-PX-YVo"; */
-"TjZ-PX-YVo.title" = "移到廢紙簍";
+"TjZ-PX-YVo.title" = "移到垃圾桶";
 
 /* Class = "NSMenuItem"; title = "Picsee"; ObjectID = "Tog-9P-3TK"; */
 "Tog-9P-3TK.title" = "Picsee";
