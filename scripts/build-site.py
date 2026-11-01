@@ -1010,8 +1010,8 @@ def page(key):
     <h2 class="section-title" id="devices-title">{esc(c['devices_title'])}</h2>
     <p class="section-lede">{esc(t(c['devices_lede']))}</p>
     <div class="devices">
-      <figure class="device phone"><img src="/assets/shots/{shot}-iphone.webp" width="700" height="1431" loading="lazy" alt="{esc(c['device_alts'][0])}"><figcaption>iPhone</figcaption></figure>
-      <figure class="device pad"><img src="/assets/shots/{shot}-ipad.webp" width="1400" height="1826" loading="lazy" alt="{esc(c['device_alts'][1])}"><figcaption>iPad</figcaption></figure>
+      <figure class="device phone"><img src="/assets/shots/{shot}-iphone.webp" width="700" height="1431" loading="lazy" alt="{esc(c['device_alts'][0])}"></figure>
+      <figure class="device pad"><img src="/assets/shots/{shot}-ipad.webp" width="1400" height="1826" loading="lazy" alt="{esc(c['device_alts'][1])}"></figure>
     </div>
     <div class="cta devices-cta"><a class="btn btn-primary" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['devices_cta'])}</a><div class="store-qr"><img src="/assets/qr-app-store.svg" width="74" height="74" loading="lazy" alt=""><span>{esc(c['devices_scan'])}</span></div></div>
   </section>
