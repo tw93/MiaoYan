@@ -44,17 +44,6 @@ public enum ToastStyle {
             return .white
         }
     }
-
-    var fallbackSymbol: String {
-        switch self {
-        case .info:
-            return ""
-        case .success:
-            return "☺︎"
-        case .failure:
-            return "☹︎"
-        }
-    }
 }
 
 // MARK: - Toast Manager
@@ -365,13 +354,8 @@ enum ToastFactory {
             return iconContainer
         }
 
-        let fallback = NSTextField(labelWithString: style.fallbackSymbol)
-        fallback.translatesAutoresizingMaskIntoConstraints = false
-        fallback.textColor = style.tintColor
-        fallback.font = .systemFont(ofSize: max(configuration.iconSize - 1, 12), weight: .regular)
-        fallback.setContentHuggingPriority(.required, for: .horizontal)
-        fallback.setContentCompressionResistancePriority(.required, for: .horizontal)
-        return fallback
+        // No symbol image: show the message alone rather than a text emoticon.
+        return nil
     }
 
     @MainActor
