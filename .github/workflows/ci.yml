@@ -7,8 +7,14 @@ on:
     # version-consistency job (gated on refs/tags/V*) was dead code and the
     # V3.5.1-class drift guard never actually ran.
     tags: ["V*"]
+    # Docs no check reads; same list as MiaoYan-Pro. .github/RELEASE_NOTES.md,
+    # docs/incidents.md and Resources/Initial/*.md stay in scope: the smoke job
+    # renders the first, the ledger check reads the second, the app ships the
+    # third. Tag pushes ignore paths, so release runs are unaffected.
+    paths-ignore: ['README*.md', AGENTS.md, ARCHITECTURE.md, CONTRIBUTING.md, DEPENDENCIES.md, CODE_OF_CONDUCT.md, 'skills/**', '.claude/**', '.github/ISSUE_TEMPLATE/**']
   pull_request:
     branches: [main]
+    paths-ignore: ['README*.md', AGENTS.md, ARCHITECTURE.md, CONTRIBUTING.md, DEPENDENCIES.md, CODE_OF_CONDUCT.md, 'skills/**', '.claude/**', '.github/ISSUE_TEMPLATE/**']
 
 concurrency:
   group: ci-${{ github.ref }}
