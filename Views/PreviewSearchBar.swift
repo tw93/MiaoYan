@@ -422,14 +422,14 @@ extension PreviewSearchBar {
     fileprivate func applyCornerMask() {
         guard wantsLayer else { return }
         if #available(macOS 10.13, *) {
-            layer?.cornerRadius = 8
+            layer?.cornerRadius = Theme.Metrics.floatingCornerRadius
             layer?.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
             layer?.masksToBounds = true
             layer?.mask = nil
         } else {
             let maskLayer = CAShapeLayer()
             maskLayer.frame = bounds
-            maskLayer.path = leftRoundedCornerPath(radius: 8).cgPath
+            maskLayer.path = leftRoundedCornerPath(radius: Theme.Metrics.floatingCornerRadius).cgPath
             layer?.mask = maskLayer
         }
     }

@@ -45,8 +45,12 @@ enum Theme {
     enum Metrics {
         /// A folder row's disclosure chevron, the family's row chevron (Yado `rowChevron`).
         static let rowChevron: CGFloat = 10
-        /// Corner radius for the rounded selection pill (sidebar rows).
+        /// Corner radius for the rounded selection pill (sidebar and note list rows).
         static let selectionCornerRadius: CGFloat = 8
+        /// Corner radius for a text field's fill (the shell's search field).
+        static let fieldCornerRadius: CGFloat = 8
+        /// Corner radius for a layer floating over the page (find bar, image preview).
+        static let floatingCornerRadius: CGFloat = 8
         /// Horizontal inset of the selection pill from the row edge.
         static let selectionInsetH: CGFloat = 6
         /// Vertical inset of the selection pill from the row edge.

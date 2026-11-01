@@ -279,7 +279,7 @@ private struct ShellSidebarRow: View {
         .padding(.trailing, 8)
         .frame(height: 30)
         .background(
-            RoundedRectangle(cornerRadius: 7, style: .continuous)
+            RoundedRectangle(cornerRadius: Theme.Metrics.selectionCornerRadius, style: .continuous)
                 .fill(isSelected || isDropTarget ? ShellStyle.sidebarSelection : .clear)
         )
         // VoiceOver reads a row as one button named after the folder.
@@ -724,7 +724,7 @@ private struct ShellNoteRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             if isSelected {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                RoundedRectangle(cornerRadius: Theme.Metrics.selectionCornerRadius, style: .continuous)
                     .fill(ShellStyle.selection)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
@@ -779,7 +779,7 @@ private struct ShellSearchField: View {
         }
         .padding(.horizontal, 9)
         .frame(height: 28)
-        .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(ShellStyle.field))
+        .background(RoundedRectangle(cornerRadius: Theme.Metrics.fieldCornerRadius, style: .continuous).fill(ShellStyle.field))
     }
 }
 

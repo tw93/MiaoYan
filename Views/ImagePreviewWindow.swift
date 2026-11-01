@@ -42,7 +42,7 @@ class ImagePreviewWindow: NSWindow {
         backgroundView.blendingMode = .behindWindow
         backgroundView.state = .active
         backgroundView.wantsLayer = true
-        backgroundView.layer?.cornerRadius = 8
+        backgroundView.layer?.cornerRadius = Theme.Metrics.floatingCornerRadius
         backgroundView.layer?.masksToBounds = true
         contentView = backgroundView
 
