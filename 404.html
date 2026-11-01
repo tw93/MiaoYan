@@ -213,16 +213,16 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   border: 1px solid var(--line); border-radius: 8px;
   background: var(--ivory);
   box-shadow: 0 8px 24px rgba(20, 19, 19, 0.08);
-  opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-4px);
-  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.16s ease, visibility 0.16s ease;
 }
 /* A bridge across the gap so the pointer can travel into the menu. */
 .lang-menu::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
 .lang-switch.is-open .lang-menu, .lang-switch:focus-within .lang-menu {
-  opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0);
+  opacity: 1; visibility: visible; pointer-events: auto;
 }
 @media (hover: hover) {
-  .lang-switch:hover .lang-menu { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
+  .lang-switch:hover .lang-menu { opacity: 1; visibility: visible; pointer-events: auto; }
 }
 .lang-menu a {
   display: flex; align-items: center; min-height: 32px; padding: 6px 10px; border-radius: 6px;
