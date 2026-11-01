@@ -4,7 +4,7 @@
   <p><b>로컬 마크다운 노트를 위한 네이티브 Mac 앱</b></p>
   <p>MiaoYan은 중국어 妙言에서 온 이름으로, 말을 넘어선 말이라는 뜻입니다.</p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · 한국어 · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
-  <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
+  <a href="https://x.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
   <a href="https://github.com/tw93/MiaoYan/releases" target="_blank"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
   <a href="https://github.com/tw93/MiaoYan/commits" target="_blank"><img alt="GitHub Commit Activity" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
@@ -76,7 +76,7 @@ miao update              # CLI 업데이트
 ## 후원
 
 - 제가 만든 유료 Mac 정리 앱 [Mole for Mac](https://mole.fit)을 이용해 주시는 것이 가장 직접적인 후원입니다
-- MiaoYan이 유용했다면 Star를 누르거나, [공유](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%EB%A1%9C%EC%BB%AC%20%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4%20%EB%85%B8%ED%8A%B8%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EB%84%A4%EC%9D%B4%ED%8B%B0%EB%B8%8C%20Mac%20%EC%95%B1)하거나, 이슈 및 PR을 남겨주세요
+- MiaoYan이 유용했다면 Star를 누르거나, [공유](https://x.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%EB%A1%9C%EC%BB%AC%20%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4%20%EB%85%B8%ED%8A%B8%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EB%84%A4%EC%9D%B4%ED%8B%B0%EB%B8%8C%20Mac%20%EC%95%B1)하거나, 이슈 및 PR을 남겨주세요
 - 탕위안(TangYuan)과 콜라(Coke)라는 두 마리의 고양이를 키우고 있습니다. MiaoYan이 즐거움을 주었다면 <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">캔 간식 🥩</a>을 후원해 주세요
 
 후원해 주신 분들 🐱

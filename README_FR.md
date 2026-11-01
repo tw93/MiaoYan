@@ -4,7 +4,7 @@
   <p><b>Une app Mac native pour vos notes Markdown locales</b></p>
   <p>MiaoYan vient du chinois 妙言, des mots au-delà des mots.</p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · Français</p>
-  <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
+  <a href="https://x.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
   <a href="https://github.com/tw93/MiaoYan/releases" target="_blank"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
   <a href="https://github.com/tw93/MiaoYan/commits" target="_blank"><img alt="GitHub Commit Activity" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
@@ -76,7 +76,7 @@ Installez le skill officiel avec `npx skills add tw93/MiaoYan/skills/miaoyan -g`
 ## Soutien
 
 - La façon la plus directe de me soutenir est d'acheter [Mole for Mac](https://mole.fit), mon application de nettoyage pour Mac
-- Si MiaoYan vous est utile, laissez une étoile, [partagez-le](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Une%20app%20Mac%20native%20pour%20vos%20notes%20Markdown%20locales) ou ouvrez une issue ou une PR
+- Si MiaoYan vous est utile, laissez une étoile, [partagez-le](https://x.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Une%20app%20Mac%20native%20pour%20vos%20notes%20Markdown%20locales) ou ouvrez une issue ou une PR
 - J'ai deux chats, TangYuan et Coke. Si MiaoYan vous apporte satisfaction, vous pouvez leur offrir de la <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">pâtée 🥩</a>
 
 Ces personnes l'ont déjà fait 🐱

@@ -4,7 +4,7 @@
   <p><b>ローカルの Markdown ノートのためのネイティブ Mac アプリ</b></p>
   <p>MiaoYan は中国語の妙言、言葉を超えた言葉という意味です。</p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · 日本語 · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
-  <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
+  <a href="https://x.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
   <a href="https://github.com/tw93/MiaoYan/releases" target="_blank"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
   <a href="https://github.com/tw93/MiaoYan/commits" target="_blank"><img alt="GitHub Commit Activity" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
@@ -76,7 +76,7 @@ miao update                 # CLI をアップデート
 ## サポート
 
 - 私が作った有料の Mac クリーナー [Mole for Mac](https://mole.fit) を使っていただくのが、いちばん直接的な支援になります
-- MiaoYan が役に立ったら、Star を付けたり、[共有](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%20Markdown%20%E3%83%8E%E3%83%BC%E3%83%88%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E3%83%8D%E3%82%A4%E3%83%86%E3%82%A3%E3%83%96%20Mac%20%E3%82%A2%E3%83%97%E3%83%AA)したり、Issue や PR をお寄せください
+- MiaoYan が役に立ったら、Star を付けたり、[共有](https://x.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%20Markdown%20%E3%83%8E%E3%83%BC%E3%83%88%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E3%83%8D%E3%82%A4%E3%83%86%E3%82%A3%E3%83%96%20Mac%20%E3%82%A2%E3%83%97%E3%83%AA)したり、Issue や PR をお寄せください
 - 私にはタンユエン（湯円）とコーラ（可楽）という2匹の猫がいます。もし MiaoYan を気に入っていただけたら、<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">缶詰 🥩</a> をプレゼントしていただけると嬉しいです
 
 支援してくださった方々 🐱

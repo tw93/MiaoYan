@@ -3,7 +3,7 @@
   <h1>妙言</h1>
   <p><b>轻灵的 Markdown 笔记本，伴你写出妙言</b></p>
   <p><a href="README.md">English</a> · 中文 · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
-  <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter 关注" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
+  <a href="https://x.com/HiTw93" target="_blank"><img alt="Twitter 关注" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram 群组" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
   <a href="https://github.com/tw93/MiaoYan/releases" target="_blank"><img alt="GitHub 下载量" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
   <a href="https://github.com/tw93/MiaoYan/commits" target="_blank"><img alt="GitHub 提交活跃度" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
@@ -75,7 +75,7 @@ miao update             # 更新 CLI
 ## 支持
 
 - 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，是对我最直接的支持
-- 如果你喜欢妙言，欢迎给它一个 Star，推荐给身边喜欢纯文本的朋友，[分享出去](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BD%BB%E7%81%B5%E7%9A%84%20Markdown%20%E7%AC%94%E8%AE%B0%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%86%99%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
+- 如果你喜欢妙言，欢迎给它一个 Star，推荐给身边喜欢纯文本的朋友，[分享出去](https://x.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BD%BB%E7%81%B5%E7%9A%84%20Markdown%20%E7%AC%94%E8%AE%B0%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%86%99%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
 - 我有两只猫，汤圆和可乐，如果妙言让你开心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">请她们吃罐头 🥩</a>
 
 这些可爱的朋友已经投喂过了 🐱

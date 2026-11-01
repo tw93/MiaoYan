@@ -4,7 +4,7 @@
   <p><b>Eine native Mac-App für lokale Markdown-Notizen</b></p>
   <p>MiaoYan ist das chinesische 妙言, Worte jenseits der Worte.</p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · <a href="README_KR.md">한국어</a> · Deutsch · <a href="README_FR.md">Français</a></p>
-  <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
+  <a href="https://x.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
   <a href="https://github.com/tw93/MiaoYan/releases" target="_blank"><img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
   <a href="https://github.com/tw93/MiaoYan/commits" target="_blank"><img alt="GitHub Commit Activity" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
@@ -76,7 +76,7 @@ Installiere den offiziellen Skill mit `npx skills add tw93/MiaoYan/skills/miaoya
 ## Unterstützung
 
 - Die direkteste Unterstützung ist der Kauf von [Mole for Mac](https://mole.fit), meiner Bereinigungs-App für macOS
-- Wenn dir MiaoYan gefällt, vergib einen Stern, [teile es](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Eine%20native%20Mac-App%20f%C3%BCr%20lokale%20Markdown-Notizen) oder eröffne ein Issue oder einen PR
+- Wenn dir MiaoYan gefällt, vergib einen Stern, [teile es](https://x.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Eine%20native%20Mac-App%20f%C3%BCr%20lokale%20Markdown-Notizen) oder eröffne ein Issue oder einen PR
 - Ich habe zwei Katzen, TangYuan und Coke. Wenn dir MiaoYan Freude bereitet, kannst du ihnen etwas <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">Dosenfutter 🥩</a> spendieren
 
 Unterstützer 🐱
