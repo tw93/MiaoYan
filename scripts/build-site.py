@@ -798,6 +798,19 @@ def font_preload(key):
     )
 
 
+# Landmark names for screen readers, in the page's own language.
+NAV_ARIA = {
+    "en": ("Main", "Footer"),
+    "zh": ("主导航", "页脚"),
+    "tw": ("主導覽", "頁尾"),
+    "ja": ("メインナビゲーション", "フッター"),
+    "ko": ("주 메뉴", "바닥글"),
+    "de": ("Hauptnavigation", "Fußzeile"),
+    "fr": ("Navigation principale", "Pied de page"),
+    "es": ("Navegación principal", "Pie de página"),
+}
+
+
 def header_html(key, *, home="", menu=None, hide_cta=False, blog_current=False):
     """The sticky nav pill. `home` prefixes the section anchors: empty on the
     home page itself, the home path elsewhere. `menu` is the language menu as
@@ -822,7 +835,7 @@ def header_html(key, *, home="", menu=None, hide_cta=False, blog_current=False):
         for k, href in menu
     )
     return f"""<header class="nav">
-  <nav class="nav-bar{" hide-cta" if hide_cta else ""}" aria-label="Main">
+  <nav class="nav-bar{" hide-cta" if hide_cta else ""}" aria-label="{NAV_ARIA[key][0]}">
     <a class="brand" href="{current[1]}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
     <div class="nav-links">{nav}</div>
     <div class="nav-end">
@@ -857,7 +870,7 @@ def footer_html(key, *, faq_href="#faq"):
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">{esc(c['about'])}</p>
       </div>
-      <nav class="foot-cols" aria-label="Footer">{foot}</nav>
+      <nav class="foot-cols" aria-label="{NAV_ARIA[key][1]}">{foot}</nav>
     </div>
   </div>
 </footer>"""
