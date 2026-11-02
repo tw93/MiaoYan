@@ -164,10 +164,10 @@ img { display: block; max-width: 100%; height: auto; }
 /* Nav: a solid ivory pill, as on mole.fit. */
 .nav { position: sticky; top: 16px; z-index: 10; margin: 16px -14px 60px; }
 /* Inner pages keep mole.fit's 47px of ink from the pill to the page title, 32
-   on phones; the home hero takes 72 / 44, about 74 / 46 of ink above the wordmark
+   on phones; the home hero takes 64 / 40, about 74 / 46 of ink above the wordmark
    like the rest of the family (maintainer 2026-11-02: a little more air on top). */
 .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 48px; }
-.nav:has(+ main:not([class])) { margin-bottom: 72px; }
+.nav:has(+ main:not([class])) { margin-bottom: 64px; }
 /* Nav links jump straight to their section, with no glide, as on mole.fit
    (maintainer 2026-11-02: the glide looked worse than the instant jump). */
 /* A jump lands the section or heading 47px under the pill, 34 on phones, the
@@ -255,6 +255,11 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   font-size: 84px; line-height: 1.02; letter-spacing: -1.2px; margin: 0 0 28px;
 }
 .hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: 18px; }
+/* The Han glyph fills its whole em and read larger than the Latin name at the
+   same size; 0.88em puts its top on the Latin ascender, the same as mole.fit's
+   鼴 (maintainer 2026-11-02). Set on the orbit wrapper so the dot's em-based
+   path shrinks with it. */
+.hero h1 .cn-orbit { font-size: 0.88em; }
 .hero h1 .cn {
   display: inline-block;
   font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif;
@@ -552,7 +557,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   :root { --inset: 24px; --gap: 64px; --anchor-clear: 105px; }
   .nav { margin: 16px -6px 40px; }
   .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
-  .nav:has(+ main:not([class])) { margin-bottom: 44px; }
+  .nav:has(+ main:not([class])) { margin-bottom: 40px; }
   .hero h1 { font-size: 60px; letter-spacing: -0.8px; margin-bottom: 20px; }
   .tagline { font-size: 20px; }
   .section-title { font-size: 26px; }
