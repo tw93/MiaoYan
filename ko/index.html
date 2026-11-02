@@ -186,8 +186,10 @@ img { display: block; max-width: 100%; height: auto; }
 /* Nav: a solid ivory pill, as on mole.fit. */
 .nav { position: sticky; top: 16px; z-index: 10; margin: 16px -14px 60px; }
 /* Inner pages keep mole.fit's 47px of ink from the pill to the page title, 32
-   on phones; the home hero keeps its own 60 / 40 (maintainer 2026-11-01). */
+   on phones; the home hero takes 72 / 44, about 74 / 46 of ink above the wordmark
+   like the rest of the family (maintainer 2026-11-02: a little more air on top). */
 .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 48px; }
+.nav:has(+ main:not([class])) { margin-bottom: 72px; }
 /* Nav links jump straight to their section, with no glide, as on mole.fit
    (maintainer 2026-11-02: the glide looked worse than the instant jump). */
 /* A jump lands the section or heading 47px under the pill, 34 on phones, the
@@ -572,6 +574,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   :root { --inset: 24px; --gap: 64px; --anchor-clear: 105px; }
   .nav { margin: 16px -6px 40px; }
   .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
+  .nav:has(+ main:not([class])) { margin-bottom: 44px; }
   .hero h1 { font-size: 60px; letter-spacing: -0.8px; margin-bottom: 20px; }
   .tagline { font-size: 20px; }
   .section-title { font-size: 26px; }
