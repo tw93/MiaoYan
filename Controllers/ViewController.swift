@@ -1143,6 +1143,9 @@ class ViewController:
     }
 
     func reloadForSingleMode(originalFileURL: URL? = nil, siblingFiles: [URL]? = nil) {
+        // A controller without its window (the storyboard's menu stand-in)
+        // has nothing to reload, and its nil outlets used to trap here (#572).
+        guard storageOutlineView != nil, notesTableView != nil else { return }
         searchQueue.cancelAllOperations()
         storage.reconfigureForSingleMode(originalFileURL: originalFileURL, siblingFiles: siblingFiles)
         storageOutlineView.sidebarItems = Sidebar().getList()

@@ -35,6 +35,18 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertEqual(standIn.string, "")
     }
 
+    /// File > Single Mode targets the Application scene's stand-in
+    /// ViewController, whose outlets are nil. Its panel callback reloaded on
+    /// that stand-in and trapped on `storageOutlineView` as soon as a folder
+    /// was picked (#572). The stand-in has nothing to reload and must return.
+    @MainActor
+    func testSingleModeReloadOnTheStandInDoesNotTrap() {
+        let standIn = ViewController()
+        XCTAssertNil(standIn.storageOutlineView)
+        standIn.reloadForSingleMode()
+        XCTAssertNil(standIn.storageOutlineView)
+    }
+
     /// The storyboard stores Control-Option-Command-Delete for Clean Unused
     /// Attachments and only the storyboard window rewrote it, so the shell
     /// showed and took the old keys. The app now rewrites it once.

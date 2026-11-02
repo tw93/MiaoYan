@@ -98,6 +98,10 @@ extension ViewController {
     }
 
     @IBAction func singleOpen(_ sender: NSMenuItem) {
+        // The menu item targets the stand-in controller in the storyboard's
+        // Application scene, whose outlets are nil (#572); the window's own
+        // controller does the reload.
+        guard let vc = ViewController.shared() else { return }
         let panel = NSOpenPanel()
         panel.allowsMultipleSelection = false
         panel.canChooseDirectories = true
@@ -107,7 +111,7 @@ extension ViewController {
             if result == NSApplication.ModalResponse.OK {
                 let urls = panel.urls
                 UserDefaultsManagement.beginSingleMode(for: urls[0])
-                self.reloadForSingleMode()
+                vc.reloadForSingleMode()
             }
         }
     }
