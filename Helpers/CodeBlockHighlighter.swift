@@ -69,9 +69,6 @@ enum CodeBlockHighlighter {
             }
 
             attributedString.addAttributes(attrs, range: fixedRange)
-            if let colour = attrs[.foregroundColor] as? NSColor {
-                attributedString.addAttribute(.foregroundColor, value: editorColor(forThemeColour: colour), range: fixedRange)
-            }
             if let font = NotesTextProcessor.codeFont {
                 attributedString.addAttribute(.font, value: font, range: fixedRange)
             }
@@ -134,27 +131,6 @@ enum CodeBlockHighlighter {
         }
     }
 
-    /// Highlightr draws with atom-one-light or tomorrow-night-blue, whose
-    /// plain text is a grey and whose comments turn blue in dark. Each role is
-    /// moved onto the editor's code colours: comments to the markup grey,
-    /// keywords, types, numbers and titles to purple, the rest (plain text,
-    /// strings) to the code gold.
-    static func editorColor(forThemeColour colour: NSColor) -> NSColor {
-        guard let srgb = colour.usingColorSpace(.sRGB) else { return NotesTextProcessor.codeColor }
-        let hex =
-            Int(round(srgb.redComponent * 255)) << 16 | Int(round(srgb.greenComponent * 255)) << 8
-            | Int(round(srgb.blueComponent * 255))
-        switch hex {
-        case 0xA0A1A7, 0x7285B7:
-            return NotesTextProcessor.syntaxColor
-        case 0xA626A4, 0x986801, 0x0184BB, 0x4078F2, 0xC18401, 0xE45649,
-            0xEBBBFF, 0xFFC58F, 0xFFEEAD, 0xBBDAFF, 0xFF9DA4:
-            return Theme.editorCodeKeywordColor
-        default:
-            return NotesTextProcessor.codeColor
-        }
-    }
-
     private static func applyBasicCodeStyle(attributedString: NSMutableAttributedString, range: NSRange) {
         guard range.upperBound <= attributedString.length,
             let codeFont = NotesTextProcessor.codeFont
@@ -163,7 +139,7 @@ enum CodeBlockHighlighter {
         }
 
         attributedString.addAttribute(.font, value: codeFont, range: range)
-        attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.codeColor, range: range)
+        attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.codeBlockPlainColor, range: range)
         attributedString.addAttribute(.codeBlock, value: true, range: range)
         attributedString.removeAttribute(.codeLanguage, range: range)
         attributedString.fixAttributes(in: range)

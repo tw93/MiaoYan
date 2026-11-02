@@ -22,7 +22,16 @@ public class NotesTextProcessor {
     // MARK: Syntax highlight customisation
     @MainActor public static var syntaxColor: NSColor { Theme.editorMarkupColor }
 
+    /// HTML tags only; code keeps Highlightr's own colours (V4.5.0's look,
+    /// restored 2026-11-02 after the gold code read yellow).
     @MainActor public static var codeColor: NSColor { Theme.editorCodeColor }
+
+    /// Code before Highlightr colours it, and code with no language.
+    @MainActor public static var codeBlockPlainColor: NSColor {
+        AppEnvironment.current.userData.isDark
+            ? NSColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
+            : NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+    }
 
     /// Markdown punctuation is set in the system face, which draws `*` and
     /// `#` light and small where TsangerJinKai draws them wide and heavy.

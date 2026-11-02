@@ -35,7 +35,7 @@ enum MarkdownRuleHighlighter {
             regex.enumerateMatches(in: string, options: [], range: range) { result, _, _ in
                 guard let codeRange = result?.range, codeRange.upperBound <= attributedString.length else { return }
 
-                let codeColor = NotesTextProcessor.codeColor
+                let codeColor = NotesTextProcessor.codeBlockPlainColor
 
                 if let codeFont = NotesTextProcessor.codeFont {
                     attributedString.addAttribute(.font, value: codeFont, range: codeRange)
@@ -162,7 +162,7 @@ enum MarkdownRuleHighlighter {
                 return
             }
             attributedString.fixAttributes(in: range)
-            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.codeColor, range: range)
+            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
             markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
         }
 

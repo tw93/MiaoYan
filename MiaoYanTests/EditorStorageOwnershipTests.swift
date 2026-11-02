@@ -87,12 +87,12 @@ final class EditorStorageOwnershipTests: XCTestCase {
         XCTAssertFalse(linkColour.map { abs($0.redComponent - markup.redComponent) < 0.01 && abs($0.greenComponent - markup.greenComponent) < 0.01 } ?? false)
     }
 
-    /// Code-block text was Highlightr's grey (`#383A42`), a command with no
-    /// keywords came out grey from end to end, and dark comments were blue.
-    /// Every run now lands on the code gold, the keyword purple or, for a
-    /// comment, the markup grey, in both themes.
+    /// V4.6.0 drew every code-block run outside keywords and comments in the
+    /// HTML tags' softened gold, and the blocks read yellow; code went back to
+    /// Highlightr's own colours. No code-block run may take that gold, in
+    /// either theme, and a plain command keeps Highlightr's text colour.
     @MainActor
-    func testCodeBlockTakesTheEditorCodeColours() throws {
+    func testCodeBlockKeepsHighlightrColoursNotTheTagGold() throws {
         let body = "```swift\n// load\nlet name = \"MiaoYan\"\n```\n\n```bash\nbrew install --cask miaoyan\n```\n"
         let previous = AppEnvironment.current.userData.isDark
         defer {
@@ -110,17 +110,19 @@ final class EditorStorageOwnershipTests: XCTestCase {
             let storage = NSMutableAttributedString(string: body)
             NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
 
-            let code = try XCTUnwrap(hex(NotesTextProcessor.codeColor))
-            let keyword = try XCTUnwrap(hex(Theme.editorCodeKeywordColor))
-            let comment = try XCTUnwrap(hex(NotesTextProcessor.syntaxColor))
+            let gold = try XCTUnwrap(hex(NotesTextProcessor.codeColor))
             let text = body as NSString
-            XCTAssertEqual(hex(storage.attribute(.foregroundColor, at: text.range(of: "brew").location, effectiveRange: nil)), code, "dark: \(dark)")
-            XCTAssertEqual(hex(storage.attribute(.foregroundColor, at: text.range(of: "let").location, effectiveRange: nil)), keyword, "dark: \(dark)")
-            XCTAssertEqual(hex(storage.attribute(.foregroundColor, at: text.range(of: "load").location, effectiveRange: nil)), comment, "dark: \(dark)")
+            var checked = 0
             storage.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: storage.length)) { value, range, _ in
                 guard storage.attribute(.codeBlock, at: range.location, effectiveRange: nil) != nil else { return }
-                XCTAssertTrue([code, keyword, comment].contains(hex(value) ?? -1), "\(text.substring(with: range)) dark: \(dark)")
+                checked += 1
+                XCTAssertNotEqual(hex(value), gold, "\(text.substring(with: range)) dark: \(dark)")
             }
+            XCTAssertGreaterThan(checked, 2, "dark: \(dark)")
+            let brew = hex(storage.attribute(.foregroundColor, at: text.range(of: "brew").location, effectiveRange: nil))
+            let keyword = hex(storage.attribute(.foregroundColor, at: text.range(of: "let").location, effectiveRange: nil))
+            XCTAssertNotNil(brew)
+            XCTAssertNotEqual(brew, keyword, "dark: \(dark)")
         }
     }
 
