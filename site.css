@@ -154,8 +154,8 @@ img { display: block; max-width: 100%; height: auto; }
 /* Inner pages keep mole.fit's 47px of ink from the pill to the page title, 32
    on phones; the home hero keeps its own 60 / 40 (maintainer 2026-11-01). */
 .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 48px; }
-/* Nav links glide to their section; the reduced-motion block turns it off. */
-html { scroll-behavior: smooth; }
+/* Nav links jump straight to their section, with no glide, as on mole.fit
+   (maintainer 2026-11-02: the glide looked worse than the instant jump). */
 /* A jump lands the section or heading 47px under the pill, 34 on phones, the
    distance the pill keeps above a page title (100 left 27 / 29). */
 :root { --anchor-clear: 119px; }
