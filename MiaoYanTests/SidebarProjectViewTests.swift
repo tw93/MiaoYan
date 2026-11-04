@@ -253,4 +253,20 @@ final class SidebarProjectViewTests: XCTestCase {
         UserDefaultsManagement.migrateLegacySidebarRow(withPath)
         XCTAssertEqual(withPath.integer(forKey: "lastProject"), 3, "a folder saved by path is restored by path")
     }
+
+    /// The folder list stays above the header in z-order. 4e081958 moved the
+    /// header (`OutlineHeaderView`) after the list's scroll view to let the
+    /// new-folder button sit over it, and AppKit then made no row views at
+    /// all: the daily build showed an empty sidebar. The header comes first
+    /// in the subviews, and the list is clear so the button shows through
+    /// the 8pt they overlap.
+    func testFolderListStaysAboveTheHeader() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let xml = try String(contentsOf: root.appendingPathComponent("Resources/Localization/Base.lproj/Main.storyboard"), encoding: .utf8)
+        let header = try XCTUnwrap(xml.range(of: "id=\"vp7-cq-QSI\" customClass=\"OutlineHeaderView\""))
+        let list = try XCTUnwrap(xml.range(of: "<scrollView ", options: .backwards, range: xml.startIndex..<XCTUnwrap(xml.range(of: "id=\"BdT-Ac-GAV\">")).upperBound))
+        XCTAssertLessThan(header.lowerBound, list.lowerBound, "the header must be ordered below the folder list")
+        let controller = try String(contentsOf: root.appendingPathComponent("Controllers/ViewController.swift"), encoding: .utf8)
+        XCTAssertTrue(controller.contains("storageOutlineView.backgroundColor = .clear"))
+    }
 }

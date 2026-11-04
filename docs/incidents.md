@@ -1,7 +1,9 @@
 # Incidents
 
-Defects that reached users in a published release, kept as the eval set for every review layer ("incidents are the
-eval", from the Claude Code team's code review write-up). A row is added in the same change that fixes the defect:
+Defects that reached users in a published release or the maintainer's daily build (the installed
+`/Applications/MiaoYan.app`, which AGENTS.md makes the test copy), kept as the eval set for every review layer
+("incidents are the eval", from the Claude Code team's code review write-up). Every release is reviewed against this
+table first (AGENTS.md, Release Notes). A row is added in the same change that fixes the defect:
 the fix commit, the commit that introduced it when known, the earliest layer that should have caught it, and the
 test or gate that catches it now. `scripts/check_incidents.py` (run by CI's Review gates job) fails a row whose
 commit does not resolve, whose layer is not one of the names below, or whose catcher is not defined in the code.
@@ -44,3 +46,7 @@ note which rows it finds. `Introduced` is kept when known, for the time a defect
 | I-12 | 2026-10-28 | Multi-line `\[ \]`, `\( \)` and mid-paragraph `$$` math showed as raw TeX under the default MiaoYan line-break mode, which Typora rendered | unknown | 4cff5e28 | unit | `testMultiLineMathRendersInTheMiaoYanLineBreakMode`, `testMathLineBreaksDoNotDependOnTheLineBreakMode` |
 | I-13 | 2026-11-01 | Picking a folder or file in File > Single Mode crashed the app, because the menu's stand-in controller reloaded with nil outlets (#572) | 20b4e8f1 | 29c83d33 | hand-test | `testSingleModeReloadOnTheStandInDoesNotTrap` |
 | I-14 | 2026-11-04 | PDF export dropped its print styles, and images the reader had not scrolled to printed blank or collapsed, because backticks in the print sheet's comments ended the template literal carrying it | 7bf089c9 | f2ad6725 | unit | `testPrintSetupRunsWithTheRealSheetAndUnlazesImages`, `testScriptsDoNotInterpolateSwiftTextIntoTemplateLiterals` |
+| I-15 | 2026-11-04 | The sidebar showed no folders in the daily build after the title row moved onto the traffic lights' line: the header was ordered above the folder list, and AppKit then made no row views | 4e081958 | 48d05fae | hand-test | `testFolderListStaysAboveTheHeader` |
+| I-16 | 2026-11-04 | An image with only a width, as Weekly notes write `<img width="800">`, held a square box until it loaded, since only both sides counted as a size | unknown | f59238a0 | write-time | `testAnImageWithOnlyAWidthTakesItsOwnRatio` |
+| I-17 | 2026-11-04 | Videos showed an empty player and slow images blank paper until they had loaded | unknown | 37f0d4f4 | hand-test | `testVideosWaitForThePageAndAreMarkedForTheirFirstFrame`, `testMediaHoldATintedBoxUntilTheyCanShowSomething` |
+| I-18 | 2026-11-04 | A remote image never opened before held a square or 16:9 box for the seconds its file took to arrive, and nothing said it was still loading | unknown | 6f0f56d8 | hand-test | `testRemoteImageProbeAsksForTheHeaderOnly`, `testMediaHoldATintedBoxUntilTheyCanShowSomething` |
