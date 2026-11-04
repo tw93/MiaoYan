@@ -285,6 +285,65 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertFalse(processed.contains("Image Not Found"), "the escaped name still resolves to the file")
     }
 
+    /// A local image reserves its box before it loads, and no image holds
+    /// the page back: a remote first image used to load eagerly, so the
+    /// note stayed hidden until that server answered.
+    func testPreviewImagesReserveTheirBoxAndLoadAfterThePage() throws {
+        let images = tempDirectory.appendingPathComponent("i", isDirectory: true)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        let rep = try XCTUnwrap(
+            NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: 30, pixelsHigh: 20, bitsPerSample: 8, samplesPerPixel: 4,
+                hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+        try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(to: images.appendingPathComponent("a.png"))
+        try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(to: images.appendingPathComponent("b.png"))
+
+        let local = try XCTUnwrap(renderMarkdownHTML(markdown: "![](/i/a.png)\n\n![](/i/b.png)", useGithubLineBreak: false))
+        let processed = HtmlManager.processImages(in: local, imagesStorage: tempDirectory)
+        XCTAssertEqual(processed.components(separatedBy: "width=\"30\" height=\"20\" style=\"aspect-ratio: 30 / 20\"").count, 3, processed)
+        XCTAssertEqual(processed.components(separatedBy: "decoding=\"async\"").count, 3, processed)
+        XCTAssertEqual(processed.components(separatedBy: "lazy-image").count, 2, "only the second local image is lazy")
+
+        let remote = try XCTUnwrap(renderMarkdownHTML(markdown: "![](https://example.com/a.png)", useGithubLineBreak: false))
+        let remoteProcessed = HtmlManager.processImages(in: remote, imagesStorage: tempDirectory)
+        XCTAssertTrue(remoteProcessed.contains("data-src=\"https://example.com/a.png\""), remoteProcessed)
+        XCTAssertTrue(remoteProcessed.contains("lazy-image"), remoteProcessed)
+    }
+
+    /// A remote image is measured by the page the first time it loads, and
+    /// renders after that reserve its box from the stored size.
+    func testRemoteImagesReserveTheirBoxOnceThePageHasMeasuredThem() throws {
+        let url = "https://example.com/\(UUID().uuidString).png"
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "![](\(url))", useGithubLineBreak: false))
+
+        let first = HtmlManager.processImages(in: html, imagesStorage: tempDirectory)
+        XCTAssertTrue(first.contains("data-measure=\"1\""), first)
+        XCTAssertFalse(first.contains("width="), first)
+
+        RemoteImageSizes.shared.record(url: url, width: 1200, height: 800)
+        let again = HtmlManager.processImages(in: html, imagesStorage: tempDirectory)
+        XCTAssertTrue(again.contains("width=\"1200\" height=\"800\" style=\"aspect-ratio: 1200 / 800\""), again)
+        XCTAssertFalse(again.contains("data-measure"), again)
+        XCTAssertTrue(again.contains("data-src=\"\(url)\""), again)
+
+        RemoteImageSizes.shared.record(url: "file:///etc/passwd", width: 10, height: 10)
+        XCTAssertNil(RemoteImageSizes.shared.size(for: "file:///etc/passwd"), "only web images are kept")
+    }
+
+    /// Sizes outlive the app: a fresh store reads what an earlier one saved.
+    func testRemoteImageSizesPersistAcrossLaunches() throws {
+        let file = tempDirectory.appendingPathComponent("sizes.json")
+        let store = RemoteImageSizes(fileURL: file)
+        store.record(url: "https://example.com/p.png", width: 640, height: 480)
+        let deadline = Date().addingTimeInterval(6)
+        while !FileManager.default.fileExists(atPath: file.path), Date() < deadline {
+            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+        }
+        let reopened = RemoteImageSizes(fileURL: file)
+        XCTAssertEqual(reopened.size(for: "https://example.com/p.png")?.width, 640)
+        XCTAssertEqual(reopened.size(for: "https://example.com/p.png")?.height, 480)
+    }
+
     func testTemplatePlaceholdersInsideNoteTextStayAsWritten() {
         let template = "<style>DOWN_CSS</style><body class=\"CUSTOM_CSS\">DOWN_HTML</body>"
         let replacements = ["DOWN_CSS": "p{}", "CUSTOM_CSS": "lightmode", "DOWN_HTML": "<p>write CUSTOM_CSS and DOWN_CSS here</p>"]

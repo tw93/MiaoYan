@@ -120,43 +120,13 @@
     // Deferred scripts (common.js, theme-config.js) execute before DOMContentLoaded,
     // so wrapping here ensures MiaoYanCommon and ThemeConfig are defined before use.
     document.addEventListener('DOMContentLoaded', function () {
-      MiaoYanCommon.initializeCore();
       MiaoYanCommon.setupTextSelection();
 
       if ('CUSTOM_CSS' === 'darkmode') {
         ThemeConfig.applyDarkModeStyles();
       }
 
-      MiaoYanCommon.onDOMReady(function () {
-        // Initialize lazy loading and layout immediately
-        MiaoYanCommon.setupHeaderAnchors();
-        MiaoYanCommon.optimizeImages();
-        MiaoYanCommon.setupImageZoom();
-        MiaoYanCommon.setupScrollCorners();
-
-        if (window.DiagramHandler) {
-          DiagramHandler.initializeAll();
-        }
-
-        // Defer KaTeX rendering so it doesn't block image loading
-        const renderMath = () => {
-          renderMathInElement(document.body, {
-            delimiters: [
-              { left: "$$", right: "$$", display: true },
-              { left: "$", right: "$", display: false },
-              { left: "\\(", right: "\\)", display: false },
-              { left: "\\[", right: "\\]", display: true }
-            ],
-            processEscapes: true,
-            ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
-          });
-        };
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(renderMath, { timeout: 200 });
-        } else {
-          setTimeout(renderMath, 0);
-        }
-      });
+      MiaoYanCommon.renderPage();
     });
   </script>
 </body>

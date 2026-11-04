@@ -42,6 +42,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// element starts out without our class. Driven by setSplitChrome.
     private var splitChromeEnabled = false
     private var lastRendererInitializationTime: TimeInterval = 0
+    /// The page on screen is the slide template, which cannot take another
+    /// note in place.
+    private var pageIsSlides = false
+    /// The preview style the page on screen was built with. A settings change
+    /// (font, size, width) gives a different one, and the page is loaded
+    /// again rather than reused.
+    private var pageStyle: String?
     static var hasCompletedInitialLoad = false
     private var loadCompletion: (() -> Void)?
     private var appDidBecomeActiveObserver: NSObjectProtocol?
@@ -99,6 +106,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
         userContentController.add(HandlerPreviewScroll(), name: "previewScroll")
         userContentController.add(HandlerTOCTip(), name: "tocTipClicked")
+        userContentController.add(HandlerImageSize(), name: "imageSize")
 
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
@@ -590,8 +598,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
             initScripts.append(
                 """
                     if (typeof renderMathInElement === 'function') {
-                        const renderMath = () => {
-                            renderMathInElement(document.body, {
+                        // The whole page, not only the inserted blocks: an
+                        // update in a burst skips math, and the catch-up that
+                        // follows renders the same HTML and inserts nothing,
+                        // so blocks from the burst would keep their raw TeX.
+                        // Rendered formulas are skipped by their .katex class.
+                        const renderMath = () => [container].forEach((target) => {
+                            renderMathInElement(target, {
                                 delimiters: [
                                     {left: "$$", right: "$$", display: true},
                                     {left: "$", right: "$", display: false},
@@ -601,7 +614,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                                 processEscapes: true,
                                 ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
                             });
-                        };
+                        });
 
                         if ('requestIdleCallback' in window) {
                             requestIdleCallback(renderMath, { timeout: 100 });
@@ -630,8 +643,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // so a split-view edit left every replaced block uncoloured.
         initScripts.append(
             """
-                if (window.hljs && typeof window.hljs.highlightAll === 'function') {
-                    window.hljs.highlightAll();
+                if (window.hljs && typeof window.hljs.highlightElement === 'function') {
+                    renderTargets.forEach((target) => {
+                        const blocks = target.matches('pre code') ? [target] : target.querySelectorAll('pre code');
+                        blocks.forEach((block) => window.hljs.highlightElement(block));
+                    });
                 }
                 if (window.MiaoYanCommon && typeof window.MiaoYanCommon.wrapWideTables === 'function') {
                     window.MiaoYanCommon.wrapWideTables();
@@ -654,6 +670,18 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     const preserveScroll = \(preserveScroll ? "true" : "false");
                     let savedLine = 0;
                     let usedAnchorScroll = false;
+                    // The first block at the top of the view and where it sits.
+                    // A block the update keeps is the same node afterwards, so
+                    // holding it in place keeps the reader exactly where they
+                    // were, even when text above it grew or shrank.
+                    let keptAnchor = null;
+                    let keptAnchorTop = 0;
+                    if (preserveScroll && (window.pageYOffset || 0) > 0) {
+                        for (const child of container.children) {
+                            const rect = child.getBoundingClientRect();
+                            if (rect.bottom > 0) { keptAnchor = child; keptAnchorTop = rect.top; break; }
+                        }
+                    }
 
                     if (preserveScroll && window.__miaoyanSync) {
                         savedLine = window.__miaoyanSync.lineForScroll(window.pageYOffset || 0);
@@ -665,10 +693,19 @@ class MPreviewView: WKWebView, WKUIDelegate {
                         savedLine = maxScroll > 0 ? (window.pageYOffset || doc.scrollTop || 0) / maxScroll : 0;
                     }
 
-                    container.innerHTML = `\(html)`;
+                    // Only the blocks that changed are replaced (common.js
+                    // patchContent), so the rest keep their loaded images,
+                    // diagrams and formulas, and only new blocks are rendered.
+                    const inserted = window.MiaoYanCommon && typeof window.MiaoYanCommon.patchContent === 'function'
+                        ? window.MiaoYanCommon.patchContent(container, `\(html)`)
+                        : (container.innerHTML = `\(html)`, Array.from(container.childNodes));
+                    const renderTargets = inserted.filter((node) => node.nodeType === Node.ELEMENT_NODE);
                     \(initialization)
 
-                    if (preserveScroll) {
+                    if (preserveScroll && keptAnchor && keptAnchor.isConnected) {
+                        window.scrollBy(0, keptAnchor.getBoundingClientRect().top - keptAnchorTop);
+                        if (window.__miaoyanSync) window.__miaoyanSync.rebuild();
+                    } else if (preserveScroll) {
                         requestAnimationFrame(() => {
                             if (usedAnchorScroll && window.__miaoyanSync) {
                                 window.__miaoyanSync.rebuild();
@@ -761,6 +798,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // a long note left the preview on it while the list showed another.
         loadEpoch &+= 1
         let epoch = loadEpoch
+        inPlaceNote = nil
         // A content update already in flight was for the previous document;
         // letting it finish would set `note` back to the note it started on.
         contentUpdateVersion &+= 1
@@ -769,8 +807,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let markdownString = note.getPrettifiedContent()
             let imagesStorage = note.project.url
             let css = HtmlManager.previewStyle()
+            self.pageStyle = css
             let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
             let isMagicPPT = UserDefaultsManagement.magicPPT
+            self.pageIsSlides = isMagicPPT
 
             // Move markdown rendering and image processing to background thread
             let rendered: (processedHtml: String, processedMarkdown: String?)? = await Task.detached {
@@ -827,6 +867,58 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
 
+    /// Whether another note can open in the page already on screen.
+    var canShowNoteInPlace: Bool {
+        hasLoadedTemplate && !isLoadingTemplate && !pageIsSlides && !UserDefaultsManagement.magicPPT
+            && !UserDefaultsManagement.isOnExportHtml && !UserDefaultsManagement.isOnExportPPT
+            && !Self.isExporting && pageStyle == HtmlManager.previewStyle()
+    }
+
+    /// The note an in-place switch is rendering. Until it lands `note` still
+    /// names the page on screen, so an update for that page has to cancel the
+    /// switch, or going back to it mid-render let the other note replace it.
+    private var inPlaceNote: Note?
+
+    /// Opens `note` in the page already on screen (common.js `showNote`)
+    /// instead of loading the template again: the scripts stay parsed and
+    /// the previous note stays visible until the next one replaces it, so
+    /// moving through notes in preview has no blank frame in between. Falls
+    /// back to a full load when the page cannot take it.
+    public func showNoteInPlace(_ note: Note, completion: (() -> Void)? = nil) {
+        loadEpoch &+= 1
+        let epoch = loadEpoch
+        contentUpdateVersion &+= 1
+        pendingPostLoadUpdateNote = nil
+        inPlaceNote = note
+        Task { @MainActor [weak self, note] in
+            guard let self else { return }
+            let markdownString = note.getPrettifiedContent()
+            let imagesStorage = note.project.url
+            let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+            let html = await Task.detached {
+                renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak).map {
+                    HtmlManager.processImages(in: $0, imagesStorage: imagesStorage)
+                }
+            }.value
+            guard epoch == self.loadEpoch else { return }
+            guard let html else {
+                self.inPlaceNote = nil
+                self.load(note: note, force: true, completion: completion)
+                return
+            }
+            let script = "window.MiaoYanCommon && typeof MiaoYanCommon.showNote === 'function' ? MiaoYanCommon.showNote(\(HtmlManager.jsStringLiteral(html))) : false"
+            let shown = (try? await self.evaluateJavaScript(script)) as? Bool == true
+            guard epoch == self.loadEpoch else { return }
+            self.inPlaceNote = nil
+            if shown {
+                self.note = note
+                completion?()
+            } else {
+                self.load(note: note, force: true, completion: completion)
+            }
+        }
+    }
+
     // Lightweight content update for split view (preserves scroll position)
     public func updateContent(note: Note, preserveScroll: Bool = true) {
         Task { @MainActor [weak self, note] in
@@ -836,6 +928,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
             self.contentUpdateWorkItem?.cancel()
             self.contentUpdateWorkItem = nil
+
+            if self.inPlaceNote != nil {
+                self.inPlaceNote = nil
+                self.loadEpoch &+= 1
+            }
 
             if let currentNote = self.note, currentNote !== note {
                 self.isUpdatingContent = false

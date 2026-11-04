@@ -54,7 +54,7 @@ enum ExportHosts {
 @MainActor
 extension MPreviewView {
 
-    private static var isExporting = false
+    fileprivate(set) static var isExporting = false
     private static var exportStartTime: Date?
     private static let exportTimeout: TimeInterval = 30.0
 

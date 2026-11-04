@@ -91,6 +91,7 @@
 		33F1E2FF1B56462C8C96769E /* MiaoYanTests/PrefsWindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */; };
 		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
 		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
+		30DCFC5BB00D93D9A25EEBBF /* MiaoYanTests/PreviewPatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */; };
 		3ED257B778940D276AFD3DD7 /* MiaoYanTests/EditorHotPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */; };
 		95B90A6B90561F9C08D03B8E /* MiaoYanTests/ModificationDateCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */; };
 		1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */; };
@@ -156,6 +157,7 @@
 		D77CC041216A608500582B97 /* EditorScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77CC040216A608500582B97 /* EditorScrollView.swift */; };
 		D783B505208A1BFD00328A41 /* EditorSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D783B504208A1BFD00328A41 /* EditorSplitView.swift */; };
 		D797004C1F3DD10700BAD94D /* EditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D797004B1F3DD10700BAD94D /* EditTextView.swift */; };
+		AB0444D3EA0DF19CAC471302 /* EditTextView+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219D3C3B530F64A59201BB6A /* EditTextView+Preview.swift */; };
 		D79FE8A21F77D04A00113CFD /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79FE8A01F77D04A00113CFD /* Note.swift */; };
 		D7A415141F2FBDA00099B82C /* NotesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A415131F2FBDA00099B82C /* NotesTableView.swift */; };
 		D7B3FE7121027A6D00764C39 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB3820FEDE230005E120 /* UserDataService.swift */; };
@@ -297,6 +299,7 @@
 		D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsWindowControllerTests.swift; sourceTree = SOURCE_ROOT; };
 		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
 		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
+		F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PreviewPatchTests.swift; sourceTree = SOURCE_ROOT; };
 		B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/EditorHotPathTests.swift; sourceTree = SOURCE_ROOT; };
 		40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ModificationDateCacheTests.swift; sourceTree = SOURCE_ROOT; };
 		0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsFitTests.swift; sourceTree = SOURCE_ROOT; };
@@ -361,6 +364,7 @@
 		D77CC040216A608500582B97 /* EditorScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorScrollView.swift; sourceTree = "<group>"; };
 		D783B504208A1BFD00328A41 /* EditorSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSplitView.swift; sourceTree = "<group>"; };
 		D797004B1F3DD10700BAD94D /* EditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextView.swift; sourceTree = "<group>"; };
+		219D3C3B530F64A59201BB6A /* EditTextView+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EditTextView+Preview.swift"; sourceTree = "<group>"; };
 		D79FE8A01F77D04A00113CFD /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		D7A415131F2FBDA00099B82C /* NotesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTableView.swift; sourceTree = "<group>"; };
 		D7B6E599207912E300FE0E20 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -485,6 +489,7 @@
 				B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */,
 				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
 				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
+				F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */,
 				B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */,
 				40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */,
 				0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */,
@@ -625,6 +630,7 @@
 			children = (
 				2781609D2E75554200F3D54B /* PrefsControls.swift */,
 				D797004B1F3DD10700BAD94D /* EditTextView.swift */,
+				219D3C3B530F64A59201BB6A /* EditTextView+Preview.swift */,
 				272ABB5E285F305500CCD651 /* SidebarProjectView.swift */,
 				D735E5BC1F2EF66000173215 /* NoteCellView.swift */,
 				D735E5BE1F2F001500173215 /* NoteRowView.swift */,
@@ -852,6 +858,7 @@
 				BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */,
 				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
 				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
+				30DCFC5BB00D93D9A25EEBBF /* MiaoYanTests/PreviewPatchTests.swift in Sources */,
 				3ED257B778940D276AFD3DD7 /* MiaoYanTests/EditorHotPathTests.swift in Sources */,
 				95B90A6B90561F9C08D03B8E /* MiaoYanTests/ModificationDateCacheTests.swift in Sources */,
 				1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */,
@@ -927,6 +934,7 @@
 				27E951092E814E61004E2883 /* ShortcutTemplateManager.swift in Sources */,
 				278160A12E7588F100F3D54B /* TypographyPrefsViewController.swift in Sources */,
 				D797004C1F3DD10700BAD94D /* EditTextView.swift in Sources */,
+				AB0444D3EA0DF19CAC471302 /* EditTextView+Preview.swift in Sources */,
 				276312932E7677E9007BB5E9 /* AppDelegate.swift in Sources */,
 				272CAC2628758C6A0026EF50 /* ContentViewController.swift in Sources */,
 				D7487FD821738A1900D09383 /* NSImage+.swift in Sources */,

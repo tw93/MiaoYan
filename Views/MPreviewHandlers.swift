@@ -10,6 +10,19 @@ class HandlerTOCTip: NSObject, WKScriptMessageHandler {
         UserDefaultsManagement.hasShownTOCTip = true
     }
 }
+/// A remote image the page measured once it loaded (`data-measure`), kept so
+/// the next render reserves its box (`RemoteImageSizes`).
+class HandlerImageSize: NSObject, WKScriptMessageHandler {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        guard let body = message.body as? [String: Any], let url = body["src"] as? String,
+            let width = (body["width"] as? NSNumber)?.intValue, let height = (body["height"] as? NSNumber)?.intValue
+        else { return }
+        RemoteImageSizes.shared.record(url: url, width: width, height: height)
+    }
+}
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     func userContentController(
         _ userContentController: WKUserContentController,

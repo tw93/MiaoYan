@@ -1,0 +1,151 @@
+import WebKit
+import XCTest
+
+@testable import MiaoYan
+
+/// A live preview update replaces only the blocks that changed
+/// (`MiaoYanCommon.patchContent`), so images, diagrams and formulas the
+/// reader is looking at stay put while the note is written to.
+@available(macOS 12.0, *)
+final class PreviewPatchTests: XCTestCase {
+    private var tempDirectory: URL!
+    private var commonScript: URL!
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        tempDirectory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("MiaoYan Preview Patch Tests \(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
+        let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
+        commonScript = bundle.appendingPathComponent("js/common.js")
+    }
+
+    override func tearDownWithError() throws {
+        try? FileManager.default.removeItem(at: tempDirectory)
+        try super.tearDownWithError()
+    }
+
+    private static let image = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+    private static let before = "# Title\n\nFirst paragraph.\n\n![](\(image))\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n\nLast paragraph."
+
+    @MainActor
+    private func loadPage(_ markdown: String) async throws -> WKWebView {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        // common.js after #write, as the deferred script runs in the app, so
+        // it records the renderer's blocks before anything changes them.
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8"></head><body>
+            <div class="markdown-body heti" id="write">\(html)</div>
+            <script src="\(commonScript.absoluteString)"></script>
+            <script>MiaoYanCommon.wrapWideTables(); window.__ready = true;</script>
+            </body></html>
+            """
+        let url = tempDirectory.appendingPathComponent("page-\(UUID().uuidString).html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 800, height: 600))
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if (try? await webView.evaluateJavaScript("window.__ready === true") as? Bool) == true { return webView }
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTFail("page did not load")
+        return webView
+    }
+
+    @MainActor
+    private func patch(_ webView: WKWebView, to markdown: String) async throws -> [String: Any] {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        let literal = String(data: try JSONEncoder().encode(html), encoding: .utf8) ?? "\"\""
+        let script = """
+            (function() {
+                const container = document.getElementById('write');
+                const inserted = MiaoYanCommon.patchContent(container, \(literal));
+                MiaoYanCommon.wrapWideTables();
+                const img = container.querySelector('img');
+                const table = container.querySelector('table');
+                const last = Array.from(container.querySelectorAll('p')).pop();
+                return {
+                    inserted: inserted.filter((n) => n.nodeType === 1).length,
+                    imageKept: img && img.__mark === 'kept',
+                    tableKept: table && table.__mark === 'kept',
+                    imageLine: parseInt(img.closest('p').getAttribute('data-sourcepos'), 10),
+                    lastLine: parseInt(last.getAttribute('data-sourcepos'), 10),
+                    text: container.textContent.replace(/\\s+/g, ' ').trim()
+                };
+            })();
+            """
+        let raw = try await webView.evaluateJavaScript(script)
+        return try XCTUnwrap(raw as? [String: Any])
+    }
+
+    @MainActor
+    private func mark(_ webView: WKWebView) async throws {
+        _ = try await webView.evaluateJavaScript(
+            "document.querySelector('#write img').__mark = 'kept'; document.querySelector('#write table').__mark = 'kept'; true")
+    }
+
+    @MainActor
+    func testEditKeepsTheBlocksThatDidNotChangeAndShiftsTheirLines() async throws {
+        let webView = try await loadPage(Self.before)
+        try await mark(webView)
+        let after = "Added above.\n\n" + Self.before.replacingOccurrences(of: "First paragraph.", with: "First paragraph, edited.")
+
+        let result = try await patch(webView, to: after)
+
+        XCTAssertEqual(result["imageKept"] as? Bool, true, "\(result)")
+        XCTAssertEqual(result["tableKept"] as? Bool, true, "the wrapped table is matched through its scroll box")
+        XCTAssertEqual(result["inserted"] as? Int, 2, "the added paragraph and the edited one; the heading between them is reused")
+        XCTAssertEqual(result["imageLine"] as? Int, 7, "a kept block takes its new source line")
+        XCTAssertEqual(result["lastLine"] as? Int, 13)
+        XCTAssertEqual(
+            result["text"] as? String,
+            "Added above. Title First paragraph, edited. A B 1 2 Last paragraph.")
+    }
+
+    /// A blank line added inside a quote renders the same HTML, but the lines
+    /// inside it moved; the block is replaced so its positions are right.
+    @MainActor
+    func testABlockWhoseInnerLinesMovedIsReplaced() async throws {
+        let webView = try await loadPage("> one\n>\n> two\n\nTail.")
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "> one\n>\n>\n> two\n\nTail.", useGithubLineBreak: false))
+        let script = """
+            (function() {
+                const container = document.getElementById('write');
+                const inserted = MiaoYanCommon.patchContent(container, \(HtmlManager.jsStringLiteral(html)));
+                const quoted = container.querySelectorAll('blockquote p');
+                return {
+                    inserted: inserted.filter((n) => n.nodeType === 1).length,
+                    second: parseInt(quoted[1].getAttribute('data-sourcepos'), 10),
+                    tail: parseInt(container.querySelector(':scope > p').getAttribute('data-sourcepos'), 10)
+                };
+            })();
+            """
+        let raw = try await webView.evaluateJavaScript(script)
+        let result = try XCTUnwrap(raw as? [String: Any])
+        XCTAssertEqual(result["inserted"] as? Int, 1, "only the quote; the tail is kept and moved a line down")
+        XCTAssertEqual(result["second"] as? Int, 4)
+        XCTAssertEqual(result["tail"] as? Int, 6)
+    }
+
+    @MainActor
+    func testUnchangedNoteInsertsNothing() async throws {
+        let webView = try await loadPage(Self.before)
+        try await mark(webView)
+        let result = try await patch(webView, to: Self.before)
+        XCTAssertEqual(result["inserted"] as? Int, 0)
+        XCTAssertEqual(result["imageKept"] as? Bool, true)
+    }
+
+    @MainActor
+    func testAPageTheRecordNoLongerDescribesIsRebuilt() async throws {
+        let webView = try await loadPage(Self.before)
+        try await mark(webView)
+        _ = try await webView.evaluateJavaScript("document.getElementById('write').appendChild(document.createElement('hr')); true")
+        let result = try await patch(webView, to: Self.before)
+        XCTAssertEqual(result["imageKept"] as? Bool, false, "everything is replaced")
+        XCTAssertEqual(result["text"] as? String, "Title First paragraph. A B 1 2 Last paragraph.")
+        let count = try await webView.evaluateJavaScript("document.querySelectorAll('#write hr').length") as? Int
+        XCTAssertEqual(count, 0, "the stray node is gone")
+    }
+}

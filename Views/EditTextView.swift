@@ -81,7 +81,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var fontColor: NSColor { Theme.textColor }
     private var editorSearchBar: PreviewSearchBar?
     private var currentFillTask: Task<Void, Never>?
-    private var fillEpoch: UInt64 = 0
+    private(set) var fillEpoch: UInt64 = 0
     private var editorSearchBarConstraints: [NSLayoutConstraint] = []
     private var editorSearchBarHeightConstraint: NSLayoutConstraint?
     private var editorSearchRanges: [NSRange] = []
@@ -91,19 +91,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         viewDelegate?.sessionState ?? AppContext.shared.sessionState
     }
 
-    private var isPreviewModeActive: Bool {
+    var isPreviewModeActive: Bool {
         !isShellHosted && (runtimeState?.preview ?? UserDefaultsManagement.preview)
     }
 
-    private var isPresentationModeActive: Bool {
+    var isPresentationModeActive: Bool {
         !isShellHosted && (runtimeState?.presentation ?? UserDefaultsManagement.presentation)
     }
 
-    private var isMagicPPTModeActive: Bool {
+    var isMagicPPTModeActive: Bool {
         !isShellHosted && (runtimeState?.magicPPT ?? UserDefaultsManagement.magicPPT)
     }
 
-    private var isSplitModeActive: Bool {
+    var isSplitModeActive: Bool {
         !isShellHosted && (runtimeState?.splitViewMode ?? UserDefaultsManagement.splitViewMode)
     }
 
@@ -595,8 +595,20 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 && !isSplitModeActive
                 && !options.force
                 && markdownView?.displayedNote === note
+            // Reading from note to note: the next one opens in the page on
+            // screen, with no reload and no blank frame between them.
+            let shouldShowNoteInPlace =
+                isPreviewModeActive
+                && !isPresentationModeActive
+                && !isMagicPPTModeActive
+                && !isSplitModeActive
+                && markdownView?.canShowNoteInPlace == true
+                && markdownView?.isHidden == false
+                && markdownView?.displayedNote != nil
+                && markdownView?.displayedNote !== note
             let shouldHidePreviewUntilReload =
                 !shouldUseIncrementalPreviewUpdate
+                && !shouldShowNoteInPlace
                 && markdownView?.displayedNote !== nil
                 && markdownView?.displayedNote !== note
 
@@ -624,7 +636,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     previewView: previewView,
                     options: options,
                     allowTransition: allowPreviewTransition,
-                    useIncremental: shouldUseIncrementalPreviewUpdate
+                    useIncremental: shouldUseIncrementalPreviewUpdate,
+                    inPlace: shouldShowNoteInPlace
                 )
             } else if let previewView = markdownView,
                 let fallbackContainer = viewController?.editAreaScroll
@@ -648,7 +661,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     previewView: previewView,
                     options: options,
                     allowTransition: allowPreviewTransition,
-                    useIncremental: shouldUseIncrementalPreviewUpdate
+                    useIncremental: shouldUseIncrementalPreviewUpdate,
+                    inPlace: shouldShowNoteInPlace
                 )
             }
         } else {
@@ -693,77 +707,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         restoreCursorPosition(needScrollToCursor: options.needScrollToCursor)
     }
 
-    private func renderPreviewContent(
-        note: Note,
-        previewView: MPreviewView,
-        options: FillOptions,
-        allowTransition: Bool,
-        useIncremental: Bool
-    ) {
-        // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
-        let needsTransition = allowTransition && !previewView.isHidden && previewView.alphaValue > 0
-        if needsTransition {
-            // The load waits for the fade-out. A fill that lands in those
-            // 80ms loads its note at once; loading this one afterwards would
-            // put the previous note back, and split mode then showed one note
-            // in the editor beside another in the preview.
-            let epoch = fillEpoch
-            NSAnimationContext.runAnimationGroup(
-                { context in
-                    context.duration = Theme.Motion.previewFade
-                    context.timingFunction = Theme.Motion.curve
-                    previewView.animator().alphaValue = 0
-                },
-                completionHandler: { [weak self] in
-                    Task { @MainActor in
-                        guard let self, self.fillEpoch == epoch else { return }
-                        previewView.load(note: note, force: options.force)
-                        NSAnimationContext.runAnimationGroup({ context in
-                            context.duration = Theme.Motion.feedback
-                            context.timingFunction = Theme.Motion.curve
-                            previewView.animator().alphaValue = 1.0
-                        })
-                    }
-                })
-        } else {
-            if useIncremental, previewView.hasLoadedTemplate {
-                previewView.updateContent(note: note, preserveScroll: false)
-                previewView.isHidden = false
-                previewView.alphaValue = 1.0
-            } else {
-                let shouldGateReveal =
-                    !MPreviewView.hasCompletedInitialLoad
-                    || previewView.displayedNote !== note
-                    || previewView.isHidden
-                if shouldGateReveal {
-                    previewView.alphaValue = 0
-                } else {
-                    // Fast reveal: show immediately to provide instant visual feedback
-                    previewView.isHidden = false
-                    previewView.alphaValue = 1.0
-                }
-                previewView.load(note: note, force: options.force) {
-                    if shouldGateReveal {
-                        DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
-                            guard let self = self else { return }
-                            let shouldShowPreview =
-                                self.isPreviewModeActive
-                                || self.isPresentationModeActive
-                                || self.isMagicPPTModeActive
-                                || self.isSplitModeActive
-                            guard shouldShowPreview else { return }
-                            previewView.isHidden = false
-                            NSAnimationContext.runAnimationGroup({ context in
-                                context.duration = Theme.Motion.previewFade
-                                context.timingFunction = Theme.Motion.curve
-                                previewView.animator().alphaValue = 1.0
-                            })
-                        }
-                    }
-                }
-            }
-        }
-    }
     public func clear() {
         currentFillTask?.cancel()
         currentFillTask = nil

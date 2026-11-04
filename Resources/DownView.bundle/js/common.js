@@ -110,6 +110,10 @@ const MiaoYanCommon = {
       const item = checkbox.closest('li[data-sourcepos]');
       if (item) checkbox.dataset.line = item.dataset.sourcepos.split(':')[0];
 
+      // A live update keeps the blocks that did not change, and their boxes
+      // with them; a second listener would toggle the line twice.
+      if (checkbox.__miaoyanBound) return;
+      checkbox.__miaoyanBound = true;
       checkbox.addEventListener('click', (event) => {
         this.handleCheckboxClick(event.target);
       });
@@ -140,6 +144,7 @@ const MiaoYanCommon = {
     }
 
     element.parentNode.replaceChild(input, element);
+    input.__miaoyanBound = true;
     input.addEventListener('click', () => {
       this.handleCheckboxClick(input);
     });
@@ -163,9 +168,44 @@ const MiaoYanCommon = {
       }
     });
 
+    // A remote image MiaoYan has not seen before reports its size once it
+    // arrives, so the next time the note opens its box is already reserved.
+    document.querySelectorAll('img[data-measure]').forEach((img) => {
+      if (img.__miaoyanMeasured) return;
+      img.__miaoyanMeasured = true;
+      const report = () => {
+        const src = img.currentSrc || img.src;
+        if (!src || src.startsWith('data:') || img.naturalWidth < 2) return false;
+        img.removeAttribute('data-measure');
+        window.webkit?.messageHandlers.imageSize?.postMessage({ src, width: img.naturalWidth, height: img.naturalHeight });
+        return true;
+      };
+      const onLoad = () => { if (report()) img.removeEventListener('load', onLoad); };
+      if (!(img.complete && report())) img.addEventListener('load', onLoad);
+    });
+
+    // Lazy images start only once the page has loaded. An image whose src is
+    // set before the load event holds that event back, and the app shows a
+    // note only after it, so a note with many images, or one slow server,
+    // stayed hidden until those images had arrived. Text shows first now and
+    // the images fill their reserved boxes right after.
+    if (document.readyState !== 'complete') {
+      if (!this._lazyAfterLoad) {
+        this._lazyAfterLoad = true;
+        window.addEventListener('load', () => this.optimizeImages(), { once: true });
+      }
+      return;
+    }
+
     // Intersection Observer for aggressive lazy loading
     if ('IntersectionObserver' in window) {
-      const imageObserver = new IntersectionObserver((entries, observer) => {
+      // One observer for the page: a split-view update calls this again, and
+      // a second observer would watch the same images twice.
+      if (this._imageObserver) {
+        document.querySelectorAll('img.lazy-image').forEach(img => this._imageObserver.observe(img));
+        return;
+      }
+      const imageObserver = this._imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target;
@@ -434,6 +474,176 @@ const MiaoYanCommon = {
     } else {
       callback();
     }
+  },
+
+  // A live update replaces only the top-level blocks that changed, as VS
+  // Code's Markdown preview reconciles its page. Replacing the whole body on
+  // every save reloaded every image and redrew every diagram and formula, so
+  // a note being written to, from the editor beside it or from another app,
+  // blinked on each write. A block is matched by its rendered HTML without
+  // its source positions, which a line added above it shifts.
+  // Source positions count from the block's own first line, so a block that
+  // only moved still matches, while one whose inner lines changed (a blank
+  // line added inside a quote renders the same HTML) does not: shifting it
+  // as a whole would leave its task boxes pointing at the wrong lines.
+  blockKey(node) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const base = parseInt(node.getAttribute('data-sourcepos'), 10) || 0;
+      return node.outerHTML.replace(/ data-sourcepos="(\d+)(:\d+-)(\d+)(:\d+)"/g,
+        (_, a, mid, b, end) => ` data-sourcepos="${a - base}${mid}${b - base}${end}"`);
+    }
+    if (node.nodeType === Node.TEXT_NODE) return '#text' + node.textContent;
+    return '#node';
+  },
+
+  blockEntry(node) {
+    const pos = node.nodeType === Node.ELEMENT_NODE ? node.getAttribute('data-sourcepos') : null;
+    return { node, key: this.blockKey(node), line: pos ? parseInt(pos, 10) : null };
+  },
+
+  // Taken while the page still holds the renderer's HTML, before highlighting,
+  // tables and lazy images change it, so the first update can match blocks.
+  recordBlocks(container) {
+    if (!container) return;
+    container.__miaoyanBlocks = Array.from(container.childNodes).map(node => this.blockEntry(node));
+  },
+
+  shiftSourceLines(root, delta) {
+    if (root.nodeType !== Node.ELEMENT_NODE) return;
+    const shift = (el) => {
+      const pos = el.getAttribute('data-sourcepos');
+      if (!pos) return;
+      el.setAttribute('data-sourcepos', pos.replace(/^(\d+)(:\d+-)(\d+)/, (_, a, mid, b) => `${+a + delta}${mid}${+b + delta}`));
+    };
+    shift(root);
+    root.querySelectorAll('[data-sourcepos]').forEach(shift);
+  },
+
+  // Everything the page does to a note's freshly rendered HTML: at load
+  // (index.html) and again for each note opened in place.
+  renderPage() {
+    this.initializeCore();
+    this.setupHeaderAnchors();
+    this.optimizeImages();
+    this.setupImageZoom();
+    this.setupScrollCorners();
+    if (window.DiagramHandler) DiagramHandler.initializeAll();
+    this.wrapWideTables();
+    this.setupInteractiveCheckboxes();
+
+    // Deferred so it does not hold up the first paint.
+    const renderMath = () => {
+      if (typeof renderMathInElement !== 'function') return;
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+          { left: "\\(", right: "\\)", display: false },
+          { left: "\\[", right: "\\]", display: true }
+        ],
+        processEscapes: true,
+        ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
+      });
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(renderMath, { timeout: 200 });
+    } else {
+      setTimeout(renderMath, 0);
+    }
+  },
+
+  // Opens another note in this page instead of loading the page again, as
+  // VS Code's preview swaps its body when the document changes. A reload
+  // parsed every script again and the preview went blank between notes.
+  showNote(html) {
+    const container = document.getElementById('write');
+    if (!container) return false;
+    container.__miaoyanBlocks = null;
+    this.patchContent(container, html);
+    window.scrollTo(0, 0);
+    this.renderPage();
+    window.MiaoYanTOC.refresh();
+    if (window.__miaoyanSync) window.__miaoyanSync.rebuild();
+    return true;
+  },
+
+  // Puts `html` into `container` and returns the nodes it inserted.
+  patchContent(container, html) {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    const fresh = Array.from(template.content.childNodes).map(node => this.blockEntry(node));
+    const old = container.__miaoyanBlocks;
+    // A tracked block is the container's child itself, or, for a table, the
+    // scroll box it was wrapped in. Anything else on the page means the
+    // record no longer describes it, and the page is rebuilt.
+    const children = container.childNodes;
+    const tops = old ? old.map(block => {
+      let node = block.node;
+      while (node && node.parentNode !== container) node = node.parentNode;
+      return node;
+    }) : null;
+    const usable = tops && tops.length === children.length && tops.every((top, i) => top === children[i]);
+    if (!usable) {
+      container.replaceChildren(...fresh.map(block => block.node));
+      container.__miaoyanBlocks = fresh;
+      return fresh.map(block => block.node);
+    }
+
+    let start = 0;
+    while (start < old.length && start < fresh.length && old[start].key === fresh[start].key) start++;
+    let endOld = old.length;
+    let endFresh = fresh.length;
+    while (endOld > start && endFresh > start && old[endOld - 1].key === fresh[endFresh - 1].key) {
+      endOld--;
+      endFresh--;
+    }
+
+    const keep = (i, now) => {
+      const was = old[i];
+      if (was.line != null && now.line != null && was.line !== now.line) this.shiftSourceLines(tops[i], now.line - was.line);
+      return { node: was.node, key: now.key, line: now.line };
+    };
+
+    // Between the shared start and end, an edit near the top and another
+    // further down leave unchanged blocks in the middle too. Elements are
+    // matched in order by key and reused; whitespace text is cheap, so it is
+    // always taken fresh. The search looks a bounded way ahead, so a note
+    // rewritten throughout costs no more than replacing it.
+    const middle = [];
+    const reused = new Set();
+    let cursor = start;
+    for (let j = start; j < endFresh; j++) {
+      const now = fresh[j];
+      let match = -1;
+      if (now.node.nodeType === Node.ELEMENT_NODE) {
+        for (let i = cursor; i < endOld && i < cursor + 64; i++) {
+          if (old[i].node.nodeType === Node.ELEMENT_NODE && old[i].key === now.key) { match = i; break; }
+        }
+      }
+      if (match >= 0) {
+        reused.add(match);
+        cursor = match + 1;
+        middle.push({ block: keep(match, now), dom: tops[match], fresh: false });
+      } else {
+        middle.push({ block: now, dom: now.node, fresh: true });
+      }
+    }
+    for (let i = start; i < endOld; i++) if (!reused.has(i)) tops[i].remove();
+    // Placed from the end backwards; a reused block already in place is not
+    // moved, so its image or diagram is left alone.
+    let ref = endOld < old.length ? tops[endOld] : null;
+    for (let k = middle.length - 1; k >= 0; k--) {
+      const dom = middle[k].dom;
+      if (dom.nextSibling !== ref || dom.parentNode !== container) container.insertBefore(dom, ref);
+      ref = dom;
+    }
+
+    const blocks = [];
+    for (let i = 0; i < start; i++) blocks.push(keep(i, fresh[i]));
+    middle.forEach(entry => blocks.push(entry.block));
+    for (let k = 0; endOld + k < old.length; k++) blocks.push(keep(endOld + k, fresh[endFresh + k]));
+    container.__miaoyanBlocks = blocks;
+    return middle.filter(entry => entry.fresh).map(entry => entry.dom);
   }
 };
 
@@ -451,36 +661,20 @@ const TOC_CONFIG = {
 (function() {
   // Default no-op so a menu/shortcut trigger never hits an undefined call
   // before initTOC runs (or when there are too few headings to build a TOC).
-  window.MiaoYanTOC = { toggle: function() {} };
+  window.MiaoYanTOC = { toggle: function() {}, refresh: function() {} };
+
+  // Wired once per page. A note opened in place (MiaoYanCommon.showNote)
+  // calls refresh, which recounts the headings and rebuilds the list.
+  let hasTOC = false;
+  let refreshTOC = () => {};
 
   function initTOC() {
     const nav = document.querySelector('.toc-nav');
     const trigger = document.querySelector('.toc-hover-trigger');
     const tocContainer = document.querySelector('.toc-content');
     const pinBtn = document.querySelector('.toc-pin-btn');
-    if (!nav || !trigger || !tocContainer) return;
-
-    // Check if we have enough headings (only count h1-h3 for TOC)
-    const headings = document.querySelectorAll('#write h1, #write h2, #write h3');
-    if (headings.length < TOC_CONFIG.MIN_HEADINGS) {
-      trigger.style.display = 'none';
-      return;
-    }
-
-    // Initialize tocbot (only show 3 levels: h1, h2, h3)
-    if (window.tocbot) {
-      tocbot.init({
-        tocSelector: '.toc-content',
-        contentSelector: '#write',
-        headingSelector: 'h1, h2, h3',
-        hasInnerContainers: true,
-        collapseDepth: 3,
-        scrollSmooth: true,
-        scrollSmoothDuration: 200,
-        headingsOffset: 80,
-        ignoreHiddenElements: true
-      });
-    }
+    if (!nav || !trigger || !tocContainer || nav.__miaoyanTOC) return;
+    nav.__miaoyanTOC = true;
 
     let fadeTimer = null;
     let scrollTimeout = null;
@@ -500,6 +694,7 @@ const TOC_CONFIG = {
     };
 
     const show = () => {
+      if (!hasTOC) return;
       nav.classList.add('active');
       trigger.classList.add('hidden');
       cancelAutoHideTimer();
@@ -515,6 +710,7 @@ const TOC_CONFIG = {
     // instead of auto-hiding; closing unpins and hides. Bypasses the
     // isPinned guard in hide() on purpose so the shortcut always works.
     const menuToggle = () => {
+      if (!hasTOC) return;
       if (nav.classList.contains('active')) {
         isPinned = false;
         localStorage.setItem('toc-pinned', 'false');
@@ -529,7 +725,7 @@ const TOC_CONFIG = {
         show();
       }
     };
-    window.MiaoYanTOC = { toggle: menuToggle };
+    window.MiaoYanTOC = { toggle: menuToggle, refresh: () => refreshTOC() };
 
     // Auto-scroll active link into view within TOC panel
     const scrollToActive = () => {
@@ -600,15 +796,48 @@ const TOC_CONFIG = {
     });
 
     const handleResize = () => {
-      trigger.style.display = window.innerWidth < TOC_CONFIG.MIN_SCREEN_WIDTH ? 'none' : '';
-      if (window.innerWidth < TOC_CONFIG.MIN_SCREEN_WIDTH) hide();
+      const narrow = window.innerWidth < TOC_CONFIG.MIN_SCREEN_WIDTH;
+      trigger.style.display = narrow || !hasTOC ? 'none' : '';
+      if (narrow) hide();
     };
     window.addEventListener('resize', handleResize);
-    handleResize();
 
-    if (!isPinned) {
-      startAutoHideTimer();
-    }
+    // Enough headings (h1 to h3) for a TOC, or the trigger stays hidden.
+    refreshTOC = () => {
+      hasTOC = document.querySelectorAll('#write h1, #write h2, #write h3').length >= TOC_CONFIG.MIN_HEADINGS;
+      if (window.tocbot) {
+        tocbot.destroy();
+        if (hasTOC) {
+          // tocbot adds its smooth-scroll click listener on every init; the
+          // first one keeps working for later notes, so it is added once.
+          const smooth = !nav.__miaoyanSmooth;
+          nav.__miaoyanSmooth = true;
+          tocbot.init({
+            tocSelector: '.toc-content',
+            contentSelector: '#write',
+            headingSelector: 'h1, h2, h3',
+            hasInnerContainers: true,
+            collapseDepth: 3,
+            scrollSmooth: smooth,
+            scrollSmoothDuration: 200,
+            headingsOffset: 80,
+            ignoreHiddenElements: true
+          });
+        }
+      }
+      if (!hasTOC) {
+        nav.classList.remove('active');
+        trigger.classList.remove('hidden');
+      } else if (isPinned) {
+        nav.classList.add('pinned');
+        show();
+      }
+      handleResize();
+      // Each note shows the trigger again before it fades, as a fresh page did.
+      cancelAutoHideTimer();
+      if (!isPinned) startAutoHideTimer();
+    };
+    refreshTOC();
   }
 
   // Wait for tocbot to be available and render TOC
@@ -620,5 +849,7 @@ const TOC_CONFIG = {
     }, TOC_CONFIG.INIT_DELAY);
   });
 })();
+
+MiaoYanCommon.recordBlocks(document.getElementById('write'));
 
 window.MiaoYanCommon = MiaoYanCommon;

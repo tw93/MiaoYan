@@ -1,4 +1,5 @@
 import Foundation
+import ImageIO
 import WebKit
 
 private struct ImageLocation {
@@ -61,6 +62,14 @@ class HtmlManager {
     // The compact spacing overrides fight `.heti` typography defaults, which are tuned for
     // on-screen reading (1.64 line-height, 1.15em block gutters). Print rendering gets
     // tighter metrics closer to a typeset article.
+    /// A Swift string as a JavaScript string literal, for scripts that carry
+    /// text in: unlike a template literal, nothing inside it (a backtick, `${`,
+    /// a backslash) can end it or run as code.
+    static func jsStringLiteral(_ value: String) -> String {
+        guard let data = try? JSONEncoder().encode(value), let literal = String(data: data, encoding: .utf8) else { return "\"\"" }
+        return literal
+    }
+
     static func paginatedPrintCSS() -> String {
         return """
             @media print {
@@ -391,11 +400,6 @@ class HtmlManager {
         }
     }
 
-    private static func updateImageSrc(in html: String, fullMatch: String, oldSrc: String, newSrc: String) -> String {
-        let updatedTag = fullMatch.replacingOccurrences(of: "src=\"\(oldSrc)\"", with: "src=\"\(newSrc)\"")
-        return html.replacingOccurrences(of: fullMatch, with: updatedTag)
-    }
-
     private static func optimizeCDNImageURL(_ url: String) -> String {
         // Apply OSS compression for alipay CDN images (skip GIF/SVG)
         let lowerURL = url.lowercased()
@@ -443,6 +447,94 @@ class HtmlManager {
         return result
     }
 
+    /// The tag with a placeholder in `src` and the real URL in `data-src`,
+    /// which `MiaoYanCommon.optimizeImages` swaps in as the image nears the
+    /// viewport.
+    private static func lazyTag(_ tag: String, oldSrc: String, newSrc: String) -> String {
+        let lazy =
+            tag
+            .replacingOccurrences(of: "src=\"\(oldSrc)\"", with: "src=\"\(lazyPlaceholder)\" data-src=\"\(newSrc)\"")
+            .replacingOccurrences(of: "class=\"", with: "class=\"lazy-image ")
+        return lazy.contains("class=") ? lazy : lazy.replacingOccurrences(of: "<img ", with: "<img class=\"lazy-image\" ")
+    }
+
+    private static func asyncDecoded(_ tag: String) -> String {
+        tag.contains("decoding=") ? tag : tag.replacingOccurrences(of: "<img ", with: "<img decoding=\"async\" ")
+    }
+
+    /// A local image keeps its box before it loads: its pixel size goes into
+    /// `width` and `height`, so the page has its final height at once. Without
+    /// them every lazy image was a 1px placeholder, so a note with many images
+    /// started out a fraction of its height, too many images counted as in view
+    /// and loaded together, and the text below jumped down as each arrived.
+    private static func localImageTag(_ tag: String, oldSrc: String, path: String, eager: Bool) -> String {
+        let url = "file://\(path)"
+        var result =
+            eager
+            ? tag.replacingOccurrences(of: "src=\"\(oldSrc)\"", with: "src=\"\(url)\"")
+            : lazyTag(tag, oldSrc: oldSrc, newSrc: url)
+        if !hasSize(tag), let size = pixelSize(atPath: path) {
+            result = sized(result, size, original: tag)
+        }
+        return asyncDecoded(result)
+    }
+
+    /// A remote image takes the size the preview measured the last time it
+    /// loaded (`RemoteImageSizes`), the way Weekly's build writes sizes it
+    /// probed into its tags. One never seen before is marked `data-measure`,
+    /// so the page reports its size once it arrives; nothing extra is fetched.
+    private static func remoteImageTag(_ tag: String, oldSrc: String, newSrc: String) -> String {
+        var result = lazyTag(tag, oldSrc: oldSrc, newSrc: newSrc)
+        if !hasSize(tag) {
+            if let size = RemoteImageSizes.shared.size(for: newSrc) {
+                result = sized(result, size, original: tag)
+            } else {
+                result = result.replacingOccurrences(of: "<img ", with: "<img data-measure=\"1\" ")
+            }
+        }
+        return asyncDecoded(result)
+    }
+
+    private static func hasSize(_ tag: String) -> Bool {
+        tag.range(of: #"\s(width|height)="#, options: .regularExpression) != nil
+    }
+
+    private static func sized(_ tag: String, _ size: (width: Int, height: Int), original: String) -> String {
+        // The 1px placeholder brings its own square ratio, which beats the
+        // attributes' ratio, so the box is held by `aspect-ratio` too.
+        let style = original.contains("style=") ? "" : " style=\"aspect-ratio: \(size.width) / \(size.height)\""
+        return tag.replacingOccurrences(of: "<img ", with: "<img width=\"\(size.width)\" height=\"\(size.height)\"\(style) ")
+    }
+
+    /// The image's displayed size in pixels, from its header alone. An iCloud
+    /// file that has not been downloaded is skipped rather than fetched to
+    /// read it; that image simply loads without a reserved box.
+    static func pixelSize(atPath path: String) -> (width: Int, height: Int)? {
+        var info = stat()
+        guard stat(path, &info) == 0, info.st_flags & UInt32(SF_DATALESS) == 0 else { return nil }
+        // Split view renders on every keystroke; a file whose date and length
+        // are unchanged keeps the size read last time.
+        let stamp = PixelSizeCache.Stamp(seconds: info.st_mtimespec.tv_sec, nanoseconds: info.st_mtimespec.tv_nsec, length: info.st_size)
+        if let known = PixelSizeCache.shared.size(for: path, stamp: stamp) { return known }
+        let size = readPixelSize(atPath: path)
+        if let size { PixelSizeCache.shared.store(size, for: path, stamp: stamp) }
+        return size
+    }
+
+    private static func readPixelSize(atPath path: String) -> (width: Int, height: Int)? {
+        let options = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: path) as CFURL, options),
+            let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, options) as? [CFString: Any],
+            let width = properties[kCGImagePropertyPixelWidth] as? Int,
+            let height = properties[kCGImagePropertyPixelHeight] as? Int,
+            width > 0, height > 0
+        else { return nil }
+        // EXIF orientations 5 to 8 turn the picture a quarter, and the page
+        // shows it turned (`image-orientation: from-image`).
+        let orientation = properties[kCGImagePropertyOrientation] as? Int ?? 1
+        return orientation >= 5 && orientation <= 8 ? (height, width) : (width, height)
+    }
+
     static func processImages(in html: String, imagesStorage: URL) -> String {
         guard let regex = imageRegex else {
             Task { @MainActor in
@@ -477,22 +569,13 @@ class HtmlManager {
             // CDN images (http/https): rewrite to lazy-load format in Swift so browser never
             // starts downloading them before JS runs.
             // First image loads eagerly (hero/cover); rest use data-src + placeholder.
+            // Remote images all load lazily, the first one too: an eager one
+            // held the page back until it had downloaded, so the note stayed
+            // hidden for as long as the slowest server took.
             if imageInfo.srcPath.starts(with: "http://") || imageInfo.srcPath.starts(with: "https://") {
-                if isFirstImage {
-                    // Hero image: keep eager, but compress if it's an alipay OSS image
-                    let optimized = optimizeCDNImageURL(imageInfo.srcPath)
-                    if optimized != imageInfo.srcPath {
-                        htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: optimized)
-                    }
-                } else {
-                    // Non-hero CDN images: rewrite src → placeholder, add data-src + lazy-image class
-                    let optimized = optimizeCDNImageURL(imageInfo.srcPath)
-                    let lazyTag = imageInfo.fullMatch
-                        .replacingOccurrences(of: "src=\"\(imageInfo.srcPath)\"", with: "src=\"\(lazyPlaceholder)\" data-src=\"\(optimized)\"")
-                        .replacingOccurrences(of: "class=\"", with: "class=\"lazy-image ")
-                    let finalTag = lazyTag.contains("class=") ? lazyTag : lazyTag.replacingOccurrences(of: "<img ", with: "<img class=\"lazy-image\" ")
-                    htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
-                }
+                let optimized = optimizeCDNImageURL(imageInfo.srcPath)
+                let finalTag = remoteImageTag(imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: optimized)
+                htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
                 continue
             }
 
@@ -504,17 +587,8 @@ class HtmlManager {
                 pathCache[cleanPath] = exists
 
                 if exists {
-                    if isFirstImage {
-                        // First image: eager load
-                        htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(cleanPath)")
-                    } else {
-                        // Rest: lazy load
-                        let lazyTag = imageInfo.fullMatch
-                            .replacingOccurrences(of: "src=\"\(imageInfo.srcPath)\"", with: "src=\"\(lazyPlaceholder)\" data-src=\"file://\(cleanPath)\"")
-                            .replacingOccurrences(of: "class=\"", with: "class=\"lazy-image ")
-                        let finalTag = lazyTag.contains("class=") ? lazyTag : lazyTag.replacingOccurrences(of: "<img ", with: "<img class=\"lazy-image\" ")
-                        htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
-                    }
+                    let finalTag = localImageTag(imageInfo.fullMatch, oldSrc: imageInfo.srcPath, path: cleanPath, eager: isFirstImage)
+                    htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
                 } else {
                     htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
                 }
@@ -527,15 +601,8 @@ class HtmlManager {
             pathCache[absolutePath] = exists
 
             if exists {
-                if isFirstImage {
-                    htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(absolutePath)")
-                } else {
-                    let lazyTag = imageInfo.fullMatch
-                        .replacingOccurrences(of: "src=\"\(imageInfo.srcPath)\"", with: "src=\"\(lazyPlaceholder)\" data-src=\"file://\(absolutePath)\"")
-                        .replacingOccurrences(of: "class=\"", with: "class=\"lazy-image ")
-                    let finalTag = lazyTag.contains("class=") ? lazyTag : lazyTag.replacingOccurrences(of: "<img ", with: "<img class=\"lazy-image\" ")
-                    htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
-                }
+                let finalTag = localImageTag(imageInfo.fullMatch, oldSrc: imageInfo.srcPath, path: absolutePath, eager: isFirstImage)
+                htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
             } else {
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
             }
@@ -1011,5 +1078,112 @@ class HtmlManager {
         }
 
         return adjustedOffset
+    }
+}
+
+/// Image sizes already read, keyed by path and checked against the file's
+/// modification date and length. Renders run on detached tasks, so it locks.
+final class PixelSizeCache: @unchecked Sendable {
+    struct Stamp: Equatable {
+        let seconds: Int
+        let nanoseconds: Int
+        let length: Int64
+    }
+
+    static let shared = PixelSizeCache()
+    private let lock = NSLock()
+    private struct Entry {
+        let stamp: Stamp
+        let width: Int
+        let height: Int
+    }
+
+    private var entries: [String: Entry] = [:]
+    private let limit = 4096
+
+    func size(for path: String, stamp: Stamp) -> (width: Int, height: Int)? {
+        lock.lock()
+        defer { lock.unlock() }
+        guard let entry = entries[path], entry.stamp == stamp else { return nil }
+        return (entry.width, entry.height)
+    }
+
+    func store(_ size: (width: Int, height: Int), for path: String, stamp: Stamp) {
+        lock.lock()
+        defer { lock.unlock() }
+        if entries.count >= limit { entries.removeAll(keepingCapacity: true) }
+        entries[path] = Entry(stamp: stamp, width: size.width, height: size.height)
+    }
+}
+
+/// Sizes of remote images as the preview measured them, kept in the app's
+/// caches folder so a note opened again reserves each image's box before it
+/// downloads. Only the preview's own measurements go in; nothing is fetched.
+final class RemoteImageSizes: @unchecked Sendable {
+    static let shared = RemoteImageSizes()
+    private let lock = NSLock()
+    private var entries: [String: [Int]]?
+    private var saveScheduled = false
+    private let limit = 4000
+    private let queue = DispatchQueue(label: "com.tw93.miaoyan.remote-image-sizes", qos: .utility)
+    private let fileURL: URL?
+
+    init(fileURL: URL? = RemoteImageSizes.defaultFileURL) {
+        self.fileURL = fileURL
+    }
+
+    static let defaultFileURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?
+        .appendingPathComponent(Bundle.main.bundleIdentifier ?? "MiaoYan", isDirectory: true)
+        .appendingPathComponent("remote-image-sizes.json")
+
+    func size(for url: String) -> (width: Int, height: Int)? {
+        lock.lock()
+        defer { lock.unlock() }
+        guard let size = loadedEntries()[url], size.count == 2 else { return nil }
+        return (size[0], size[1])
+    }
+
+    func record(url: String, width: Int, height: Int) {
+        guard url.hasPrefix("http://") || url.hasPrefix("https://"), url.count < 4096,
+            (1...100_000).contains(width), (1...100_000).contains(height)
+        else { return }
+        lock.lock()
+        var current = loadedEntries()
+        guard current[url] != [width, height] else {
+            lock.unlock()
+            return
+        }
+        if current.count >= limit { current.removeAll(keepingCapacity: true) }
+        current[url] = [width, height]
+        entries = current
+        let shouldSchedule = !saveScheduled && fileURL != nil
+        if shouldSchedule { saveScheduled = true }
+        lock.unlock()
+        if shouldSchedule {
+            queue.asyncAfter(deadline: .now() + 2) { [weak self] in self?.save() }
+        }
+    }
+
+    /// Caller holds the lock.
+    private func loadedEntries() -> [String: [Int]] {
+        if let entries { return entries }
+        var loaded: [String: [Int]] = [:]
+        if let fileURL, let data = try? Data(contentsOf: fileURL),
+            let decoded = try? JSONDecoder().decode([String: [Int]].self, from: data)
+        {
+            loaded = decoded
+        }
+        entries = loaded
+        return loaded
+    }
+
+    private func save() {
+        lock.lock()
+        let snapshot = entries ?? [:]
+        saveScheduled = false
+        lock.unlock()
+        guard let fileURL, let data = try? JSONEncoder().encode(snapshot) else { return }
+        try? FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try? data.write(to: fileURL, options: .atomic)
     }
 }
