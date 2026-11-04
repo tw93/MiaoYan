@@ -959,6 +959,11 @@ class HtmlManager {
             for (var j = 0; j < images.length; j++) {
                 images[j].classList.remove('media-pending');
             }
+            // A video the page never loaded has no frame to show; it goes out
+            // as a bare player, not a grey box.
+            document.querySelectorAll('#write video').forEach(function(video) {
+                if (video.readyState < 2) video.style.backgroundColor = 'transparent';
+            });
             return true;
         })();
         """

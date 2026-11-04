@@ -12,6 +12,7 @@ final class ImageProbeStub: URLProtocol {
         let status: Int
         let body: Data
         var failuresLeft = 0
+        var hangs = false
     }
     private static let lock = NSLock()
     nonisolated(unsafe) private static var responses: [String: Response] = [:]
@@ -19,8 +20,8 @@ final class ImageProbeStub: URLProtocol {
     nonisolated(unsafe) private static var counts: [String: Int] = [:]
 
     /// `failing` first requests time out before the response is served.
-    static func serve(_ url: String, status: Int, body: Data, failing: Int = 0) {
-        lock.withLock { responses[url] = Response(status: status, body: body, failuresLeft: failing) }
+    static func serve(_ url: String, status: Int, body: Data, failing: Int = 0, hangs: Bool = false) {
+        lock.withLock { responses[url] = Response(status: status, body: body, failuresLeft: failing, hangs: hangs) }
     }
 
     static func range(for url: String) -> String? {
@@ -52,6 +53,7 @@ final class ImageProbeStub: URLProtocol {
             client?.urlProtocol(self, didFailWithError: URLError(.timedOut))
             return
         }
+        if response?.hangs == true { return }
         let status = response?.status ?? 404
         let http = HTTPURLResponse(url: url, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)
         if let http { client?.urlProtocol(self, didReceive: http, cacheStoragePolicy: .notAllowed) }
@@ -412,6 +414,17 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertEqual(PreviewMedia.deferredVideoTags(lines[0]), lines[0], "a second pass changes nothing")
     }
 
+    /// A video far from the view never loads its first frame in an export, so
+    /// the tint it waits on printed as a grey 16:9 box. Print and the PNG
+    /// capture drop the tint, leaving the bare player V4.6.1 showed.
+    func testExportsDoNotPrintAVideoAsAGreyBox() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let css = try String(contentsOf: root.appendingPathComponent("Resources/DownView.bundle/css/base.css"), encoding: .utf8)
+        let print = try XCTUnwrap(css.range(of: "@media print {\n  #write img.lazy-image,\n  #write img.media-pending,\n  #write video {\n    background-color: transparent;"))
+        XCTAssertFalse(print.isEmpty)
+        XCTAssertTrue(HtmlManager.checkImagesScript.contains("if (video.readyState < 2) video.style.backgroundColor = 'transparent';"))
+    }
+
     /// An image that gives only its width, as every weekly note does, takes
     /// its height from the image's own ratio. The placeholder's square ratio
     /// drew an 800 by 800 box for a landscape photo.
@@ -470,6 +483,20 @@ final class HtmlManagerTests: XCTestCase {
         let kept = PreviewMedia.sized(widthOnly, (400, 300), original: widthOnly, placeholder: false)
         XCTAssertFalse(kept.contains("height="), "a width the note wrote stays alone")
         XCTAssertTrue(kept.contains("aspect-ratio: auto 400 / 300"), kept)
+    }
+
+    /// Typora writes `<img src="a.png" style="zoom:50%;">`. Such a tag got the
+    /// width and height but no ratio, so behind the 1px placeholder its box
+    /// was square until the file loaded.
+    func testSizedTagKeepsTheNotesOwnStyleAndAddsTheRatio() {
+        let typora = "<img src=\"a.png\" style=\"zoom:50%;\">"
+        let preview = PreviewMedia.sized(typora, (400, 300), original: typora)
+        XCTAssertTrue(preview.contains("style=\"aspect-ratio: 400 / 300; zoom:50%;\""), preview)
+        XCTAssertEqual(preview.components(separatedBy: "style=").count, 2, "one style attribute, not two")
+        let single = "<img src='a.png' style='width:50%'>"
+        XCTAssertTrue(PreviewMedia.sized(single, (400, 300), original: single).contains("style='aspect-ratio: 400 / 300; width:50%'"))
+        let own = "<img src=\"a.png\" style=\"aspect-ratio: 1\">"
+        XCTAssertFalse(PreviewMedia.sized(own, (400, 300), original: own).contains("400 / 300"), "a note's own ratio stays")
     }
 
     func testPixelSizeComesFromTheFirstBytesOfAFile() throws {
@@ -556,6 +583,40 @@ final class HtmlManagerTests: XCTestCase {
         let measured = await probe.size(of: "https://probe.invalid/\(id)-measured.png")
         XCTAssertEqual(measured?.width, 10, "the page's own measurement is kept")
         XCTAssertEqual(ImageProbeStub.requests(for: "https://probe.invalid/\(id)-measured.png"), 0)
+    }
+
+    /// Moving to another note drops the probes still queued for the last
+    /// one: with four reads stuck on a dead host, a fifth waited behind them
+    /// for up to 15s each while the new note's images sat in 16:9 boxes.
+    func testQueuedProbesAreDroppedWhenThePreviewMovesOn() async throws {
+        let id = UUID().uuidString
+        let stuck = (0..<4).map { "https://probe.invalid/\(id)-stuck-\($0).png" }
+        stuck.forEach { ImageProbeStub.serve($0, status: 206, body: Data(), hangs: true) }
+        let queued = "https://probe.invalid/\(id)-queued.png"
+        ImageProbeStub.serve(queued, status: 206, body: Data())
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [ImageProbeStub.self]
+        configuration.timeoutIntervalForRequest = 3
+        let probe = RemoteImageProbe(configuration: configuration, sizes: RemoteImageSizes(fileURL: nil))
+        let reads = stuck.map { url in Task { await probe.size(of: url) } }
+        var tries = 0
+        while stuck.contains(where: { ImageProbeStub.requests(for: $0) == 0 }), tries < 300 {
+            tries += 1
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        let waiting = Task { await probe.size(of: queued) }
+        var queuedBefore = await probe.queuedCount
+        while queuedBefore == 0, tries < 600 {
+            tries += 1
+            try await Task.sleep(nanoseconds: 10_000_000)
+            queuedBefore = await probe.queuedCount
+        }
+        XCTAssertEqual(queuedBefore, 1, "the fifth read waits for a slot")
+        await probe.cancelQueued()
+        let answer = await waiting.value
+        XCTAssertNil(answer)
+        XCTAssertEqual(ImageProbeStub.requests(for: queued), 0, "a dropped probe never reaches the server")
+        reads.forEach { $0.cancel() }
     }
 
     func testTemplatePlaceholdersInsideNoteTextStayAsWritten() {

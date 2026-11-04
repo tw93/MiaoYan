@@ -33,11 +33,24 @@ enum PreviewMedia {
     /// side.
     static func sized(_ tag: String, _ size: (width: Int, height: Int), original: String, placeholder: Bool = true) -> String {
         let ratio = placeholder ? "\(size.width) / \(size.height)" : "auto \(size.width) / \(size.height)"
-        let style = original.contains("style=") ? "" : " style=\"aspect-ratio: \(ratio)\""
         let written = hasAttribute("width", in: original) || hasAttribute("height", in: original)
         let attributes = written ? "" : " width=\"\(size.width)\" height=\"\(size.height)\""
-        return tag.replacingOccurrences(of: "<img ", with: "<img\(attributes)\(style) ")
+        // A note's own style (Typora writes `style="zoom:50%"`) keeps its
+        // declarations and gets the ratio in front of them; one that sets its
+        // own aspect-ratio is left alone.
+        let sized = tag.replacingOccurrences(of: "<img ", with: "<img\(attributes) ")
+        guard let match = styleAttribute?.firstMatch(in: sized, range: NSRange(sized.startIndex..., in: sized)),
+            let opening = Range(match.range, in: sized)
+        else {
+            return tag.replacingOccurrences(of: "<img ", with: "<img\(attributes) style=\"aspect-ratio: \(ratio)\" ")
+        }
+        if original.lowercased().contains("aspect-ratio") { return sized }
+        return sized.replacingCharacters(in: opening, with: "\(sized[opening])aspect-ratio: \(ratio); ")
     }
+
+    private static let styleAttribute: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: #"\sstyle\s*=\s*["']"#, options: [.caseInsensitive])
+    }()
 
     /// The image's displayed size in pixels, from its header alone. An iCloud
     /// file that has not been downloaded is skipped rather than fetched to
@@ -261,7 +274,7 @@ actor RemoteImageProbe {
     private var inFlight: [String: Task<Answer, Never>] = [:]
     private var failed: Set<String> = []
     private var running = 0
-    private var waiters: [CheckedContinuation<Void, Never>] = []
+    private var waiters: [CheckedContinuation<Bool, Never>] = []
 
     init(configuration: URLSessionConfiguration = RemoteImageProbe.defaultConfiguration, sizes: RemoteImageSizes = .shared) {
         session = URLSession(configuration: configuration)
@@ -288,7 +301,7 @@ actor RemoteImageProbe {
         } else {
             let session = session
             task = Task {
-                await acquire()
+                guard await acquire() else { return .unknown }
                 let answer = await Self.read(url, session: session)
                 release()
                 return answer
@@ -311,19 +324,31 @@ actor RemoteImageProbe {
         }
     }
 
-    private func acquire() async {
+    /// Probes not yet started when the preview moves to another note are
+    /// dropped, so the next note's images are not queued behind the last
+    /// one's; reads already running finish and keep their answer.
+    func cancelQueued() {
+        let dropped = waiters
+        waiters.removeAll()
+        dropped.forEach { $0.resume(returning: false) }
+    }
+
+    var queuedCount: Int { waiters.count }
+
+    /// False when the wait was dropped by `cancelQueued` before a slot came.
+    private func acquire() async -> Bool {
         if running < Self.maxRunning {
             running += 1
-            return
+            return true
         }
-        await withCheckedContinuation { waiters.append($0) }
+        return await withCheckedContinuation { waiters.append($0) }
     }
 
     private func release() {
         if waiters.isEmpty {
             running -= 1
         } else {
-            waiters.removeFirst().resume()
+            waiters.removeFirst().resume(returning: true)
         }
     }
 
