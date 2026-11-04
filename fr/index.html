@@ -91,14 +91,6 @@
   unicode-range: U+8A9E;
 }
 @font-face {
-  font-family: "MiaoYan Mark";
-  src: url("/fonts/miaoyan-name.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+5999, U+8A00;
-}
-@font-face {
   font-family: "MiaoYan Serif SC";
   src: local("Source Han Serif SC"), local("Noto Serif CJK SC"),
        url("/fonts/miaoyan-serif-sc-regular.woff2") format("woff2");
@@ -323,8 +315,6 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 }
 .tagline { font-family: var(--serif); font-size: var(--text-title); line-height: 1.45; color: var(--near-black); margin: 0 0 10px; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; }
-/* The tagline opens with 妙言 in the other languages; set it in the app's lockup face, not the visitor's Songti or SimSun. */
-html:not([lang^="zh"]) .tagline { font-family: "MiaoYan Mark", var(--serif); }
 .tagline + .trust { margin-top: 18px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
 /* Every item carries its dot in a left gutter the list clips, so the item
@@ -373,11 +363,15 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 
 /* iPhone and iPad */
 /* Apple's product bezels, shown as is. The iPhone is drawn larger than its
-   real size next to the iPad so its text stays readable. */
-.devices { display: flex; justify-content: center; align-items: flex-end; gap: 48px; }
+   real size next to the iPad so its text stays readable. The phone starts on
+   the text column's left edge and the iPad ends on its right: centred as a
+   pair, the larger iPad pulled the group right of the left-aligned title and
+   lede, and both grow so the column holds no hole between them (maintainer's
+   pick, C of three, 2026-11-04; 260 and 520 left 340px empty at 1280). */
+.devices { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; }
 .device { margin: 0; }
-.device.phone { width: 260px; }
-.device.pad { width: 520px; }
+.device.phone { width: 300px; }
+.device.pad { width: 660px; }
 .devices-cta { justify-content: center; align-items: center; gap: 12px 40px; margin-top: 32px; }
 .store-qr { display: flex; align-items: center; gap: 14px; font-size: var(--text-meta); color: var(--stone); }
 .store-qr img { display: block; width: 74px; height: 74px; }
@@ -698,7 +692,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <main>
   <div class="hero">
     <h1>MiaoYan<span class="cn-orbit"><span class="cn" lang="zh-Hant">語</span></span></h1>
-    <p class="tagline">妙言, un carnet Markdown léger pour des mots au-delà des mots</p>
+    <p class="tagline">Un carnet Markdown léger pour des mots au-delà des mots</p>
     <ul class="trust"><li>Un achat pour Mac, iPhone et iPad</li><li>Fichiers Markdown locaux</li><li>App Mac gratuite et open source</li><li>macOS 12 / iOS 18+</li></ul>
     <div class="cta hero-cta">
       <a class="btn btn-primary" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>Voir dans l&#x27;App Store</a>

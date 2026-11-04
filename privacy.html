@@ -70,14 +70,6 @@
   unicode-range: U+8A9E;
 }
 @font-face {
-  font-family: "MiaoYan Mark";
-  src: url("/fonts/miaoyan-name.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+5999, U+8A00;
-}
-@font-face {
   font-family: "MiaoYan Serif SC";
   src: local("Source Han Serif SC"), local("Noto Serif CJK SC"),
        url("/fonts/miaoyan-serif-sc-regular.woff2") format("woff2");
@@ -302,8 +294,6 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 }
 .tagline { font-family: var(--serif); font-size: var(--text-title); line-height: 1.45; color: var(--near-black); margin: 0 0 10px; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; }
-/* The tagline opens with 妙言 in the other languages; set it in the app's lockup face, not the visitor's Songti or SimSun. */
-html:not([lang^="zh"]) .tagline { font-family: "MiaoYan Mark", var(--serif); }
 .tagline + .trust { margin-top: 18px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
 /* Every item carries its dot in a left gutter the list clips, so the item
@@ -352,11 +342,15 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 
 /* iPhone and iPad */
 /* Apple's product bezels, shown as is. The iPhone is drawn larger than its
-   real size next to the iPad so its text stays readable. */
-.devices { display: flex; justify-content: center; align-items: flex-end; gap: 48px; }
+   real size next to the iPad so its text stays readable. The phone starts on
+   the text column's left edge and the iPad ends on its right: centred as a
+   pair, the larger iPad pulled the group right of the left-aligned title and
+   lede, and both grow so the column holds no hole between them (maintainer's
+   pick, C of three, 2026-11-04; 260 and 520 left 340px empty at 1280). */
+.devices { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; }
 .device { margin: 0; }
-.device.phone { width: 260px; }
-.device.pad { width: 520px; }
+.device.phone { width: 300px; }
+.device.pad { width: 660px; }
 .devices-cta { justify-content: center; align-items: center; gap: 12px 40px; margin-top: 32px; }
 .store-qr { display: flex; align-items: center; gap: 14px; font-size: var(--text-meta); color: var(--stone); }
 .store-qr img { display: block; width: 74px; height: 74px; }
