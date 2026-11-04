@@ -798,7 +798,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Renders run off the main thread and a small note finishes before a
         // large one; only the newest load may land, or arrowing quickly from
         // a long note left the preview on it while the list showed another.
-        dropQueuedImageProbes(movingTo: note)
+        deferQueuedImageProbes(movingTo: note)
         loadEpoch &+= 1
         let epoch = loadEpoch
         inPlaceNote = nil
@@ -878,10 +878,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     /// Header probes still queued for the note on screen would hold the next
-    /// note's images behind them, up to 15s each on a dead host.
-    private func dropQueuedImageProbes(movingTo next: Note) {
+    /// note's images behind them, up to 15s each on a dead host; they move to
+    /// the back of the queue.
+    private func deferQueuedImageProbes(movingTo next: Note) {
         guard let shown = inPlaceNote ?? note, shown !== next else { return }
-        Task { await RemoteImageProbe.shared.cancelQueued() }
+        Task { await RemoteImageProbe.shared.deferQueued() }
     }
 
     /// The note an in-place switch is rendering. Until it lands `note` still
@@ -895,7 +896,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// moving through notes in preview has no blank frame in between. Falls
     /// back to a full load when the page cannot take it.
     public func showNoteInPlace(_ note: Note, completion: (() -> Void)? = nil) {
-        dropQueuedImageProbes(movingTo: note)
+        deferQueuedImageProbes(movingTo: note)
         loadEpoch &+= 1
         let epoch = loadEpoch
         contentUpdateVersion &+= 1

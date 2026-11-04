@@ -13,15 +13,22 @@ final class ImageProbeStub: URLProtocol {
         let body: Data
         var failuresLeft = 0
         var hangs = false
+        var delay: TimeInterval = 0
     }
     private static let lock = NSLock()
     nonisolated(unsafe) private static var responses: [String: Response] = [:]
     nonisolated(unsafe) private static var ranges: [String: String] = [:]
     nonisolated(unsafe) private static var counts: [String: Int] = [:]
+    nonisolated(unsafe) private static var order: [String] = []
+
+    /// Where `url` came in the order of all requests served so far.
+    static func position(of url: String) -> Int? {
+        lock.withLock { order.firstIndex(of: url) }
+    }
 
     /// `failing` first requests time out before the response is served.
-    static func serve(_ url: String, status: Int, body: Data, failing: Int = 0, hangs: Bool = false) {
-        lock.withLock { responses[url] = Response(status: status, body: body, failuresLeft: failing, hangs: hangs) }
+    static func serve(_ url: String, status: Int, body: Data, failing: Int = 0, hangs: Bool = false, delay: TimeInterval = 0) {
+        lock.withLock { responses[url] = Response(status: status, body: body, failuresLeft: failing, hangs: hangs, delay: delay) }
     }
 
     static func range(for url: String) -> String? {
@@ -41,6 +48,7 @@ final class ImageProbeStub: URLProtocol {
         let (response, fails) = Self.lock.withLock { () -> (Response?, Bool) in
             Self.ranges[key] = request.value(forHTTPHeaderField: "Range")
             Self.counts[key, default: 0] += 1
+            Self.order.append(key)
             guard var response = Self.responses[key] else { return (nil, false) }
             if response.failuresLeft > 0 {
                 response.failuresLeft -= 1
@@ -54,11 +62,18 @@ final class ImageProbeStub: URLProtocol {
             return
         }
         if response?.hangs == true { return }
-        let status = response?.status ?? 404
-        let http = HTTPURLResponse(url: url, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)
-        if let http { client?.urlProtocol(self, didReceive: http, cacheStoragePolicy: .notAllowed) }
-        if let body = response?.body, !body.isEmpty { client?.urlProtocol(self, didLoad: body) }
-        client?.urlProtocolDidFinishLoading(self)
+        let finish = { [self] in
+            let status = response?.status ?? 404
+            let http = HTTPURLResponse(url: url, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)
+            if let http { client?.urlProtocol(self, didReceive: http, cacheStoragePolicy: .notAllowed) }
+            if let body = response?.body, !body.isEmpty { client?.urlProtocol(self, didLoad: body) }
+            client?.urlProtocolDidFinishLoading(self)
+        }
+        if let delay = response?.delay, delay > 0 {
+            DispatchQueue.global().asyncAfter(deadline: .now() + delay, execute: finish)
+        } else {
+            finish()
+        }
     }
 
     override func stopLoading() {}
@@ -497,6 +512,14 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertTrue(PreviewMedia.sized(single, (400, 300), original: single).contains("style='aspect-ratio: 400 / 300; width:50%'"))
         let own = "<img src=\"a.png\" style=\"aspect-ratio: 1\">"
         XCTAssertFalse(PreviewMedia.sized(own, (400, 300), original: own).contains("400 / 300"), "a note's own ratio stays")
+        let alt = "<img src=\"a.png\" alt=\"see style='x'\">"
+        let altSized = PreviewMedia.sized(alt, (400, 300), original: alt)
+        XCTAssertTrue(altSized.contains("alt=\"see style='x'\""), "style= inside the alt text is left alone")
+        XCTAssertTrue(altSized.contains("style=\"aspect-ratio: 400 / 300\""), altSized)
+        let bare = "<img src=\"a.png\" style=zoom:50%>"
+        let bareSized = PreviewMedia.sized(bare, (400, 300), original: bare)
+        XCTAssertTrue(bareSized.contains("style=\"aspect-ratio: 400 / 300; zoom:50%\""), bareSized)
+        XCTAssertEqual(bareSized.components(separatedBy: "style=").count, 2, "an unquoted style is not doubled")
     }
 
     func testPixelSizeComesFromTheFirstBytesOfAFile() throws {
@@ -585,18 +608,23 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertEqual(ImageProbeStub.requests(for: "https://probe.invalid/\(id)-measured.png"), 0)
     }
 
-    /// Moving to another note drops the probes still queued for the last
-    /// one: with four reads stuck on a dead host, a fifth waited behind them
-    /// for up to 15s each while the new note's images sat in 16:9 boxes.
-    func testQueuedProbesAreDroppedWhenThePreviewMovesOn() async throws {
+    /// Moving to another note puts the probes still queued for the last one
+    /// behind the next note's: with four reads stuck on a dead host, a probe
+    /// queued before the switch waited ahead of the new note's for up to 15s
+    /// each. It is not dropped, since a cancelled switch keeps the old page.
+    func testQueuedProbesGoBehindTheNextNotesWhenThePreviewMovesOn() async throws {
         let id = UUID().uuidString
+        // Three reads hang and one answers after 0.4s, so slots free one at a time.
         let stuck = (0..<4).map { "https://probe.invalid/\(id)-stuck-\($0).png" }
-        stuck.forEach { ImageProbeStub.serve($0, status: 206, body: Data(), hangs: true) }
-        let queued = "https://probe.invalid/\(id)-queued.png"
-        ImageProbeStub.serve(queued, status: 206, body: Data())
+        stuck.dropLast().forEach { ImageProbeStub.serve($0, status: 206, body: Data(), hangs: true) }
+        ImageProbeStub.serve(stuck[3], status: 404, body: Data(), delay: 0.4)
+        let old = "https://probe.invalid/\(id)-old.png"
+        let next = "https://probe.invalid/\(id)-next.png"
+        ImageProbeStub.serve(old, status: 404, body: Data())
+        ImageProbeStub.serve(next, status: 404, body: Data())
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [ImageProbeStub.self]
-        configuration.timeoutIntervalForRequest = 3
+        configuration.timeoutIntervalForRequest = 4
         let probe = RemoteImageProbe(configuration: configuration, sizes: RemoteImageSizes(fileURL: nil))
         let reads = stuck.map { url in Task { await probe.size(of: url) } }
         var tries = 0
@@ -604,19 +632,23 @@ final class HtmlManagerTests: XCTestCase {
             tries += 1
             try await Task.sleep(nanoseconds: 10_000_000)
         }
-        let waiting = Task { await probe.size(of: queued) }
-        var queuedBefore = await probe.queuedCount
-        while queuedBefore == 0, tries < 600 {
+        let oldRead = Task { await probe.size(of: old) }
+        while await probe.queuedCount < 1, tries < 600 {
             tries += 1
             try await Task.sleep(nanoseconds: 10_000_000)
-            queuedBefore = await probe.queuedCount
         }
-        XCTAssertEqual(queuedBefore, 1, "the fifth read waits for a slot")
-        await probe.cancelQueued()
-        let answer = await waiting.value
-        XCTAssertNil(answer)
-        XCTAssertEqual(ImageProbeStub.requests(for: queued), 0, "a dropped probe never reaches the server")
+        await probe.deferQueued()
+        let nextRead = Task { await probe.size(of: next) }
+        while await probe.queuedCount < 2, tries < 900 {
+            tries += 1
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
+        _ = await nextRead.value
+        _ = await oldRead.value
         reads.forEach { $0.cancel() }
+        let nextAt = try XCTUnwrap(ImageProbeStub.position(of: next))
+        let oldAt = try XCTUnwrap(ImageProbeStub.position(of: old), "a deferred probe still runs")
+        XCTAssertLessThan(nextAt, oldAt, "the next note's probe goes first")
     }
 
     func testTemplatePlaceholdersInsideNoteTextStayAsWritten() {

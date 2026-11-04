@@ -37,20 +37,46 @@ enum PreviewMedia {
         let attributes = written ? "" : " width=\"\(size.width)\" height=\"\(size.height)\""
         // A note's own style (Typora writes `style="zoom:50%"`) keeps its
         // declarations and gets the ratio in front of them; one that sets its
-        // own aspect-ratio is left alone.
+        // own aspect-ratio is left alone. Attributes are read one by one, so
+        // `style=` inside a quoted alt or title is not taken for one.
         let sized = tag.replacingOccurrences(of: "<img ", with: "<img\(attributes) ")
-        guard let match = styleAttribute?.firstMatch(in: sized, range: NSRange(sized.startIndex..., in: sized)),
-            let opening = Range(match.range, in: sized)
-        else {
+        guard let style = styleAttribute(in: sized) else {
             return tag.replacingOccurrences(of: "<img ", with: "<img\(attributes) style=\"aspect-ratio: \(ratio)\" ")
         }
-        if original.lowercased().contains("aspect-ratio") { return sized }
-        return sized.replacingCharacters(in: opening, with: "\(sized[opening])aspect-ratio: \(ratio); ")
+        if style.value.lowercased().contains("aspect-ratio") { return sized }
+        let quote = style.quote ?? "\""
+        let value = "aspect-ratio: \(ratio); \(style.value)"
+        return sized.replacingCharacters(in: style.range, with: " style=\(quote)\(value)\(quote)")
     }
 
-    private static let styleAttribute: NSRegularExpression? = {
-        try? NSRegularExpression(pattern: #"\sstyle\s*=\s*["']"#, options: [.caseInsensitive])
+    // swift-format-ignore
+    private static let attributeRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: #"\s([^\s=>/"']+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?"#)
     }()
+
+    /// The tag's real style attribute: its whole range, its value and the
+    /// quote it was written with (nil when unquoted).
+    private struct StyleAttribute {
+        let range: Range<String.Index>
+        let value: String
+        let quote: String?
+    }
+
+    private static func styleAttribute(in tag: String) -> StyleAttribute? {
+        guard let regex = attributeRegex else { return nil }
+        for match in regex.matches(in: tag, range: NSRange(tag.startIndex..., in: tag)) {
+            guard let name = Range(match.range(at: 1), in: tag), tag[name].lowercased() == "style",
+                let whole = Range(match.range, in: tag)
+            else { continue }
+            for (group, quote) in [(2, "\""), (3, "'"), (4, nil)] as [(Int, String?)] {
+                if let value = Range(match.range(at: group), in: tag) {
+                    return StyleAttribute(range: whole, value: String(tag[value]), quote: quote)
+                }
+            }
+            return StyleAttribute(range: whole, value: "", quote: nil)
+        }
+        return nil
+    }
 
     /// The image's displayed size in pixels, from its header alone. An iCloud
     /// file that has not been downloaded is skipped rather than fetched to
@@ -274,7 +300,8 @@ actor RemoteImageProbe {
     private var inFlight: [String: Task<Answer, Never>] = [:]
     private var failed: Set<String> = []
     private var running = 0
-    private var waiters: [CheckedContinuation<Bool, Never>] = []
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+    private var earlier: [CheckedContinuation<Void, Never>] = []
 
     init(configuration: URLSessionConfiguration = RemoteImageProbe.defaultConfiguration, sizes: RemoteImageSizes = .shared) {
         session = URLSession(configuration: configuration)
@@ -301,7 +328,7 @@ actor RemoteImageProbe {
         } else {
             let session = session
             task = Task {
-                guard await acquire() else { return .unknown }
+                await acquire()
                 let answer = await Self.read(url, session: session)
                 release()
                 return answer
@@ -324,31 +351,33 @@ actor RemoteImageProbe {
         }
     }
 
-    /// Probes not yet started when the preview moves to another note are
-    /// dropped, so the next note's images are not queued behind the last
-    /// one's; reads already running finish and keep their answer.
-    func cancelQueued() {
-        let dropped = waiters
+    /// When the preview moves to another note, probes not yet started go
+    /// behind the ones it asks for next, so the new note's images are not
+    /// queued behind the last one's backlog. They are not dropped: a switch
+    /// cancelled mid-render keeps the old page, and its images still need
+    /// their answers.
+    func deferQueued() {
+        earlier.insert(contentsOf: waiters, at: 0)
         waiters.removeAll()
-        dropped.forEach { $0.resume(returning: false) }
     }
 
-    var queuedCount: Int { waiters.count }
+    var queuedCount: Int { waiters.count + earlier.count }
 
-    /// False when the wait was dropped by `cancelQueued` before a slot came.
-    private func acquire() async -> Bool {
+    private func acquire() async {
         if running < Self.maxRunning {
             running += 1
-            return true
+            return
         }
-        return await withCheckedContinuation { waiters.append($0) }
+        await withCheckedContinuation { waiters.append($0) }
     }
 
     private func release() {
-        if waiters.isEmpty {
-            running -= 1
+        if !waiters.isEmpty {
+            waiters.removeFirst().resume()
+        } else if !earlier.isEmpty {
+            earlier.removeFirst().resume()
         } else {
-            waiters.removeFirst().resume(returning: true)
+            running -= 1
         }
     }
 
