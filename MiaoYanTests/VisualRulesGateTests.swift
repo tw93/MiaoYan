@@ -43,8 +43,17 @@ final class VisualRulesGateTests: XCTestCase {
             let rule = try XCTUnwrap(typography.range(of: #"\.heti \#(heading) \{[^}]*\}"#, options: .regularExpression), heading)
             XCTAssertNotNil(typography[rule].range(of: "font-size: \(size);"), String(typography[rule]))
         }
-        let pull = try XCTUnwrap(typography.range(of: #"#write :is\(h1, h2, h3, h4, h5, h6\) \+ \* \{[^}]*\}"#, options: .regularExpression))
+        let pull = try XCTUnwrap(
+            typography.range(
+                of: #"#write :is\(h1, h2, h3, h4, h5, h6\) \+ :not\(h1, h2, h3, h4, h5, h6\) \{[^}]*\}"#,
+                options: .regularExpression))
         XCTAssertNotNil(typography[pull].range(of: "margin-block-start: 0;"), String(typography[pull]))
+        // CJK emphasis is marked with its lang and never slanted (Emphasis.markCJK).
+        XCTAssertNotNil(typography.range(of: ".heti em:not([lang]) {"))
+        XCTAssertNil(typography.range(of: ".heti em:not(:lang(zh))"))
+        // The green is about 2:1 from the body text, so links carry a light underline.
+        let link = try XCTUnwrap(typography.range(of: #"\n\.heti a \{[^}]*\}"#, options: .regularExpression))
+        XCTAssertNotNil(typography[link].range(of: "text-decoration-color: var(--link-underline);"), String(typography[link]))
         let code = try XCTUnwrap(typography.range(of: #"\.heti pre code \{[^}]*\}"#, options: .regularExpression))
         XCTAssertNotNil(typography[code].range(of: "font-size: 0.86em;"), String(typography[code]))
         for name in sheets {

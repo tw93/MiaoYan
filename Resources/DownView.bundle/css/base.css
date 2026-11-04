@@ -72,8 +72,6 @@ code {
 pre {
   font-family: var(--code-text-font);
   background-color: var(--code-bg);
-  padding: 14px 16px;
-  border-radius: var(--border-radius-lg);
   max-width: 100%;
   overflow-x: hidden;
   box-sizing: border-box;

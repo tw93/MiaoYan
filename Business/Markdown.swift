@@ -1,5 +1,6 @@
 import CMarkGFM
 import Foundation
+import MiaoYanCore
 
 extension String {
     func matches(_ pattern: String) -> Bool {
@@ -406,7 +407,7 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
     }
 
-    return renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes))
+    return Emphasis.markCJK(in: renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes)))
 }
 
 private let emptyTaskItemRegex = try? NSRegularExpression(

@@ -59,14 +59,9 @@ a {
   margin-block-start: 10px !important;
 }
 
-.heti > ol:first-child {
-  margin-block-start: 5px !important;
-  padding-inline-start: calc(12px + 1em);
-}
-
+.heti > ol:first-child,
 .heti > ul:first-child {
   margin-block-start: 5px !important;
-  padding-inline-start: 20px;
 }
 
 .heti > *:last-child,
@@ -124,20 +119,12 @@ a {
   letter-spacing: 0.02em;
 }
 
-.heti h1:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
-.heti h1:not(:lang(zh)),
-.heti h2:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
-.heti h2:not(:lang(zh)),
-.heti h3:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
-.heti h3:not(:lang(zh)) {
-  letter-spacing: 0;
-}
-
 /* A heading sits with what it introduces: the next block drops its own top
    margin, which used to win the collapse and leave the head as far from its
    body as from the section above. Scoped to #write so it outranks the
-   paragraph, list and table-wrapper rules. */
-#write :is(h1, h2, h3, h4, h5, h6) + * {
+   paragraph, list and table-wrapper rules; a heading that follows keeps its
+   own space, or a subsection under a title reads as its subtitle. */
+#write :is(h1, h2, h3, h4, h5, h6) + :not(h1, h2, h3, h4, h5, h6) {
   margin-block-start: 0;
 }
 
@@ -201,6 +188,11 @@ a {
 
 .heti li {
   margin-block: 0.4em;
+}
+
+/* A loose list wraps each item in a paragraph; keep items 0.4em apart. */
+.heti li > p {
+  margin-block: 0.26em;
 }
 
 .heti ul ul,
@@ -416,21 +408,22 @@ blockquote blockquote {
 }
 
 /* Inline Elements */
+/* The green sits about 2:1 from the body text, too close to find a link by
+   colour alone, so it carries a light underline that firms up on hover. */
 .heti a {
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: var(--link-underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 
 .heti a:hover {
-  padding-block-end: 1px;
-  border-block-end: 1px solid currentColor;
-  text-decoration: none;
+  text-decoration-color: currentColor;
 }
 
 /* Remove underline from image links */
 .heti a:has(img),
 .heti a:has(img):hover {
-  padding-block-end: 0;
-  border-block-end: none;
   text-decoration: none;
 }
 
@@ -571,9 +564,13 @@ blockquote blockquote {
 .heti dfn:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
 .heti dfn:not(:lang(zh)),
 .heti dt:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
-.heti dt:not(:lang(zh)),
-.heti em:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
-.heti em:not(:lang(zh)) {
+.heti dt:not(:lang(zh)) {
+  font-style: italic;
+}
+
+/* Emphasis slants only when MiaoYanCore's Emphasis.markCJK found no CJK in
+   it: the preview has no document language, and a CJK face has no italic. */
+.heti em:not([lang]) {
   font-style: italic;
 }
 
@@ -584,22 +581,12 @@ blockquote blockquote {
   font-size: 1em;
 }
 
-.heti p > code,
-.heti li > code {
-  background-color: var(--code-bg);
-  padding: 2px;
-  border-radius: var(--border-radius-lg);
-}
-
 .heti pre {
   margin-block-start: 1.15em;
   margin-block-end: 1.15em;
   margin-inline-start: 0;
   margin-inline-end: 0;
-  padding-block-start: 14px;
-  padding-block-end: 14px;
-  padding-inline-start: 16px;
-  padding-inline-end: 16px;
+  padding: 14px 16px;
   overflow-x: hidden;
   overflow-y: visible;
   white-space: pre-wrap;
