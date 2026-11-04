@@ -37,6 +37,7 @@ final class VisualRulesGateTests: XCTestCase {
     /// it, monospace code blocks a step down, and MiaoYan green links.
     func testPreviewSharesTheFamilyReadingRhythm() throws {
         let typography = try css("typography.css")
+        let base = try css("base.css")
         let core = try XCTUnwrap(typography.range(of: #"\n\.heti \{[^}]*\}"#, options: .regularExpression))
         XCTAssertNotNil(typography[core].range(of: "line-height: 1.64;"), String(typography[core]))
         for (heading, size) in [("h1", "1.76em"), ("h2", "1.41em"), ("h3", "1.18em")] {
@@ -51,9 +52,11 @@ final class VisualRulesGateTests: XCTestCase {
         // CJK emphasis is marked with its lang and never slanted (Emphasis.markCJK).
         XCTAssertNotNil(typography.range(of: ".heti em:not([lang]) {"))
         XCTAssertNil(typography.range(of: ".heti em:not(:lang(zh))"))
-        // The green is about 2:1 from the body text, so links carry a light underline.
-        let link = try XCTUnwrap(typography.range(of: #"\n\.heti a \{[^}]*\}"#, options: .regularExpression))
-        XCTAssertNotNil(typography[link].range(of: "text-decoration-color: var(--link-underline);"), String(typography[link]))
+        // Links are told apart by the green alone; an underline at rest read ugly
+        // (maintainer 2026-11-04).
+        let link = try XCTUnwrap(typography.range(of: #"\n\.heti a,\n\.heti a:hover \{[^}]*\}"#, options: .regularExpression))
+        XCTAssertNotNil(typography[link].range(of: "text-decoration: none;"), String(typography[link]))
+        for css in [typography, base] { XCTAssertNil(css.range(of: "text-decoration: underline")) }
         let code = try XCTUnwrap(typography.range(of: #"\.heti pre code \{[^}]*\}"#, options: .regularExpression))
         XCTAssertNotNil(typography[code].range(of: "font-size: 0.86em;"), String(typography[code]))
         for name in sheets {

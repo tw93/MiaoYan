@@ -362,10 +362,6 @@ pre table.hljs-ln,
   font-weight: 700;
 }
 
-.darkmode .hljs-link {
-  text-decoration: underline;
-}
-
 /* ==================== Emoji Support ==================== */
 span.emoji {
   display: -moz-inline-box;

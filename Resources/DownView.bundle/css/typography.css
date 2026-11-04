@@ -408,22 +408,10 @@ blockquote blockquote {
 }
 
 /* Inline Elements */
-/* The green sits about 2:1 from the body text, too close to find a link by
-   colour alone, so it carries a light underline that firms up on hover. */
-.heti a {
-  text-decoration: underline;
-  text-decoration-color: var(--link-underline);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-}
-
+/* Links read by the green alone, at rest and on hover, as on the product
+   sites: an underline read ugly (maintainer 2026-11-04). */
+.heti a,
 .heti a:hover {
-  text-decoration-color: currentColor;
-}
-
-/* Remove underline from image links */
-.heti a:has(img),
-.heti a:has(img):hover {
   text-decoration: none;
 }
 
