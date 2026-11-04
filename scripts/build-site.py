@@ -53,7 +53,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "妙言, a light Markdown notebook for words beyond words",
-        "lede": "",
         "trust": ["One purchase for Mac, iPhone and iPad", "Local Markdown files", "Free and open source on Mac", "macOS 12 / iOS 18+"],
         "cta": ("View in App Store", "Source code"),
         "gallery_title": "Write, read and present",
@@ -104,7 +103,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "轻灵的 Markdown 笔记本伴你写出妙言",
-        "lede": "",
         "trust": ["一次购买覆盖三端", "纯本地 Markdown", "Mac 版免费开源", "macOS 12 / iOS 18+"],
         "cta": ("在 App Store 获取", "查看源码"),
         "gallery_title": "书写、排版与演示",
@@ -161,7 +159,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "輕靈的 Markdown 筆記本伴你寫出妙言",
-        "lede": "",
         "trust": ["一次購買覆蓋三端", "純本地 Markdown", "Mac 版免費開源", "macOS 12 / iOS 18+"],
         "cta": ("在 App Store 取得", "查看原始碼"),
         "gallery_title": "書寫、排版與簡報",
@@ -218,7 +215,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "妙言、言葉を超えた言葉のための軽やかなMarkdownノート",
-        "lede": "",
         "trust": ["一度の購入でMac・iPhone・iPad", "ローカルのMarkdown", "Mac版は無料・オープンソース", "macOS 12 / iOS 18以降"],
         "cta": ("App Storeで入手", "ソースコード"),
         "gallery_title": "書く、読む、プレゼンする",
@@ -275,7 +271,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "妙言, 말을 넘어선 말을 위한 가벼운 마크다운 노트",
-        "lede": "",
         "trust": ["한 번 구매로 Mac·iPhone·iPad", "로컬 마크다운 파일", "Mac 버전 무료 오픈 소스", "macOS 12 / iOS 18 이상"],
         "cta": ("App Store에서 받기", "소스 코드"),
         "gallery_title": "쓰고, 읽고, 발표하기",
@@ -332,7 +327,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "妙言, ein leichtes Markdown-Notizbuch für Worte jenseits der Worte",
-        "lede": "",
         "trust": ["Ein Kauf für Mac, iPhone und iPad", "Lokale Markdown-Dateien", "Mac-App kostenlos und Open Source", "macOS 12 / iOS 18+"],
         "cta": ("Im App Store laden", "Quellcode"),
         "gallery_title": "Schreiben, lesen, präsentieren",
@@ -389,7 +383,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "妙言, un carnet Markdown léger pour des mots au-delà des mots",
-        "lede": "",
         "trust": ["Un achat pour Mac, iPhone et iPad", "Fichiers Markdown locaux", "App Mac gratuite et open source", "macOS 12 / iOS 18+"],
         "cta": ("Voir dans l'App Store", "Code source"),
         "gallery_title": "Écrire, lire, présenter",
@@ -446,7 +439,6 @@ COPY = {
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "妙言, un cuaderno Markdown ligero para palabras más allá de las palabras",
-        "lede": "",
         "trust": ["Una compra para Mac, iPhone y iPad", "Archivos Markdown locales", "App de Mac gratis y de código abierto", "macOS 12 / iOS 18+"],
         "cta": ("Ver en App Store", "Código fuente"),
         "gallery_title": "Escribe, lee y presenta",
@@ -989,7 +981,7 @@ def page(key):
   <div class="hero">
     <h1>{esc(c['h1'])}<span class="cn-orbit"><span class="cn" lang="zh-Hant">語</span></span></h1>
     <p class="tagline">{esc(t(c['tagline']))}</p>
-{f'    <p class="lede">{esc(t(c["lede"]))}</p>\n' if c['lede'] else ''}    <ul class="trust">{trust}</ul>
+    <ul class="trust">{trust}</ul>
     <div class="cta hero-cta">
       <a class="btn btn-primary" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['cta'][0])}</a>
       <a class="btn btn-ghost" href="{GITHUB}" target="_blank" rel="noopener">{GITHUB_MARK}{esc(c['cta'][1])}</a>

@@ -76,11 +76,16 @@ def subset_path(script, weight):
     return FONT_DIR / f"miaoyan-serif-{script}-{weight}.woff2"
 
 
-# The hero's 語 is the only Chinese the other languages set. It gets a
-# one-glyph file in the Traditional face, so those pages skip the subsets.
+# The hero's 語 and the tagline's 妙言 are the only Chinese the other
+# languages set, so those pages skip the subsets. 語 is cut from the
+# Traditional face; 妙言 from the Simplified one, as the app's sidebar lockup
+# sets it (the Traditional 言 opens with a stroke, not a dot).
 MARK = "語"
 MARK_SOURCE = "SourceHanSerifTC-Regular.otf"
 MARK_FILE = FONT_DIR / "miaoyan-mark.woff2"
+NAME = "妙言"
+NAME_SOURCE = "SourceHanSerifSC-Regular.otf"
+NAME_FILE = FONT_DIR / "miaoyan-name.woff2"
 
 
 def regenerate():
@@ -112,15 +117,16 @@ def regenerate():
         text_file.unlink()
         rename_reserved(out)
         print(f"  fonts/{out.name}  {len(chars)} glyphs  {out.stat().st_size / 1024:.0f} KB")
-    subprocess.run(
-        [
-            "pyftsubset", str(FONT_CACHE / MARK_SOURCE), f"--text={MARK}",
-            "--flavor=woff2", "--no-hinting", "--desubroutinize", f"--output-file={MARK_FILE}",
-        ],
-        check=True,
-    )
-    rename_reserved(MARK_FILE)
-    print(f"  fonts/{MARK_FILE.name}  1 glyph  {MARK_FILE.stat().st_size / 1024:.0f} KB")
+    for text, source, out in ((MARK, MARK_SOURCE, MARK_FILE), (NAME, NAME_SOURCE, NAME_FILE)):
+        subprocess.run(
+            [
+                "pyftsubset", str(FONT_CACHE / source), f"--text={text}",
+                "--flavor=woff2", "--no-hinting", "--desubroutinize", f"--output-file={out}",
+            ],
+            check=True,
+        )
+        rename_reserved(out)
+        print(f"  fonts/{out.name}  {len(text)} glyph(s)  {out.stat().st_size / 1024:.0f} KB")
     return 0
 
 
@@ -188,9 +194,10 @@ def check():
                 file=sys.stderr,
             )
             failed = True
-    if not MARK_FILE.exists():
-        print(f"missing font subset: fonts/{MARK_FILE.name}", file=sys.stderr)
-        failed = True
+    for path in (MARK_FILE, NAME_FILE):
+        if not path.exists():
+            print(f"missing font subset: fonts/{path.name}", file=sys.stderr)
+            failed = True
     for path in sorted(FONT_DIR.glob("*.woff2")):
         found = reserved_names(path)
         if found:
