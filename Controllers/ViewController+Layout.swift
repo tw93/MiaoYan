@@ -9,18 +9,19 @@ extension ViewController {
         static let maxSidebarWidth: CGFloat = 280
         static let defaultNotelistWidth: CGFloat = 280
         static let narrowThreshold: CGFloat = 50
-        static let searchTopSidebarCollapsed: CGFloat = 30.0
-        static let searchTopNormal: CGFloat = 13.0
-        static let titlebarHeightNarrow: CGFloat = 54.0
-        static let titlebarHeightEditorOnly: CGFloat = 66.0
-        static let titlebarHeightNormal: CGFloat = 52.0
-        static let titleTopNarrow: CGFloat = 22.0
-        static let titleTopEditorOnly: CGFloat = 32.0
-        static let titleTopNormal: CGFloat = 16.0
+        // The window's unified toolbar centres the traffic lights 26.5pt
+        // down; the column headers sit on that line in every layout. A
+        // column that starts at the window's left edge moves its first
+        // control past the traffic lights instead of below them.
+        static let searchTop: CGFloat = 12.0
+        static let searchLeadingNormal: CGFloat = 13.0
+        static let titlebarHeight: CGFloat = 52.0
+        static let titleTop: CGFloat = 14.0
         static let titleLeadingNormal: CGFloat = 25.0
-        static let titleLeadingEditorOnly: CGFloat = 30.0
-        static let titleBarActionsTopNormal: CGFloat = 18.0
-        static let titleBarActionsTopEditorOnly: CGFloat = 28.0
+        static let titleBarActionsTop: CGFloat = 16.0
+        /// Where a leftmost column's first control starts: the traffic
+        /// lights end 79pt in, plus the gap the sidebar leaves beside them.
+        static let besideTrafficLights: CGFloat = 92.0
     }
 
     // MARK: - Properties
@@ -49,23 +50,25 @@ extension ViewController {
     // MARK: - Layout Management Methods
     func checkSidebarConstraint() {
         let isSidebarCollapsed = !isSidebarVisible && !UserDefaultsManagement.isWillFullScreen
-        searchTopConstraint.constant = isSidebarCollapsed ? LayoutConstants.searchTopSidebarCollapsed : LayoutConstants.searchTopNormal
+        searchTopConstraint.constant = LayoutConstants.searchTop
+        updateSearchLeadingInset(isSidebarCollapsed ? LayoutConstants.besideTrafficLights : LayoutConstants.searchLeadingNormal)
     }
 
     func checkTitlebarTopConstraint() {
         let isNarrow = !isNotelistVisible && !UserDefaultsManagement.isWillFullScreen
         let isEditorOnly = isNarrow && !isSidebarVisible
 
-        if isEditorOnly {
-            titiebarHeight.constant = LayoutConstants.titlebarHeightEditorOnly
-            titleTopConstraint.constant = LayoutConstants.titleTopEditorOnly
-        } else {
-            titiebarHeight.constant = isNarrow ? LayoutConstants.titlebarHeightNarrow : LayoutConstants.titlebarHeightNormal
-            titleTopConstraint.constant = isNarrow ? LayoutConstants.titleTopNarrow : LayoutConstants.titleTopNormal
-        }
+        titiebarHeight.constant = LayoutConstants.titlebarHeight
+        titleTopConstraint.constant = LayoutConstants.titleTop
+        updateTitleLeadingInset(isEditorOnly ? LayoutConstants.besideTrafficLights : LayoutConstants.titleLeadingNormal)
+        updateTitleBarActionsTop(LayoutConstants.titleBarActionsTop)
+    }
 
-        updateTitleLeadingInset(isEditorOnly ? LayoutConstants.titleLeadingEditorOnly : LayoutConstants.titleLeadingNormal)
-        updateTitleBarActionsTop(isEditorOnly ? LayoutConstants.titleBarActionsTopEditorOnly : LayoutConstants.titleBarActionsTopNormal)
+    private func updateSearchLeadingInset(_ inset: CGFloat) {
+        guard let search, let container = search.superview else { return }
+        for constraint in container.constraints where constraint.firstItem === search && constraint.firstAttribute == .leading {
+            constraint.constant = inset
+        }
     }
 
     private func updateTitleLeadingInset(_ inset: CGFloat) {

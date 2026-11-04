@@ -20,6 +20,13 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         window?.hidesOnDeactivate = false
         window?.titleVisibility = .hidden
         window?.titlebarAppearsTransparent = true
+        // An empty unified toolbar gives the title bar the 52pt height the
+        // column headers already have and centres the traffic lights in it,
+        // so they, the new-folder button, the search field, the title and
+        // the mode buttons sit on one line, as in the SwiftUI shell.
+        window?.toolbar = NSToolbar(identifier: "MiaoYanMainToolbar")
+        window?.toolbarStyle = .unified
+        window?.titlebarSeparatorStyle = .none
         windowFrameAutosaveName = "myMainWindow"
         window?.restorationClass = MainWindowController.self
         window?.delegate = self
@@ -194,6 +201,9 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
     func windowWillEnterFullScreen(_ notification: Notification) {
         UserDefaultsManagement.isWillFullScreen = true
+        // Full screen draws even an empty toolbar as a solid band over the
+        // content, and it only sizes the title bar, so it waits outside.
+        window?.toolbar?.isVisible = false
     }
 
     func windowWillExitFullScreen(_ notification: Notification) {
@@ -209,6 +219,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
     func windowDidExitFullScreen(_ notification: Notification) {
         AppContext.shared.sessionState.fullScreen = false
+        window?.toolbar?.isVisible = true
         let pending = pendingPostFullScreenAction
         pendingPostFullScreenAction = nil
         pending?()

@@ -775,7 +775,7 @@ extension ViewController {
         updateToolbarButtonTints()
         titleLabel.isHidden = false
         titleBarView.isHidden = false
-        titiebarHeight.constant = 40.0
+        checkTitlebarTopConstraint()
         titleLabel.isEditable = true
 
         // Hide webview immediately rather than leaving stale PPT view during animation
