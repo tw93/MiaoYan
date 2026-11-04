@@ -49,7 +49,7 @@ final class MediaPlaceholderTests: XCTestCase {
             <p><img id="styled" class="lazy-image" data-measure="1" width="200" style="aspect-ratio: 1 / 1" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/z.png"> a</p>
             <p><img id="pending" class="media-pending" width="40" height="20" src="\(Self.placeholder)"></p>
             \(video)
-            <div style="height: 3000px"></div>
+            <div style="height: 3000px"><p id="marker" style="margin: 1800px 0 0">m</p></div>
             </div>
             <script src="\(bundle.appendingPathComponent("js/common.js").absoluteString)"></script>
             <script>
@@ -58,22 +58,12 @@ final class MediaPlaceholderTests: XCTestCase {
                 var img = document.getElementById('unmeasured');
                 var box = img.getBoundingClientRect();
                 var widthOnly = document.getElementById('widthOnly');
-                var square = widthOnly.getBoundingClientRect();
-                window.scrollTo(0, 1500);
-                var scrolled = window.scrollY;
-                MiaoYanCommon.applyImageSize('http://127.0.0.1:9/y.png', 1536, 2048);
-                var shift = window.scrollY - scrolled;
-                window.scrollTo(0, 0);
+                var marker = document.getElementById('marker');
                 MiaoYanCommon.applyImageSize('http://127.0.0.1:9/z.png', 1536, 2048);
                 var styled = document.getElementById('styled').getBoundingClientRect();
-                var sized = widthOnly.getBoundingClientRect();
                 var pending = getComputedStyle(document.getElementById('pending'));
                 window.__before = {
-                    squareHeight: square.height,
-                    shift: shift,
                     styledHeight: styled.height,
-                    sizedWidth: sized.width,
-                    sizedHeight: sized.height,
                     pulse: pending.animationName,
                     pulseDelay: pending.animationDelay,
                     reserved: img.classList.contains('media-reserve'),
@@ -82,8 +72,23 @@ final class MediaPlaceholderTests: XCTestCase {
                     tint: getComputedStyle(img).backgroundColor,
                     videoTint: getComputedStyle(document.querySelector('video')).backgroundColor
                 };
+                // The answer lands while the reader is further down. A test
+                // webview has no window and never anchors the scroll itself,
+                // so this checks the page's own compensation, which older
+                // WebKit (CI's macOS 15) relies on; newer WebKit anchors too,
+                // and applyImageSize only adds what it did not.
+                window.scrollTo(0, 1500);
+                var markerTop = marker.getBoundingClientRect().top;
+                MiaoYanCommon.applyImageSize('http://127.0.0.1:9/y.png', 1536, 2048);
+                setTimeout(function () {
+                    var sized = widthOnly.getBoundingClientRect();
+                    window.__before.sizedWidth = sized.width;
+                    window.__before.sizedHeight = sized.height;
+                    window.__before.moved = marker.getBoundingClientRect().top - markerTop;
+                    window.scrollTo(0, 0);
+                    window.__ready = true;
+                }, 300);
             })();
-            window.__ready = true;
             </script>
             </body></html>
             """
@@ -126,11 +131,13 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertEqual(before["height"] as? Double, 360)
         XCTAssertNotEqual(before["tint"] as? String, transparent, "a lazy image shows a tinted box")
         XCTAssertNotEqual(before["videoTint"] as? String, transparent, "a video shows a tinted box")
-        XCTAssertEqual(before["squareHeight"] as? Double, 400, "a width-only image without a size starts square")
         XCTAssertEqual(before["sizedWidth"] as? Double, 400)
         XCTAssertEqual(try XCTUnwrap(before["sizedHeight"] as? Double), 533.33, accuracy: 0.5, "the header's size gives it the picture's ratio")
         XCTAssertEqual(before["styledHeight"] as? Double, 200, "a ratio the note set is kept")
-        XCTAssertEqual(try XCTUnwrap(before["shift"] as? Double), 133.33, accuracy: 1, "a box above the view grows without moving the text")
+        // How tall the box was before the answer depends on the engine: the
+        // 1px placeholder had decoded to a square on macOS 27's WebKit and
+        // not yet on CI's macOS 15. What must hold is the text in view.
+        XCTAssertEqual(try XCTUnwrap(before["moved"] as? Double), 0, accuracy: 1, "a box above the view grows without moving the text")
         // Under Reduce Motion the pulse is off by design.
         if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
             XCTAssertEqual(before["pulse"] as? String, "media-pulse", "a loading image breathes its tint")
