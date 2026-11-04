@@ -21,7 +21,11 @@ a {
 /* Core Typography */
 .heti {
   font-weight: 400;
-  line-height: 1.74;
+  /* One reading rhythm with the iPhone reader, tw93.fun and Weekly: 1.64
+     line height, 0.02em tracking, the 30/24/20 heading ladder (as em of the
+     body size here, since the size is a preference) and the spacing below
+     (maintainer 2026-11-04, from rendered candidates of all four). */
+  line-height: 1.64;
   /* Shared with the editor and interface through letterSpacingEm. */
   letter-spacing: 0.02em;
   overflow-wrap: break-word;
@@ -80,31 +84,32 @@ a {
 .heti h6 {
   position: relative;
   margin: 0;
-  line-height: 1.8;
-  margin-block-start: 1.6em;
-  margin-block-end: 0.8em;
+  line-height: 1.4;
+  margin-block-start: 1.4em;
+  margin-block-end: 0.4em;
   font-weight: bold;
   -webkit-font-smoothing: antialiased;
 }
 
 .heti h1 {
-  font-size: 2em;
+  font-size: 1.76em;
+  margin-block-end: 0.45em;
 }
 
 .heti h2 {
-  font-size: 1.5em;
+  font-size: 1.41em;
 }
 
 .heti h3 {
-  font-size: 1.25em;
+  font-size: 1.18em;
+  margin-block-start: 1.3em;
 }
 
-.heti h3,
 .heti h4,
 .heti h5,
 .heti h6 {
-  margin-block-start: 0.6em;
-  margin-block-end: 0.6em;
+  margin-block-start: 1.2em;
+  margin-block-end: 0.35em;
 }
 
 .heti h4,
@@ -116,7 +121,7 @@ a {
 .heti h1,
 .heti h2,
 .heti h3 {
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
 }
 
 .heti h1:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
@@ -128,18 +133,18 @@ a {
   letter-spacing: 0;
 }
 
-.heti h1 + h2,
-.heti h2 + h3,
-.heti h3 + h4,
-.heti h4 + h5,
-.heti h5 + h6 {
-  margin-block-start: 0.8em;
+/* A heading sits with what it introduces: the next block drops its own top
+   margin, which used to win the collapse and leave the head as far from its
+   body as from the section above. Scoped to #write so it outranks the
+   paragraph, list and table-wrapper rules. */
+#write :is(h1, h2, h3, h4, h5, h6) + * {
+  margin-block-start: 0;
 }
 
 /* Paragraphs */
 .heti p {
-  margin-block-start: 1.6em;
-  margin-block-end: 1.6em;
+  margin-block-start: 1.15em;
+  margin-block-end: 1.15em;
   text-align: left;
 }
 
@@ -180,18 +185,22 @@ a {
 .heti ul,
 .heti ol,
 .heti dl {
-  margin-block-start: 0.8em;
-  margin-block-end: 1.6em;
+  margin-block-start: 1.15em;
+  margin-block-end: 1.15em;
 }
 
 .heti ul {
-  padding-inline-start: calc(24px + 0.5em);
+  padding-inline-start: 1.5em;
   list-style-type: disc;
 }
 
 .heti ol {
-  padding-inline-start: calc(24px + 1em);
+  padding-inline-start: 1.75em;
   list-style-type: decimal;
+}
+
+.heti li {
+  margin-block: 0.4em;
 }
 
 .heti ul ul,
@@ -251,8 +260,8 @@ a {
 .heti blockquote {
   position: relative;
   margin: 0;
-  margin-block-start: 0.8em;
-  margin-block-end: 1.6em;
+  margin-block-start: 1.15em;
+  margin-block-end: 1.15em;
   padding: 0 0 0 1.1em;
   color: var(--text-secondary);
   line-height: 1;
@@ -276,7 +285,7 @@ a {
 .heti blockquote p {
   margin-block-end: 0.4em;
   margin-block-start: 0.4em;
-  line-height: 1.74;
+  line-height: 1.64;
 }
 
 blockquote blockquote {
@@ -285,8 +294,8 @@ blockquote blockquote {
 
 /* GitHub Alerts (> [!NOTE] etc.) */
 .heti .markdown-alert {
-  margin-block-start: 0.8em;
-  margin-block-end: 1.6em;
+  margin-block-start: 1.15em;
+  margin-block-end: 1.15em;
   padding: 0.3em 15px;
   border-radius: 6px;
   background: var(--alert-bg, transparent);
@@ -298,7 +307,7 @@ blockquote blockquote {
 .heti .markdown-alert p {
   margin-block-end: 0.4em;
   margin-block-start: 0.4em;
-  line-height: 1.74;
+  line-height: 1.64;
 }
 
 .heti .markdown-alert .markdown-alert-title {
@@ -344,8 +353,8 @@ blockquote blockquote {
 /* Tables */
 .heti table {
   box-sizing: border-box;
-  margin-block-start: 0.8em;
-  margin-block-end: 1.6em;
+  margin-block-start: 1.15em;
+  margin-block-end: 1.15em;
   margin-inline-start: auto;
   margin-inline-end: auto;
   margin-right: auto;
@@ -358,10 +367,10 @@ blockquote blockquote {
 
 .heti th,
 .heti td {
-  padding-block-start: 6px;
-  padding-block-end: 6px;
-  padding-inline-start: 8px;
-  padding-inline-end: 8px;
+  padding-block-start: 8px;
+  padding-block-end: 8px;
+  padding-inline-start: 12px;
+  padding-inline-end: 12px;
   border-width: 1px;
   border-style: solid;
   border-color: var(--border-color);
@@ -379,8 +388,8 @@ blockquote blockquote {
 .heti hr {
   width: 100%;
   height: 1px;
-  margin-block-start: 1.6em;
-  margin-block-end: 1.6em;
+  margin-block-start: 2em;
+  margin-block-end: 2em;
   margin-inline-start: auto;
   margin-inline-end: auto;
   border: 0;
@@ -583,12 +592,12 @@ blockquote blockquote {
 }
 
 .heti pre {
-  margin-block-start: 0.8em;
-  margin-block-end: 1.6em;
+  margin-block-start: 1.15em;
+  margin-block-end: 1.15em;
   margin-inline-start: 0;
   margin-inline-end: 0;
-  padding-block-start: 12px;
-  padding-block-end: 12px;
+  padding-block-start: 14px;
+  padding-block-end: 14px;
   padding-inline-start: 16px;
   padding-inline-end: 16px;
   overflow-x: hidden;
@@ -609,6 +618,8 @@ blockquote blockquote {
   overflow-wrap: anywhere;
   word-break: break-word;
   font-family: var(--code-text-font);
+  font-size: 0.86em;
+  line-height: 1.6;
 }
 
 .heti pre code span {

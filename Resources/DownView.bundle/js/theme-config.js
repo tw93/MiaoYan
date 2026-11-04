@@ -10,7 +10,7 @@ const THEME_COLORS = {
     background: '#FFFFFF',
     textColor: '#262626',
     textSecondary: '#777',
-    linkColor: '#0C6ADA',
+    linkColor: '#1C5D33',
     borderColor: '#e6e6e6',
 
     // Code & Diagrams
@@ -41,7 +41,7 @@ const THEME_COLORS = {
     background: '#23282D',
     textColor: '#E7E9EA',
     textSecondary: '#ABB2BF',
-    linkColor: '#1D9BF0',
+    linkColor: '#54C59F',
     borderColor: '#454545',
 
     // Code & Diagrams

@@ -59,7 +59,7 @@ class HtmlManager {
     // `@page { size; margin }`, so this stylesheet sticks to properties that work on 12.0+.
     //
     // The compact spacing overrides fight `.heti` typography defaults, which are tuned for
-    // on-screen reading (1.74 line-height, 1.6em paragraph gutters). Print rendering gets
+    // on-screen reading (1.64 line-height, 1.15em block gutters). Print rendering gets
     // tighter metrics closer to a typeset article.
     static func paginatedPrintCSS() -> String {
         return """

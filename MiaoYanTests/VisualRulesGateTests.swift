@@ -31,6 +31,29 @@ final class VisualRulesGateTests: XCTestCase {
         }
     }
 
+    /// The preview shares one reading rhythm with the iPhone reader, tw93.fun
+    /// and Weekly (maintainer 2026-11-04): 1.64 line height, the 30/24/20
+    /// heading ladder as em of the body, a heading's next block pulled up to
+    /// it, monospace code blocks a step down, and MiaoYan green links.
+    func testPreviewSharesTheFamilyReadingRhythm() throws {
+        let typography = try css("typography.css")
+        let core = try XCTUnwrap(typography.range(of: #"\n\.heti \{[^}]*\}"#, options: .regularExpression))
+        XCTAssertNotNil(typography[core].range(of: "line-height: 1.64;"), String(typography[core]))
+        for (heading, size) in [("h1", "1.76em"), ("h2", "1.41em"), ("h3", "1.18em")] {
+            let rule = try XCTUnwrap(typography.range(of: #"\.heti \#(heading) \{[^}]*\}"#, options: .regularExpression), heading)
+            XCTAssertNotNil(typography[rule].range(of: "font-size: \(size);"), String(typography[rule]))
+        }
+        let pull = try XCTUnwrap(typography.range(of: #"#write :is\(h1, h2, h3, h4, h5, h6\) \+ \* \{[^}]*\}"#, options: .regularExpression))
+        XCTAssertNotNil(typography[pull].range(of: "margin-block-start: 0;"), String(typography[pull]))
+        let code = try XCTUnwrap(typography.range(of: #"\.heti pre code \{[^}]*\}"#, options: .regularExpression))
+        XCTAssertNotNil(typography[code].range(of: "font-size: 0.86em;"), String(typography[code]))
+        for name in sheets {
+            XCTAssertNil(try css(name).range(of: "line-height: 1.74"), name)
+        }
+        XCTAssertNotNil(try css("theme-light.css").range(of: "--link-color: #1C5D33;"))
+        XCTAssertNotNil(try css("theme-dark.css").range(of: "--link-color: #54C59F;"))
+    }
+
     /// A SwiftUI chevron takes a named size (`Theme.Metrics.rowChevron`), not a literal (sumi principle 5).
     func testChevronsNameTheirSize() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
