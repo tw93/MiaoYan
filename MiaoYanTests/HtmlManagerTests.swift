@@ -459,6 +459,19 @@ final class HtmlManagerTests: XCTestCase {
     /// A remote image's size comes from its first bytes: a PNG's within its
     /// first kilobyte, a JPEG's once the headers after its EXIF arrive,
     /// turned for an EXIF orientation that shows it a quarter round.
+    func testSizedTagLetsALoadedPictureKeepItsOwnRatio() {
+        let bare = "<img src=\"a.png\">"
+        let reader = PreviewMedia.sized(bare, (400, 300), original: bare, placeholder: false)
+        XCTAssertTrue(reader.contains("width=\"400\" height=\"300\""), reader)
+        XCTAssertTrue(reader.contains("aspect-ratio: auto 400 / 300"), "the picture's own ratio wins once it loads")
+        let preview = PreviewMedia.sized(bare, (400, 300), original: bare)
+        XCTAssertTrue(preview.contains("aspect-ratio: 400 / 300"), "the 1px placeholder's square must not win")
+        let widthOnly = "<img width=\"200\" src=\"a.png\">"
+        let kept = PreviewMedia.sized(widthOnly, (400, 300), original: widthOnly, placeholder: false)
+        XCTAssertFalse(kept.contains("height="), "a width the note wrote stays alone")
+        XCTAssertTrue(kept.contains("aspect-ratio: auto 400 / 300"), kept)
+    }
+
     func testPixelSizeComesFromTheFirstBytesOfAFile() throws {
         let rep = try XCTUnwrap(
             NSBitmapImageRep(

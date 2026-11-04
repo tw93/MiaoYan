@@ -24,12 +24,16 @@ enum PreviewMedia {
         tag.range(of: #"\s"# + name + "=", options: .regularExpression) != nil
     }
 
-    static func sized(_ tag: String, _ size: (width: Int, height: Int), original: String) -> String {
-        // The 1px placeholder brings its own square ratio, which beats the
-        // attributes' ratio, so the box is held by `aspect-ratio` too. A
-        // width or height the note wrote stays; the image's own ratio sets
-        // the other side.
-        let style = original.contains("style=") ? "" : " style=\"aspect-ratio: \(size.width) / \(size.height)\""
+    /// `placeholder` is the Mac preview's case, where a lazy image's `src` is
+    /// a 1px GIF whose own square ratio beats the attributes' ratio, so the
+    /// box is held by a plain `aspect-ratio`, written fresh on every render. A tag that loads its real file at once (the iPhone
+    /// reader) takes `auto` instead, so the picture's own ratio wins once it
+    /// arrives, even when its file changed after the HTML was cached. A width
+    /// or height the note wrote stays; the image's own ratio sets the other
+    /// side.
+    static func sized(_ tag: String, _ size: (width: Int, height: Int), original: String, placeholder: Bool = true) -> String {
+        let ratio = placeholder ? "\(size.width) / \(size.height)" : "auto \(size.width) / \(size.height)"
+        let style = original.contains("style=") ? "" : " style=\"aspect-ratio: \(ratio)\""
         let written = hasAttribute("width", in: original) || hasAttribute("height", in: original)
         let attributes = written ? "" : " width=\"\(size.width)\" height=\"\(size.height)\""
         return tag.replacingOccurrences(of: "<img ", with: "<img\(attributes)\(style) ")
