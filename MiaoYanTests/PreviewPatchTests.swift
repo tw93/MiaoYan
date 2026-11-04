@@ -148,4 +148,15 @@ final class PreviewPatchTests: XCTestCase {
         let count = try await webView.evaluateJavaScript("document.querySelectorAll('#write hr').length") as? Int
         XCTAssertEqual(count, 0, "the stray node is gone")
     }
+
+    /// A reload while an in-place switch is still rendering (the app comes
+    /// back to the front, WebContent restarts) loaded the note being
+    /// replaced, which cancelled the switch and left the preview on it while
+    /// the list showed the next one.
+    func testReloadsMidSwitchLoadTheNoteOnItsWayIn() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("Views/MPreviewView.swift"), encoding: .utf8)
+        XCTAssertTrue(source.contains("if let note = inPlaceNote ?? self.note {\n            self.load(note: note, force: true)"), "WebContent restart")
+        XCTAssertTrue(source.contains("guard let note = inPlaceNote ?? note else { return }\n        load(note: note, force: true)"), "app reactivation")
+    }
 }

@@ -570,8 +570,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         AppDelegate.trackError(NSError(domain: "WKWebViewError", code: 1, userInfo: [NSLocalizedDescriptionKey: "WebContent process terminated"]), context: "MPreviewView.WebContentTerminated")
 
-        if let note = self.note {
-            // Reload the view explicitly
+        // Reload the note on its way in when an in-place switch is still
+        // rendering; `note` names the one it is replacing.
+        if let note = inPlaceNote ?? self.note {
             self.load(note: note, force: true)
         }
     }
@@ -797,6 +798,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Renders run off the main thread and a small note finishes before a
         // large one; only the newest load may land, or arrowing quickly from
         // a long note left the preview on it while the list showed another.
+        dropQueuedImageProbes(movingTo: note)
         loadEpoch &+= 1
         let epoch = loadEpoch
         inPlaceNote = nil
@@ -875,6 +877,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
             && !Self.isExporting && pageStyle == HtmlManager.previewStyle()
     }
 
+    /// Header probes still queued for the note on screen would hold the next
+    /// note's images behind them, up to 15s each on a dead host.
+    private func dropQueuedImageProbes(movingTo next: Note) {
+        guard let shown = inPlaceNote ?? note, shown !== next else { return }
+        Task { await RemoteImageProbe.shared.cancelQueued() }
+    }
+
     /// The note an in-place switch is rendering. Until it lands `note` still
     /// names the page on screen, so an update for that page has to cancel the
     /// switch, or going back to it mid-render let the other note replace it.
@@ -886,6 +895,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// moving through notes in preview has no blank frame in between. Falls
     /// back to a full load when the page cannot take it.
     public func showNoteInPlace(_ note: Note, completion: (() -> Void)? = nil) {
+        dropQueuedImageProbes(movingTo: note)
         loadEpoch &+= 1
         let epoch = loadEpoch
         contentUpdateVersion &+= 1
@@ -1222,7 +1232,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private func handleApplicationDidBecomeActive() {
         guard hasLoadedTemplate else { return }
         guard HtmlManager.ensurePreviewResourcesAvailable() else { return }
-        guard let note else { return }
+        guard let note = inPlaceNote ?? note else { return }
         load(note: note, force: true)
     }
 
