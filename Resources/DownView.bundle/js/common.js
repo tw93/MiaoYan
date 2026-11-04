@@ -285,6 +285,7 @@ const MiaoYanCommon = {
       if (img.style.aspectRatio || img.dataset.probed) return;
       const before = img.getBoundingClientRect();
       const scrolled = window.scrollY;
+      const pageHeight = document.documentElement.scrollHeight;
       img.dataset.probed = '1';
       img.classList.remove('media-reserve');
       img.style.aspectRatio = `${width} / ${height}`;
@@ -301,8 +302,11 @@ const MiaoYanCommon = {
         }
       }, { once: true });
       // Newer WebKit anchors the scroll itself; older ones leave it to us.
+      // What moved the text is how much the page grew, not the image: one
+      // with nothing painted yet is 0 tall in a line that already had a
+      // line's height, so a table row grows a line less than its image.
       if (before.bottom <= 0) {
-        const grown = img.getBoundingClientRect().height - before.height;
+        const grown = document.documentElement.scrollHeight - pageHeight;
         const missing = grown - (window.scrollY - scrolled);
         if (Math.abs(missing) >= 1) window.scrollBy(0, missing);
       }

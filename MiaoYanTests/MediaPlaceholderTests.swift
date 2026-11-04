@@ -49,6 +49,7 @@ final class MediaPlaceholderTests: XCTestCase {
             <p><img id="styled" class="lazy-image" data-measure="1" width="200" style="aspect-ratio: 1 / 1" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/z.png"> a</p>
             <p><img id="pending" class="media-pending" width="40" height="20" src="\(Self.placeholder)"></p>
             \(video)
+            <table><tr><td><img id="unpainted" data-measure="1" width="400" data-src="http://127.0.0.1:9/w.png"></td></tr></table>
             <div style="height: 3000px"><p id="marker" style="margin: 1800px 0 0">m</p></div>
             </div>
             <script src="\(bundle.appendingPathComponent("js/common.js").absoluteString)"></script>
@@ -79,6 +80,9 @@ final class MediaPlaceholderTests: XCTestCase {
                 // and applyImageSize only adds what it did not. The text is
                 // read in the same turn, before a failed image above it can
                 // fold and move it for a reason of its own.
+                // The second table image has nothing painted yet, as a lazy
+                // placeholder can be on older WebKit: it is 0 tall in a row
+                // still one line high, so the row grows less than the image.
                 window.scrollTo(0, 1500);
                 var markerTop = marker.getBoundingClientRect().top;
                 MiaoYanCommon.applyImageSize('http://127.0.0.1:9/y.png', 1536, 2048);
@@ -86,6 +90,10 @@ final class MediaPlaceholderTests: XCTestCase {
                 window.__before.sizedWidth = sized.width;
                 window.__before.sizedHeight = sized.height;
                 window.__before.moved = marker.getBoundingClientRect().top - markerTop;
+                markerTop = marker.getBoundingClientRect().top;
+                MiaoYanCommon.applyImageSize('http://127.0.0.1:9/w.png', 1536, 2048);
+                window.__before.movedInRow = marker.getBoundingClientRect().top - markerTop;
+                window.__before.unpaintedHeight = document.getElementById('unpainted').getBoundingClientRect().height;
                 window.scrollTo(0, 0);
                 window.__ready = true;
             })();
@@ -138,6 +146,8 @@ final class MediaPlaceholderTests: XCTestCase {
         // 1px placeholder had decoded to a square on macOS 27's WebKit and
         // not yet on CI's macOS 15. What must hold is the text in view.
         XCTAssertEqual(try XCTUnwrap(before["moved"] as? Double), 0, accuracy: 1, "a box above the view grows without moving the text")
+        XCTAssertEqual(try XCTUnwrap(before["unpaintedHeight"] as? Double), 533.33, accuracy: 0.5, "an image with nothing painted takes the answer too")
+        XCTAssertEqual(try XCTUnwrap(before["movedInRow"] as? Double), 0, accuracy: 1, "a row that grows less than its image still leaves the text in place")
         // Under Reduce Motion the pulse is off by design.
         if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
             XCTAssertEqual(before["pulse"] as? String, "media-pulse", "a loading image breathes its tint")
