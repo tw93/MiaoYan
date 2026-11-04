@@ -22,7 +22,7 @@ APP_STORE = "https://apps.apple.com/app/id6759252269"
 APP_STORE_CN = "https://apps.apple.com/cn/app/id6759252269"
 MAC_APP_STORE = "macappstore://apps.apple.com/app/id6759252269"
 GITHUB = "https://github.com/tw93/MiaoYan"
-SHOTS = ["edit", "preview", "split", "ppt", "dark"]
+SHOTS = ["edit", "preview", "split", "dark"]
 
 # key, path, html lang, menu name, short code (narrow nav), screenshot set
 LANGS = [
@@ -40,7 +40,6 @@ EN_ALTS = {
     "edit": "MiaoYan editing a Markdown note with folders, a note list and syntax highlighting",
     "preview": "MiaoYan previewing a note with a table and a checklist",
     "split": "MiaoYan in split view with Markdown on the left and a rendered Mermaid diagram on the right",
-    "ppt": "A MiaoYan note shown as a slide",
     "dark": "MiaoYan in dark mode editing Swift code",
 }
 
@@ -57,12 +56,11 @@ COPY = {
         "cta": ("View in App Store", "Source code"),
         "gallery_title": "Write, read and present",
         "gallery_lede": "Edit plain Markdown, switch to a typeset preview, work side by side, or turn a note into slides.",
-        "tabs": {"edit": "Edit", "preview": "Preview", "split": "Split", "ppt": "Present", "dark": "Dark"},
+        "tabs": {"edit": "Edit", "preview": "Preview", "split": "Split", "dark": "Dark"},
         "captions": {
             "edit": "Plain Markdown with syntax highlighting, so headings, links and code stand apart",
             "preview": "Images, tables and code rendered the way they will be read",
             "split": "Write on the left and see it on the right, Mermaid diagrams included",
-            "ppt": "Split a note with --- and it becomes a slide deck",
             "dark": "Dark mode follows the system",
         },
         "alts": EN_ALTS,
@@ -107,19 +105,17 @@ COPY = {
         "cta": ("在 App Store 获取", "查看源码"),
         "gallery_title": "书写、排版与演示",
         "gallery_lede": "纯 Markdown 专注书写，切到预览看排版，分栏一边写一边看，一篇笔记还能直接变成幻灯片。",
-        "tabs": {"edit": "编辑", "preview": "预览", "split": "分栏", "ppt": "演示", "dark": "深色"},
+        "tabs": {"edit": "编辑", "preview": "预览", "split": "分栏", "dark": "深色"},
         "captions": {
             "edit": "纯 Markdown 编辑，标题、链接与代码各有色彩，层次分明",
             "preview": "排版如书，图片、表格和代码按最终阅读形态呈现",
             "split": "左边写右边实时预览，60fps 双向滚动与 Mermaid 流程图随手即得",
-            "ppt": "用 --- 分页，同一篇笔记直接变成幻灯片放映",
             "dark": "跟随系统昼夜轮转，专为夜间书写调校的暖调深色",
         },
         "alts": {
             "edit": "妙言编辑一篇 Markdown 笔记，左侧是文件夹和笔记列表",
             "preview": "妙言预览一期周刊，带封面图和链接",
             "split": "妙言分栏模式，左边是 Markdown，右边是渲染好的流程图",
-            "ppt": "妙言把一篇笔记展示成幻灯片",
             "dark": "妙言深色模式下编辑 Swift 代码",
         },
         "devices_title": "iPhone 和 iPad",
@@ -163,19 +159,17 @@ COPY = {
         "cta": ("在 App Store 取得", "查看原始碼"),
         "gallery_title": "書寫、排版與簡報",
         "gallery_lede": "純 Markdown 專注書寫，切到預覽看排版，分欄一邊寫一邊看，一篇筆記還能直接變成投影片。",
-        "tabs": {"edit": "編輯", "preview": "預覽", "split": "分欄", "ppt": "簡報", "dark": "深色"},
+        "tabs": {"edit": "編輯", "preview": "預覽", "split": "分欄", "dark": "深色"},
         "captions": {
             "edit": "純 Markdown 編輯，標題、連結與程式碼各有色彩，層次分明",
             "preview": "排版如書，圖片、表格和程式碼按最終閱讀形態呈現",
             "split": "左邊寫右邊即時預覽，60fps 雙向捲動與 Mermaid 流程圖隨手即得",
-            "ppt": "用 --- 分頁，同一篇筆記直接變成投影片放映",
             "dark": "跟隨系統晝夜輪轉，專為夜間書寫調校的暖調深色",
         },
         "alts": {
             "edit": "妙言編輯一篇 Markdown 筆記，左側是檔案夾和筆記列表",
             "preview": "妙言預覽一期週刊，帶封面圖和連結",
             "split": "妙言分欄模式，左邊是 Markdown，右邊是繪製好的流程圖",
-            "ppt": "妙言把一篇筆記展示成投影片",
             "dark": "妙言深色模式下編輯 Swift 程式碼",
         },
         "devices_title": "iPhone 和 iPad",
@@ -219,19 +213,17 @@ COPY = {
         "cta": ("App Storeで入手", "ソースコード"),
         "gallery_title": "書く、読む、プレゼンする",
         "gallery_lede": "素のMarkdownで書き、プレビューで組版を確かめ、分割表示で並べて作業し、ノートをそのままスライドにできます。",
-        "tabs": {"edit": "編集", "preview": "プレビュー", "split": "分割", "ppt": "プレゼン", "dark": "ダーク"},
+        "tabs": {"edit": "編集", "preview": "プレビュー", "split": "分割", "dark": "ダーク"},
         "captions": {
             "edit": "シンタックスハイライト付きの素のMarkdownで、見出し、リンク、コードがひと目で区別できます",
             "preview": "画像、表、コードを読まれるときと同じ姿で表示します",
             "split": "左で書いて右で確認、Mermaidの図もそのまま描画されます",
-            "ppt": "---で区切ればノートがスライドになります",
             "dark": "ダークモードはシステムに合わせて切り替わります",
         },
         "alts": {
             "edit": "フォルダ、ノート一覧、シンタックスハイライトとともにMarkdownノートを編集するMiaoYan",
             "preview": "表とチェックリストのあるノートをプレビューするMiaoYan",
             "split": "左にMarkdown、右に描画されたMermaid図を並べたMiaoYanの分割表示",
-            "ppt": "スライドとして表示したMiaoYanのノート",
             "dark": "ダークモードでSwiftのコードを編集するMiaoYan",
         },
         "devices_title": "iPhoneとiPad",
@@ -275,19 +267,17 @@ COPY = {
         "cta": ("App Store에서 받기", "소스 코드"),
         "gallery_title": "쓰고, 읽고, 발표하기",
         "gallery_lede": "순수 마크다운으로 쓰고, 미리보기로 조판을 확인하고, 분할 화면에서 나란히 작업하거나, 노트를 그대로 슬라이드로 바꿀 수 있습니다.",
-        "tabs": {"edit": "편집", "preview": "미리보기", "split": "분할", "ppt": "발표", "dark": "다크"},
+        "tabs": {"edit": "편집", "preview": "미리보기", "split": "분할", "dark": "다크"},
         "captions": {
             "edit": "구문 강조가 적용된 순수 마크다운으로 제목, 링크, 코드가 한눈에 구분됩니다",
             "preview": "이미지, 표, 코드를 실제 읽는 모습 그대로 보여 줍니다",
             "split": "왼쪽에서 쓰고 오른쪽에서 확인하며, Mermaid 다이어그램도 바로 그려집니다",
-            "ppt": "---로 나누면 노트가 슬라이드가 됩니다",
             "dark": "다크 모드는 시스템 설정을 따릅니다",
         },
         "alts": {
             "edit": "폴더, 노트 목록, 구문 강조와 함께 마크다운 노트를 편집하는 MiaoYan",
             "preview": "표와 체크리스트가 있는 노트를 미리 보는 MiaoYan",
             "split": "왼쪽에 마크다운, 오른쪽에 렌더링된 Mermaid 다이어그램이 있는 MiaoYan 분할 화면",
-            "ppt": "슬라이드로 표시된 MiaoYan 노트",
             "dark": "다크 모드에서 Swift 코드를 편집하는 MiaoYan",
         },
         "devices_title": "iPhone과 iPad",
@@ -331,19 +321,17 @@ COPY = {
         "cta": ("Im App Store laden", "Quellcode"),
         "gallery_title": "Schreiben, lesen, präsentieren",
         "gallery_lede": "Schreib reines Markdown, wechsle zur gesetzten Vorschau, arbeite Seite an Seite oder mach aus einer Notiz eine Präsentation.",
-        "tabs": {"edit": "Bearbeiten", "preview": "Vorschau", "split": "Geteilt", "ppt": "Präsentieren", "dark": "Dunkel"},
+        "tabs": {"edit": "Bearbeiten", "preview": "Vorschau", "split": "Geteilt", "dark": "Dunkel"},
         "captions": {
             "edit": "Reines Markdown mit Syntaxhervorhebung, damit sich Überschriften, Links und Code abheben",
             "preview": "Bilder, Tabellen und Code so dargestellt, wie sie gelesen werden",
             "split": "Links schreiben, rechts sehen, Mermaid-Diagramme inklusive",
-            "ppt": "Teile eine Notiz mit --- und sie wird zur Präsentation",
             "dark": "Der Dark Mode folgt dem System",
         },
         "alts": {
             "edit": "MiaoYan beim Bearbeiten einer Markdown-Notiz mit Ordnern, Notizliste und Syntaxhervorhebung",
             "preview": "MiaoYan zeigt die Vorschau einer Notiz mit Tabelle und Checkliste",
             "split": "MiaoYan in der geteilten Ansicht mit Markdown links und gerendertem Mermaid-Diagramm rechts",
-            "ppt": "Eine MiaoYan-Notiz als Folie",
             "dark": "MiaoYan im Dark Mode beim Bearbeiten von Swift-Code",
         },
         "devices_title": "Auf iPhone und iPad",
@@ -387,19 +375,17 @@ COPY = {
         "cta": ("Voir dans l'App Store", "Code source"),
         "gallery_title": "Écrire, lire, présenter",
         "gallery_lede": "Écrivez en Markdown pur, passez à un aperçu mis en page, travaillez côte à côte ou transformez une note en diaporama.",
-        "tabs": {"edit": "Édition", "preview": "Aperçu", "split": "Côte à côte", "ppt": "Présentation", "dark": "Sombre"},
+        "tabs": {"edit": "Édition", "preview": "Aperçu", "split": "Côte à côte", "dark": "Sombre"},
         "captions": {
             "edit": "Du Markdown pur avec coloration syntaxique, pour distinguer titres, liens et code",
             "preview": "Images, tableaux et code rendus tels qu'ils seront lus",
             "split": "Écrivez à gauche, voyez le résultat à droite, diagrammes Mermaid compris",
-            "ppt": "Séparez une note avec --- et elle devient un diaporama",
             "dark": "Le mode sombre suit le système",
         },
         "alts": {
             "edit": "MiaoYan éditant une note Markdown avec dossiers, liste de notes et coloration syntaxique",
             "preview": "MiaoYan affichant l'aperçu d'une note avec un tableau et une liste de tâches",
             "split": "MiaoYan en vue partagée, le Markdown à gauche et un diagramme Mermaid rendu à droite",
-            "ppt": "Une note MiaoYan affichée en diapositive",
             "dark": "MiaoYan en mode sombre éditant du code Swift",
         },
         "devices_title": "Sur iPhone et iPad",
@@ -443,19 +429,17 @@ COPY = {
         "cta": ("Ver en App Store", "Código fuente"),
         "gallery_title": "Escribe, lee y presenta",
         "gallery_lede": "Escribe Markdown puro, cambia a una vista previa maquetada, trabaja en paralelo o convierte una nota en diapositivas.",
-        "tabs": {"edit": "Editar", "preview": "Vista previa", "split": "Dividido", "ppt": "Presentar", "dark": "Oscuro"},
+        "tabs": {"edit": "Editar", "preview": "Vista previa", "split": "Dividido", "dark": "Oscuro"},
         "captions": {
             "edit": "Markdown puro con resaltado de sintaxis, para que títulos, enlaces y código se distingan",
             "preview": "Imágenes, tablas y código tal como se van a leer",
             "split": "Escribe a la izquierda y míralo a la derecha, con diagramas Mermaid incluidos",
-            "ppt": "Divide una nota con --- y se convierte en una presentación",
             "dark": "El modo oscuro sigue al sistema",
         },
         "alts": {
             "edit": "MiaoYan editando una nota Markdown con carpetas, lista de notas y resaltado de sintaxis",
             "preview": "MiaoYan mostrando la vista previa de una nota con una tabla y una lista de tareas",
             "split": "MiaoYan en vista dividida con Markdown a la izquierda y un diagrama Mermaid renderizado a la derecha",
-            "ppt": "Una nota de MiaoYan mostrada como diapositiva",
             "dark": "MiaoYan en modo oscuro editando código Swift",
         },
         "devices_title": "En iPhone y iPad",
@@ -890,7 +874,7 @@ def page(key):
     )
     shots = "".join(
         f'<img src="/assets/shots/{shot}-{s}-1400.webp" srcset="/assets/shots/{shot}-{s}-1400.webp 1400w, /assets/shots/{shot}-{s}-2400.webp 2400w" '
-        f'sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="{1506 if s == "ppt" else 1660}" alt="{esc(c["alts"][s])}" data-shot="{s}"'
+        f'sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="{esc(c["alts"][s])}" data-shot="{s}"'
         f'{" fetchpriority=\"high\"" if i == 0 else " loading=\"lazy\" hidden"}>'
         for i, s in enumerate(SHOTS)
     )
