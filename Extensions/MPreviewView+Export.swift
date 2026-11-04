@@ -227,14 +227,12 @@ extension MPreviewView {
             """
         // Remove trailing whitespace and closing brace from mediaCSS to insert exportLayoutCSS inside the media query
         let trimmedMediaCSS = mediaCSS.trimmingCharacters(in: .whitespacesAndNewlines).dropLast()
+        let sheet = "\(trimmedMediaCSS)\n\(exportLayoutCSS)\n}\n"
         let printCSS = """
                 (function() {
                     var style = document.createElement('style');
                     style.id = 'miaoyan-export-style';
-                    style.innerHTML = `\(trimmedMediaCSS)
-                           \(exportLayoutCSS)
-                        }
-                    `;
+                    style.textContent = \(HtmlManager.jsStringLiteral(sheet));
                     document.head.appendChild(style);
                     void document.body.offsetHeight;
                     return true;

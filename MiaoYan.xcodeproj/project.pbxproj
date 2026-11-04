@@ -92,6 +92,7 @@
 		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
 		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
 		30DCFC5BB00D93D9A25EEBBF /* MiaoYanTests/PreviewPatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */; };
+		2F185BBC7E4F7EADC156950E /* MiaoYanTests/PrintExportScriptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB5B8E267E925B04142F54C /* MiaoYanTests/PrintExportScriptTests.swift */; };
 		3ED257B778940D276AFD3DD7 /* MiaoYanTests/EditorHotPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */; };
 		95B90A6B90561F9C08D03B8E /* MiaoYanTests/ModificationDateCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */; };
 		1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */; };
@@ -300,6 +301,7 @@
 		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
 		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
 		F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PreviewPatchTests.swift; sourceTree = SOURCE_ROOT; };
+		FEB5B8E267E925B04142F54C /* MiaoYanTests/PrintExportScriptTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrintExportScriptTests.swift; sourceTree = SOURCE_ROOT; };
 		B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/EditorHotPathTests.swift; sourceTree = SOURCE_ROOT; };
 		40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ModificationDateCacheTests.swift; sourceTree = SOURCE_ROOT; };
 		0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsFitTests.swift; sourceTree = SOURCE_ROOT; };
@@ -490,6 +492,7 @@
 				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
 				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
 				F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */,
+				FEB5B8E267E925B04142F54C /* MiaoYanTests/PrintExportScriptTests.swift */,
 				B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */,
 				40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */,
 				0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */,
@@ -859,6 +862,7 @@
 				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
 				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
 				30DCFC5BB00D93D9A25EEBBF /* MiaoYanTests/PreviewPatchTests.swift in Sources */,
+				2F185BBC7E4F7EADC156950E /* MiaoYanTests/PrintExportScriptTests.swift in Sources */,
 				3ED257B778940D276AFD3DD7 /* MiaoYanTests/EditorHotPathTests.swift in Sources */,
 				95B90A6B90561F9C08D03B8E /* MiaoYanTests/ModificationDateCacheTests.swift in Sources */,
 				1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */,

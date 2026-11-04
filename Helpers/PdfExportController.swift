@@ -120,54 +120,60 @@ final class PdfExportController: NSObject {
             completion()
             return
         }
-        let css = HtmlManager.paginatedPrintCSS()
-        let safeTitle = escapeForJS(note.getExportTitle())
-        // Un-lazy: MiaoYan's preview keeps non-first images on a placeholder GIF + data-src
-        // until the user scrolls them into view. The offscreen print webview never scrolls, so
-        // those placeholders would render as blank boxes. Swap data-src back to src before print.
-        // Also kick off an async Promise.all of img.decode() and park the completion flag on
-        // window so waitForMedia can poll it.
-        let script = """
-            (function() {
-                var s = document.createElement('style');
-                s.id = 'miaoyan-pdf-print-style';
-                s.innerHTML = `\(css)`;
-                document.head.appendChild(s);
-
-                var container = document.getElementById('write') || document.body;
-                if (container && !document.getElementById('export-generated-title')) {
-                    var h = document.createElement('h1');
-                    h.id = 'export-generated-title';
-                    h.innerText = '\(safeTitle)';
-                    // Styling lives in paginatedPrintCSS() under #export-generated-title.
-                    // Inline !important here used to shadow half of that rule, leaving two
-                    // fighting sources for the same heading.
-                    container.insertBefore(h, container.firstChild);
-                }
-
-                document.querySelectorAll('img[data-src]').forEach(function(img) {
-                    var real = img.getAttribute('data-src');
-                    if (real) img.src = real;
-                    img.removeAttribute('loading');
-                    img.removeAttribute('data-src');
-                    img.classList.remove('lazy-image');
-                });
-                document.querySelectorAll('img[loading]').forEach(function(img) {
-                    img.removeAttribute('loading');
-                });
-
-                var toc = document.querySelector('.toc-nav');
-                var tocTrigger = document.querySelector('.toc-hover-trigger');
-                if (toc) toc.style.display = 'none';
-                if (tocTrigger) tocTrigger.style.display = 'none';
-
-                void document.body.offsetHeight;
-                return true;
-            })();
-            """
+        let script = Self.printSetupScript(css: HtmlManager.paginatedPrintCSS(), title: note.getExportTitle())
         web.evaluateJavaScript(script) { _, _ in
             completion()
         }
+    }
+
+    /// Adds the print sheet and the title, and swaps lazy images back to their
+    /// real files: the offscreen print view never scrolls, so a placeholder
+    /// would print as a blank box. The sheet and the title go in as JSON
+    /// string literals. They used to sit in a template literal, and the
+    /// backticks in the sheet's comments ended it early, so from V4.3.0 the
+    /// whole script failed to parse: no print styles, and every image the
+    /// reader had not scrolled to came out blank.
+    static func printSetupScript(css: String, title: String) -> String {
+        """
+        (function() {
+            var s = document.createElement('style');
+            s.id = 'miaoyan-pdf-print-style';
+            s.textContent = \(HtmlManager.jsStringLiteral(css));
+            document.head.appendChild(s);
+
+            var container = document.getElementById('write') || document.body;
+            // A note that opens with its own heading keeps it as the title,
+            // as HTML export does, rather than printing two in a row.
+            var first = container && container.firstElementChild;
+            var hasHeading = first && first.tagName === 'H1';
+            if (container && !hasHeading && !document.getElementById('export-generated-title')) {
+                var h = document.createElement('h1');
+                h.id = 'export-generated-title';
+                h.innerText = \(HtmlManager.jsStringLiteral(title));
+                // Styling lives in paginatedPrintCSS() under #export-generated-title.
+                container.insertBefore(h, container.firstChild);
+            }
+
+            document.querySelectorAll('img[data-src]').forEach(function(img) {
+                var real = img.getAttribute('data-src');
+                if (real) img.src = real;
+                img.removeAttribute('loading');
+                img.removeAttribute('data-src');
+                img.classList.remove('lazy-image');
+            });
+            document.querySelectorAll('img[loading]').forEach(function(img) {
+                img.removeAttribute('loading');
+            });
+
+            var toc = document.querySelector('.toc-nav');
+            var tocTrigger = document.querySelector('.toc-hover-trigger');
+            if (toc) toc.style.display = 'none';
+            if (tocTrigger) tocTrigger.style.display = 'none';
+
+            void document.body.offsetHeight;
+            return true;
+        })();
+        """
     }
 
     private func waitForMedia() {
@@ -334,20 +340,6 @@ final class PdfExportController: NSObject {
             try? FileManager.default.removeItem(at: url)
             indexURL = nil
         }
-    }
-
-    private func escapeForJS(_ value: String) -> String {
-        // Backtick / ${ escapes are needed if value is ever interpolated into a template literal.
-        // Title currently lives inside single quotes, but escape defensively so the helper is
-        // safe to drop anywhere.
-        value
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\n", with: "\\n")
-            .replacingOccurrences(of: "\r", with: "\\r")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-            .replacingOccurrences(of: "'", with: "\\'")
-            .replacingOccurrences(of: "`", with: "\\`")
-            .replacingOccurrences(of: "${", with: "\\${")
     }
 
     // Navigation delegate held off-self so the controller can remain @MainActor and stay clean.
