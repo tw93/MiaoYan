@@ -1,8 +1,66 @@
+import ImageIO
 import JavaScriptCore
 import WebKit
 import XCTest
 
 @testable import MiaoYan
+
+/// Serves `RemoteImageProbe`'s requests from memory and records the range
+/// each one asked for.
+final class ImageProbeStub: URLProtocol {
+    private struct Response {
+        let status: Int
+        let body: Data
+        var failuresLeft = 0
+    }
+    private static let lock = NSLock()
+    nonisolated(unsafe) private static var responses: [String: Response] = [:]
+    nonisolated(unsafe) private static var ranges: [String: String] = [:]
+    nonisolated(unsafe) private static var counts: [String: Int] = [:]
+
+    /// `failing` first requests time out before the response is served.
+    static func serve(_ url: String, status: Int, body: Data, failing: Int = 0) {
+        lock.withLock { responses[url] = Response(status: status, body: body, failuresLeft: failing) }
+    }
+
+    static func range(for url: String) -> String? {
+        lock.withLock { ranges[url] }
+    }
+
+    static func requests(for url: String) -> Int {
+        lock.withLock { counts[url] ?? 0 }
+    }
+
+    override static func canInit(with request: URLRequest) -> Bool { true }
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        guard let url = request.url else { return }
+        let key = url.absoluteString
+        let (response, fails) = Self.lock.withLock { () -> (Response?, Bool) in
+            Self.ranges[key] = request.value(forHTTPHeaderField: "Range")
+            Self.counts[key, default: 0] += 1
+            guard var response = Self.responses[key] else { return (nil, false) }
+            if response.failuresLeft > 0 {
+                response.failuresLeft -= 1
+                Self.responses[key] = response
+                return (response, true)
+            }
+            return (response, false)
+        }
+        if fails {
+            client?.urlProtocol(self, didFailWithError: URLError(.timedOut))
+            return
+        }
+        let status = response?.status ?? 404
+        let http = HTTPURLResponse(url: url, statusCode: status, httpVersion: "HTTP/1.1", headerFields: nil)
+        if let http { client?.urlProtocol(self, didReceive: http, cacheStoragePolicy: .notAllowed) }
+        if let body = response?.body, !body.isEmpty { client?.urlProtocol(self, didLoad: body) }
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
+}
 
 private let nestedUnderbraceFormula =
     #"$$"# + "\n"
@@ -396,6 +454,95 @@ final class HtmlManagerTests: XCTestCase {
         let reopened = RemoteImageSizes(fileURL: file)
         XCTAssertEqual(reopened.size(for: "https://example.com/p.png")?.width, 640)
         XCTAssertEqual(reopened.size(for: "https://example.com/p.png")?.height, 480)
+    }
+
+    /// A remote image's size comes from its first bytes: a PNG's within its
+    /// first kilobyte, a JPEG's once the headers after its EXIF arrive,
+    /// turned for an EXIF orientation that shows it a quarter round.
+    func testPixelSizeComesFromTheFirstBytesOfAFile() throws {
+        let rep = try XCTUnwrap(
+            NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: 40, pixelsHigh: 30, bitsPerSample: 8, samplesPerPixel: 4,
+                hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+        let png = try XCTUnwrap(rep.representation(using: .png, properties: [:]))
+        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: png.prefix(1024))?.width, 40)
+        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: png.prefix(1024))?.height, 30)
+        XCTAssertNil(HtmlManager.pixelSize(fromHeader: png.prefix(12)), "a cut before the header has no size")
+
+        let image = try XCTUnwrap(rep.cgImage)
+        let jpeg = NSMutableData()
+        let destination = try XCTUnwrap(CGImageDestinationCreateWithData(jpeg, "public.jpeg" as CFString, 1, nil))
+        CGImageDestinationAddImage(destination, image, [kCGImagePropertyOrientation: 6] as CFDictionary)
+        XCTAssertTrue(CGImageDestinationFinalize(destination))
+        let bytes = [UInt8](jpeg as Data)
+        // ImageIO gives a JPEG's size once the scan header after the frame
+        // header has arrived (an iPhone photo's at byte 7640).
+        let marker = { (code: UInt8) in (0..<bytes.count - 1).first { bytes[$0] == 0xFF && bytes[$0 + 1] == code } }
+        let frame = try XCTUnwrap(marker(0xC0))
+        let scan = try XCTUnwrap(marker(0xDA))
+        XCTAssertNil(HtmlManager.pixelSize(fromHeader: (jpeg as Data).prefix(frame)), "the EXIF alone has no size")
+        let header = (jpeg as Data).prefix(scan + 16)
+        XCTAssertLessThan(header.count, bytes.count)
+        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: header)?.width, 30, "orientation 6 shows it turned")
+        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: header)?.height, 40)
+
+        // An animated WebP, which ImageIO gives no size for: the canvas in
+        // its VP8X chunk (a 720 by 414 preview, sides stored less one).
+        var webp = Data("RIFF".utf8) + Data([0x94, 0x90, 0x92, 0x00]) + Data("WEBPVP8X".utf8)
+        webp += Data([0x0A, 0, 0, 0, 0x12, 0, 0, 0, 0xCF, 0x02, 0x00, 0x9D, 0x01, 0x00]) + Data("ANIM".utf8)
+        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: webp)?.width, 720)
+        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: webp)?.height, 414)
+        XCTAssertEqual(HtmlManager.extendedWebPSize(Data("RIFF".utf8) + Data(count: 4) + Data("WEBPVP8X".utf8) + Data(repeating: 0xFF, count: 14))?.width, 1 << 24)
+    }
+
+    /// The probe asks for the start of the file only and reads the size from
+    /// it, keeping it for the next render, also from a server that ignores
+    /// the range. An error status is remembered and not asked again; a
+    /// timeout is not, so the next render tries once more.
+    func testRemoteImageProbeAsksForTheHeaderOnly() async throws {
+        let rep = try XCTUnwrap(
+            NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: 36, pixelsHigh: 48, bitsPerSample: 8, samplesPerPixel: 4,
+                hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+        var body = try XCTUnwrap(rep.representation(using: .png, properties: [:]))
+        body.append(Data(count: 600_000))
+        let id = UUID().uuidString
+        let url = "https://probe.invalid/\(id).png"
+        let whole = "https://probe.invalid/\(id)-whole.png"
+        let missing = "https://probe.invalid/\(id)-missing.png"
+        let flaky = "https://probe.invalid/\(id)-flaky.png"
+        ImageProbeStub.serve(url, status: 206, body: body)
+        ImageProbeStub.serve(whole, status: 200, body: body)
+        ImageProbeStub.serve(missing, status: 404, body: Data())
+        ImageProbeStub.serve(flaky, status: 206, body: body, failing: 1)
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [ImageProbeStub.self]
+        let sizes = RemoteImageSizes(fileURL: nil)
+        let probe = RemoteImageProbe(configuration: configuration, sizes: sizes)
+
+        let size = await probe.size(of: url)
+        XCTAssertEqual(size?.width, 36)
+        XCTAssertEqual(size?.height, 48)
+        XCTAssertEqual(ImageProbeStub.range(for: url), "bytes=0-\(RemoteImageProbe.maxBytes - 1)")
+        XCTAssertEqual(sizes.size(for: url)?.height, 48, "the next render reserves the box")
+        let wholeSize = await probe.size(of: whole)
+        XCTAssertEqual(wholeSize?.width, 36, "a server that sends the whole file still gives the size")
+
+        var missingSize = await probe.size(of: missing)
+        missingSize = await probe.size(of: missing)
+        XCTAssertNil(missingSize)
+        XCTAssertEqual(ImageProbeStub.requests(for: missing), 1, "an error status is not asked again")
+
+        let firstTry = await probe.size(of: flaky)
+        XCTAssertNil(firstTry)
+        let secondTry = await probe.size(of: flaky)
+        XCTAssertEqual(secondTry?.height, 48, "a timeout does not stop the next render from asking")
+
+        sizes.record(url: "https://probe.invalid/\(id)-measured.png", width: 10, height: 20)
+        ImageProbeStub.serve("https://probe.invalid/\(id)-measured.png", status: 206, body: body)
+        let measured = await probe.size(of: "https://probe.invalid/\(id)-measured.png")
+        XCTAssertEqual(measured?.width, 10, "the page's own measurement is kept")
+        XCTAssertEqual(ImageProbeStub.requests(for: "https://probe.invalid/\(id)-measured.png"), 0)
     }
 
     func testTemplatePlaceholdersInsideNoteTextStayAsWritten() {

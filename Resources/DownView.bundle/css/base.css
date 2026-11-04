@@ -449,10 +449,27 @@ img.border {
   width: 100%;
 }
 
+/* An image still downloading after a moment breathes its tint, the way a
+   skeleton screen pulses, so a slow one reads as loading rather than as a
+   blank gap; one that arrives within 0.45s never shows it. Off under
+   Reduce Motion. */
+@media (prefers-reduced-motion: no-preference) {
+  #write img.media-pending {
+    animation: media-pulse 0.9s ease-out 0.45s infinite alternate;
+  }
+}
+
+@keyframes media-pulse {
+  to {
+    background-color: var(--media-pulse);
+  }
+}
+
 @media print {
   #write img.lazy-image,
   #write img.media-pending {
     background-color: transparent;
+    animation: none;
   }
 }
 
@@ -465,6 +482,7 @@ img.border {
     --border-color: #3A3936;
     --code-bg: #282724;
     --diagram-bg: #282724;
+    --media-pulse: #34332F;
   }
 
   html {

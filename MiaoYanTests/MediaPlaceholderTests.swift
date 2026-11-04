@@ -5,7 +5,9 @@ import XCTest
 @testable import MiaoYan
 
 /// Media in the preview hold a visible box until they can show something:
-/// a slow image used to leave blank paper and a video an empty player.
+/// a slow image used to leave blank paper and a video an empty player. A
+/// width-only remote image takes its ratio from the header the app read,
+/// and one still loading after a moment breathes its tint.
 @available(macOS 12.0, *)
 final class MediaPlaceholderTests: XCTestCase {
     private static let placeholder = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -43,7 +45,11 @@ final class MediaPlaceholderTests: XCTestCase {
             <div class="markdown-body heti" id="write" style="width: 640px">
             <p><img id="unmeasured" class="lazy-image" data-measure="1" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/x.png"></p>
             <p><img id="lazy" class="lazy-image" width="40" height="20" src="\(Self.placeholder)" data-src="\(png.absoluteString)"></p>
+            <table><tr><td><img id="widthOnly" class="lazy-image" data-measure="1" width="400" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/y.png"></td></tr></table>
+            <p><img id="styled" class="lazy-image" data-measure="1" width="200" style="aspect-ratio: 1 / 1" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/z.png"> a</p>
+            <p><img id="pending" class="media-pending" width="40" height="20" src="\(Self.placeholder)"></p>
             \(video)
+            <div style="height: 3000px"></div>
             </div>
             <script src="\(bundle.appendingPathComponent("js/common.js").absoluteString)"></script>
             <script>
@@ -51,7 +57,25 @@ final class MediaPlaceholderTests: XCTestCase {
             (function() {
                 var img = document.getElementById('unmeasured');
                 var box = img.getBoundingClientRect();
+                var widthOnly = document.getElementById('widthOnly');
+                var square = widthOnly.getBoundingClientRect();
+                window.scrollTo(0, 1500);
+                var scrolled = window.scrollY;
+                MiaoYanCommon.applyImageSize('http://127.0.0.1:9/y.png', 1536, 2048);
+                var shift = window.scrollY - scrolled;
+                window.scrollTo(0, 0);
+                MiaoYanCommon.applyImageSize('http://127.0.0.1:9/z.png', 1536, 2048);
+                var styled = document.getElementById('styled').getBoundingClientRect();
+                var sized = widthOnly.getBoundingClientRect();
+                var pending = getComputedStyle(document.getElementById('pending'));
                 window.__before = {
+                    squareHeight: square.height,
+                    shift: shift,
+                    styledHeight: styled.height,
+                    sizedWidth: sized.width,
+                    sizedHeight: sized.height,
+                    pulse: pending.animationName,
+                    pulseDelay: pending.animationDelay,
                     reserved: img.classList.contains('media-reserve'),
                     width: box.width,
                     height: box.height,
@@ -102,6 +126,16 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertEqual(before["height"] as? Double, 360)
         XCTAssertNotEqual(before["tint"] as? String, transparent, "a lazy image shows a tinted box")
         XCTAssertNotEqual(before["videoTint"] as? String, transparent, "a video shows a tinted box")
+        XCTAssertEqual(before["squareHeight"] as? Double, 400, "a width-only image without a size starts square")
+        XCTAssertEqual(before["sizedWidth"] as? Double, 400)
+        XCTAssertEqual(try XCTUnwrap(before["sizedHeight"] as? Double), 533.33, accuracy: 0.5, "the header's size gives it the picture's ratio")
+        XCTAssertEqual(before["styledHeight"] as? Double, 200, "a ratio the note set is kept")
+        XCTAssertEqual(try XCTUnwrap(before["shift"] as? Double), 133.33, accuracy: 1, "a box above the view grows without moving the text")
+        // Under Reduce Motion the pulse is off by design.
+        if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
+            XCTAssertEqual(before["pulse"] as? String, "media-pulse", "a loading image breathes its tint")
+            XCTAssertEqual(before["pulseDelay"] as? String, "0.45s", "after a moment, so a quick one never flashes it")
+        }
 
         XCTAssertEqual(result["lazyLoaded"] as? Bool, true, "\(result)")
         XCTAssertEqual(result["lazyPending"] as? Bool, false, "\(result)")

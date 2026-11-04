@@ -169,10 +169,13 @@ const MiaoYanCommon = {
       }
     });
 
-    // A remote image MiaoYan has not seen before reports its size once it
-    // arrives, so the next time the note opens its box is already reserved.
-    // Until then one standing alone in its paragraph holds a full-width
-    // 16:9 box, not a 1px point the text jumps away from when it arrives.
+    // A remote image MiaoYan has not seen before asks the app for the size in
+    // its file's header (applyImageSize answers, well before a large file has
+    // arrived) and reports its size again once it loads, so the next time the
+    // note opens its box is already reserved. Until the answer one standing
+    // alone in its paragraph holds a full-width 16:9 box, not a 1px point the
+    // text jumps away from. Those nearest the view ask first.
+    const asks = [];
     document.querySelectorAll('img[data-measure]').forEach((img) => {
       if (img.__miaoyanMeasured) return;
       img.__miaoyanMeasured = true;
@@ -181,17 +184,29 @@ const MiaoYanCommon = {
         img.classList.add('media-reserve');
         img.addEventListener('error', () => img.classList.remove('media-reserve'), { once: true });
       }
+      if (img.dataset.src) asks.push(img);
       const report = () => {
         const src = img.currentSrc || img.src;
         if (!src || src.startsWith('data:') || img.naturalWidth < 2) return false;
         img.classList.remove('media-reserve');
         img.removeAttribute('data-measure');
+        // The picture itself now holds the box.
+        if (img.dataset.probed) img.style.aspectRatio = '';
         window.webkit?.messageHandlers.imageSize?.postMessage({ src, width: img.naturalWidth, height: img.naturalHeight });
         return true;
       };
       const onLoad = () => { if (report()) img.removeEventListener('load', onLoad); };
       if (!(img.complete && report())) img.addEventListener('load', onLoad);
     });
+    if (asks.length && window.webkit?.messageHandlers.imageProbe) {
+      const middle = window.innerHeight / 2;
+      const distance = (img) => {
+        const box = img.getBoundingClientRect();
+        return Math.abs((box.top + box.bottom) / 2 - middle);
+      };
+      asks.sort((a, b) => distance(a) - distance(b))
+        .forEach((img) => window.webkit.messageHandlers.imageProbe.postMessage(img.dataset.src));
+    }
 
     // Lazy images start only once the page has loaded. An image whose src is
     // set before the load event holds that event back, and the app shows a
@@ -255,6 +270,43 @@ const MiaoYanCommon = {
         }
       });
     }
+  },
+
+  // The size the app read from a remote image's header: the box takes the
+  // picture's ratio, at the width the note wrote or the image's own, until
+  // the picture arrives and holds it itself. An image that has loaded, or
+  // whose note set its own ratio, is left alone. A box above the view grows
+  // without moving the text being read, and one whose file then fails to
+  // load gives back what it was given.
+  applyImageSize(src, width, height) {
+    document.querySelectorAll('img[data-measure]').forEach((img) => {
+      if (img.dataset.src !== src && img.getAttribute('src') !== src) return;
+      if (!img.src.startsWith('data:') && img.complete && img.naturalWidth > 1) return;
+      if (img.style.aspectRatio || img.dataset.probed) return;
+      const before = img.getBoundingClientRect();
+      const scrolled = window.scrollY;
+      img.dataset.probed = '1';
+      img.classList.remove('media-reserve');
+      img.style.aspectRatio = `${width} / ${height}`;
+      const added = !img.hasAttribute('width') && !img.hasAttribute('height');
+      if (added) {
+        img.setAttribute('width', width);
+        img.setAttribute('height', height);
+      }
+      img.addEventListener('error', () => {
+        img.style.aspectRatio = '';
+        if (added) {
+          img.removeAttribute('width');
+          img.removeAttribute('height');
+        }
+      }, { once: true });
+      // Newer WebKit anchors the scroll itself; older ones leave it to us.
+      if (before.bottom <= 0) {
+        const grown = img.getBoundingClientRect().height - before.height;
+        const missing = grown - (window.scrollY - scrolled);
+        if (Math.abs(missing) >= 1) window.scrollBy(0, missing);
+      }
+    });
   },
 
   // An image keeps a tinted box until it has painted, so a slow one reads

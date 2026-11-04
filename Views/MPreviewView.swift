@@ -107,6 +107,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         userContentController.add(HandlerPreviewScroll(), name: "previewScroll")
         userContentController.add(HandlerTOCTip(), name: "tocTipClicked")
         userContentController.add(HandlerImageSize(), name: "imageSize")
+        userContentController.add(HandlerImageProbe(), name: "imageProbe")
 
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController

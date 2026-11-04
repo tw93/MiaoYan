@@ -23,6 +23,22 @@ class HandlerImageSize: NSObject, WKScriptMessageHandler {
         RemoteImageSizes.shared.record(url: url, width: width, height: height)
     }
 }
+/// A remote image the page has no size for yet asks for one here; the size
+/// read from the file's header goes back to the page, which gives the image's
+/// box its ratio while the file is still downloading (`RemoteImageProbe`).
+class HandlerImageProbe: NSObject, WKScriptMessageHandler {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        guard let src = message.body as? String, !src.isEmpty, src.count < 4096 else { return }
+        Task { @MainActor [weak webView = message.webView] in
+            guard let size = await RemoteImageProbe.shared.size(of: src), let webView else { return }
+            let script = "window.MiaoYanCommon && MiaoYanCommon.applyImageSize(\(HtmlManager.jsStringLiteral(src)), \(size.width), \(size.height));"
+            webView.evaluateJavaScript(script, completionHandler: nil)
+        }
+    }
+}
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     func userContentController(
         _ userContentController: WKUserContentController,

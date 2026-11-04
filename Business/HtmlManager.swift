@@ -483,14 +483,17 @@ class HtmlManager {
         return asyncDecoded(result)
     }
 
-    /// A remote image takes the size the preview measured the last time it
-    /// loaded (`RemoteImageSizes`), the way Weekly's build writes sizes it
-    /// probed into its tags. One never seen before is marked `data-measure`,
-    /// so the page reports its size once it arrives; nothing extra is fetched.
+    /// A remote image takes the size known from an earlier load
+    /// (`RemoteImageSizes`), the way Weekly's build writes sizes it probed
+    /// into its tags. One never seen before is marked `data-measure`: the page
+    /// asks for its header at once (`RemoteImageProbe`) and reports its size
+    /// again once it arrives.
     private static func remoteImageTag(_ tag: String, oldSrc: String, newSrc: String) -> String {
         var result = lazyTag(tag, oldSrc: oldSrc, newSrc: newSrc)
         if !hasSize(tag) {
-            if let size = RemoteImageSizes.shared.size(for: newSrc) {
+            // The tag holds the URL HTML-escaped (cmark writes `&amp;`); the
+            // sizes are kept under the URL the page loads.
+            if let size = RemoteImageSizes.shared.size(for: newSrc.replacingOccurrences(of: "&amp;", with: "&")) {
                 result = sized(result, size, original: tag)
             } else {
                 result = result.replacingOccurrences(of: "<img ", with: "<img data-measure=\"1\" ")
@@ -539,8 +542,37 @@ class HtmlManager {
 
     private static func readPixelSize(atPath path: String) -> (width: Int, height: Int)? {
         let options = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: path) as CFURL, options),
-            let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, options) as? [CFString: Any],
+        guard let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: path) as CFURL, options) else { return nil }
+        if let size = pixelSize(of: source) { return size }
+        guard path.lowercased().hasSuffix(".webp"), let handle = FileHandle(forReadingAtPath: path) else { return nil }
+        defer { try? handle.close() }
+        return extendedWebPSize((try? handle.read(upToCount: 30)) ?? Data())
+    }
+
+    /// The displayed size from the first bytes of an image file, or nil while
+    /// they do not reach the size yet. ImageIO's incremental source gives no
+    /// properties for a JPEG cut short, so this is a whole source each time.
+    static func pixelSize(fromHeader data: Data) -> (width: Int, height: Int)? {
+        let options = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithData(data as CFData, options) else { return extendedWebPSize(data) }
+        return pixelSize(of: source) ?? extendedWebPSize(data)
+    }
+
+    /// The canvas of an extended WebP (an animated one, or one with alpha or
+    /// metadata), from its `VP8X` chunk: ImageIO reports no size for an
+    /// animated WebP, not even for the whole file.
+    static func extendedWebPSize(_ data: Data) -> (width: Int, height: Int)? {
+        let bytes = [UInt8](data.prefix(30))
+        guard bytes.count == 30, bytes[0..<4] == [0x52, 0x49, 0x46, 0x46], bytes[8..<12] == [0x57, 0x45, 0x42, 0x50],
+            bytes[12..<16] == [0x56, 0x50, 0x38, 0x58]
+        else { return nil }
+        let side = { (at: Int) in 1 + (Int(bytes[at]) | Int(bytes[at + 1]) << 8 | Int(bytes[at + 2]) << 16) }
+        return (side(24), side(27))
+    }
+
+    private static func pixelSize(of source: CGImageSource) -> (width: Int, height: Int)? {
+        let options = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, options) as? [CFString: Any],
             let width = properties[kCGImagePropertyPixelWidth] as? Int,
             let height = properties[kCGImagePropertyPixelHeight] as? Int,
             width > 0, height > 0
@@ -1149,9 +1181,10 @@ final class PixelSizeCache: @unchecked Sendable {
     }
 }
 
-/// Sizes of remote images as the preview measured them, kept in the app's
-/// caches folder so a note opened again reserves each image's box before it
-/// downloads. Only the preview's own measurements go in; nothing is fetched.
+/// Sizes of remote images, kept in the app's caches folder so a note opened
+/// again reserves each image's box before it downloads. They come from the
+/// file's header (`RemoteImageProbe`) and from the preview once the image
+/// has loaded, which has the last word.
 final class RemoteImageSizes: @unchecked Sendable {
     static let shared = RemoteImageSizes()
     private let lock = NSLock()
@@ -1218,5 +1251,126 @@ final class RemoteImageSizes: @unchecked Sendable {
         guard let fileURL, let data = try? JSONEncoder().encode(snapshot) else { return }
         try? FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         try? data.write(to: fileURL, options: .atomic)
+    }
+}
+
+/// Reads a remote image's pixel size from the start of the file, so a note
+/// opened for the first time holds each image's box at the picture's own
+/// ratio while the file is still on its way. A 2 MB photo can take seconds
+/// to arrive, and until then a width-only tag drew a square; its size sits in
+/// the first kilobytes (a PNG's in 1 KB, an iPhone JPEG's at about 8 KB,
+/// after its EXIF). Each request asks for that range only and stops reading
+/// once the size is known. It goes to the same URL the preview loads, so no
+/// server is contacted that the note does not already show.
+actor RemoteImageProbe {
+    typealias Size = (width: Int, height: Int)
+    /// A read either finds the size, finds there is none to find (an error
+    /// status, or no size within the range), or cannot tell (offline, a
+    /// timeout); only the first two are kept, so a dropped connection does
+    /// not stop the next render from asking again.
+    private enum Answer {
+        case size(Size)
+        case none
+        case unknown
+    }
+
+    static let shared = RemoteImageProbe()
+    static let maxBytes = 262_144
+    private static let maxRunning = 4
+
+    private let session: URLSession
+    private let sizes: RemoteImageSizes
+    private var inFlight: [String: Task<Answer, Never>] = [:]
+    private var failed: Set<String> = []
+    private var running = 0
+    private var waiters: [CheckedContinuation<Void, Never>] = []
+
+    init(configuration: URLSessionConfiguration = RemoteImageProbe.defaultConfiguration, sizes: RemoteImageSizes = .shared) {
+        session = URLSession(configuration: configuration)
+        self.sizes = sizes
+    }
+
+    static var defaultConfiguration: URLSessionConfiguration {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.timeoutIntervalForRequest = 8
+        configuration.timeoutIntervalForResource = 15
+        configuration.waitsForConnectivity = false
+        configuration.httpMaximumConnectionsPerHost = maxRunning
+        return configuration
+    }
+
+    func size(of urlString: String) async -> Size? {
+        if let known = sizes.size(for: urlString) { return known }
+        guard !failed.contains(urlString), let url = URL(string: urlString),
+            let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https"
+        else { return nil }
+        let task: Task<Answer, Never>
+        if let running = inFlight[urlString] {
+            task = running
+        } else {
+            let session = session
+            task = Task {
+                await acquire()
+                let answer = await Self.read(url, session: session)
+                release()
+                return answer
+            }
+            inFlight[urlString] = task
+        }
+        let answer = await task.value
+        inFlight[urlString] = nil
+        switch answer {
+        case .size(let size) where (1...100_000).contains(size.width) && (1...100_000).contains(size.height):
+            // The page's own measurement, once the image has loaded, wins.
+            if let measured = sizes.size(for: urlString) { return measured }
+            sizes.record(url: urlString, width: size.width, height: size.height)
+            return size
+        case .size, .none:
+            if failed.count < 4000 { failed.insert(urlString) }
+            return nil
+        case .unknown:
+            return nil
+        }
+    }
+
+    private func acquire() async {
+        if running < Self.maxRunning {
+            running += 1
+            return
+        }
+        await withCheckedContinuation { waiters.append($0) }
+    }
+
+    private func release() {
+        if waiters.isEmpty {
+            running -= 1
+        } else {
+            waiters.removeFirst().resume()
+        }
+    }
+
+    private static func read(_ url: URL, session: URLSession) async -> Answer {
+        var request = URLRequest(url: url)
+        request.setValue("bytes=0-\(maxBytes - 1)", forHTTPHeaderField: "Range")
+        guard let (bytes, response) = try? await session.bytes(for: request) else { return .unknown }
+        // Whatever the answer, the rest of the body is not wanted: an error
+        // page, or the whole file from a server that ignores the range.
+        defer { bytes.task.cancel() }
+        guard let status = (response as? HTTPURLResponse)?.statusCode, (200...299).contains(status) else { return .none }
+        var data = Data()
+        data.reserveCapacity(16_384)
+        var nextCheck = 1024
+        do {
+            for try await byte in bytes {
+                data.append(byte)
+                guard data.count >= nextCheck else { continue }
+                if let size = HtmlManager.pixelSize(fromHeader: data) { return .size(size) }
+                if data.count >= maxBytes { return .none }
+                nextCheck = min(nextCheck * 2, maxBytes)
+            }
+        } catch {
+            return .unknown
+        }
+        return HtmlManager.pixelSize(fromHeader: data).map { .size($0) } ?? .none
     }
 }
