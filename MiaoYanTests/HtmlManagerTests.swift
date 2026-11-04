@@ -409,7 +409,7 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertEqual(lines[2], "<video preload=\"none\" data-preload=\"metadata\" controls><source src=\"https://example.com/b.mp4\"></video>")
         XCTAssertEqual(lines[3], "<VIDEO preload=\"none\" data-preload=\"metadata\" src=\"https://example.com/c.mp4\"></VIDEO>")
         XCTAssertEqual(lines[4], "<video preload=\"none\" src=\"https://example.com/d.mp4\"></video>")
-        XCTAssertEqual(HtmlManager.deferredVideoTags(lines[0]), lines[0], "a second pass changes nothing")
+        XCTAssertEqual(PreviewMedia.deferredVideoTags(lines[0]), lines[0], "a second pass changes nothing")
     }
 
     /// An image that gives only its width, as every weekly note does, takes
@@ -465,9 +465,9 @@ final class HtmlManagerTests: XCTestCase {
                 bitmapDataPlanes: nil, pixelsWide: 40, pixelsHigh: 30, bitsPerSample: 8, samplesPerPixel: 4,
                 hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
         let png = try XCTUnwrap(rep.representation(using: .png, properties: [:]))
-        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: png.prefix(1024))?.width, 40)
-        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: png.prefix(1024))?.height, 30)
-        XCTAssertNil(HtmlManager.pixelSize(fromHeader: png.prefix(12)), "a cut before the header has no size")
+        XCTAssertEqual(PreviewMedia.pixelSize(fromHeader: png.prefix(1024))?.width, 40)
+        XCTAssertEqual(PreviewMedia.pixelSize(fromHeader: png.prefix(1024))?.height, 30)
+        XCTAssertNil(PreviewMedia.pixelSize(fromHeader: png.prefix(12)), "a cut before the header has no size")
 
         let image = try XCTUnwrap(rep.cgImage)
         let jpeg = NSMutableData()
@@ -480,19 +480,19 @@ final class HtmlManagerTests: XCTestCase {
         let marker = { (code: UInt8) in (0..<bytes.count - 1).first { bytes[$0] == 0xFF && bytes[$0 + 1] == code } }
         let frame = try XCTUnwrap(marker(0xC0))
         let scan = try XCTUnwrap(marker(0xDA))
-        XCTAssertNil(HtmlManager.pixelSize(fromHeader: (jpeg as Data).prefix(frame)), "the EXIF alone has no size")
+        XCTAssertNil(PreviewMedia.pixelSize(fromHeader: (jpeg as Data).prefix(frame)), "the EXIF alone has no size")
         let header = (jpeg as Data).prefix(scan + 16)
         XCTAssertLessThan(header.count, bytes.count)
-        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: header)?.width, 30, "orientation 6 shows it turned")
-        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: header)?.height, 40)
+        XCTAssertEqual(PreviewMedia.pixelSize(fromHeader: header)?.width, 30, "orientation 6 shows it turned")
+        XCTAssertEqual(PreviewMedia.pixelSize(fromHeader: header)?.height, 40)
 
         // An animated WebP, which ImageIO gives no size for: the canvas in
         // its VP8X chunk (a 720 by 414 preview, sides stored less one).
         var webp = Data("RIFF".utf8) + Data([0x94, 0x90, 0x92, 0x00]) + Data("WEBPVP8X".utf8)
         webp += Data([0x0A, 0, 0, 0, 0x12, 0, 0, 0, 0xCF, 0x02, 0x00, 0x9D, 0x01, 0x00]) + Data("ANIM".utf8)
-        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: webp)?.width, 720)
-        XCTAssertEqual(HtmlManager.pixelSize(fromHeader: webp)?.height, 414)
-        XCTAssertEqual(HtmlManager.extendedWebPSize(Data("RIFF".utf8) + Data(count: 4) + Data("WEBPVP8X".utf8) + Data(repeating: 0xFF, count: 14))?.width, 1 << 24)
+        XCTAssertEqual(PreviewMedia.pixelSize(fromHeader: webp)?.width, 720)
+        XCTAssertEqual(PreviewMedia.pixelSize(fromHeader: webp)?.height, 414)
+        XCTAssertEqual(PreviewMedia.extendedWebPSize(Data("RIFF".utf8) + Data(count: 4) + Data("WEBPVP8X".utf8) + Data(repeating: 0xFF, count: 14))?.width, 1 << 24)
     }
 
     /// The probe asks for the start of the file only and reads the size from

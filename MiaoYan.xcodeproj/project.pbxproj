@@ -77,6 +77,7 @@
 		27E951092E814E61004E2883 /* ShortcutTemplateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */; };
 		27EAA59A2EA8C76500D13871 /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
 		27EFD78A2E40E2E400DE6636 /* HtmlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFD7892E40E2E400DE6636 /* HtmlManager.swift */; };
+		4F3392227790068E2A3FF4DC /* PreviewMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C2112B0775CD0A3E7E0531 /* PreviewMedia.swift */; };
 		27F1C0012F40000100AAA001 /* LinkHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0002F40000100AAA001 /* LinkHighlighter.swift */; };
 		27F1C0112F40000200AAA001 /* CodeBlockHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */; };
 		27F1C0212F40000300AAA001 /* MarkdownRuleHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0202F40000300AAA001 /* MarkdownRuleHighlighter.swift */; };
@@ -278,6 +279,7 @@
 		27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutTemplateManager.swift; sourceTree = "<group>"; };
 		27EAA5992EA8C76500D13871 /* app.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = app.icon; sourceTree = "<group>"; };
 		27EFD7892E40E2E400DE6636 /* HtmlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlManager.swift; sourceTree = "<group>"; };
+		91C2112B0775CD0A3E7E0531 /* PreviewMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewMedia.swift; sourceTree = "<group>"; };
 		27F1C0002F40000100AAA001 /* LinkHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHighlighter.swift; sourceTree = "<group>"; };
 		27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBlockHighlighter.swift; sourceTree = "<group>"; };
 		27F1C0202F40000300AAA001 /* MarkdownRuleHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRuleHighlighter.swift; sourceTree = "<group>"; };
@@ -557,6 +559,7 @@
 				D7038E2520FB24E000A54E69 /* NoteAttachment.swift */,
 				D7B6E599207912E300FE0E20 /* Project.swift */,
 				27EFD7892E40E2E400DE6636 /* HtmlManager.swift */,
+				91C2112B0775CD0A3E7E0531 /* PreviewMedia.swift */,
 				2B5045CD50BB4556AAB3F390 /* WikilinkIndex.swift */,
 				D79FE8A01F77D04A00113CFD /* Note.swift */,
 				AA001000AA001000AA001000 /* NoteVersionManager.swift */,
@@ -908,6 +911,7 @@
 				271FD5A12A73DC9E001EA97B /* NSColor+.swift in Sources */,
 				271FD59D2A73DB9A001EA97B /* NSTextStorage+.swift in Sources */,
 				27EFD78A2E40E2E400DE6636 /* HtmlManager.swift in Sources */,
+				4F3392227790068E2A3FF4DC /* PreviewMedia.swift in Sources */,
 				271FD59F2A73DB9A001EA97B /* String+.swift in Sources */,
 				271FD5A02A73DB9A001EA97B /* URL+.swift in Sources */,
 				275F9F622E682239006BC2AC /* ViewController+Editor.swift in Sources */,

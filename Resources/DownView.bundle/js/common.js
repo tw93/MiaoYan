@@ -320,7 +320,7 @@ const MiaoYanCommon = {
     img.addEventListener('error', done, { once: true });
   },
 
-  // Swift starts every video with preload="none" (HtmlManager
+  // Swift starts every video with preload="none" (PreviewMedia
   // .deferredVideoTags), since one that loads holds back the page's load
   // event. Once the page is up, a video near the view loads its metadata
   // and moves to its first frame, so the player shows a picture instead of

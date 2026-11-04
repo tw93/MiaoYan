@@ -36,7 +36,7 @@ final class MediaPlaceholderTests: XCTestCase {
         let png = directory.appendingPathComponent("a.png")
         try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(to: png)
 
-        let video = HtmlManager.deferredVideoTags("<video src=\"\(directory.appendingPathComponent("none.mp4").absoluteString)\" controls></video>")
+        let video = PreviewMedia.deferredVideoTags("<video src=\"\(directory.appendingPathComponent("none.mp4").absoluteString)\" controls></video>")
         let page = """
             <!doctype html><html><head><meta charset="utf-8">
             <link rel="stylesheet" href="\(bundle.appendingPathComponent("css/base.css").absoluteString)">
