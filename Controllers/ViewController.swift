@@ -1053,7 +1053,12 @@ class ViewController:
         outlineHeader.applyMiaoYanPaneBackground()
         projectHeaderView.applyMiaoYanPaneBackground()
 
-        storageOutlineView.backgroundColor = Theme.paneBackgroundColor
+        // The sidebar's own paper comes from StorageView behind it. The
+        // outline runs 8pt up under the header, over the brand row's empty
+        // top, and stays clear so the new-folder button there shows. The
+        // header cannot simply sit above the outline: in that order AppKit
+        // drew no sidebar rows at all (2026-11-04).
+        storageOutlineView.backgroundColor = .clear
         notesTableView.backgroundColor = Theme.paneBackgroundColor
 
         [sidebarScrollView, notesScrollView].forEach { scrollView in
