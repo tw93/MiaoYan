@@ -260,6 +260,10 @@ class HtmlManager {
         try? NSRegularExpression(pattern: "<(?:video|source)\\b[^>]*?\\bsrc=\"([^\"]*)\"[^>]*?/?>", options: [.caseInsensitive])
     }()
 
+    private static let videoTagRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: "<video\\b[^>]*>", options: [.caseInsensitive])
+    }()
+
     private static let htmlTagPatterns: [NSRegularExpression] = {
         let patterns = [
             try? NSRegularExpression(pattern: "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>", options: [.caseInsensitive]),
@@ -608,9 +612,8 @@ class HtmlManager {
             }
         }
 
-        // Process <video src> and <source src>, rewriting local paths to file://
-        // CDN (http/https) video src: force preload="none" to prevent WebKit from
-        // blocking preview while downloading a remote video
+        // Process <video src> and <source src>, rewriting local paths to
+        // file://. Preload is settled afterwards for every video at once.
         if let videoRegex = videoSrcRegex {
             let videoResults = videoRegex.matches(in: htmlString, range: NSRange(htmlString.startIndex..., in: htmlString))
             let videoMatches = videoResults.compactMap { match -> (fullMatch: String, srcPath: String)? in
@@ -622,13 +625,6 @@ class HtmlManager {
 
             for videoInfo in videoMatches {
                 if videoInfo.srcPath.starts(with: "http://") || videoInfo.srcPath.starts(with: "https://") {
-                    // Remote video: disable eager preload so CDN latency/failure doesn't block preview
-                    let noPreload = videoInfo.fullMatch
-                        .replacingOccurrences(of: #"\bpreload="[^"]*""#, with: "preload=\"none\"", options: .regularExpression)
-                        .replacingOccurrences(of: #"(?<=[^-\w])preload(?=[^=]|$)"#, with: "preload=\"none\"", options: .regularExpression)
-                    if noPreload != videoInfo.fullMatch {
-                        htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: noPreload)
-                    }
                     continue
                 }
 
@@ -638,11 +634,8 @@ class HtmlManager {
                     pathCache[cleanPath] = exists
 
                     if exists {
-                        var updatedTag = videoInfo.fullMatch
+                        let updatedTag = videoInfo.fullMatch
                             .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"file://\(cleanPath)\"")
-                        if !updatedTag.contains("preload=") {
-                            updatedTag = updatedTag.replacingOccurrences(of: "<video ", with: "<video preload=\"none\" ")
-                        }
                         htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: updatedTag)
                     }
                 } else {
@@ -651,18 +644,41 @@ class HtmlManager {
                     pathCache[absolutePath] = exists
 
                     if exists {
-                        var updatedTag = videoInfo.fullMatch
+                        let updatedTag = videoInfo.fullMatch
                             .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"file://\(absolutePath)\"")
-                        if !updatedTag.contains("preload=") {
-                            updatedTag = updatedTag.replacingOccurrences(of: "<video ", with: "<video preload=\"none\" ")
-                        }
                         htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: updatedTag)
                     }
                 }
             }
         }
 
-        return htmlString
+        return deferredVideoTags(htmlString)
+    }
+
+    /// Every video starts with `preload="none"`: a video that loads anything
+    /// holds back the page's load event, and the app shows a note only after
+    /// it, so one slow server kept the whole note hidden. `data-preload`
+    /// marks the ones MiaoYan held back, and `MiaoYanCommon.prepareVideos`
+    /// loads their metadata and first frame once the page is up, so the
+    /// player shows a picture instead of an empty box. A video the note
+    /// itself set to `preload="none"` is left as written.
+    static func deferredVideoTags(_ html: String) -> String {
+        guard let regex = videoTagRegex else { return html }
+        var result = html
+        let matches = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
+        for match in matches.reversed() {
+            guard let range = Range(match.range, in: result) else { continue }
+            let tag = String(result[range])
+            if tag.range(of: #"\bpreload\s*=\s*["']?none\b"#, options: [.regularExpression, .caseInsensitive]) != nil { continue }
+            if tag.contains("data-preload=") { continue }
+            let bare =
+                tag
+                .replacingOccurrences(of: #"\s+preload\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)"#, with: "", options: [.regularExpression, .caseInsensitive])
+                .replacingOccurrences(of: #"\s+preload(?=[\s/>])"#, with: "", options: [.regularExpression, .caseInsensitive])
+            let open = bare.prefix(6)
+            result.replaceSubrange(range, with: open + " preload=\"none\" data-preload=\"metadata\"" + bare.dropFirst(6))
+        }
+        return result
     }
 
     private static let fencedCodeBlockRegex: NSRegularExpression? = {
@@ -1004,6 +1020,11 @@ class HtmlManager {
 
             for (var i = 0; i < images.length; i++) {
                 if (!images[i].complete) return false;
+            }
+            // The capture can come before the load events that take the
+            // loading tint off, which a transparent image would keep.
+            for (var j = 0; j < images.length; j++) {
+                images[j].classList.remove('media-pending');
             }
             return true;
         })();

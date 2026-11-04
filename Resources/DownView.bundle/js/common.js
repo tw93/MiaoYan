@@ -165,17 +165,26 @@ const MiaoYanCommon = {
       // Just ensure eager images have the attribute set
       if (!img.classList.contains('lazy-image')) {
         img.setAttribute('loading', 'eager');
+        if (!img.src.startsWith('data:') && !img.classList.contains('emoji')) this.holdImageBox(img);
       }
     });
 
     // A remote image MiaoYan has not seen before reports its size once it
     // arrives, so the next time the note opens its box is already reserved.
+    // Until then one standing alone in its paragraph holds a full-width
+    // 16:9 box, not a 1px point the text jumps away from when it arrives.
     document.querySelectorAll('img[data-measure]').forEach((img) => {
       if (img.__miaoyanMeasured) return;
       img.__miaoyanMeasured = true;
+      const parent = img.parentElement;
+      if (img.classList.contains('lazy-image') && parent && parent.tagName === 'P' && parent.children.length === 1 && !parent.textContent.trim()) {
+        img.classList.add('media-reserve');
+        img.addEventListener('error', () => img.classList.remove('media-reserve'), { once: true });
+      }
       const report = () => {
         const src = img.currentSrc || img.src;
         if (!src || src.startsWith('data:') || img.naturalWidth < 2) return false;
+        img.classList.remove('media-reserve');
         img.removeAttribute('data-measure');
         window.webkit?.messageHandlers.imageSize?.postMessage({ src, width: img.naturalWidth, height: img.naturalHeight });
         return true;
@@ -197,6 +206,8 @@ const MiaoYanCommon = {
       return;
     }
 
+    this.prepareVideos();
+
     // Intersection Observer for aggressive lazy loading
     if ('IntersectionObserver' in window) {
       // One observer for the page: a split-view update calls this again, and
@@ -214,6 +225,7 @@ const MiaoYanCommon = {
               img.classList.remove('lazy-image');
               delete img.dataset.src;
               observer.unobserve(img);
+              MiaoYanCommon.holdImageBox(img);
 
               // Re-initialize Lightense for this image after it loads
               if (window.Lightense && (img.closest('#write') || img.parentElement?.tagName === 'P' || img.closest('table'))) {
@@ -243,6 +255,50 @@ const MiaoYanCommon = {
         }
       });
     }
+  },
+
+  // An image keeps a tinted box until it has painted, so a slow one reads
+  // as on its way rather than as a gap in the note. The tint goes once it
+  // loads, so a transparent image does not sit on a card.
+  holdImageBox(img) {
+    if (img.complete && img.naturalWidth > 1) return;
+    img.classList.add('media-pending');
+    const done = () => img.classList.remove('media-pending');
+    img.addEventListener('load', done, { once: true });
+    img.addEventListener('error', done, { once: true });
+  },
+
+  // Swift starts every video with preload="none" (HtmlManager
+  // .deferredVideoTags), since one that loads holds back the page's load
+  // event. Once the page is up, a video near the view loads its metadata
+  // and moves to its first frame, so the player shows a picture instead of
+  // an empty box. A video with its own poster keeps showing that.
+  prepareVideos() {
+    const videos = document.querySelectorAll('#write video[data-preload]');
+    if (!videos.length) return;
+    const start = (video) => {
+      video.removeAttribute('data-preload');
+      if (video.hasAttribute('poster') || !video.paused) return;
+      video.preload = 'metadata';
+      video.addEventListener('loadedmetadata', () => {
+        if (video.paused && video.currentTime === 0) video.currentTime = 0.001;
+      }, { once: true });
+      video.load();
+    };
+    if (!('IntersectionObserver' in window)) {
+      videos.forEach(start);
+      return;
+    }
+    if (!this._videoObserver) {
+      this._videoObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          observer.unobserve(entry.target);
+          start(entry.target);
+        });
+      }, { rootMargin: '400px' });
+    }
+    videos.forEach(video => this._videoObserver.observe(video));
   },
 
   // While an image runs under the top edge, two paper-coloured corner pieces

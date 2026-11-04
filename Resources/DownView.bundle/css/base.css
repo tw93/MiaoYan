@@ -426,6 +426,32 @@ img.border {
   border-radius: var(--border-radius-lg);
 }
 
+/* Media hold a tinted box until they show something: an image until it
+   loads (common.js holdImageBox), a video behind its first frame
+   (prepareVideos), which also starts out player-shaped instead of
+   300 by 150. A remote image never measured before holds a 16:9 box. */
+#write img.lazy-image,
+#write img.media-pending,
+#write video {
+  background-color: var(--code-bg);
+}
+
+#write video {
+  aspect-ratio: auto 16 / 9;
+}
+
+#write img.media-reserve {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+@media print {
+  #write img.lazy-image,
+  #write img.media-pending {
+    background-color: transparent;
+  }
+}
+
 /* ==================== Media Queries ==================== */
 @media (prefers-color-scheme: dark) {
   :root {

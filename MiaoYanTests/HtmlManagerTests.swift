@@ -330,6 +330,30 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertNil(RemoteImageSizes.shared.size(for: "file:///etc/passwd"), "only web images are kept")
     }
 
+    /// Every video waits for the page: none may load before the load event,
+    /// which hides the note until it fires, and each one MiaoYan held back is
+    /// marked so the page loads its first frame afterwards. A video the note
+    /// set to preload="none" itself stays that way.
+    func testVideosWaitForThePageAndAreMarkedForTheirFirstFrame() throws {
+        let clip = tempDirectory.appendingPathComponent("clip.mp4")
+        try Data([0]).write(to: clip)
+        let html = [
+            "<video src=\"clip.mp4\" controls></video>",
+            "<video controls preload=\"auto\" src=\"https://example.com/a.mp4\"></video>",
+            "<video controls preload><source src=\"https://example.com/b.mp4\"></video>",
+            "<VIDEO preload='metadata' src=\"https://example.com/c.mp4\"></VIDEO>",
+            "<video preload=\"none\" src=\"https://example.com/d.mp4\"></video>",
+        ].joined(separator: "\n")
+        let lines = HtmlManager.processImages(in: html, imagesStorage: tempDirectory).components(separatedBy: "\n")
+
+        XCTAssertEqual(lines[0], "<video preload=\"none\" data-preload=\"metadata\" src=\"file://\(clip.path)\" controls></video>")
+        XCTAssertEqual(lines[1], "<video preload=\"none\" data-preload=\"metadata\" controls src=\"https://example.com/a.mp4\"></video>")
+        XCTAssertEqual(lines[2], "<video preload=\"none\" data-preload=\"metadata\" controls><source src=\"https://example.com/b.mp4\"></video>")
+        XCTAssertEqual(lines[3], "<VIDEO preload=\"none\" data-preload=\"metadata\" src=\"https://example.com/c.mp4\"></VIDEO>")
+        XCTAssertEqual(lines[4], "<video preload=\"none\" src=\"https://example.com/d.mp4\"></video>")
+        XCTAssertEqual(HtmlManager.deferredVideoTags(lines[0]), lines[0], "a second pass changes nothing")
+    }
+
     /// Sizes outlive the app: a fresh store reads what an earlier one saved.
     func testRemoteImageSizesPersistAcrossLaunches() throws {
         let file = tempDirectory.appendingPathComponent("sizes.json")
