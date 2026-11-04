@@ -579,7 +579,9 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .nav { margin: 16px -6px 40px; }
   .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
   .nav:has(+ main:not([class])) { margin-bottom: 40px; }
-  .hero h1 { font-size: 60px; letter-spacing: -0.8px; margin-bottom: 20px; }
+  /* 64px with -1px tracking under 880, as on pake.run, hina.day and yado.house
+     (maintainer 2026-11-04: one lockup size across the product sites). */
+  .hero h1 { font-size: 64px; letter-spacing: -1px; margin-bottom: 20px; }
   .tagline { font-size: 20px; }
   .section-title { font-size: 26px; }
   .devices { gap: 32px; }
@@ -623,7 +625,10 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 @media (max-width: 480px) {
   .nav-bar { padding-left: 14px; gap: 10px; }
   .nav-end { gap: 10px; }
-  .hero h1 { font-size: clamp(48px, 13vw, 60px); }
+  /* MiaoYan is the longest name: the lockup is about 4.2em plus the 18px gap,
+     with the orbiting dot, so it stays at 64px down to about 350px and only then
+     shrinks to fit. */
+  .hero h1 { font-size: min(64px, calc((100vw - 54px) / 4.6)); }
   .btn { width: 100%; }
   /* Phone hero buttons keep their label's width and share one row (maintainer
      2026-10-27: 不要两行，控制一行就好了) with a 6px icon gap, labels short
