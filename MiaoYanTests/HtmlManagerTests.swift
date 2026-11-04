@@ -354,6 +354,36 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertEqual(HtmlManager.deferredVideoTags(lines[0]), lines[0], "a second pass changes nothing")
     }
 
+    /// An image that gives only its width, as every weekly note does, takes
+    /// its height from the image's own ratio. The placeholder's square ratio
+    /// drew an 800 by 800 box for a landscape photo.
+    func testAnImageWithOnlyAWidthTakesItsOwnRatio() throws {
+        let images = tempDirectory.appendingPathComponent("i", isDirectory: true)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        let rep = try XCTUnwrap(
+            NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: 40, pixelsHigh: 30, bitsPerSample: 8, samplesPerPixel: 4,
+                hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+        try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(to: images.appendingPathComponent("w.png"))
+
+        let local = HtmlManager.processImages(in: "<p>a</p><p><img src=\"/i/w.png\" width=\"800\" /></p><p><img src=\"/i/w.png\" width=\"800\" /></p>", imagesStorage: tempDirectory)
+        XCTAssertEqual(local.components(separatedBy: "style=\"aspect-ratio: 40 / 30\"").count, 3, local)
+        XCTAssertEqual(local.components(separatedBy: "width=\"800\"").count, 3, local)
+        XCTAssertFalse(local.contains("height="), local)
+
+        let url = "https://example.com/\(UUID().uuidString).jpg"
+        let remote = "<p><img src=\"\(url)\" width=\"800\" /></p>"
+        XCTAssertTrue(HtmlManager.processImages(in: remote, imagesStorage: tempDirectory).contains("data-measure=\"1\""))
+        RemoteImageSizes.shared.record(url: url, width: 1600, height: 1200)
+        let measured = HtmlManager.processImages(in: remote, imagesStorage: tempDirectory)
+        XCTAssertTrue(measured.contains("style=\"aspect-ratio: 1600 / 1200\""), measured)
+        XCTAssertFalse(measured.contains("data-measure"), measured)
+        XCTAssertFalse(measured.contains("height="), measured)
+
+        let both = HtmlManager.processImages(in: "<p><img src=\"\(url)\" width=\"800\" height=\"100\" /></p>", imagesStorage: tempDirectory)
+        XCTAssertFalse(both.contains("aspect-ratio"), "a note that sets both keeps its own box")
+    }
+
     /// Sizes outlive the app: a fresh store reads what an earlier one saved.
     func testRemoteImageSizesPersistAcrossLaunches() throws {
         let file = tempDirectory.appendingPathComponent("sizes.json")

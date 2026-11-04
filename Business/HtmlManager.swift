@@ -499,15 +499,27 @@ class HtmlManager {
         return asyncDecoded(result)
     }
 
+    /// Whether the tag already fixes its box: both `width` and `height`.
+    /// One alone is not enough. Weekly notes write `<img width="800">`, and
+    /// with only a width the 1px placeholder's square ratio drew an 800 by
+    /// 800 box for a landscape photo.
     private static func hasSize(_ tag: String) -> Bool {
-        tag.range(of: #"\s(width|height)="#, options: .regularExpression) != nil
+        hasAttribute("width", in: tag) && hasAttribute("height", in: tag)
+    }
+
+    private static func hasAttribute(_ name: String, in tag: String) -> Bool {
+        tag.range(of: #"\s"# + name + "=", options: .regularExpression) != nil
     }
 
     private static func sized(_ tag: String, _ size: (width: Int, height: Int), original: String) -> String {
         // The 1px placeholder brings its own square ratio, which beats the
-        // attributes' ratio, so the box is held by `aspect-ratio` too.
+        // attributes' ratio, so the box is held by `aspect-ratio` too. A
+        // width or height the note wrote stays; the image's own ratio sets
+        // the other side.
         let style = original.contains("style=") ? "" : " style=\"aspect-ratio: \(size.width) / \(size.height)\""
-        return tag.replacingOccurrences(of: "<img ", with: "<img width=\"\(size.width)\" height=\"\(size.height)\"\(style) ")
+        let written = hasAttribute("width", in: original) || hasAttribute("height", in: original)
+        let attributes = written ? "" : " width=\"\(size.width)\" height=\"\(size.height)\""
+        return tag.replacingOccurrences(of: "<img ", with: "<img\(attributes)\(style) ")
     }
 
     /// The image's displayed size in pixels, from its header alone. An iCloud
