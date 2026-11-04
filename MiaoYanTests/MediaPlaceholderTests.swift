@@ -76,18 +76,18 @@ final class MediaPlaceholderTests: XCTestCase {
                 // webview has no window and never anchors the scroll itself,
                 // so this checks the page's own compensation, which older
                 // WebKit (CI's macOS 15) relies on; newer WebKit anchors too,
-                // and applyImageSize only adds what it did not.
+                // and applyImageSize only adds what it did not. The text is
+                // read in the same turn, before a failed image above it can
+                // fold and move it for a reason of its own.
                 window.scrollTo(0, 1500);
                 var markerTop = marker.getBoundingClientRect().top;
                 MiaoYanCommon.applyImageSize('http://127.0.0.1:9/y.png', 1536, 2048);
-                setTimeout(function () {
-                    var sized = widthOnly.getBoundingClientRect();
-                    window.__before.sizedWidth = sized.width;
-                    window.__before.sizedHeight = sized.height;
-                    window.__before.moved = marker.getBoundingClientRect().top - markerTop;
-                    window.scrollTo(0, 0);
-                    window.__ready = true;
-                }, 300);
+                var sized = widthOnly.getBoundingClientRect();
+                window.__before.sizedWidth = sized.width;
+                window.__before.sizedHeight = sized.height;
+                window.__before.moved = marker.getBoundingClientRect().top - markerTop;
+                window.scrollTo(0, 0);
+                window.__ready = true;
             })();
             </script>
             </body></html>
