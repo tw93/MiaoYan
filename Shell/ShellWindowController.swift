@@ -1162,11 +1162,18 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     /// was started again before the animation finished.
     private var isLeavingFullScreenForPresentation = false
 
+    /// Full screen draws even an empty toolbar as a solid band over the
+    /// content, and it only sizes the title bar, so it waits outside.
+    func windowWillEnterFullScreen(_ notification: Notification) {
+        window?.toolbar?.isVisible = false
+    }
+
     func windowDidEnterFullScreen(_ notification: Notification) {
         didEnterFullScreenForPresentation = model.isPresenting
     }
 
     func windowDidExitFullScreen(_ notification: Notification) {
+        window?.toolbar?.isVisible = true
         didEnterFullScreenForPresentation = false
         if isLeavingFullScreenForPresentation {
             isLeavingFullScreenForPresentation = false
