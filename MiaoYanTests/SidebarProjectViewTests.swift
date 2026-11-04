@@ -269,4 +269,23 @@ final class SidebarProjectViewTests: XCTestCase {
         let controller = try String(contentsOf: root.appendingPathComponent("Controllers/ViewController.swift"), encoding: .utf8)
         XCTAssertTrue(controller.contains("storageOutlineView.backgroundColor = .clear"))
     }
+
+    /// The list overlaps the header's bottom 8pt and sits above it, so the
+    /// lower part of the new-folder button lay under the list and a click
+    /// there selected the brand row (All Notes) instead of adding a folder.
+    @MainActor
+    func testTheNewFolderButtonTakesClicksWhereTheListOverlapsIt() throws {
+        let storage = StorageView(frame: NSRect(x: 0, y: 0, width: 170, height: 300))
+        let header = OutlineHeaderView(frame: NSRect(x: 0, y: 264, width: 170, height: 36))
+        let button = NSButton(frame: NSRect(x: 144, y: 2, width: 18, height: 18))
+        header.addSubview(button)
+        storage.addSubview(header)
+        let list = NSScrollView(frame: NSRect(x: 0, y: 0, width: 170, height: 272))
+        list.documentView = NSView(frame: list.bounds)
+        storage.addSubview(list)
+        let overlap = NSPoint(x: 153, y: 268)
+        XCTAssertTrue(storage.hitTest(overlap) === button, "the button's lower part, under the list, still takes the click")
+        XCTAssertFalse(storage.hitTest(NSPoint(x: 40, y: 268)) === button, "the rest of the overlap stays with the list")
+        XCTAssertTrue(storage.hitTest(NSPoint(x: 153, y: 280)) === button, "above the list the button takes it as before")
+    }
 }
