@@ -197,6 +197,29 @@ final class NoteSaveDebounceTests: XCTestCase {
         manager.waitForPendingWork()
     }
 
+    /// Undoing a delete dropped the note from storage before moving it back,
+    /// so a move that failed hid it from the Trash list until a reload.
+    @MainActor
+    func testFailedUndeleteKeepsTheNoteInTheTrash() throws {
+        let trashed = tempDir.appendingPathComponent("in-trash.md")
+        let occupied = tempDir.appendingPathComponent("occupied.md")
+        try "trashed".write(to: trashed, atomically: true, encoding: .utf8)
+        try "someone else".write(to: occupied, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "Trash", isTrash: true)
+        let storage = Storage(loadsLibrary: false)
+        let note = Note(url: trashed, with: project)
+        note.sharedStorage = storage
+        storage.add(note)
+
+        let table = NotesTableView(frame: .zero)
+        table.storage = storage
+        table.unDelete([trashed: occupied])
+
+        XCTAssertTrue(storage.noteList.contains { $0 === note }, "a restore that failed leaves the note listed")
+        XCTAssertEqual(try String(contentsOf: occupied, encoding: .utf8), "someone else")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: trashed.path))
+    }
+
     @MainActor
     func testMissingFileIsNotAFailedLoad() {
         let url = tempDir.appendingPathComponent("not-yet-written.md")
@@ -273,6 +296,83 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertTrue(note.needsSave, "the unsaved edit remains retryable if the file returns")
         XCTAssertFalse(note.flushPendingSave(globalStorage: false))
         XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
+    }
+
+    /// A note deleted or renamed in Finder, git or a sync client stayed
+    /// listed: the watcher read the type of a path that was gone, got nothing
+    /// and dropped every removal and rename before handling it.
+    @MainActor
+    func testNoteDeletedOrRenamedOutsideMiaoYanLeavesTheList() async throws {
+        let deletedURL = tempDir.appendingPathComponent("deleted-in-finder.md")
+        let renamedURL = tempDir.appendingPathComponent("renamed-in-finder.md")
+        let newNameURL = tempDir.appendingPathComponent("new-name.md")
+        try "deleted".write(to: deletedURL, atomically: true, encoding: .utf8)
+        try "renamed".write(to: renamedURL, atomically: true, encoding: .utf8)
+
+        let storage = Storage(loadsLibrary: false)
+        let project = Project(url: tempDir, label: "test", isRoot: true, isDefault: true)
+        _ = storage.add(project: project)
+        defer { storage.removeBy(project: project) }
+        let deleted = Note(url: deletedURL, with: project)
+        let renamed = Note(url: renamedURL, with: project)
+        for note in [deleted, renamed] {
+            note.sharedStorage = storage
+            note.load()
+            storage.add(note)
+        }
+
+        let host = FileEventHostStub()
+        let removed = expectation(description: "the window drops both rows")
+        removed.expectedFulfillmentCount = 2
+        host.onRemove = { _ in removed.fulfill() }
+        let manager = FileSystemEventManager(storage: storage, delegate: host)
+
+        try FileManager.default.removeItem(at: deletedURL)
+        try FileManager.default.moveItem(at: renamedURL, to: newNameURL)
+        // FSEvents names the disk path, /private/var for the temporary folder.
+        func diskPath(_ url: URL) -> String { url.path.hasPrefix("/var/") ? "/private" + url.path : url.path }
+        let file = UInt32(kFSEventStreamEventFlagItemIsFile)
+        manager.handleFileSystemEvent(FileWatcherEvent(1, diskPath(deletedURL), file | UInt32(kFSEventStreamEventFlagItemRemoved)))
+        manager.handleFileSystemEvent(FileWatcherEvent(2, diskPath(renamedURL), file | UInt32(kFSEventStreamEventFlagItemRenamed)))
+        manager.handleFileSystemEvent(FileWatcherEvent(3, diskPath(newNameURL), file | UInt32(kFSEventStreamEventFlagItemRenamed)))
+
+        XCTAssertFalse(storage.noteList.contains { $0 === deleted }, "a note deleted outside MiaoYan leaves storage")
+        XCTAssertFalse(storage.noteList.contains { $0 === renamed }, "the old name of a renamed note leaves storage")
+        XCTAssertNotNil(storage.getBy(url: newNameURL), "the new name is listed")
+        await fulfillment(of: [removed], timeout: 2)
+
+        deleted.save(attributed: NSAttributedString(string: "typed into the stale row"))
+        XCTAssertFalse(deleted.flushPendingSave(globalStorage: false), "the removed note is retired")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: deletedURL.path))
+    }
+
+    /// Each typing pause asks the watcher to re-check the open note; while
+    /// its save was pending every request started its own delayed re-check,
+    /// each ending in a main-thread read of the file.
+    @MainActor
+    func testTypingPausesShareOneDeferredDiskRecheck() async throws {
+        let url = tempDir.appendingPathComponent("typing.md")
+        try "start".write(to: url, atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let project = Project(url: tempDir, label: "test", isRoot: true, isDefault: true)
+        _ = storage.add(project: project)
+        defer { storage.removeBy(project: project) }
+        let note = Note(url: url, with: project)
+        note.sharedStorage = storage
+        note.load()
+        storage.add(note)
+        let host = FileEventHostStub()
+        let manager = FileSystemEventManager(storage: storage, delegate: host)
+
+        note.save(attributed: NSAttributedString(string: "typed"))
+        XCTAssertTrue(note.hasPendingSave)
+        for _ in 0..<5 { manager.recheckNote(note) }
+        XCTAssertTrue(note.flushPendingSave(globalStorage: false))
+
+        let elapsed = expectation(description: "the deferred re-check window elapsed")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.9) { elapsed.fulfill() }
+        await fulfillment(of: [elapsed], timeout: 3)
+        XCTAssertEqual(manager.deferredRecheckRuns, 1, "five requests while saving run one re-check")
     }
 
     @MainActor
@@ -502,4 +602,20 @@ final class NoteSaveDebounceTests: XCTestCase {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
         XCTAssertEqual(attributes[.creationDate] as? Date, created)
     }
+}
+
+/// Records what the watcher asks a window to do.
+@MainActor
+private final class FileEventHostStub: FileSystemEventHost {
+    var onRemove: (([Note]) -> Void)?
+
+    func fsReloadList(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?) { completion?() }
+    func fsInsert(_ note: Note) {}
+    func fsReloadSidebar() {}
+    func fsSelectFirstNote() {}
+    func fsRemove(_ notes: [Note]) { onRemove?(notes) }
+    func fsReload(_ note: Note) {}
+    func fsRefillEditor() {}
+    var fsEditorBuffer: (owner: Note?, text: String)? { nil }
+    func fsToast(_ message: String, style: ToastStyle) {}
 }

@@ -418,21 +418,42 @@ class Storage {
         return target
     }
 
+    /// Drops a folder and every registered folder under it, with their notes.
+    /// Left behind, a subfolder of a deleted folder stayed a Move target that
+    /// recreated the deleted path, and its notes could still be saved.
     public func removeBy(project: Project) {
+        let removed = projects.filter { $0 === project || Self.isFolder($0, inside: project) }
+        let removedPaths = Set(removed.map(\.url.path))
         let list = noteList.filter {
-            $0.project == project
+            $0.project == project || removedPaths.contains($0.project.url.path)
         }
 
         for note in list {
-            if let i = noteList.firstIndex(where: { $0 === note }) {
-                noteList.remove(at: i)
-            }
+            // A library root removed from the sidebar keeps its files, so an
+            // edit still waiting is written first; a folder already moved to
+            // the Trash fails closed here and recreates nothing.
+            if note.needsSave { _ = note.flushPendingSave(globalStorage: false) }
+            note.retireAfterRemoval()
+            removeBy(note: note)
         }
 
-        if let i = projects.firstIndex(of: project) {
-            projects.remove(at: i)
+        projects.removeAll { candidate in removed.contains { $0 === candidate } || candidate == project }
+        for folder in removed + [project] {
+            loadedProjectInfo.removeValue(forKey: folder.url.path)
         }
-        loadedProjectInfo.removeValue(forKey: project.url.path)
+    }
+
+    /// Whether `folder` sits below `ancestor`, by parent chain or by path.
+    /// Paths are compared as registered and resolved, since a folder may be
+    /// registered under /tmp while its child came in under /private/tmp.
+    static func isFolder(_ folder: Project, inside ancestor: Project) -> Bool {
+        guard folder != ancestor else { return false }
+        if folder.isDescendant(of: ancestor) { return true }
+        let paths = { (url: URL) in [url.standardizedFileURL.path, url.resolvingSymlinksInPath().standardizedFileURL.path] }
+        let ancestorPaths = paths(ancestor.url)
+        return paths(folder.url).contains { path in
+            ancestorPaths.contains { path.hasPrefix($0 + "/") }
+        }
     }
 
     public func add(project: Project) -> [Project] {

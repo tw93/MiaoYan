@@ -230,12 +230,6 @@ extension ViewController {
     }
 
     private func executeSearchOperation(searchParams: SearchParameters, isSearch: Bool, operation: Operation, completion: @escaping () -> Void) {
-        if let projects = searchParams.projects {
-            for project in projects {
-                preLoadNoteTitles(in: project)
-            }
-        }
-
         // The folder check is cheap and rules out most of the library, so it
         // runs before any text is compared.
         let scoped = storage.noteList.filter {
@@ -489,14 +483,6 @@ extension ViewController {
         }
 
         return false
-    }
-
-    private func preLoadNoteTitles(in project: Project) {
-        if UserDefaultsManagement.sort == .title || project.sortBy == .title {
-            _ = storage.noteList.filter {
-                $0.project == project
-            }
-        }
     }
 
     private func isInScope(note: Note, projects: [Project]?, type: SidebarItemType?) -> Bool {
