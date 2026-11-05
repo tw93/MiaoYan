@@ -493,9 +493,24 @@ img.border {
    skeleton screen pulses, so a slow one reads as loading rather than as a
    blank gap; one that arrives within 0.45s never shows it. Off under
    Reduce Motion. */
+/* After the same 0.45s a small turning arc sits in the middle of the box,
+   so a slow image reads as loading rather than as a grey card; the warm grey
+   reads on the light and the dark tint alike. */
 @media (prefers-reduced-motion: no-preference) {
   #write img.media-pending {
-    animation: media-pulse 0.9s ease-out 0.45s infinite alternate;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%239A958A' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9' stroke-opacity='.25'/%3E%3Cpath d='M12 3a9 9 0 0 1 9 9'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='0.9s' repeatCount='indefinite'/%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 0 0;
+    animation:
+      media-pulse 0.9s ease-out 0.45s infinite alternate,
+      media-spinner 0.01s step-end 0.45s forwards;
+  }
+}
+
+@keyframes media-spinner {
+  to {
+    background-size: 22px 22px;
   }
 }
 
@@ -510,6 +525,7 @@ img.border {
   #write img.media-pending,
   #write video {
     background-color: transparent;
+    background-image: none;
     animation: none;
   }
 }

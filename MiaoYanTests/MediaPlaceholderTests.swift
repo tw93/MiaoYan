@@ -67,6 +67,7 @@ final class MediaPlaceholderTests: XCTestCase {
                     styledHeight: styled.height,
                     pulse: pending.animationName,
                     pulseDelay: pending.animationDelay,
+                    spinner: pending.backgroundImage,
                     reserved: img.classList.contains('media-reserve'),
                     width: box.width,
                     height: box.height,
@@ -150,8 +151,10 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(before["movedInRow"] as? Double), 0, accuracy: 1, "a row that grows less than its image still leaves the text in place")
         // Under Reduce Motion the pulse is off by design.
         if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
-            XCTAssertEqual(before["pulse"] as? String, "media-pulse", "a loading image breathes its tint")
-            XCTAssertEqual(before["pulseDelay"] as? String, "0.45s", "after a moment, so a quick one never flashes it")
+            XCTAssertEqual(
+                before["pulse"] as? String, "media-pulse, media-spinner", "a loading image breathes its tint and shows a turning arc")
+            XCTAssertEqual(before["pulseDelay"] as? String, "0.45s, 0.45s", "after a moment, so a quick one never flashes either")
+            XCTAssertTrue((before["spinner"] as? String)?.contains("animateTransform") == true, "the arc turns: \(before)")
         }
 
         XCTAssertEqual(result["lazyLoaded"] as? Bool, true, "\(result)")
