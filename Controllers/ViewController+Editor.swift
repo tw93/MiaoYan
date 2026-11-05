@@ -1424,7 +1424,10 @@ extension ViewController {
                         preserveUndo: true  // Preserve undo stack during view refreshes (e.g. Split View toggle)
                     )
                     self.editArea.fill(note: note, options: options)
-                    self.editArea.setSelectedRange(NSRange(location: location, length: 0))
+                    // An outside edit can leave the note shorter than the
+                    // caret was; clamp as ShellEditorController.applyReload does.
+                    let length = (self.editArea.string as NSString).length
+                    self.editArea.setSelectedRange(NSRange(location: min(max(location, 0), length), length: 0))
                 }
             }
         }
