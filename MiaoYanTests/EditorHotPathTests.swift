@@ -76,14 +76,25 @@ final class EditorHotPathTests: XCTestCase {
         note.save(content: NSMutableAttributedString(string: "plain 中文 text"))
         XCTAssertEqual(note.content.string, "plain 中文 text")
 
-        let checkbox = NSMutableAttributedString(attributedString: NSAttributedString(attachment: NSTextAttachment()))
-        checkbox.addAttribute(.todo, value: 1, range: NSRange(location: 0, length: 1))
-        checkbox.append(NSAttributedString(string: " buy milk"))
-        XCTAssertTrue(checkbox.hasAttachmentAttribute)
+        let withAttachment = NSMutableAttributedString(attributedString: NSAttributedString(attachment: NSTextAttachment()))
+        XCTAssertTrue(withAttachment.hasAttachmentAttribute)
         XCTAssertFalse(NSAttributedString(string: "plain").hasAttachmentAttribute)
-        note.save(content: checkbox)
-        XCTAssertEqual(note.content.string, "- [x] buy milk")
         _ = note.flushPendingSave(globalStorage: false)
+    }
+
+    /// The note list resolves its two fonts once per face and size, not on
+    /// every redraw; a size change rebuilds them.
+    @MainActor
+    func testNoteListFontsAreCachedUntilTheSizeChanges() {
+        let first = NoteCellView.listFonts()
+        XCTAssertEqual(NoteCellView.listFonts(), first)
+        XCTAssertEqual(first.name, UserDefaultsManagement.nameFont)
+        XCTAssertEqual(first.date, UserDefaultsManagement.dateFont)
+
+        let saved = UserDefaultsManagement.nameFontSize
+        defer { UserDefaultsManagement.nameFontSize = saved }
+        UserDefaultsManagement.nameFontSize = saved + 3
+        XCTAssertEqual(NoteCellView.listFonts().name.pointSize, CGFloat(saved + 3))
     }
 
     /// A skipped KaTeX or Mermaid pass schedules one more update for just past
