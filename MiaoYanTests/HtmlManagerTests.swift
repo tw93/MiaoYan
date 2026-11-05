@@ -660,6 +660,25 @@ final class HtmlManagerTests: XCTestCase {
                 "<style>p{}</style><body class=\"lightmode\"><p>write CUSTOM_CSS and DOWN_CSS here</p></body>")
         }
     }
+
+    /// Every full preview load walked all of DownView.bundle on the main
+    /// thread to refresh the cached copy. It is walked once per launch now,
+    /// and again only when the cache lost a required file.
+    @MainActor
+    func testPreviewBundleIsWalkedOncePerLaunchAndAgainWhenLost() throws {
+        HtmlManager.ensurePreviewResourcesAvailable()
+        let walked = HtmlManager.bundleSyncCount
+        XCTAssertGreaterThan(walked, 0)
+        XCTAssertFalse(HtmlManager.ensurePreviewResourcesAvailable(), "nothing to repair")
+        _ = HtmlManager.createTemporaryBundle(pageHTMLString: "<p>a</p>")
+        XCTAssertEqual(HtmlManager.bundleSyncCount, walked, "a load does not walk the bundle again")
+
+        let common = HtmlManager.previewBundleURL().appendingPathComponent("js/common.js")
+        try FileManager.default.removeItem(at: common)
+        XCTAssertTrue(HtmlManager.ensurePreviewResourcesAvailable(), "a lost file is put back")
+        XCTAssertEqual(HtmlManager.bundleSyncCount, walked + 1)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: common.path))
+    }
 }
 
 @available(macOS 12.0, *)
