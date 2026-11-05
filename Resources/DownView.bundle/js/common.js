@@ -642,11 +642,30 @@ const MiaoYanCommon = {
   blockKey(node) {
     if (node.nodeType === Node.ELEMENT_NODE) {
       const base = parseInt(node.getAttribute('data-sourcepos'), 10) || 0;
-      return node.outerHTML.replace(/ data-sourcepos="(\d+)(:\d+-)(\d+)(:\d+)"/g,
+      return this.withoutLearntSizes(node.outerHTML).replace(/ data-sourcepos="(\d+)(:\d+-)(\d+)(:\d+)"/g,
         (_, a, mid, b, end) => ` data-sourcepos="${a - base}${mid}${b - base}${end}"`);
     }
     if (node.nodeType === Node.TEXT_NODE) return '#text' + node.textContent;
     return '#node';
+  },
+
+  // A remote image's size is learnt after its first render, and the next
+  // render writes it into the tag (HtmlManager.remoteImageTag): width and
+  // height when the note gave none, an aspect-ratio, and no data-measure.
+  // The page already gave the image that box (applyImageSize), so the key
+  // leaves them out; otherwise the first edit after it replaced the
+  // paragraph and loaded the picture again. Sizes the note wrote itself
+  // stay in the key.
+  withoutLearntSizes(html) {
+    if (!html.includes('data-src="http')) return html;
+    return html.replace(/<img\b[^>]*>/g, (tag) => {
+      if (!/\sdata-src="https?:/.test(tag)) return tag;
+      return tag
+        .replace(' data-measure="1"', '')
+        .replace(/ width="(\d+)" height="(\d+)"/, (all, w, h) => tag.includes(`aspect-ratio: ${w} / ${h}`) ? '' : all)
+        .replace(/ style="aspect-ratio: \d+ \/ \d+"/, '')
+        .replace(/(style="[^"]*?)aspect-ratio: \d+ \/ \d+; /, '$1');
+    });
   },
 
   blockEntry(node) {

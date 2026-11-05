@@ -288,6 +288,47 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertTrue(export.contains(".heading-anchor { display: none !important; }"), "PNG")
     }
 
+    /// A remote image never seen before renders unmeasured; once its size
+    /// is learnt the next render writes it into the tag. That changed the
+    /// paragraph's key, so the first edit after it replaced the paragraph
+    /// and loaded the picture again, though the page had already sized it.
+    @MainActor
+    func testALearntRemoteImageSizeKeepsItsParagraph() async throws {
+        let first = "https://example.invalid/\(UUID().uuidString).png"
+        let styled = "https://example.invalid/\(UUID().uuidString).png"
+        let markdown = "Intro.\n\n![](\(first))\n\n<p><img src=\"\(styled)\" style=\"zoom:50%\"></p>\n\nAfter."
+        let webView = try await loadRenderedPage(markdown)
+        _ = try await webView.evaluateJavaScript("document.querySelectorAll('#write img').forEach((img) => img.__mark = 'kept'); true")
+
+        RemoteImageSizes.shared.record(url: first, width: 640, height: 480)
+        RemoteImageSizes.shared.record(url: styled, width: 300, height: 200)
+        let sized = try XCTUnwrap(MPreviewView.previewHTML(markdown: markdown + " Edited.", useGithubLineBreak: false, imagesStorage: tempDirectory))
+        XCTAssertTrue(sized.contains("aspect-ratio: 640 / 480"), sized)
+        XCTAssertTrue(sized.contains("aspect-ratio: 300 / 200; zoom:50%"), sized)
+        let script = """
+            (function() {
+                const inserted = MiaoYanCommon.patchContent(document.getElementById('write'), \(HtmlManager.jsStringLiteral(sized)));
+                return {
+                    inserted: inserted.filter((n) => n.nodeType === 1).length,
+                    kept: Array.from(document.querySelectorAll('#write img'), (img) => img.__mark === 'kept')
+                };
+            })();
+            """
+        let raw = try await webView.evaluateJavaScript(script)
+        let result = try XCTUnwrap(raw as? [String: Any])
+        XCTAssertEqual(result["inserted"] as? Int, 1, "only the edited paragraph")
+        XCTAssertEqual(result["kept"] as? [Bool], [true, true])
+
+        let rewritten = "<p><img src=\"\(styled)\" width=\"120\" style=\"zoom:50%\"></p>"
+        let html = try XCTUnwrap(
+            MPreviewView.previewHTML(
+                markdown: markdown.replacingOccurrences(of: "<p><img src=\"\(styled)\" style=\"zoom:50%\"></p>", with: rewritten) + " Edited.",
+                useGithubLineBreak: false, imagesStorage: tempDirectory))
+        let again = try await webView.evaluateJavaScript(
+            "MiaoYanCommon.patchContent(document.getElementById('write'), \(HtmlManager.jsStringLiteral(html))).filter((n) => n.nodeType === 1).length")
+        XCTAssertEqual(again as? Int, 1, "a width the note writes itself still counts")
+    }
+
     /// A reload while an in-place switch is still rendering (the app comes
     /// back to the front, WebContent restarts) loaded the note being
     /// replaced, which cancelled the switch and left the preview on it while
