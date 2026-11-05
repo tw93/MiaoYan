@@ -86,9 +86,9 @@ breaks the UI at runtime without a compile-time error:
 - `SidebarProjectView` is loaded as the storyboard's outline view subclass;
   its `awakeFromNib` is the construction entry point, not `init`.
 - `NotesTableView` cell views have `NSUserInterfaceItemIdentifier("NoteCellView")`
-  registered in the storyboard and dequeued at `Views/NotesTableView.swift:550`.
+  registered in the storyboard and dequeued in `Views/NotesTableView.swift`.
 - `SidebarProjectView` cell views use identifier `"DataCell"` similarly
-  (`Views/SidebarProjectView.swift:726`).
+  (`Views/SidebarProjectView.swift`).
 - The First Responder action chain is selector-based. `@IBAction` methods on
   `ViewController+Action.swift` must keep their exact ObjC selectors.
 
@@ -104,7 +104,7 @@ keystroke
   → NotesTextProcessor.checkPerformanceLevel
      ├─ short text:    full Markdown highlight via MarkdownRuleHighlighter
      └─ long/large:    simplified highlight (skips code block regex)
-  → ViewController.textDidChange (URL drift tripwire fires here)
+  → ViewController.textDidChange (the #543 `storageNote` owner guard runs here)
      ├─ debounced disk save:  Note.save(content:)
      └─ debounced preview:    MPreviewView.updateContent (adaptive 0.3/0.6/1.0s)
 ```

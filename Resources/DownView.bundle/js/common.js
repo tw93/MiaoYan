@@ -223,7 +223,7 @@ const MiaoYanCommon = {
               if (window.Lightense && (img.closest('#write') || img.parentElement?.tagName === 'P' || img.closest('table'))) {
                 img.addEventListener('load', () => {
                   window.Lightense([img], {
-                    background: MiaoYanCommon.isDarkMode() ? 'rgba(33, 38, 43, .8)' : 'rgba(255, 255, 255, .8)',
+                    background: MiaoYanCommon.isDarkMode() ? 'rgba(30, 29, 27, .8)' : 'rgba(253, 252, 249, .8)',
                   });
                 }, { once: true });
               }
@@ -384,7 +384,7 @@ const MiaoYanCommon = {
       : document.querySelectorAll(selector);
     if (zoomImgs.length > 0 && window.Lightense) {
       window.Lightense(zoomImgs, {
-        background: this.isDarkMode() ? 'rgba(33, 38, 43, .8)' : 'rgba(255, 255, 255, .8)',
+        background: this.isDarkMode() ? 'rgba(30, 29, 27, .8)' : 'rgba(253, 252, 249, .8)',
       });
     }
   },
