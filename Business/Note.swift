@@ -1007,7 +1007,11 @@ public class Note: NSObject {
         let noteDirectory = url.deletingLastPathComponent().path
         let resolvedRelative = NSString(string: noteDirectory).appendingPathComponent(normalizedPath)
         let standardized = NSString(string: resolvedRelative).standardizingPath
-        guard standardized.hasPrefix(projectPath) else { return nil }
+        // A note in a subfolder reaches a parent folder's i/ or files/ with
+        // ../, so the bound is the library, not the note's own folder: bounded
+        // by the folder, Clean Unused Attachments trashed those files.
+        let libraryPath = project.getParent().url.path
+        guard standardized.hasPrefix(libraryPath.hasSuffix("/") ? libraryPath : libraryPath + "/") else { return nil }
 
         return standardized
     }

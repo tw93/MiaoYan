@@ -54,6 +54,50 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertTrue(names.contains("unused.png"), "an image nothing references is still found")
     }
 
+    /// A subfolder note reaching its parent's `i/` and `files/` through `../`
+    /// resolved outside its own folder, so those files were called unused and
+    /// moved to the Trash. Paths are bounded by the library instead.
+    @MainActor
+    func testParentFolderAttachmentsReachedWithDotDotAreNotOrphans() async throws {
+        let manager = FileManager.default
+        let library = tempDir.appendingPathComponent("Library", isDirectory: true)
+        let sub = library.appendingPathComponent("Sub", isDirectory: true)
+        for folder in ["i", "files", "Sub/i"] {
+            try manager.createDirectory(at: library.appendingPathComponent(folder), withIntermediateDirectories: true)
+        }
+        for file in ["i/x.png", "i/y.png", "files/a.pdf", "i/unused.png", "Sub/i/own.png"] {
+            try Data([0x89]).write(to: library.appendingPathComponent(file))
+        }
+        let body = "# Sub\n\n<img src=\"../i/x.png\">\n\n[a](../files/a.pdf)\n\n![](../i/y.png)\n\n![](/i/own.png)\n"
+        try body.write(to: sub.appendingPathComponent("note.md"), atomically: true, encoding: .utf8)
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: library, label: "root")
+        _ = storage.add(project: root)
+        let subProject = try XCTUnwrap(storage.subfolders(of: root).first { $0.label == "Sub" })
+
+        let done = expectation(description: "orphan scan")
+        var result: [URL]?
+        storage.findOrphanAttachments { urls in
+            result = urls
+            done.fulfill()
+        }
+        await fulfillment(of: [done], timeout: 10)
+
+        let orphans = Set((result ?? []).map { $0.resolvingSymlinksInPath().path })
+        XCTAssertNotNil(result)
+        for used in ["i/x.png", "i/y.png", "files/a.pdf", "Sub/i/own.png"] {
+            XCTAssertFalse(orphans.contains(library.appendingPathComponent(used).path), "\(used) is referenced from Sub/note.md")
+        }
+        XCTAssertTrue(orphans.contains(library.appendingPathComponent("i/unused.png").path), "an unreferenced file is still found")
+
+        let note = Note(url: subProject.url.appendingPathComponent("note.md"), with: subProject)
+        XCTAssertEqual(
+            note.getReferencedAttachmentPaths(in: "<img src=\"../i/x.png\">"), [root.url.appendingPathComponent("i/x.png").path])
+        let escaping = note.getReferencedAttachmentPaths(in: "<img src=\"../../i/out.png\">")
+        XCTAssertTrue(escaping.isEmpty, "a path leaving the library is not resolved: \(escaping)")
+    }
+
     /// Trash notes are listed only once the Trash is opened, and the scan
     /// skipped the Trash folder, so an image only a trashed note used was
     /// cleaned and the note came back from the Trash without it.
