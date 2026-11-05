@@ -222,6 +222,9 @@ public class NotesTextProcessor {
         }
 
         var replacements: [(range: NSRange, text: String)] = []
+        // Fenced blocks are found once, on the first link, rather than by
+        // rescanning the note from the top for every link on each update.
+        var fencedRanges: [NSRange]?
 
         var index = 0
         while index < attributedString.length {
@@ -235,8 +238,10 @@ public class NotesTextProcessor {
                 let tag = linkValue.replacingOccurrences(of: tagQuery, with: "").removingPercentEncoding,
                 effectiveRange.length > 0
             {
+                let codeRanges = fencedRanges ?? fencedCodeBlockRanges(in: attributedString)
+                fencedRanges = codeRanges
                 if getSpanCodeBlockRange(content: attributedString, range: effectiveRange) == nil,
-                    getFencedCodeBlockRange(paragraphRange: effectiveRange, string: attributedString) == nil
+                    !codeRanges.contains(where: { $0.intersection(effectiveRange) != nil })
                 {
                     let markdownLink = "[\(tag)](\(linkValue))"
                     replacements.append((effectiveRange, markdownLink))

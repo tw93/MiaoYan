@@ -44,6 +44,24 @@ final class EditorHotPathTests: XCTestCase {
         XCTAssertEqual(emoji.filter { range in ranges.contains { $0.intersection(range) != nil } }.count, 1)
     }
 
+    /// The preview turns `[[note]]` into a link everywhere but code. Each
+    /// link used to rescan the note from the top for fenced blocks, on every
+    /// preview update; the blocks are found once now, with the same result.
+    @MainActor
+    func testWikilinksSkipFencedCodeWithOneScan() throws {
+        let text = "See [[Alpha]].\n\n```\n[[Inside]]\n```\n\nAnd `[[Span]]` and [[Beta Note]].\n"
+        let converted = NotesTextProcessor.convertAppLinks(in: NSMutableAttributedString(string: text)).string
+        XCTAssertEqual(
+            converted,
+            "See [Alpha](miaoyan://goto/Alpha).\n\n```\n[[Inside]]\n```\n\nAnd `[[Span]]` and [Beta Note](miaoyan://goto/Beta%20Note).\n")
+
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("Helpers/NotesTextProcessor.swift"), encoding: .utf8)
+        let start = try XCTUnwrap(source.range(of: "public static func convertAppLinks"))
+        let end = try XCTUnwrap(source.range(of: "public static func highlight(note:", range: start.upperBound..<source.endIndex))
+        XCTAssertFalse(source[start.lowerBound..<end.lowerBound].contains("getFencedCodeBlockRange("), "no per-link rescan")
+    }
+
     /// Typing hands plain text to `save(content:)`, which skips the unload
     /// copies; content with a checkbox attachment must still be unloaded.
     @MainActor
