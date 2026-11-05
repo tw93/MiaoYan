@@ -189,7 +189,7 @@ body.darkmode .toc-nav .is-active-link {
 }
 
 body.darkmode .toc-pin-btn {
-  color: var(--text-color, #E7E9EA);
+  color: var(--text-color, #D6D1C6);
 }
 
 body.darkmode .toc-pin-btn:hover {

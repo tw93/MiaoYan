@@ -35,7 +35,7 @@ class HtmlManager {
             @media print, screen {
                :root {
                    --bg-color: #1E1D1B !important;
-                   --text-color: #E7E9EA !important;
+                   --text-color: #D6D1C6 !important;
                    --code-bg: #282724 !important;
                    --side-bar-bg-color: #1E1D1B !important;
                    --control-text-color: #999 !important;
@@ -43,7 +43,7 @@ class HtmlManager {
                }
                html, body {
                    background-color: #1E1D1B !important;
-                   color: #E7E9EA !important;
+                   color: #D6D1C6 !important;
                }
             }
             """

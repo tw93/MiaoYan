@@ -478,7 +478,7 @@ img.border {
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #1E1D1B;
-    --text-color: #E7E9EA;
+    --text-color: #D6D1C6;
     --link-color: #54C59F;
     --border-color: #3A3936;
     --code-bg: #282724;
