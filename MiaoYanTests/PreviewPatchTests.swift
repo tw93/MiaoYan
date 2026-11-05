@@ -247,6 +247,7 @@ final class PreviewPatchTests: XCTestCase {
                     text: h.textContent,
                     opacity: style.opacity,
                     transition: style.transitionDuration + ' ' + style.transitionTimingFunction,
+                    reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
                     copied: copied.html
                 };
             })();
@@ -257,7 +258,10 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(result["hrefs"] as? [String], ["#1.%20Intro", "#Two"], "one link per heading, even when run again")
         XCTAssertEqual(result["text"] as? String, "1. Intro")
         XCTAssertEqual(result["opacity"] as? String, "0", "hidden until the pointer is over the heading")
-        XCTAssertEqual(result["transition"] as? String, "0.12s ease-out")
+        // CI's runner has Reduce Motion on, where the link appears without
+        // the fade, as sumi asks; it fades in 0.12s everywhere else.
+        let reduced = result["reduced"] as? Bool ?? false
+        XCTAssertEqual(result["transition"] as? String, reduced ? "0s ease" : "0.12s ease-out")
         XCTAssertEqual(result["copied"] as? String, "1. Intro", "copying a heading leaves the link behind")
 
         _ = try await webView.evaluateJavaScript("window.scrollTo(0, document.body.scrollHeight); document.querySelector('#write a[href=\"#1.%20Intro\"]').click(); true")
