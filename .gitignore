@@ -98,9 +98,11 @@ package-lock.json
 appcast.xml
 
 # Documentation & Demo files
-# docs/ stays local except the incident ledger, which CI checks.
+# docs/ stays local except the incident ledger, which CI checks, and the
+# weekly-audit run log, which the next run reads for its window and decisions.
 docs/*
 !docs/incidents.md
+!docs/weekly-audit.md
 index.html
 Resources/DownView.bundle/demo.html
 
