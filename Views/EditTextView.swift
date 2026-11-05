@@ -350,6 +350,16 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.paste(sender)
     }
 
+    /// A file dragged in from Finder goes through the paste path
+    /// (ClipboardManager.dropFiles); a text drag stays NSTextView's.
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        let caret = characterIndexForInsertion(at: convert(sender.draggingLocation, from: nil))
+        if let handled = clipboardManager?.dropFiles(from: sender.draggingPasteboard, at: caret) {
+            return handled
+        }
+        return super.performDragOperation(sender)
+    }
+
     @IBAction func boldMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.bold)
     }

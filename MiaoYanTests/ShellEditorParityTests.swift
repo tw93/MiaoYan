@@ -235,6 +235,55 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(controller.textView.string, formatted)
     }
 
+    /// A file dragged in from Finder became an inline attachment NSTextView
+    /// never saved (the drop handling went in a73f4585). It now takes the
+    /// paste path: the file is copied to `i/` and its link goes in at the
+    /// drop point. A text drag is still NSTextView's.
+    @available(macOS 14, *)
+    @MainActor
+    func testDroppedFileIsCopiedAndLinkedAtTheDropPoint() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let note = makeLoadedNote("drop.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDrop-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let image = NSImage(size: NSSize(width: 4, height: 4))
+        image.lockFocus()
+        NSColor.red.drawSwatch(in: NSRect(x: 0, y: 0, width: 4, height: 4))
+        image.unlockFocus()
+        let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(image.tiffRepresentation))?.representation(using: .png, properties: [:]))
+        let file = source.appendingPathComponent("dropped.png")
+        try png.write(to: file)
+
+        // The editor's own ClipboardManager is private; this one is built the same way.
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.setString("plain text", forType: .string)
+        XCTAssertNil(drop.dropFiles(from: board, at: 0), "a text drag is NSTextView's")
+
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+
+        XCTAssertFalse(controller.textView.textStorage?.containsAttachments ?? true)
+        let text = controller.textView.string
+        let match = try XCTUnwrap(text.range(of: "^before !\\[\\]\\((/i/[^)]+\\.png)\\)after$", options: .regularExpression), text)
+        let link = String(text[match].dropFirst("before ![](".count).dropLast(")after".count))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.path + link), "copied to \(link)")
+        XCTAssertEqual(note.content.string, text)
+    }
+
     /// The shell's text view is made in code; it must carry what the
     /// storyboard's EditTextView sets in Main.storyboard and ViewController.
     @available(macOS 14, *)

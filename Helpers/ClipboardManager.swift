@@ -106,6 +106,43 @@ class ClipboardManager {
         return false
     }
 
+    /// Files dropped on the editor take the paste path: each is copied into
+    /// the note's attachment folder (or uploaded, per the image upload
+    /// setting) and its Markdown link goes in at the drop point. Left to
+    /// NSTextView, which imports graphics, a file became an inline attachment
+    /// that was never written anywhere, since a73f4585 removed the drop
+    /// handling. Nil when the pasteboard holds no file, leaving the drop to
+    /// NSTextView; false when the editor cannot take it (read-only, or the
+    /// buffer is not the open note's, #543).
+    func dropFiles(from pasteboard: NSPasteboard, at location: Int) -> Bool? {
+        let urls = Self.fileURLs(on: pasteboard)
+        guard !urls.isEmpty else { return nil }
+        guard let textView, textView.isEditable, let note = EditTextView.note, textView.storageNote === note,
+            let storage = textView.textStorage
+        else { return false }
+        textView.setSelectedRange(NSRange(location: min(max(location, 0), storage.length), length: 0))
+        var inserted = 0
+        for url in urls {
+            if inserted > 0 {
+                textView.insertText("\n\n", replacementRange: textView.selectedRange())
+            }
+            if saveFile(url: url, in: note) {
+                inserted += 1
+            }
+        }
+        return inserted > 0
+    }
+
+    /// The regular files on a pasteboard, as Finder puts them there when
+    /// files are dragged; folders and web links are not among them.
+    static func fileURLs(on pasteboard: NSPasteboard) -> [URL] {
+        let objects = pasteboard.readObjects(forClasses: [NSURL.self], options: [.urlReadingFileURLsOnly: true]) ?? []
+        return objects.compactMap { $0 as? URL }.filter {
+            (try? $0.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true
+                && FileManager.default.isReadableFile(atPath: $0.path)
+        }
+    }
+
     func saveFile(url: URL, in note: Note) -> Bool {
         guard let textView = textView else { return false }
 
