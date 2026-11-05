@@ -564,7 +564,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             md.editorUndoManager = note.undoManager
         }
         isEditable = isEditable(note: note)
-        if note.loadFailed { window?.contentViewController?.toast(message: I18n.str("This note could not be read, so it was left as it is"), style: .failure) }
+        if let notice = note.readOnlyNotice { window?.contentViewController?.toast(message: notice, style: .failure) }
         if !options.saveTyping {
             typingAttributes.removeAll()
             typingAttributes[.font] = UserDefaultsManagement.noteFont

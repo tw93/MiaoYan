@@ -32,13 +32,29 @@ public class Note: NSObject {
     /// opened offline, a permission or provider error). The buffer then holds
     /// nothing of the real text, so every write is refused until a read
     /// succeeds; saving it would replace the file with an empty note.
-    private(set) var loadFailed = false
+    private(set) var readFailed = false
+    /// True when the file is UTF-8 with invalid bytes (`NoteText.isDamagedUTF8`).
+    /// The buffer shows them as U+FFFD, so saving it would drop the original
+    /// bytes; the note stays read-only until it reads cleanly.
+    private(set) var hasDamagedText = false
+    /// The buffer is not the file's text, so the note is read-only and every
+    /// write is refused. The editor, move and duplicate all check this.
+    var loadFailed: Bool { readFailed || hasDamagedText }
+    /// Why the editor opened the note read-only, for its toast.
+    var readOnlyNotice: String? {
+        if readFailed { return I18n.str("This note could not be read, so it was left as it is") }
+        if hasDamagedText { return I18n.str("This note has invalid characters, so it opened read-only") }
+        return nil
+    }
 
     // Debounce for save operations
     private var saveWorkItem: DispatchWorkItem?
     private var hasUnpersistedChanges = false
     private var isRetired = false
     private var allowsInitialFileCreation = false
+    /// A save refused because the file is gone has told the user once; a
+    /// successful write re-arms it.
+    private(set) var announcedMissingFile = false
     /// The directory is between its old and new paths; retain edits until relocation finishes.
     var isMovingWithFolder = false
     public var hasPendingSave: Bool {
@@ -130,8 +146,8 @@ public class Note: NSObject {
     }
 
     func load() {
-        if let attributedString = getContent() {
-            adoptReadContent(attributedString)
+        if let read = readContent() {
+            adoptReadContent(read.text, damaged: read.damaged)
             loadModifiedLocalAt()
             return
         }
@@ -139,8 +155,8 @@ public class Note: NSObject {
     }
 
     func loadAsync() async {
-        if let attributedString = await getContentAsync() {
-            adoptReadContent(attributedString)
+        if let read = await readContentAsync() {
+            adoptReadContent(read.text, damaged: read.damaged)
             loadModifiedLocalAt()
             return
         }
@@ -149,10 +165,11 @@ public class Note: NSObject {
 
     /// Every successful read goes through here, so a body changed on disk by
     /// another app or device also refreshes the backlinks it contributes.
-    private func adoptReadContent(_ attributedString: NSAttributedString) {
+    private func adoptReadContent(_ attributedString: NSAttributedString, damaged: Bool) {
         content = NSMutableAttributedString(attributedString: attributedString)
         isContentLoaded = true
-        loadFailed = false
+        readFailed = false
+        hasDamagedText = damaged
         if !isTrash() {
             WikilinkIndex.shared.updateNote(title: title, content: content.string)
         }
@@ -163,7 +180,7 @@ public class Note: NSObject {
     private func markLoadFailure(context: String) {
         isContentLoaded = false
         guard FileManager.default.fileExists(atPath: url.path) else { return }
-        loadFailed = true
+        readFailed = true
         let error = CocoaError(.fileReadUnknown, userInfo: [NSFilePathErrorKey: url.path])
         AppDelegate.trackError(error, context: context)
     }
@@ -174,8 +191,8 @@ public class Note: NSObject {
         }
 
         if modifiedAt != modifiedLocalAt {
-            if let attributedString = getContent() {
-                adoptReadContent(attributedString)
+            if let read = readContent() {
+                adoptReadContent(read.text, damaged: read.damaged)
             } else {
                 markLoadFailure(context: "Note.reload")
             }
@@ -187,8 +204,8 @@ public class Note: NSObject {
     }
 
     public func forceReload() {
-        if let attributedString = getContent() {
-            adoptReadContent(attributedString)
+        if let read = readContent() {
+            adoptReadContent(read.text, damaged: read.damaged)
             return
         }
         markLoadFailure(context: "Note.forceReload")
@@ -461,35 +478,43 @@ public class Note: NSObject {
         url.path.replacingOccurrences(of: UserDefaultsManagement.storagePath!, with: "")
     }
 
+    /// The file watcher adopts this text without going through `load()`, so
+    /// the read also decides whether the note is damaged, both ways.
     func getContent() -> NSAttributedString? {
-        guard let url = getContentFileURL() else { return nil }
+        guard let read = readContent() else { return nil }
+        hasDamagedText = read.damaged
+        return read.text
+    }
 
-        do {
-            let options = getDocOptions()
-
-            return try NSAttributedString(url: url, options: options, documentAttributes: nil)
-        } catch {
-            if let data = try? Data(contentsOf: url), let text = NoteText.decode(data) {
-                return NSAttributedString(string: text)
-            }
+    /// The file's text, and whether it is UTF-8 with invalid bytes, which
+    /// `NoteText.decode` shows as U+FFFD and the note must not write back.
+    private func readContent() -> (text: NSAttributedString, damaged: Bool)? {
+        guard let url = getContentFileURL(), let data = try? Data(contentsOf: url) else { return nil }
+        if let text = try? NSAttributedString(data: data, options: getDocOptions(), documentAttributes: nil) {
+            return (text, false)
         }
-
-        return nil
+        guard let text = NoteText.decode(data) else { return nil }
+        return (NSAttributedString(string: text), NoteText.isDamagedUTF8(data))
     }
 
     func getContentAsync() async -> NSAttributedString? {
+        await readContentAsync()?.text
+    }
+
+    private func readContentAsync() async -> (text: NSAttributedString, damaged: Bool)? {
         guard let url = getContentFileURL() else { return nil }
 
-        let stringContent = await Task.detached(priority: .userInitiated) { () -> String? in
-            (try? Data(contentsOf: url)).flatMap(NoteText.decode)
+        let read = await Task.detached(priority: .userInitiated) { () -> (String, Bool)? in
+            guard let data = try? Data(contentsOf: url), let text = NoteText.decode(data) else { return nil }
+            return (text, NoteText.isDamagedUTF8(data))
         }.value
 
-        guard let string = stringContent else { return nil }
+        guard let (string, damaged) = read else { return nil }
 
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UserDefaultsManagement.noteFont as Any
         ]
-        return NSAttributedString(string: string, attributes: attrs)
+        return (NSAttributedString(string: string, attributes: attrs), damaged)
     }
 
     func isMarkdown() -> Bool {
@@ -653,7 +678,7 @@ public class Note: NSObject {
         guard !loadFailed else {
             saveWorkItem?.cancel()
             let error = CocoaError(.fileWriteNoPermission, userInfo: [NSFilePathErrorKey: url.path])
-            AppDelegate.trackError(error, context: "Note.saveRefusedAfterFailedLoad")
+            AppDelegate.trackError(error, context: readFailed ? "Note.saveRefusedAfterFailedLoad" : "Note.saveRefusedDamagedText")
             return false
         }
         // Cancel pending debounce if we are saving immediately
@@ -671,6 +696,13 @@ public class Note: NSObject {
                     code: CocoaError.fileNoSuchFile.rawValue,
                     userInfo: [NSFilePathErrorKey: getURL().path])
                 AppDelegate.trackError(error, context: "Note.writeMissingFile")
+                // Typing into a note removed outside MiaoYan was dropped with
+                // nothing on screen; say so once, not on every keystroke.
+                if !announcedMissingFile {
+                    announcedMissingFile = true
+                    (NSApp.mainWindow ?? NSApp.keyWindow)?.contentViewController?
+                        .toast(message: I18n.str("This note no longer exists on disk, so edits are not saved"), style: .failure)
+                }
                 return false
             }
             let dst = contentSrc ?? getURL()
@@ -720,6 +752,7 @@ public class Note: NSObject {
             sharedStorage.add(self)
         }
         allowsInitialFileCreation = false
+        announcedMissingFile = false
         hasUnpersistedChanges = false
         return true
     }
@@ -985,7 +1018,11 @@ public class Note: NSObject {
         let noteDirectory = url.deletingLastPathComponent().path
         let resolvedRelative = NSString(string: noteDirectory).appendingPathComponent(normalizedPath)
         let standardized = NSString(string: resolvedRelative).standardizingPath
-        guard standardized.hasPrefix(projectPath) else { return nil }
+        // A note in a subfolder reaches a parent folder's i/ or files/ with
+        // ../, so the bound is the library, not the note's own folder: bounded
+        // by the folder, Clean Unused Attachments trashed those files.
+        let libraryPath = project.getParent().url.path
+        guard standardized.hasPrefix(libraryPath.hasSuffix("/") ? libraryPath : libraryPath + "/") else { return nil }
 
         return standardized
     }

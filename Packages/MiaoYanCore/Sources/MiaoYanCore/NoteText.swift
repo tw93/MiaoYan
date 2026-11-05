@@ -20,6 +20,12 @@ public enum NoteText {
 
     public static func decode(_ data: Data, preferredLanguages: [String]) -> String? {
         if let text = String(data: data, encoding: .utf8) { return text }
+        // A UTF-8 note with a few bad bytes is still UTF-8: shown through a
+        // legacy guess it read as mojibake, and the next save wrote that back.
+        // The bad bytes become U+FFFD; callers that write notes check
+        // `isDamagedUTF8` and leave such a file alone.
+        // swiftlint:disable:next optional_data_string_conversion
+        if isDamagedUTF8(data) { return String(decoding: data, as: UTF8.self) }
         if let first = detect(data, options: [.allowLossyKey: false]) {
             if containsCJK(first) { return first }
             if let hint = cjkHint(for: preferredLanguages),
@@ -33,6 +39,29 @@ public enum NoteText {
             return first
         }
         return String(data: data, encoding: encoding(.GB_18030_2000))
+    }
+
+    /// True when `data` is not valid UTF-8 but reads as UTF-8 text with a
+    /// few bad bytes (a truncated write, a stray byte from a sync or a script):
+    /// it holds at least one well-formed multi-byte UTF-8 sequence, and no more
+    /// invalid sequences than well-formed multi-byte ones. Legacy encodings
+    /// fail this by a wide margin, since their CJK and accented bytes rarely
+    /// line up into UTF-8 sequences by chance; an ASCII file with one stray
+    /// high byte has no multi-byte sequence and stays a Windows-1252 note.
+    public static func isDamagedUTF8(_ data: Data) -> Bool {
+        if String(data: data, encoding: .utf8) != nil { return false }
+        var valid = 0
+        var invalid = 0
+        var bytes = data.makeIterator()
+        var decoder = UTF8()
+        loop: while true {
+            switch decoder.decode(&bytes) {
+            case .scalarValue(let scalar): if scalar.value >= 0x80 { valid += 1 }
+            case .error: invalid += 1
+            case .emptyInput: break loop
+            }
+        }
+        return valid > 0 && valid >= invalid
     }
 
     private static func detect(_ data: Data, options: [StringEncodingDetectionOptionsKey: Any]) -> String? {
