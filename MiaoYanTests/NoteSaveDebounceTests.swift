@@ -245,6 +245,55 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: note.url), bytes)
     }
 
+    /// Move refuses a read-only note, but the storyboard window cleared the
+    /// editor after every move, so the open note went blank while its row
+    /// stayed selected. Only a note that really moved clears it.
+    @MainActor
+    func testStoryboardMoveClearsTheEditorOnlyWhenANoteMoved() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        let previous = Note.showFailure
+        defer { Note.showFailure = previous }
+        Note.showFailure = { _ in true }
+        let folder = tempDir.appendingPathComponent("Elsewhere", isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let destination = Project(url: folder, label: "Elsewhere")
+        let home = Project(url: tempDir, label: "test", isRoot: true)
+        let controller = ViewController()
+        controller.editArea = EditTextView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        controller.notesTableView = NotesTableView(frame: .zero)
+        controller.storageOutlineView = SidebarProjectView(frame: .zero)
+        controller.search = SearchTextField(frame: .zero)
+
+        let damagedURL = tempDir.appendingPathComponent("stays.md")
+        var bytes = Data("# 你好".utf8)
+        bytes.append(0xFF)
+        try bytes.write(to: damagedURL)
+        let damaged = Note(url: damagedURL, with: home)
+        damaged.load()
+        XCTAssertTrue(damaged.loadFailed)
+        controller.editArea.publishStorage(damaged.content, owner: damaged)
+        EditTextView.note = damaged
+
+        controller.move(notes: [damaged], project: destination)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: damagedURL.path), "the read-only note is not moved")
+        XCTAssertTrue(EditTextView.note === damaged, "so the editor keeps it")
+        XCTAssertTrue(controller.editArea.storageNote === damaged)
+
+        controller.move(notes: [damaged], project: home)
+        XCTAssertTrue(EditTextView.note === damaged, "a note already in the folder moves nowhere either")
+
+        let plainURL = tempDir.appendingPathComponent("goes.md")
+        try "plain".write(to: plainURL, atomically: true, encoding: .utf8)
+        let plain = Note(url: plainURL, with: home)
+        plain.load()
+        controller.editArea.publishStorage(plain.content, owner: plain)
+        EditTextView.note = plain
+        controller.move(notes: [plain], project: destination)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: folder.appendingPathComponent("goes.md").path), "a writable note moves")
+        XCTAssertNil(EditTextView.note, "and the editor lets it go, as before")
+    }
+
     /// File events are paused while typing, so a sync that lands then never
     /// reaches a resident note. Opening it must pick the new text up.
     @MainActor

@@ -759,12 +759,19 @@ extension ViewController {
 
     public func move(notes: [Note], project: Project) {
         let selectedRow = notesTableView.selectedRowIndexes.min()
+        var movedAny = false
         for note in notes {
             if note.project == project {
                 continue
             }
 
+            // Note.move refuses a read-only note (with its own toast) and can
+            // fail on disk; such a note stays where it is, in the list and
+            // in the editor.
+            let previousURL = note.url
             note.move(toProject: project)
+            guard note.url != previousURL else { continue }
+            movedAny = true
 
             if !isFit(note: note, shouldLoadMain: true) {
                 notesTableView.removeByNotes(notes: [note])
@@ -781,7 +788,9 @@ extension ViewController {
             note.invalidateCache()
         }
 
-        editArea.clear()
+        if movedAny {
+            editArea.clear()
+        }
     }
 
     func createNote(name: String = "", content: String = "", type: NoteType? = nil, project: Project? = nil, load: Bool = false) {
