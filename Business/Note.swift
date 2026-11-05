@@ -597,8 +597,12 @@ public class Note: NSObject {
         save(content: mutable)
     }
 
+    /// A read-only note (`loadFailed`) is refused here, before its buffer or
+    /// pending state changes: refused only at the write, a preview checkbox
+    /// or Clean Typography left it marked unsaved for the session, which kept
+    /// its folder from moving and logged a refusal on every note switch.
     public func save(content: NSMutableAttributedString) {
-        guard !isRetired else { return }
+        guard !isRetired, !loadFailed else { return }
         // Typing hands `note.content` here on every keystroke, already free of
         // attachments, so the unload passes run only when there is one to undo.
         self.content = content.hasAttachmentAttribute ? content.unLoad() : content
@@ -608,7 +612,7 @@ public class Note: NSObject {
     }
 
     public func save(globalStorage: Bool = true) {
-        guard !isRetired else { return }
+        guard !isRetired, !loadFailed else { return }
         if isMarkdown() {
             content = content.unLoadCheckboxes()
         }

@@ -110,7 +110,8 @@ final class NoteSaveDebounceTests: XCTestCase {
             XCTAssertFalse(EditTextView(frame: .zero).isEditable(note: note))
 
             note.save(content: NSMutableAttributedString(string: "# 你好世界\u{FFFD}\nedited"))
-            XCTAssertFalse(note.flushPendingSave(globalStorage: false), "the save is refused")
+            XCTAssertFalse(note.needsSave, "the save is refused before the note is marked unsaved")
+            XCTAssertEqual(note.content.string, "# 你好世界\u{FFFD}\n", "and before its buffer changes")
             XCTAssertEqual(try Data(contentsOf: url), bytes, "the file keeps its original bytes")
         }
 
@@ -146,7 +147,9 @@ final class NoteSaveDebounceTests: XCTestCase {
         note.load()
         XCTAssertTrue(note.loadFailed, "a short damaged note is read-only")
         note.save(content: NSMutableAttributedString(string: "edited"))
-        XCTAssertFalse(note.flushPendingSave(globalStorage: false))
+        note.save()
+        XCTAssertFalse(note.needsSave, "both save entry points refuse a read-only note")
+        XCTAssertTrue(note.flushPendingSave(globalStorage: false), "nothing is left waiting")
         XCTAssertEqual(try Data(contentsOf: url), bytes, "the file keeps its bytes")
 
         let previous = Note.showFailure
