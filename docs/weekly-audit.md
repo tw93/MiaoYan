@@ -10,9 +10,9 @@ are summarised without code paths, since that code lives in the private MiaoYan-
 - Mechanical: `check_incidents.py` 19 rows, 0 problems; SwiftLint and swift-format `--strict` clean.
 - Verified by the main session before reporting: B1 (a `typeIdentifier` read on a deleted file
   returns nil in a standalone test), E1 and P1 (read the code paths).
-- Next window from: `2c979d33`.
+- Next window from: `ec507b2d` (the last fix of this run).
 
-### Open, awaiting the maintainer's go-ahead
+### Findings as reported
 
 Behaviour
 - B1 high: notes deleted or renamed outside MiaoYan stay listed. `FileSystemEventManager.isValidFileType`
@@ -102,9 +102,65 @@ iPhone and iPad (fix in MiaoYan-Pro)
   like "Trash Talk" is hidden; Trash with iCloud may land in a hidden `.Trash`.
 - Stale: AGENTS.md lists card dates under caption (they use subheadline); three dead symbols.
 
+### Outcome
+
+The maintainer approved every fix on 2026-11-05: drops import files, damaged UTF-8 opens read-only,
+heading ids keep their text with a hover anchor (no GitHub slugs), diagrams take the warm palette,
+the iPhone reader gets alerts and KaTeX, and the old review document goes. Five fix agents worked in
+separate worktrees; three review rounds on the merged stack found ten more problems, fixed below.
+
+Fixed (MiaoYan)
+- B1 `15ec8bfe`, B2 `c730fcc1`, B3 `8430694b` with `da9687e6` and `ec507b2d`: decode shows U+FFFD
+  only at four good UTF-8 sequences per bad one (short GB18030 and EUC-KR titles were read as
+  damaged), while any note with at least as many good as bad stays read-only, since a short damaged
+  note shown in its legacy reading and saved wrote mojibake over itself. Read-only notes duplicate
+  (`f6a3daf5`), refuse Move with a toast, and have Restore disabled. B4 `55004c43`, B5 `a562362c`.
+- E1 `93fc8a84`, E2 `38bf0f0d` with `3dc82e63` (a note dragged from the list is not imported), E3
+  `dc42ff2c`, E4 `02d6159d`, E5 `fb4ae907`, E6 `ac0d88bc`.
+- P1 `e0088b1d`, P2 `73244c52`, P3 `77a4dc7b` (shell window), P4 `169f65ec`, P5 `8c629f49`, hover
+  anchor `421a25e9` with batched reads `af63deb5`, warm diagrams `a9fffaa7`.
+- F1 `f0931802`, F2 `ab393e8c`, F3 `70dcbc33`, `13b1258a`, `fe151058`.
+- S1 moved to the Trash (local file), S2 `ed5c72f5`, S3 `fe24644d` `7fa91f63` `b35f92cb`, and the
+  `Trash Talk` folder `394a513f`.
+- From the review: a folder delete wrote its last edit after the move (`faafa0a9`, I-27); the
+  missing-file notice was marked even with no window to show it (`733651d9`); the zoom backdrop
+  stayed dark after an in-place switch to light (`af63deb5`).
+- A V4.7.0 user's report: list titles, dates and folder names set their last character apart
+  (`系统配置SO P`), fixed in `4bcde409` (I-28).
+- Incident rows I-20 to I-28.
+
+Fixed (iPhone and iPad, MiaoYan-Pro): typing kept through a background exit during a conflict;
+Delete, Rename and Move open the conflict choice; fences resweep only when they change; the new-note
+hint steps aside for marked text; titles starting with "."; case-only renames; folders named like
+"Trash Talk"; search finds undownloaded notes by title; Move and Restore download first; local video,
+GitHub alerts and bundled KaTeX in the reader; Mermaid follows the appearance; a size-class change no
+longer reloads the reader; three dead symbols removed.
+
+### Open
+
+- The storyboard window still reloads its preview on an appearance change
+  (`EditTextView.applySystemAppearance`); the shell switches in place.
+- PlantUML is fetched again from its server on an appearance change, so offline it shows source.
+- Whether Restore may overwrite a read-only damaged note with a clean version (recorded in
+  `decide`; Duplicate is the way out today).
+- Every note switch writes a version snapshot even when nothing was edited (needs a decision).
+- `NoteCellView.draw` builds fonts on every redraw.
+- The 2026-05-07 tripwire in `ViewController+Action` (needs a decision); `.todo` readers in the
+  text storage and highlighter are dead now that nothing sets `.todo`; `.preferencesChanged` is
+  posted with no observer checked.
+- S4 pbxproj orphan package references (clean up in Xcode).
+- Format undo is tested in the shell only, and the drop test calls `dropFiles` directly rather than
+  through `performDragOperation`.
+- Real-app checks: P3 and P4, the hover anchor, the light zoom backdrop after a switch, E6.
+- iPhone: Trash with iCloud may land in a system `.Trash` the app never lists (needs a decision);
+  `<audio>` is not routed through the asset scheme; video and KaTeX need a device check.
+
 ### Decided, do not re-report
 
 - Everything AGENTS.md records as a maintainer decision.
+- Heading ids keep the heading's text; in-note `#slug` links written GitHub-style do not match, by
+  choice (2026-11-05).
+- PPT diagrams are not themed (ppt.html loads no ThemeConfig), so they need no redraw on a switch.
 - Mermaid and markmap keep `#E7E9EA` diagram text while the dark body text is `#D6D1C6` (2026-11-05).
 - Methods called only from tests (`hasVersions`, `waitForPendingWork`, `queuedCount`,
   `Project.saveSettings`, `getOutlinks`, `getAllImageLinks`) are test seams.
