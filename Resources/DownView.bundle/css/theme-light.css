@@ -45,3 +45,9 @@
   /* Diagram */
   --markmap-height: 450px;
 }
+
+/* Lightense keeps the backdrop colour it was given at setup; after an
+   in-place switch from dark the zoom would open on the dark paper. */
+.lightense-backdrop {
+  background-color: rgba(253, 252, 249, .8) !important;
+}

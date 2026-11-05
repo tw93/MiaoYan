@@ -398,10 +398,14 @@ const MiaoYanCommon = {
     // GitHub; exported HTML (the page with a <base>) and print have none.
     const exported = !!document.querySelector('base[href]');
     const usedIds = new Set();
-    document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => {
-      // The title export adds is found by its own id.
-      if (h.id === 'export-generated-title') return;
-      let baseId = h.innerText.trim();
+    // The title export adds is found by its own id.
+    const headings = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, h6'))
+      .filter((h) => h.id !== 'export-generated-title');
+    // This runs on every live update: every innerText is read before any
+    // write, so a long note lays out once rather than once per heading.
+    const texts = headings.map((h) => h.innerText.trim());
+    headings.forEach((h, index) => {
+      let baseId = texts[index];
       let id = baseId;
       let counter = 1;
 
@@ -410,7 +414,7 @@ const MiaoYanCommon = {
         counter++;
       }
 
-      h.id = id;
+      if (h.id !== id) h.id = id;
       usedIds.add(id);
 
       if (exported || !h.closest('#write')) return;
@@ -422,7 +426,8 @@ const MiaoYanCommon = {
         link.innerHTML = this.HEADING_ANCHOR_ICON;
         h.appendChild(link);
       }
-      link.setAttribute('href', '#' + encodeURIComponent(id));
+      const href = '#' + encodeURIComponent(id);
+      if (link.getAttribute('href') !== href) link.setAttribute('href', href);
     });
 
     // One listener for the page, so a live update that runs this again does
