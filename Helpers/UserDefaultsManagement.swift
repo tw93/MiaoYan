@@ -3,7 +3,6 @@ import Foundation
 
 extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
-    static let preferencesChanged = Notification.Name("PreferencesChanged")
     /// Editor and preview fonts changed while no ViewController exists (the
     /// SwiftUI shell), which re-renders on it.
     static let editorSettingsChanged = Notification.Name("EditorSettingsChanged")
@@ -28,7 +27,6 @@ enum AppIdentifier {
     static var imageTitleKey: String { "\(bundleID).image.title" }
 
     // NSAttributedString.Key (internal, fixed identifiers)
-    static let todoKey = "\(legacyBundleID).image.todo"
     static let codeBlockKey = "\(legacyBundleID).code.block"
     static let codeLanguageKey = "\(legacyBundleID).code.language"
 

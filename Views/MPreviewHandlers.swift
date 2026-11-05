@@ -50,7 +50,7 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
         let preview = message.webView as? MPreviewView
         guard let note = preview?.displayedNote ?? EditTextView.note else { return }
         note.ensureContentLoaded()
-        let text = note.content.unLoadCheckboxes().unLoadImages().string
+        let text = note.content.unLoadImages().string
 
         guard position.hasPrefix("line:"), let bodyLine = Int(position.dropFirst(5)),
             let range = HandlerCheckbox.taskMarkerRange(in: text, bodyLine: bodyLine)

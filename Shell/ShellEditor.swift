@@ -190,7 +190,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         guard note.isContentLoaded, !note.loadFailed, let storage = textView.textStorage else { return }
         let buffer =
             storage.containsAttachments
-            ? NSMutableAttributedString(attributedString: storage).unLoadImages().unLoadCheckboxes().string : storage.string
+            ? NSMutableAttributedString(attributedString: storage).unLoadImages().string : storage.string
         guard buffer != note.content.string else { return }
         reload(note)
     }
