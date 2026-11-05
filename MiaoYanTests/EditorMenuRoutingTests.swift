@@ -141,4 +141,66 @@ final class EditorMenuRoutingTests: XCTestCase {
             }
         }
     }
+
+    /// Command-K and the image command tested the selection against 4 and 5,
+    /// the length of "[]()" and "![]()": an empty selection put the caret in
+    /// the parentheses and a four-letter one in the brackets.
+    @MainActor
+    func testLinkAndImageCaretFollowsWhetherTextWasSelected() {
+        var (editor, note) = makeEditor("")
+        TextFormatter(textView: editor, note: note).link()
+        XCTAssertEqual(editor.string, "[]()")
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 1, length: 0))
+
+        (editor, note) = makeEditor("abcd")
+        editor.setSelectedRange(NSRange(location: 0, length: 4))
+        TextFormatter(textView: editor, note: note).link()
+        XCTAssertEqual(editor.string, "[abcd]()")
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 7, length: 0))
+
+        (editor, note) = makeEditor("")
+        TextFormatter(textView: editor, note: note).image()
+        XCTAssertEqual(editor.string, "![]()")
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 2, length: 0))
+
+        (editor, note) = makeEditor("abcde")
+        editor.setSelectedRange(NSRange(location: 0, length: 5))
+        TextFormatter(textView: editor, note: note).image()
+        XCTAssertEqual(editor.string, "![abcde]()")
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 9, length: 0))
+    }
+
+    /// "\r\n" ends a CRLF line: the caret at the end of its text sat two
+    /// before the paragraph's end, which the list continuation took for the
+    /// middle of the line, and an empty item measured one short.
+    @MainActor
+    func testListContinuesOnCRLFLines() {
+        for (text, caret, expected) in [
+            ("- a\r\n- b", 3, "- a\n- \r\n- b"),
+            ("1. a\r\nx", 4, "1. a\n2. \r\nx"),
+            ("- [x] a\r\nx", 7, "- [x] a\n- [ ] \r\nx"),
+            ("- a\r\n- \r\nend", 7, "- a\r\n\nend"),
+        ] {
+            let (editor, note) = makeEditor(text)
+            editor.setSelectedRange(NSRange(location: caret, length: 0))
+            TextFormatter(textView: editor, note: note, shouldScanMarkdown: false).newLine()
+            XCTAssertEqual(editor.string, expected, text.debugDescription)
+        }
+    }
+
+    /// Tab and Shift-Tab over a selection reselect what they rewrote; the
+    /// length was counted in Characters, so an emoji left the end unselected.
+    @MainActor
+    func testTabSelectionCoversTheWholeTextInUTF16() {
+        let text = "- \u{1F600} a\n- b"
+        let (editor, note) = makeEditor(text)
+        editor.setSelectedRange(NSRange(location: 0, length: (text as NSString).length))
+        TextFormatter(textView: editor, note: note).tab()
+        XCTAssertEqual(editor.string, "  - \u{1F600} a\n  - b")
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 0, length: (editor.string as NSString).length))
+
+        TextFormatter(textView: editor, note: note).unTab()
+        XCTAssertEqual(editor.string, text)
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 0, length: (text as NSString).length))
+    }
 }
