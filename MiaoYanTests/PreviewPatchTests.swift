@@ -149,6 +149,76 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(count, 0, "the stray node is gone")
     }
 
+    /// A page with the bundle's renderers, as index.html loads them, showing
+    /// `markdown` the way a load does (renderPage).
+    @MainActor
+    private func loadRenderedPage(_ markdown: String) async throws -> WKWebView {
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: markdown, useGithubLineBreak: false, imagesStorage: tempDirectory))
+        let bundle = commonScript.deletingLastPathComponent().deletingLastPathComponent()
+        let scripts = ["highlight.min.js", "katex.min.js", "auto-render.min.js", "emoji.min.js", "lightense.min.js", "tocbot.min.js", "common.js"]
+            .map { "<script src=\"\(bundle.appendingPathComponent("js/\($0)").absoluteString)\"></script>" }.joined()
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8"></head><body>
+            <div class="toc-hover-trigger"></div><nav class="toc-nav"><div class="toc-content"></div></nav>
+            <div class="markdown-body heti" id="write">\(html)</div>
+            \(scripts)
+            <script>MiaoYanCommon.renderPage(); setTimeout(function() { window.__ready = true; }, 400);</script>
+            </body></html>
+            """
+        let url = tempDirectory.appendingPathComponent("page-\(UUID().uuidString).html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 800, height: 600))
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if (try? await webView.evaluateJavaScript("window.__ready === true") as? Bool) == true { return webView }
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTFail("page did not load")
+        return webView
+    }
+
+    /// A live update did only some of what a load does to the blocks it
+    /// inserts: `$5 and $10` typed in split view became a formula, emoji
+    /// shortcodes stayed text, a new heading had no id and the table of
+    /// contents never saw it.
+    @MainActor
+    func testALiveUpdateRendersNewBlocksAsALoadDoes() async throws {
+        let before = "# One\n\nFirst."
+        let after = "# One\n\nFirst.\n\n## Two\n\nIt costs $5 and $10 :smile:\n\nInline $x^2$ math."
+        let updated = try await loadRenderedPage(before)
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: after, useGithubLineBreak: false, imagesStorage: tempDirectory))
+        _ = try await updated.evaluateJavaScript(
+            MPreviewView.buildUpdateScript(html: html, initializeMath: true, initializeDiagrams: false, preserveScroll: false))
+        try await Task.sleep(nanoseconds: 500_000_000)
+        let loaded = try await loadRenderedPage(after)
+
+        let probe = """
+            (function() {
+                const blocks = Array.from(document.querySelectorAll('#write > *'));
+                return {
+                    html: blocks.map((b) => b.outerHTML.replace(/ data-sourcepos="[^"]*"/g, '')),
+                    katex: document.querySelectorAll('#write .katex').length,
+                    skipped: document.querySelectorAll('#write .skip-math-dollar').length,
+                    id: (document.querySelector('#write h2') || {}).id,
+                    toc: document.querySelectorAll('.toc-content a').length,
+                    shortcode: document.getElementById('write').innerHTML.includes(':smile:')
+                };
+            })();
+            """
+        let gotRaw = try await updated.evaluateJavaScript(probe)
+        let wantRaw = try await loaded.evaluateJavaScript(probe)
+        let got = try XCTUnwrap(gotRaw as? [String: Any])
+        let want = try XCTUnwrap(wantRaw as? [String: Any])
+        XCTAssertEqual(got["skipped"] as? Int, 2, "both amounts stay text: \(got)")
+        XCTAssertEqual(got["katex"] as? Int, 1, "only $x^2$ is math")
+        XCTAssertEqual(want["shortcode"] as? Bool, false, "a load turns :smile: into an emoji")
+        XCTAssertEqual(got["shortcode"] as? Bool, false, "and so does an update")
+        XCTAssertEqual(got["id"] as? String, "Two")
+        XCTAssertEqual(got["toc"] as? Int, 2, "the new heading joins the table of contents")
+        XCTAssertEqual(got["html"] as? [String], want["html"] as? [String], "an updated block reads as a loaded one")
+    }
+
     /// A reload while an in-place switch is still rendering (the app comes
     /// back to the front, WebContent restarts) loaded the note being
     /// replaced, which cancelled the switch and left the preview on it while

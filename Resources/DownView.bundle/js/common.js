@@ -397,8 +397,14 @@ const MiaoYanCommon = {
     place();
   },
 
-  setupImageZoom() {
-    const zoomImgs = document.querySelectorAll('#write>img, #write>p>img, #write>table img');
+  // Every zoomable image on the page, or only those inside `roots`: a live
+  // update binds the blocks it inserted, since binding an image twice made
+  // one click open and close it.
+  setupImageZoom(roots) {
+    const selector = '#write>img, #write>p>img, #write>table img';
+    const zoomImgs = roots
+      ? roots.flatMap(root => [root, ...root.querySelectorAll('img')]).filter(img => img.tagName === 'IMG' && img.matches(selector))
+      : document.querySelectorAll(selector);
     if (zoomImgs.length > 0 && window.Lightense) {
       window.Lightense(zoomImgs, {
         background: this.isDarkMode() ? 'rgba(33, 38, 43, .8)' : 'rgba(255, 255, 255, .8)',
@@ -423,12 +429,16 @@ const MiaoYanCommon = {
       usedIds.add(id);
     });
 
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(decodeURIComponent(this.getAttribute('href')))?.scrollIntoView({
-          behavior: 'smooth',
-        });
+    // One listener for the page, so a live update that runs this again does
+    // not bind every in-page link once more.
+    if (this._anchorClicks) return;
+    this._anchorClicks = true;
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!anchor) return;
+      e.preventDefault();
+      document.querySelector(decodeURIComponent(anchor.getAttribute('href')))?.scrollIntoView({
+        behavior: 'smooth',
       });
     });
   },
@@ -439,59 +449,66 @@ const MiaoYanCommon = {
       hljs.highlightAll();
     }
 
-    this.escapeCurrencyLikeMath();
-
-    if (window.EmojiConvertor) {
-      const writeElement = document.getElementById('write');
-      const emoji = new EmojiConvertor();
-
-      // Use TreeWalker to replace emoji only in text nodes, avoiding code blocks
-      const walker = document.createTreeWalker(
-        writeElement,
-        NodeFilter.SHOW_TEXT,
-        {
-          acceptNode: function(node) {
-            // Skip text nodes inside code or pre elements
-            let parent = node.parentElement;
-            while (parent && parent !== writeElement) {
-              if (parent.tagName === 'CODE' || parent.tagName === 'PRE') {
-                return NodeFilter.FILTER_REJECT;
-              }
-              parent = parent.parentElement;
-            }
-            return NodeFilter.FILTER_ACCEPT;
-          }
-        }
-      );
-
-      const nodesToReplace = [];
-      let node;
-      while (node = walker.nextNode()) {
-        if (/:[^:\s]*(?:::[^:\s]*)*:/.test(node.textContent)) {
-          nodesToReplace.push(node);
-        }
-      }
-
-      // Replace emoji in collected text nodes
-      nodesToReplace.forEach(textNode => {
-        const replacedHTML = emoji.replace_colons(textNode.textContent);
-        if (replacedHTML !== textNode.textContent) {
-          const span = document.createElement('span');
-          span.innerHTML = replacedHTML;
-          textNode.parentNode.replaceChild(span, textNode);
-        }
-      });
-    }
+    const write = document.getElementById('write');
+    this.escapeCurrencyLikeMath(write);
+    this.convertEmoji(write);
   },
 
-  escapeCurrencyLikeMath() {
+  // Emoji shortcodes such as :smile: in the text under `root`, not in code.
+  convertEmoji(root) {
+    if (!window.EmojiConvertor || !root) return;
     const writeElement = document.getElementById('write');
-    if (!writeElement) {
+    const emoji = this._emoji || (this._emoji = new EmojiConvertor());
+
+    // Use TreeWalker to replace emoji only in text nodes, avoiding code blocks
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: function(node) {
+          // Skip text nodes inside code or pre elements
+          let parent = node.parentElement;
+          while (parent && parent !== writeElement) {
+            if (parent.tagName === 'CODE' || parent.tagName === 'PRE') {
+              return NodeFilter.FILTER_REJECT;
+            }
+            parent = parent.parentElement;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    const nodesToReplace = [];
+    let node;
+    while (node = walker.nextNode()) {
+      if (/:[^:\s]*(?:::[^:\s]*)*:/.test(node.textContent)) {
+        nodesToReplace.push(node);
+      }
+    }
+
+    // Replace emoji in collected text nodes
+    nodesToReplace.forEach(textNode => {
+      const replacedHTML = emoji.replace_colons(textNode.textContent);
+      if (replacedHTML !== textNode.textContent) {
+        const span = document.createElement('span');
+        span.innerHTML = replacedHTML;
+        textNode.parentNode.replaceChild(span, textNode);
+      }
+    });
+  },
+
+  // `$5 and $10` stays text instead of becoming a formula: each amount goes
+  // into a span the math pass skips. Runs before that pass, on the page at
+  // load and on the blocks a live update inserts.
+  escapeCurrencyLikeMath(root = document.getElementById('write')) {
+    const writeElement = document.getElementById('write');
+    if (!root) {
       return;
     }
 
     const walker = document.createTreeWalker(
-      writeElement,
+      root,
       NodeFilter.SHOW_TEXT,
       {
         acceptNode(node) {
@@ -662,6 +679,40 @@ const MiaoYanCommon = {
     } else {
       setTimeout(renderMath, 0);
     }
+    this._headings = this.headingSignature();
+  },
+
+  // What renderPage does, for the blocks a live update inserted
+  // (MPreviewView.buildUpdateScript); the blocks it kept had it done when
+  // they came in. Math and diagrams follow in the update, throttled.
+  renderBlocks(nodes) {
+    const targets = nodes.filter(node => node.nodeType === Node.ELEMENT_NODE);
+    if (window.hljs && typeof window.hljs.highlightElement === 'function') {
+      targets.forEach((target) => {
+        const blocks = target.matches('pre code') ? [target] : target.querySelectorAll('pre code');
+        blocks.forEach((block) => window.hljs.highlightElement(block));
+      });
+    }
+    targets.forEach((target) => {
+      this.escapeCurrencyLikeMath(target);
+      this.convertEmoji(target);
+    });
+    this.setupHeaderAnchors();
+    this.optimizeImages();
+    this.setupImageZoom(targets);
+    this.wrapWideTables();
+    this.setupInteractiveCheckboxes();
+    // The table of contents follows when a heading was added, removed or
+    // renamed, without showing its trigger again on every keystroke.
+    const headings = this.headingSignature();
+    if (headings !== this._headings) {
+      this._headings = headings;
+      window.MiaoYanTOC.refresh({ quiet: true });
+    }
+  },
+
+  headingSignature() {
+    return Array.from(document.querySelectorAll('#write h1, #write h2, #write h3'), h => h.tagName + h.textContent).join('\n');
   },
 
   // Opens another note in this page instead of loading the page again, as
@@ -837,7 +888,7 @@ const TOC_CONFIG = {
         show();
       }
     };
-    window.MiaoYanTOC = { toggle: menuToggle, refresh: () => refreshTOC() };
+    window.MiaoYanTOC = { toggle: menuToggle, refresh: (options) => refreshTOC(options) };
 
     // Auto-scroll active link into view within TOC panel
     const scrollToActive = () => {
@@ -915,7 +966,7 @@ const TOC_CONFIG = {
     window.addEventListener('resize', handleResize);
 
     // Enough headings (h1 to h3) for a TOC, or the trigger stays hidden.
-    refreshTOC = () => {
+    refreshTOC = (options = {}) => {
       hasTOC = document.querySelectorAll('#write h1, #write h2, #write h3').length >= TOC_CONFIG.MIN_HEADINGS;
       if (window.tocbot) {
         tocbot.destroy();
@@ -945,7 +996,9 @@ const TOC_CONFIG = {
         show();
       }
       handleResize();
-      // Each note shows the trigger again before it fades, as a fresh page did.
+      // Each note shows the trigger again before it fades, as a fresh page did;
+      // an edit to the note on screen leaves it as it is.
+      if (options.quiet) return;
       cancelAutoHideTimer();
       if (!isPinned) startAutoHideTimer();
     };

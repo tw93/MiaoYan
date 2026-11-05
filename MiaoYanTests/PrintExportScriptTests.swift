@@ -88,13 +88,12 @@ final class PrintExportScriptTests: XCTestCase {
 
     /// Text carried into a script goes in as `HtmlManager.jsStringLiteral`,
     /// never inside a template literal, where a backtick or `${` in it ends
-    /// the string or runs as code. The preview's update keeps its template
-    /// literal because it escapes the HTML first (`rawEscaped`).
+    /// the string or runs as code, the preview's live update included.
     func testScriptsDoNotInterpolateSwiftTextIntoTemplateLiterals() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let interpolation = try NSRegularExpression(pattern: #"`\\\("#)
         // Markdown.swift names `\( \)` math in a comment; TextFormatter wraps inline code.
-        let allowed = ["Business/Markdown.swift": 1, "Helpers/TextFormatter.swift": 1, "Views/MPreviewView.swift": 2]
+        let allowed = ["Business/Markdown.swift": 1, "Helpers/TextFormatter.swift": 1]
         var found: [String: Int] = [:]
         for folder in ["Business", "Controllers", "Extensions", "Helpers", "Shell", "Views"] {
             let files = FileManager.default.enumerator(at: root.appendingPathComponent(folder), includingPropertiesForKeys: nil)

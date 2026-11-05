@@ -593,7 +593,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         stopLoading()
     }
 
-    private func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool, preserveScroll: Bool) -> String {
+    /// The script a live update runs: `html` is the note's rendered HTML,
+    /// carried in as a JSON string literal.
+    static func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool, preserveScroll: Bool) -> String {
         var initScripts: [String] = []
 
         if initializeMath {
@@ -636,32 +638,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 """)
         }
 
-        // Always re-initialize lazy loading after content update. The table
-        // wrappers and task checkboxes go back on here too: the innerHTML
-        // assignment above replaces them, so what app.js set up at load time
-        // is gone by now. Without the checkbox pass a task list showed list
-        // bullets and its boxes no longer toggled.
-        // Code blocks are highlighted once at load (common.js initializeCore),
-        // so a split-view edit left every replaced block uncoloured.
-        initScripts.append(
-            """
-                if (window.hljs && typeof window.hljs.highlightElement === 'function') {
-                    renderTargets.forEach((target) => {
-                        const blocks = target.matches('pre code') ? [target] : target.querySelectorAll('pre code');
-                        blocks.forEach((block) => window.hljs.highlightElement(block));
-                    });
-                }
-                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.wrapWideTables === 'function') {
-                    window.MiaoYanCommon.wrapWideTables();
-                }
-                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.setupInteractiveCheckboxes === 'function') {
-                    window.MiaoYanCommon.setupInteractiveCheckboxes();
-                }
-                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.optimizeImages === 'function') {
-                    window.MiaoYanCommon.optimizeImages();
-                }
-            """)
-
         let initialization = initScripts.joined(separator: "\n")
 
         return """
@@ -697,11 +673,16 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
                     // Only the blocks that changed are replaced (common.js
                     // patchContent), so the rest keep their loaded images,
-                    // diagrams and formulas, and only new blocks are rendered.
+                    // diagrams and formulas, and only new blocks are rendered:
+                    // everything renderPage does at load (renderBlocks), then
+                    // math and diagrams, so `$5 and $10` is escaped first.
+                    const html = \(HtmlManager.jsStringLiteral(html));
                     const inserted = window.MiaoYanCommon && typeof window.MiaoYanCommon.patchContent === 'function'
-                        ? window.MiaoYanCommon.patchContent(container, `\(html)`)
-                        : (container.innerHTML = `\(html)`, Array.from(container.childNodes));
-                    const renderTargets = inserted.filter((node) => node.nodeType === Node.ELEMENT_NODE);
+                        ? window.MiaoYanCommon.patchContent(container, html)
+                        : (container.innerHTML = html, Array.from(container.childNodes));
+                    if (window.MiaoYanCommon && typeof window.MiaoYanCommon.renderBlocks === 'function') {
+                        window.MiaoYanCommon.renderBlocks(inserted);
+                    }
                     \(initialization)
 
                     if (preserveScroll && keptAnchor && keptAnchor.isConnected) {
@@ -996,11 +977,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 || htmlString.contains("language-plantuml")
                 || htmlString.contains("language-markmap")
 
-            let rawEscaped =
-                htmlString
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "`", with: "\\`")
-                .replacingOccurrences(of: "$", with: "\\$")
             let now = Date().timeIntervalSince1970
             let rendererPlan = Self.specialRendererPlan(
                 needsRenderers: needsMath || needsDiagrams,
@@ -1024,8 +1000,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 }
             }
 
-            let phase1Script = self.buildUpdateScript(
-                html: rawEscaped,
+            let phase1Script = Self.buildUpdateScript(
+                html: htmlString,
                 initializeMath: shouldInitializeSpecialRenderers && needsMath,
                 initializeDiagrams: shouldInitializeSpecialRenderers && needsDiagrams,
                 preserveScroll: preserveScroll
