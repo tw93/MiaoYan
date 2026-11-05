@@ -7,7 +7,6 @@ class NoteCellView: NSTableCellView {
 
     public var note: Note?
     public var timestamp: Int64?
-    public let cellSpacing: CGFloat = 34
 
     // Use Theme.secondaryTextColor instead of a hard-coded gray
     public var tableView: NotesTableView? {

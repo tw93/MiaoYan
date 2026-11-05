@@ -59,7 +59,6 @@ extension ViewController {
     // MARK: - Timing Constants
 
     private enum EditorTiming {
-        static let scrollSyncResetDelay: TimeInterval = 0.016  // ~60fps (1/60 second)
         // Toast nudges and the small "press ESC" prompt after entering
         // Presentation / Magic PPT. Not on a layout-critical path; keep
         // the fixed delay so the toast appears slightly after the mode
@@ -466,25 +465,6 @@ extension ViewController {
             disablePreview()
         } else {
             enablePreview()
-        }
-    }
-
-    @IBAction func toggleSplitView(_ sender: Any) {
-        saveTitleSafely()
-        sessionSplitMode.toggle()
-
-        if sessionPreviewMode {
-            disablePreview()
-        } else {
-            applyEditorModePreferenceChange()
-        }
-    }
-
-    // Debug helper - can call this from console or add a menu item
-    @objc func resetSplitViewPosition() {
-        UserDefaultsManagement.editorContentSplitPosition = 0
-        if sessionSplitMode {
-            editorContentSplitView?.setDisplayMode(.sideBySide, animated: false)
         }
     }
 
@@ -1404,7 +1384,11 @@ extension ViewController {
                             // SAFETY CHECK: Prevent overwriting content with empty string during view mode toggle
                             // This catches the specific data loss case where editor content is lost but note exists
                             if self.editArea.string.isEmpty && currentNote.content.length > 0 {
-                                self.internalLogDebug("Skipping save of empty content to non-empty note: \(currentNote.getFileName())")
+                                AppDelegate.trackError(
+                                    NSError(
+                                        domain: "ViewController", code: 2,
+                                        userInfo: [NSLocalizedDescriptionKey: "Skipped saving empty editor content over non-empty note \(currentNote.getFileName())"]),
+                                    context: "ViewController.refillEditArea.emptySaveSkipped")
                             } else {
                                 self.editArea.saveTextStorageContent(to: currentNote)
                                 // CRITICAL: Mark content as loaded to prevent ensureContentLoaded() from reloading stale disk content

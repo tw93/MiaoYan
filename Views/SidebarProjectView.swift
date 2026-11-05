@@ -841,35 +841,6 @@ class SidebarProjectView: NSOutlineView,
         return super.menu(for: event)
     }
 
-    private func isChangedSelectedProjectsState() -> Bool {
-        var qtyChanged = false
-        if selectedProjects.isEmpty {
-            for i in selectedRowIndexes {
-                if let si = item(atRow: i) as? SidebarItem, let project = si.project {
-                    selectedProjects.append(project)
-                    qtyChanged = true
-                }
-            }
-        } else {
-            var new = [Project]()
-            for i in selectedRowIndexes {
-                if let si = item(atRow: i) as? SidebarItem, let project = si.project {
-                    new.append(project)
-                    if !selectedProjects.contains(project) {
-                        qtyChanged = true
-                    }
-                }
-            }
-            selectedProjects = new
-
-            if new.isEmpty {
-                qtyChanged = true
-            }
-        }
-
-        return qtyChanged
-    }
-
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let vd = viewDelegate else {
             return
@@ -1175,33 +1146,6 @@ class SidebarProjectView: NSOutlineView,
                 style: .warning,
                 for: window
             )
-        }
-    }
-
-    private func addRoot() {
-        let openPanel = NSOpenPanel()
-        openPanel.allowsMultipleSelection = false
-        openPanel.canChooseDirectories = true
-        openPanel.canCreateDirectories = true
-        openPanel.canChooseFiles = false
-        openPanel.begin { [weak self] result in
-            guard let self = self else { return }
-            if result == NSApplication.ModalResponse.OK {
-                guard let url = openPanel.url else {
-                    return
-                }
-
-                guard !self.storage.projectExist(url: url) else {
-                    return
-                }
-                let newProject = Project(url: url, isRoot: true)
-                let projects = self.storage.add(project: newProject)
-                for project in projects {
-                    self.storage.loadLabel(project)
-                }
-
-                self.reloadSidebar()
-            }
         }
     }
 

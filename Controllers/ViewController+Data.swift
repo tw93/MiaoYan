@@ -566,15 +566,6 @@ extension ViewController {
         }
     }
 
-    public func reSort(note: Note) {
-        if !updateViews.contains(note) {
-            updateViews.append(note)
-        }
-
-        rowUpdaterTimer.invalidate()
-        rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(updateTableViews), userInfo: nil, repeats: false)
-    }
-
     public func sortAndMove(note: Note) {
         guard let notes = filteredNoteList else { return }
         guard let srcIndex = notesTableView.noteList.firstIndex(of: note) else { return }
@@ -713,17 +704,6 @@ extension ViewController {
     }
 
     // MARK: - Search and Input Management
-    func focusSearchInput(firstResponder: NSResponder? = nil) {
-        DispatchQueue.main.async {
-            let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
-            self.notesTableView.window?.makeFirstResponder(self.notesTableView)
-            self.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
-            self.notesTableView.scrollRowToVisible(index)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            _ = self.search.becomeFirstResponder()
-        }
-    }
 
     func cleanSearchAndEditArea() {
         search.stringValue = ""

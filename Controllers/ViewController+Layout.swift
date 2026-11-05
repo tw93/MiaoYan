@@ -8,7 +8,6 @@ extension ViewController {
         static let minSidebarWidth: CGFloat = 138
         static let maxSidebarWidth: CGFloat = 280
         static let defaultNotelistWidth: CGFloat = 280
-        static let narrowThreshold: CGFloat = 50
         // The window's unified toolbar centres the traffic lights 26.5pt
         // down; the column headers sit on that line in every layout. A
         // column that starts at the window's left edge moves its first

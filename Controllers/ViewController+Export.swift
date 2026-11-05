@@ -71,13 +71,6 @@ extension ViewController {
         toast(message: String(format: I18n.str("Install and set up %@ first"), name), style: .failure)
     }
 
-    public func toastUpload(status: Bool) {
-        if status {
-            toast(message: I18n.str("Uploading image…"))
-        } else {
-            toast(message: I18n.str("Upload failed. The local image was kept"), style: .failure)
-        }
-    }
 }
 
 extension ViewController: ExportHost {
