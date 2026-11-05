@@ -197,6 +197,29 @@ final class NoteSaveDebounceTests: XCTestCase {
         manager.waitForPendingWork()
     }
 
+    /// Undoing a delete dropped the note from storage before moving it back,
+    /// so a move that failed hid it from the Trash list until a reload.
+    @MainActor
+    func testFailedUndeleteKeepsTheNoteInTheTrash() throws {
+        let trashed = tempDir.appendingPathComponent("in-trash.md")
+        let occupied = tempDir.appendingPathComponent("occupied.md")
+        try "trashed".write(to: trashed, atomically: true, encoding: .utf8)
+        try "someone else".write(to: occupied, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "Trash", isTrash: true)
+        let storage = Storage(loadsLibrary: false)
+        let note = Note(url: trashed, with: project)
+        note.sharedStorage = storage
+        storage.add(note)
+
+        let table = NotesTableView(frame: .zero)
+        table.storage = storage
+        table.unDelete([trashed: occupied])
+
+        XCTAssertTrue(storage.noteList.contains { $0 === note }, "a restore that failed leaves the note listed")
+        XCTAssertEqual(try String(contentsOf: occupied, encoding: .utf8), "someone else")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: trashed.path))
+    }
+
     @MainActor
     func testMissingFileIsNotAFailedLoad() {
         let url = tempDir.appendingPathComponent("not-yet-written.md")
