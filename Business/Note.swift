@@ -46,7 +46,7 @@ public class Note: NSObject {
     /// Why the editor opened the note read-only, for its toast.
     var readOnlyNotice: String? {
         if readFailed { return I18n.str("This note could not be read, so it was left as it is") }
-        if hasDamagedText { return I18n.str("This note has invalid characters, so it opened read-only") }
+        if hasDamagedText { return I18n.str("This note's text encoding could not be determined, so it opened read-only") }
         return nil
     }
 
