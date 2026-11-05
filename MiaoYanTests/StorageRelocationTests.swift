@@ -199,6 +199,41 @@ final class StorageRelocationTests: XCTestCase {
         }
     }
 
+    /// Deleting a folder moved it to the Trash first and flushed its notes
+    /// afterwards, so an edit typed in the last 1.5s found its file gone and
+    /// never reached the Trash copy. Both sidebars flush before the move.
+    @MainActor
+    func testDeletingAFolderWritesWaitingEditsBeforeTheMove() async throws {
+        try await withMoveLibrary { storage, _, source, _ in
+            let nested = try XCTUnwrap(storage.getChildProjects(project: source).first)
+            var notes: [Note] = []
+            for (folder, name) in [(source, "own.md"), (nested, "nested.md")] {
+                let url = folder.url.appendingPathComponent(name)
+                try "before".write(to: url, atomically: true, encoding: .utf8)
+                let note = Note(url: url, with: folder)
+                note.sharedStorage = storage
+                note.load()
+                storage.add(note)
+                note.save(attributed: NSAttributedString(string: "typed just now"))
+                notes.append(note)
+            }
+
+            storage.flushPendingSaves(inside: source)
+
+            for note in notes {
+                XCTAssertFalse(note.needsSave, "\(note.name) has no edit left waiting")
+                XCTAssertEqual(try String(contentsOf: note.url, encoding: .utf8), "typed just now", note.name)
+            }
+            let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            for path in ["Shell/ShellModel+Folders.swift", "Views/SidebarProjectView.swift"] {
+                let source = try String(contentsOf: root.appendingPathComponent(path), encoding: .utf8)
+                let flush = try XCTUnwrap(source.range(of: "storage.flushPendingSaves(inside: project)"), path)
+                let move = try XCTUnwrap(source.range(of: "FileManager.default.moveItem(at: project.url"), path)
+                XCTAssertLessThan(flush.lowerBound, move.lowerBound, "\(path) flushes before the folder moves")
+            }
+        }
+    }
+
     @MainActor
     func testMovingToCurrentParentDoesNothing() async throws {
         try await withMoveLibrary { storage, root, source, _ in

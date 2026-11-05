@@ -412,15 +412,28 @@ class Storage {
         return target
     }
 
+    /// `project` and every registered folder under it, with their notes.
+    private func tree(of project: Project) -> (folders: [Project], notes: [Note]) {
+        let folders = projects.filter { $0 === project || Self.isFolder($0, inside: project) }
+        let paths = Set(folders.map(\.url.path))
+        return (folders, noteList.filter { $0.project == project || paths.contains($0.project.url.path) })
+    }
+
+    /// Writes the waiting edits of every note in `project` and the folders
+    /// under it. Deleting a folder calls this before moving it to the Trash:
+    /// flushed afterwards by `removeBy(project:)`, the save found its file
+    /// gone, so an edit typed in the last 1.5s never reached the Trash copy.
+    public func flushPendingSaves(inside project: Project) {
+        for note in tree(of: project).notes where note.needsSave {
+            _ = note.flushPendingSave(globalStorage: false)
+        }
+    }
+
     /// Drops a folder and every registered folder under it, with their notes.
     /// Left behind, a subfolder of a deleted folder stayed a Move target that
     /// recreated the deleted path, and its notes could still be saved.
     public func removeBy(project: Project) {
-        let removed = projects.filter { $0 === project || Self.isFolder($0, inside: project) }
-        let removedPaths = Set(removed.map(\.url.path))
-        let list = noteList.filter {
-            $0.project == project || removedPaths.contains($0.project.url.path)
-        }
+        let (removed, list) = tree(of: project)
 
         for note in list {
             // A library root removed from the sidebar keeps its files, so an

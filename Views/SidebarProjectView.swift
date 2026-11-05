@@ -1039,6 +1039,7 @@ class SidebarProjectView: NSOutlineView,
                         return
                     }
 
+                    self.storage.flushPendingSaves(inside: project)
                     do {
                         try FileManager.default.moveItem(at: project.url, to: resultingItemUrl)
 
