@@ -183,9 +183,6 @@ public class Project: Equatable {
         }
     }
 
-    public func getShortSign() -> String {
-        String(getParent().url.path.md5.prefix(4))
-    }
 }
 
 extension Project: @unchecked Sendable {}

@@ -21,8 +21,9 @@ of declared versions only).
 
 ## Conditional Compilation
 
-- `#if !APPSTORE` gates Sparkle imports; the Mac App Store target ships without
-  the auto-update path and relies on Apple's update mechanism instead.
+- This repository builds the direct-download app with Sparkle. The Mac App Store
+  build is packaged outside this repository, where Sparkle is stripped and Apple's
+  update mechanism is used instead; no `#if !APPSTORE` gate exists here.
 
 ## Bundled Frontend Assets
 

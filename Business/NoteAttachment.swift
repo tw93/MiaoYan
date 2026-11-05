@@ -33,8 +33,6 @@ class NoteAttachment {
         }
     }
 
-    weak var weakTimer: Timer?
-
     @MainActor
     public func getAttributedString(lazy: Bool = true) -> NSMutableAttributedString? {
         let imageKey = NSAttributedString.Key(rawValue: AppIdentifier.imageURLKey)

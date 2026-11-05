@@ -101,14 +101,6 @@ public class ImagesProcessor {
         }
     }
 
-    func computeMarkdownTitleLength(mdLink: String) -> Int {
-        var mdTitleLength = 0
-        if let match = mdLink.range(of: "\\[(.+)\\]", options: .regularExpression) {
-            mdTitleLength = mdLink[match].count - 2
-        }
-        return mdTitleLength
-    }
-
     private func getTitle(link: String) -> String {
         if let match = link.range(of: "\\[(.+)\\]", options: .regularExpression) {
             let title = link[match]
@@ -235,19 +227,4 @@ public class ImagesProcessor {
         return "\(prefix)\(fileName)"
     }
 
-    func isContainAttachment(innerRange: NSRange, mdTitleLength: Int) -> Bool {
-        let j = offset + newLineOffset - mdTitleLength
-        if innerRange.lowerBound >= 5 + mdTitleLength {
-            return styleApplier.containsAttachments(in: NSRange(location: innerRange.lowerBound - 5 + j, length: 1))
-        }
-        return false
-    }
-
-    func isContainNewLine(innerRange: NSRange, mdTitleLength: Int) -> Bool {
-        let j = offset + newLineOffset - mdTitleLength
-        if innerRange.lowerBound >= 4 + mdTitleLength {
-            return (styleApplier.attributedSubstring(from: NSRange(location: innerRange.lowerBound - 4 + j, length: 1)).string == "\n")
-        }
-        return false
-    }
 }

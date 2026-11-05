@@ -14,10 +14,6 @@ class EditorSplitView: ThemedSplitView {
         return isNotelistHidden || notelistWidth <= Theme.Metrics.collapsedSplitWidthEpsilon || shouldHideDivider
     }
 
-    override func minPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {
-        return 0
-    }
-
     override func maxPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 {
             return 600

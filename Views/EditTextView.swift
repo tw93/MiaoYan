@@ -998,12 +998,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         note.content = copy.hasAttachmentAttribute ? copy.unLoadImages().unLoadCheckboxes() : copy
     }
 
-    func setEditorTextColor(_ color: NSColor) {
-        if let note = EditTextView.note, !note.isMarkdown() {
-            textColor = color
-        }
-    }
-
     public func unLoadImages(note: Note) {
         note.save(attributed: attributedString())
     }
@@ -1064,11 +1058,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     @IBAction func insertCodeSpan(_ sender: NSMenuItem) {
         menuManager?.insertCodeSpan()
-    }
-
-    private func getTextFormatter() -> TextFormatter? {
-        guard let note = EditTextView.note else { return nil }
-        return TextFormatter(textView: self, note: note)
     }
 
     override func clicked(onLink link: Any, at charIndex: Int) {

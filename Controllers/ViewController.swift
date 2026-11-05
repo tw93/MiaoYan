@@ -54,7 +54,6 @@ class ViewController:
     var swipeRightExecuted = false
     var scrollDeltaX: CGFloat = 0
     var updateViews = [Note]()
-    public var breakUndoTimer = Timer()
     var lastEnablePreviewTime: TimeInterval = 0
     var lastPreviewReloadTime: TimeInterval = 0
     var savedEditorSelection: NSRange?
@@ -1413,28 +1412,5 @@ class ViewController:
             self.editAreaScroll.animator().alphaValue = 1
             self.titleLabel.animator().alphaValue = 1
         }
-    }
-
-    func internalLogDebug(_ message: String) {
-        #if DEBUG
-            DispatchQueue.global(qos: .utility).async {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-                let timestamp = formatter.string(from: Date())
-                let logMessage = "\(timestamp) [ViewController] \(message)\n"
-
-                let fileURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads/miaoyan_debug.log")
-
-                if let handle = try? FileHandle(forWritingTo: fileURL) {
-                    handle.seekToEndOfFile()
-                    if let data = logMessage.data(using: .utf8) {
-                        handle.write(data)
-                    }
-                    try? handle.close()
-                } else {
-                    try? logMessage.write(to: fileURL, atomically: true, encoding: .utf8)
-                }
-            }
-        #endif
     }
 }

@@ -16,7 +16,6 @@ public class TextFormatter {
     private var storage: NSTextStorage
     private var selectedRange: NSRange
     private var range: NSRange
-    private var newSelectedRange: NSRange?
     private var cursor: Int?
 
     private var prevSelectedString: NSAttributedString
@@ -45,8 +44,6 @@ public class TextFormatter {
 
         self.shouldScanMarkdown = note.isMarkdown() ? shouldScanMarkdown : false
     }
-
-    func getString() -> NSMutableAttributedString { attributedString }
 
     func bold() {
         if note.isMarkdown() {
@@ -202,30 +199,6 @@ public class TextFormatter {
         }
     }
 
-    public func tabKey() {
-        guard let currentPR = getParagraphRange() else { return }
-        let paragraph = storage.attributedSubstring(from: currentPR).string
-        let sRange = textView.selectedRange
-
-        if sRange.location != 0 || sRange.location != storage.length,
-            paragraph.count == 1, note.isMarkdown()
-        {
-            insertText("\t", replacementRange: sRange)
-            return
-        }
-
-        if sRange.location == 0 || sRange.location == storage.length,
-            paragraph.isEmpty, note.isMarkdown()
-        {
-            if textView.textStorage?.length == 0 { EditTextView.shouldForceRescan = true }
-            insertText("\t\n", replacementRange: sRange)
-            setSelectedRange(NSRange(location: sRange.location + 1, length: 0))
-            return
-        }
-
-        insertText("\t")
-    }
-
     public static func getAutocompleteCharsMatch(string: String) -> NSTextCheckingResult? {
         guard
             let regex = try? NSRegularExpression(
@@ -315,35 +288,6 @@ public class TextFormatter {
         var contentsEnd = 0
         storage.mutableString.getParagraphStart(nil, end: nil, contentsEnd: &contentsEnd, for: currentParagraphRange)
         let atLineEnd = selectedRange.location >= contentsEnd
-
-        if selectedRange.location != currentParagraphRange.location,
-            atLineEnd,
-            currentParagraph.length >= 2
-        {
-            if textView.selectedRange.upperBound > 2 {
-                let char = storage.attributedSubstring(from: NSRange(location: textView.selectedRange.upperBound - 2, length: 1))
-                if char.attribute(.todo, at: 0, effectiveRange: nil) != nil {
-                    let selectRange = NSRange(location: currentParagraphRange.location, length: 0)
-                    insertText("\n", replacementRange: currentParagraphRange, selectRange: selectRange)
-                    return
-                }
-            }
-            var todoLocation = -1
-            currentParagraph.enumerateAttribute(.todo, in: NSRange(0..<currentParagraph.length), options: []) { value, range, stop in
-                guard value != nil else { return }
-                todoLocation = range.location
-                stop.pointee = true
-            }
-            if todoLocation > -1 {
-                var prefix = String()
-                if todoLocation > 0 {
-                    prefix = currentParagraph.attributedSubstring(from: NSRange(0..<todoLocation)).string
-                }
-                let string = NSMutableAttributedString(string: "\n" + prefix)
-                insertText(string)
-                return
-            }
-        }
 
         if selectedRange.location != currentParagraphRange.location, atLineEnd {
             if let charsMatch = TextFormatter.getAutocompleteCharsMatch(string: currentParagraph.string) {
@@ -438,14 +382,6 @@ public class TextFormatter {
         setSelectedRange(NSRange(location: currentRange.location + 2, length: 0))
     }
 
-    private func getAttributedTodoString(_ string: String) -> NSAttributedString {
-        let string = NSMutableAttributedString(string: string)
-        string.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: NSRange(0..<1))
-        let color: Color = Theme.textColor
-        string.addAttribute(.foregroundColor, value: color, range: NSRange(1..<string.length))
-        return string
-    }
-
     private func replaceWith(string: String, range: NSRange? = nil) {
         var r = textView.selectedRange
         if let range { r = range }
@@ -473,20 +409,6 @@ public class TextFormatter {
 
     func toggleBoldFont(font: Font) -> Font { font.isBold ? font.unBold() : font.bold() }
     func toggleItalicFont(font: Font) -> Font { font.isItalic ? font.unItalic() : font.italic() }
-
-    func getTypingAttributes() -> Font {
-        // textView is configured with a non-optional font typing attribute at
-        // setup; the as? Font path here is a soft fallback to the default
-        // editor font rather than a crash if a future refactor breaks that.
-        if let font = textView.typingAttributes[.font] as? Font {
-            return font
-        }
-        return Font.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize))
-    }
-
-    private func getDefaultColor() -> NSColor { Theme.textColor }
-
-    func setTypingAttributes(font: Font) { textView.typingAttributes[.font] = font }
 
     public func setSelectedRange(_ range: NSRange) {
         if range.upperBound <= storage.length { textView.setSelectedRange(range) }

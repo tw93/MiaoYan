@@ -317,15 +317,6 @@ extension ViewController {
         }
     }
 
-    @IBAction func makeMenu(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        if let type = vc.getSidebarType(), type == .Trash {
-            vc.storageOutlineView.deselectAll(nil)
-        }
-
-        vc.createNote()
-    }
-
     @IBAction func pinMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         vc.pin(vc.notesTableView.selectedRowIndexes)
@@ -648,14 +639,6 @@ extension ViewController {
         }
 
         return responder === view
-    }
-
-    @IBAction func copyTitle(_ sender: Any) {
-        if let note = notesTableView.getSelectedNote() {
-            let pasteboard = NSPasteboard.general
-            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-            pasteboard.setString(note.title, forType: NSPasteboard.PasteboardType.string)
-        }
     }
 
     @IBAction func exportImage(_ sender: Any) {
@@ -1098,10 +1081,6 @@ extension ViewController {
         vc.titleLabel.editModeOn()
     }
 
-    @objc func breakUndo() {
-        editArea.breakUndoCoalescing()
-    }
-
     // MARK: - File Operations
     public func copy(project: Project, url: URL) -> URL {
         Self.copyFile(url, into: project)
@@ -1244,17 +1223,6 @@ extension ViewController {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(note.content.string, forType: NSPasteboard.PasteboardType.string)
-        }
-    }
-
-    public func saveHtmlAtClipboard() {
-        if let note = notesTableView.getSelectedNote() {
-            let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
-            if let render = renderMarkdownHTML(markdown: note.content.string, useGithubLineBreak: useGithubLineBreak) {
-                let pasteboard = NSPasteboard.general
-                pasteboard.declareTypes([NSPasteboard.PasteboardType.html], owner: nil)
-                pasteboard.setString(render, forType: NSPasteboard.PasteboardType.html)
-            }
         }
     }
 

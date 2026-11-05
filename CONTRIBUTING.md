@@ -9,7 +9,7 @@
 
 ## Prerequisites
 
-- macOS 13 or newer (Sonoma recommended)
+- macOS 14 (Sonoma) or newer
 - Xcode 16+ with the Swift 6 toolchain (the project builds with `SWIFT_VERSION = 6.0`)
 - [SwiftLint](https://github.com/realm/SwiftLint) and [swift-format](https://github.com/apple/swift-format) available on your PATH (e.g. via Homebrew)
 
@@ -36,9 +36,9 @@ Select a development team in the Signing & Capabilities editor.
    - If you don't have one, click "Add an Account..." to add your free Apple ID
    - No paid developer account needed for local development
 
-**Why no DEVELOPMENT_TEAM in project.pbxproj?**
+**Why does the build ask for a Team?**
 
-To make the DMG easier for users to open (avoid strict macOS Gatekeeper blocking), we removed the hardcoded `DEVELOPMENT_TEAM` from the project file. Xcode will save your Team selection locally in `xcuserdata/` (which is gitignored), so each developer uses their own Apple ID without affecting others.
+`project.pbxproj` sets `DEVELOPMENT_TEAM` to the maintainer's team, which your Apple ID cannot sign for. Choosing your own Team in Xcode rewrites that line in the project file; keep that change out of your commit. To build and test without signing, pass `CODE_SIGNING_ALLOWED=NO` to `xcodebuild`, as CI does.
 
 ## Build & Run
 

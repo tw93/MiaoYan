@@ -17,7 +17,6 @@ public class Note: NSObject {
     var sharedStorage = Storage.sharedInstance()
     private static let dateFormatter = DateFormatter()
     let undoManager = UndoManager()
-    public var originalExtension: String?
 
     public var name: String = ""
     public var preview: String = ""
@@ -76,8 +75,6 @@ public class Note: NSObject {
     private var decryptedTemporarySrc: URL?
     public var ciphertextWriter = OperationQueue()
 
-    private var lastSelectedRange: NSRange?
-
     init(url: URL, with project: Project) {
         ciphertextWriter.maxConcurrentOperationCount = 1
         ciphertextWriter.qualityOfService = .userInteractive
@@ -119,14 +116,6 @@ public class Note: NSObject {
 
         super.init()
         parseURL()
-    }
-
-    public func setLastSelectedRange(value: NSRange) {
-        lastSelectedRange = value
-    }
-
-    public func getLastSelectedRange() -> NSRange? {
-        lastSelectedRange
     }
 
     public func hasTitle() -> Bool {
@@ -444,10 +433,6 @@ public class Note: NSObject {
         }
 
         return preview
-    }
-
-    @objc public func getPreviewForLabel() -> String {
-        getPreviewLabel()
     }
 
     @objc func getDateForLabel() -> String {
@@ -924,10 +909,6 @@ public class Note: NSObject {
         return nil
     }
 
-    public func getImageCacheUrl() -> URL? {
-        project.url.appendingPathComponent("/.cache/")
-    }
-
     public func getAllImages(content: NSMutableAttributedString? = nil) -> [(url: URL, path: String)] {
         let content = content ?? self.content
         var res = [(url: URL, path: String)]()
@@ -1107,13 +1088,6 @@ public class Note: NSObject {
         isContentLoaded = true
     }
 
-    public func getMdImagePath(name: String) -> String {
-        let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        let name = encoded ?? name
-
-        return "/i/\(name)"
-    }
-
     public func isEqualURL(url: URL) -> Bool {
         url.path == self.url.path
     }
@@ -1140,108 +1114,6 @@ public class Note: NSObject {
         }
 
         return title
-    }
-
-    public func getCacheForPreviewImage(at url: URL) -> URL? {
-        var temporary = URL(fileURLWithPath: NSTemporaryDirectory())
-        temporary.appendPathComponent("Preview")
-
-        if let filePath = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
-            return temporary.appendingPathComponent(filePath)
-        }
-
-        return nil
-    }
-
-    private func moveFilesFlatToAssets(note: Note, from imageURL: URL, imagePath: String, to dest: URL) {
-        let dest = dest.appendingPathComponent("assets")
-        let fileName = imageURL.lastPathComponent
-
-        if !FileManager.default.fileExists(atPath: dest.path) {
-            try? FileManager.default.createDirectory(at: dest, withIntermediateDirectories: false, attributes: nil)
-        }
-
-        do {
-            try FileManager.default.moveItem(at: imageURL, to: dest.appendingPathComponent(fileName))
-
-            let prefix = "]("
-            let postfix = ")"
-
-            let find = prefix + imagePath + postfix
-            let replace = prefix + "assets/" + imageURL.lastPathComponent + postfix
-
-            guard find != replace else { return }
-
-            while note.content.mutableString.contains(find) {
-                let range = note.content.mutableString.range(of: find)
-                note.content.replaceCharacters(in: range, with: replace)
-            }
-        } catch {
-            AppDelegate.trackError(error, context: "Note.encrypt")
-        }
-    }
-
-    private func moveFilesAssetsToFlat(content: URL, src: URL, project: Project) {
-        guard let content = try? String(contentsOf: content) else { return }
-
-        let mutableContent = NSMutableAttributedString(attributedString: NSAttributedString(string: content))
-
-        let imagesMeta = getAllImages(content: mutableContent)
-        for imageMeta in imagesMeta {
-            let fileName = imageMeta.url.lastPathComponent
-            var dst: URL?
-            var prefix = "/files/"
-
-            if imageMeta.url.isImage {
-                prefix = "/i/"
-            }
-
-            dst = project.url.appendingPathComponent(prefix + fileName)
-
-            guard let moveTo = dst else { continue }
-
-            let dstDir = project.url.appendingPathComponent(prefix)
-            let moveFrom = src.appendingPathComponent("assets/" + fileName)
-
-            do {
-                if !FileManager.default.fileExists(atPath: dstDir.path) {
-                    try? FileManager.default.createDirectory(at: dstDir, withIntermediateDirectories: false, attributes: nil)
-                }
-
-                try FileManager.default.moveItem(at: moveFrom, to: moveTo)
-
-            } catch {
-                if let fileName = ImagesProcessor.getFileName(from: moveTo, to: dstDir, ext: moveTo.pathExtension) {
-                    let moveTo = dstDir.appendingPathComponent(fileName)
-                    try? FileManager.default.moveItem(at: moveFrom, to: moveTo)
-                }
-            }
-
-            let find = "](assets/" + fileName + ")"
-            let replace = "](" + prefix + fileName + ")"
-
-            guard find != replace else { return }
-
-            while mutableContent.mutableString.contains(find) {
-                let range = mutableContent.mutableString.range(of: find)
-                mutableContent.replaceCharacters(in: range, with: replace)
-            }
-
-            try? mutableContent.string.write(to: url, atomically: true, encoding: String.Encoding.utf8)
-        }
-    }
-
-    private func cleanOut() {
-        imageUrl = nil
-        content = NSMutableAttributedString(string: String())
-        preview = String()
-        title = String()
-    }
-
-    private func removeTempContainer() {
-        if let url = decryptedTemporarySrc {
-            try? FileManager.default.removeItem(at: url)
-        }
     }
 
     public func showIconInList() -> Bool {
@@ -1348,16 +1220,6 @@ public class Note: NSObject {
 
     public func getFileName() -> String {
         let fileName = url.deletingPathExtension().pathComponents.last!.replacingOccurrences(of: ":", with: "/")
-        return fileName
-    }
-
-    public func getShortTitle() -> String {
-        let fileName = getFileName()
-
-        if fileName.isValidUUID {
-            return ""
-        }
-
         return fileName
     }
 

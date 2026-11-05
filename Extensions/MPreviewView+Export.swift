@@ -1081,15 +1081,3 @@ extension MPreviewView {
         static var pdfExportController: UInt8 = 0
     }
 }
-
-// MARK: - WKScriptMessageHandler Implementation for MPreviewView
-extension MPreviewView: WKScriptMessageHandler {
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        // Handle 'logging' messages for debugging
-        if message.name == "logging", let body = message.body as? String {
-            #if DEBUG
-                print("[JS Log] \(body)")
-            #endif
-        }
-    }
-}

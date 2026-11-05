@@ -3,26 +3,6 @@ import Foundation
 
 extension NSTextStorage {
 
-    // Read UserDefaultsManagement, modify font attributes → UI related, main thread execution
-    @MainActor
-    public func updateFont() {
-        beginEditing()
-        enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
-            if let font = value as? NSFont, let familyName = UserDefaultsManagement.noteFont.familyName {
-                let newFontDescriptor = font.fontDescriptor
-                    .withFamily(familyName)
-                    .withSymbolicTraits(font.fontDescriptor.symbolicTraits)
-
-                if let newFont = NSFont(descriptor: newFontDescriptor, size: CGFloat(UserDefaultsManagement.fontSize)) {
-                    removeAttribute(.font, range: range)
-                    addAttribute(.font, value: newFont, range: range)
-                    fixAttributes(in: range)
-                }
-            }
-        }
-        endEditing()
-    }
-
     // Read line height/spacing config, return paragraph style → UI state, main thread safe
     @MainActor
     public static func getParagraphStyle() -> NSMutableParagraphStyle {

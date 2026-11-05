@@ -49,7 +49,6 @@ public class NotesTextProcessor {
     open var linkColor: NSColor { Theme.linkColor }
 
     public static var underlineColor: NSColor { Theme.underlineColor }
-    open var quoteIndentation: CGFloat = 20
 
     @MainActor public static var codeFont: NSFont? = UserDefaultsManagement.codeFont
     @MainActor public static var georgiaFont = NSFont(name: "Georgia", size: CGFloat(UserDefaultsManagement.fontSize))
@@ -366,13 +365,6 @@ public class NotesTextProcessor {
         CodeBlockHighlighter.highlightFencedAndIndentCodeBlocks(attributedString: attributedString, pattern: _codeQuoteBlockPattern)
     }
 
-    public static func isIntersect(fencedRanges: [NSRange], indentRange: NSRange) -> Bool {
-        for fencedRange in fencedRanges where fencedRange.intersection(indentRange) != nil {
-            return true
-        }
-        return false
-    }
-
     public static func checkBackTick(styleApplier: NSMutableAttributedString, paragraphRange: NSRange? = nil) {
         BacktickAndFontNormalizer.normalize(styleApplier: styleApplier, paragraphRange: paragraphRange)
     }
@@ -630,8 +622,6 @@ public class NotesTextProcessor {
 
     fileprivate static let todoInlinePattern = "(^(-\\ \\[(?:\\ |x)\\])\\ )"
 
-    @MainActor public static let todoInlineRegex = MarklightRegex(pattern: todoInlinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
-
     fileprivate static let allTodoInlinePattern = "((-\\ \\[(?:\\ |x)\\])\\ )"
 
     @MainActor public static let allTodoInlineRegex = MarklightRegex(pattern: allTodoInlinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -666,14 +656,10 @@ public class NotesTextProcessor {
         "(`+)           # $1 = Opening run of `",
     ].joined(separator: "\n")
 
-    @MainActor public static let codeSpanOpeningRegex = MarklightRegex(pattern: codeSpanOpeningPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
-
     fileprivate static let codeSpanClosingPattern = [
         "(?<![\\\\`])   # Character before opening ` can't be a backslash or backtick",
         "(`+)           # $1 = Opening run of `",
     ].joined(separator: "\n")
-
-    @MainActor public static let codeSpanClosingRegex = MarklightRegex(pattern: codeSpanClosingPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
     // MARK: Block quotes
     /*
@@ -705,7 +691,6 @@ public class NotesTextProcessor {
 
     // MARK: Bold
     fileprivate static let strictBoldPattern = "(^|[\\W_])(?:(?!\\1)|(?=^))(\\*|_)\\2(?=\\S)(.*?\\S)\\2\\2(?!\\2)(?=[\\W_]|$)"
-    @MainActor public static let strictBoldRegex = MarklightRegex(pattern: strictBoldPattern, options: [.anchorsMatchLines])
 
     fileprivate static let boldPattern = "(\\*\\*|__)(?=\\S)(.+?)(?<=\\S)\\1"
     @MainActor public static let boldRegex = MarklightRegex(pattern: boldPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -728,8 +713,6 @@ public class NotesTextProcessor {
     // MARK: Italic
     fileprivate static let strictItalicPattern = "(^|[\\s_])(?:(?!\\1)|(?=^))(\\*|_)(?=\\S)((?:(?!\\2).)*?\\S)\\2(?!\\2)(?=[\\s]|(?:[.,!?]\\s)|$)"
 
-    @MainActor public static let strictItalicRegex = MarklightRegex(pattern: strictItalicPattern, options: [.anchorsMatchLines])
-
     fileprivate static let italicPattern = "(?<!\\*|_)(?<!\\*\\*)(\\*|_)(?!\\s)(.+?)(?<!\\s)\\1(?!\\*|_)(?!\\*\\*)"
     @MainActor public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
@@ -738,8 +721,6 @@ public class NotesTextProcessor {
     /// `<https://…>`: only its angle brackets are markup.
     @MainActor public static let autolinkBracketRegex = MarklightRegex(
         pattern: "<(?:https?|ftp|mailto):[^\\s<>]+>", options: [])
-
-    @MainActor public static let autolinkPrefixRegex = MarklightRegex(pattern: autolinkPrefixPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
     /// maximum nested depth of [] and () supported by the transform;
     /// implementation detail
@@ -1027,13 +1008,6 @@ class CodeTextProcessor {
         return false
     }
 
-    public func getIntersectedRange(range: NSRange, ranges: [NSRange]) -> NSRange? {
-        for rangeItem in ranges where range.intersection(rangeItem) != nil {
-            return rangeItem
-        }
-
-        return nil
-    }
 }
 
 public struct MarklightRegex {

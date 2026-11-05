@@ -21,12 +21,6 @@ extension NSMutableAttributedString {
         addAttribute(.kern, value: letterSpacing as Any, range: range)
     }
 
-    @MainActor
-    public func removeEditorLetterSpacing() {
-        let range = NSRange(location: 0, length: length)
-        removeAttribute(.kern, range: range)
-    }
-
     // MARK: - Images → Markdown
     @MainActor
     public func unLoadImages(note: Note? = nil) -> NSMutableAttributedString {
@@ -109,34 +103,7 @@ extension NSMutableAttributedString {
     }
 
     // MARK: - Underline colors
-    @MainActor
-    func unLoadUnderlines() -> NSMutableAttributedString {
-        enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
-            guard value != nil else { return }
-            addAttribute(.underlineColor, value: Theme.underlineColor, range: range)
-        }
-        return self
-    }
 
-    @MainActor
-    public func loadUnderlines() {
-        enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
-            guard value != nil else { return }
-            addAttribute(.underlineColor, value: NotesTextProcessor.underlineColor, range: range)
-        }
-    }
-
-    private func extractTitle(from result: NSTextCheckingResult?, offset: Int) -> String {
-        guard let titleRange = result?.range(at: 2) else { return "" }
-        let adjustedRange = NSRange(location: titleRange.location - offset, length: titleRange.length)
-        return mutableString.substring(with: adjustedRange)
-    }
-
-    private func extractPath(from result: NSTextCheckingResult?, offset: Int) -> String {
-        guard let linkRange = result?.range(at: 3) else { return "" }
-        let adjustedRange = NSRange(location: linkRange.location - offset, length: linkRange.length)
-        return mutableString.substring(with: adjustedRange)
-    }
 }
 
 extension NSAttributedString {

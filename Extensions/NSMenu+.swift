@@ -105,22 +105,6 @@ enum MenuIconRegistry {
         IconMapping(symbol: "scope", selectors: ["centerSelectionInVisibleArea:"], identifiers: []),
     ]
 
-    private static let suppressedSelectors: Set<String> = [
-        "submenuAction:",
-        "_handleInsertFromContactsCommand:",
-        "_handleInsertFromPasswordsCommand:",
-        "_handleInsertFromCreditCardsCommand:",
-        "insertTimeShortcut:",
-        "insertTableShortcut:",
-        "insertImgShortcut:",
-        "insertVideoShortcut:",
-        "insertMarkmapShortcut:",
-        "insertMermaidShortcut:",
-        "insertPlantumlShortcut:",
-        "insertFoldShortcut:",
-        "insertTaskShortcut:",
-    ]
-
     // MARK: - Computed Symbol Maps
 
     private static let symbolMap: [String: String] = {
@@ -176,9 +160,4 @@ enum MenuIconRegistry {
         return nil
     }
 
-    @MainActor
-    static func shouldSuppressWarning(for selector: Selector) -> Bool {
-        let selectorString = NSStringFromSelector(selector)
-        return suppressedSelectors.contains(selectorString)
-    }
 }

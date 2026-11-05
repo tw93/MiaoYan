@@ -32,12 +32,9 @@ extension FileWatcherEvent {
     var fileCreated: Bool { fileChange && created }
     var fileRemoved: Bool { fileChange && removed }
     var fileRenamed: Bool { fileChange && renamed }
-    var fileModified: Bool { fileChange && modified }
     /* Directory */
-    var dirCreated: Bool { dirChange && created }
     var dirRemoved: Bool { dirChange && removed }
     var dirRenamed: Bool { dirChange && renamed }
-    var dirModified: Bool { dirChange && modified }
 }
 
 /// Simplifies debugging

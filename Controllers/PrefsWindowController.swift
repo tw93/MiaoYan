@@ -130,10 +130,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         window?.level = UserDefaultsManagement.alwaysOnTop ? .floating : .normal
     }
 
-    func selectCategory(_ category: PrefsSection) {
-        showCategory(category)
-    }
-
     /// Follows a change of the Appearance setting while the window is open.
     func refreshThemeAppearance() {
         applyWindowAppearance()

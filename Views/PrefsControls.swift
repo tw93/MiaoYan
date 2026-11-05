@@ -529,8 +529,6 @@ final class PrefsTabBar: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    var tabButtons: [NSButton] { buttons }
-
     func select(index: Int) {
         for button in buttons { button.isSelected = button.tag == index }
     }

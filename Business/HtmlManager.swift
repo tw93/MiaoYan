@@ -366,26 +366,6 @@ class HtmlManager {
         return path.starts(with: "/") && !path.starts(with: "/i/")
     }
 
-    private static func resolveImageLocation(_ cleanPath: String, imagesStorage: URL) -> ImageLocation {
-        // Absolute system path (not relative to project)
-        if isAbsolutePath(cleanPath) {
-            let imageURL = URL(fileURLWithPath: cleanPath)
-            let filename = imageURL.lastPathComponent
-            return ImageLocation(
-                source: imageURL,
-                dest: webkitPreviewURL.appendingPathComponent(filename),
-                displayPath: filename
-            )
-        }
-
-        // Relative path: maintain directory structure
-        return ImageLocation(
-            source: imagesStorage.appendingPathComponent(cleanPath),
-            dest: webkitPreviewURL.appendingPathComponent(cleanPath),
-            displayPath: cleanPath
-        )
-    }
-
     private static func copyImageIfNeeded(from source: URL, to destination: URL) {
         guard !FileManager.default.fileExists(atPath: destination.path) else { return }
 

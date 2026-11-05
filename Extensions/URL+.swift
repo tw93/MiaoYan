@@ -33,25 +33,6 @@ extension URL {
         }
     }
 
-    public func listExtendedAttributes() throws -> [String] {
-        try withUnsafeFileSystemRepresentation { fileSystemPath -> [String] in
-            let length = listxattr(fileSystemPath, nil, 0, 0)
-            guard length >= 0 else { throw URL.posixError(errno) }
-
-            var namebuf = [CChar](repeating: 0, count: length)
-            let result = listxattr(fileSystemPath, &namebuf, namebuf.count, 0)
-            guard result >= 0 else { throw URL.posixError(errno) }
-
-            return namebuf.split(separator: 0).compactMap {
-                $0.withUnsafeBufferPointer {
-                    $0.withMemoryRebound(to: UInt8.self) {
-                        String(bytes: $0, encoding: .utf8)
-                    }
-                }
-            }
-        }
-    }
-
     private static func posixError(_ err: Int32) -> NSError {
         NSError(
             domain: NSPOSIXErrorDomain,

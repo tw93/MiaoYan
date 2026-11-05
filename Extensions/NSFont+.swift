@@ -26,16 +26,6 @@ extension NSFont {
     // MARK: - Methods accessing UserDefaultsManagement require @MainActor
 
     @MainActor
-    static func italicFont() -> NSFont {
-        NSFontManager().convert(UserDefaultsManagement.noteFont, toHaveTrait: .italicFontMask)
-    }
-
-    @MainActor
-    static func boldFont() -> NSFont {
-        NSFontManager().convert(UserDefaultsManagement.noteFont, toHaveTrait: .boldFontMask)
-    }
-
-    @MainActor
     func bold() -> NSFont {
         guard let family = UserDefaultsManagement.noteFont.familyName else {
             return UserDefaultsManagement.noteFont

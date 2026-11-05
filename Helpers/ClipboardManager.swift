@@ -7,12 +7,6 @@ private let uploadServerURL = "http://127.0.0.1:36677/upload"
 class ClipboardManager {
     private weak var textView: EditTextView?
 
-    // Simplistic response model for PicGo/PicList
-    struct PicGoResponse: Codable {
-        let success: Bool
-        let result: [String]
-    }
-
     init(textView: EditTextView) {
         self.textView = textView
     }

@@ -2,8 +2,6 @@ import Cocoa
 
 @MainActor
 class EditorScrollView: NSScrollView {
-    private var initialHeight: CGFloat?
-
     override var isFindBarVisible: Bool {
         get {
             super.isFindBarVisible

@@ -57,8 +57,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     private enum JavaScriptTiming {
         static let diagramInitDelay = 100  // milliseconds
-        static let imageLoadTimeout: TimeInterval = 0.4  // WebView image load timeout
-        static let diagramLoadTimeout: TimeInterval = 0.8  // Extended timeout for diagram rendering
     }
 
     @objcMembers
@@ -91,7 +89,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var closure: MPreviewViewClosure?
     public static var template: String?
     private static var bundleInitialized = false
-    private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
     weak var scrollDelegate: MPreviewScrollDelegate?
     var displayedNote: Note? {
         note
@@ -101,8 +98,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         self.closure = closure
         let userContentController = WKUserContentController()
         userContentController.add(HandlerCheckbox(), name: "checkbox")
-        userContentController.add(HandlerSelection(), name: "newSelectionDetected")
-        userContentController.add(HandlerCodeCopy(), name: "notification")
         userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
         userContentController.add(HandlerPreviewScroll(), name: "previewScroll")
         userContentController.add(HandlerTOCTip(), name: "tocTipClicked")
@@ -178,7 +173,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
     override func viewWillMove(toWindow newWindow: NSWindow?) {
         super.viewWillMove(toWindow: newWindow)
         if newWindow == nil {
-            configuration.userContentController.removeScriptMessageHandler(forName: "logging")
             removeAppDidBecomeActiveObserver()
         }
     }

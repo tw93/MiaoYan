@@ -119,36 +119,6 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     }
 }
 
-class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
-    public static var selectionString: String? {
-        didSet {
-            guard let copyBlock = selectionString else {
-                return
-            }
-            NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(copyBlock, forType: .string)
-        }
-    }
-
-    func userContentController(
-        _ userContentController: WKUserContentController,
-        didReceive message: WKScriptMessage
-    ) {
-        let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
-        HandlerCodeCopy.selectionString = message
-    }
-}
-
-class HandlerSelection: NSObject, WKScriptMessageHandler {
-    public static var selectionString: String?
-    func userContentController(
-        _ userContentController: WKUserContentController,
-        didReceive message: WKScriptMessage
-    ) {
-        let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
-        HandlerSelection.selectionString = message
-    }
-}
 // Used to solve the adaptation of the left border/title color change with background color in PPT mode.
 
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {

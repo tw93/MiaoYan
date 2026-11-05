@@ -32,8 +32,6 @@ enum AppIdentifier {
     static let codeBlockKey = "\(legacyBundleID).code.block"
     static let codeLanguageKey = "\(legacyBundleID).code.language"
 
-    // CloudKit sync key (fixed, shared across devices)
-    static let cloudPinsKey = "\(legacyBundleID).pins.shared"
 }
 
 enum StorageLocationValidator {
@@ -122,28 +120,20 @@ public enum UserDefaultsManagement {
         static let BgColorKey = "bgColorKeyed"
 
         static let CodeFontNameKey = "codeFont"
-        static let FontNameKey = "font"
         static let FontSizeKey = "fontsize"
         static let FontColorKey = "fontColorKeyed"
-        static let FullScreen = "fullScreen"
         static let NoteType = "noteType"
         static let ImagesWidthKey = "imagesWidthKey"
         static let DefaultLanguageKey = "defaultLanguage"
         static let DefaultPicUpload = "defaultPicUpload"
-        static let ImportURLsKey = "ImportURLs"
         static let LastSelectedPath = "lastSelectedPath"
         static let LastProject = "lastProject"
         static let LastProjectPath = "lastProjectPath"
         static let SidebarRowsIncludeBrand = "sidebarRowsIncludeBrand"
-        static let LineSpacingEditorKey = "lineSpacingEditor"
-        static let LineWidthKey = "lineWidth"
-        static let MarginSizeKey = "marginSize"
         static let MarkdownPreviewCSS = "markdownPreviewCSS"
         static let PreviewFontSize = "previewFontSize"
         static let PresentationFontSize = "presentationFontSize"
         static let ProjectsKey = "projects"
-        static let RestoreCursorPosition = "restoreCursorPosition"
-        static let SaveInKeychain = "saveInKeychain"
         static let SortBy = "sortBy"
         static let StoragePathKey = "storageUrl"
         static let FontName = "fontName"
@@ -966,14 +956,6 @@ public enum UserDefaultsManagement {
     static var canUseMenu: Bool {
         return EditorStateManager.shared.canUseMenu
     }
-    // Reset editor state
-    static func resetEditorState() {
-        EditorStateManager.shared.reset()
-    }
-    // Get current editor mode
-    static var currentEditorMode: EditorMode {
-        return EditorStateManager.shared.currentMode
-    }
     static var lastSync: Date? {
         get {
             if let sync = UserDefaults.standard.object(forKey: "lastSync") {
@@ -1044,27 +1026,6 @@ public enum UserDefaultsManagement {
             }
             let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
             defaults.set(data, forKey: Constants.ProjectsKey)
-        }
-    }
-    static var importURLs: [URL] {
-        get {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
-                return []
-            }
-            if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data,
-                let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL]
-            {
-                return urls
-            }
-            return []
-        }
-        set {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
-                return
-            }
-            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
-                defaults.set(data, forKey: Constants.ImportURLsKey)
-            }
         }
     }
     static var markdownPreviewCSS: URL? {
