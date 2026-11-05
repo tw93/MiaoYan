@@ -92,7 +92,7 @@ final class NoteSaveDebounceTests: XCTestCase {
     @MainActor
     func testDamagedUTF8NoteOpensReadOnlyAndKeepsItsBytes() async throws {
         let url = tempDir.appendingPathComponent("damaged.md")
-        var bytes = Data("# 你好".utf8)
+        var bytes = Data("# 你好世界".utf8)
         bytes.append(0xFF)
         bytes.append(Data("\n".utf8))
         try bytes.write(to: url)
@@ -104,12 +104,12 @@ final class NoteSaveDebounceTests: XCTestCase {
         await asynchronous.loadAsync()
         for note in [synchronous, asynchronous] {
             XCTAssertTrue(note.isContentLoaded)
-            XCTAssertEqual(note.content.string, "# 你好\u{FFFD}\n", "shown as UTF-8, the bad byte as a replacement mark")
+            XCTAssertEqual(note.content.string, "# 你好世界\u{FFFD}\n", "shown as UTF-8, the bad byte as a replacement mark")
             XCTAssertTrue(note.loadFailed, "a damaged note is read-only")
             XCTAssertEqual(note.readOnlyNotice, I18n.str("This note has invalid characters, so it opened read-only"))
             XCTAssertFalse(EditTextView(frame: .zero).isEditable(note: note))
 
-            note.save(content: NSMutableAttributedString(string: "# 你好\u{FFFD}\nedited"))
+            note.save(content: NSMutableAttributedString(string: "# 你好世界\u{FFFD}\nedited"))
             XCTAssertFalse(note.flushPendingSave(globalStorage: false), "the save is refused")
             XCTAssertEqual(try Data(contentsOf: url), bytes, "the file keeps its original bytes")
         }
@@ -122,7 +122,7 @@ final class NoteSaveDebounceTests: XCTestCase {
         // The file watcher reads through getContent() and adopts the text
         // itself, so a sync that damages an open note makes it read-only too.
         try bytes.write(to: url)
-        XCTAssertEqual(synchronous.getContent()?.string, "# 你好\u{FFFD}\n")
+        XCTAssertEqual(synchronous.getContent()?.string, "# 你好世界\u{FFFD}\n")
         XCTAssertTrue(synchronous.loadFailed, "a damaged file read by the watcher is read-only")
         try Data("# 你好\n".utf8).write(to: url)
         _ = synchronous.getContent()

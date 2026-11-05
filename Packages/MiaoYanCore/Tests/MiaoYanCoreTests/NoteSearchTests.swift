@@ -92,20 +92,26 @@ final class NoteTextTests: XCTestCase {
     /// shown as mojibake and saved back that way. It is reported as damaged
     /// UTF-8 and decoded as UTF-8, the bad byte as U+FFFD.
     func testUTF8WithABadByteIsDamagedNotALegacyEncoding() throws {
-        var damaged = Data("# 你好".utf8)
+        var damaged = Data("# 你好世界".utf8)
         damaged.append(0xFF)
         damaged.append(Data("\n".utf8))
         XCTAssertTrue(NoteText.isDamagedUTF8(damaged))
-        XCTAssertEqual(NoteText.decode(damaged, preferredLanguages: ["zh-Hans-CN"]), "# 你好\u{FFFD}\n")
-        XCTAssertEqual(NoteText.decode(damaged, preferredLanguages: ["en-US"]), "# 你好\u{FFFD}\n")
+        XCTAssertEqual(NoteText.decode(damaged, preferredLanguages: ["zh-Hans-CN"]), "# 你好世界\u{FFFD}\n")
+        XCTAssertEqual(NoteText.decode(damaged, preferredLanguages: ["en-US"]), "# 你好世界\u{FFFD}\n")
 
-        var truncated = Data("Café notes, 第一段".utf8)
+        var truncated = Data("Café notes, 第一段落".utf8)
         truncated.removeLast()
         XCTAssertTrue(NoteText.isDamagedUTF8(truncated), "a write cut inside the last character")
 
         let legacy: [(String, String.Encoding)] = [
             ("这是一篇旧的周报，记录了本周的工作。", Self.encoding(.GB_18030_2000)),
             ("中文", Self.encoding(.GB_18030_2000)),
+            // Short titles whose GB18030 or EUC-KR bytes happen to pair up
+            // into a few UTF-8 sequences: an equal-count rule read them as
+            // damaged UTF-8 and opened them read-only as mojibake.
+            ("# 学习笔记\n", Self.encoding(.GB_18030_2000)),
+            ("테스트", Self.encoding(.EUC_KR)),
+            ("회의록", Self.encoding(.EUC_KR)),
             ("這是一篇舊的週報，記錄了本週的工作。", Self.encoding(.big5)),
             ("# Memo\n\n- Fix sidebar\n- 메모", Self.encoding(.EUC_KR)),
             ("今日はいい天気ですね。散歩に行きましょう。", .shiftJIS),

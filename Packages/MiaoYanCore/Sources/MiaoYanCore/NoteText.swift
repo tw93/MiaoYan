@@ -43,11 +43,13 @@ public enum NoteText {
 
     /// True when `data` is not valid UTF-8 but reads as UTF-8 text with a
     /// few bad bytes (a truncated write, a stray byte from a sync or a script):
-    /// it holds at least one well-formed multi-byte UTF-8 sequence, and no more
-    /// invalid sequences than well-formed multi-byte ones. Legacy encodings
-    /// fail this by a wide margin, since their CJK and accented bytes rarely
-    /// line up into UTF-8 sequences by chance; an ASCII file with one stray
-    /// high byte has no multi-byte sequence and stays a Windows-1252 note.
+    /// it holds well-formed multi-byte UTF-8 sequences at four times the count
+    /// of invalid ones. A short GB18030 or EUC-KR title can pair up into a few
+    /// UTF-8 sequences by chance (`# 学习笔记` in GB18030), so an equal count read
+    /// 2 to 15% of two- and three-character legacy titles as damaged and opened
+    /// them read-only; at four times, 5 of 75,000 emulated legacy samples still
+    /// pass. An ASCII file with one stray high byte has no multi-byte sequence
+    /// and stays a Windows-1252 note.
     public static func isDamagedUTF8(_ data: Data) -> Bool {
         if String(data: data, encoding: .utf8) != nil { return false }
         var valid = 0
@@ -61,7 +63,7 @@ public enum NoteText {
             case .emptyInput: break loop
             }
         }
-        return valid > 0 && valid >= invalid
+        return valid > 0 && valid >= 4 * invalid
     }
 
     private static func detect(_ data: Data, options: [StringEncodingDetectionOptionsKey: Any]) -> String? {
