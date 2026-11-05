@@ -269,4 +269,25 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertEqual(family["quoteBlock"], family["quote"])
     }
 
+    /// List titles and sidebar names were tracked one character short, so
+    /// the last character sat in a run of its own and the system face set it
+    /// apart: `系统配置SOP` read `系统配置SO P` and `妙言 PPT` read `妙言 PP T`.
+    @MainActor
+    func testLabelTrackingCoversTheLastCharacter() {
+        for title in ["系统配置SOP", "妙言 PPT", "笔记", "Notes 📝"] {
+            let field = NSTextField(labelWithString: title)
+            field.font = NSFont.systemFont(ofSize: 14)
+            field.addCharacterSpacing()
+            let string = field.attributedStringValue
+            XCTAssertNotNil(string.attribute(.kern, at: string.length - 1, effectiveRange: nil), "\(title) tracks its last character")
+            let line = CTLineCreateWithAttributedString(string)
+            let fonts = (CTLineGetGlyphRuns(line) as? [CTRun] ?? []).map { run in
+                ((CTRunGetAttributes(run) as NSDictionary)[kCTFontAttributeName] as? NSFont)?.fontName ?? "?"
+            }
+            XCTAssertEqual(fonts.count, Set(fonts).count, "\(title) sets each face in one run: \(fonts)")
+        }
+        let empty = NSTextField(labelWithString: "")
+        empty.addCharacterSpacing()
+        XCTAssertEqual(empty.stringValue, "", "an empty label is left alone")
+    }
 }
