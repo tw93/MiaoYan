@@ -137,22 +137,32 @@ hint steps aside for marked text; titles starting with "."; case-only renames; f
 GitHub alerts and bundled KaTeX in the reader; Mermaid follows the appearance; a size-class change no
 longer reloads the reader; three dead symbols removed.
 
+Follow-up the same day, after the maintainer asked for every open item that could be improved:
+- The storyboard window switches light and dark in place in preview and split mode (`6223461f`),
+  and a PlantUML retheme keeps the drawn image until the new one loads, or for good when it fails
+  (`157cb205`).
+- Clean Typography refuses a read-only note with its notice (`5828a325`); the damaged notice says
+  the encoding could not be determined (`42b68257`); the storyboard's move clears the editor only
+  when a note moved (`c6652cdd`).
+- Note list fonts are cached (`ba6a2bde`); the tripwire (`d35db779`), `.todo` with
+  `unLoadCheckboxes` and `.preferencesChanged` (`4d21a4f1`) are gone; the pbxproj links each
+  package once (`a89a11bc`, S4).
+- Format undo on the storyboard editor and drops through `performDragOperation` are tested
+  (`ffd1d88b`).
+- iPhone: local `<audio>` goes through the asset scheme.
+- Dropped: the version snapshot per note switch; `saveVersion` already skips content equal to the
+  latest snapshot, so nothing is written.
+
 ### Open
 
-- The storyboard window still reloads its preview on an appearance change
-  (`EditTextView.applySystemAppearance`); the shell switches in place.
-- PlantUML is fetched again from its server on an appearance change, so offline it shows source.
-- Whether Restore may overwrite a read-only damaged note with a clean version (recorded in
-  `decide`; Duplicate is the way out today).
-- Every note switch writes a version snapshot even when nothing was edited (needs a decision).
-- Clean Typography on a read-only note still shows its success toast; a valid short legacy note
-  held read-only reads "has invalid characters"; the storyboard's move clears the editor even when
-  a read-only note refused to move.
-- Format undo is tested in the shell only, and the drop test calls `dropFiles` directly rather than
-  through `performDragOperation`.
-- Real-app checks: P3 and P4, the hover anchor, the light zoom backdrop after a switch, E6.
-- iPhone: Trash with iCloud may land in a system `.Trash` the app never lists (needs a decision);
-  `<audio>` is not routed through the asset scheme; video and KaTeX need a device check.
+- Whether Restore may overwrite a read-only damaged note with a clean version (`decide` 1105-42;
+  Duplicate is the way out today).
+- Changing Light or Dark in Settings still reloads the preview (`recreatePreviewView`); a Mermaid
+  diagram shows its source for a moment while it redraws in the new theme.
+- Real-app checks: P3 and P4, the hover anchor, the light zoom backdrop after a switch, E6, and a
+  system appearance switch while reading in preview and in split mode.
+- iPhone: Trash with iCloud lands in iCloud Drive's Recently Deleted, which the app never lists
+  (`decide` 1105-47); video, audio and KaTeX need a device check.
 
 ### Decided, do not re-report
 
