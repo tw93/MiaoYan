@@ -17,12 +17,8 @@ class Storage {
 
     var noteList = [Note]()
     private var projects = [Project]()
-    private var imageFolders = [URL]()
 
-    public var tagNames = [String]()
     public var tags = [String]()
-
-    var notesDict: [String: Note] = [:]
 
     private struct LoadedProjectInfo {
         let lastScan: Date
@@ -151,7 +147,6 @@ class Storage {
         if let subFolders = getSubFolders(url: url) {
             for subFolder in subFolders {
                 if subFolder.lastPathComponent == "i" {
-                    imageFolders.append(subFolder as URL)
                     continue
                 }
 
@@ -647,8 +642,6 @@ class Storage {
     }
 
     func loadDocuments(tryCount: Int = 0, completion: @escaping () -> Void) {
-        _ = restoreCloudPins()
-
         noteList = sortNotes(noteList: noteList, filter: "")
 
         guard !checkFirstRun() else {
@@ -675,18 +668,6 @@ class Storage {
         }
 
         return nil
-    }
-
-    public func getCloudDriveProjects() -> [Project] {
-        projects.filter {
-            $0.isCloudDrive == true
-        }
-    }
-
-    public func getLocalProjects() -> [Project] {
-        projects.filter {
-            $0.isCloudDrive == false
-        }
     }
 
     public func getProjectPaths() -> [String] {
@@ -932,14 +913,6 @@ class Storage {
         loadedProjectInfo.removeValue(forKey: project.url.path)
     }
 
-    public func reLoadTrash() {
-        noteList.removeAll(where: { $0.isTrash() })
-
-        for project in projects where project.isTrash {
-            loadLabel(project, loadContent: true)
-        }
-    }
-
     /// Reconcile a Trash project before presenting it. FSEvents can coalesce
     /// or delay a removal from the system Trash, so the in-memory list may
     /// still contain a Note whose file is already gone. Retiring the old
@@ -1041,10 +1014,6 @@ class Storage {
         if let i = noteList.firstIndex(where: { $0 === note }) {
             noteList.remove(at: i)
         }
-    }
-
-    func getNextId() -> Int {
-        noteList.count
     }
 
     /// Pure decision the storage takes on first launch / each launch about
@@ -1371,52 +1340,9 @@ class Storage {
         return hasFile
     }
 
-    public func getCurrentProject() -> Project? {
-        projects.first
-    }
-
     public func getAllTrash() -> [Note] {
         noteList.filter {
             $0.isTrash()
-        }
-    }
-
-    public func initiateCloudDriveSync() {
-        for project in projects {
-            syncDirectory(url: project.url)
-        }
-
-        for imageFolder in imageFolders {
-            syncDirectory(url: imageFolder)
-        }
-    }
-
-    public func syncDirectory(url: URL) {
-        do {
-            let directoryFiles =
-                try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey])
-
-            let files =
-                directoryFiles.filter {
-                    !isDownloaded(url: $0)
-                }
-
-            let images = files.map { url in
-                (
-                    url,
-                    (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast,
-                    (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
-                )
-            }
-
-            for image in images {
-                let url = image.0 as URL
-
-                if FileManager.default.isUbiquitousItem(at: url) {
-                    try? FileManager.default.startDownloadingUbiquitousItem(at: url)
-                }
-            }
-        } catch {
         }
     }
 
@@ -1581,20 +1507,6 @@ class Storage {
         return false
     }
 
-    public func isDownloaded(url: URL) -> Bool {
-        var isDownloaded: AnyObject?
-
-        do {
-            try (url as NSURL).getResourceValue(&isDownloaded, forKey: URLResourceKey.ubiquitousItemDownloadingStatusKey)
-        } catch _ {}
-
-        if isDownloaded as? URLUbiquitousItemDownloadingStatus == URLUbiquitousItemDownloadingStatus.current {
-            return true
-        }
-
-        return false
-    }
-
     public func initNote(url: URL) -> Note? {
         guard let project = getProjectBy(url: url) else {
             return nil
@@ -1609,42 +1521,9 @@ class Storage {
         return note
     }
 
-    private func cleanTrash() {
-        guard let trash = try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: UserDefaultsManagement.storageUrl, create: false) else {
-            return
-        }
-
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil, options: [])
-
-            for fileURL in fileURLs {
-                try FileManager.default.removeItem(at: fileURL)
-            }
-        } catch {
-            AppDelegate.trackError(error, context: "Storage.copyPins")
-        }
-    }
-
-    public func saveCloudPins() {
-    }
-
-    public func restoreCloudPins() -> (removed: [Note]?, added: [Note]?) {
-        return (nil, nil)
-    }
-
-    public func getPinned() -> [Note]? {
-        noteList.filter(\.isPinned)
-    }
-
     public func remove(project: Project) {
         if let index = projects.firstIndex(of: project) {
             projects.remove(at: index)
-        }
-    }
-
-    public func getNotesBy(project: Project) -> [Note] {
-        noteList.filter {
-            $0.project == project
         }
     }
 

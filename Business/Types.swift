@@ -74,53 +74,6 @@ extension NSAttributedString.Key {
 }
 
 // MARK: - Utility Types
-class UndoData: NSObject {
-    let string: NSAttributedString
-    let range: NSRange
-
-    init(string: NSAttributedString, range: NSRange) {
-        self.string = string
-        self.range = range
-    }
-}
-
-struct RuntimeError: Error {
-    let message: String
-
-    init(_ message: String) {
-        self.message = message
-    }
-
-    public var localizedDescription: String {
-        message
-    }
-}
-
-class IndexSetWrapper: NSObject, NSSecureCoding {
-    static var supportsSecureCoding: Bool {
-        true
-    }
-
-    let indexSet: IndexSet
-
-    init(indexSet: IndexSet) {
-        self.indexSet = indexSet
-        super.init()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        guard let intArray = aDecoder.decodeObject(of: NSArray.self, forKey: "indexSet") as? [Int] else {
-            return nil
-        }
-        self.indexSet = IndexSet(intArray)
-        super.init()
-    }
-
-    func encode(with aCoder: NSCoder) {
-        let intArray = indexSet.map { $0 }
-        aCoder.encode(intArray, forKey: "indexSet")
-    }
-}
 
 enum LanguageType: Int {
     case Chinese = 0x00
@@ -158,27 +111,6 @@ enum LanguageType: Int {
         case "繁體中文", "繁体中文", "Chinese (Traditional)": return LanguageType.ChineseTC
         default: return LanguageType.Chinese
         }
-    }
-}
-
-class Commit {
-    private var date: String?
-    private var hash: String
-
-    init(hash: String) {
-        self.hash = hash
-    }
-
-    public func setDate(date: String) {
-        self.date = date
-    }
-
-    public func getDate() -> String? {
-        date
-    }
-
-    public func getHash() -> String {
-        hash
     }
 }
 

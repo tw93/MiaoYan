@@ -39,13 +39,6 @@ final class CloudSyncManager: ObservableObject {
         startMonitoring()
     }
 
-    func getNotesDirectory() -> URL? {
-        guard iCloudAvailable, let base = iCloudContainerURL else {
-            return nil
-        }
-        return base
-    }
-
     private func startMonitoring() {
         guard iCloudAvailable else { return }
 
@@ -86,25 +79,6 @@ final class CloudSyncManager: ObservableObject {
         Task { @MainActor in
             status = .synced
         }
-    }
-
-    func readFile(at url: URL) throws -> String {
-        var coordinationError: NSError?
-        var readError: Error?
-        let coordinator = NSFileCoordinator()
-        var content = ""
-
-        coordinator.coordinate(readingItemAt: url, options: [], error: &coordinationError) { readURL in
-            do {
-                content = try String(contentsOf: readURL, encoding: .utf8)
-            } catch {
-                readError = error
-            }
-        }
-
-        if let coordinationError { throw coordinationError }
-        if let readError { throw readError }
-        return content
     }
 
     func writeFile(content: String, to url: URL) throws {
