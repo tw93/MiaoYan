@@ -1,3 +1,4 @@
+import AppKit
 import WebKit
 import XCTest
 
@@ -84,6 +85,41 @@ final class PrintExportScriptTests: XCTestCase {
         _ = try await webView.evaluateJavaScript(PdfExportController.printSetupScript(css: "", title: "Trip"))
         let titles = try await webView.evaluateJavaScript("document.querySelectorAll('#write h1').length") as? Int
         XCTAssertEqual(titles, 1)
+    }
+
+    /// PNG export snapshots the live preview, where a PlantUML diagram is an
+    /// image marked loading="lazy" and a Mermaid diagram may still be
+    /// drawing. Its check force-loaded only Swift's lazy images, so a
+    /// diagram below the view was captured blank or missing.
+    @MainActor
+    func testImageExportWaitsForLazyDiagramsAsPDFDoes() async throws {
+        let rep = try XCTUnwrap(
+            NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: 8, pixelsHigh: 8, bitsPerSample: 8, samplesPerPixel: 4,
+                hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+        let png = directory.appendingPathComponent("diagram.png")
+        try XCTUnwrap(rep.representation(using: .png, properties: [:])).write(to: png)
+        let webView = try await loadPage(
+            """
+            <pre><code class="language-mermaid">flowchart LR</code></pre>
+            <div style="height: 6000px"></div>
+            <pre><img class="plantuml-image" loading="lazy" src="\(png.absoluteString)"></pre>
+            """)
+
+        let waiting = try await webView.evaluateJavaScript(HtmlManager.checkImagesScript) as? Bool
+        XCTAssertEqual(waiting, false, "a Mermaid diagram still drawing holds the capture")
+        _ = try await webView.evaluateJavaScript("document.querySelector('code.language-mermaid').setAttribute('data-processed', 'true'); true")
+
+        var ready = false
+        let deadline = Date().addingTimeInterval(3)
+        while Date() < deadline, !ready {
+            ready = (try? await webView.evaluateJavaScript(HtmlManager.checkImagesScript) as? Bool) == true
+            if !ready { try await Task.sleep(nanoseconds: 50_000_000) }
+        }
+        XCTAssertTrue(ready, "the PlantUML image below the view loads for the capture")
+        let state = try await webView.evaluateJavaScript(
+            "(function() { var img = document.querySelector('.plantuml-image'); return img.hasAttribute('loading') + ':' + img.naturalWidth; })()")
+        XCTAssertEqual(state as? String, "false:8")
     }
 
     /// Text carried into a script goes in as `HtmlManager.jsStringLiteral`,

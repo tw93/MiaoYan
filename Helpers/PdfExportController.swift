@@ -154,16 +154,7 @@ final class PdfExportController: NSObject {
                 container.insertBefore(h, container.firstChild);
             }
 
-            document.querySelectorAll('img[data-src]').forEach(function(img) {
-                var real = img.getAttribute('data-src');
-                if (real) img.src = real;
-                img.removeAttribute('loading');
-                img.removeAttribute('data-src');
-                img.classList.remove('lazy-image');
-            });
-            document.querySelectorAll('img[loading]').forEach(function(img) {
-                img.removeAttribute('loading');
-            });
+            \(HtmlManager.unlazyImagesScript)
 
             var toc = document.querySelector('.toc-nav');
             var tocTrigger = document.querySelector('.toc-hover-trigger');
@@ -199,11 +190,7 @@ final class PdfExportController: NSObject {
             (function() {
                 var imgs = Array.prototype.slice.call(document.images || []);
                 var imgsReady = imgs.every(function(i) { return i.complete && i.naturalWidth > 0; });
-                var pendingMermaid = document.querySelectorAll('code.language-mermaid:not([data-processed])').length;
-                var pendingMarkmap = document.querySelectorAll('code.language-markmap:not([data-markmap-rendered])').length;
-                return imgsReady
-                    && pendingMermaid === 0
-                    && pendingMarkmap === 0;
+                return imgsReady && (\(HtmlManager.pendingDiagramsExpression)) === 0;
             })();
             """
         web.evaluateJavaScript(probe) { [weak self] result, _ in

@@ -939,14 +939,37 @@ class HtmlManager {
     }
 
     // MARK: - JavaScript Utilities
+
+    /// The capture steps PDF and PNG export share. A capture never scrolls,
+    /// so every image loads now: Swift's lazy images go back to their files,
+    /// and `loading` goes from all of them, PlantUML's included, which
+    /// diagram-handler.js marks lazy.
+    static let unlazyImagesScript = """
+        document.querySelectorAll('img[data-src]').forEach(function(img) {
+            var real = img.getAttribute('data-src');
+            if (real) img.src = real;
+            img.removeAttribute('data-src');
+            img.classList.remove('lazy-image');
+        });
+        document.querySelectorAll('img[loading]').forEach(function(img) {
+            img.removeAttribute('loading');
+        });
+        """
+
+    /// Diagrams still being drawn, by the markers DiagramHandler sets:
+    /// Mermaid's `data-processed` once its SVG is in (or it fell back to the
+    /// source), Markmap's `data-markmap-rendered`. A PlantUML diagram is an
+    /// image, which the image checks cover.
+    static let pendingDiagramsExpression =
+        "document.querySelectorAll('code.language-mermaid:not([data-processed])').length"
+        + " + document.querySelectorAll('code.language-markmap:not([data-markmap-rendered])').length"
+
+    /// PNG export's readiness check on the live preview: false until every
+    /// image has loaded and every diagram is drawn.
     static let checkImagesScript = """
         (function() {
-            // Force-load any lazy images so they are included in the export
-            document.querySelectorAll('img[data-src]').forEach(function(img) {
-                img.src = img.dataset.src;
-                img.classList.remove('lazy-image');
-                img.removeAttribute('data-src');
-            });
+            \(unlazyImagesScript)
+            if (\(pendingDiagramsExpression) > 0) return false;
 
             var images = document.getElementsByTagName('img');
             if (images.length === 0) return true;
