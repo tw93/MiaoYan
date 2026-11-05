@@ -187,6 +187,54 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(note.content.string, "#   Title\n\n*   item typed")
     }
 
+    /// Format wrote straight into the storage, so it was not on the undo
+    /// stack: Command-Z after it replayed the earlier typing at stale ranges
+    /// in the reformatted text. One undo now gives back the text from before
+    /// Format, and the next one the text from before the typing.
+    @available(macOS 14, *)
+    @MainActor
+    func testUndoAfterFormatRestoresTheTextBeforeIt() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let note = makeLoadedNote("undo-format.md", body: "#   Title\n\n*   item")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let undo = try XCTUnwrap(controller.textView.undoManager)
+        // The test host never ends the event group a key press would end, so
+        // each step here is its own group, as each event is in the app.
+        undo.groupsByEvent = false
+        defer { undo.groupsByEvent = true }
+        undo.removeAllActions()
+        undo.beginUndoGrouping()
+        let end = (controller.textView.string as NSString).length
+        controller.textView.insertText(" typed", replacementRange: NSRange(location: end, length: 0))
+        undo.endUndoGrouping()
+
+        let host = NSViewController()
+        host.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        let finished = expectation(description: "format finished")
+        controller.onFormattingChange = { running in
+            if !running { finished.fulfill() }
+        }
+        undo.beginUndoGrouping()
+        controller.format(in: host)
+        wait(for: [finished], timeout: 20)
+        undo.endUndoGrouping()
+        let formatted = controller.textView.string
+        XCTAssertNotEqual(formatted, "#   Title\n\n*   item typed", "Prettier changed the text")
+
+        undo.undo()
+        XCTAssertEqual(controller.textView.string, "#   Title\n\n*   item typed")
+        XCTAssertEqual(note.content.string, "#   Title\n\n*   item typed")
+        undo.undo()
+        XCTAssertEqual(controller.textView.string, "#   Title\n\n*   item")
+        undo.redo()
+        undo.redo()
+        XCTAssertEqual(controller.textView.string, formatted)
+    }
+
     /// The shell's text view is made in code; it must carry what the
     /// storyboard's EditTextView sets in Main.storyboard and ViewController.
     @available(macOS 14, *)

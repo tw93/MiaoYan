@@ -1114,6 +1114,39 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         scheduleLinkHighlight(range: range, immediate: true)
     }
 
+    /// Format's whole-buffer rewrite, highlighted in the same edit, for both
+    /// windows. It goes through shouldChangeText and didChangeText so it is
+    /// one undo step of its own: written straight into the storage it was
+    /// not on the stack, and Command-Z then replayed earlier typing at stale
+    /// ranges in the reformatted text. Returns false when the editor refuses
+    /// the edit (a read-only note).
+    @discardableResult
+    func replaceWholeBuffer(with newContent: String, note: Note) -> Bool {
+        guard let storage = textStorage else {
+            string = newContent
+            return true
+        }
+        let fullRange = NSRange(location: 0, length: storage.length)
+        breakUndoCoalescing()
+        guard shouldChangeText(in: fullRange, replacementString: newContent) else { return false }
+        storage.beginEditing()
+        storage.replaceCharacters(in: fullRange, with: newContent)
+        NotesTextProcessor.checkPerformanceLevel(attributedString: storage, note: note)
+        if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+            NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
+        } else {
+            NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
+            NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
+        }
+        storage.updateParagraphStyle()
+        NotesTextProcessor(storage: storage, range: NSRange(location: 0, length: storage.length)).highlightLinks()
+        storage.applyEditorLetterSpacing()
+        storage.endEditing()
+        didChangeText()
+        breakUndoCoalescing()
+        return true
+    }
+
     public func updateTextContainerInset() {
         let lineWidth = UserDefaultsManagement.lineWidth
         let margin = UserDefaultsManagement.marginSize

@@ -904,7 +904,12 @@ extension ViewController {
             newContent = restoredContent.removeLastNewLine()
         }
 
-        replaceEditorStorage(with: newContent, note: note)
+        guard editArea.replaceWholeBuffer(with: newContent, note: note) else {
+            isFormatting = false
+            updateFormatButtonState(isFormatting: false)
+            formatTask = nil
+            return
+        }
 
         let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: output.cursorOffset, protected: output.protectedContent, restored: newContent)
         editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
@@ -922,29 +927,6 @@ extension ViewController {
         isFormatting = false
         updateFormatButtonState(isFormatting: false)
         formatTask = nil
-    }
-
-    private func replaceEditorStorage(with newContent: String, note: Note) {
-        guard let storage = editArea.textStorage else {
-            editArea.string = newContent
-            return
-        }
-        let originalLength = storage.length
-        storage.beginEditing()
-        storage.replaceCharacters(in: NSRange(0..<originalLength), with: newContent)
-        NotesTextProcessor.checkPerformanceLevel(attributedString: storage, note: note)
-        if NotesTextProcessor.shouldUseSimplifiedHighlighting {
-            NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
-        } else {
-            NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
-            NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
-        }
-        storage.updateParagraphStyle()
-        let fullRange = NSRange(location: 0, length: storage.length)
-        let linkProcessor = NotesTextProcessor(storage: storage, range: fullRange)
-        linkProcessor.highlightLinks()
-        storage.applyEditorLetterSpacing()
-        storage.endEditing()
     }
 
     /// CJK typography cleanup for the whole document: pangu spacing, punctuation
