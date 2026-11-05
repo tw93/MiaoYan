@@ -323,6 +323,35 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: deletedURL.path))
     }
 
+    /// Each typing pause asks the watcher to re-check the open note; while
+    /// its save was pending every request started its own delayed re-check,
+    /// each ending in a main-thread read of the file.
+    @MainActor
+    func testTypingPausesShareOneDeferredDiskRecheck() async throws {
+        let url = tempDir.appendingPathComponent("typing.md")
+        try "start".write(to: url, atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let project = Project(url: tempDir, label: "test", isRoot: true, isDefault: true)
+        _ = storage.add(project: project)
+        defer { storage.removeBy(project: project) }
+        let note = Note(url: url, with: project)
+        note.sharedStorage = storage
+        note.load()
+        storage.add(note)
+        let host = FileEventHostStub()
+        let manager = FileSystemEventManager(storage: storage, delegate: host)
+
+        note.save(attributed: NSAttributedString(string: "typed"))
+        XCTAssertTrue(note.hasPendingSave)
+        for _ in 0..<5 { manager.recheckNote(note) }
+        XCTAssertTrue(note.flushPendingSave(globalStorage: false))
+
+        let elapsed = expectation(description: "the deferred re-check window elapsed")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.9) { elapsed.fulfill() }
+        await fulfillment(of: [elapsed], timeout: 3)
+        XCTAssertEqual(manager.deferredRecheckRuns, 1, "five requests while saving run one re-check")
+    }
+
     @MainActor
     func testTrashReconciliationRetiresAFileMissingFromDisk() throws {
         let url = tempDir.appendingPathComponent("missing-trash-note.md")

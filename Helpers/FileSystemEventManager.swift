@@ -23,6 +23,12 @@ class FileSystemEventManager {
     private let storage: Storage
     private weak var delegate: FileSystemEventHost?
     private var watcher: FileWatcher?
+    /// The one deferred re-check each note may have waiting; scheduling
+    /// another replaces it.
+    private var recheckTokens: [ObjectIdentifier: Int] = [:]
+    private var lastRecheckToken = 0
+    /// Deferred re-checks that ran, for tests.
+    private(set) var deferredRecheckRuns = 0
     private var observedFolders: [String] {
         storage.getProjectPaths()
     }
@@ -308,13 +314,11 @@ class FileSystemEventManager {
         // we'd read might be from before our save lands. Re-check shortly
         // after the save fires so a real external change is not lost.
         if note.hasPendingSave {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { [weak self] in
-                Task { @MainActor [weak self] in
-                    self?.recheckNote(note)
-                }
-            }
+            scheduleRecheck(of: note)
             return
         }
+        // Checked now, so a re-check still waiting has nothing left to do.
+        recheckTokens[ObjectIdentifier(note)] = nil
 
         // A note whose body was never read has nothing in memory to go stale:
         // opening it reads the disk. Comparing its empty buffer with the file
@@ -462,6 +466,24 @@ class FileSystemEventManager {
     @MainActor
     public func recheckNote(_ note: Note) {
         reloadNote(note: note)
+    }
+
+    /// Every typing pause asks for a re-check, and while the save is pending
+    /// each one used to start its own 1.6s chain, every chain ending in a
+    /// main-thread read of the note. Only the latest request per note runs.
+    private func scheduleRecheck(of note: Note) {
+        let key = ObjectIdentifier(note)
+        lastRecheckToken += 1
+        let token = lastRecheckToken
+        recheckTokens[key] = token
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { [weak self] in
+            Task { @MainActor [weak self] in
+                guard let self, self.recheckTokens[key] == token else { return }
+                self.recheckTokens[key] = nil
+                self.deferredRecheckRuns += 1
+                self.recheckNote(note)
+            }
+        }
     }
 
     public func restart() {
