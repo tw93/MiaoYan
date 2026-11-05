@@ -92,4 +92,31 @@ final class EditorMenuRoutingTests: XCTestCase {
             XCTAssertTrue(sceneIDs.contains(target), "\(action) targets \(target), outside the note list's scene")
         }
     }
+
+    // MARK: - TextFormatter
+
+    @MainActor
+    private func makeEditor(_ text: String) -> (EditTextView, Note) {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("miaoyan-formatter-\(UUID().uuidString)")
+        let note = Note(url: dir.appendingPathComponent("note.md"), with: Project(url: dir, label: "formatter", isRoot: true))
+        note.content = NSMutableAttributedString(string: text)
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        editor.publishStorage(NSAttributedString(string: text), owner: note)
+        return (editor, note)
+    }
+
+    /// Return after "- [x] done" started "- [x] ", a task already ticked.
+    @MainActor
+    func testReturnAfterACheckedTaskStartsAnUncheckedOne() {
+        for (text, expected) in [
+            ("- [x] done", "- [x] done\n- [ ] "),
+            ("  - [X] done", "  - [X] done\n  - [ ] "),
+            ("- [ ] open", "- [ ] open\n- [ ] "),
+        ] {
+            let (editor, note) = makeEditor(text)
+            editor.setSelectedRange(NSRange(location: (text as NSString).length, length: 0))
+            TextFormatter(textView: editor, note: note, shouldScanMarkdown: false).newLine()
+            XCTAssertEqual(editor.string, expected, text)
+        }
+    }
 }

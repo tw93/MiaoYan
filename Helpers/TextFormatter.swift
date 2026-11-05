@@ -229,7 +229,7 @@ public class TextFormatter {
     public static func getAutocompleteCharsMatch(string: String) -> NSTextCheckingResult? {
         guard
             let regex = try? NSRegularExpression(
-                pattern: "^(( |\\t)*\\- \\[[x| ]*\\] )|^(( |\\t)*[-|–|—|*|•|>|\\+]{1} )"),
+                pattern: "^(( |\\t)*\\- \\[[ xX]\\] )|^(( |\\t)*[-|–|—|*|•|>|\\+]{1} )"),
             let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
         else { return nil }
         return result
@@ -240,6 +240,12 @@ public class TextFormatter {
             let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
         else { return nil }
         return result
+    }
+
+    /// The marker the next line starts with: a task continues unticked,
+    /// whatever the line it follows says.
+    static func continuedListMarker(_ found: String) -> String {
+        found.replacingOccurrences(of: "[x]", with: "[ ]").replacingOccurrences(of: "[X]", with: "[ ]")
     }
 
     private func matchChars(string: NSAttributedString, match: NSTextCheckingResult, prefix: String? = nil) {
@@ -253,7 +259,7 @@ public class TextFormatter {
             insertText("\n", replacementRange: range, selectRange: selectRange)
             return
         }
-        insertText("\n" + found)
+        insertText("\n" + Self.continuedListMarker(found))
     }
 
     private func matchDigits(string: NSAttributedString, match: NSTextCheckingResult) {
