@@ -117,7 +117,21 @@ const DiagramHandler = {
     });
   },
 
+  // The server URL for a PlantUML block drawn in the given theme.
+  plantumlImageURL(code, isDark) {
+    let plantumlContent = code.dataset.originalContent || code.innerText;
+    const skinparams = window.ThemeConfig?.getPlantUMLSkinparams(isDark) || '';
+
+    // Strip existing skinparam directives before injecting the themed preset
+    plantumlContent = plantumlContent.replace(/skinparam\s+[^\n]*/g, '');
+    plantumlContent = skinparams + '\n' + plantumlContent;
+
+    return 'https://www.plantuml.com/plantuml/svg/~1' + window.plantumlEncoder.encode(plantumlContent);
+  },
+
   processPlantumlElement(code) {
+    // A retheme still waiting on its image no longer applies to this block.
+    code._plantumlRetheme = null;
     const existingImage = code.parentNode.querySelector('.plantuml-image');
     if (existingImage) existingImage.remove();
 
@@ -131,15 +145,8 @@ const DiagramHandler = {
     image.className = 'plantuml-image';
     image.loading = 'lazy';
 
-    let plantumlContent = code.dataset.originalContent || code.innerText;
     const isDark = this.isDarkMode();
-    const skinparams = window.ThemeConfig?.getPlantUMLSkinparams(isDark) || '';
-
-    // Strip existing skinparam directives before injecting the themed preset
-    plantumlContent = plantumlContent.replace(/skinparam\s+[^\n]*/g, '');
-    plantumlContent = skinparams + '\n' + plantumlContent;
-
-    image.src = 'https://www.plantuml.com/plantuml/svg/~1' + window.plantumlEncoder.encode(plantumlContent);
+    image.src = this.plantumlImageURL(code, isDark);
 
     image.onload = () => {
       loader.remove();
@@ -188,8 +195,37 @@ const DiagramHandler = {
     });
     this.initializeMermaid();
     document.querySelectorAll('code.language-plantuml[data-processed="true"]').forEach((code) => {
-      this.processPlantumlElement(code);
+      this.rethemePlantumlElement(code);
     });
+  },
+
+  // A diagram already on screen stays until its redrawn image has loaded,
+  // and stays for good if that request fails (offline, server error), so a
+  // theme switch never turns a drawn diagram back into source text. A block
+  // with nothing drawn yet (still loading lazily, or failed before) is
+  // processed as on first load.
+  rethemePlantumlElement(code) {
+    const shown = code.parentNode?.querySelector('.plantuml-image');
+    const isDrawn = shown && shown.complete && shown.naturalWidth > 0 && shown.style.display !== 'none';
+    if (!isDrawn) {
+      this.processPlantumlElement(code);
+      return;
+    }
+    const isDark = this.isDarkMode();
+    const replacement = document.createElement('img');
+    replacement.className = 'plantuml-image';
+    code._plantumlRetheme = replacement;
+    replacement.onload = () => {
+      if (code._plantumlRetheme !== replacement || !shown.isConnected) return;
+      code._plantumlRetheme = null;
+      shown.replaceWith(replacement);
+      this.stylePlantumlImage(replacement, code, isDark);
+    };
+    replacement.onerror = () => {
+      if (code._plantumlRetheme === replacement) code._plantumlRetheme = null;
+      console.warn('PlantUML image failed to load in the new theme, keeping the current one');
+    };
+    replacement.src = this.plantumlImageURL(code, isDark);
   },
 
   initializeMarkmap() {
