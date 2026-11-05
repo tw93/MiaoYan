@@ -294,6 +294,119 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(note.content.string, text)
     }
 
+    /// The storyboard window's Format ends in the same `replaceWholeBuffer`
+    /// (`ViewController+Editor`), so its one-undo-step guarantee is checked on a
+    /// bare storyboard-style editor (not shell hosted). Not covered: Prettier
+    /// and the ViewController around it, which need the storyboard window.
+    @available(macOS 14, *)
+    @MainActor
+    func testReplaceWholeBufferIsOneUndoStepOnTheStoryboardEditor() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        let note = makeLoadedNote("undo-whole.md", body: "#   Title\n\n*   item")
+        defer { note.discardPendingSave() }
+        EditTextView.note = note
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 480, height: 320))
+        editor.allowsUndo = true
+        // A text view only has an undo manager inside a window.
+        let window = NSWindow(contentRect: editor.frame, styleMask: [.titled], backing: .buffered, defer: true)
+        window.contentView = editor
+        defer { window.contentView = nil }
+        editor.publishStorage(NSAttributedString(string: "#   Title\n\n*   item"), owner: note)
+        let undo = try XCTUnwrap(editor.undoManager)
+        undo.groupsByEvent = false
+        defer { undo.groupsByEvent = true }
+        undo.removeAllActions()
+
+        undo.beginUndoGrouping()
+        let end = (editor.string as NSString).length
+        editor.insertText(" typed", replacementRange: NSRange(location: end, length: 0))
+        undo.endUndoGrouping()
+        let typed = "#   Title\n\n*   item typed"
+        XCTAssertEqual(editor.string, typed)
+
+        undo.beginUndoGrouping()
+        XCTAssertTrue(editor.replaceWholeBuffer(with: "# Title\n\n- item typed", note: note))
+        undo.endUndoGrouping()
+        XCTAssertEqual(editor.string, "# Title\n\n- item typed")
+
+        undo.undo()
+        XCTAssertEqual(editor.string, typed, "one undo gives back the text from before Format")
+        editor.saveTextStorageContent(to: note)
+        XCTAssertEqual(note.content.string, typed)
+        undo.undo()
+        XCTAssertEqual(editor.string, "#   Title\n\n*   item", "the next undo reaches the typing, not stale ranges")
+    }
+
+    /// The drop reaches `ClipboardManager.dropFiles` through
+    /// `EditTextView.performDragOperation`, with the caret taken from the drag
+    /// location; a text drag stays NSTextView's.
+    @available(macOS 14, *)
+    @MainActor
+    func testPerformDragOperationRoutesFilesToDropFilesAtTheDragPoint() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let note = makeLoadedNote("drag.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let editor = controller.textView
+        // In a window, so the drag's window coordinates convert as they do in the app.
+        let scroll = try XCTUnwrap(editor.enclosingScrollView)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 320), styleMask: [.titled], backing: .buffered, defer: false)
+        window.contentView = scroll
+        defer { window.contentView = nil }
+        scroll.frame = NSRect(x: 0, y: 0, width: 480, height: 320)
+        scroll.layoutSubtreeIfNeeded()
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDrag-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let image = NSImage(size: NSSize(width: 4, height: 4))
+        image.lockFocus()
+        NSColor.red.drawSwatch(in: NSRect(x: 0, y: 0, width: 4, height: 4))
+        image.unlockFocus()
+        let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(image.tiffRepresentation))?.representation(using: .png, properties: [:]))
+        let file = source.appendingPathComponent("dragged.png")
+        try png.write(to: file)
+
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drag-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+
+        // The caret index performDragOperation will compute from this point.
+        editor.layoutManager?.ensureLayout(for: editor.textContainer!)
+        let glyphRect = try XCTUnwrap(editor.layoutManager?.boundingRect(forGlyphRange: NSRange(location: 0, length: 12), in: editor.textContainer!))
+        let origin = editor.textContainerOrigin
+        let inView = NSPoint(x: origin.x + glyphRect.minX + glyphRect.width * 7 / 12, y: origin.y + glyphRect.midY)
+        let point = editor.convert(inView, to: nil)
+        let expected = editor.characterIndexForInsertion(at: inView)
+        XCTAssertTrue((1..<11).contains(expected), "the drop point is inside the text: \(expected)")
+
+        let handled = editor.performDragOperation(StubDraggingInfo(pasteboard: board, location: point))
+        XCTAssertTrue(handled)
+        let text = editor.string
+        let match = try XCTUnwrap(text.range(of: "^(.*)!\\[\\]\\((/i/[^)]+\\.png)\\)(.*)$", options: .regularExpression), text)
+        let head = String(text[..<(text.range(of: "![](")!.lowerBound)])
+        XCTAssertEqual(head.utf16.count, expected, "the link lands at the drag point")
+        XCTAssertFalse(editor.textStorage?.containsAttachments ?? true)
+        let link = String(text[text.range(of: "(/i/")!.lowerBound...].dropFirst().prefix(while: { $0 != ")" }))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.path + link), "copied to \(link) (\(match))")
+        XCTAssertEqual(note.content.string, text)
+
+        // A text drag is left to NSTextView: no file is copied and no link is added.
+        let before = editor.string
+        board.clearContents()
+        board.setString("plain text", forType: .string)
+        _ = editor.performDragOperation(StubDraggingInfo(pasteboard: board, location: point))
+        XCTAssertEqual(editor.string.components(separatedBy: "![](").count, before.components(separatedBy: "![](").count)
+    }
+
     /// The shell's text view is made in code; it must carry what the
     /// storyboard's EditTextView sets in Main.storyboard and ViewController.
     @available(macOS 14, *)
@@ -434,4 +547,36 @@ final class ShellEditorParityTests: XCTestCase {
             AppDelegate.relaunchCommand(quotedAppPath: path, intoShell: true),
             "sleep 0.7; /usr/bin/open -n -a '/Applications/MiaoYan.app' --args -MiaoYanShell YES")
     }
+}
+
+/// A drag the test controls: a private pasteboard and a point in the view.
+@MainActor
+private final class StubDraggingInfo: NSObject, @preconcurrency NSDraggingInfo {
+    private let board: NSPasteboard
+    private let location: NSPoint
+    var draggingFormation: NSDraggingFormation = .default
+    var animatesToDestination = false
+    var numberOfValidItemsForDrop = 1
+    var springLoadingHighlight: NSSpringLoadingHighlight { .none }
+
+    init(pasteboard: NSPasteboard, location: NSPoint) {
+        board = pasteboard
+        self.location = location
+    }
+
+    var draggingDestinationWindow: NSWindow? { nil }
+    var draggingSourceOperationMask: NSDragOperation { .copy }
+    var draggingLocation: NSPoint { location }
+    var draggedImageLocation: NSPoint { location }
+    var draggedImage: NSImage? { nil }
+    var draggingPasteboard: NSPasteboard { board }
+    var draggingSource: Any? { nil }
+    var draggingSequenceNumber: Int { 1 }
+
+    func slideDraggedImage(to screenPoint: NSPoint) {}
+    func enumerateDraggingItems(
+        options enumOpts: NSDraggingItemEnumerationOptions, for view: NSView?, classes classArray: [AnyClass],
+        searchOptions: [NSPasteboard.ReadingOptionKey: Any], using block: @escaping (NSDraggingItem, Int, UnsafeMutablePointer<ObjCBool>) -> Void
+    ) {}
+    func resetSpringLoading() {}
 }
