@@ -106,7 +106,7 @@ final class NoteSaveDebounceTests: XCTestCase {
             XCTAssertTrue(note.isContentLoaded)
             XCTAssertEqual(note.content.string, "# 你好世界\u{FFFD}\n", "shown as UTF-8, the bad byte as a replacement mark")
             XCTAssertTrue(note.loadFailed, "a damaged note is read-only")
-            XCTAssertEqual(note.readOnlyNotice, I18n.str("This note has invalid characters, so it opened read-only"))
+            XCTAssertEqual(note.readOnlyNotice, I18n.str("This note's text encoding could not be determined, so it opened read-only"))
             XCTAssertFalse(EditTextView(frame: .zero).isEditable(note: note))
 
             note.save(content: NSMutableAttributedString(string: "# 你好世界\u{FFFD}\nedited"))
