@@ -11,6 +11,8 @@ struct FillOptions {
     let previewOnly: Bool
     let animatePreview: Bool
     let preserveUndo: Bool
+    /// Leaves the preview page alone: the caller already updated it in place.
+    let keepPreviewPage: Bool
 
     init(
         highlight: Bool,
@@ -19,7 +21,8 @@ struct FillOptions {
         needScrollToCursor: Bool,
         previewOnly: Bool = false,
         animatePreview: Bool = true,
-        preserveUndo: Bool = false
+        preserveUndo: Bool = false,
+        keepPreviewPage: Bool = false
     ) {
         self.highlight = highlight
         self.saveTyping = saveTyping
@@ -28,6 +31,7 @@ struct FillOptions {
         self.previewOnly = previewOnly
         self.animatePreview = animatePreview
         self.preserveUndo = preserveUndo
+        self.keepPreviewPage = keepPreviewPage
     }
 
     // Common presets
@@ -590,7 +594,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             || isPresentationModeActive
             || isSplitModeActive
 
-        if shouldRenderPreview {
+        if shouldRenderPreview, !options.keepPreviewPage {
             EditTextView.note = note
             let frame = viewController?.previewScrollView?.bounds ?? viewController?.editAreaScroll.bounds ?? bounds
             let allowPreviewTransition =
@@ -675,7 +679,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     inPlace: shouldShowNoteInPlace
                 )
             }
-        } else {
+        } else if !shouldRenderPreview {
             // Ensure preview is completely hidden and doesn't block editor
             markdownView?.isHidden = true
             markdownView?.alphaValue = 0
@@ -1111,6 +1115,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
+
+        if viewDelegate?.updatePreviewAppearanceInPlace(for: note) == true { return }
 
         // Don't toggle preview mode on theme change - just refresh the preview content
         if isPreviewModeActive && UserDefaultsManagement.appearanceType == .System {

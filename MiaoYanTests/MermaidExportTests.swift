@@ -190,6 +190,7 @@ final class MermaidExportTests: XCTestCase {
             A --> B</code></pre>
             <pre><code class="language-plantuml">Alice -> Bob: Hi</code></pre>
             </div>
+            <script>\(Self.plantumlStub)</script>
             <script>
             DiagramHandler.initializeMermaid().then(function() { DiagramHandler.initializePlantUML(); window.__ready = true; });
             </script></body></html>
@@ -225,10 +226,12 @@ final class MermaidExportTests: XCTestCase {
         XCTAssertEqual(dark["marked"] as? Int, 3, "html, body and #write")
         XCTAssertEqual(dark["nodeVariable"] as? Bool, true)
         XCTAssertEqual(dark["svgDark"] as? Bool, true, "the flowchart is drawn again in the dark palette")
-        let before = try XCTUnwrap(light["plantuml"] as? [String])
-        let after = try XCTUnwrap(dark["plantuml"] as? [String])
-        XCTAssertEqual(after.count, 1)
-        XCTAssertNotEqual(after, before, "the PlantUML image is asked for again with the dark skin")
+        XCTAssertEqual(light["plantuml"] as? [String], [Self.plantumlLight])
+        // The light image stays until the dark one has loaded.
+        try await waitFor(preview, "document.querySelector('img.plantuml-image').getAttribute('src') === \(HtmlManager.jsStringLiteral(Self.plantumlDark))")
+        let afterRaw = try await preview.evaluateJavaScript(state)
+        let after = try XCTUnwrap(afterRaw as? [String: Any])
+        XCTAssertEqual(after["plantuml"] as? [String], [Self.plantumlDark], "the PlantUML image is asked for again with the dark skin")
         XCTAssertEqual(rgb(preview.value(forKey: "underPageBackgroundColor") as? NSColor), resolved(Theme.previewDarkBackgroundColor, in: preview))
         XCTAssertEqual(rgb(preview.layer?.backgroundColor.flatMap(NSColor.init(cgColor:))), resolved(Theme.previewDarkBackgroundColor, in: preview))
 
@@ -238,6 +241,190 @@ final class MermaidExportTests: XCTestCase {
         XCTAssertEqual(rgb(preview.value(forKey: "underPageBackgroundColor") as? NSColor), resolved(Theme.backgroundColor, in: preview))
         XCTAssertEqual(rgb(preview.layer?.backgroundColor.flatMap(NSColor.init(cgColor:))), resolved(Theme.backgroundColor, in: preview))
     }
+
+    /// A light or dark switch in the storyboard window loaded the preview
+    /// again (the editor's `applySystemAppearance` refilled it), which put
+    /// the reader back at the top of the note. A page already showing the
+    /// note now switches in place, as the shell window's does.
+    @MainActor
+    func testStoryboardAppearanceSwitchKeepsThePreviewPage() async throws {
+        let previous = (
+            type: UserDefaultsManagement.appearanceType, dark: UserDataService.instance.isDark,
+            preview: UserDefaultsManagement.preview, split: UserDefaultsManagement.splitViewMode,
+            presentation: UserDefaultsManagement.presentation, ppt: UserDefaultsManagement.magicPPT,
+            note: EditTextView.note
+        )
+        // The modes are one setting underneath: turning PPT off resets it.
+        UserDefaultsManagement.appearanceType = .System
+        UserDataService.instance.isDark = false
+        UserDefaultsManagement.magicPPT = false
+        UserDefaultsManagement.splitViewMode = false
+        UserDefaultsManagement.preview = true
+        defer {
+            UserDefaultsManagement.appearanceType = previous.type
+            UserDataService.instance.isDark = previous.dark
+            UserDefaultsManagement.magicPPT = previous.ppt
+            if !previous.ppt {
+                UserDefaultsManagement.presentation = previous.presentation
+                UserDefaultsManagement.preview = previous.preview
+            }
+            UserDefaultsManagement.splitViewMode = previous.split
+            EditTextView.note = previous.note
+        }
+        let project = Project(url: tempDirectory, label: "appearance-test", isRoot: true)
+        let noteURL = tempDirectory.appendingPathComponent("long.md")
+        let paragraphs = (1...80).map { "Paragraph \($0) of a note long enough to scroll." }.joined(separator: "\n\n")
+        try "# Title\n\n\(paragraphs)".write(to: noteURL, atomically: true, encoding: .utf8)
+        let note = Note(url: noteURL, with: project)
+        note.load()
+
+        let preview = LoadCountingPreviewView(frame: CGRect(x: 0, y: 0, width: 600, height: 400), note: note, closure: nil)
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline, !preview.canUpdateAppearanceInPlace(showing: note) {
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTAssertTrue(preview.canUpdateAppearanceInPlace(showing: note), "the preview loaded the note")
+        try await waitFor(preview, "document.readyState === 'complete' && !!window.ThemeConfig && document.querySelectorAll('#write p').length > 40")
+        let scrolledRaw = try await preview.evaluateJavaScript(
+            """
+            window.__samePage = true;
+            window.__rethemes = 0;
+            const retheme = DiagramHandler.retheme.bind(DiagramHandler);
+            DiagramHandler.retheme = function() { window.__rethemes += 1; return retheme(); };
+            window.scrollTo(0, 900);
+            window.scrollY
+            """)
+        let scrolled = try XCTUnwrap(scrolledRaw as? Double)
+        XCTAssertGreaterThan(scrolled, 0)
+
+        let controller = ExportTestViewController()
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
+        controller.editArea = editor
+        controller.notesTableView = NotesTableView(frame: .zero)
+        controller.notesListCustomView = NSView()
+        editor.viewDelegate = controller
+        editor.markdownView = preview
+        EditTextView.note = note
+        XCTAssertTrue(editor.isPreviewModeActive)
+        let loads = preview.loads
+
+        editor.appearance = NSAppearance(named: .darkAqua)
+        editor.applySystemAppearance()
+        try await waitFor(preview, "document.documentElement.classList.contains('darkmode') && document.body.classList.contains('darkmode')")
+        let afterRaw = try await preview.evaluateJavaScript("({ same: window.__samePage === true, y: window.scrollY })")
+        let after = try XCTUnwrap(afterRaw as? [String: Any])
+        XCTAssertEqual(after["same"] as? Bool, true, "the page was not loaded again")
+        XCTAssertEqual(after["y"] as? Double, scrolled, "the reader stays where they were")
+        XCTAssertEqual(preview.loads, loads)
+        XCTAssertTrue(UserDataService.instance.isDark)
+
+        // MainWindowController asks the preview for the same switch again
+        // after the editor did; the page draws its diagrams once.
+        preview.updateAppearance()
+        _ = try await preview.evaluateJavaScript("true")
+        let rethemes = try await preview.evaluateJavaScript("window.__rethemes")
+        XCTAssertEqual(rethemes as? Int, 1)
+    }
+
+    /// A light or dark switch asked the PlantUML server for every diagram
+    /// again and took the drawn image down while it did; offline, or when
+    /// the request failed, the diagram turned back into source text.
+    @MainActor
+    func testPlantUMLRethemeKeepsTheDrawnImageUntilTheNewOneLoads() async throws {
+        let webView = makeWebView()
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let scripts = ["plantuml-encoder.min.js", "theme-config.js", "theme-manager.js", "diagram-handler.js"]
+            .map { "<script src=\"\(js.appendingPathComponent($0).absoluteString)\"></script>" }.joined()
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8">\(scripts)</head><body>
+            <div class="markdown-body" id="write"><pre><code class="language-plantuml">Alice -> Bob: Hi</code></pre></div>
+            <script>\(Self.plantumlStub)</script>
+            <script>DiagramHandler.initializePlantUML(); window.__ready = true;</script>
+            </body></html>
+            """
+        let pageURL = tempDirectory.appendingPathComponent("plantuml.html")
+        try page.write(to: pageURL, atomically: true, encoding: .utf8)
+        webView.loadFileURL(pageURL, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        try await waitFor(webView, "window.__ready === true && (function(img) { return !!img && img.complete && img.naturalWidth > 0; })(document.querySelector('img.plantuml-image'))")
+
+        let state = """
+            (function() {
+                const images = document.querySelectorAll('img.plantuml-image');
+                const code = document.querySelector('code.language-plantuml');
+                return {
+                    images: images.length,
+                    kept: images.length === 1 && images[0].__mark === 'light',
+                    src: images.length ? images[0].getAttribute('src') : null,
+                    shown: images.length === 1 && images[0].style.display !== 'none',
+                    sourceShown: code.style.display !== 'none',
+                    loaders: document.querySelectorAll('.diagram-loading').length
+                };
+            })();
+            """
+        let failing = tempDirectory.appendingPathComponent("missing.svg").absoluteString
+        let switchRaw = try await webView.evaluateJavaScript(
+            """
+            window.__plantumlServe.DARK = \(HtmlManager.jsStringLiteral(failing));
+            document.querySelector('img.plantuml-image').__mark = 'light';
+            ThemeConfig.applyTheme(true);
+            \(state)
+            """)
+        let switching = try XCTUnwrap(switchRaw as? [String: Any])
+        XCTAssertEqual(switching["kept"] as? Bool, true, "the drawn image stays while the dark one loads")
+        XCTAssertEqual(switching["loaders"] as? Int, 0)
+        XCTAssertEqual(switching["sourceShown"] as? Bool, false)
+
+        try await Task.sleep(nanoseconds: 500_000_000)
+        let failedRaw = try await webView.evaluateJavaScript(state)
+        let failed = try XCTUnwrap(failedRaw as? [String: Any])
+        XCTAssertEqual(failed["kept"] as? Bool, true, "a failed request keeps the light image")
+        XCTAssertEqual(failed["shown"] as? Bool, true)
+        XCTAssertEqual(failed["sourceShown"] as? Bool, false, "the diagram does not fall back to source text")
+        XCTAssertEqual(failed["src"] as? String, Self.plantumlLight)
+
+        _ = try await webView.evaluateJavaScript("window.__plantumlServe.DARK = \(HtmlManager.jsStringLiteral(Self.plantumlDark)); DiagramHandler.retheme(); true")
+        try await waitFor(webView, "document.querySelector('img.plantuml-image').getAttribute('src') === \(HtmlManager.jsStringLiteral(Self.plantumlDark))")
+        let darkRaw = try await webView.evaluateJavaScript(state)
+        let dark = try XCTUnwrap(darkRaw as? [String: Any])
+        XCTAssertEqual(dark["images"] as? Int, 1)
+        XCTAssertEqual(dark["shown"] as? Bool, true)
+        XCTAssertEqual(dark["sourceShown"] as? Bool, false)
+        XCTAssertEqual(dark["loaders"] as? Int, 0)
+    }
+
+    private static let plantumlLight =
+        "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2220%22%3E"
+        + "%3Crect%20width%3D%2240%22%20height%3D%2220%22%20fill%3D%22%23F5F4ED%22%2F%3E%3C%2Fsvg%3E"
+    private static let plantumlDark =
+        "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2220%22%3E"
+        + "%3Crect%20width%3D%2240%22%20height%3D%2220%22%20fill%3D%22%23282724%22%2F%3E%3C%2Fsvg%3E"
+
+    /// Serves PlantUML images from the page instead of the PlantUML server:
+    /// the encoder names the skin it was given (the dark one carries the
+    /// dark diagram background), and image sources naming a skin load the
+    /// image `__plantumlServe` holds for it. Lazy loading is off, since a
+    /// web view outside a window never scrolls an image into view.
+    private static let plantumlStub = """
+        window.__plantumlServe = { LIGHT: \(HtmlManager.jsStringLiteral(plantumlLight)), DARK: \(HtmlManager.jsStringLiteral(plantumlDark)) };
+        window.plantumlEncoder.encode = function(text) { return text.indexOf('#282724') !== -1 ? 'DARK' : 'LIGHT'; };
+        (function() {
+            const src = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+            Object.defineProperty(HTMLImageElement.prototype, 'src', {
+                configurable: true,
+                get() { return src.get.call(this); },
+                set(value) {
+                    const skin = /~1(LIGHT|DARK)$/.exec(value);
+                    src.set.call(this, skin ? window.__plantumlServe[skin[1]] : value);
+                }
+            });
+            const loading = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'loading');
+            Object.defineProperty(HTMLImageElement.prototype, 'loading', {
+                configurable: true,
+                get() { return loading.get.call(this); },
+                set(value) { loading.set.call(this, 'eager'); }
+            });
+        })();
+        """
 
     private func rgb(_ color: NSColor?) -> String? {
         guard let srgb = color?.usingColorSpace(.sRGB) else { return nil }
@@ -371,6 +558,16 @@ private struct MermaidDOMState {
 @MainActor
 private final class ExportTestViewController: ViewController {
     override func viewDidLoad() {}
+}
+
+@MainActor
+private final class LoadCountingPreviewView: MPreviewView {
+    private(set) var loads = 0
+
+    override func load(note: Note, force: Bool = false, completion: (() -> Void)? = nil) {
+        loads += 1
+        super.load(note: note, force: force, completion: completion)
+    }
 }
 
 @MainActor
