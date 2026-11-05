@@ -52,6 +52,9 @@ public class Note: NSObject {
     private var hasUnpersistedChanges = false
     private var isRetired = false
     private var allowsInitialFileCreation = false
+    /// A save refused because the file is gone has told the user once; a
+    /// successful write re-arms it.
+    private(set) var announcedMissingFile = false
     /// The directory is between its old and new paths; retain edits until relocation finishes.
     var isMovingWithFolder = false
     public var hasPendingSave: Bool {
@@ -693,6 +696,13 @@ public class Note: NSObject {
                     code: CocoaError.fileNoSuchFile.rawValue,
                     userInfo: [NSFilePathErrorKey: getURL().path])
                 AppDelegate.trackError(error, context: "Note.writeMissingFile")
+                // Typing into a note removed outside MiaoYan was dropped with
+                // nothing on screen; say so once, not on every keystroke.
+                if !announcedMissingFile {
+                    announcedMissingFile = true
+                    (NSApp.mainWindow ?? NSApp.keyWindow)?.contentViewController?
+                        .toast(message: I18n.str("This note no longer exists on disk, so edits are not saved"), style: .failure)
+                }
                 return false
             }
             let dst = contentSrc ?? getURL()
@@ -742,6 +752,7 @@ public class Note: NSObject {
             sharedStorage.add(self)
         }
         allowsInitialFileCreation = false
+        announcedMissingFile = false
         hasUnpersistedChanges = false
         return true
     }

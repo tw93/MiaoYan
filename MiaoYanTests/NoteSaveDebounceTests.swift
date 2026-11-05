@@ -249,6 +249,29 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(note.loadFailed, "a note whose file does not exist yet must stay writable")
     }
 
+    /// A note removed outside MiaoYan but still listed refused every save
+    /// with only a diagnostics entry, so typing into it vanished silently.
+    /// The first refusal tells the user; a later successful write re-arms it.
+    @MainActor
+    func testRefusedSaveOfAMissingFileIsAnnounced() throws {
+        let url = tempDir.appendingPathComponent("removed-outside.md")
+        try "original".write(to: url, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let note = Note(url: url, with: project)
+        note.load()
+        try FileManager.default.removeItem(at: url)
+
+        note.save(content: NSMutableAttributedString(string: "typed"))
+        XCTAssertFalse(note.flushPendingSave(globalStorage: false))
+        XCTAssertTrue(note.announcedMissingFile, "the refused save is shown, not only logged")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: url.path), "the note is not recreated")
+
+        try "back".write(to: url, atomically: true, encoding: .utf8)
+        note.save(content: NSMutableAttributedString(string: "typed again"))
+        XCTAssertTrue(note.flushPendingSave(globalStorage: false))
+        XCTAssertFalse(note.announcedMissingFile, "a successful write re-arms the notice")
+    }
+
     @MainActor
     func testExternallyRemovedNoteCannotBeRecreatedByPendingSave() async throws {
         let url = tempDir.appendingPathComponent("externally-removed.md")
