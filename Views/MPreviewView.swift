@@ -128,8 +128,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Keep the same background color between native and web layers
         setValue(false, forKey: "drawsBackground")
         wantsLayer = true
-        let bgNSColor = determineBackgroundColor()
-        layer?.backgroundColor = bgNSColor.cgColor
         layer?.isOpaque = false
         // Use sRGB color space to avoid HDR tone mapping
         if #available(macOS 10.12, *) {
@@ -138,13 +136,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Optimize layer rendering during resize
         layerContentsRedrawPolicy = .onSetNeedsDisplay
         layer?.drawsAsynchronously = false
-        // Fill under-page area with the same color to cover rubber-banding gaps (macOS 12+)
-        if #available(macOS 12.0, *) {
-            setValue(bgNSColor, forKey: "underPageBackgroundColor")
-        }
         if let hostingScrollView = subviews.compactMap({ $0 as? NSScrollView }).first {
             hostingScrollView.drawsBackground = false
-            hostingScrollView.backgroundColor = bgNSColor
             // 禁用弹性滚动
             hostingScrollView.hasVerticalScroller = false
             hostingScrollView.hasHorizontalScroller = false
@@ -156,13 +149,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
             hostingScrollView.scrollerStyle = .overlay
             hostingScrollView.horizontalScrollElasticity = .none
             hostingScrollView.verticalScrollElasticity = .none
-            let clipView = hostingScrollView.contentView
-            clipView.drawsBackground = false
-            clipView.backgroundColor = bgNSColor
+            hostingScrollView.contentView.drawsBackground = false
         } else if let clipView = subviews.compactMap({ $0 as? NSClipView }).first {
             clipView.drawsBackground = false
-            clipView.backgroundColor = bgNSColor
         }
+        applyBackgroundColor(determineBackgroundColor())
         // Set webview appearance to match current theme
         self.appearance = UserDataService.instance.isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
         appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
@@ -342,18 +333,50 @@ class MPreviewView: WKWebView, WKUIDelegate {
         return determineDarkTheme() ? Theme.previewDarkBackgroundColor : Theme.backgroundColor
     }
 
+    /// The paper behind the page, in every layer that shows around it: the
+    /// view's layer, the area under the page when it rubber-bands, and the
+    /// hosting scroll and clip views.
+    private func applyBackgroundColor(_ color: NSColor) {
+        layer?.backgroundColor = color.cgColor
+        // Fill under-page area with the same color to cover rubber-banding gaps (macOS 12+)
+        if #available(macOS 12.0, *) {
+            setValue(color, forKey: "underPageBackgroundColor")
+        }
+        if let hostingScrollView = subviews.compactMap({ $0 as? NSScrollView }).first {
+            hostingScrollView.backgroundColor = color
+            hostingScrollView.contentView.backgroundColor = color
+        } else if let clipView = subviews.compactMap({ $0 as? NSClipView }).first {
+            clipView.backgroundColor = color
+        }
+    }
+
+    /// Follows a light or dark switch without loading the page again, so the
+    /// reader stays where they were: the page switches every element the
+    /// template marked and draws its diagrams again (`ThemeConfig.applyTheme`),
+    /// and the native layers around it take the new paper.
     public func updateAppearance() {
         let isDark = determineDarkTheme()
         self.appearance = isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
-        let js = """
-                (function() {
-                    var body = document.body;
-                    if (!body) return;
-                    body.classList.remove('darkmode', 'lightmode');
-                    body.classList.add('\(isDark ? "darkmode" : "lightmode")');
-                })();
-            """
-        evaluateJavaScript(js, completionHandler: nil)
+        applyBackgroundColor(determineBackgroundColor())
+        evaluateJavaScript(Self.appearanceScript(isDark: isDark), completionHandler: nil)
+    }
+
+    /// The page side of `updateAppearance`. The slide template has no
+    /// ThemeConfig; it swaps its reveal theme and the body class instead.
+    static func appearanceScript(isDark: Bool) -> String {
+        """
+        (function() {
+            if (window.ThemeConfig && typeof ThemeConfig.applyTheme === 'function') {
+                ThemeConfig.applyTheme(\(isDark));
+                return;
+            }
+            var body = document.body;
+            if (!body) return;
+            body.classList.toggle('darkmode', \(isDark));
+            var theme = document.getElementById('theme');
+            if (theme) theme.href = theme.href.replace(/(white|night)\\.css$/, '\(isDark ? "night" : "white").css');
+        })();
+        """
     }
 
     // MARK: - Standard Find Actions
