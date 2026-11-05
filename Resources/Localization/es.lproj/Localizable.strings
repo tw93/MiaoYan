@@ -277,6 +277,7 @@
 "Unpin Note" = "Desfijar Nota";
 "Image" = "Imagen";
 "This note could not be read, so it was left as it is" = "No se pudo leer esta nota, así que se ha dejado como estaba";
+"This note has invalid characters, so it opened read-only" = "Esta nota tiene caracteres no válidos, así que se ha abierto en modo de solo lectura";
 "Open in Terminal" = "Abrir en Terminal";
 "File path copied" = "Ruta copiada";
 "Version" = "Versión";

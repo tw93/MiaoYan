@@ -87,6 +87,37 @@ final class NoteTextTests: XCTestCase {
             XCTAssertEqual(NoteText.decode(data, preferredLanguages: sample.languages), sample.text, "\(sample.encoding) \(sample.languages)")
         }
     }
+
+    /// A UTF-8 note with one bad byte was read as Windows-1252 or GB18030,
+    /// shown as mojibake and saved back that way. It is reported as damaged
+    /// UTF-8 and decoded as UTF-8, the bad byte as U+FFFD.
+    func testUTF8WithABadByteIsDamagedNotALegacyEncoding() throws {
+        var damaged = Data("# 你好".utf8)
+        damaged.append(0xFF)
+        damaged.append(Data("\n".utf8))
+        XCTAssertTrue(NoteText.isDamagedUTF8(damaged))
+        XCTAssertEqual(NoteText.decode(damaged, preferredLanguages: ["zh-Hans-CN"]), "# 你好\u{FFFD}\n")
+        XCTAssertEqual(NoteText.decode(damaged, preferredLanguages: ["en-US"]), "# 你好\u{FFFD}\n")
+
+        var truncated = Data("Café notes, 第一段".utf8)
+        truncated.removeLast()
+        XCTAssertTrue(NoteText.isDamagedUTF8(truncated), "a write cut inside the last character")
+
+        let legacy: [(String, String.Encoding)] = [
+            ("这是一篇旧的周报，记录了本周的工作。", Self.encoding(.GB_18030_2000)),
+            ("中文", Self.encoding(.GB_18030_2000)),
+            ("這是一篇舊的週報，記錄了本週的工作。", Self.encoding(.big5)),
+            ("# Memo\n\n- Fix sidebar\n- 메모", Self.encoding(.EUC_KR)),
+            ("今日はいい天気ですね。散歩に行きましょう。", .shiftJIS),
+            ("UTF-16 note 中文", .utf16),
+            ("Windows note: café, naïve, résumé", .windowsCP1252),
+        ]
+        for (text, encoding) in legacy {
+            XCTAssertFalse(NoteText.isDamagedUTF8(try XCTUnwrap(text.data(using: encoding))), "\(encoding) \(text)")
+        }
+        XCTAssertFalse(NoteText.isDamagedUTF8(Data("plain café 中文".utf8)), "valid UTF-8 is not damaged")
+        XCTAssertFalse(NoteText.isDamagedUTF8(Data([0x23, 0x20, 0x61, 0xFF, 0x0A])), "ASCII with one high byte stays a legacy note")
+    }
 }
 
 final class NoteContentMatcherTests: XCTestCase {

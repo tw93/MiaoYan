@@ -86,6 +86,49 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(try String(contentsOf: url, encoding: .utf8), "the real body")
     }
 
+    /// A UTF-8 note with one bad byte was shown through a Windows-1252 guess,
+    /// and the next save wrote the mojibake back over it. It opens read-only,
+    /// with its own toast, and the file keeps its bytes until it reads cleanly.
+    @MainActor
+    func testDamagedUTF8NoteOpensReadOnlyAndKeepsItsBytes() async throws {
+        let url = tempDir.appendingPathComponent("damaged.md")
+        var bytes = Data("# 你好".utf8)
+        bytes.append(0xFF)
+        bytes.append(Data("\n".utf8))
+        try bytes.write(to: url)
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+
+        let synchronous = Note(url: url, with: project)
+        synchronous.load()
+        let asynchronous = Note(url: url, with: project)
+        await asynchronous.loadAsync()
+        for note in [synchronous, asynchronous] {
+            XCTAssertTrue(note.isContentLoaded)
+            XCTAssertEqual(note.content.string, "# 你好\u{FFFD}\n", "shown as UTF-8, the bad byte as a replacement mark")
+            XCTAssertTrue(note.loadFailed, "a damaged note is read-only")
+            XCTAssertEqual(note.readOnlyNotice, I18n.str("This note has invalid characters, so it opened read-only"))
+            XCTAssertFalse(EditTextView(frame: .zero).isEditable(note: note))
+
+            note.save(content: NSMutableAttributedString(string: "# 你好\u{FFFD}\nedited"))
+            XCTAssertFalse(note.flushPendingSave(globalStorage: false), "the save is refused")
+            XCTAssertEqual(try Data(contentsOf: url), bytes, "the file keeps its original bytes")
+        }
+
+        try Data("# 你好\n".utf8).write(to: url)
+        synchronous.forceReload()
+        XCTAssertFalse(synchronous.loadFailed, "a clean read makes the note writable again")
+        XCTAssertNil(synchronous.readOnlyNotice)
+
+        // The file watcher reads through getContent() and adopts the text
+        // itself, so a sync that damages an open note makes it read-only too.
+        try bytes.write(to: url)
+        XCTAssertEqual(synchronous.getContent()?.string, "# 你好\u{FFFD}\n")
+        XCTAssertTrue(synchronous.loadFailed, "a damaged file read by the watcher is read-only")
+        try Data("# 你好\n".utf8).write(to: url)
+        _ = synchronous.getContent()
+        XCTAssertFalse(synchronous.loadFailed)
+    }
+
     /// File events are paused while typing, so a sync that lands then never
     /// reaches a resident note. Opening it must pick the new text up.
     @MainActor

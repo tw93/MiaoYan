@@ -279,6 +279,7 @@
 "Unpin Note" = "ノートのピン留めを解除";
 "Image" = "画像";
 "This note could not be read, so it was left as it is" = "このノートを読み込めなかったため、変更せずにそのままにしています";
+"This note has invalid characters, so it opened read-only" = "このノートには読み取れない文字が含まれているため、読み取り専用で開きました";
 "Version" = "バージョン";
 "Show Info" = "情報";
 "Copy URL" = "コピーする URL";
