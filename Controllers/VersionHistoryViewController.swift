@@ -466,7 +466,10 @@ final class VersionHistoryViewController: NSViewController {
 
     private func updateRestoreButtonState() {
         let row = tableView.selectedRow
-        guard row >= 0, row < entries.count else { restoreButton.isEnabled = false; return }
+        // A read-only note refuses the save, so a restore would announce a
+        // version that never reached the file.
+        restoreButton.toolTip = note.readOnlyNotice
+        guard row >= 0, row < entries.count, !note.loadFailed else { restoreButton.isEnabled = false; return }
         if case .current = entries[row] { restoreButton.isEnabled = false } else { restoreButton.isEnabled = true }
     }
 
@@ -477,7 +480,7 @@ final class VersionHistoryViewController: NSViewController {
 
     @objc private func restoreAction() {
         let row = tableView.selectedRow
-        guard row >= 0, row < entries.count,
+        guard row >= 0, row < entries.count, !note.loadFailed,
             case .saved(let date, let url) = entries[row],
             let text = try? String(contentsOf: url, encoding: .utf8)
         else { return }

@@ -37,7 +37,9 @@ public class Note: NSObject {
     /// bytes; the note stays read-only until it reads cleanly.
     private(set) var hasDamagedText = false
     /// The buffer is not the file's text, so the note is read-only and every
-    /// write is refused. The editor, move and duplicate all check this.
+    /// write is refused; the editor and version restore check this. Move and
+    /// duplicate check only `readFailed`: a damaged note's text is there to
+    /// list its images and to copy, and neither writes over the original.
     var loadFailed: Bool { readFailed || hasDamagedText }
     /// Why the editor opened the note read-only, for its toast.
     var readOnlyNotice: String? {
@@ -1133,7 +1135,7 @@ public class Note: NSObject {
             ensureContentLoaded()
             // Without the text there is no list of images, so the note would
             // arrive with its /i/ links pointing at a folder it left.
-            if loadFailed {
+            if readFailed {
                 AppDelegate.trackError(
                     NSError(domain: "NoteError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Note could not be read, move skipped"]),
                     context: "Note.move(toProject:).loadFailed")

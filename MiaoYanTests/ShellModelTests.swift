@@ -119,6 +119,30 @@ final class ShellModelTests: XCTestCase {
         }
     }
 
+    /// A note with damaged UTF-8 opens read-only, and Duplicate used to skip
+    /// it without a word. It is copied with the bad bytes as U+FFFD, and the
+    /// original file keeps its bytes.
+    @MainActor
+    func testDuplicateCopiesADamagedNoteAndLeavesItsFile() async throws {
+        try await withShellLibrary(["damaged"]) { model, _, notes in
+            let damaged = notes[0]
+            var bytes = Data("# 你好世界".utf8)
+            bytes.append(0xFF)
+            bytes.append(Data("\n".utf8))
+            try bytes.write(to: damaged.url)
+            damaged.forceReload()
+            XCTAssertTrue(damaged.loadFailed)
+
+            model.duplicate([damaged])
+            for _ in 0..<100 where model.notes.count < 2 { await Task.yield() }
+
+            XCTAssertEqual(model.notes.count, 2, "the copy is listed")
+            let copy = try XCTUnwrap(model.notes.first { $0.url != damaged.url })
+            XCTAssertEqual(try String(contentsOf: copy.url, encoding: .utf8), "# 你好世界\u{FFFD}\n")
+            XCTAssertEqual(try Data(contentsOf: damaged.url), bytes, "the original keeps its bytes")
+        }
+    }
+
     /// NotesTableView.rightMouseDown: a row outside the selection becomes
     /// the selection; a row inside a multiple selection keeps all of it.
     @MainActor
