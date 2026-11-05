@@ -3,6 +3,15 @@ import AppKit
 /// How the editor hands a note to its preview: in place, as an update to the
 /// note on screen, or as a full load behind a fade.
 extension EditTextView {
+    /// Whether a fill updates the page on screen in place, keeping the
+    /// reader's scroll, rather than loading it again. Preview mode does for
+    /// the note it shows; split mode only for a change from outside, since
+    /// its own typing reaches the page through `didChangeText`.
+    static func patchesPreviewInPlace(preview: Bool, split: Bool, presentation: Bool, options: FillOptions, showsSameNote: Bool) -> Bool {
+        guard !presentation, !options.force, showsSameNote else { return false }
+        return split ? options.keepPlace : preview
+    }
+
     func renderPreviewContent(
         note: Note,
         previewView: MPreviewView,

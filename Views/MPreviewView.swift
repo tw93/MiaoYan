@@ -210,107 +210,107 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     private func setupScrollObserver() {
         guard !scrollObserverInjected else { return }
-        // Source-line anchor sync: queries data-sourcepos attributes emitted by cmark-gfm
-        // and builds a {line, top} index for binary-search interpolation (VS Code algorithm).
-        let script = """
-                (function() {
-                    if (window.__miaoyanSync) { return; }
-                    var anchors = [];
-                    var rebuildTimer = null;
-                    var rafId = null;
-                    var lastReportedLine = -1;
-
-                    function rebuildAnchors() {
-                        var els = document.querySelectorAll('[data-sourcepos]');
-                        var result = [];
-                        for (var i = 0; i < els.length; i++) {
-                            var el = els[i];
-                            if (el.offsetHeight === 0) { continue; }
-                            if (el.offsetParent === null && el !== document.body) { continue; }
-                            var attr = el.getAttribute('data-sourcepos');
-                            if (!attr) { continue; }
-                            var line = parseInt(attr, 10);
-                            if (isNaN(line) || line < 1) { continue; }
-                            var top = el.getBoundingClientRect().top + window.scrollY;
-                            result.push({ line: line, top: top });
-                        }
-                        result.sort(function(a, b) { return a.line - b.line; });
-                        anchors = result;
-                    }
-
-                    function lineForScroll(scrollY) {
-                        if (anchors.length === 0) { return 0; }
-                        if (scrollY <= anchors[0].top) { return anchors[0].line; }
-                        var last = anchors[anchors.length - 1];
-                        if (scrollY >= last.top) { return last.line; }
-                        var lo = 0, hi = anchors.length - 1;
-                        while (lo + 1 < hi) {
-                            var mid = (lo + hi) >> 1;
-                            if (anchors[mid].top <= scrollY) { lo = mid; } else { hi = mid; }
-                        }
-                        var a = anchors[lo], b = anchors[hi];
-                        if (b.top === a.top) { return a.line; }
-                        return a.line + (b.line - a.line) * (scrollY - a.top) / (b.top - a.top);
-                    }
-
-                    function scrollToLine(line) {
-                        if (anchors.length === 0) { return false; }
-                        var first = anchors[0], last = anchors[anchors.length - 1];
-                        if (line <= first.line) { window.scrollTo(0, first.top); return true; }
-                        if (line >= last.line) { window.scrollTo(0, last.top); return true; }
-                        var lo = 0, hi = anchors.length - 1;
-                        while (lo + 1 < hi) {
-                            var mid = (lo + hi) >> 1;
-                            if (anchors[mid].line <= line) { lo = mid; } else { hi = mid; }
-                        }
-                        var a = anchors[lo], b = anchors[hi];
-                        var frac = (b.line === a.line) ? 0 : (line - a.line) / (b.line - a.line);
-                        window.scrollTo(0, a.top + (b.top - a.top) * frac);
-                        return true;
-                    }
-
-                    function scheduleRebuild() {
-                        if (rebuildTimer !== null) { clearTimeout(rebuildTimer); }
-                        rebuildTimer = setTimeout(function() {
-                            rebuildTimer = null;
-                            rebuildAnchors();
-                        }, 100);
-                    }
-
-                    window.__miaoyanSync = {
-                        rebuild: function() { rebuildAnchors(); },
-                        lineForScroll: lineForScroll,
-                        scrollToLine: scrollToLine
-                    };
-
-                    if (document.readyState === 'loading') {
-                        document.addEventListener('DOMContentLoaded', rebuildAnchors);
-                    } else {
-                        rebuildAnchors();
-                    }
-                    window.addEventListener('load', rebuildAnchors);
-                    if (typeof ResizeObserver !== 'undefined') {
-                        new ResizeObserver(scheduleRebuild).observe(document.body);
-                    }
-
-                    window.addEventListener('scroll', function() {
-                        if (rafId !== null) { cancelAnimationFrame(rafId); }
-                        rafId = requestAnimationFrame(function() {
-                            rafId = null;
-                            var scrollY = window.pageYOffset || 0;
-                            var line = lineForScroll(scrollY);
-                            if (Math.abs(line - lastReportedLine) > 0.1) {
-                                window.webkit.messageHandlers.previewScroll.postMessage({ line: line });
-                                lastReportedLine = line;
-                            }
-                        });
-                    }, { passive: true });
-                })();
-            """
-
-        evaluateJavaScript(script, completionHandler: nil)
+        evaluateJavaScript(Self.scrollSyncScript, completionHandler: nil)
         scrollObserverInjected = true
     }
+
+    /// Source-line anchor sync: queries data-sourcepos attributes emitted by cmark-gfm
+    /// and builds a {line, top} index for binary-search interpolation (VS Code algorithm).
+    nonisolated static let scrollSyncScript = """
+            (function() {
+                if (window.__miaoyanSync) { return; }
+                var anchors = [];
+                var rebuildTimer = null;
+                var rafId = null;
+                var lastReportedLine = -1;
+
+                function rebuildAnchors() {
+                    var els = document.querySelectorAll('[data-sourcepos]');
+                    var result = [];
+                    for (var i = 0; i < els.length; i++) {
+                        var el = els[i];
+                        if (el.offsetHeight === 0) { continue; }
+                        if (el.offsetParent === null && el !== document.body) { continue; }
+                        var attr = el.getAttribute('data-sourcepos');
+                        if (!attr) { continue; }
+                        var line = parseInt(attr, 10);
+                        if (isNaN(line) || line < 1) { continue; }
+                        var top = el.getBoundingClientRect().top + window.scrollY;
+                        result.push({ line: line, top: top });
+                    }
+                    result.sort(function(a, b) { return a.line - b.line; });
+                    anchors = result;
+                }
+
+                function lineForScroll(scrollY) {
+                    if (anchors.length === 0) { return 0; }
+                    if (scrollY <= anchors[0].top) { return anchors[0].line; }
+                    var last = anchors[anchors.length - 1];
+                    if (scrollY >= last.top) { return last.line; }
+                    var lo = 0, hi = anchors.length - 1;
+                    while (lo + 1 < hi) {
+                        var mid = (lo + hi) >> 1;
+                        if (anchors[mid].top <= scrollY) { lo = mid; } else { hi = mid; }
+                    }
+                    var a = anchors[lo], b = anchors[hi];
+                    if (b.top === a.top) { return a.line; }
+                    return a.line + (b.line - a.line) * (scrollY - a.top) / (b.top - a.top);
+                }
+
+                function scrollToLine(line) {
+                    if (anchors.length === 0) { return false; }
+                    var first = anchors[0], last = anchors[anchors.length - 1];
+                    if (line <= first.line) { window.scrollTo(0, first.top); return true; }
+                    if (line >= last.line) { window.scrollTo(0, last.top); return true; }
+                    var lo = 0, hi = anchors.length - 1;
+                    while (lo + 1 < hi) {
+                        var mid = (lo + hi) >> 1;
+                        if (anchors[mid].line <= line) { lo = mid; } else { hi = mid; }
+                    }
+                    var a = anchors[lo], b = anchors[hi];
+                    var frac = (b.line === a.line) ? 0 : (line - a.line) / (b.line - a.line);
+                    window.scrollTo(0, a.top + (b.top - a.top) * frac);
+                    return true;
+                }
+
+                function scheduleRebuild() {
+                    if (rebuildTimer !== null) { clearTimeout(rebuildTimer); }
+                    rebuildTimer = setTimeout(function() {
+                        rebuildTimer = null;
+                        rebuildAnchors();
+                    }, 100);
+                }
+
+                window.__miaoyanSync = {
+                    rebuild: function() { rebuildAnchors(); },
+                    lineForScroll: lineForScroll,
+                    scrollToLine: scrollToLine
+                };
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', rebuildAnchors);
+                } else {
+                    rebuildAnchors();
+                }
+                window.addEventListener('load', rebuildAnchors);
+                if (typeof ResizeObserver !== 'undefined') {
+                    new ResizeObserver(scheduleRebuild).observe(document.body);
+                }
+
+                window.addEventListener('scroll', function() {
+                    if (rafId !== null) { cancelAnimationFrame(rafId); }
+                    rafId = requestAnimationFrame(function() {
+                        rafId = null;
+                        var scrollY = window.pageYOffset || 0;
+                        var line = lineForScroll(scrollY);
+                        if (Math.abs(line - lastReportedLine) > 0.1) {
+                            window.webkit.messageHandlers.previewScroll.postMessage({ line: line });
+                            lastReportedLine = line;
+                        }
+                    });
+                }, { passive: true });
+            })();
+        """
 
     // MARK: - Appearance Helpers
 
@@ -684,16 +684,20 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     const preserveScroll = \(preserveScroll ? "true" : "false");
                     let savedLine = 0;
                     let usedAnchorScroll = false;
-                    // The first block at the top of the view and where it sits.
-                    // A block the update keeps is the same node afterwards, so
-                    // holding it in place keeps the reader exactly where they
-                    // were, even when text above it grew or shrank.
-                    let keptAnchor = null;
-                    let keptAnchorTop = 0;
+                    // The blocks in view, top first, and where each sits. A
+                    // block the update keeps is the same node afterwards, so
+                    // holding the first kept one in place keeps the reader
+                    // where they were, even when text above it grew or shrank.
+                    // The top block alone was not enough: a sync from another
+                    // device often rewrote it, and the line fallback below
+                    // then landed on older text once lines were added above.
+                    const inView = [];
                     if (preserveScroll && (window.pageYOffset || 0) > 0) {
                         for (const child of container.children) {
                             const rect = child.getBoundingClientRect();
-                            if (rect.bottom > 0) { keptAnchor = child; keptAnchorTop = rect.top; break; }
+                            if (rect.bottom <= 0) continue;
+                            if (rect.top >= window.innerHeight) break;
+                            inView.push({ node: child, top: rect.top });
                         }
                     }
 
@@ -721,8 +725,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     }
                     \(initialization)
 
-                    if (preserveScroll && keptAnchor && keptAnchor.isConnected) {
-                        window.scrollBy(0, keptAnchor.getBoundingClientRect().top - keptAnchorTop);
+                    const keptAnchor = inView.find((entry) => entry.node.isConnected);
+                    if (preserveScroll && keptAnchor) {
+                        window.scrollBy(0, keptAnchor.node.getBoundingClientRect().top - keptAnchor.top);
                         if (window.__miaoyanSync) window.__miaoyanSync.rebuild();
                     } else if (preserveScroll) {
                         requestAnimationFrame(() => {

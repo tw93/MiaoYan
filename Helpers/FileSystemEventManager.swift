@@ -357,6 +357,10 @@ class FileSystemEventManager {
         }
 
         note.content = NSMutableAttributedString(attributedString: fsContent)
+        // The text just read is the file's: without the date, the refill
+        // below took the note for stale, read it again after an await and
+        // applied it after the editor's place had been put back.
+        note.loadModifiedLocalAt()
         // The per-note UndoManager (Views/EditTextView.swift undo policy) is
         // tied to textStorage edits made within MiaoYan. After we replace
         // note.content with the disk version, any action still on that

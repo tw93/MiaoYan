@@ -292,6 +292,76 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertTrue(export.contains(".heading-anchor { display: none !important; }"), "PNG")
     }
 
+    /// A sync from another device rewrote the paragraph at the top of the
+    /// view and added text above it. The update held only that paragraph in
+    /// place, and it was the one replaced, so the page fell back to the
+    /// source line it read before the update: with lines added above, that
+    /// line named text further up and the reader's place jumped. The next
+    /// block in view that the update keeps now holds still instead.
+    @MainActor
+    func testAnOutsideEditToTheTopBlockInViewKeepsTheReaderInPlace() async throws {
+        let filler = String(repeating: "word ", count: 30)
+        let paragraphs = (1...80).map { "Paragraph \($0) \(filler)" }
+        var edited = paragraphs
+        edited[39] = "Paragraph 40 rewritten on another device."
+        edited.insert(contentsOf: ["Added one.", "Added two.", "Added three."], at: 10)
+        let webView = try await loadRenderedPage(paragraphs.joined(separator: "\n\n"))
+        // As in the app's window: animation frames run (an offscreen test
+        // view never runs them) and the source-line index is installed.
+        _ = try await webView.evaluateJavaScript("window.requestAnimationFrame = (callback) => setTimeout(callback, 16); 0")
+        _ = try await webView.evaluateJavaScript(MPreviewView.scrollSyncScript + "; 0")
+        let topOfFortyOne = """
+            (function() {
+                const p = Array.from(document.querySelectorAll('#write > p')).find((p) => p.textContent.startsWith('Paragraph 41 '));
+                return p.getBoundingClientRect().top;
+            })();
+            """
+        // Paragraph 40 straddles the top edge of the view, 41 sits below it.
+        _ = try await webView.evaluateJavaScript(
+            """
+            (function() {
+                const p = Array.from(document.querySelectorAll('#write > p'))[39];
+                window.scrollTo(0, p.getBoundingClientRect().top + window.pageYOffset + 10);
+                window.__miaoyanSync.rebuild();
+                return 0;
+            })();
+            """)
+        let beforeRaw = try await webView.evaluateJavaScript(topOfFortyOne)
+        let before = try XCTUnwrap(beforeRaw as? Double)
+        XCTAssertGreaterThan(before, 0)
+        XCTAssertLessThan(before, 600, "paragraph 41 is in view")
+
+        let html = try XCTUnwrap(
+            MPreviewView.previewHTML(markdown: edited.joined(separator: "\n\n"), useGithubLineBreak: false, imagesStorage: tempDirectory))
+        _ = try await webView.evaluateJavaScript(
+            MPreviewView.buildUpdateScript(html: html, initializeMath: false, initializeDiagrams: false, preserveScroll: true))
+        try await Task.sleep(nanoseconds: 300_000_000)
+
+        let afterRaw = try await webView.evaluateJavaScript(topOfFortyOne)
+        let after = try XCTUnwrap(afterRaw as? Double)
+        XCTAssertEqual(after, before, accuracy: 1, "the words under the reader stay put")
+    }
+
+    /// Split view loaded its page again from the top when the open note
+    /// changed on disk, so a sync from another device threw the reader back
+    /// to the start. A change from outside now patches the page in place in
+    /// split view too; typing and opening notes keep their own paths.
+    @MainActor
+    func testAnOutsideChangePatchesTheSplitPreviewInPlace() {
+        let outside = FillOptions(highlight: true, saveTyping: false, force: false, needScrollToCursor: false, keepPlace: true)
+        let plain = FillOptions(highlight: true, saveTyping: false, force: false, needScrollToCursor: true)
+        func patches(preview: Bool = false, split: Bool = false, presentation: Bool = false, _ options: FillOptions, same: Bool = true) -> Bool {
+            EditTextView.patchesPreviewInPlace(preview: preview, split: split, presentation: presentation, options: options, showsSameNote: same)
+        }
+        XCTAssertTrue(patches(split: true, outside))
+        XCTAssertFalse(patches(split: true, plain), "split view's other refills still load")
+        XCTAssertTrue(patches(preview: true, outside))
+        XCTAssertTrue(patches(preview: true, plain), "preview mode already patched the note it shows")
+        XCTAssertFalse(patches(split: true, outside, same: false), "another note loads")
+        XCTAssertFalse(patches(split: true, presentation: true, outside))
+        XCTAssertFalse(patches(split: true, .forced))
+    }
+
     /// A remote image never seen before renders unmeasured; once its size
     /// is learnt the next render writes it into the tag. That changed the
     /// paragraph's key, so the first edit after it replaced the paragraph

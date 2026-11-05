@@ -1364,7 +1364,8 @@ extension ViewController {
         force: Bool = false,
         animatePreview: Bool = true,
         suppressSave: Bool = false,
-        keepPreviewPage: Bool = false
+        keepPreviewPage: Bool = false,
+        keepPlace: Bool = false
     ) {
         DispatchQueue.main.async { [weak self] in
             self?.updateToolbarButtonTints()
@@ -1422,21 +1423,30 @@ extension ViewController {
                         }
                     }
 
+                    // A change from outside keeps the editor where the reader
+                    // is, as ShellEditorController.applyReload does; scrolling
+                    // to the saved caret moved the view under them.
+                    let editorTop = self.editAreaScroll.contentView.bounds.origin
                     let options = FillOptions(
                         highlight: true,
                         saveTyping: saveTyping,
                         force: force,
-                        needScrollToCursor: true,
+                        needScrollToCursor: !keepPlace,
                         previewOnly: previewOnly,
                         animatePreview: animatePreview && !isRapidPreviewSwitch,
                         preserveUndo: true,  // Preserve undo stack during view refreshes (e.g. Split View toggle)
-                        keepPreviewPage: keepPreviewPage
+                        keepPreviewPage: keepPreviewPage,
+                        keepPlace: keepPlace
                     )
                     self.editArea.fill(note: note, options: options)
                     // An outside edit can leave the note shorter than the
                     // caret was; clamp as ShellEditorController.applyReload does.
                     let length = (self.editArea.string as NSString).length
                     self.editArea.setSelectedRange(NSRange(location: min(max(location, 0), length), length: 0))
+                    if keepPlace, self.editArea.storageNote === note {
+                        self.editAreaScroll.contentView.scroll(to: editorTop)
+                        self.editAreaScroll.reflectScrolledClipView(self.editAreaScroll.contentView)
+                    }
                 }
             }
         }

@@ -13,6 +13,10 @@ struct FillOptions {
     let preserveUndo: Bool
     /// Leaves the preview page alone: the caller already updated it in place.
     let keepPreviewPage: Bool
+    /// The open note changed on disk (another device, another app): the
+    /// split preview patches its page in place, as typing does, instead of
+    /// loading it again at the top.
+    let keepPlace: Bool
 
     init(
         highlight: Bool,
@@ -22,7 +26,8 @@ struct FillOptions {
         previewOnly: Bool = false,
         animatePreview: Bool = true,
         preserveUndo: Bool = false,
-        keepPreviewPage: Bool = false
+        keepPreviewPage: Bool = false,
+        keepPlace: Bool = false
     ) {
         self.highlight = highlight
         self.saveTyping = saveTyping
@@ -32,6 +37,7 @@ struct FillOptions {
         self.animatePreview = animatePreview
         self.preserveUndo = preserveUndo
         self.keepPreviewPage = keepPreviewPage
+        self.keepPlace = keepPlace
     }
 
     // Common presets
@@ -597,18 +603,18 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if shouldRenderPreview, !options.keepPreviewPage {
             EditTextView.note = note
             let frame = viewController?.previewScrollView?.bounds ?? viewController?.editAreaScroll.bounds ?? bounds
+            let shouldUseIncrementalPreviewUpdate = Self.patchesPreviewInPlace(
+                preview: isPreviewModeActive,
+                split: isSplitModeActive,
+                presentation: isPresentationModeActive || isMagicPPTModeActive,
+                options: options,
+                showsSameNote: markdownView?.displayedNote === note)
             let allowPreviewTransition =
                 options.animatePreview
                 && !isPreviewModeActive
                 && !isPresentationModeActive
                 && !isMagicPPTModeActive
-            let shouldUseIncrementalPreviewUpdate =
-                isPreviewModeActive
-                && !isPresentationModeActive
-                && !isMagicPPTModeActive
-                && !isSplitModeActive
-                && !options.force
-                && markdownView?.displayedNote === note
+                && !shouldUseIncrementalPreviewUpdate
             // Reading from note to note: the next one opens in the page on
             // screen, with no reload and no blank frame between them.
             let shouldShowNoteInPlace =

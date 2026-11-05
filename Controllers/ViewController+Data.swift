@@ -753,7 +753,7 @@ extension ViewController: FileSystemEventHost {
     }
 
     func fsRefillEditor() {
-        refillEditArea(suppressSave: true)
+        refillEditArea(suppressSave: true, keepPlace: true)
     }
 
     var fsEditorBuffer: (owner: Note?, text: String)? {
