@@ -266,8 +266,7 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertNotNil(top)
         XCTAssertLessThan(abs(top ?? 9_999), 40, "the link scrolled to the heading")
 
-        let exported = try await webView.evaluateJavaScript(
-            """
+        let asExported = """
             (function() {
                 document.querySelectorAll('.heading-anchor').forEach((a) => a.remove());
                 const base = document.createElement('base');
@@ -276,7 +275,8 @@ final class PreviewPatchTests: XCTestCase {
                 MiaoYanCommon.setupHeaderAnchors();
                 return document.querySelectorAll('.heading-anchor').length;
             })();
-            """) as? Int
+            """
+        let exported = try await webView.evaluateJavaScript(asExported) as? Int
         XCTAssertEqual(exported, 0, "exported HTML has no hover links")
 
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
