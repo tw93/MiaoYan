@@ -227,7 +227,9 @@ extension MPreviewView {
             """
         // Remove trailing whitespace and closing brace from mediaCSS to insert exportLayoutCSS inside the media query
         let trimmedMediaCSS = mediaCSS.trimmingCharacters(in: .whitespacesAndNewlines).dropLast()
-        let sheet = "\(trimmedMediaCSS)\n\(exportLayoutCSS)\n}\n"
+        // The hover link beside headings never goes out, whichever media the
+        // capture renders with.
+        let sheet = "\(trimmedMediaCSS)\n\(exportLayoutCSS)\n}\n.heading-anchor { display: none !important; }\n"
         let printCSS = """
                 (function() {
                     var style = document.createElement('style');

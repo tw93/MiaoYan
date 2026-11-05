@@ -244,7 +244,7 @@ class HtmlManager {
                     margin-block-end: 0.2em !important;
                 }
 
-                .toc-nav, .toc-hover-trigger, .toc-pin-btn {
+                .toc-nav, .toc-hover-trigger, .toc-pin-btn, .heading-anchor {
                     display: none !important;
                 }
             }

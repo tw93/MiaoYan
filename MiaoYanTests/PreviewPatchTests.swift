@@ -157,8 +157,10 @@ final class PreviewPatchTests: XCTestCase {
         let bundle = commonScript.deletingLastPathComponent().deletingLastPathComponent()
         let scripts = ["highlight.min.js", "katex.min.js", "auto-render.min.js", "emoji.min.js", "lightense.min.js", "tocbot.min.js", "common.js"]
             .map { "<script src=\"\(bundle.appendingPathComponent("js/\($0)").absoluteString)\"></script>" }.joined()
+        let sheets = ["typography.css", "theme-light.css", "base.css"]
+            .map { "<link rel=\"stylesheet\" href=\"\(bundle.appendingPathComponent("css/\($0)").absoluteString)\">" }.joined()
         let page = """
-            <!doctype html><html><head><meta charset="utf-8"></head><body>
+            <!doctype html><html><head><meta charset="utf-8">\(sheets)</head><body>
             <div class="toc-hover-trigger"></div><nav class="toc-nav"><div class="toc-content"></div></nav>
             <div class="markdown-body heti" id="write">\(html)</div>
             \(scripts)
@@ -217,6 +219,73 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(got["id"] as? String, "Two")
         XCTAssertEqual(got["toc"] as? Int, 2, "the new heading joins the table of contents")
         XCTAssertEqual(got["html"] as? [String], want["html"] as? [String], "an updated block reads as a loaded one")
+    }
+
+    /// Each heading shows a small link beside it on hover, as on GitHub,
+    /// without changing its id or its text, and an in-page link reaches a
+    /// heading whose id is no CSS selector: `querySelector('#1. Intro')`
+    /// threw, so the click did nothing.
+    @MainActor
+    func testHeadingsCarryAHoverLinkThatScrollsToThem() async throws {
+        let filler = (1...60).map { "Paragraph \($0)." }.joined(separator: "\n\n")
+        let webView = try await loadRenderedPage("# 1. Intro\n\nText.\n\n\(filler)\n\n## Two\n\n[back](#1.%20Intro)\n\n\(filler)")
+        let probe = """
+            (function() {
+                MiaoYanCommon.setupHeaderAnchors();
+                const h = document.querySelector('#write h1');
+                const links = Array.from(document.querySelectorAll('#write .heading-anchor'));
+                const style = getComputedStyle(links[0]);
+                const range = document.createRange();
+                range.selectNodeContents(h);
+                getSelection().removeAllRanges();
+                getSelection().addRange(range);
+                const copied = MiaoYanCommon.selectionPayload();
+                getSelection().removeAllRanges();
+                return {
+                    ids: Array.from(document.querySelectorAll('#write h1, #write h2'), (x) => x.id),
+                    hrefs: links.map((a) => a.getAttribute('href')),
+                    text: h.textContent,
+                    opacity: style.opacity,
+                    transition: style.transitionDuration + ' ' + style.transitionTimingFunction,
+                    copied: copied.html
+                };
+            })();
+            """
+        let raw = try await webView.evaluateJavaScript(probe)
+        let result = try XCTUnwrap(raw as? [String: Any])
+        XCTAssertEqual(result["ids"] as? [String], ["1. Intro", "Two"], "ids stay the heading's text")
+        XCTAssertEqual(result["hrefs"] as? [String], ["#1.%20Intro", "#Two"], "one link per heading, even when run again")
+        XCTAssertEqual(result["text"] as? String, "1. Intro")
+        XCTAssertEqual(result["opacity"] as? String, "0", "hidden until the pointer is over the heading")
+        XCTAssertEqual(result["transition"] as? String, "0.12s ease-out")
+        XCTAssertEqual(result["copied"] as? String, "1. Intro", "copying a heading leaves the link behind")
+
+        _ = try await webView.evaluateJavaScript("window.scrollTo(0, document.body.scrollHeight); document.querySelector('#write a[href=\"#1.%20Intro\"]').click(); true")
+        try await Task.sleep(nanoseconds: 900_000_000)
+        let top = try await webView.evaluateJavaScript("Math.round(document.getElementById('1. Intro').getBoundingClientRect().top)") as? Int
+        XCTAssertNotNil(top)
+        XCTAssertLessThan(abs(top ?? 9_999), 40, "the link scrolled to the heading")
+
+        let exported = try await webView.evaluateJavaScript(
+            """
+            (function() {
+                document.querySelectorAll('.heading-anchor').forEach((a) => a.remove());
+                const base = document.createElement('base');
+                base.href = 'https://cdn.miaoyan.app/Resources/DownView.bundle/';
+                document.head.appendChild(base);
+                MiaoYanCommon.setupHeaderAnchors();
+                return document.querySelectorAll('.heading-anchor').length;
+            })();
+            """) as? Int
+        XCTAssertEqual(exported, 0, "exported HTML has no hover links")
+
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let base = try String(contentsOf: root.appendingPathComponent("Resources/DownView.bundle/css/base.css"), encoding: .utf8)
+        XCTAssertTrue(base.contains("@media print {\n  #write .heading-anchor {\n    display: none !important;"), "print")
+        XCTAssertTrue(base.contains("@media (prefers-reduced-motion: no-preference) {\n  #write .heading-anchor {\n    transition"), "Reduce Motion")
+        XCTAssertTrue(HtmlManager.paginatedPrintCSS().contains(".heading-anchor"), "PDF")
+        let export = try String(contentsOf: root.appendingPathComponent("Extensions/MPreviewView+Export.swift"), encoding: .utf8)
+        XCTAssertTrue(export.contains(".heading-anchor { display: none !important; }"), "PNG")
     }
 
     /// A reload while an in-place switch is still rendering (the app comes

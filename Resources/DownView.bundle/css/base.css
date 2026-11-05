@@ -191,6 +191,46 @@ pre code {
   }
 }
 
+/* ==================== Heading Anchors ==================== */
+/* A small link beside each heading, shown while the pointer is over it, as
+   on GitHub. It is muted, sits after the text (the page has no left margin
+   to hang it in), and never prints. */
+#write .heading-anchor {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-inline-start: 0.4em;
+  vertical-align: middle;
+  color: var(--text-secondary);
+  opacity: 0;
+  text-decoration: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#write .heading-anchor svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#write :is(h1, h2, h3, h4, h5, h6):hover > .heading-anchor,
+#write .heading-anchor:focus {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #write .heading-anchor {
+    transition: opacity 0.12s ease-out;
+  }
+}
+
+@media print {
+  #write .heading-anchor {
+    display: none !important;
+  }
+}
+
 /* ==================== HR ==================== */
 .heti hr {
   background-color: var(--border-color);

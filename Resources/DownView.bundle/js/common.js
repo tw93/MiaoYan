@@ -34,6 +34,8 @@ const MiaoYanCommon = {
     const text = selection.toString() || '';
     const container = document.createElement('div');
     container.appendChild(selection.getRangeAt(0).cloneContents());
+    // The hover link beside a heading is not part of the note.
+    container.querySelectorAll('.heading-anchor').forEach(anchor => anchor.remove());
     const only = container.children.length === 1 ? container.children[0] : null;
     if (only && /^H[1-6]$/.test(only.tagName) && container.textContent.trim() === only.textContent.trim()) {
       return { text: text.trim(), html: only.innerHTML, heading: true };
@@ -412,10 +414,18 @@ const MiaoYanCommon = {
     }
   },
 
+  // GitHub's link octicon (MIT), drawn in the text colour.
+  HEADING_ANCHOR_ICON: '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>',
+
   setupHeaderAnchors() {
-    // Generate unique IDs for headings, handling duplicates
+    // Generate unique IDs for headings, handling duplicates. Each heading in
+    // the note gets a small link beside it that shows on hover, as on
+    // GitHub; exported HTML (the page with a <base>) and print have none.
+    const exported = !!document.querySelector('base[href]');
     const usedIds = new Set();
     document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => {
+      // The title export adds is found by its own id.
+      if (h.id === 'export-generated-title') return;
       let baseId = h.innerText.trim();
       let id = baseId;
       let counter = 1;
@@ -427,19 +437,33 @@ const MiaoYanCommon = {
 
       h.id = id;
       usedIds.add(id);
+
+      if (exported || !h.closest('#write')) return;
+      let link = h.querySelector(':scope > .heading-anchor');
+      if (!link) {
+        link = document.createElement('a');
+        link.className = 'heading-anchor';
+        link.setAttribute('aria-label', 'Link to this heading');
+        link.innerHTML = this.HEADING_ANCHOR_ICON;
+        h.appendChild(link);
+      }
+      link.setAttribute('href', '#' + encodeURIComponent(id));
     });
 
     // One listener for the page, so a live update that runs this again does
-    // not bind every in-page link once more.
+    // not bind every in-page link once more. Ids are the heading's own text,
+    // such as "1. Intro", which is no CSS selector, so the target is looked
+    // up by id; the table of contents scrolls itself.
     if (this._anchorClicks) return;
     this._anchorClicks = true;
     document.addEventListener('click', (e) => {
-      const anchor = e.target.closest && e.target.closest('a[href^="#"]');
+      const anchor = e.target.closest && e.target.closest('#write a[href^="#"]');
       if (!anchor) return;
       e.preventDefault();
-      document.querySelector(decodeURIComponent(anchor.getAttribute('href')))?.scrollIntoView({
-        behavior: 'smooth',
-      });
+      let id = anchor.getAttribute('href').slice(1);
+      try { id = decodeURIComponent(id); } catch (error) { /* keep it as written */ }
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.getElementById(id)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
     });
   },
 
