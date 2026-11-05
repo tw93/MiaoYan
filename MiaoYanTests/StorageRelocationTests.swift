@@ -29,6 +29,32 @@ final class StorageRelocationTests: XCTestCase {
         try await body(storage, root, source, base)
     }
 
+    /// Only the Trash folder itself is kept out of the sidebar; a folder whose
+    /// name or ancestor merely contains "Trash" is the user's own.
+    @MainActor
+    func testFolderNamedLikeTrashIsListedButTrashIsNot() throws {
+        let base = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanTrashName-\(UUID().uuidString)")
+        let rootURL = base.appendingPathComponent("Library", isDirectory: true)
+        for name in ["Trash Talk", "Trash", "Recycle Trash Can"] {
+            try FileManager.default.createDirectory(at: rootURL.appendingPathComponent(name), withIntermediateDirectories: true)
+        }
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: rootURL, isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        defer {
+            for project in storage.getProjects().filter({ $0.url.path.hasPrefix(rootURL.path) }) {
+                UserDefaults.standard.removeObject(forKey: project.url.path)
+                storage.removeBy(project: project)
+            }
+            try? FileManager.default.removeItem(at: base)
+        }
+
+        let names = Set(storage.getChildProjects(project: root).map { $0.url.lastPathComponent })
+        XCTAssertTrue(names.contains("Trash Talk"))
+        XCTAssertTrue(names.contains("Recycle Trash Can"))
+        XCTAssertFalse(names.contains("Trash"))
+    }
+
     @MainActor
     func testMovingFolderPreservesNotesAttachmentsHistoryAndSettings() async throws {
         try await withMoveLibrary { storage, root, source, _ in
