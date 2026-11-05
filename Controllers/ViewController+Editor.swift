@@ -923,6 +923,12 @@ extension ViewController {
         // must be the buffer's owner. The table selection can already point at
         // a different note while an async fill is still loading it (#543).
         guard let note = EditTextView.note, editArea.storageNote === note else { return }
+        // A read-only note's save is refused, so cleaning it would only change
+        // the screen and announce a cleanup that never reached the file.
+        if let notice = note.readOnlyNotice {
+            _ = Note.showFailure(notice)
+            return
+        }
         saveTitleSafely()
 
         let content = editArea.textStorage?.string ?? note.content.string

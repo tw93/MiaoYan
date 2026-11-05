@@ -430,6 +430,11 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
     /// the whole buffer, written through the text view so one undo reverts it.
     func cleanTypography(in host: NSViewController) {
         guard let note = EditTextView.note, textView.storageNote === note else { return }
+        // The storyboard window's rule: a read-only note is refused aloud.
+        if let notice = note.readOnlyNotice {
+            _ = Note.showFailure(notice)
+            return
+        }
         let content = textView.textStorage?.string ?? note.content.string
         let cleaned = TypographyCleaner.clean(content)
         guard cleaned != content else {

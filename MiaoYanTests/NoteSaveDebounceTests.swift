@@ -165,6 +165,86 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(notices.shown, [I18n.str("This note is read-only, so it was not moved")])
     }
 
+    /// A damaged note whose text Clean Typography would change. Its save is
+    /// refused, so the cleanup used to change only the screen (or nothing)
+    /// and still toast "Typography cleaned up".
+    @MainActor
+    private func makeDamagedNoteNeedingCleanup() throws -> (note: Note, bytes: Data) {
+        let url = tempDir.appendingPathComponent("damaged-typography.md")
+        var bytes = Data("# 你好世界\n中文English混排\n".utf8)
+        bytes.append(0xFF)
+        bytes.append(Data("\n".utf8))
+        try bytes.write(to: url)
+        let note = Note(url: url, with: Project(url: tempDir, label: "test", isRoot: true))
+        note.load()
+        XCTAssertTrue(note.loadFailed, "the fixture is read-only")
+        XCTAssertNotEqual(TypographyCleaner.clean(note.content.string), note.content.string, "and its text is not clean")
+        return (note, bytes)
+    }
+
+    @available(macOS 14, *)
+    @MainActor
+    func testShellCleanTypographyRefusesAReadOnlyNoteAloud() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        let (note, bytes) = try makeDamagedNoteNeedingCleanup()
+        let previous = Note.showFailure
+        defer { Note.showFailure = previous }
+        let notices = NoticeBox()
+        Note.showFailure = { message in
+            notices.shown.append(message)
+            return true
+        }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let shown = controller.textView.string
+        let host = NSViewController()
+        host.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+
+        controller.cleanTypography(in: host)
+
+        XCTAssertEqual(notices.shown, [try XCTUnwrap(note.readOnlyNotice)], "the read-only notice, not a success toast")
+        XCTAssertEqual(controller.textView.string, shown, "the text is left alone")
+        XCTAssertEqual(try Data(contentsOf: note.url), bytes)
+    }
+
+    @MainActor
+    func testStoryboardCleanTypographyRefusesAReadOnlyNoteAloud() throws {
+        let previousNote = EditTextView.note
+        let previousPreview = UserDefaultsManagement.preview
+        let previousSplit = UserDefaultsManagement.splitViewMode
+        defer {
+            EditTextView.note = previousNote
+            UserDefaultsManagement.preview = previousPreview
+            UserDefaultsManagement.splitViewMode = previousSplit
+        }
+        UserDefaultsManagement.preview = false
+        UserDefaultsManagement.splitViewMode = false
+        let (note, bytes) = try makeDamagedNoteNeedingCleanup()
+        let previous = Note.showFailure
+        defer { Note.showFailure = previous }
+        let notices = NoticeBox()
+        Note.showFailure = { message in
+            notices.shown.append(message)
+            return true
+        }
+        let controller = ViewController()
+        controller.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        controller.editArea = EditTextView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        controller.editAreaScroll = EditorScrollView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        controller.notesTableView = NotesTableView(frame: .zero)
+        controller.titleLabel = TitleTextField(frame: .zero)
+        controller.editArea.publishStorage(note.content, owner: note)
+        EditTextView.note = note
+        let shown = controller.editArea.string
+
+        controller.cleanTypography(nil)
+
+        XCTAssertEqual(notices.shown, [try XCTUnwrap(note.readOnlyNotice)], "the read-only notice, not a success toast")
+        XCTAssertEqual(controller.editArea.string, shown, "the text is left alone")
+        XCTAssertEqual(try Data(contentsOf: note.url), bytes)
+    }
+
     /// File events are paused while typing, so a sync that lands then never
     /// reaches a resident note. Opening it must pick the new text up.
     @MainActor
