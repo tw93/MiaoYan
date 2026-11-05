@@ -4,67 +4,71 @@
  * All color definitions for light and dark themes.
  */
 
+// The warm paper palette the preview uses (theme-light.css and
+// theme-dark.css): paper behind the page, --diagram-bg behind a diagram,
+// sand for groups, warm hairlines, MiaoYan green for lines. Diagram text in
+// dark stays #E7E9EA (maintainer 2026-11-05).
 const THEME_COLORS = {
   light: {
     // Base Colors
-    background: '#FFFFFF',
+    background: '#FDFCF9',
     textColor: '#262626',
-    textSecondary: '#777',
+    textSecondary: '#6B6A64',
     linkColor: '#1C5D33',
-    borderColor: '#e6e6e6',
+    borderColor: '#E8E6DC',
 
     // Code & Diagrams
-    codeBg: '#f6f8fa',
-    diagramBg: '#f7f7f7',
-    blockquoteBorderColor: '#d0d0d0',
+    codeBg: '#F5F4ED',
+    diagramBg: '#F5F4ED',
+    blockquoteBorderColor: '#DDD9CD',
 
     // Mermaid Specific
-    primaryColor: '#FFFFFF',
-    primaryBorderColor: '#d0d7e2',
-    primaryTextColor: '#1f2933',
-    secondaryColor: '#f0f3f6',
-    tertiaryColor: '#ffffff',
+    primaryColor: '#FDFCF9',
+    primaryBorderColor: '#E8E6DC',
+    primaryTextColor: '#262626',
+    secondaryColor: '#EFEDE4',
+    tertiaryColor: '#FDFCF9',
     lineColor: '#1C5D33',
 
     // Diagram Elements
-    mainBkg: '#ffffff',
-    secondBkg: '#f0f3f6',
-    tertiaryTextColor: '#333333',
-    nodeBorder: '#d0d7e2',
-    clusterBkg: '#f0f3f6',
-    clusterBorder: '#d0d7e2',
-    edgeLabelBackground: '#ffffff'
+    mainBkg: '#FDFCF9',
+    secondBkg: '#EFEDE4',
+    tertiaryTextColor: '#262626',
+    nodeBorder: '#E8E6DC',
+    clusterBkg: '#EFEDE4',
+    clusterBorder: '#E8E6DC',
+    edgeLabelBackground: '#F5F4ED'
   },
 
   dark: {
     // Base Colors
-    background: '#23282D',
+    background: '#1E1D1B',
     textColor: '#E7E9EA',
-    textSecondary: '#ABB2BF',
+    textSecondary: '#B5B1A7',
     linkColor: '#54C59F',
-    borderColor: '#454545',
+    borderColor: '#3A3936',
 
     // Code & Diagrams
-    codeBg: '#282e33',
-    diagramBg: '#282e33',
-    blockquoteBorderColor: '#545454',
+    codeBg: '#282724',
+    diagramBg: '#282724',
+    blockquoteBorderColor: '#4A4843',
 
     // Mermaid Specific
-    primaryColor: '#2f353d',
-    primaryBorderColor: '#49515a',
+    primaryColor: '#2F2E2B',
+    primaryBorderColor: '#45433F',
     primaryTextColor: '#E7E9EA',
-    secondaryColor: '#252b31',
-    tertiaryColor: '#30363d',
+    secondaryColor: '#252421',
+    tertiaryColor: '#2F2E2B',
     lineColor: '#54C59F',
 
     // Diagram Elements
-    mainBkg: '#2c3238',
-    secondBkg: '#252b31',
+    mainBkg: '#2F2E2B',
+    secondBkg: '#252421',
     tertiaryTextColor: '#E7E9EA',
-    nodeBorder: '#49515a',
-    clusterBkg: '#252b31',
-    clusterBorder: '#49515a',
-    edgeLabelBackground: '#2f353d'
+    nodeBorder: '#45433F',
+    clusterBkg: '#252421',
+    clusterBorder: '#45433F',
+    edgeLabelBackground: '#2F2E2B'
   }
 };
 
@@ -81,7 +85,7 @@ function getThemeColors(isDark = false) {
   palette.diagramBg = palette.diagramBg || palette.background;
   palette.codeBg = palette.codeBg || palette.diagramBg;
   palette.lineColor = palette.lineColor || (isDark ? '#54C59F' : '#1C5D33');
-  palette.blockquoteBorderColor = palette.blockquoteBorderColor || (isDark ? '#545454' : '#d0d0d0');
+  palette.blockquoteBorderColor = palette.blockquoteBorderColor || (isDark ? '#4A4843' : '#DDD9CD');
 
   return palette;
 }
@@ -242,7 +246,7 @@ function getMarkmapColors(isDark = false) {
   const palette = getThemeColors(isDark);
   const accentColors = isDark
     ? [palette.lineColor, '#E7E9EA', '#F7CC8F', '#8FFCCD', '#ED716C', '#C084FC', '#60A5FA']
-    : [palette.lineColor, '#1f2933', '#059669', '#F97316', '#EF4444', '#7C3AED', '#0EA5E9'];
+    : [palette.lineColor, '#262626', '#059669', '#F97316', '#EF4444', '#7C3AED', '#0EA5E9'];
 
   return {
     colorFreezeLevel: 6,

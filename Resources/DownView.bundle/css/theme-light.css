@@ -28,8 +28,8 @@
   --hljs-title: #6f42c1;
 
   /* Mermaid Diagram */
-  --mermaid-node-bg: #ffffff;
-  --mermaid-text-color: #333333;
+  --mermaid-node-bg: #FDFCF9;
+  --mermaid-text-color: #262626;
   --mermaid-border-color: var(--border-color);
   --mermaid-line-color: var(--primary-color);
   --mermaid-edge-label-bg: transparent;
