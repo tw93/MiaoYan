@@ -42,7 +42,7 @@ class FileSystemEventManager {
         watcher?.start()
     }
 
-    private func handleFileSystemEvent(_ event: FileWatcherEvent) {
+    func handleFileSystemEvent(_ event: FileWatcherEvent) {
         do {
             guard let url = createURL(from: event.path) else {
                 throw FileSystemError.invalidPath(event.path)
@@ -130,7 +130,22 @@ class FileSystemEventManager {
             return false
         }
 
-        return storage.allowedExtensions.contains(url.pathExtension.lowercased()) && storage.isValidUTI(url: url)
+        guard storage.allowedExtensions.contains(url.pathExtension.lowercased()) else { return false }
+        // A path that is gone has no type to read, so the UTI check refused
+        // every removal and rename: notes deleted or renamed outside MiaoYan
+        // stayed listed. The extension is all a missing file can be judged by.
+        guard FileManager.default.fileExists(atPath: url.path) else { return true }
+        return storage.isValidUTI(url: url)
+    }
+
+    /// The note at a path an event names. Events report the path as the disk
+    /// names it (/private/tmp) while notes may be registered by the resolved
+    /// one, and a file that is gone no longer resolves, so its folder is.
+    private func listedNote(at url: URL) -> Note? {
+        if let note = storage.getBy(url: url) { return note }
+        let resolved = Storage.resolvingFolder(of: url)
+        guard resolved.path != url.path else { return nil }
+        return storage.getBy(url: resolved)
     }
 
     private func handleFileRemoval(url: URL) throws {
@@ -146,9 +161,9 @@ class FileSystemEventManager {
             }
             return
         }
-        guard let note = storage.getBy(url: url) else {
-            throw FileSystemError.noteNotFound(url)
-        }
+        // MiaoYan's own deletes retire the note before the event arrives, so
+        // a missing note here is expected, not an error worth logging.
+        guard let note = listedNote(at: url) else { return }
         removeNote(note: note)
     }
 
@@ -176,7 +191,7 @@ class FileSystemEventManager {
     private func moveHandler(url: URL, pathList: [String]) {
         let fileExistsInFS = checkFile(url: url, pathList: pathList)
 
-        guard let note = storage.getBy(url: url) else {
+        guard let note = fileExistsInFS ? storage.getBy(url: url) : listedNote(at: url) else {
             if fileExistsInFS {
                 importNote(url)
             }

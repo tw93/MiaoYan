@@ -275,6 +275,54 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
     }
 
+    /// A note deleted or renamed in Finder, git or a sync client stayed
+    /// listed: the watcher read the type of a path that was gone, got nothing
+    /// and dropped every removal and rename before handling it.
+    @MainActor
+    func testNoteDeletedOrRenamedOutsideMiaoYanLeavesTheList() async throws {
+        let deletedURL = tempDir.appendingPathComponent("deleted-in-finder.md")
+        let renamedURL = tempDir.appendingPathComponent("renamed-in-finder.md")
+        let newNameURL = tempDir.appendingPathComponent("new-name.md")
+        try "deleted".write(to: deletedURL, atomically: true, encoding: .utf8)
+        try "renamed".write(to: renamedURL, atomically: true, encoding: .utf8)
+
+        let storage = Storage(loadsLibrary: false)
+        let project = Project(url: tempDir, label: "test", isRoot: true, isDefault: true)
+        _ = storage.add(project: project)
+        defer { storage.removeBy(project: project) }
+        let deleted = Note(url: deletedURL, with: project)
+        let renamed = Note(url: renamedURL, with: project)
+        for note in [deleted, renamed] {
+            note.sharedStorage = storage
+            note.load()
+            storage.add(note)
+        }
+
+        let host = FileEventHostStub()
+        let removed = expectation(description: "the window drops both rows")
+        removed.expectedFulfillmentCount = 2
+        host.onRemove = { _ in removed.fulfill() }
+        let manager = FileSystemEventManager(storage: storage, delegate: host)
+
+        try FileManager.default.removeItem(at: deletedURL)
+        try FileManager.default.moveItem(at: renamedURL, to: newNameURL)
+        // FSEvents names the disk path, /private/var for the temporary folder.
+        func diskPath(_ url: URL) -> String { url.path.hasPrefix("/var/") ? "/private" + url.path : url.path }
+        let file = UInt32(kFSEventStreamEventFlagItemIsFile)
+        manager.handleFileSystemEvent(FileWatcherEvent(1, diskPath(deletedURL), file | UInt32(kFSEventStreamEventFlagItemRemoved)))
+        manager.handleFileSystemEvent(FileWatcherEvent(2, diskPath(renamedURL), file | UInt32(kFSEventStreamEventFlagItemRenamed)))
+        manager.handleFileSystemEvent(FileWatcherEvent(3, diskPath(newNameURL), file | UInt32(kFSEventStreamEventFlagItemRenamed)))
+
+        XCTAssertFalse(storage.noteList.contains { $0 === deleted }, "a note deleted outside MiaoYan leaves storage")
+        XCTAssertFalse(storage.noteList.contains { $0 === renamed }, "the old name of a renamed note leaves storage")
+        XCTAssertNotNil(storage.getBy(url: newNameURL), "the new name is listed")
+        await fulfillment(of: [removed], timeout: 2)
+
+        deleted.save(attributed: NSAttributedString(string: "typed into the stale row"))
+        XCTAssertFalse(deleted.flushPendingSave(globalStorage: false), "the removed note is retired")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: deletedURL.path))
+    }
+
     @MainActor
     func testTrashReconciliationRetiresAFileMissingFromDisk() throws {
         let url = tempDir.appendingPathComponent("missing-trash-note.md")
@@ -502,4 +550,20 @@ final class NoteSaveDebounceTests: XCTestCase {
         let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
         XCTAssertEqual(attributes[.creationDate] as? Date, created)
     }
+}
+
+/// Records what the watcher asks a window to do.
+@MainActor
+private final class FileEventHostStub: FileSystemEventHost {
+    var onRemove: (([Note]) -> Void)?
+
+    func fsReloadList(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?) { completion?() }
+    func fsInsert(_ note: Note) {}
+    func fsReloadSidebar() {}
+    func fsSelectFirstNote() {}
+    func fsRemove(_ notes: [Note]) { onRemove?(notes) }
+    func fsReload(_ note: Note) {}
+    func fsRefillEditor() {}
+    var fsEditorBuffer: (owner: Note?, text: String)? { nil }
+    func fsToast(_ message: String, style: ToastStyle) {}
 }
