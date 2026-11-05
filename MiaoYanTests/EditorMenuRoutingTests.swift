@@ -119,4 +119,26 @@ final class EditorMenuRoutingTests: XCTestCase {
             XCTAssertEqual(editor.string, expected, text)
         }
     }
+
+    /// Command-T replaced the line's first six characters with a task
+    /// marker: "  - [x] a" became "- [ ] ] a". Only the box flips now.
+    @MainActor
+    func testToggleTodoFlipsOnlyTheTaskBox() {
+        for (text, expected) in [
+            ("  - [x] a", "  - [ ] a"),
+            ("  - [ ] a", "  - [x] a"),
+            ("- [X] a", "- [ ] a"),
+            ("1. [ ] b", "1. [x] b"),
+            ("plain", "- [ ] plain"),
+            ("text - [ ] not a task", "- [ ] text - [ ] not a task"),
+        ] {
+            let (editor, note) = makeEditor(text)
+            editor.setSelectedRange(NSRange(location: 2, length: 1))
+            TextFormatter(textView: editor, note: note).toggleTodo()
+            XCTAssertEqual(editor.string, expected, text)
+            if text.contains("[") && !text.hasPrefix("text") {
+                XCTAssertEqual(editor.selectedRange(), NSRange(location: 2, length: 1), "the selection stays: \(text)")
+            }
+        }
+    }
 }

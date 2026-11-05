@@ -279,18 +279,28 @@ public class TextFormatter {
         }
     }
 
+    /// The box of a task line ("  - [x] a", "1. [ ] b"), as a range inside
+    /// the line: the one character between the brackets.
+    static func taskBoxRange(in line: String) -> NSRange? {
+        guard
+            let regex = try? NSRegularExpression(pattern: "^[ \\t]*(?:[-*+]|[0-9]+[.)]) \\[([ xX])\\]"),
+            let match = regex.firstMatch(in: line, range: NSRange(location: 0, length: (line as NSString).length))
+        else { return nil }
+        return match.range(at: 1)
+    }
+
     public func toggleTodo() {
         guard let currentParagraphRange = getParagraphRange() else { return }
-        let currentParagraph = storage.attributedSubstring(from: currentParagraphRange)
-        let string = currentParagraph.string
-        var todoString = "- [ ] "
-        if string.contains("- [ ] ") { todoString = "- [x] " }
+        let string = storage.attributedSubstring(from: currentParagraphRange).string
 
-        if string.contains("- [ ] ") || string.contains("- [x] ") {
-            replaceWith(string: todoString, range: NSRange(location: currentParagraphRange.location, length: 6))
-        } else {
-            insertText(todoString, replacementRange: NSRange(location: currentParagraphRange.location, length: 0))
+        guard let box = Self.taskBoxRange(in: string) else {
+            insertText("- [ ] ", replacementRange: NSRange(location: currentParagraphRange.location, length: 0))
+            return
         }
+        let mark = (string as NSString).substring(with: box) == " " ? "x" : " "
+        let selection = textView.selectedRange
+        replaceWith(string: mark, range: NSRange(location: currentParagraphRange.location + box.location, length: 1))
+        setSelectedRange(selection)
     }
 
     public func newLine() {
