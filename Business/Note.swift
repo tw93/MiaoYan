@@ -56,6 +56,13 @@ public class Note: NSObject {
     /// A save refused because the file is gone has told the user once; a
     /// successful write re-arms it.
     private(set) var announcedMissingFile = false
+    /// Shows a failed save as a toast in the front window; false when no
+    /// window could show it. Tests replace it to see the message.
+    static var showFailure: @MainActor (String) -> Bool = { message in
+        guard let controller = (NSApp.mainWindow ?? NSApp.keyWindow)?.contentViewController else { return false }
+        controller.toast(message: message, style: .failure)
+        return true
+    }
     /// The directory is between its old and new paths; retain edits until relocation finishes.
     var isMovingWithFolder = false
     public var hasPendingSave: Bool {
@@ -685,10 +692,10 @@ public class Note: NSObject {
                 AppDelegate.trackError(error, context: "Note.writeMissingFile")
                 // Typing into a note removed outside MiaoYan was dropped with
                 // nothing on screen; say so once, not on every keystroke.
+                // Marked only once shown: a save flushed with no window up
+                // (quitting, a background flush) leaves the next one to say it.
                 if !announcedMissingFile {
-                    announcedMissingFile = true
-                    (NSApp.mainWindow ?? NSApp.keyWindow)?.contentViewController?
-                        .toast(message: I18n.str("This note no longer exists on disk, so edits are not saved"), style: .failure)
+                    announcedMissingFile = Self.showFailure(I18n.str("This note no longer exists on disk, so edits are not saved"))
                 }
                 return false
             }

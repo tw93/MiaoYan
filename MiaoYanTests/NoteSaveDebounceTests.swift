@@ -283,10 +283,27 @@ final class NoteSaveDebounceTests: XCTestCase {
         let note = Note(url: url, with: project)
         note.load()
         try FileManager.default.removeItem(at: url)
+        let previous = Note.showFailure
+        defer { Note.showFailure = previous }
+        var shown: [String] = []
+        var windowUp = false
+        Note.showFailure = { message in
+            guard windowUp else { return false }
+            shown.append(message)
+            return true
+        }
 
         note.save(content: NSMutableAttributedString(string: "typed"))
         XCTAssertFalse(note.flushPendingSave(globalStorage: false))
-        XCTAssertTrue(note.announcedMissingFile, "the refused save is shown, not only logged")
+        XCTAssertFalse(note.announcedMissingFile, "with no window to show it, the next refusal still tries")
+        windowUp = true
+        note.save(content: NSMutableAttributedString(string: "typed more"))
+        XCTAssertFalse(note.flushPendingSave(globalStorage: false))
+        XCTAssertEqual(shown, [I18n.str("This note no longer exists on disk, so edits are not saved")], "the refused save is shown, not only logged")
+        XCTAssertTrue(note.announcedMissingFile)
+        note.save(content: NSMutableAttributedString(string: "and more"))
+        XCTAssertFalse(note.flushPendingSave(globalStorage: false))
+        XCTAssertEqual(shown.count, 1, "said once, not on every keystroke")
         XCTAssertFalse(FileManager.default.fileExists(atPath: url.path), "the note is not recreated")
 
         try "back".write(to: url, atomically: true, encoding: .utf8)
