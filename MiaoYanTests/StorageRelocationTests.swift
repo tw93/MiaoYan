@@ -134,6 +134,45 @@ final class StorageRelocationTests: XCTestCase {
         }
     }
 
+    /// Deleting a folder dropped only its own notes: its registered
+    /// subfolders stayed Move targets that recreated the deleted path.
+    @MainActor
+    func testRemovingAFolderDropsItsSubfoldersAndTheirNotes() async throws {
+        try await withMoveLibrary { storage, root, source, _ in
+            let nested = try XCTUnwrap(storage.getChildProjects(project: source).first)
+            // Registered by path alone, the way a Move or a scan may add one.
+            let deeperURL = nested.url.appendingPathComponent("Deeper", isDirectory: true)
+            try FileManager.default.createDirectory(at: deeperURL, withIntermediateDirectories: true)
+            let deeper = Project(url: deeperURL)
+            _ = storage.add(project: deeper)
+            let sibling = try XCTUnwrap(storage.getChildProjects(project: root).first { $0.url.lastPathComponent == "Archive" })
+            var notes: [Note] = []
+            for (folder, name) in [(source, "own.md"), (nested, "nested.md"), (deeper, "deeper.md"), (sibling, "kept.md")] {
+                let url = folder.url.appendingPathComponent(name)
+                try name.write(to: url, atomically: true, encoding: .utf8)
+                let note = Note(url: url, with: folder)
+                note.sharedStorage = storage
+                note.load()
+                storage.add(note)
+                notes.append(note)
+            }
+
+            storage.removeBy(project: source)
+
+            let paths = storage.getProjects().map(\.url.path)
+            for gone in [source, nested, deeper] {
+                XCTAssertFalse(paths.contains(gone.url.path), "\(gone.url.lastPathComponent) left storage")
+            }
+            XCTAssertTrue(paths.contains(sibling.url.path), "a sibling folder stays")
+            for note in notes.dropLast() {
+                XCTAssertFalse(storage.noteList.contains { $0 === note }, "\(note.name) left storage")
+                note.save(attributed: NSAttributedString(string: "late"))
+                XCTAssertFalse(note.flushPendingSave(globalStorage: false), "\(note.name) is retired")
+            }
+            XCTAssertTrue(storage.noteList.contains { $0 === notes.last }, "the sibling's note stays")
+        }
+    }
+
     @MainActor
     func testMovingToCurrentParentDoesNothing() async throws {
         try await withMoveLibrary { storage, root, source, _ in
