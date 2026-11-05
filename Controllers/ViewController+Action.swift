@@ -912,24 +912,6 @@ extension ViewController {
         // into the new note via pendingTitleChange or controlTextDidEndEditing.
         UserDataService.instance.pendingTitleChange = nil
 
-        // Tripwire: titiebarHeight is supposed to be 0 only inside PPT mode
-        // (Controllers/ViewController+Editor.swift sets it to 0 on enter and
-        // back to 40 on exit). If we land here with constant=0 outside PPT
-        // / Presentation, an exit path leaked. Track it once so we can fix
-        // the leak instead of relying on the defensive reset below.
-        //
-        // TODO(tripwire): this is a temporary diagnostic. Remove (along with
-        // the err init) once two consecutive releases have shipped without
-        // any "prepareForNoteCreation.titlebarHeight" report. Defensive
-        // checkTitlebarTopConstraint() below stays as the actual fix.
-        if titiebarHeight.constant == 0 && !sessionMagicPPTMode && !sessionPresentationMode {
-            let leak = NSError(
-                domain: "com.tw93.miaoyan.layout",
-                code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "titiebarHeight stuck at 0 outside PPT/Presentation"])
-            AppDelegate.trackError(leak, context: "prepareForNoteCreation.titlebarHeight")
-        }
-
         // Keep the title bar visible (we may be coming back from preview / PPT
         // where it was hidden) and clear the previous title in the same frame
         // as the editor body, so users never see the old title on a new note.

@@ -60,10 +60,6 @@ enum NoteAttribute {
 }
 
 extension NSAttributedString.Key {
-    public static var todo: NSAttributedString.Key {
-        NSAttributedString.Key(rawValue: AppIdentifier.todoKey)
-    }
-
     public static var codeBlock: NSAttributedString.Key {
         NSAttributedString.Key(rawValue: AppIdentifier.codeBlockKey)
     }

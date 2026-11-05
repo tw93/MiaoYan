@@ -277,9 +277,7 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         let affectedRange = NSRange(location: start, length: finish - start)
 
         textStorage.enumerateAttribute(.attachment, in: affectedRange, options: []) { value, range, _ in
-            guard let attachment = value as? NSTextAttachment,
-                textStorage.attribute(.todo, at: range.location, effectiveRange: nil) == nil
-            else { return }
+            guard let attachment = value as? NSTextAttachment else { return }
 
             // Paragraph style: Get and set directly on main thread
             let paragraph = NSTextStorage.getParagraphStyle()

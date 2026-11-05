@@ -145,14 +145,9 @@ longer reloads the reader; three dead symbols removed.
 - Whether Restore may overwrite a read-only damaged note with a clean version (recorded in
   `decide`; Duplicate is the way out today).
 - Every note switch writes a version snapshot even when nothing was edited (needs a decision).
-- `NoteCellView.draw` builds fonts on every redraw.
-- The 2026-05-07 tripwire in `ViewController+Action` (needs a decision); `.todo` readers in the
-  text storage and highlighter are dead now that nothing sets `.todo`; `.preferencesChanged` is
-  posted with no observer checked.
 - Clean Typography on a read-only note still shows its success toast; a valid short legacy note
   held read-only reads "has invalid characters"; the storyboard's move clears the editor even when
   a read-only note refused to move.
-- S4 pbxproj orphan package references (clean up in Xcode).
 - Format undo is tested in the shell only, and the drop test calls `dropFiles` directly rather than
   through `performDragOperation`.
 - Real-app checks: P3 and P4, the hover anchor, the light zoom backdrop after a switch, E6.

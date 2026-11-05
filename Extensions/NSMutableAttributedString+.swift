@@ -33,11 +33,7 @@ extension NSMutableAttributedString {
         let titleKey = NSAttributedString.Key(rawValue: AppIdentifier.imageTitleKey)
 
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
-            guard let textAttachment = value as? NSTextAttachment,
-                attribute(.todo, at: range.location, effectiveRange: nil) == nil
-            else {
-                return
-            }
+            guard let textAttachment = value as? NSTextAttachment else { return }
 
             let path = self.extractImagePath(textAttachment: textAttachment, note: note, filePathKey: filePathKey)
             let title = attribute(titleKey, at: range.location, effectiveRange: nil) as? String ?? ""
@@ -72,34 +68,9 @@ extension NSMutableAttributedString {
         return nil
     }
 
-    // MARK: - Checkboxes → GFM
-    @MainActor
-    public func unLoadCheckboxes() -> NSMutableAttributedString {
-        guard let content = mutableCopy() as? NSMutableAttributedString else {
-            return NSMutableAttributedString()
-        }
-
-        var offset = 0
-        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
-            guard value != nil,
-                range.length == 1,
-                let todoValue = attribute(.todo, at: range.location, effectiveRange: nil) as? Int
-            else {
-                return
-            }
-
-            let newRange = NSRange(location: range.location + offset, length: 1)
-            let gfm = todoValue == 1 ? "- [x]" : "- [ ]"
-            content.replaceCharacters(in: newRange, with: gfm)
-            offset += 4
-        }
-
-        return content
-    }
-
     @MainActor
     public func unLoad() -> NSMutableAttributedString {
-        unLoadCheckboxes().unLoadImages()
+        unLoadImages()
     }
 
     // MARK: - Underline colors

@@ -56,9 +56,7 @@ struct GeneralSettings: SettingsConfigurable {
         set { UserDefaultsManagement.defaultPicUpload = newValue }
     }
 
-    func applyChanges() {
-        NotificationCenter.default.post(name: .preferencesChanged, object: self.category)
-    }
+    func applyChanges() {}
 }
 
 // MARK: - Editor Settings Model

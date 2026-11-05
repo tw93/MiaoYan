@@ -28,10 +28,6 @@
 		272B1F8F5FB78A7F647D931A /* Helpers/UIDelay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEDD077A416C0F4BA0EC980 /* Helpers/UIDelay.swift */; };
 		272CAC2628758C6A0026EF50 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272CAC2528758C6A0026EF50 /* ContentViewController.swift */; };
 		272D1B432E77E9AC00A95673 /* MPreviewView+Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272D1B422E77E9AC00A95673 /* MPreviewView+Export.swift */; };
-		2732D2FF2E70450B00F00158 /* Prettier in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D2FE2E70450B00F00158 /* Prettier */; };
-		2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3002E7047D400F00158 /* PrettierMarkdown */; };
-		2732D3032E70482E00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3022E70482E00F00158 /* PrettierMarkdown */; };
-		2732D3052E70487B00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3042E70487B00F00158 /* PrettierMarkdown */; };
 		274D62CF2E434B6D003C075F /* ImageLinkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62CE2E434B6D003C075F /* ImageLinkParser.swift */; };
 		274D62D12E434B9C003C075F /* ImagePreviewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62D02E434B9C003C075F /* ImagePreviewWindow.swift */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
@@ -58,7 +54,6 @@
 		2781609E2E75554200F3D54B /* PrefsControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2781609D2E75554200F3D54B /* PrefsControls.swift */; };
 		278160A02E75588F00F3D54B /* EditorPrefsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2781609F2E75588F00F3D54B /* EditorPrefsViewController.swift */; };
 		278160A12E7588F100F3D54B /* TypographyPrefsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278160A22E7588F100F3D54B /* TypographyPrefsViewController.swift */; };
-		27977FF42E7126C40016D57D /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = 27977FF32E7126C40016D57D /* CMarkGFM */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
 		27A0773A2E714AB1008A5483 /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077392E714AB1008A5483 /* CMarkGFM */; };
 		27A077402E714ACC008A5483 /* Prettier in Frameworks */ = {isa = PBXBuildFile; productRef = 27A0773F2E714ACC008A5483 /* Prettier */; };
@@ -69,8 +64,6 @@
 		27A1B2C32E681510006BC2AC /* PdfExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A1B2C42E681510006BC2AC /* PdfExportController.swift */; };
 		27B4A5AA2E6924CC00C89EFF /* ViewController+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */; };
 		27B4A5AB2E6924CC00C89EFF /* ViewController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */; };
-		27B5AC682E45F25F00C83B3A /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC672E45F25F00C83B3A /* Highlightr */; };
-		27B5AC6E2E45F27A00C83B3A /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC6D2E45F27A00C83B3A /* Sparkle */; };
 		27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C34C0D28928D0B007369E5 /* Emoji.swift */; };
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
 		27D9A4F72873D345006317AD /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9A4F62873D345006317AD /* FileManager+.swift */; };
@@ -399,16 +392,9 @@
 				27A0773A2E714AB1008A5483 /* CMarkGFM in Frameworks */,
 				C0DE0000000000000000A004 /* MiaoYanCore in Frameworks */,
 				27A077482E714AFE008A5483 /* Highlightr in Frameworks */,
-				27977FF42E7126C40016D57D /* CMarkGFM in Frameworks */,
-				2732D2FF2E70450B00F00158 /* Prettier in Frameworks */,
 				27A077542E7152C9008A5483 /* KeyboardShortcuts in Frameworks */,
-				27B5AC682E45F25F00C83B3A /* Highlightr in Frameworks */,
 				27A077402E714ACC008A5483 /* Prettier in Frameworks */,
 				27A0774E2E714C43008A5483 /* Sparkle in Frameworks */,
-				27B5AC6E2E45F27A00C83B3A /* Sparkle in Frameworks */,
-				2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */,
-				2732D3052E70487B00F00158 /* PrettierMarkdown in Frameworks */,
-				2732D3032E70482E00F00158 /* PrettierMarkdown in Frameworks */,
 				27A077422E714ACC008A5483 /* PrettierMarkdown in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -742,7 +728,7 @@
 			name = MiaoYan;
 			packageProductDependencies = (
 				C0DE0000000000000000A002 /* MiaoYanCore */,
-				27977FF32E7126C40016D57D /* CMarkGFM */,
+				27A077392E714AB1008A5483 /* CMarkGFM */,
 				27A077472E714AFE008A5483 /* Highlightr */,
 				27A077532E7152C9008A5483 /* KeyboardShortcuts */,
 				27A0773F2E714ACC008A5483 /* Prettier */,
@@ -1404,22 +1390,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/simonbs/Prettier.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.1;
-			};
-		};
-		27977FF22E7126C40016D57D /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stackotter/swift-cmark-gfm";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stackotter/swift-cmark-gfm";
@@ -1460,22 +1430,6 @@
 				minimumVersion = 2.3.0;
 			};
 		};
-		27B5AC662E45F25F00C83B3A /* XCRemoteSwiftPackageReference "Highlightr" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/raspu/Highlightr.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.0;
-			};
-		};
-		27B5AC6C2E45F27A00C83B3A /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.7.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1483,31 +1437,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C0DE0000000000000000A001 /* XCLocalSwiftPackageReference "Packages/MiaoYanCore" */;
 			productName = MiaoYanCore;
-		};
-		2732D2FE2E70450B00F00158 /* Prettier */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
-			productName = Prettier;
-		};
-		2732D3002E7047D400F00158 /* PrettierMarkdown */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
-			productName = PrettierMarkdown;
-		};
-		2732D3022E70482E00F00158 /* PrettierMarkdown */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
-			productName = PrettierMarkdown;
-		};
-		2732D3042E70487B00F00158 /* PrettierMarkdown */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
-			productName = PrettierMarkdown;
-		};
-		27977FF32E7126C40016D57D /* CMarkGFM */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27977FF22E7126C40016D57D /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */;
-			productName = CMarkGFM;
 		};
 		27A077392E714AB1008A5483 /* CMarkGFM */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1538,16 +1467,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 27A077522E7152C8008A5483 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
-		};
-		27B5AC672E45F25F00C83B3A /* Highlightr */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27B5AC662E45F25F00C83B3A /* XCRemoteSwiftPackageReference "Highlightr" */;
-			productName = Highlightr;
-		};
-		27B5AC6D2E45F27A00C83B3A /* Sparkle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27B5AC6C2E45F27A00C83B3A /* XCRemoteSwiftPackageReference "Sparkle" */;
-			productName = Sparkle;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

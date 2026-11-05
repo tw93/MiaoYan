@@ -8,6 +8,24 @@ class NoteCellView: NSTableCellView {
     public var note: Note?
     public var timestamp: Int64?
 
+    /// The list fonts, resolved once per (face, sizes) instead of on every
+    /// redraw; a font preference or size change changes the key and rebuilds.
+    struct ListFonts: Equatable {
+        let key: String
+        let name: NSFont
+        let date: NSFont
+    }
+
+    static var cachedListFonts: ListFonts?
+
+    static func listFonts() -> ListFonts {
+        let key = "\(UserDefaultsManagement.windowFontName)|\(UserDefaultsManagement.nameFontSize)|\(UserDefaultsManagement.dateFontSize)"
+        if let cached = cachedListFonts, cached.key == key { return cached }
+        let fonts = ListFonts(key: key, name: UserDefaultsManagement.nameFont, date: UserDefaultsManagement.dateFont)
+        cachedListFonts = fonts
+        return fonts
+    }
+
     // Use Theme.secondaryTextColor instead of a hard-coded gray
     public var tableView: NotesTableView? {
         guard let vc = AppContext.shared.viewController else { return nil }
@@ -38,8 +56,9 @@ class NoteCellView: NSTableCellView {
 
     public func updateSelectionHighlight() {
 
-        name.font = UserDefaultsManagement.nameFont
-        date.font = UserDefaultsManagement.dateFont
+        let fonts = Self.listFonts()
+        name.font = fonts.name
+        date.font = fonts.date
         name.addCharacterSpacing()
         date.addCharacterSpacing()
 

@@ -440,18 +440,6 @@ enum MarkdownRuleHighlighter {
             }
         }
 
-        attributedString.enumerateAttribute(.attachment, in: paragraphRange) { value, range, _ in
-            guard value != nil,
-                range.upperBound <= attributedString.length,
-                let todo = attributedString.attribute(.todo, at: range.location, effectiveRange: nil)
-            else {
-                return
-            }
-            let strikeRange = attributedString.mutableString.paragraphRange(for: range)
-            guard strikeRange.upperBound <= attributedString.length else { return }
-            attributedString.addAttribute(.strikethroughStyle, value: todo, range: strikeRange)
-        }
-
         if isFullScan {
             NotesTextProcessor.checkBackTick(styleApplier: attributedString)
         }

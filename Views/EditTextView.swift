@@ -322,7 +322,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let range = selectedRange()
         let attributedString = NSMutableAttributedString(attributedString: storage.attributedSubstring(from: range))
         if type == .string {
-            let plainText = attributedString.unLoadImages().unLoadCheckboxes().string
+            let plainText = attributedString.unLoadImages().string
             pboard.setString(plainText, forType: .string)
             return true
         }
@@ -812,7 +812,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
         if note.isMarkdown() {
             deleteUnusedImages(checkRange: affectedCharRange)
-            typingAttributes.removeValue(forKey: .todo)
             if textStorage?.length == 0 {
                 typingAttributes[.foregroundColor] = Theme.textColor
             }
@@ -999,7 +998,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         // Runs on every keystroke. Both unload passes copy and walk the whole
         // buffer, and plain Markdown has no attachments for them to undo.
         let copy = NSMutableAttributedString(attributedString: storage)
-        note.content = copy.hasAttachmentAttribute ? copy.unLoadImages().unLoadCheckboxes() : copy
+        note.content = copy.hasAttachmentAttribute ? copy.unLoadImages() : copy
     }
 
     public func unLoadImages(note: Note) {
@@ -1201,7 +1200,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard let note = EditTextView.note else { return }
         var removedImages = [URL: URL]()
         storage.enumerateAttribute(.attachment, in: checkRange) { value, range, _ in
-            if value is NSTextAttachment, storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
+            if value is NSTextAttachment {
                 let filePathKey = NSAttributedString.Key(rawValue: AppIdentifier.imagePathKey)
                 if let filePath = storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
                     if let note = EditTextView.note {

@@ -613,9 +613,6 @@ public class Note: NSObject {
 
     public func save(globalStorage: Bool = true) {
         guard !isRetired, !loadFailed else { return }
-        if isMarkdown() {
-            content = content.unLoadCheckboxes()
-        }
         hasUnpersistedChanges = true
 
         // Immediate save for manual requests or structure changes
