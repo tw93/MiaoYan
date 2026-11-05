@@ -122,6 +122,23 @@ final class NoteTextTests: XCTestCase {
             XCTAssertFalse(NoteText.isDamagedUTF8(try XCTUnwrap(text.data(using: encoding))), "\(encoding) \(text)")
         }
         XCTAssertFalse(NoteText.isDamagedUTF8(Data("plain café 中文".utf8)), "valid UTF-8 is not damaged")
+        for (text, encoding) in legacy where text.count > 8 {
+            XCTAssertFalse(NoteText.mayBeDamagedUTF8(try XCTUnwrap(text.data(using: encoding))), "\(encoding) \(text) stays editable")
+        }
+        let title = try XCTUnwrap("# 学习笔记\n".data(using: Self.encoding(.GB_18030_2000)))
+        XCTAssertTrue(NoteText.mayBeDamagedUTF8(title), "a short legacy title is held read-only")
+        XCTAssertEqual(NoteText.decode(title, preferredLanguages: ["zh-Hans-CN"]), "# 学习笔记\n", "and shown in its own encoding")
+
+        // Too few sequences to call damaged outright, but never editable:
+        // the legacy reading saved back would be mojibake.
+        var short = Data("# 你好".utf8)
+        short.append(0xFF)
+        var cut = Data("Café notes, 第一段".utf8)
+        cut.removeLast()
+        for sample in [short, cut] {
+            XCTAssertFalse(NoteText.isDamagedUTF8(sample))
+            XCTAssertTrue(NoteText.mayBeDamagedUTF8(sample))
+        }
         XCTAssertFalse(NoteText.isDamagedUTF8(Data([0x23, 0x20, 0x61, 0xFF, 0x0A])), "ASCII with one high byte stays a legacy note")
     }
 }

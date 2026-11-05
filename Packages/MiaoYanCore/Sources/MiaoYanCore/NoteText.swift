@@ -23,7 +23,7 @@ public enum NoteText {
         // A UTF-8 note with a few bad bytes is still UTF-8: shown through a
         // legacy guess it read as mojibake, and the next save wrote that back.
         // The bad bytes become U+FFFD; callers that write notes check
-        // `isDamagedUTF8` and leave such a file alone.
+        // `mayBeDamagedUTF8` and leave such a file alone.
         // swiftlint:disable:next optional_data_string_conversion
         if isDamagedUTF8(data) { return String(decoding: data, as: UTF8.self) }
         if let first = detect(data, options: [.allowLossyKey: false]) {
@@ -42,16 +42,35 @@ public enum NoteText {
     }
 
     /// True when `data` is not valid UTF-8 but reads as UTF-8 text with a
-    /// few bad bytes (a truncated write, a stray byte from a sync or a script):
-    /// it holds well-formed multi-byte UTF-8 sequences at four times the count
-    /// of invalid ones. A short GB18030 or EUC-KR title can pair up into a few
-    /// UTF-8 sequences by chance (`# 学习笔记` in GB18030), so an equal count read
-    /// 2 to 15% of two- and three-character legacy titles as damaged and opened
-    /// them read-only; at four times, 5 of 75,000 emulated legacy samples still
-    /// pass. An ASCII file with one stray high byte has no multi-byte sequence
-    /// and stays a Windows-1252 note.
+    /// few bad bytes (a truncated write, a stray byte from a sync or a script),
+    /// so `decode` shows it as UTF-8 with U+FFFD marks: it holds well-formed
+    /// multi-byte sequences at four times the count of invalid ones. A short
+    /// GB18030 or EUC-KR title can pair up into a few UTF-8 sequences by chance
+    /// (`# 学习笔记` in GB18030), so an equal count read 2 to 15% of two- and
+    /// three-character legacy titles as damaged; at four times, 5 of 75,000
+    /// emulated legacy samples still pass.
     public static func isDamagedUTF8(_ data: Data) -> Bool {
-        if String(data: data, encoding: .utf8) != nil { return false }
+        guard let (valid, invalid) = utf8Counts(data) else { return false }
+        return valid > 0 && valid >= 4 * invalid
+    }
+
+    /// True when `data` may be damaged UTF-8: at least as many well-formed
+    /// multi-byte sequences as invalid ones. Between this and
+    /// `isDamagedUTF8`, a short damaged note (`# 你好` and one bad byte) and a
+    /// short legacy title look alike; `decode` shows the legacy reading, and
+    /// a caller that writes notes keeps both read-only, since saving a
+    /// damaged note's legacy reading writes mojibake over it. A legacy note
+    /// rarely has this many sequences by chance (about 4% of emulated ones,
+    /// mostly short); an ASCII file with one stray high byte has none.
+    public static func mayBeDamagedUTF8(_ data: Data) -> Bool {
+        guard let (valid, invalid) = utf8Counts(data) else { return false }
+        return valid > 0 && valid >= invalid
+    }
+
+    /// Well-formed multi-byte UTF-8 sequences and invalid ones, or nil for
+    /// valid UTF-8.
+    private static func utf8Counts(_ data: Data) -> (valid: Int, invalid: Int)? {
+        if String(data: data, encoding: .utf8) != nil { return nil }
         var valid = 0
         var invalid = 0
         var bytes = data.makeIterator()
@@ -63,7 +82,7 @@ public enum NoteText {
             case .emptyInput: break loop
             }
         }
-        return valid > 0 && valid >= 4 * invalid
+        return (valid, invalid)
     }
 
     private static func detect(_ data: Data, options: [StringEncodingDetectionOptionsKey: Any]) -> String? {

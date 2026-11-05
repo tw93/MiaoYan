@@ -257,6 +257,7 @@
 "Image" = "影像";
 "This note could not be read, so it was left as it is" = "這篇筆記讀取失敗，已經保持原樣沒有改動";
 "This note has invalid characters, so it opened read-only" = "這篇筆記含有無法識別的字元，已用唯讀方式開啟";
+"This note is read-only, so it was not moved" = "這篇筆記是唯讀的，沒有移動";
 "This note no longer exists on disk, so edits are not saved" = "這篇筆記已不在磁碟上，修改不會儲存";
 "Version" = "版本";
 "Show Info" = "顯示資訊";

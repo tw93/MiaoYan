@@ -281,6 +281,7 @@
 "Image" = "图片";
 "This note could not be read, so it was left as it is" = "该笔记读取失败，已保持原样避免内容丢失";
 "This note has invalid characters, so it opened read-only" = "该笔记含有无法识别的字符，已用只读方式打开";
+"This note is read-only, so it was not moved" = "该笔记是只读的，没有移动";
 "This note no longer exists on disk, so edits are not saved" = "该笔记已不在磁盘上，修改不会保存";
 "Version" = "版本";
 "Show Info" = "显示简介";

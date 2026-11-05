@@ -280,6 +280,7 @@
 "Image" = "画像";
 "This note could not be read, so it was left as it is" = "このノートを読み込めなかったため、変更せずにそのままにしています";
 "This note has invalid characters, so it opened read-only" = "このノートには読み取れない文字が含まれているため、読み取り専用で開きました";
+"This note is read-only, so it was not moved" = "このノートは読み取り専用のため、移動しませんでした";
 "This note no longer exists on disk, so edits are not saved" = "このノートはディスク上にもう存在しないため、変更は保存されません";
 "Version" = "バージョン";
 "Show Info" = "情報";

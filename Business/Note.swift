@@ -32,14 +32,16 @@ public class Note: NSObject {
     /// nothing of the real text, so every write is refused until a read
     /// succeeds; saving it would replace the file with an empty note.
     private(set) var readFailed = false
-    /// True when the file is UTF-8 with invalid bytes (`NoteText.isDamagedUTF8`).
-    /// The buffer shows them as U+FFFD, so saving it would drop the original
-    /// bytes; the note stays read-only until it reads cleanly.
+    /// True when the file may be UTF-8 with invalid bytes
+    /// (`NoteText.mayBeDamagedUTF8`). The buffer shows them as U+FFFD, or for a
+    /// short note that may as well be a legacy encoding the legacy reading;
+    /// saving either would drop the original bytes, so the note stays
+    /// read-only until it reads cleanly.
     private(set) var hasDamagedText = false
     /// The buffer is not the file's text, so the note is read-only and every
-    /// write is refused; the editor and version restore check this. Move and
-    /// duplicate check only `readFailed`: a damaged note's text is there to
-    /// list its images and to copy, and neither writes over the original.
+    /// write is refused; the editor, move and version restore check this.
+    /// Duplicate checks only `readFailed`: a damaged note's text is there to
+    /// copy into a new file, and the original is not written.
     var loadFailed: Bool { readFailed || hasDamagedText }
     /// Why the editor opened the note read-only, for its toast.
     var readOnlyNotice: String? {
@@ -488,7 +490,7 @@ public class Note: NSObject {
             return (text, false)
         }
         guard let text = NoteText.decode(data) else { return nil }
-        return (NSAttributedString(string: text), NoteText.isDamagedUTF8(data))
+        return (NSAttributedString(string: text), NoteText.mayBeDamagedUTF8(data))
     }
 
     func getContentAsync() async -> NSAttributedString? {
@@ -500,7 +502,7 @@ public class Note: NSObject {
 
         let read = await Task.detached(priority: .userInitiated) { () -> (String, Bool)? in
             guard let data = try? Data(contentsOf: url), let text = NoteText.decode(data) else { return nil }
-            return (text, NoteText.isDamagedUTF8(data))
+            return (text, NoteText.mayBeDamagedUTF8(data))
         }.value
 
         guard let (string, damaged) = read else { return nil }
@@ -1141,11 +1143,13 @@ public class Note: NSObject {
             // opened; without their text there is no list of images to carry.
             ensureContentLoaded()
             // Without the text there is no list of images, so the note would
-            // arrive with its /i/ links pointing at a folder it left.
-            if readFailed {
+            // arrive with its /i/ links pointing at a folder it left; a damaged
+            // note's renamed image links could not be saved either.
+            if loadFailed {
                 AppDelegate.trackError(
-                    NSError(domain: "NoteError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Note could not be read, move skipped"]),
+                    NSError(domain: "NoteError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Note is read-only, move skipped"]),
                     context: "Note.move(toProject:).loadFailed")
+                _ = Self.showFailure(I18n.str("This note is read-only, so it was not moved"))
                 return
             }
             let imagesMeta = getAllImages()

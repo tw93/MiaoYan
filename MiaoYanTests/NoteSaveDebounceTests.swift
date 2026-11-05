@@ -129,6 +129,39 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(synchronous.loadFailed)
     }
 
+    /// A short damaged note (`# 你好` and one bad byte) has too few UTF-8
+    /// sequences to tell from a legacy title, so it shows the legacy reading;
+    /// opened editable, saving wrote that mojibake over it. It stays read-only,
+    /// and Move, whose renamed image links it could not save, refuses it aloud.
+    @MainActor
+    func testShortDamagedNoteStaysReadOnlyAndIsNotMoved() throws {
+        let folder = tempDir.appendingPathComponent("Elsewhere", isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let url = tempDir.appendingPathComponent("short.md")
+        var bytes = Data("# 你好".utf8)
+        bytes.append(0xFF)
+        bytes.append(Data("\n".utf8))
+        try bytes.write(to: url)
+        let note = Note(url: url, with: Project(url: tempDir, label: "test", isRoot: true))
+        note.load()
+        XCTAssertTrue(note.loadFailed, "a short damaged note is read-only")
+        note.save(content: NSMutableAttributedString(string: "edited"))
+        XCTAssertFalse(note.flushPendingSave(globalStorage: false))
+        XCTAssertEqual(try Data(contentsOf: url), bytes, "the file keeps its bytes")
+
+        let previous = Note.showFailure
+        defer { Note.showFailure = previous }
+        let notices = NoticeBox()
+        notices.windowUp = true
+        Note.showFailure = { message in
+            notices.shown.append(message)
+            return true
+        }
+        note.move(toProject: Project(url: folder, label: "Elsewhere"))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: url.path), "the note stays")
+        XCTAssertEqual(notices.shown, [I18n.str("This note is read-only, so it was not moved")])
+    }
+
     /// File events are paused while typing, so a sync that lands then never
     /// reaches a resident note. Opening it must pick the new text up.
     @MainActor
@@ -285,25 +318,24 @@ final class NoteSaveDebounceTests: XCTestCase {
         try FileManager.default.removeItem(at: url)
         let previous = Note.showFailure
         defer { Note.showFailure = previous }
-        var shown: [String] = []
-        var windowUp = false
+        let notices = NoticeBox()
         Note.showFailure = { message in
-            guard windowUp else { return false }
-            shown.append(message)
+            guard notices.windowUp else { return false }
+            notices.shown.append(message)
             return true
         }
 
         note.save(content: NSMutableAttributedString(string: "typed"))
         XCTAssertFalse(note.flushPendingSave(globalStorage: false))
         XCTAssertFalse(note.announcedMissingFile, "with no window to show it, the next refusal still tries")
-        windowUp = true
+        notices.windowUp = true
         note.save(content: NSMutableAttributedString(string: "typed more"))
         XCTAssertFalse(note.flushPendingSave(globalStorage: false))
-        XCTAssertEqual(shown, [I18n.str("This note no longer exists on disk, so edits are not saved")], "the refused save is shown, not only logged")
+        XCTAssertEqual(notices.shown, [I18n.str("This note no longer exists on disk, so edits are not saved")], "the refused save is shown, not only logged")
         XCTAssertTrue(note.announcedMissingFile)
         note.save(content: NSMutableAttributedString(string: "and more"))
         XCTAssertFalse(note.flushPendingSave(globalStorage: false))
-        XCTAssertEqual(shown.count, 1, "said once, not on every keystroke")
+        XCTAssertEqual(notices.shown.count, 1, "said once, not on every keystroke")
         XCTAssertFalse(FileManager.default.fileExists(atPath: url.path), "the note is not recreated")
 
         try "back".write(to: url, atomically: true, encoding: .utf8)
@@ -701,4 +733,12 @@ private final class FileEventHostStub: FileSystemEventHost {
     func fsRefillEditor() {}
     var fsEditorBuffer: (owner: Note?, text: String)? { nil }
     func fsToast(_ message: String, style: ToastStyle) {}
+}
+
+/// Holds what a replaced `Note.showFailure` saw; a class, so the main-actor
+/// closure changes it without capturing a mutable local.
+@MainActor
+private final class NoticeBox {
+    var windowUp = false
+    var shown: [String] = []
 }
