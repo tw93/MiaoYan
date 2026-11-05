@@ -1,3 +1,4 @@
+import Carbon.HIToolbox
 import XCTest
 
 @testable import MiaoYan
@@ -87,5 +88,40 @@ final class EditorHotPathTests: XCTestCase {
         let none = MPreviewView.specialRendererPlan(needsRenderers: false, preserveScroll: true, now: 100.1, lastInitialization: 100)
         XCTAssertFalse(none.initialize)
         XCTAssertNil(none.catchUpAfter)
+    }
+
+    /// Return marked links over the whole note while every other key kept to
+    /// its paragraph. It now marks the two lines around the caret: the URL in
+    /// the line it ended is a link, one far above is not touched.
+    @MainActor
+    func testReturnMarksLinksInTheLinesAroundTheCaretOnly() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanHotPath-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let body = "https://far.example\n\nsee https://near.example"
+        let url = dir.appendingPathComponent("return.md")
+        try body.write(to: url, atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: Project(url: dir, label: "test", isRoot: true))
+        note.content = NSMutableAttributedString(string: body)
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = note
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 480, height: 320))
+        editor.isShellHosted = true
+        editor.publishStorage(NSAttributedString(string: body), owner: note)
+        editor.setSelectedRange(NSRange(location: (body as NSString).length, length: 0))
+
+        let event = try XCTUnwrap(
+            NSEvent.keyEvent(
+                with: .keyDown, location: .zero, modifierFlags: [], timestamp: 0, windowNumber: 0, context: nil,
+                characters: "\r", charactersIgnoringModifiers: "\r", isARepeat: false, keyCode: UInt16(kVK_Return)))
+        editor.keyDown(with: event)
+        RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+
+        let storage = try XCTUnwrap(editor.textStorage)
+        XCTAssertEqual(storage.string, body + "\n")
+        let near = (body as NSString).range(of: "https://near").location
+        XCTAssertNotNil(storage.attribute(.link, at: near, effectiveRange: nil), "the line Return ended")
+        XCTAssertNil(storage.attribute(.link, at: 0, effectiveRange: nil), "a line far from the caret")
     }
 }

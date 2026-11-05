@@ -890,6 +890,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
     }
 
+    /// The caret's paragraph and the one before it: Return splits a line in
+    /// two and a link can end up in either half. Marking the whole note on
+    /// every Return was the one key that did.
+    private func paragraphsAroundCaret() -> NSRange? {
+        guard let storage = textStorage else { return nil }
+        let text = storage.mutableString
+        let current = text.paragraphRange(for: NSRange(location: min(selectedRange().location, storage.length), length: 0))
+        guard current.location > 0 else { return current }
+        return NSUnionRange(text.paragraphRange(for: NSRange(location: current.location - 1, length: 0)), current)
+    }
+
     private func shouldHighlightLinks(in paragraphRange: NSRange) -> Bool {
         guard let storage = textStorage,
             paragraphRange.location >= 0,
@@ -1338,7 +1349,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             } else {
                 formatter.newLine()
             }
-            fillHighlightLinks()
+            fillHighlightLinks(range: paragraphsAroundCaret())
             saveCursorPosition()
             return
         }
