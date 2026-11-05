@@ -350,6 +350,16 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.paste(sender)
     }
 
+    /// A file dragged in from Finder goes through the paste path
+    /// (ClipboardManager.dropFiles); a text drag stays NSTextView's.
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        let caret = characterIndexForInsertion(at: convert(sender.draggingLocation, from: nil))
+        if let handled = clipboardManager?.dropFiles(from: sender.draggingPasteboard, at: caret) {
+            return handled
+        }
+        return super.performDragOperation(sender)
+    }
+
     @IBAction func boldMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.bold)
     }
@@ -890,6 +900,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
     }
 
+    /// The caret's paragraph and the one before it: Return splits a line in
+    /// two and a link can end up in either half. Marking the whole note on
+    /// every Return was the one key that did.
+    private func paragraphsAroundCaret() -> NSRange? {
+        guard let storage = textStorage else { return nil }
+        let text = storage.mutableString
+        let current = text.paragraphRange(for: NSRange(location: min(selectedRange().location, storage.length), length: 0))
+        guard current.location > 0 else { return current }
+        return NSUnionRange(text.paragraphRange(for: NSRange(location: current.location - 1, length: 0)), current)
+    }
+
     private func shouldHighlightLinks(in paragraphRange: NSRange) -> Bool {
         guard let storage = textStorage,
             paragraphRange.location >= 0,
@@ -1114,6 +1135,39 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         scheduleLinkHighlight(range: range, immediate: true)
     }
 
+    /// Format's whole-buffer rewrite, highlighted in the same edit, for both
+    /// windows. It goes through shouldChangeText and didChangeText so it is
+    /// one undo step of its own: written straight into the storage it was
+    /// not on the stack, and Command-Z then replayed earlier typing at stale
+    /// ranges in the reformatted text. Returns false when the editor refuses
+    /// the edit (a read-only note).
+    @discardableResult
+    func replaceWholeBuffer(with newContent: String, note: Note) -> Bool {
+        guard let storage = textStorage else {
+            string = newContent
+            return true
+        }
+        let fullRange = NSRange(location: 0, length: storage.length)
+        breakUndoCoalescing()
+        guard shouldChangeText(in: fullRange, replacementString: newContent) else { return false }
+        storage.beginEditing()
+        storage.replaceCharacters(in: fullRange, with: newContent)
+        NotesTextProcessor.checkPerformanceLevel(attributedString: storage, note: note)
+        if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+            NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
+        } else {
+            NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
+            NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
+        }
+        storage.updateParagraphStyle()
+        NotesTextProcessor(storage: storage, range: NSRange(location: 0, length: storage.length)).highlightLinks()
+        storage.applyEditorLetterSpacing()
+        storage.endEditing()
+        didChangeText()
+        breakUndoCoalescing()
+        return true
+    }
+
     public func updateTextContainerInset() {
         let lineWidth = UserDefaultsManagement.lineWidth
         let margin = UserDefaultsManagement.marginSize
@@ -1305,7 +1359,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             } else {
                 formatter.newLine()
             }
-            fillHighlightLinks()
+            fillHighlightLinks(range: paragraphsAroundCaret())
             saveCursorPosition()
             return
         }

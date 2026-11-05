@@ -493,7 +493,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
                     host?.toast(message: I18n.str("Formatting cancelled"))
                     return
                 }
-                self.apply(output, original: content, note: note, top: top)
+                guard self.apply(output, original: content, note: note, top: top) else { return }
                 host?.toast(message: I18n.str("Formatted"), style: .success)
             } catch is CancellationError {
             } catch {
@@ -505,7 +505,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         onFormattingChange?(true)
     }
 
-    private func apply(_ output: MarkdownFormatOutput, original: String, note: Note, top: CGFloat) {
+    private func apply(_ output: MarkdownFormatOutput, original: String, note: Note, top: CGFloat) -> Bool {
         let restored = HtmlManager.restoreHTMLTags(in: output.formattedString, with: output.placeholders)
         var newContent = restored
         if original.components(separatedBy: .newlines).count > 1 && !restored.contains("\n") {
@@ -514,21 +514,8 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
             newContent = restored.removeLastNewLine()
         }
 
-        if let storage = textView.textStorage {
-            storage.beginEditing()
-            storage.replaceCharacters(in: NSRange(0..<storage.length), with: newContent)
-            NotesTextProcessor.checkPerformanceLevel(attributedString: storage, note: note)
-            if NotesTextProcessor.shouldUseSimplifiedHighlighting {
-                NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
-            } else {
-                NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
-                NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
-            }
-            storage.updateParagraphStyle()
-            NotesTextProcessor(storage: storage, range: NSRange(location: 0, length: storage.length)).highlightLinks()
-            storage.applyEditorLetterSpacing()
-            storage.endEditing()
-        }
+        // One undo step through the text view, as the storyboard window.
+        guard textView.replaceWholeBuffer(with: newContent, note: note) else { return false }
 
         let cursor = HtmlManager.adjustCursorAfterRestore(
             originalOffset: output.cursorOffset, protected: output.protectedContent, restored: newContent)
@@ -540,6 +527,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         scrollView.reflectScrolledClipView(scrollView.contentView)
         refreshSplitPreview()
         onContentChange?()
+        return true
     }
 
     /// Called as Command-Z reaches the editor: when it undoes the last

@@ -119,7 +119,7 @@ public class TextFormatter {
         if textView.textStorage?.length == 0 { EditTextView.shouldForceRescan = true }
 
         textView.insertText(result, replacementRange: pRange)
-        setSelectedRange(NSRange(location: pRange.lowerBound, length: result.count))
+        setSelectedRange(NSRange(location: pRange.lowerBound, length: (result as NSString).length))
     }
 
     func unTab() {
@@ -156,7 +156,7 @@ public class TextFormatter {
         var result = resultList.joined(separator: "\n")
         if pRange.upperBound != storage.length { result += "\n" }
         textView.insertText(result, replacementRange: pRange)
-        let finalRange = NSRange(location: pRange.lowerBound, length: result.count)
+        let finalRange = NSRange(location: pRange.lowerBound, length: (result as NSString).length)
         setSelectedRange(finalRange)
     }
 
@@ -185,7 +185,7 @@ public class TextFormatter {
     public func link() {
         let text = "[" + attributedString.string + "]()"
         replaceWith(string: text, range: range)
-        if attributedString.length == 4 {
+        if range.length == 0 {
             setSelectedRange(NSRange(location: range.location + 1, length: 0))
         } else {
             setSelectedRange(NSRange(location: range.upperBound + 3, length: 0))
@@ -195,7 +195,7 @@ public class TextFormatter {
     public func image() {
         let text = "![" + attributedString.string + "]()"
         replaceWith(string: text)
-        if attributedString.length == 5 {
+        if range.length == 0 {
             setSelectedRange(NSRange(location: range.location + 2, length: 0))
         } else {
             setSelectedRange(NSRange(location: range.upperBound + 4, length: 0))
@@ -229,7 +229,7 @@ public class TextFormatter {
     public static func getAutocompleteCharsMatch(string: String) -> NSTextCheckingResult? {
         guard
             let regex = try? NSRegularExpression(
-                pattern: "^(( |\\t)*\\- \\[[x| ]*\\] )|^(( |\\t)*[-|–|—|*|•|>|\\+]{1} )"),
+                pattern: "^(( |\\t)*\\- \\[[ xX]\\] )|^(( |\\t)*[-|–|—|*|•|>|\\+]{1} )"),
             let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
         else { return nil }
         return result
@@ -242,26 +242,36 @@ public class TextFormatter {
         return result
     }
 
+    /// The marker the next line starts with: a task continues unticked,
+    /// whatever the line it follows says.
+    static func continuedListMarker(_ found: String) -> String {
+        found.replacingOccurrences(of: "[x]", with: "[ ]").replacingOccurrences(of: "[X]", with: "[ ]")
+    }
+
+    /// The paragraph's length without its line terminator, in UTF-16 units,
+    /// so a CRLF line ("\r\n" is one Character) measures like an LF one.
+    private static func contentsLength(of paragraph: NSAttributedString) -> Int {
+        var contentsEnd = 0
+        (paragraph.string as NSString).getParagraphStart(nil, end: nil, contentsEnd: &contentsEnd, for: NSRange(location: 0, length: 0))
+        return contentsEnd
+    }
+
     private func matchChars(string: NSAttributedString, match: NSTextCheckingResult, prefix: String? = nil) {
         guard string.length >= match.range.upperBound else { return }
         let found = string.attributedSubstring(from: match.range).string
-        var newLine = 1
-        if textView.selectedRange.upperBound == storage.length { newLine = 0 }
-        if found.count + newLine == string.length {
+        if (found as NSString).length == Self.contentsLength(of: string) {
             let range = storage.mutableString.paragraphRange(for: textView.selectedRange)
             let selectRange = NSRange(location: range.location, length: 0)
             insertText("\n", replacementRange: range, selectRange: selectRange)
             return
         }
-        insertText("\n" + found)
+        insertText("\n" + Self.continuedListMarker(found))
     }
 
     private func matchDigits(string: NSAttributedString, match: NSTextCheckingResult) {
         guard string.length >= match.range.upperBound else { return }
         let found = string.attributedSubstring(from: match.range).string
-        var newLine = 1
-        if textView.selectedRange.upperBound == storage.length { newLine = 0 }
-        if found.count + newLine == string.length {
+        if (found as NSString).length == Self.contentsLength(of: string) {
             let range = storage.mutableString.paragraphRange(for: textView.selectedRange)
             let selectRange = NSRange(location: range.location, length: 0)
             insertText("\n", replacementRange: range, selectRange: selectRange)
@@ -273,27 +283,41 @@ public class TextFormatter {
         }
     }
 
+    /// The box of a task line ("  - [x] a", "1. [ ] b"), as a range inside
+    /// the line: the one character between the brackets.
+    static func taskBoxRange(in line: String) -> NSRange? {
+        guard
+            let regex = try? NSRegularExpression(pattern: "^[ \\t]*(?:[-*+]|[0-9]+[.)]) \\[([ xX])\\]"),
+            let match = regex.firstMatch(in: line, range: NSRange(location: 0, length: (line as NSString).length))
+        else { return nil }
+        return match.range(at: 1)
+    }
+
     public func toggleTodo() {
         guard let currentParagraphRange = getParagraphRange() else { return }
-        let currentParagraph = storage.attributedSubstring(from: currentParagraphRange)
-        let string = currentParagraph.string
-        var todoString = "- [ ] "
-        if string.contains("- [ ] ") { todoString = "- [x] " }
+        let string = storage.attributedSubstring(from: currentParagraphRange).string
 
-        if string.contains("- [ ] ") || string.contains("- [x] ") {
-            replaceWith(string: todoString, range: NSRange(location: currentParagraphRange.location, length: 6))
-        } else {
-            insertText(todoString, replacementRange: NSRange(location: currentParagraphRange.location, length: 0))
+        guard let box = Self.taskBoxRange(in: string) else {
+            insertText("- [ ] ", replacementRange: NSRange(location: currentParagraphRange.location, length: 0))
+            return
         }
+        let mark = (string as NSString).substring(with: box) == " " ? "x" : " "
+        let selection = textView.selectedRange
+        replaceWith(string: mark, range: NSRange(location: currentParagraphRange.location + box.location, length: 1))
+        setSelectedRange(selection)
     }
 
     public func newLine() {
         guard let currentParagraphRange = getParagraphRange() else { return }
         let currentParagraph = storage.attributedSubstring(from: currentParagraphRange)
         let selectedRange = textView.selectedRange
+        // Where the line's text ends, before "\n" or "\r\n".
+        var contentsEnd = 0
+        storage.mutableString.getParagraphStart(nil, end: nil, contentsEnd: &contentsEnd, for: currentParagraphRange)
+        let atLineEnd = selectedRange.location >= contentsEnd
 
         if selectedRange.location != currentParagraphRange.location,
-            currentParagraphRange.upperBound - 2 < selectedRange.location,
+            atLineEnd,
             currentParagraph.length >= 2
         {
             if textView.selectedRange.upperBound > 2 {
@@ -321,9 +345,7 @@ public class TextFormatter {
             }
         }
 
-        if selectedRange.location != currentParagraphRange.location,
-            currentParagraphRange.upperBound - 2 < selectedRange.location
-        {
+        if selectedRange.location != currentParagraphRange.location, atLineEnd {
             if let charsMatch = TextFormatter.getAutocompleteCharsMatch(string: currentParagraph.string) {
                 matchChars(string: currentParagraph, match: charsMatch)
                 return

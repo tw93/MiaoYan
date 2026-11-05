@@ -187,6 +187,103 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(note.content.string, "#   Title\n\n*   item typed")
     }
 
+    /// Format wrote straight into the storage, so it was not on the undo
+    /// stack: Command-Z after it replayed the earlier typing at stale ranges
+    /// in the reformatted text. One undo now gives back the text from before
+    /// Format, and the next one the text from before the typing.
+    @available(macOS 14, *)
+    @MainActor
+    func testUndoAfterFormatRestoresTheTextBeforeIt() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let note = makeLoadedNote("undo-format.md", body: "#   Title\n\n*   item")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let undo = try XCTUnwrap(controller.textView.undoManager)
+        // The test host never ends the event group a key press would end, so
+        // each step here is its own group, as each event is in the app.
+        undo.groupsByEvent = false
+        defer { undo.groupsByEvent = true }
+        undo.removeAllActions()
+        undo.beginUndoGrouping()
+        let end = (controller.textView.string as NSString).length
+        controller.textView.insertText(" typed", replacementRange: NSRange(location: end, length: 0))
+        undo.endUndoGrouping()
+
+        let host = NSViewController()
+        host.view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        let finished = expectation(description: "format finished")
+        controller.onFormattingChange = { running in
+            if !running { finished.fulfill() }
+        }
+        undo.beginUndoGrouping()
+        controller.format(in: host)
+        wait(for: [finished], timeout: 20)
+        undo.endUndoGrouping()
+        let formatted = controller.textView.string
+        XCTAssertNotEqual(formatted, "#   Title\n\n*   item typed", "Prettier changed the text")
+
+        undo.undo()
+        XCTAssertEqual(controller.textView.string, "#   Title\n\n*   item typed")
+        XCTAssertEqual(note.content.string, "#   Title\n\n*   item typed")
+        undo.undo()
+        XCTAssertEqual(controller.textView.string, "#   Title\n\n*   item")
+        undo.redo()
+        undo.redo()
+        XCTAssertEqual(controller.textView.string, formatted)
+    }
+
+    /// A file dragged in from Finder became an inline attachment NSTextView
+    /// never saved (the drop handling went in a73f4585). It now takes the
+    /// paste path: the file is copied to `i/` and its link goes in at the
+    /// drop point. A text drag is still NSTextView's.
+    @available(macOS 14, *)
+    @MainActor
+    func testDroppedFileIsCopiedAndLinkedAtTheDropPoint() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let note = makeLoadedNote("drop.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDrop-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let image = NSImage(size: NSSize(width: 4, height: 4))
+        image.lockFocus()
+        NSColor.red.drawSwatch(in: NSRect(x: 0, y: 0, width: 4, height: 4))
+        image.unlockFocus()
+        let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(image.tiffRepresentation))?.representation(using: .png, properties: [:]))
+        let file = source.appendingPathComponent("dropped.png")
+        try png.write(to: file)
+
+        // The editor's own ClipboardManager is private; this one is built the same way.
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.setString("plain text", forType: .string)
+        XCTAssertNil(drop.dropFiles(from: board, at: 0), "a text drag is NSTextView's")
+
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+
+        XCTAssertFalse(controller.textView.textStorage?.containsAttachments ?? true)
+        let text = controller.textView.string
+        let match = try XCTUnwrap(text.range(of: "^before !\\[\\]\\((/i/[^)]+\\.png)\\)after$", options: .regularExpression), text)
+        let link = String(text[match].dropFirst("before ![](".count).dropLast(")after".count))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.path + link), "copied to \(link)")
+        XCTAssertEqual(note.content.string, text)
+    }
+
     /// The shell's text view is made in code; it must carry what the
     /// storyboard's EditTextView sets in Main.storyboard and ViewController.
     @available(macOS 14, *)
