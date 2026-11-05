@@ -10,7 +10,7 @@ are summarised without code paths, since that code lives in the private MiaoYan-
 - Mechanical: `check_incidents.py` 19 rows, 0 problems; SwiftLint and swift-format `--strict` clean.
 - Verified by the main session before reporting: B1 (a `typeIdentifier` read on a deleted file
   returns nil in a standalone test), E1 and P1 (read the code paths).
-- Next window from: `ec507b2d` (the last fix of this run).
+- Next window from: `49da1f67` (the last fix of this run).
 
 ### Findings as reported
 
@@ -114,7 +114,8 @@ Fixed (MiaoYan)
   only at four good UTF-8 sequences per bad one (short GB18030 and EUC-KR titles were read as
   damaged), while any note with at least as many good as bad stays read-only, since a short damaged
   note shown in its legacy reading and saved wrote mojibake over itself. Read-only notes duplicate
-  (`f6a3daf5`), refuse Move with a toast, and have Restore disabled. B4 `55004c43`, B5 `a562362c`.
+  (`f6a3daf5`), refuse Move with a toast, have Restore disabled, and are refused at `save` before
+  their buffer changes. B4 `55004c43`, B5 `a562362c`.
 - E1 `93fc8a84`, E2 `38bf0f0d` with `3dc82e63` (a note dragged from the list is not imported), E3
   `dc42ff2c`, E4 `02d6159d`, E5 `fb4ae907`, E6 `ac0d88bc`.
 - P1 `e0088b1d`, P2 `73244c52`, P3 `77a4dc7b` (shell window), P4 `169f65ec`, P5 `8c629f49`, hover
@@ -148,6 +149,9 @@ longer reloads the reader; three dead symbols removed.
 - The 2026-05-07 tripwire in `ViewController+Action` (needs a decision); `.todo` readers in the
   text storage and highlighter are dead now that nothing sets `.todo`; `.preferencesChanged` is
   posted with no observer checked.
+- Clean Typography on a read-only note still shows its success toast; a valid short legacy note
+  held read-only reads "has invalid characters"; the storyboard's move clears the editor even when
+  a read-only note refused to move.
 - S4 pbxproj orphan package references (clean up in Xcode).
 - Format undo is tested in the shell only, and the drop test calls `dropFiles` directly rather than
   through `performDragOperation`.
