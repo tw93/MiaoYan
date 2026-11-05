@@ -1333,6 +1333,23 @@ extension ViewController {
         }
     }
 
+    /// A light or dark switch for a preview already showing `note`: the page
+    /// switches in place (`MPreviewView.updateAppearance`), as the shell
+    /// window's does, so the reader stays where they were; loading it again
+    /// put them back at the top. In split mode the editor beside it is filled
+    /// again for its own colours, leaving the page alone. Returns false when
+    /// the page has to be loaded again (none loaded yet, slides).
+    func updatePreviewAppearanceInPlace(for note: Note) -> Bool {
+        guard shouldShowPreview, let preview = editArea.markdownView, !preview.isHidden,
+            preview.canUpdateAppearanceInPlace(showing: note)
+        else { return false }
+        preview.updateAppearance()
+        if sessionSplitMode {
+            refillEditArea(keepPreviewPage: true)
+        }
+        return true
+    }
+
     // MARK: - Editor Content Management
     func refillEditArea(
         cursor: Int? = nil,
@@ -1340,7 +1357,8 @@ extension ViewController {
         saveTyping: Bool = false,
         force: Bool = false,
         animatePreview: Bool = true,
-        suppressSave: Bool = false
+        suppressSave: Bool = false,
+        keepPreviewPage: Bool = false
     ) {
         DispatchQueue.main.async { [weak self] in
             self?.updateToolbarButtonTints()
@@ -1405,7 +1423,8 @@ extension ViewController {
                         needScrollToCursor: true,
                         previewOnly: previewOnly,
                         animatePreview: animatePreview && !isRapidPreviewSwitch,
-                        preserveUndo: true  // Preserve undo stack during view refreshes (e.g. Split View toggle)
+                        preserveUndo: true,  // Preserve undo stack during view refreshes (e.g. Split View toggle)
+                        keepPreviewPage: keepPreviewPage
                     )
                     self.editArea.fill(note: note, options: options)
                     // An outside edit can leave the note shorter than the

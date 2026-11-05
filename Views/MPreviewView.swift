@@ -49,6 +49,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// (font, size, width) gives a different one, and the page is loaded
     /// again rather than reused.
     private var pageStyle: String?
+    /// The theme the page on screen is in: the one its template was built
+    /// with, then whatever `updateAppearance` last switched it to.
+    private var pageIsDark: Bool?
     static var hasCompletedInitialLoad = false
     private var loadCompletion: (() -> Void)?
     private var appDidBecomeActiveObserver: NSObjectProtocol?
@@ -352,7 +355,23 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let isDark = determineDarkTheme()
         self.appearance = isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
         applyBackgroundColor(determineBackgroundColor())
+        // The storyboard window asks twice for one switch (the editor's
+        // appearance hook, then the window's observer); a loaded page already
+        // in that theme does not draw its diagrams again.
+        let pageIsLive = hasLoadedTemplate && !isLoadingTemplate
+        if pageIsLive, pageIsDark == isDark { return }
+        pageIsDark = pageIsLive ? isDark : nil
         evaluateJavaScript(Self.appearanceScript(isDark: isDark), completionHandler: nil)
+    }
+
+    /// Whether a light or dark switch can be made in the page on screen
+    /// (`updateAppearance`) rather than by loading `note` again: the page is
+    /// the note template, fully loaded, showing that note. The slide template
+    /// is loaded again, because its diagrams and slide chrome keep the colours
+    /// they were drawn with.
+    func canUpdateAppearanceInPlace(showing note: Note) -> Bool {
+        hasLoadedTemplate && !isLoadingTemplate && inPlaceNote == nil && !pageIsSlides
+            && !UserDefaultsManagement.magicPPT && self.note === note
     }
 
     /// The page side of `updateAppearance`. The slide template has no
@@ -855,6 +874,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 }
                 self.loadFileURL(indexURL, allowingReadAccessTo: URL(fileURLWithPath: "/"))
                 self.hasLoadedTemplate = true
+                self.pageIsDark = UserDataService.instance.isDark
                 self.note = note
             } catch {
                 self.hasLoadedTemplate = false

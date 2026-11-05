@@ -242,6 +242,90 @@ final class MermaidExportTests: XCTestCase {
         XCTAssertEqual(rgb(preview.layer?.backgroundColor.flatMap(NSColor.init(cgColor:))), resolved(Theme.backgroundColor, in: preview))
     }
 
+    /// A light or dark switch in the storyboard window loaded the preview
+    /// again (the editor's `applySystemAppearance` refilled it), which put
+    /// the reader back at the top of the note. A page already showing the
+    /// note now switches in place, as the shell window's does.
+    @MainActor
+    func testStoryboardAppearanceSwitchKeepsThePreviewPage() async throws {
+        let previous = (
+            type: UserDefaultsManagement.appearanceType, dark: UserDataService.instance.isDark,
+            preview: UserDefaultsManagement.preview, split: UserDefaultsManagement.splitViewMode,
+            presentation: UserDefaultsManagement.presentation, ppt: UserDefaultsManagement.magicPPT,
+            note: EditTextView.note
+        )
+        // The modes are one setting underneath: turning PPT off resets it.
+        UserDefaultsManagement.appearanceType = .System
+        UserDataService.instance.isDark = false
+        UserDefaultsManagement.magicPPT = false
+        UserDefaultsManagement.splitViewMode = false
+        UserDefaultsManagement.preview = true
+        defer {
+            UserDefaultsManagement.appearanceType = previous.type
+            UserDataService.instance.isDark = previous.dark
+            UserDefaultsManagement.magicPPT = previous.ppt
+            if !previous.ppt {
+                UserDefaultsManagement.presentation = previous.presentation
+                UserDefaultsManagement.preview = previous.preview
+            }
+            UserDefaultsManagement.splitViewMode = previous.split
+            EditTextView.note = previous.note
+        }
+        let project = Project(url: tempDirectory, label: "appearance-test", isRoot: true)
+        let noteURL = tempDirectory.appendingPathComponent("long.md")
+        let paragraphs = (1...80).map { "Paragraph \($0) of a note long enough to scroll." }.joined(separator: "\n\n")
+        try "# Title\n\n\(paragraphs)".write(to: noteURL, atomically: true, encoding: .utf8)
+        let note = Note(url: noteURL, with: project)
+        note.load()
+
+        let preview = LoadCountingPreviewView(frame: CGRect(x: 0, y: 0, width: 600, height: 400), note: note, closure: nil)
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline, !preview.canUpdateAppearanceInPlace(showing: note) {
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTAssertTrue(preview.canUpdateAppearanceInPlace(showing: note), "the preview loaded the note")
+        try await waitFor(preview, "document.readyState === 'complete' && !!window.ThemeConfig && document.querySelectorAll('#write p').length > 40")
+        let scrolledRaw = try await preview.evaluateJavaScript(
+            """
+            window.__samePage = true;
+            window.__rethemes = 0;
+            const retheme = DiagramHandler.retheme.bind(DiagramHandler);
+            DiagramHandler.retheme = function() { window.__rethemes += 1; return retheme(); };
+            window.scrollTo(0, 900);
+            window.scrollY
+            """)
+        let scrolled = try XCTUnwrap(scrolledRaw as? Double)
+        XCTAssertGreaterThan(scrolled, 0)
+
+        let controller = ExportTestViewController()
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
+        controller.editArea = editor
+        controller.notesTableView = NotesTableView(frame: .zero)
+        controller.notesListCustomView = NSView()
+        editor.viewDelegate = controller
+        editor.markdownView = preview
+        EditTextView.note = note
+        XCTAssertTrue(editor.isPreviewModeActive)
+        let loads = preview.loads
+
+        editor.appearance = NSAppearance(named: .darkAqua)
+        editor.applySystemAppearance()
+        try await waitFor(preview, "document.documentElement.classList.contains('darkmode') && document.body.classList.contains('darkmode')")
+        let afterRaw = try await preview.evaluateJavaScript("({ same: window.__samePage === true, y: window.scrollY })")
+        let after = try XCTUnwrap(afterRaw as? [String: Any])
+        XCTAssertEqual(after["same"] as? Bool, true, "the page was not loaded again")
+        XCTAssertEqual(after["y"] as? Double, scrolled, "the reader stays where they were")
+        XCTAssertEqual(preview.loads, loads)
+        XCTAssertTrue(UserDataService.instance.isDark)
+
+        // MainWindowController asks the preview for the same switch again
+        // after the editor did; the page draws its diagrams once.
+        preview.updateAppearance()
+        _ = try await preview.evaluateJavaScript("true")
+        let rethemes = try await preview.evaluateJavaScript("window.__rethemes")
+        XCTAssertEqual(rethemes as? Int, 1)
+    }
+
     /// A light or dark switch asked the PlantUML server for every diagram
     /// again and took the drawn image down while it did; offline, or when
     /// the request failed, the diagram turned back into source text.
@@ -474,6 +558,16 @@ private struct MermaidDOMState {
 @MainActor
 private final class ExportTestViewController: ViewController {
     override func viewDidLoad() {}
+}
+
+@MainActor
+private final class LoadCountingPreviewView: MPreviewView {
+    private(set) var loads = 0
+
+    override func load(note: Note, force: Bool = false, completion: (() -> Void)? = nil) {
+        loads += 1
+        super.load(note: note, force: force, completion: completion)
+    }
 }
 
 @MainActor
