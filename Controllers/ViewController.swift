@@ -368,6 +368,9 @@ class ViewController:
                 let appeared = !self.missingChosenFonts.subtracting(missing).isEmpty
                 self.missingChosenFonts = missing
                 guard appeared else { return }
+                // The list caches its fonts by the stored name, which an
+                // install does not change, so drop them to pick up the face.
+                NoteCellView.cachedListFonts = nil
                 EditorSettings().applyChanges()
                 self.applyInterfacePreferences()
             }
