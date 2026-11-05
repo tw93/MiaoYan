@@ -272,9 +272,19 @@ final class ShellEditorParityTests: XCTestCase {
         board.setString("plain text", forType: .string)
         XCTAssertNil(drop.dropFiles(from: board, at: 0), "a text drag is NSTextView's")
 
+        // A note dragged from the shell's list arrives as its file URL; it is
+        // not copied into the note as an attachment.
+        let library = Storage(loadsLibrary: false)
+        let listed = makeLoadedNote("listed.md", body: "listed")
+        library.add(listed)
         board.clearContents()
-        board.writeObjects([file as NSURL])
-        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+        board.writeObjects([listed.url as NSURL])
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7, storage: library), false, "a library note is refused")
+        XCTAssertEqual(controller.textView.string, "before after")
+
+        board.clearContents()
+        board.writeObjects([file as NSURL, listed.url as NSURL])
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7, storage: library), true)
 
         XCTAssertFalse(controller.textView.textStorage?.containsAttachments ?? true)
         let text = controller.textView.string

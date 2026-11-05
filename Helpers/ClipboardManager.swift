@@ -107,11 +107,17 @@ class ClipboardManager {
     /// that was never written anywhere, since a73f4585 removed the drop
     /// handling. Nil when the pasteboard holds no file, leaving the drop to
     /// NSTextView; false when the editor cannot take it (read-only, or the
-    /// buffer is not the open note's, #543).
-    func dropFiles(from pasteboard: NSPasteboard, at location: Int) -> Bool? {
-        let urls = Self.fileURLs(on: pasteboard)
-        guard !urls.isEmpty else { return nil }
-        guard let textView, textView.isEditable, let note = EditTextView.note, textView.storageNote === note,
+    /// buffer is not the open note's, #543). A note of the library, which the
+    /// shell's list drags as its file URL, is not an attachment: copied into
+    /// `files/` it became a second copy of the note, so it is left out, and a
+    /// drop of notes alone is refused.
+    func dropFiles(
+        from pasteboard: NSPasteboard, at location: Int, storage library: Storage = AppEnvironment.current.storage
+    ) -> Bool? {
+        let dropped = Self.fileURLs(on: pasteboard)
+        guard !dropped.isEmpty else { return nil }
+        let urls = dropped.filter { library.getBy(url: $0) == nil }
+        guard !urls.isEmpty, let textView, textView.isEditable, let note = EditTextView.note, textView.storageNote === note,
             let storage = textView.textStorage
         else { return false }
         textView.setSelectedRange(NSRange(location: min(max(location, 0), storage.length), length: 0))
