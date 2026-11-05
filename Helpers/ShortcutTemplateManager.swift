@@ -177,9 +177,4 @@ class ShortcutTemplateManager {
         )
     }
 
-    func getAllShortcuts() -> [String] {
-        var shortcuts = Array(templates.keys)
-        shortcuts.append("time")
-        return shortcuts.sorted()
-    }
 }

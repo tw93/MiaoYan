@@ -76,20 +76,6 @@ extension NSImage {
         ) ? img : nil
     }
 
-    public func savePNGRepresentationToURL(url: URL) throws {
-        guard let pngData = PNGRepresentation else {
-            throw NSError(domain: "Error creating PNG representation", code: 0, userInfo: nil)
-        }
-        try pngData.write(to: url, options: .atomicWrite)
-    }
-
-    public func saveJPEGRepresentationToURL(url: URL) throws {
-        guard let jpegData = JPEGRepresentation else {
-            throw NSError(domain: "Error creating JPEG representation", code: 0, userInfo: nil)
-        }
-        try jpegData.write(to: url, options: .atomicWrite)
-    }
-
     public func resize(to targetSize: CGSize) -> NSImage? {
         let frame = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
         guard let representation = bestRepresentation(for: frame, context: nil, hints: nil) else {
@@ -177,32 +163,6 @@ extension NSImage {
             image.unlockFocus()
 
             return image
-        }
-
-        return self
-    }
-
-    public func roundCorners(withRadius radius: CGFloat) -> NSImage {
-        let rect = NSRect(origin: NSPoint.zero, size: size)
-        if let cgImage = cgImage,
-            let context = CGContext(
-                data: nil,
-                width: Int(size.width),
-                height: Int(size.height),
-                bitsPerComponent: 8,
-                bytesPerRow: 4 * Int(size.width),
-                space: CGColorSpaceCreateDeviceRGB(),
-                bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
-        {
-            context.beginPath()
-            context.addPath(CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil))
-            context.closePath()
-            context.clip()
-            context.draw(cgImage, in: rect)
-
-            if let composedImage = context.makeImage() {
-                return NSImage(cgImage: composedImage, size: size)
-            }
         }
 
         return self

@@ -39,67 +39,6 @@ extension NoteAttachment {
         }
     }
 
-    // Access note.project on the main actor to honor isolation
-    @MainActor
-    static func getImageAndCacheData(url: URL, note: Note) -> Image? {
-        let cacheDirectoryUrl = note.project.url.appendingPathComponent("/.cache/")
-
-        let data: Data?
-        if shouldUseCache(for: url),
-            let cacheName = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        {
-            let imageCacheUrl = cacheDirectoryUrl.appendingPathComponent(cacheName)
-            data = getCachedOrFetchData(imageCacheUrl: imageCacheUrl, originalUrl: url, cacheDirectoryUrl: cacheDirectoryUrl)
-        } else {
-            data = try? Data(contentsOf: url)
-        }
-
-        guard let imageData = data else { return nil }
-        return Image(data: imageData)
-    }
-
-    private static func shouldUseCache(for url: URL) -> Bool {
-        url.isRemote() || url.pathExtension.lowercased() == "png"
-    }
-
-    // Non-isolated function calling trackError must hop to the main actor
-    private static func getCachedOrFetchData(imageCacheUrl: URL, originalUrl: URL, cacheDirectoryUrl: URL) -> Data? {
-        if FileManager.default.fileExists(atPath: imageCacheUrl.path) {
-            return try? Data(contentsOf: imageCacheUrl)
-        }
-
-        ensureCacheDirectoryExists(cacheDirectoryUrl: cacheDirectoryUrl)
-
-        do {
-            return try Data(contentsOf: originalUrl)
-        } catch {
-            Task { @MainActor in
-                AppDelegate.trackError(error, context: "ImageAttachment+.loadImage")
-            }
-            return nil
-        }
-    }
-
-    // Same as above: ensure error tracking runs on the main actor
-    private static func ensureCacheDirectoryExists(cacheDirectoryUrl: URL) {
-        var isDirectory = ObjCBool(true)
-        let fileExists = FileManager.default.fileExists(atPath: cacheDirectoryUrl.path, isDirectory: &isDirectory)
-
-        if !fileExists || !isDirectory.boolValue {
-            do {
-                try FileManager.default.createDirectory(
-                    at: cacheDirectoryUrl,
-                    withIntermediateDirectories: true,
-                    attributes: nil
-                )
-            } catch {
-                Task { @MainActor in
-                    AppDelegate.trackError(error, context: "ImageAttachment+.loadFileWrapper")
-                }
-            }
-        }
-    }
-
     static func getImage(url: URL, size: CGSize) -> NSImage? {
         let finalImage: NSImage?
 

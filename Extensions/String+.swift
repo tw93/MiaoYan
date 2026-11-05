@@ -45,10 +45,6 @@ extension String {
         return result.isEmpty ? nil : result
     }
 
-    public func localizedCaseInsensitiveContainsTerms(_ terms: [Substring]) -> Bool {
-        terms.allSatisfy { localizedLowercase.contains($0) }
-    }
-
     public func removeLastNewLine() -> String {
         last == "\n" ? String(dropLast()) : self
     }
@@ -75,20 +71,8 @@ extension String {
         UTTypeCreatePreferredIdentifierForTag(withClass, self as CFString, nil)?.takeRetainedValue() as String?
     }
 
-    public var utiMimeType: String? {
-        tag(withClass: kUTTagClassMIMEType)
-    }
-
     public var utiFileExtension: String? {
         tag(withClass: kUTTagClassFilenameExtension)
-    }
-
-    public var mimeTypeUTI: String? {
-        uti(withClass: kUTTagClassMIMEType)
-    }
-
-    public var fileExtensionUTI: String? {
-        uti(withClass: kUTTagClassFilenameExtension)
     }
 
     public var md5: String {
@@ -103,9 +87,6 @@ extension String {
 }
 
 extension StringProtocol where Index == String.Index {
-    public func nsRange(from range: Range<Index>) -> NSRange {
-        NSRange(range, in: self)
-    }
 }
 
 // MARK: - String Subscript Extensions
