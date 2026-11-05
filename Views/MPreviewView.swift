@@ -128,8 +128,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Keep the same background color between native and web layers
         setValue(false, forKey: "drawsBackground")
         wantsLayer = true
-        let bgNSColor = determineBackgroundColor()
-        layer?.backgroundColor = bgNSColor.cgColor
         layer?.isOpaque = false
         // Use sRGB color space to avoid HDR tone mapping
         if #available(macOS 10.12, *) {
@@ -138,13 +136,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Optimize layer rendering during resize
         layerContentsRedrawPolicy = .onSetNeedsDisplay
         layer?.drawsAsynchronously = false
-        // Fill under-page area with the same color to cover rubber-banding gaps (macOS 12+)
-        if #available(macOS 12.0, *) {
-            setValue(bgNSColor, forKey: "underPageBackgroundColor")
-        }
         if let hostingScrollView = subviews.compactMap({ $0 as? NSScrollView }).first {
             hostingScrollView.drawsBackground = false
-            hostingScrollView.backgroundColor = bgNSColor
             // 禁用弹性滚动
             hostingScrollView.hasVerticalScroller = false
             hostingScrollView.hasHorizontalScroller = false
@@ -156,13 +149,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
             hostingScrollView.scrollerStyle = .overlay
             hostingScrollView.horizontalScrollElasticity = .none
             hostingScrollView.verticalScrollElasticity = .none
-            let clipView = hostingScrollView.contentView
-            clipView.drawsBackground = false
-            clipView.backgroundColor = bgNSColor
+            hostingScrollView.contentView.drawsBackground = false
         } else if let clipView = subviews.compactMap({ $0 as? NSClipView }).first {
             clipView.drawsBackground = false
-            clipView.backgroundColor = bgNSColor
         }
+        applyBackgroundColor(determineBackgroundColor())
         // Set webview appearance to match current theme
         self.appearance = UserDataService.instance.isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
         appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
@@ -342,18 +333,50 @@ class MPreviewView: WKWebView, WKUIDelegate {
         return determineDarkTheme() ? Theme.previewDarkBackgroundColor : Theme.backgroundColor
     }
 
+    /// The paper behind the page, in every layer that shows around it: the
+    /// view's layer, the area under the page when it rubber-bands, and the
+    /// hosting scroll and clip views.
+    private func applyBackgroundColor(_ color: NSColor) {
+        layer?.backgroundColor = color.cgColor
+        // Fill under-page area with the same color to cover rubber-banding gaps (macOS 12+)
+        if #available(macOS 12.0, *) {
+            setValue(color, forKey: "underPageBackgroundColor")
+        }
+        if let hostingScrollView = subviews.compactMap({ $0 as? NSScrollView }).first {
+            hostingScrollView.backgroundColor = color
+            hostingScrollView.contentView.backgroundColor = color
+        } else if let clipView = subviews.compactMap({ $0 as? NSClipView }).first {
+            clipView.backgroundColor = color
+        }
+    }
+
+    /// Follows a light or dark switch without loading the page again, so the
+    /// reader stays where they were: the page switches every element the
+    /// template marked and draws its diagrams again (`ThemeConfig.applyTheme`),
+    /// and the native layers around it take the new paper.
     public func updateAppearance() {
         let isDark = determineDarkTheme()
         self.appearance = isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
-        let js = """
-                (function() {
-                    var body = document.body;
-                    if (!body) return;
-                    body.classList.remove('darkmode', 'lightmode');
-                    body.classList.add('\(isDark ? "darkmode" : "lightmode")');
-                })();
-            """
-        evaluateJavaScript(js, completionHandler: nil)
+        applyBackgroundColor(determineBackgroundColor())
+        evaluateJavaScript(Self.appearanceScript(isDark: isDark), completionHandler: nil)
+    }
+
+    /// The page side of `updateAppearance`. The slide template has no
+    /// ThemeConfig; it swaps its reveal theme and the body class instead.
+    static func appearanceScript(isDark: Bool) -> String {
+        """
+        (function() {
+            if (window.ThemeConfig && typeof ThemeConfig.applyTheme === 'function') {
+                ThemeConfig.applyTheme(\(isDark));
+                return;
+            }
+            var body = document.body;
+            if (!body) return;
+            body.classList.toggle('darkmode', \(isDark));
+            var theme = document.getElementById('theme');
+            if (theme) theme.href = theme.href.replace(/(white|night)\\.css$/, '\(isDark ? "night" : "white").css');
+        })();
+        """
     }
 
     // MARK: - Standard Find Actions
@@ -593,7 +616,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         stopLoading()
     }
 
-    private func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool, preserveScroll: Bool) -> String {
+    /// The script a live update runs: `html` is the note's rendered HTML,
+    /// carried in as a JSON string literal.
+    static func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool, preserveScroll: Bool) -> String {
         var initScripts: [String] = []
 
         if initializeMath {
@@ -636,32 +661,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 """)
         }
 
-        // Always re-initialize lazy loading after content update. The table
-        // wrappers and task checkboxes go back on here too: the innerHTML
-        // assignment above replaces them, so what app.js set up at load time
-        // is gone by now. Without the checkbox pass a task list showed list
-        // bullets and its boxes no longer toggled.
-        // Code blocks are highlighted once at load (common.js initializeCore),
-        // so a split-view edit left every replaced block uncoloured.
-        initScripts.append(
-            """
-                if (window.hljs && typeof window.hljs.highlightElement === 'function') {
-                    renderTargets.forEach((target) => {
-                        const blocks = target.matches('pre code') ? [target] : target.querySelectorAll('pre code');
-                        blocks.forEach((block) => window.hljs.highlightElement(block));
-                    });
-                }
-                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.wrapWideTables === 'function') {
-                    window.MiaoYanCommon.wrapWideTables();
-                }
-                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.setupInteractiveCheckboxes === 'function') {
-                    window.MiaoYanCommon.setupInteractiveCheckboxes();
-                }
-                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.optimizeImages === 'function') {
-                    window.MiaoYanCommon.optimizeImages();
-                }
-            """)
-
         let initialization = initScripts.joined(separator: "\n")
 
         return """
@@ -697,11 +696,16 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
                     // Only the blocks that changed are replaced (common.js
                     // patchContent), so the rest keep their loaded images,
-                    // diagrams and formulas, and only new blocks are rendered.
+                    // diagrams and formulas, and only new blocks are rendered:
+                    // everything renderPage does at load (renderBlocks), then
+                    // math and diagrams, so `$5 and $10` is escaped first.
+                    const html = \(HtmlManager.jsStringLiteral(html));
                     const inserted = window.MiaoYanCommon && typeof window.MiaoYanCommon.patchContent === 'function'
-                        ? window.MiaoYanCommon.patchContent(container, `\(html)`)
-                        : (container.innerHTML = `\(html)`, Array.from(container.childNodes));
-                    const renderTargets = inserted.filter((node) => node.nodeType === Node.ELEMENT_NODE);
+                        ? window.MiaoYanCommon.patchContent(container, html)
+                        : (container.innerHTML = html, Array.from(container.childNodes));
+                    if (window.MiaoYanCommon && typeof window.MiaoYanCommon.renderBlocks === 'function') {
+                        window.MiaoYanCommon.renderBlocks(inserted);
+                    }
                     \(initialization)
 
                     if (preserveScroll && keptAnchor && keptAnchor.isConnected) {
@@ -821,11 +825,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     let processedMarkdown = HtmlManager.processImagesInMarkdown(markdownString, imagesStorage: imagesStorage)
                     return (processedMarkdown, processedMarkdown)
                 }
-                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
+                guard let html = Self.previewHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak, imagesStorage: imagesStorage) else {
                     return nil
                 }
-                let processed = HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
-                return (processed, nil)
+                return (html, nil)
             }.value
             guard epoch == self.loadEpoch else { return }
 
@@ -908,9 +911,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let imagesStorage = note.project.url
             let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
             let html = await Task.detached {
-                renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak).map {
-                    HtmlManager.processImages(in: $0, imagesStorage: imagesStorage)
-                }
+                Self.previewHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak, imagesStorage: imagesStorage)
             }.value
             guard epoch == self.loadEpoch else { return }
             guard let html else {
@@ -970,16 +971,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let imagesStorage = note.project.url
             let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
 
-            // Phase 1: render, and resolve image paths in the same pass when the
-            // note has images. Injecting the raw cmark HTML first showed every
-            // local image broken (relative to the cache page) and restored the
-            // scroll on that collapsed layout before phase 2 patched the srcs.
-            let rendered = await Task.detached { () -> (html: String, imagesResolved: Bool)? in
-                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else { return nil }
-                guard html.contains("<img") else { return (html, false) }
-                return (HtmlManager.processImages(in: html, imagesStorage: imagesStorage), true)
+            // Rendered with media resolved in the same pass, as a load does.
+            let htmlString = await Task.detached {
+                Self.previewHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak, imagesStorage: imagesStorage)
             }.value
-            let htmlString = rendered?.html
 
             guard let htmlString else {
                 AppDelegate.trackError(
@@ -1005,11 +1000,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 || htmlString.contains("language-plantuml")
                 || htmlString.contains("language-markmap")
 
-            let rawEscaped =
-                htmlString
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "`", with: "\\`")
-                .replacingOccurrences(of: "$", with: "\\$")
             let now = Date().timeIntervalSince1970
             let rendererPlan = Self.specialRendererPlan(
                 needsRenderers: needsMath || needsDiagrams,
@@ -1033,8 +1023,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 }
             }
 
-            let phase1Script = self.buildUpdateScript(
-                html: rawEscaped,
+            let phase1Script = Self.buildUpdateScript(
+                html: htmlString,
                 initializeMath: shouldInitializeSpecialRenderers && needsMath,
                 initializeDiagrams: shouldInitializeSpecialRenderers && needsDiagrams,
                 preserveScroll: preserveScroll
@@ -1052,41 +1042,24 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
             self.setupScrollObserver()
 
-            // Phase 2: Process image paths in background (~50-200ms) — patch srcs without DOM rebuild
             guard updateVersion == self.contentUpdateVersion else {
                 self.isUpdatingContent = false
                 return
             }
             self.note = note
-
-            // Images were resolved before injection; processing that output
-            // again would read the lazy placeholders as missing local files.
-            if rendered?.imagesResolved == true {
-                self.isUpdatingContent = false
-                self.contentUpdateWorkItem = nil
-                return
-            }
-
-            let processedHtml = await Task.detached {
-                HtmlManager.processImages(in: htmlString, imagesStorage: imagesStorage)
-            }.value
-
-            guard updateVersion == self.contentUpdateVersion else {
-                self.isUpdatingContent = false
-                return
-            }
-
-            if processedHtml != htmlString {
-                let patchScript = MPreviewView.buildImagePatchScript(processedHtml: processedHtml)
-                do {
-                    _ = try await self.evaluateJavaScript(patchScript)
-                } catch {
-                    AppDelegate.trackError(error, context: "MPreviewView.updateContent.phase2")
-                }
-            }
-
             self.isUpdatingContent = false
             self.contentUpdateWorkItem = nil
+        }
+    }
+
+    /// The note's HTML as every preview path shows it: rendered, with local
+    /// image and video paths resolved and videos held to `preload="none"`.
+    /// A live update used to resolve them only when the note had an image, so
+    /// a note with a local video and no image lost its player on the first
+    /// edit: the patch swapped in the raw tag, relative to the cache page.
+    nonisolated static func previewHTML(markdown: String, useGithubLineBreak: Bool, imagesStorage: URL) -> String? {
+        renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak).map {
+            HtmlManager.processImages(in: $0, imagesStorage: imagesStorage)
         }
     }
 
@@ -1102,83 +1075,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let elapsed = now - lastInitialization
         if !preserveScroll || elapsed > rendererInterval { return (true, nil) }
         return (false, max(0, rendererInterval - elapsed) + 0.05)
-    }
-
-    // Patch image src attributes in place without rebuilding the DOM.
-    // processedHtml contains the final img src / data-src values in document order.
-    private static func buildImagePatchScript(processedHtml: String) -> String {
-        struct ImgUpdate {
-            let src: String
-            let isLazy: Bool
-        }
-
-        var updates: [ImgUpdate] = []
-        let pattern = #"<img\s[^>]*>"#
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators]) else {
-            return ""
-        }
-        let ns = processedHtml as NSString
-        let matches = regex.matches(in: processedHtml, range: NSRange(location: 0, length: ns.length))
-
-        let srcRegex = try? NSRegularExpression(pattern: #"\bsrc="([^"]*)""#)
-        let dataSrcRegex = try? NSRegularExpression(pattern: #"\bdata-src="([^"]*)""#)
-        let lazyRegex = try? NSRegularExpression(pattern: #"\blazy-image\b"#)
-
-        for match in matches {
-            let tag = ns.substring(with: match.range)
-            let tagNS = tag as NSString
-            let tagRange = NSRange(location: 0, length: tagNS.length)
-
-            let isLazy = lazyRegex?.firstMatch(in: tag, range: tagRange) != nil
-
-            if isLazy,
-                let m = dataSrcRegex?.firstMatch(in: tag, range: tagRange),
-                let r = Range(m.range(at: 1), in: tag)
-            {
-                updates.append(ImgUpdate(src: String(tag[r]), isLazy: true))
-            } else if let m = srcRegex?.firstMatch(in: tag, range: tagRange),
-                let r = Range(m.range(at: 1), in: tag)
-            {
-                updates.append(ImgUpdate(src: String(tag[r]), isLazy: false))
-            }
-        }
-
-        guard !updates.isEmpty else { return "" }
-
-        let lazyPlaceholder = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        var jsonParts: [String] = []
-        for u in updates {
-            let escapedSrc = u.src
-                .replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "\"", with: "\\\"")
-                .replacingOccurrences(of: "\n", with: "\\n")
-                .replacingOccurrences(of: "\r", with: "\\r")
-            jsonParts.append("{\"src\":\"\(escapedSrc)\",\"lazy\":\(u.isLazy ? "true" : "false")}")
-        }
-        let jsonArray = "[" + jsonParts.joined(separator: ",") + "]"
-
-        return """
-            (function() {
-                const container = document.querySelector('.markdown-body') || document.body;
-                const imgs = container.querySelectorAll('img');
-                const updates = \(jsonArray);
-                const placeholder = '\(lazyPlaceholder)';
-                updates.forEach(function(u, i) {
-                    if (i >= imgs.length) return;
-                    const img = imgs[i];
-                    if (u.lazy) {
-                        img.setAttribute('data-src', u.src);
-                        img.src = placeholder;
-                        img.classList.add('lazy-image');
-                    } else {
-                        img.src = u.src;
-                        img.classList.remove('lazy-image');
-                        img.removeAttribute('data-src');
-                    }
-                });
-                if (window.MiaoYanCommon) window.MiaoYanCommon.optimizeImages();
-            })();
-            """
     }
 
     private func isFootNotes(url: URL) -> Bool {
@@ -1242,10 +1138,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         guard let appDidBecomeActiveObserver else { return }
         NotificationCenter.default.removeObserver(appDidBecomeActiveObserver)
         self.appDidBecomeActiveObserver = nil
-    }
-
-    private func loadImages(imagesStorage: URL, html: String) -> String {
-        return HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
     }
 
     // MARK: - TOC Hint

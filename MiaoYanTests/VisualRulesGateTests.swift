@@ -1,3 +1,4 @@
+import JavaScriptCore
 import XCTest
 
 /// The app follows the family's visual standard (Kata `sumi`): alerts carry
@@ -136,6 +137,37 @@ final class VisualRulesGateTests: XCTestCase {
                     XCTAssertTrue(words.contains("0.12s") || words.contains("0.25s"), "\(name): \(line)")
                 }
             }
+        }
+    }
+
+    /// Mermaid, PlantUML and Markmap take their colours from theme-config.js,
+    /// which kept the cool greys from before the warm paper palette, so a
+    /// PlantUML diagram painted a bluish box inside the warm --diagram-bg.
+    /// Its backgrounds now are the sheets' own values; diagram text in dark
+    /// stays #E7E9EA (maintainer 2026-11-05).
+    func testDiagramPaletteIsTheWarmPaper() throws {
+        let context = try XCTUnwrap(JSContext())
+        context.evaluateScript("var window = this;")
+        context.evaluateScript(try source("Resources/DownView.bundle/js/theme-config.js"))
+        func variable(_ sheet: String, _ name: String) throws -> String {
+            let text = try css(sheet)
+            let range = try XCTUnwrap(text.range(of: name + #":\s*#[0-9A-Fa-f]{6}"#, options: .regularExpression), "\(sheet) \(name)")
+            return String(text[range].suffix(7)).lowercased()
+        }
+        for (dark, sheet) in [(false, "theme-light.css"), (true, "theme-dark.css")] {
+            let colors = try XCTUnwrap(context.evaluateScript("ThemeColors.getThemeColors(\(dark))").toDictionary() as? [String: String])
+            XCTAssertEqual(colors["diagramBg"]?.lowercased(), try variable(sheet, "--diagram-bg"), sheet)
+            XCTAssertEqual(colors["codeBg"]?.lowercased(), try variable(sheet, "--code-bg"), sheet)
+            XCTAssertEqual(colors["background"]?.lowercased(), try variable(sheet, "--bg-color"), sheet)
+            XCTAssertEqual(colors["primaryColor"]?.lowercased(), try variable(sheet, "--mermaid-node-bg"), sheet)
+            let skin = try XCTUnwrap(context.evaluateScript("ThemeColors.getPlantUMLSkinparams(\(dark))").toString())
+            XCTAssertTrue(skin.contains("skinparam backgroundColor \(colors["diagramBg"] ?? "")"), "PlantUML paints no box of its own")
+        }
+        XCTAssertEqual(context.evaluateScript("ThemeColors.getThemeColors(true).textColor").toString(), "#E7E9EA")
+        let cool = ["#2f353d", "#323a42", "#23282d", "#282e33", "#f7f7f7", "#d0d7e2", "#f0f3f6", "#49515a", "#252b31", "#2c3238", "#30363d", "#1f2933", "#f6f8fa", "#e8e8e8"]
+        for file in ["Resources/DownView.bundle/js/theme-config.js", "Resources/DownView.bundle/css/diagrams.css"] {
+            let text = try source(file).lowercased()
+            for grey in cool { XCTAssertFalse(text.contains(grey), "\(file): \(grey)") }
         }
     }
 }

@@ -94,10 +94,11 @@ pre:has(.language-mermaid) {
   stroke: none !important;
 }
 
-/* Edge label HTML span (htmlLabels: true) */
+/* Edge label HTML span (htmlLabels: true): a warm hairline chip, light and
+   dark through --border-color. */
 .language-mermaid .edgeLabel foreignObject div,
 .language-mermaid .edgeLabel foreignObject span {
-  background-color: #e8e8e8 !important;
+  background-color: var(--border-color) !important;
 }
 
 /* Dark mode specific mermaid overrides */
@@ -122,7 +123,7 @@ pre:has(.language-mermaid) {
 
 .darkmode .language-mermaid .edgeLabel foreignObject div,
 .darkmode .language-mermaid .edgeLabel foreignObject span {
-  background-color: #323a42 !important;
+  background-color: var(--border-color) !important;
 }
 
 .darkmode .markmap text,

@@ -160,4 +160,21 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertEqual(result["videoMarked"] as? Bool, false, "\(result)")
         XCTAssertEqual(result["videoPreload"] as? String, "metadata", "the video loads its first frame after the page")
     }
+
+    /// A live update rendered the note's media only when it had an image, so
+    /// a note with a local video and no image swapped in the raw tag on its
+    /// first edit, its path relative to the cache page, and lost the player.
+    func testALiveUpdateResolvesALocalVideoInANoteWithoutImages() throws {
+        try Data([0, 0, 0, 0]).write(to: directory.appendingPathComponent("clip.mp4"))
+        let html = try XCTUnwrap(
+            MPreviewView.previewHTML(
+                markdown: "Text.\n\n<video src=\"clip.mp4\" controls></video>\n", useGithubLineBreak: false, imagesStorage: directory))
+        XCTAssertTrue(html.contains("src=\"file://\(directory.appendingPathComponent("clip.mp4").path)\""), html)
+        XCTAssertTrue(html.contains("data-preload=\"metadata\""), html)
+
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("Views/MPreviewView.swift"), encoding: .utf8)
+        XCTAssertNil(source.range(of: "contains(\"<img\")"), "no path skips media for notes without images")
+        XCTAssertEqual(source.components(separatedBy: "Self.previewHTML(markdown:").count - 1, 3, "load, in-place switch and live update")
+    }
 }

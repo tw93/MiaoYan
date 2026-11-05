@@ -163,6 +163,104 @@ final class MermaidExportTests: XCTestCase {
         }
     }
 
+    /// A system light/dark switch changed only the body class of a preview
+    /// it did not reload (the shell window's), so `html` and `#write` kept
+    /// the old theme, diagrams kept their old palette, and the native
+    /// layers around the page kept the old paper.
+    @MainActor
+    func testAppearanceSwitchRethemesThePageInPlace() async throws {
+        let previousType = UserDefaultsManagement.appearanceType
+        let previousDark = UserDataService.instance.isDark
+        UserDefaultsManagement.appearanceType = .System
+        UserDataService.instance.isDark = false
+        defer {
+            UserDefaultsManagement.appearanceType = previousType
+            UserDataService.instance.isDark = previousDark
+        }
+        let project = Project(url: tempDirectory, label: "appearance-test", isRoot: true)
+        let note = Note(url: tempDirectory.appendingPathComponent("a.md"), with: project)
+        let preview = ExportTestPreviewView(frame: CGRect(x: 0, y: 0, width: 600, height: 400), note: note, closure: nil)
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let scripts = ["mermaid.min.js", "plantuml-encoder.min.js", "theme-config.js", "common.js", "theme-manager.js", "diagram-handler.js"]
+            .map { "<script src=\"\(js.appendingPathComponent($0).absoluteString)\"></script>" }.joined()
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8">\(scripts)</head><body>
+            <div class="markdown-body heti" id="write">
+            <pre><code class="language-mermaid">flowchart LR
+            A --> B</code></pre>
+            <pre><code class="language-plantuml">Alice -> Bob: Hi</code></pre>
+            </div>
+            <script>
+            DiagramHandler.initializeMermaid().then(function() { DiagramHandler.initializePlantUML(); window.__ready = true; });
+            </script></body></html>
+            """
+        let pageURL = tempDirectory.appendingPathComponent("appearance.html")
+        try page.write(to: pageURL, atomically: true, encoding: .utf8)
+        preview.loadFileURL(pageURL, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        try await waitFor(preview, "window.__ready === true")
+
+        let state = """
+            (function() {
+                const write = document.getElementById('write');
+                const svg = document.querySelector('.language-mermaid svg');
+                const node = window.ThemeColors.getThemeColors(true).primaryColor.toLowerCase();
+                return {
+                    marked: [document.documentElement, document.body, write].filter((el) => el.classList.contains('darkmode')).length,
+                    nodeVariable: document.documentElement.style.getPropertyValue('--mermaid-node-bg').trim().toLowerCase() === node,
+                    svgDark: !!svg && svg.outerHTML.toLowerCase().includes(node),
+                    plantuml: Array.from(document.querySelectorAll('img.plantuml-image'), (img) => img.getAttribute('src'))
+                };
+            })();
+            """
+        let lightRaw = try await preview.evaluateJavaScript(state)
+        let light = try XCTUnwrap(lightRaw as? [String: Any])
+        XCTAssertEqual(light["marked"] as? Int, 0)
+        XCTAssertEqual(light["svgDark"] as? Bool, false)
+
+        UserDataService.instance.isDark = true
+        preview.updateAppearance()
+        try await waitFor(preview, "document.querySelector('.language-mermaid[data-processed=\"true\"] svg') !== null && document.documentElement.classList.contains('darkmode')")
+        let darkRaw = try await preview.evaluateJavaScript(state)
+        let dark = try XCTUnwrap(darkRaw as? [String: Any])
+        XCTAssertEqual(dark["marked"] as? Int, 3, "html, body and #write")
+        XCTAssertEqual(dark["nodeVariable"] as? Bool, true)
+        XCTAssertEqual(dark["svgDark"] as? Bool, true, "the flowchart is drawn again in the dark palette")
+        let before = try XCTUnwrap(light["plantuml"] as? [String])
+        let after = try XCTUnwrap(dark["plantuml"] as? [String])
+        XCTAssertEqual(after.count, 1)
+        XCTAssertNotEqual(after, before, "the PlantUML image is asked for again with the dark skin")
+        XCTAssertEqual(rgb(preview.value(forKey: "underPageBackgroundColor") as? NSColor), resolved(Theme.previewDarkBackgroundColor, in: preview))
+        XCTAssertEqual(rgb(preview.layer?.backgroundColor.flatMap(NSColor.init(cgColor:))), resolved(Theme.previewDarkBackgroundColor, in: preview))
+
+        UserDataService.instance.isDark = false
+        preview.updateAppearance()
+        try await waitFor(preview, "!document.documentElement.classList.contains('darkmode')")
+        XCTAssertEqual(rgb(preview.value(forKey: "underPageBackgroundColor") as? NSColor), resolved(Theme.backgroundColor, in: preview))
+        XCTAssertEqual(rgb(preview.layer?.backgroundColor.flatMap(NSColor.init(cgColor:))), resolved(Theme.backgroundColor, in: preview))
+    }
+
+    private func rgb(_ color: NSColor?) -> String? {
+        guard let srgb = color?.usingColorSpace(.sRGB) else { return nil }
+        return String(format: "%.3f %.3f %.3f", srgb.redComponent, srgb.greenComponent, srgb.blueComponent)
+    }
+
+    @MainActor
+    private func resolved(_ color: NSColor, in view: NSView) -> String? {
+        var value: String?
+        view.effectiveAppearance.performAsCurrentDrawingAppearance { value = self.rgb(color) }
+        return value
+    }
+
+    @MainActor
+    private func waitFor(_ webView: WKWebView, _ condition: String) async throws {
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if (try? await webView.evaluateJavaScript(condition) as? Bool) == true { return }
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTFail("timed out waiting for \(condition)")
+    }
+
     @MainActor
     private func makeWebView() -> WKWebView {
         let configuration = WKWebViewConfiguration()

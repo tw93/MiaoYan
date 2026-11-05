@@ -77,6 +77,18 @@ const ThemeConfig = {
     return window.ThemeColors.getMarkmapColors(isDark);
   },
 
+  // Switches the page between light and dark in place, as the system
+  // appearance changes: every element the template marks (html, body and
+  // #write), the diagram variables, and diagrams drawn in the old palette,
+  // so the reader keeps their place instead of the page loading again.
+  applyTheme(isDark) {
+    [document.documentElement, document.body, document.querySelector('.markdown-body')].forEach((el) => {
+      if (el) el.classList.toggle('darkmode', isDark);
+    });
+    this.applyCSSVariables(isDark);
+    window.DiagramHandler?.retheme?.();
+  },
+
   applyDarkModeStyles() {
     // Ensure the root elements receive the dark-mode class
     document.documentElement.classList.add('darkmode');

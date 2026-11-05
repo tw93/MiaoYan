@@ -56,10 +56,13 @@ const DiagramHandler = {
     const renderPromises = Array.from(mermaidElements).map(async (element) => {
       if (element.dataset.processed === 'true') return;
 
-      const content = element.textContent || '';
+      const content = element.dataset.mermaidSource || element.textContent || '';
       if (!content.trim()) return;
+      // The source, kept for drawing the diagram again in the other theme.
+      element.dataset.mermaidSource = content;
 
-      const hash = this._simpleHash(content);
+      // Light and dark draw the same source differently.
+      const hash = this._simpleHash((isDark ? 'dark:' : 'light:') + content);
 
       // 1. Check Cache
       if (this._svgCache.has(hash)) {
@@ -128,7 +131,7 @@ const DiagramHandler = {
     image.className = 'plantuml-image';
     image.loading = 'lazy';
 
-    let plantumlContent = code.innerText;
+    let plantumlContent = code.dataset.originalContent || code.innerText;
     const isDark = this.isDarkMode();
     const skinparams = window.ThemeConfig?.getPlantUMLSkinparams(isDark) || '';
 
@@ -171,6 +174,22 @@ const DiagramHandler = {
     if (image.parentNode) {
       image.parentNode.classList.add('plantuml-container');
     }
+  },
+
+  // Draws the diagrams already on the page again in the current theme:
+  // Mermaid and PlantUML bake their palette into what they draw. Markmap
+  // takes its colours from the stylesheet and follows on its own.
+  retheme() {
+    document.querySelectorAll('.language-mermaid[data-mermaid-source]').forEach((element) => {
+      element.textContent = element.dataset.mermaidSource;
+      element.removeAttribute('data-processed');
+      delete element.dataset.mermaidRendered;
+      element.closest('pre')?.classList.remove('mermaid-source-fallback');
+    });
+    this.initializeMermaid();
+    document.querySelectorAll('code.language-plantuml[data-processed="true"]').forEach((code) => {
+      this.processPlantumlElement(code);
+    });
   },
 
   initializeMarkmap() {

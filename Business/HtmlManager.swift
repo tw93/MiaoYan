@@ -244,7 +244,7 @@ class HtmlManager {
                     margin-block-end: 0.2em !important;
                 }
 
-                .toc-nav, .toc-hover-trigger, .toc-pin-btn {
+                .toc-nav, .toc-hover-trigger, .toc-pin-btn, .heading-anchor {
                     display: none !important;
                 }
             }
@@ -775,6 +775,21 @@ class HtmlManager {
         return repairedAnyFile
     }
 
+    /// Whether this launch has walked the bundle into the cache yet.
+    @MainActor private static var bundleSynced = false
+    /// Times the bundle has been walked this launch, for tests.
+    @MainActor private(set) static var bundleSyncCount = 0
+    /// Path, modification date and length of the custom CSS last copied.
+    @MainActor private static var customCSSStamp: String?
+
+    /// Keeps the preview's cached copy of DownView.bundle usable. Every full
+    /// preview load and every return to the app calls this, and walking the
+    /// bundle's files on the main thread each time cost a stat per file. The
+    /// walk runs once per launch, which also brings in files newer than the
+    /// cached ones (another build with the same bundle id, AGENTS.md), and
+    /// again only when a required file is gone, as when a cleaner empties
+    /// Caches while the app runs. The custom stylesheet is copied when it
+    /// changes on disk.
     @MainActor
     @discardableResult
     static func ensurePreviewResourcesAvailable() -> Bool {
@@ -787,29 +802,38 @@ class HtmlManager {
         let fileManager = FileManager.default
         var repairedResources = areRequiredPreviewResourcesMissing()
 
-        do {
-            repairedResources = (try syncBundleContents(from: bundleResourceURL, to: webkitPreviewURL)) || repairedResources
-        } catch {
-            AppDelegate.trackError(error, context: "HtmlManager.ensurePreviewResourcesAvailable.copyBundleResource")
+        if !bundleSynced || repairedResources {
+            do {
+                repairedResources = (try syncBundleContents(from: bundleResourceURL, to: webkitPreviewURL)) || repairedResources
+                bundleSynced = true
+                bundleSyncCount += 1
+            } catch {
+                AppDelegate.trackError(error, context: "HtmlManager.ensurePreviewResourcesAvailable.copyBundleResource")
+            }
         }
 
         if let customCSS = UserDefaultsManagement.markdownPreviewCSS {
             let cssDst = webkitPreviewURL.appendingPathComponent("css", isDirectory: true)
             let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
-            do {
-                try fileManager.createDirectory(at: cssDst, withIntermediateDirectories: true, attributes: nil)
-                let needsRefresh =
-                    !fileManager.fileExists(atPath: styleDst.path)
-                    || !fileManager.contentsEqual(atPath: customCSS.path, andPath: styleDst.path)
-                if needsRefresh {
-                    if fileManager.fileExists(atPath: styleDst.path) {
-                        try fileManager.removeItem(at: styleDst)
+            let attributes = try? fileManager.attributesOfItem(atPath: customCSS.path)
+            let stamp = "\(customCSS.path)|\(String(describing: attributes?[.modificationDate]))|\(String(describing: attributes?[.size]))"
+            if stamp != customCSSStamp || !fileManager.fileExists(atPath: styleDst.path) {
+                do {
+                    try fileManager.createDirectory(at: cssDst, withIntermediateDirectories: true, attributes: nil)
+                    let needsRefresh =
+                        !fileManager.fileExists(atPath: styleDst.path)
+                        || !fileManager.contentsEqual(atPath: customCSS.path, andPath: styleDst.path)
+                    if needsRefresh {
+                        if fileManager.fileExists(atPath: styleDst.path) {
+                            try fileManager.removeItem(at: styleDst)
+                        }
+                        try fileManager.copyItem(at: customCSS, to: styleDst)
+                        repairedResources = true
                     }
-                    try fileManager.copyItem(at: customCSS, to: styleDst)
-                    repairedResources = true
+                    customCSSStamp = stamp
+                } catch {
+                    AppDelegate.trackError(error, context: "HtmlManager.ensurePreviewResourcesAvailable.copyCustomCSS")
                 }
-            } catch {
-                AppDelegate.trackError(error, context: "HtmlManager.ensurePreviewResourcesAvailable.copyCustomCSS")
             }
         }
 
@@ -939,14 +963,37 @@ class HtmlManager {
     }
 
     // MARK: - JavaScript Utilities
+
+    /// The capture steps PDF and PNG export share. A capture never scrolls,
+    /// so every image loads now: Swift's lazy images go back to their files,
+    /// and `loading` goes from all of them, PlantUML's included, which
+    /// diagram-handler.js marks lazy.
+    static let unlazyImagesScript = """
+        document.querySelectorAll('img[data-src]').forEach(function(img) {
+            var real = img.getAttribute('data-src');
+            if (real) img.src = real;
+            img.removeAttribute('data-src');
+            img.classList.remove('lazy-image');
+        });
+        document.querySelectorAll('img[loading]').forEach(function(img) {
+            img.removeAttribute('loading');
+        });
+        """
+
+    /// Diagrams still being drawn, by the markers DiagramHandler sets:
+    /// Mermaid's `data-processed` once its SVG is in (or it fell back to the
+    /// source), Markmap's `data-markmap-rendered`. A PlantUML diagram is an
+    /// image, which the image checks cover.
+    static let pendingDiagramsExpression =
+        "document.querySelectorAll('code.language-mermaid:not([data-processed])').length"
+        + " + document.querySelectorAll('code.language-markmap:not([data-markmap-rendered])').length"
+
+    /// PNG export's readiness check on the live preview: false until every
+    /// image has loaded and every diagram is drawn.
     static let checkImagesScript = """
         (function() {
-            // Force-load any lazy images so they are included in the export
-            document.querySelectorAll('img[data-src]').forEach(function(img) {
-                img.src = img.dataset.src;
-                img.classList.remove('lazy-image');
-                img.removeAttribute('data-src');
-            });
+            \(unlazyImagesScript)
+            if (\(pendingDiagramsExpression) > 0) return false;
 
             var images = document.getElementsByTagName('img');
             if (images.length === 0) return true;

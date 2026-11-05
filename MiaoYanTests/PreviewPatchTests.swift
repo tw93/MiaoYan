@@ -149,6 +149,186 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(count, 0, "the stray node is gone")
     }
 
+    /// A page with the bundle's renderers, as index.html loads them, showing
+    /// `markdown` the way a load does (renderPage).
+    @MainActor
+    private func loadRenderedPage(_ markdown: String) async throws -> WKWebView {
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: markdown, useGithubLineBreak: false, imagesStorage: tempDirectory))
+        let bundle = commonScript.deletingLastPathComponent().deletingLastPathComponent()
+        let scripts = ["highlight.min.js", "katex.min.js", "auto-render.min.js", "emoji.min.js", "lightense.min.js", "tocbot.min.js", "common.js"]
+            .map { "<script src=\"\(bundle.appendingPathComponent("js/\($0)").absoluteString)\"></script>" }.joined()
+        let sheets = ["typography.css", "theme-light.css", "base.css"]
+            .map { "<link rel=\"stylesheet\" href=\"\(bundle.appendingPathComponent("css/\($0)").absoluteString)\">" }.joined()
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8">\(sheets)</head><body>
+            <div class="toc-hover-trigger"></div><nav class="toc-nav"><div class="toc-content"></div></nav>
+            <div class="markdown-body heti" id="write">\(html)</div>
+            \(scripts)
+            <script>MiaoYanCommon.renderPage(); setTimeout(function() { window.__ready = true; }, 400);</script>
+            </body></html>
+            """
+        let url = tempDirectory.appendingPathComponent("page-\(UUID().uuidString).html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 800, height: 600))
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if (try? await webView.evaluateJavaScript("window.__ready === true") as? Bool) == true { return webView }
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTFail("page did not load")
+        return webView
+    }
+
+    /// A live update did only some of what a load does to the blocks it
+    /// inserts: `$5 and $10` typed in split view became a formula, emoji
+    /// shortcodes stayed text, a new heading had no id and the table of
+    /// contents never saw it.
+    @MainActor
+    func testALiveUpdateRendersNewBlocksAsALoadDoes() async throws {
+        let before = "# One\n\nFirst."
+        let after = "# One\n\nFirst.\n\n## Two\n\nIt costs $5 and $10 :smile:\n\nInline $x^2$ math."
+        let updated = try await loadRenderedPage(before)
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: after, useGithubLineBreak: false, imagesStorage: tempDirectory))
+        _ = try await updated.evaluateJavaScript(
+            MPreviewView.buildUpdateScript(html: html, initializeMath: true, initializeDiagrams: false, preserveScroll: false))
+        try await Task.sleep(nanoseconds: 500_000_000)
+        let loaded = try await loadRenderedPage(after)
+
+        let probe = """
+            (function() {
+                const blocks = Array.from(document.querySelectorAll('#write > *'));
+                return {
+                    html: blocks.map((b) => b.outerHTML.replace(/ data-sourcepos="[^"]*"/g, '')),
+                    katex: document.querySelectorAll('#write .katex').length,
+                    skipped: document.querySelectorAll('#write .skip-math-dollar').length,
+                    id: (document.querySelector('#write h2') || {}).id,
+                    toc: document.querySelectorAll('.toc-content a').length,
+                    shortcode: document.getElementById('write').innerHTML.includes(':smile:')
+                };
+            })();
+            """
+        let gotRaw = try await updated.evaluateJavaScript(probe)
+        let wantRaw = try await loaded.evaluateJavaScript(probe)
+        let got = try XCTUnwrap(gotRaw as? [String: Any])
+        let want = try XCTUnwrap(wantRaw as? [String: Any])
+        XCTAssertEqual(got["skipped"] as? Int, 2, "both amounts stay text: \(got)")
+        XCTAssertEqual(got["katex"] as? Int, 1, "only $x^2$ is math")
+        XCTAssertEqual(want["shortcode"] as? Bool, false, "a load turns :smile: into an emoji")
+        XCTAssertEqual(got["shortcode"] as? Bool, false, "and so does an update")
+        XCTAssertEqual(got["id"] as? String, "Two")
+        XCTAssertEqual(got["toc"] as? Int, 2, "the new heading joins the table of contents")
+        XCTAssertEqual(got["html"] as? [String], want["html"] as? [String], "an updated block reads as a loaded one")
+    }
+
+    /// Each heading shows a small link beside it on hover, as on GitHub,
+    /// without changing its id or its text, and an in-page link reaches a
+    /// heading whose id is no CSS selector: `querySelector('#1. Intro')`
+    /// threw, so the click did nothing.
+    @MainActor
+    func testHeadingsCarryAHoverLinkThatScrollsToThem() async throws {
+        let filler = (1...60).map { "Paragraph \($0)." }.joined(separator: "\n\n")
+        let webView = try await loadRenderedPage("# 1. Intro\n\nText.\n\n\(filler)\n\n## Two\n\n[back](#1.%20Intro)\n\n\(filler)")
+        let probe = """
+            (function() {
+                MiaoYanCommon.setupHeaderAnchors();
+                const h = document.querySelector('#write h1');
+                const links = Array.from(document.querySelectorAll('#write .heading-anchor'));
+                const style = getComputedStyle(links[0]);
+                const range = document.createRange();
+                range.selectNodeContents(h);
+                getSelection().removeAllRanges();
+                getSelection().addRange(range);
+                const copied = MiaoYanCommon.selectionPayload();
+                getSelection().removeAllRanges();
+                return {
+                    ids: Array.from(document.querySelectorAll('#write h1, #write h2'), (x) => x.id),
+                    hrefs: links.map((a) => a.getAttribute('href')),
+                    text: h.textContent,
+                    opacity: style.opacity,
+                    transition: style.transitionDuration + ' ' + style.transitionTimingFunction,
+                    copied: copied.html
+                };
+            })();
+            """
+        let raw = try await webView.evaluateJavaScript(probe)
+        let result = try XCTUnwrap(raw as? [String: Any])
+        XCTAssertEqual(result["ids"] as? [String], ["1. Intro", "Two"], "ids stay the heading's text")
+        XCTAssertEqual(result["hrefs"] as? [String], ["#1.%20Intro", "#Two"], "one link per heading, even when run again")
+        XCTAssertEqual(result["text"] as? String, "1. Intro")
+        XCTAssertEqual(result["opacity"] as? String, "0", "hidden until the pointer is over the heading")
+        XCTAssertEqual(result["transition"] as? String, "0.12s ease-out")
+        XCTAssertEqual(result["copied"] as? String, "1. Intro", "copying a heading leaves the link behind")
+
+        _ = try await webView.evaluateJavaScript("window.scrollTo(0, document.body.scrollHeight); document.querySelector('#write a[href=\"#1.%20Intro\"]').click(); true")
+        try await Task.sleep(nanoseconds: 900_000_000)
+        let top = try await webView.evaluateJavaScript("Math.round(document.getElementById('1. Intro').getBoundingClientRect().top)") as? Int
+        XCTAssertNotNil(top)
+        XCTAssertLessThan(abs(top ?? 9_999), 40, "the link scrolled to the heading")
+
+        let asExported = """
+            (function() {
+                document.querySelectorAll('.heading-anchor').forEach((a) => a.remove());
+                const base = document.createElement('base');
+                base.href = 'https://cdn.miaoyan.app/Resources/DownView.bundle/';
+                document.head.appendChild(base);
+                MiaoYanCommon.setupHeaderAnchors();
+                return document.querySelectorAll('.heading-anchor').length;
+            })();
+            """
+        let exported = try await webView.evaluateJavaScript(asExported) as? Int
+        XCTAssertEqual(exported, 0, "exported HTML has no hover links")
+
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let base = try String(contentsOf: root.appendingPathComponent("Resources/DownView.bundle/css/base.css"), encoding: .utf8)
+        XCTAssertTrue(base.contains("@media print {\n  #write .heading-anchor {\n    display: none !important;"), "print")
+        XCTAssertTrue(base.contains("@media (prefers-reduced-motion: no-preference) {\n  #write .heading-anchor {\n    transition"), "Reduce Motion")
+        XCTAssertTrue(HtmlManager.paginatedPrintCSS().contains(".heading-anchor"), "PDF")
+        let export = try String(contentsOf: root.appendingPathComponent("Extensions/MPreviewView+Export.swift"), encoding: .utf8)
+        XCTAssertTrue(export.contains(".heading-anchor { display: none !important; }"), "PNG")
+    }
+
+    /// A remote image never seen before renders unmeasured; once its size
+    /// is learnt the next render writes it into the tag. That changed the
+    /// paragraph's key, so the first edit after it replaced the paragraph
+    /// and loaded the picture again, though the page had already sized it.
+    @MainActor
+    func testALearntRemoteImageSizeKeepsItsParagraph() async throws {
+        let first = "https://example.invalid/\(UUID().uuidString).png"
+        let styled = "https://example.invalid/\(UUID().uuidString).png"
+        let markdown = "Intro.\n\n![](\(first))\n\n<p><img src=\"\(styled)\" style=\"zoom:50%\"></p>\n\nAfter."
+        let webView = try await loadRenderedPage(markdown)
+        _ = try await webView.evaluateJavaScript("document.querySelectorAll('#write img').forEach((img) => img.__mark = 'kept'); true")
+
+        RemoteImageSizes.shared.record(url: first, width: 640, height: 480)
+        RemoteImageSizes.shared.record(url: styled, width: 300, height: 200)
+        let sized = try XCTUnwrap(MPreviewView.previewHTML(markdown: markdown + " Edited.", useGithubLineBreak: false, imagesStorage: tempDirectory))
+        XCTAssertTrue(sized.contains("aspect-ratio: 640 / 480"), sized)
+        XCTAssertTrue(sized.contains("aspect-ratio: 300 / 200; zoom:50%"), sized)
+        let script = """
+            (function() {
+                const inserted = MiaoYanCommon.patchContent(document.getElementById('write'), \(HtmlManager.jsStringLiteral(sized)));
+                return {
+                    inserted: inserted.filter((n) => n.nodeType === 1).length,
+                    kept: Array.from(document.querySelectorAll('#write img'), (img) => img.__mark === 'kept')
+                };
+            })();
+            """
+        let raw = try await webView.evaluateJavaScript(script)
+        let result = try XCTUnwrap(raw as? [String: Any])
+        XCTAssertEqual(result["inserted"] as? Int, 1, "only the edited paragraph")
+        XCTAssertEqual(result["kept"] as? [Bool], [true, true])
+
+        let rewritten = "<p><img src=\"\(styled)\" width=\"120\" style=\"zoom:50%\"></p>"
+        let html = try XCTUnwrap(
+            MPreviewView.previewHTML(
+                markdown: markdown.replacingOccurrences(of: "<p><img src=\"\(styled)\" style=\"zoom:50%\"></p>", with: rewritten) + " Edited.",
+                useGithubLineBreak: false, imagesStorage: tempDirectory))
+        let again = try await webView.evaluateJavaScript(
+            "MiaoYanCommon.patchContent(document.getElementById('write'), \(HtmlManager.jsStringLiteral(html))).filter((n) => n.nodeType === 1).length")
+        XCTAssertEqual(again as? Int, 1, "a width the note writes itself still counts")
+    }
+
     /// A reload while an in-place switch is still rendering (the app comes
     /// back to the front, WebContent restarts) loaded the note being
     /// replaced, which cancelled the switch and left the preview on it while
