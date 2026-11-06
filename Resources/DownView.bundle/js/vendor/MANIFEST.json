@@ -81,7 +81,7 @@
       "source_url": "https://github.com/KaTeX/KaTeX/releases",
       "license": "MIT",
       "sha256": "eb18207487161674e717087c317db14ac1a62dadaecccb802499ce173bfeb739",
-      "purpose": "LaTeX math rendering in preview.",
+      "purpose": "LaTeX math rendering in preview. Its 20 woff2 fonts sit in css/fonts/, byte-identical to the copies katex.min.css used to fetch from gw.alipayobjects.com, so formulas typeset offline.",
       "version_source": "no banner. Pair with auto-render.min.js."
     },
     {

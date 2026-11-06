@@ -679,6 +679,27 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertEqual(HtmlManager.bundleSyncCount, walked + 1)
         XCTAssertTrue(FileManager.default.fileExists(atPath: common.path))
     }
+
+    /// KaTeX's stylesheet fetched every font from gw.alipayobjects.com, so
+    /// offline formulas fell back to Times while the blog said math needs no
+    /// network. The fonts ship in the built bundle, next to the stylesheet.
+    func testKatexFontsShipInsideThePreviewBundle() throws {
+        let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
+        let cssURL = bundle.appendingPathComponent("css/katex.min.css")
+        let css = try String(contentsOf: cssURL, encoding: .utf8)
+        let regex = try NSRegularExpression(pattern: "url\\(([^)]+)\\)")
+        let urls = regex.matches(in: css, range: NSRange(css.startIndex..., in: css)).compactMap {
+            Range($0.range(at: 1), in: css).map { String(css[$0]) }
+        }
+        XCTAssertFalse(urls.isEmpty)
+        XCTAssertFalse(urls.contains { $0.contains("://") }, "no font is fetched from the network")
+        let woff2 = Set(urls.filter { $0.hasSuffix(".woff2") })
+        XCTAssertEqual(woff2.count, 20)
+        for path in woff2 {
+            let file = cssURL.deletingLastPathComponent().appendingPathComponent(path)
+            XCTAssertTrue(FileManager.default.fileExists(atPath: file.path), "\(path) is bundled")
+        }
+    }
 }
 
 @available(macOS 12.0, *)

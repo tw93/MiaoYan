@@ -111,6 +111,8 @@ IrEditor/
 fonts/
 # The bundled wordmark face; core.ignorecase lets fonts/ match it.
 !Resources/Fonts/
+# KaTeX's fonts in the preview bundle, so formulas typeset offline.
+!Resources/DownView.bundle/css/fonts/
 
 # AI agent files
 # AGENTS.md is committed (Claude Code reads it directly, no CLAUDE.md);
