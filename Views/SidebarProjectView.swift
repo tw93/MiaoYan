@@ -1035,7 +1035,7 @@ class SidebarProjectView: NSOutlineView,
             ) { [weak vc, weak v] confirmed in
                 guard let vc = vc, let v = v else { return }
                 if confirmed {
-                    guard let resultingItemUrl = self.storage.trashItem(url: project.url) else {
+                    guard let resultingItemUrl = self.storage.systemTrashDestination(for: project.url) else {
                         return
                     }
 

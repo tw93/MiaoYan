@@ -1212,7 +1212,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     if let note = EditTextView.note {
                         guard let imageURL = note.getImageUrl(imageName: filePath) else { return }
                         do {
-                            guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: imageURL) else { return }
+                            guard let resultingItemUrl = Storage.sharedInstance().systemTrashDestination(for: imageURL) else { return }
                             try FileManager.default.moveItem(at: imageURL, to: resultingItemUrl)
                             removedImages[resultingItemUrl] = imageURL
                         } catch {
@@ -1256,7 +1256,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         var deletedImages = [URL: URL]()
         for (src, _) in urls {
             do {
-                guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: src) else { continue }
+                guard let resultingItemUrl = Storage.sharedInstance().systemTrashDestination(for: src) else { continue }
                 try FileManager.default.moveItem(at: src, to: resultingItemUrl)
                 deletedImages[resultingItemUrl] = src
             } catch {

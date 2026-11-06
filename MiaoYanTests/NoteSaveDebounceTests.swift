@@ -726,6 +726,119 @@ final class NoteSaveDebounceTests: XCTestCase {
             "callbacks holding the removed Note must not mutate its Trash copy")
     }
 
+    /// A deleted note goes to the library's own Trash folder, the one the
+    /// iPhone and iPad app uses, not to the volume's system Trash (iCloud's
+    /// `.Trash` for an iCloud library), where the other devices never saw it.
+    @MainActor
+    func testDeletedNoteGoesToTheLibraryTrashFolder() throws {
+        let sourceURL = tempDir.appendingPathComponent("shared-trash.md")
+        try "keep me".write(to: sourceURL, atomically: true, encoding: .utf8)
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "library", isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        storage.checkLibraryTrash()
+
+        let libraryTrash = tempDir.appendingPathComponent("Trash", isDirectory: true)
+        XCTAssertEqual(
+            storage.getDefaultTrash()?.url.resolvingSymlinksInPath().standardizedFileURL,
+            libraryTrash.resolvingSymlinksInPath().standardizedFileURL)
+        XCTAssertFalse(
+            FileManager.default.fileExists(atPath: libraryTrash.path),
+            "the Trash folder is made by the first delete, not at launch")
+
+        let previousStorage = Storage.instance
+        Storage.instance = storage
+        defer { Storage.instance = previousStorage }
+
+        let note = Note(url: sourceURL, with: root)
+        note.sharedStorage = storage
+        storage.add(note)
+
+        var removedURLs: [URL: URL]?
+        storage.removeNotes(notes: [note]) { removedURLs = $0 }
+
+        let movedURL = try XCTUnwrap(removedURLs?.keys.first)
+        XCTAssertEqual(
+            movedURL.deletingLastPathComponent().resolvingSymlinksInPath().standardizedFileURL,
+            libraryTrash.resolvingSymlinksInPath().standardizedFileURL)
+        XCTAssertEqual(try String(contentsOf: movedURL, encoding: .utf8), "keep me")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: sourceURL.path))
+    }
+
+    @MainActor
+    func testTrashRowCountsNotesOnlyOnDisk() throws {
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "library", isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        storage.checkLibraryTrash()
+        XCTAssertFalse(storage.trashHasNotes())
+
+        // A note the iPhone deleted: on disk in the library Trash, never loaded here.
+        let libraryTrash = tempDir.appendingPathComponent("Trash", isDirectory: true)
+        try FileManager.default.createDirectory(at: libraryTrash, withIntermediateDirectories: true)
+        try "deleted on the phone".write(
+            to: libraryTrash.appendingPathComponent("phone.md"), atomically: true, encoding: .utf8)
+
+        XCTAssertTrue(storage.getAllTrash().isEmpty)
+        XCTAssertTrue(storage.trashHasNotes())
+
+        // A file the Trash list hides does not show the row on its own.
+        try FileManager.default.removeItem(at: libraryTrash.appendingPathComponent("phone.md"))
+        let hidden = libraryTrash.appendingPathComponent("hidden.md")
+        try "already removed".write(to: hidden, atomically: true, encoding: .utf8)
+        try hidden.setExtendedAttribute(data: Data([1]), forName: AppIdentifier.removedFromTrashKey)
+        XCTAssertFalse(storage.trashHasNotes())
+    }
+
+    @MainActor
+    func testATrashFolderThatCannotBeMadeHandsTheNoteToTheSystemTrash() throws {
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "library", isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        storage.checkLibraryTrash()
+        try "not a folder".write(
+            to: tempDir.appendingPathComponent("Trash"), atomically: true, encoding: .utf8)
+
+        let previousStorage = Storage.instance
+        Storage.instance = storage
+        defer { Storage.instance = previousStorage }
+
+        // Nil sends `Note.removeFile` to `FileManager.trashItem`; nothing is moved here.
+        XCTAssertNil(storage.trashItem(url: tempDir.appendingPathComponent("note.md")))
+    }
+
+    @MainActor
+    func testFoldersAndImagesStillGoToTheSystemTrash() throws {
+        guard
+            let systemTrash = try? FileManager.default.url(
+                for: .trashDirectory, in: .allDomainsMask, appropriateFor: tempDir, create: false),
+            FileManager.default.fileExists(atPath: systemTrash.path)
+        else {
+            throw XCTSkip("this volume has no system Trash")
+        }
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "library", isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        storage.checkLibraryTrash()
+
+        let previousStorage = Storage.instance
+        Storage.instance = storage
+        defer { Storage.instance = previousStorage }
+
+        let folder = tempDir.appendingPathComponent("Drafts", isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
+        let libraryTrash = tempDir.appendingPathComponent("Trash", isDirectory: true)
+
+        // Only the destination is checked; nothing is moved into the real Trash.
+        let destination = try XCTUnwrap(storage.systemTrashDestination(for: folder))
+        let parent = destination.deletingLastPathComponent().resolvingSymlinksInPath().standardizedFileURL
+        XCTAssertNotEqual(parent, libraryTrash.resolvingSymlinksInPath().standardizedFileURL)
+        XCTAssertEqual(parent.lastPathComponent, ".Trash")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: libraryTrash.path))
+    }
+
     @MainActor
     func testFailedRemovalKeepsTheNoteWritable() throws {
         let sourceURL = tempDir.appendingPathComponent("failed-delete.md")
@@ -735,8 +848,13 @@ final class NoteSaveDebounceTests: XCTestCase {
         if let existingTrash = storage.getDefaultTrash() {
             storage.removeBy(project: existingTrash)
         }
-        let missingTrashURL = tempDir.appendingPathComponent("missing/Trash", isDirectory: true)
-        _ = storage.add(project: Project(url: missingTrashURL, isTrash: true))
+        // A Trash folder the move cannot write into. (A Trash folder that
+        // cannot be made is not a failure: the note goes to the system Trash.)
+        let lockedTrashURL = tempDir.appendingPathComponent("Trash", isDirectory: true)
+        try FileManager.default.createDirectory(at: lockedTrashURL, withIntermediateDirectories: false)
+        try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: lockedTrashURL.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o700], ofItemAtPath: lockedTrashURL.path) }
+        _ = storage.add(project: Project(url: lockedTrashURL, isTrash: true))
 
         let previousStorage = Storage.instance
         Storage.instance = storage

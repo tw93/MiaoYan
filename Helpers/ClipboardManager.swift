@@ -442,7 +442,7 @@ class ClipboardManager {
 
     @MainActor private func deleteImage(tempPath: URL) {
         do {
-            guard let resultingItemUrl = AppEnvironment.current.storage.trashItem(url: tempPath) else { return }
+            guard let resultingItemUrl = AppEnvironment.current.storage.systemTrashDestination(for: tempPath) else { return }
             try FileManager.default.moveItem(at: tempPath, to: resultingItemUrl)
         } catch {
             AppDelegate.trackError(error, context: "ClipboardManager.deleteImage")

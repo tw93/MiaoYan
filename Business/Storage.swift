@@ -63,7 +63,8 @@ class Storage {
             }
         }
 
-        checkTrashForVolume(url: addRootProject(url: url).url)
+        addRootProject(url: url)
+        checkLibraryTrash()
     }
 
     /// Registers the library root, named "iCloud Drive" when it is that.
@@ -172,42 +173,35 @@ class Storage {
         return added
     }
 
-    private func checkTrashForVolume(url: URL) {
+    /// The Trash is the library's own `Trash` folder, the one the iPhone and
+    /// iPad app moves notes into too, so a note deleted on any device shows
+    /// in every device's Trash (maintainer 2026-11-06). It used to be the
+    /// volume's system Trash when there was one, which for an iCloud library
+    /// is iCloud's own `.Trash`: notes deleted on the phone never showed on
+    /// the Mac and the other way round. The folder is made by the first
+    /// delete (`trashItem(url:)`), not at launch, so a library nobody deletes
+    /// from gains no folder. Deleting from this Trash still hands the file to
+    /// the system Trash (`Note.removeFile`).
+    func checkLibraryTrash() {
         if UserDefaultsManagement.isSingleMode {
             return
         }
-
-        var trashURL = getTrash(url: url)
-        var needsTrashCreation = true
-
-        if let currentTrash = trashURL, FileManager.default.fileExists(atPath: currentTrash.path) {
-            needsTrashCreation = false
+        guard let trashURL = getDefault()?.url.appendingPathComponent("Trash", isDirectory: true),
+            !projectExist(url: trashURL)
+        else {
+            return
         }
+        projects.append(Project(url: trashURL, isTrash: true))
+    }
 
-        if needsTrashCreation {
-            guard let trash = getDefault()?.url.appendingPathComponent("Trash") else {
-                return
-            }
-
-            var isDir = ObjCBool(false)
-            if !FileManager.default.fileExists(atPath: trash.path, isDirectory: &isDir) || !isDir.boolValue {
-                do {
-                    try FileManager.default.createDirectory(at: trash, withIntermediateDirectories: false, attributes: nil)
-                } catch {
-                    AppDelegate.trackError(error, context: "Storage.trashDir")
-                }
-            }
-
-            trashURL = trash
-        }
-
-        if let trashURL = trashURL {
-            guard !projectExist(url: trashURL) else {
-                return
-            }
-
-            let project = Project(url: trashURL, isTrash: true)
-            projects.append(project)
+    /// Whether the Trash holds a note, loaded or not. The Trash is not loaded
+    /// at launch, and a note another device deleted is only on disk, so the
+    /// sidebar asked `getAllTrash()` alone and hid the Trash row.
+    public func trashHasNotes() -> Bool {
+        if !getAllTrash().isEmpty { return true }
+        guard let trash = getDefaultTrash()?.url else { return false }
+        return Self.noteFiles(in: trash, extensions: allowedExtensions).contains {
+            (try? $0.extendedAttribute(forName: AppIdentifier.removedFromTrashKey)) == nil
         }
     }
 
@@ -502,10 +496,6 @@ class Storage {
         }
     }
 
-    func getTrash(url: URL) -> URL? {
-        return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
-    }
-
     static func isSystemTrashProject(_ project: Project) -> Bool {
         guard project.isTrash,
             let systemTrash = try? FileManager.default.url(
@@ -648,7 +638,8 @@ class Storage {
         loadedProjectInfo.removeAll()
         pinned = 0
 
-        checkTrashForVolume(url: addRootProject(url: url).url)
+        addRootProject(url: url)
+        checkLibraryTrash()
         loadProjects()
         loadDocuments {}
     }
@@ -1586,21 +1577,56 @@ class Storage {
         }
     }
 
+    /// Where a note goes when deleted: a free name in the library Trash,
+    /// made on first use. Nil when that folder cannot be made (a read-only
+    /// library root, a plain file named `Trash`), and `Note.removeFile` then
+    /// hands the note to the system Trash as before.
     public func trashItem(url: URL) -> URL? {
         guard let trashURL = Storage.sharedInstance().getDefaultTrash()?.url else {
             return nil
         }
+        var isDirectory = ObjCBool(false)
+        if FileManager.default.fileExists(atPath: trashURL.path, isDirectory: &isDirectory) {
+            guard isDirectory.boolValue else { return nil }
+        } else {
+            do {
+                try FileManager.default.createDirectory(at: trashURL, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+                AppDelegate.trackError(error, context: "Storage.trashDir")
+                return nil
+            }
+        }
+        return Self.freeDestination(for: url, in: trashURL)
+    }
 
+    /// Where a folder or image goes when deleted: the system Trash of its
+    /// volume, as before notes moved to the library Trash. The in-app Trash
+    /// lists only the notes directly inside it, so a folder or image put
+    /// there would sit unseen, and the iPhone's Empty Trash would delete a
+    /// folder's notes nobody saw. A volume without a system Trash falls back
+    /// to the library Trash.
+    public func systemTrashDestination(for url: URL) -> URL? {
+        guard
+            let systemTrash = try? FileManager.default.url(
+                for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false),
+            FileManager.default.fileExists(atPath: systemTrash.path)
+        else {
+            return trashItem(url: url)
+        }
+        return Self.freeDestination(for: url, in: systemTrash)
+    }
+
+    private static func freeDestination(for url: URL, in folder: URL) -> URL {
         let fileName = url.deletingPathExtension().lastPathComponent
         let fileExtension = url.pathExtension
 
-        var destination = trashURL.appendingPathComponent(url.lastPathComponent)
+        var destination = folder.appendingPathComponent(url.lastPathComponent)
 
         var i = 0
 
         while FileManager.default.fileExists(atPath: destination.path) {
-            let nextName = "\(fileName)_\(i).\(fileExtension)"
-            destination = trashURL.appendingPathComponent(nextName)
+            let nextName = fileExtension.isEmpty ? "\(fileName)_\(i)" : "\(fileName)_\(i).\(fileExtension)"
+            destination = folder.appendingPathComponent(nextName)
             i += 1
         }
 

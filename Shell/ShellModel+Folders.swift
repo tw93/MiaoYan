@@ -141,7 +141,7 @@ extension ShellModel {
             confirmTitle: I18n.str("Move to Trash"),
             for: window
         ) { [weak self] confirmed in
-            guard confirmed, let self, let trashURL = self.storage.trashItem(url: project.url) else { return }
+            guard confirmed, let self, let trashURL = self.storage.systemTrashDestination(for: project.url) else { return }
             self.storage.flushPendingSaves(inside: project)
             do {
                 try FileManager.default.moveItem(at: project.url, to: trashURL)
