@@ -422,7 +422,7 @@ class SidebarProjectView: NSOutlineView,
         updateIconLeading(cell, leading: defaultIconLeading)
         adjustIconSize(cell, size: defaultIconSize)
         setupBasicCellAppearance(cell, baseFont: baseFont)
-        updateLabelVerticalNudge(cell, nudge: Theme.Metrics.sidebarStandardLabelVerticalNudge)
+        updateLabelVerticalNudge(cell, nudge: Theme.Metrics.sidebarLabelVerticalNudge(for: cell.label.font))
         updateLabelSpacing(cell, spacing: defaultSpacing)
         alignContentVertically(cell)
     }

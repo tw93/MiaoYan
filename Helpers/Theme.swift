@@ -68,7 +68,17 @@ enum Theme {
         /// center. Text drawing is nudged separately to account for CJK ink.
         static let sidebarStandardIconOffsetY: CGFloat = 0
         static let sidebarLabelOffsetY: CGFloat = 0
+        /// Measured on 2x captures of the selected row (2026-11-06): 1.5 put
+        /// a chosen face's CJK ink level with the folder icon (TsangerJinKai02
+        /// 0.25pt low), but the system face, the default since 2026-10-11,
+        /// sat 2pt low with it, so the system face takes -0.5.
         static let sidebarStandardLabelVerticalNudge: CGFloat = 1.5
+        static let sidebarSystemFaceLabelVerticalNudge: CGFloat = -0.5
+
+        static func sidebarLabelVerticalNudge(for font: NSFont?) -> CGFloat {
+            let systemName = NSFont.systemFont(ofSize: font?.pointSize ?? 14).fontName
+            return font?.fontName == systemName ? sidebarSystemFaceLabelVerticalNudge : sidebarStandardLabelVerticalNudge
+        }
         static let sidebarBrandLabelVerticalNudge: CGFloat = 1.5
         static let sidebarBrandIconOffsetY: CGFloat = -3.5
         /// 妙言 in Source Han Serif sits higher in its line than Charter's
