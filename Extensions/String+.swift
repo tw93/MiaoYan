@@ -130,6 +130,45 @@ extension String {
     }
 }
 
+extension String {
+    /// The info panel's word count: each Chinese, Japanese or Korean
+    /// character is one, and a run of other letters or digits is one word,
+    /// so English and Spanish count words rather than characters and mixed
+    /// text counts both. Markdown markers and punctuation are not counted.
+    var noteWordCount: Int {
+        var count = 0
+        var inWord = false
+        for scalar in unicodeScalars {
+            if scalar.isCJKWordCharacter {
+                count += 1
+                inWord = false
+            } else if CharacterSet.alphanumerics.contains(scalar) || (inWord && (scalar == "'" || scalar == "\u{2019}")) {
+                if !inWord { count += 1 }
+                inWord = true
+            } else {
+                inWord = false
+            }
+        }
+        return count
+    }
+}
+
+extension Unicode.Scalar {
+    fileprivate var isCJKWordCharacter: Bool {
+        switch value {
+        case 0x3040...0x30FF,  // Hiragana, Katakana
+            0x3400...0x4DBF,  // CJK Extension A
+            0x4E00...0x9FFF,  // CJK Unified Ideographs
+            0xAC00...0xD7AF,  // Hangul syllables
+            0xF900...0xFAFF,  // CJK Compatibility Ideographs
+            0x20000...0x2FA1F:  // CJK Extensions B and later
+            return true
+        default:
+            return false
+        }
+    }
+}
+
 extension NSString {
     public func getLineRangeBefore(_ lineRange: NSRange) -> NSRange? {
         var lineStart = 0

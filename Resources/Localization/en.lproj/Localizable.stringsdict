@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Couldn't move %d note(s) to Trash</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>Couldn't move %d note to the Trash</string>
+			<key>other</key>
+			<string>Couldn't move %d notes to the Trash</string>
+		</dict>
+	</dict>
+	<key>Move %d note(s) to the system Trash?</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>Move %d note to the system Trash?</string>
+			<key>other</key>
+			<string>Move %d notes to the system Trash?</string>
+		</dict>
+	</dict>
+	<key>Move %d unused attachment(s) to Trash?</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>Move %d unused attachment to the Trash?</string>
+			<key>other</key>
+			<string>Move %d unused attachments to the Trash?</string>
+		</dict>
+	</dict>
+	<key>Moved %d unused attachment(s) to Trash</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>Moved %d unused attachment to the Trash</string>
+			<key>other</key>
+			<string>Moved %d unused attachments to the Trash</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

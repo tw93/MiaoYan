@@ -436,7 +436,7 @@ extension ViewController {
             DispatchQueue.main.async { [weak vc] in
                 guard let vc = vc else { return }
                 vc.toast(
-                    message: String(format: I18n.str("Couldn't move %d note(s) to Trash"), failedCount),
+                    message: I18n.count("Couldn't move %d note(s) to Trash", failedCount),
                     style: .failure
                 )
             }
@@ -497,7 +497,7 @@ extension ViewController {
             }
 
             MiaoYanAlert.confirm(
-                message: String(format: I18n.str("Move %d unused attachment(s) to Trash?"), orphanAttachments.count),
+                message: I18n.count("Move %d unused attachment(s) to Trash?", orphanAttachments.count),
                 confirmTitle: I18n.str("Move to Trash"),
                 for: vc.view.window
             ) { confirmed in
@@ -507,7 +507,7 @@ extension ViewController {
 
                 if !result.removed.isEmpty {
                     NSSound(named: "Pop")?.play()
-                    vc.toast(message: String(format: I18n.str("Moved %d unused attachment(s) to Trash"), result.removed.count), style: .success)
+                    vc.toast(message: I18n.count("Moved %d unused attachment(s) to Trash", result.removed.count), style: .success)
                 }
 
                 if !result.failed.isEmpty {
@@ -961,7 +961,7 @@ extension ViewController {
         guard let window = MainWindowController.shared() else { return }
 
         MiaoYanAlert.confirm(
-            message: String(format: I18n.str("Move %d note(s) to the system Trash?"), notes.count),
+            message: I18n.count("Move %d note(s) to the system Trash?", notes.count),
             confirmTitle: I18n.str("Move to Trash"),
             for: window
         ) { confirmed in
@@ -970,7 +970,7 @@ extension ViewController {
                 let onPartialFailure: (Int) -> Void = { failedCount in
                     DispatchQueue.main.async {
                         vc.toast(
-                            message: String(format: I18n.str("Couldn't move %d note(s) to Trash"), failedCount),
+                            message: I18n.count("Couldn't move %d note(s) to Trash", failedCount),
                             style: .failure
                         )
                     }

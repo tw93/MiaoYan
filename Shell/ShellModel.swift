@@ -921,7 +921,7 @@ final class ShellModel {
                 return
             }
             MiaoYanAlert.confirm(
-                message: String(format: I18n.str("Move %d unused attachment(s) to Trash?"), orphans.count),
+                message: I18n.count("Move %d unused attachment(s) to Trash?", orphans.count),
                 confirmTitle: I18n.str("Move to Trash"),
                 for: host.view.window
             ) { confirmed in
@@ -929,7 +929,7 @@ final class ShellModel {
                 let result = self.storage.removeAttachments(urls: orphans)
                 if !result.removed.isEmpty {
                     NSSound(named: "Pop")?.play()
-                    host.toast(message: String(format: I18n.str("Moved %d unused attachment(s) to Trash"), result.removed.count), style: .success)
+                    host.toast(message: I18n.count("Moved %d unused attachment(s) to Trash", result.removed.count), style: .success)
                 }
                 if !result.failed.isEmpty {
                     MiaoYanAlert.show(
@@ -985,7 +985,7 @@ final class ShellModel {
         }
         guard let window = host?.view.window else { return }
         MiaoYanAlert.confirm(
-            message: String(format: I18n.str("Move %d note(s) to the system Trash?"), removing.count),
+            message: I18n.count("Move %d note(s) to the system Trash?", removing.count),
             confirmTitle: I18n.str("Move to Trash"),
             for: window
         ) { [weak self] confirmed in
@@ -1018,7 +1018,7 @@ final class ShellModel {
                 someFailed = true
                 Task { @MainActor in
                     self?.host?.toast(
-                        message: String(format: I18n.str("Couldn't move %d note(s) to Trash"), count), style: .failure)
+                        message: I18n.count("Couldn't move %d note(s) to Trash", count), style: .failure)
                 }
             }
         ) { [weak self] urls in

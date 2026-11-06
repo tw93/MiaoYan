@@ -43,4 +43,16 @@ final class StringExtensionsTests: XCTestCase {
         XCTAssertTrue("Quick brown fox".localizedStandardContains(["brown", "missing"]))
         XCTAssertFalse("Quick brown fox".localizedStandardContains(["zebra", "lion"]))
     }
+
+    func testNoteWordCountCountsWordsInLatinScriptsAndCharactersInCJK() {
+        // English and Spanish count words, not the 30-odd letters.
+        XCTAssertEqual("# A **quick** brown fox, don't stop.".noteWordCount, 6)
+        XCTAssertEqual("¿Dónde está la biblioteca?".noteWordCount, 4)
+        // Chinese and Japanese count each character, not punctuation.
+        XCTAssertEqual("妙言是笔记。".noteWordCount, 5)
+        XCTAssertEqual("メモを書く".noteWordCount, 5)
+        // Mixed text counts both.
+        XCTAssertEqual("用 Swift 写 macOS App".noteWordCount, 5)
+        XCTAssertEqual("".noteWordCount, 0)
+    }
 }

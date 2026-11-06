@@ -25,4 +25,17 @@ enum I18n {
     static func str(_ key: String) -> String {
         NSLocalizedString(key, tableName: "Localizable", bundle: bundle, value: key, comment: "")
     }
+
+    /// "Words: 12", with the full-width colon Chinese and Japanese use
+    /// (the "%@: %@" key is "%@：%@" there).
+    static func labeled(_ key: String, _ value: String) -> String {
+        String(format: str("%@: %@"), str(key), value)
+    }
+
+    /// A counted string. English and Spanish take their singular and plural
+    /// from Localizable.stringsdict (`1 note`, `2 notes`); the other
+    /// languages have one form and read the .strings value.
+    static func count(_ key: String, _ n: Int) -> String {
+        String.localizedStringWithFormat(str(key), n)
+    }
 }

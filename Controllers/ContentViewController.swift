@@ -101,24 +101,17 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
 
         guard let note = note ?? ViewController.shared()?.notesTableView.getSelectedNote() else { return }
 
-        var words = note.getPrettifiedContent()
-        words = ViewController.replace(validateString: words, regex: "*+", content: "")
-        words = ViewController.replace(validateString: words, regex: "#+", content: "")
-        words = ViewController.replace(validateString: words, regex: "\\r\n", content: "")
-        words = ViewController.replace(validateString: words, regex: "\\n", content: "")
-        words = ViewController.replace(validateString: words, regex: "\\s", content: "")
-
-        wordCount.stringValue = "\(I18n.str("Words")): \(words.count)"
-        updateTime.stringValue = "\(I18n.str("Modified")): \(note.getUpdateTime() ?? "")"
-        createTime.stringValue = "\(I18n.str("Created")): \(note.getCreateTime() ?? "")"
+        wordCount.stringValue = I18n.labeled("Words", "\(note.getPrettifiedContent().noteWordCount)")
+        updateTime.stringValue = I18n.labeled("Modified", note.getUpdateTime() ?? "")
+        createTime.stringValue = I18n.labeled("Created", note.getCreateTime() ?? "")
 
         let backlinks = WikilinkIndex.shared.getBacklinks(for: note.title)
         if backlinks.isEmpty {
-            backlinksLabel.stringValue = "\(I18n.str("Backlinks")): \(I18n.str("None"))"
+            backlinksLabel.stringValue = I18n.labeled("Backlinks", I18n.str("None"))
             backlinksListView.string = ""
             scrollView.isHidden = true
         } else {
-            backlinksLabel.stringValue = "\(I18n.str("Backlinks")): \(backlinks.count)"
+            backlinksLabel.stringValue = I18n.labeled("Backlinks", "\(backlinks.count)")
             backlinksListView.string = backlinks.joined(separator: "\n")
             scrollView.isHidden = false
         }

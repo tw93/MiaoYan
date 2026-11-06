@@ -38,6 +38,7 @@
 		275F9F622E682239006BC2AC /* ViewController+Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F612E682239006BC2AC /* ViewController+Editor.swift */; };
 		276312612E7580B5007BB5E9 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312602E7580B5007BB5E9 /* Localization.swift */; };
 		276312822E75813D007BB5E9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 276312782E75813D007BB5E9 /* Localizable.strings */; };
+		B0AD6CFF88B84EE9CAB22A14 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 33EAE19BD6F5A7BDDB1059D9 /* Localizable.stringsdict */; };
 		276312842E75813D007BB5E9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 276312732E75813D007BB5E9 /* InfoPlist.strings */; };
 		276312862E75813D007BB5E9 /* ContentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2763126B2E75813D007BB5E9 /* ContentViewController.xib */; };
 		276312872E75813D007BB5E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2763127E2E75813D007BB5E9 /* Main.storyboard */; };
@@ -85,6 +86,7 @@
 		33F1E2FF1B56462C8C96769E /* MiaoYanTests/PrefsWindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */; };
 		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
 		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
+		9D61CFA7A05DA60BCEE29441 /* MiaoYanTests/LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E9A41BAC2C4A5B6A0C7E81 /* MiaoYanTests/LocalizationTests.swift */; };
 		9B20FB1766E96D07EB753896 /* MiaoYanTests/LegacyPreferencesMigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CCB319ED69B8592A4E1CB8 /* MiaoYanTests/LegacyPreferencesMigrationTests.swift */; };
 		30DCFC5BB00D93D9A25EEBBF /* MiaoYanTests/PreviewPatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */; };
 		2F185BBC7E4F7EADC156950E /* MiaoYanTests/PrintExportScriptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEB5B8E267E925B04142F54C /* MiaoYanTests/PrintExportScriptTests.swift */; };
@@ -240,6 +242,8 @@
 		276312712E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		276312722E75813D007BB5E9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		276312752E75813D007BB5E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8954D97E2110BDBE7525C0BE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		B73D27E0B064D5A4996762AE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = es; path = es.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		E0C26ACF86EB525BA43E6762 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		276312762E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		276312772E75813D007BB5E9 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -297,6 +301,7 @@
 		D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsWindowControllerTests.swift; sourceTree = SOURCE_ROOT; };
 		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
 		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
+		78E9A41BAC2C4A5B6A0C7E81 /* MiaoYanTests/LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/LocalizationTests.swift; sourceTree = SOURCE_ROOT; };
 		37CCB319ED69B8592A4E1CB8 /* MiaoYanTests/LegacyPreferencesMigrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/LegacyPreferencesMigrationTests.swift; sourceTree = SOURCE_ROOT; };
 		F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PreviewPatchTests.swift; sourceTree = SOURCE_ROOT; };
 		FEB5B8E267E925B04142F54C /* MiaoYanTests/PrintExportScriptTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrintExportScriptTests.swift; sourceTree = SOURCE_ROOT; };
@@ -440,6 +445,7 @@
 				2763126B2E75813D007BB5E9 /* ContentViewController.xib */,
 				276312732E75813D007BB5E9 /* InfoPlist.strings */,
 				276312782E75813D007BB5E9 /* Localizable.strings */,
+				33EAE19BD6F5A7BDDB1059D9 /* Localizable.stringsdict */,
 				2763127E2E75813D007BB5E9 /* Main.storyboard */,
 			);
 			path = Localization;
@@ -483,6 +489,7 @@
 				B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */,
 				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
 				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
+				78E9A41BAC2C4A5B6A0C7E81 /* MiaoYanTests/LocalizationTests.swift */,
 				37CCB319ED69B8592A4E1CB8 /* MiaoYanTests/LegacyPreferencesMigrationTests.swift */,
 				F23877CEE115CDB590793EB4 /* MiaoYanTests/PreviewPatchTests.swift */,
 				FEB5B8E267E925B04142F54C /* MiaoYanTests/PrintExportScriptTests.swift */,
@@ -827,6 +834,7 @@
 				D7465F28207F2CD600E46A52 /* Images.xcassets in Resources */,
 				D7ED6892200F87BD00FF975A /* Initial in Resources */,
 				276312822E75813D007BB5E9 /* Localizable.strings in Resources */,
+				B0AD6CFF88B84EE9CAB22A14 /* Localizable.stringsdict in Resources */,
 				27EAA59A2EA8C76500D13871 /* app.icon in Resources */,
 				276312842E75813D007BB5E9 /* InfoPlist.strings in Resources */,
 				276312862E75813D007BB5E9 /* ContentViewController.xib in Resources */,
@@ -856,6 +864,7 @@
 				BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */,
 				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
 				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
+				9D61CFA7A05DA60BCEE29441 /* MiaoYanTests/LocalizationTests.swift in Sources */,
 				9B20FB1766E96D07EB753896 /* MiaoYanTests/LegacyPreferencesMigrationTests.swift in Sources */,
 				30DCFC5BB00D93D9A25EEBBF /* MiaoYanTests/PreviewPatchTests.swift in Sources */,
 				2F185BBC7E4F7EADC156950E /* MiaoYanTests/PrintExportScriptTests.swift in Sources */,
@@ -1036,6 +1045,15 @@
 				276312722E75813D007BB5E9 /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		33EAE19BD6F5A7BDDB1059D9 /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8954D97E2110BDBE7525C0BE /* en */,
+				B73D27E0B064D5A4996762AE /* es */,
+			);
+			name = Localizable.stringsdict;
 			sourceTree = "<group>";
 		};
 		276312782E75813D007BB5E9 /* Localizable.strings */ = {

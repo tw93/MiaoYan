@@ -118,19 +118,25 @@ final class VersionHistoryViewController: NSViewController {
     private let previewTextView = NSTextView()
     private let restoreButton = NSButton()
 
+    // In the app's language, as the note list's dates are: with the app set
+    // to Chinese on an English system, the system locale wrote "2 hours ago".
+    private static let displayLocale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? "en")
     private let relativeFormatter: RelativeDateTimeFormatter = {
         let f = RelativeDateTimeFormatter()
+        f.locale = VersionHistoryViewController.displayLocale
         f.unitsStyle = .full
         return f
     }()
     private let todayFormatter: DateFormatter = {
         let f = DateFormatter()
+        f.locale = VersionHistoryViewController.displayLocale
         f.timeStyle = .short
         f.dateStyle = .none
         return f
     }()
     private let fullFormatter: DateFormatter = {
         let f = DateFormatter()
+        f.locale = VersionHistoryViewController.displayLocale
         f.dateStyle = .medium
         f.timeStyle = .short
         return f

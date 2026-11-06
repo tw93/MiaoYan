@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Couldn't move %d note(s) to Trash</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>No se pudo mover %d nota a la Papelera</string>
+			<key>other</key>
+			<string>No se pudieron mover %d notas a la Papelera</string>
+		</dict>
+	</dict>
+	<key>Move %d note(s) to the system Trash?</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>¿Mover %d nota a la Papelera del sistema?</string>
+			<key>other</key>
+			<string>¿Mover %d notas a la Papelera del sistema?</string>
+		</dict>
+	</dict>
+	<key>Move %d unused attachment(s) to Trash?</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>¿Mover %d archivo adjunto sin usar a la Papelera?</string>
+			<key>other</key>
+			<string>¿Mover %d archivos adjuntos sin usar a la Papelera?</string>
+		</dict>
+	</dict>
+	<key>Moved %d unused attachment(s) to Trash</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>Se movió %d archivo adjunto sin usar a la Papelera</string>
+			<key>other</key>
+			<string>Se movieron %d archivos adjuntos sin usar a la Papelera</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
