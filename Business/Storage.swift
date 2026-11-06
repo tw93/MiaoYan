@@ -1036,6 +1036,16 @@ class Storage {
         return .createInitFolders
     }
 
+    /// Whether a preferred language tag gets the Traditional folder names. A
+    /// script subtag decides (zh-Hans-HK is Simplified); a region implies
+    /// Traditional only when the tag names no script.
+    nonisolated static func seedsTraditionalChinese(_ language: String) -> Bool {
+        guard language.hasPrefix("zh") else { return false }
+        if language.contains("Hant") { return true }
+        if language.contains("Hans") { return false }
+        return ["TW", "HK", "MO"].contains { language.contains($0) }
+    }
+
     func checkFirstRun() -> Bool {
         switch Storage.decideInitContent(
             noteListIsEmpty: noteList.isEmpty,
@@ -1068,7 +1078,7 @@ class Storage {
         // Detect system language
         let language = Locale.preferredLanguages.first ?? ""
         let isChinese = language.hasPrefix("zh")
-        let isTraditional = isChinese && ["Hant", "TW", "HK", "MO"].contains { language.contains($0) }
+        let isTraditional = Self.seedsTraditionalChinese(language)
 
         // Folder names follow the notes' language, so a Chinese library
         // does not open on four English folders.
