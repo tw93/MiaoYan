@@ -71,6 +71,9 @@ fi
 
 cat <<'FOOTER'
 
+<p>MiaoYan for iPhone and iPad is on the <a href="https://apps.apple.com/app/miaoyan/id6759252269">App Store</a>, one purchase covers them and the Mac, and they open the same iCloud Drive folder.</p>
+<p>妙言的 iPhone 和 iPad 版在 <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269">App Store</a> 上，和 Mac 一次购买通用，打开同一个 iCloud 云盘笔记文件夹，在手机和平板上也能接着写。</p>
+
 <hr />
 <p>If you find MiaoYan useful, please consider giving it a star and recommending it to your friends.</p>
 

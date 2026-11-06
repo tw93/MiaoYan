@@ -20,6 +20,7 @@
 - **Épuré** : dossiers, notes et éditeur sur trois colonnes, avec mode sombre et sans système d'extensions à maintenir
 - **Natif** : écrit en Swift 6, plus léger qu'un wrapper web, avec un défilement synchronisé à 60 fps dans l'aperçu divisé
 - **Bien équipé** : wikilinks, LaTeX, Mermaid, historique des versions, mise en forme automatique et présentations PPT intégrés
+- **Partout** : les apps iPhone et iPad sont sur l'[App Store](https://apps.apple.com/app/miaoyan/id6759252269), un seul achat couvre aussi le Mac, et elles ouvrent le même dossier iCloud Drive pour continuer à écrire sur téléphone et tablette
 
 ## Installation
 

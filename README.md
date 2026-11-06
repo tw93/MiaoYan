@@ -20,6 +20,7 @@
 - **Focused**: Folders, notes, and editor in three columns, with dark mode and no plugin system to maintain
 - **Native**: Built with Swift 6, lighter than web wrappers, with 60fps scroll sync in split preview
 - **Capable**: Wikilinks, LaTeX, Mermaid, version history, auto-formatting, and PPT presentations built in
+- **Portable**: The iPhone and iPad apps are on the [App Store](https://apps.apple.com/app/miaoyan/id6759252269), one purchase covers them and the Mac, and they open the same iCloud Drive folder, so you can keep writing on your phone and tablet
 
 ## Installation
 

@@ -20,6 +20,7 @@
 - **Fokussiert**: Ordner, Notizen und Editor in drei Spalten, mit Dark Mode und ohne Plugin-System, das gepflegt werden muss
 - **Nativ**: Mit Swift 6 gebaut, leichter als Web-Wrapper, geteilte Vorschau mit 60fps-Bildlaufsynchronisation
 - **Gut ausgestattet**: Wikilinks, LaTeX, Mermaid, Versionsverlauf, automatische Formatierung und PPT-Präsentationen integriert
+- **Unterwegs**: Die Apps für iPhone und iPad gibt es im [App Store](https://apps.apple.com/app/miaoyan/id6759252269), ein Kauf gilt auch für den Mac, und alle öffnen denselben Ordner in iCloud Drive, sodass du auf Handy und Tablet weiterschreiben kannst
 
 ## Installation
 
