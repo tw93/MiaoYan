@@ -4,7 +4,7 @@ import Foundation
 
 @MainActor
 private enum UIConstants {
-    static let brandRowHeight: CGFloat = 52
+    static let brandRowHeight: CGFloat = 52 + Theme.Metrics.sidebarBrandDrop
     static let defaultRowHeight: CGFloat = 32
 }
 
@@ -550,8 +550,8 @@ class SidebarProjectView: NSOutlineView,
     private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
         // The brand lockup (maintainer, 2026-10-11): an upright wordmark at
         // regular weight, two points above the folder labels with a 22pt bird, in a
-        // 52pt row so the space above and below it is even and wider than the
-        // gap between folders. The italic wordmark with a slanted 26pt bird
+        // row taller than the folders' so the space above and below it is even
+        // and wider than the gap between folders. The italic wordmark with a slanted 26pt bird
         // leaned against the upright folder names and read too large; a
         // lockup of icon 20 and font +1 was rejected earlier as too small.
         // The bird's left edge and the wordmark's first stroke line up with the
@@ -579,16 +579,22 @@ class SidebarProjectView: NSOutlineView,
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
             // The bird icon has a different visual center from folder icons.
+            // The row grows by `sidebarBrandDrop` and both views sit half of
+            // it below the row's centre, so the lockup moves down the whole
+            // drop while the gap under it stays as it was.
+            let drop = Theme.Metrics.sidebarBrandDrop / 2
             for constraint in cell.constraints
             where constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY {
                 let first = constraint.firstItem as? NSView
                 let second = constraint.secondItem as? NSView
                 if first === cell.icon {
-                    constraint.constant = iconOffsetY
-                    break
+                    constraint.constant = iconOffsetY + drop
                 } else if second === cell.icon {
-                    constraint.constant = -iconOffsetY
-                    break
+                    constraint.constant = -(iconOffsetY + drop)
+                } else if first === cell.label {
+                    constraint.constant = Theme.Metrics.sidebarLabelOffsetY + drop
+                } else if second === cell.label {
+                    constraint.constant = -(Theme.Metrics.sidebarLabelOffsetY + drop)
                 }
             }
 

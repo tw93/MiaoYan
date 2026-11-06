@@ -87,6 +87,12 @@ enum Theme {
         /// the bird's (maintainer, 2026-10-26).
         static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 5
         static let sidebarBrandMarkIconOffsetY: CGFloat = -0.5
+        /// How far the lockup sits below its old 52pt row. With it the gap
+        /// over the lockup (28.5pt from the traffic lights) matches the 27pt
+        /// under it, and its ink centre lines up with the first note title in
+        /// the list column; before, 23.5pt over it read cramped (maintainer,
+        /// 2026-11-06). The folders below move down by the same amount.
+        static let sidebarBrandDrop: CGFloat = 5
         /// Right-side gutter so long note titles truncate before the pane edge.
         /// The visible gutter inside the selection pill varies by title because
         /// truncation snaps to whole glyphs (CJK chars are ~14pt), so this is

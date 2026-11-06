@@ -233,6 +233,31 @@ final class SidebarProjectViewTests: XCTestCase {
 
     /// V4.5.0 saved only a row number with All Notes at row 0; after the
     /// brand row took row 0 that number reopened the folder above.
+    /// The lockup sat 23.5pt under the traffic lights and 27pt over All
+    /// Notes, which read cramped at the top (maintainer, 2026-11-06). It now
+    /// sits `sidebarBrandDrop` lower while the gap under it stays as it was.
+    @MainActor
+    func testTheBrandLockupDropsWithoutClosingTheGapUnderIt() throws {
+        let cell = makeFolderCell()
+        let outlineView = ReusingSidebar(frame: NSRect(x: 0, y: 0, width: 200, height: 300))
+        outlineView.reusedCell = cell
+        let brand = SidebarItem(name: "妙言", type: .Brand)
+        let height = outlineView.outlineView(outlineView, heightOfRowByItem: brand)
+        let drop = Theme.Metrics.sidebarBrandDrop
+        XCTAssertEqual(height, 52 + drop)
+
+        _ = try XCTUnwrap(outlineView.outlineView(outlineView, viewFor: nil, item: brand) as? SidebarCellView)
+        cell.frame = NSRect(x: 0, y: 0, width: 200, height: height)
+        cell.layoutSubtreeIfNeeded()
+        // Auto Layout measures centerY downward; the cell is not flipped.
+        let iconFromTop = height - cell.icon.frame.midY
+        let iconToBottom = cell.icon.frame.midY
+        let iconOffset = Theme.Metrics.sidebarBrandMarkIconOffsetY
+        XCTAssertEqual(iconFromTop, 26 + iconOffset + drop, accuracy: 0.01, "the lockup moves down by the drop")
+        XCTAssertEqual(iconToBottom, 26 - iconOffset, accuracy: 0.01, "the gap under the lockup stays")
+        XCTAssertEqual(height - cell.label.frame.midY, height / 2 + drop / 2, accuracy: 0.01, "the wordmark moves with the bird")
+    }
+
     @MainActor
     func testAV450SidebarRowMovesDownOnceForTheBrandRow() throws {
         // Fixed names: a removed domain still leaves its empty plist in
