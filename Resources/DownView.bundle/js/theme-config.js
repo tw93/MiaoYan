@@ -238,24 +238,17 @@ skinparam component {
 }
 
 /**
- * Get Markmap color configuration
+ * Markmap branch colours by depth: the brand green at the root, then the
+ * editor's highlight colours (title purple, link teal, bold gold, list grey),
+ * the same values as the title, link, html and list colour assets.
  * @param {boolean} isDark - Whether dark mode is enabled
- * @returns {object} Markmap color options
+ * @returns {string[]} Colours, index = node depth modulo length
  */
 function getMarkmapColors(isDark = false) {
   const palette = getThemeColors(isDark);
-  const accentColors = isDark
-    ? [palette.lineColor, '#E7E9EA', '#F7CC8F', '#8FFCCD', '#ED716C', '#C084FC', '#60A5FA']
-    : [palette.lineColor, '#262626', '#059669', '#F97316', '#EF4444', '#7C3AED', '#0EA5E9'];
-
-  return {
-    colorFreezeLevel: 6,
-    color: accentColors,
-    backgroundColor: palette.diagramBg,
-    nodeBackgroundColor: 'transparent',
-    nodeBorderColor: 'transparent',
-    linkColor: palette.lineColor
-  };
+  return isDark
+    ? [palette.lineColor, '#8E6AD9', '#58D8AD', '#DAAE76', '#8E8B83']
+    : [palette.lineColor, '#5E3DB3', '#24837B', '#9A7400', '#7A7872'];
 }
 
 // Export for use in other modules

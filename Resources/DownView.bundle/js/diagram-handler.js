@@ -184,8 +184,7 @@ const DiagramHandler = {
   },
 
   // Draws the diagrams already on the page again in the current theme:
-  // Mermaid and PlantUML bake their palette into what they draw. Markmap
-  // takes its colours from the stylesheet and follows on its own.
+  // Mermaid, PlantUML and Markmap bake their palette into what they draw.
   retheme() {
     document.querySelectorAll('.language-mermaid[data-mermaid-source]').forEach((element) => {
       element.textContent = element.dataset.mermaidSource;
@@ -197,6 +196,14 @@ const DiagramHandler = {
     document.querySelectorAll('code.language-plantuml[data-processed="true"]').forEach((code) => {
       this.rethemePlantumlElement(code);
     });
+    let markmapChanged = false;
+    document.querySelectorAll('.language-markmap[data-markmap-source]').forEach((element) => {
+      if (element.dataset.markmapRendered !== 'true') return;
+      element.textContent = element.dataset.markmapSource;
+      delete element.dataset.markmapRendered;
+      markmapChanged = true;
+    });
+    if (markmapChanged) this.renderMarkmap();
   },
 
   // A diagram already on screen stays until its redrawn image has loaded,
@@ -243,8 +250,7 @@ const DiagramHandler = {
   },
 
   processMarkmapElement(element) {
-    const isDark = this.isDarkMode();
-    const colorOptions = window.ThemeConfig?.getMarkmapColors(isDark) || {};
+    if (!element.dataset.markmapSource) element.dataset.markmapSource = element.textContent;
 
     element.style.visibility = 'hidden';
     element.style.overflow = 'visible';
@@ -255,8 +261,6 @@ const DiagramHandler = {
     element.style.textAlign = 'center';
     element.style.lineHeight = '1';
     element.style.boxSizing = 'border-box';
-
-    element.dataset.markmapColors = JSON.stringify(colorOptions);
   },
 
   renderMarkmap() {

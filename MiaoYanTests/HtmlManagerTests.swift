@@ -755,6 +755,81 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertEqual(count, 3, html)
     }
 
+    /// Markmap's branches take the family palette from theme-config.js, and a
+    /// change of appearance draws the map again in the other palette; the
+    /// patched render() used to draw twelve stock colours of its own.
+    @MainActor
+    func testMarkmapBranchesUseTheFamilyPaletteAndFollowTheAppearance() async throws {
+        let webView = try loadMarkmapPage()
+        let light = try await settledMarkmapLinkColours(webView, differentFrom: nil)
+        XCTAssertEqual(light["1"], "#5E3DB3", "\(light)")
+        XCTAssertEqual(light["2"], "#24837B", "\(light)")
+        XCTAssertEqual(light["3"], "#9A7400", "\(light)")
+
+        _ = try await webView.evaluateJavaScript("window.__dark = true; DiagramHandler.retheme(); true")
+        let dark = try await settledMarkmapLinkColours(webView, differentFrom: light)
+        XCTAssertEqual(dark["1"], "#8E6AD9", "\(dark)")
+        XCTAssertEqual(dark["2"], "#58D8AD", "\(dark)")
+        let maps = try await webView.evaluateJavaScript(
+            "[document.querySelectorAll('.language-markmap svg').length, document.querySelector('.language-markmap').textContent.includes('Root')]")
+        let state = try XCTUnwrap(maps as? [Any])
+        XCTAssertEqual(state.first as? Int, 1, "one map after the redraw")
+        XCTAssertEqual(state.last as? Bool, true, "the redraw starts from the note's source")
+    }
+
+    @MainActor
+    private func loadMarkmapPage() throws -> WKWebView {
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let scripts = ["d3.min.js", "markmap.min.js", "markmap-view.min.js", "theme-config.js", "diagram-handler.js"]
+            .map { "<script src=\"\(js.appendingPathComponent($0).absoluteString)\"></script>" }
+            .joined()
+        // An offscreen web view gets no animation frames, which both the
+        // handler and d3's transitions wait on; timers stand in for them.
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8"><script>
+            window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);
+            window.ThemeConfig = { isDarkMode: () => window.__dark === true };
+            </script>
+            \(scripts)
+            </head><body><pre><code class="language-markmap">- Root
+              - One
+                - Two
+                  - Three</code></pre>
+            <script>window.addEventListener('load', () => DiagramHandler.initializeMarkmap());</script>
+            </body></html>
+            """
+        let url = try write(page: page, named: "markmap")
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        return webView
+    }
+
+    /// Link colours by depth once two reads agree, so the transitions have ended.
+    @MainActor
+    private func settledMarkmapLinkColours(_ webView: WKWebView, differentFrom earlier: [String: String]?) async throws -> [String: String] {
+        let probe = """
+            (() => {
+              const hex = (rgb) => '#' + (rgb.match(/\\d+/g) || []).slice(0, 3)
+                .map((n) => Number(n).toString(16).padStart(2, '0')).join('').toUpperCase();
+              const out = {};
+              document.querySelectorAll('path.markmap-link').forEach((p) => {
+                if (p.getAttribute('stroke')) out[p.getAttribute('data-depth')] = hex(getComputedStyle(p).stroke);
+              });
+              return Object.keys(out).length >= 3 ? out : null;
+            })()
+            """
+        var previous: [String: String]?
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            let colours = try? await webView.evaluateJavaScript(probe) as? [String: String]
+            if let colours, colours == previous, colours != earlier { return colours }
+            previous = colours
+            try await Task.sleep(nanoseconds: 400_000_000)
+        }
+        XCTFail("Timed out waiting for Markmap links, last read \(String(describing: previous))")
+        return [:]
+    }
+
     private func writePreviewPage(markdownHTML: String) throws -> URL {
         let jsDirectory = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
         let page = """

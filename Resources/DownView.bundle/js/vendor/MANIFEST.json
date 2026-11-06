@@ -116,8 +116,8 @@
       "version": "unknown",
       "source_url": "https://github.com/markmap/markmap",
       "license": "MIT",
-      "sha256": "7708007bc3ffb2f2078211ba692d350a90eaccef8081949393de0709998d594d",
-      "purpose": "Mindmap rendering from Markdown.",
+      "sha256": "62ecaf4bb56420068ac2e94d6d3a84aea7be2a54f6aa0f1c2822f12e77440828",
+      "purpose": "Mindmap rendering from Markdown. Its autoloader render() is patched locally: sizing, and branch colours from theme-config.js getMarkmapColors.",
       "version_source": "no banner."
     },
     {
