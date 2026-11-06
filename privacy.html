@@ -254,15 +254,15 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 /* Hero */
 .hero { margin-bottom: var(--gap); }
 .hero h1 {
-  font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--near-black);
-  font-size: 84px; line-height: 1.02; letter-spacing: -1.2px; margin: 0 0 28px;
+  font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--olive);
+  font-size: 84px; line-height: 1.02; letter-spacing: -0.048em; margin: 0 0 28px;
 }
-.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: 18px; }
-/* The Han glyph fills its whole em and read larger than the Latin name at the
-   same size; 0.88em puts its top on the Latin ascender, the same as mole.fit's
-   鼴 (maintainer 2026-11-02). Set on the orbit wrapper so the dot's em-based
-   path shrinks with it. */
-.hero h1 .cn-orbit { font-size: 0.88em; }
+.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.04em); }
+/* Tracking, olive and the Han glyph's 0.84em follow mole.fit's wordmark
+   (maintainer 2026-11-06; reasons in its styles.css). The glyph size sits on the
+   orbit wrapper so the dot's em-based path shrinks with it, and the margin adds
+   back what the last letter's tracking takes from the gap. */
+.hero h1 .cn-orbit { font-size: 0.84em; }
 .hero h1 .cn {
   display: inline-block;
   font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif;
@@ -567,7 +567,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .nav:has(+ main:not([class])) { margin-bottom: 40px; }
   /* 64px with -1px tracking under 880, as on pake.run, hina.day and yado.house
      (maintainer 2026-11-04: one lockup size across the product sites). */
-  .hero h1 { font-size: 64px; letter-spacing: -1px; margin-bottom: 20px; }
+  .hero h1 { font-size: 64px; margin-bottom: 20px; }
   .tagline { font-size: 20px; }
   .section-title { font-size: 26px; }
   .devices { gap: 32px; }
