@@ -1,6 +1,8 @@
 import JavaScriptCore
 import XCTest
 
+@testable import MiaoYan
+
 /// The app follows the family's visual standard (Kata `sumi`): alerts carry
 /// no left stripe and a quote only its thin warm bar, nothing glows, and motion eases out at 0.12s
 /// for feedback on the control under the pointer and 0.25s for what the
@@ -95,6 +97,28 @@ final class VisualRulesGateTests: XCTestCase {
         }
         // PDF export restyles quotes on top of the preview.
         XCTAssertNil(try source("Business/HtmlManager.swift").range(of: stripe, options: .regularExpression))
+    }
+
+    /// No interface text is below 12pt: the note list's dates were 11pt in
+    /// both windows until 2026-11-06, while AGENTS.md already named the floor.
+    @MainActor
+    func testListDatesMeetTheTwelvePointFloor() {
+        XCTAssertGreaterThanOrEqual(UserDefaultsManagement.dateFontSize, 12)
+    }
+
+    /// Floating layers share one radius, and none of them uses a translucent
+    /// `.hudWindow` material any more.
+    func testFloatingLayersShareOneRadiusAndNoFrost() throws {
+        XCTAssertTrue(try source("Views/Toast.swift").contains("cornerRadius: CGFloat = Theme.Metrics.floatingCornerRadius"))
+        for path in ["Views/Toast.swift", "Views/ImagePreviewWindow.swift"] {
+            XCTAssertFalse(try source(path).contains("material = .hudWindow"), path)
+        }
+    }
+
+    /// Exports take the preview's green; an orange `--primary-color` from an
+    /// older theme sat in the export CSS until 2026-11-06.
+    func testExportCSSHasNoOrangeAccent() throws {
+        XCTAssertFalse(try source("Business/HtmlManager.swift").lowercased().contains("#fd8258"))
     }
 
     func testNothingGlows() throws {

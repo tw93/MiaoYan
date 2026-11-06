@@ -20,7 +20,6 @@ class HtmlManager {
                    --code-bg: #f7f7f7 !important;
                    --side-bar-bg-color: #fafafa !important;
                    --control-text-color: #777 !important;
-                   --primary-color: #fd8258 !important;
                }
                html, body {
                    background-color: #FFFFFF !important;
@@ -39,7 +38,6 @@ class HtmlManager {
                    --code-bg: #282724 !important;
                    --side-bar-bg-color: #1E1D1B !important;
                    --control-text-color: #999 !important;
-                   --primary-color: #fd8258 !important;
                }
                html, body {
                    background-color: #1E1D1B !important;

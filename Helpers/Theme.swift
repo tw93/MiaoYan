@@ -50,7 +50,9 @@ enum Theme {
         /// Corner radius for a text field's fill (the shell's search field).
         static let fieldCornerRadius: CGFloat = 8
         /// Corner radius for a layer floating over the page (find bar, image preview).
-        static let floatingCornerRadius: CGFloat = 8
+        /// One radius for every floating layer: toasts, the find bar, the
+        /// image preview and the preview's TOC panel (`tocbot.css`, 10px).
+        static let floatingCornerRadius: CGFloat = 10
         /// Horizontal inset of the selection pill from the row edge.
         static let selectionInsetH: CGFloat = 6
         /// Vertical inset of the selection pill from the row edge.
@@ -101,9 +103,11 @@ enum Theme {
         static let noteListContentInset: CGFloat = 30
     }
 
+    /// The storyboard window's text greys are the shell's and Settings'
+    /// warm Ink, not the system's cool label greys.
     static var textColor: Color {
         if UserDefaultsManagement.appearanceType != .Custom {
-            return .labelColor
+            return Ink.primary
         } else {
             return UserDefaultsManagement.fontColor
         }
@@ -111,7 +115,9 @@ enum Theme {
 
     static var secondaryTextColor: Color {
         if UserDefaultsManagement.appearanceType != .Custom {
-            return .secondaryLabelColor
+            // Tertiary, as the shell's list dates: secondary Ink reads
+            // nearly as dark as the titles.
+            return Ink.tertiary
         } else {
             return UserDefaultsManagement.fontColor.withAlphaComponent(0.6)
         }

@@ -106,7 +106,8 @@ public enum UserDefaultsManagement {
     static var emptyEditTitleFontSize = 14
     static var nameFontSize = 14
     static var searchFontSize = 12
-    static var dateFontSize = 11
+    /// The list's dates; the interface floor is 12pt (AGENTS.md).
+    static var dateFontSize = 12
     static var marginSize = 24
     static var realSidebarSize = 138
     static var sidebarSize = 280

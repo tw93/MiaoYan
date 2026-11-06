@@ -424,7 +424,9 @@ extension PreviewSearchBar {
         if #available(macOS 10.13, *) {
             layer?.cornerRadius = Theme.Metrics.floatingCornerRadius
             layer?.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-            layer?.masksToBounds = true
+            // The corner radius already rounds the fill; masking to bounds
+            // also cut away the FloatingShadow on this same layer.
+            layer?.masksToBounds = false
             layer?.mask = nil
         } else {
             let maskLayer = CAShapeLayer()

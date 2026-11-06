@@ -654,7 +654,7 @@ private struct ShellSectionHeader: View {
     let title: String
 
     var body: some View {
-        let size = CGFloat(UserDefaultsManagement.dateFontSize) + 1
+        let size = CGFloat(UserDefaultsManagement.dateFontSize)
         ShellBoldText(string: title, size: size)
             .foregroundStyle(ShellStyle.tertiaryText)
             .padding(.horizontal, 20)

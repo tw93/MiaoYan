@@ -3,7 +3,7 @@ import Cocoa
 class ImagePreviewWindow: NSWindow {
     private var imageView: NSImageView!
     private var loadingIndicator: NSProgressIndicator!
-    private var backgroundView: NSVisualEffectView!
+    private var backgroundView: PaperPanelView!
     private var currentImageURL: String?
     private var fixedPosition: NSPoint?
     private var isPositionFixed: Bool = false
@@ -37,10 +37,9 @@ class ImagePreviewWindow: NSWindow {
     }
 
     private func setupUI() {
-        backgroundView = NSVisualEffectView()
-        backgroundView.material = .hudWindow
-        backgroundView.blendingMode = .behindWindow
-        backgroundView.state = .active
+        // The note's own paper, opaque like the other floating layers; the
+        // .hudWindow frost was the last translucent surface in the window.
+        backgroundView = PaperPanelView()
         backgroundView.wantsLayer = true
         backgroundView.layer?.cornerRadius = Theme.Metrics.floatingCornerRadius
         backgroundView.layer?.masksToBounds = true
@@ -376,5 +375,17 @@ class ImagePreviewWindow: NSWindow {
             height: min(size.height, maxHeight)
         )
         super.setContentSize(limitedSize)
+    }
+}
+
+/// A floating panel on the paper tone with the column hairline, recoloured
+/// when the appearance changes.
+final class PaperPanelView: NSView {
+    override var wantsUpdateLayer: Bool { true }
+
+    override func updateLayer() {
+        layer?.backgroundColor = Theme.paper.cgColor
+        layer?.borderColor = Theme.columnHairline.cgColor
+        layer?.borderWidth = 0.5
     }
 }

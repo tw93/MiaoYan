@@ -11,7 +11,7 @@ struct ToastConfiguration: Sendable {
     /// After the pointer leaves a toast it stays this long before fading.
     var hoverLinger: TimeInterval = 1
     var opacity: Float = 0.92
-    var cornerRadius: CGFloat = 12
+    var cornerRadius: CGFloat = Theme.Metrics.floatingCornerRadius
     var horizontalPadding: CGFloat = 12
     var verticalPadding: CGFloat = 6
     var minWidth: CGFloat = 80
@@ -154,35 +154,20 @@ final class ToastManager {
         toast.layer?.opacity = 0
 
         if !toast.subviews.contains(where: { $0.identifier?.rawValue == "ToastBackgroundView" }) {
-            let backgroundView: NSView
-            // Use the translucent system material only in dark mode, where the
-            // .hudWindow glass renders as a rich dark frost over the dark
-            // editor. In light mode the same material blends the bright window
-            // content through .withinWindow and washes out to a flat gray (even
-            // when pinned dark), so the fixed white label looks muddy. Fall back
-            // to the solid dark pill there for a clean, consistent toast.
-            if Theme.usesModernSystemChrome && view.effectiveAppearance.isDark {
-                let effectView = NSVisualEffectView()
-                effectView.material = .hudWindow
-                effectView.blendingMode = .withinWindow
-                effectView.state = .active
-                effectView.appearance = NSAppearance(named: .darkAqua)
-                effectView.wantsLayer = true
-                backgroundView = effectView
-            } else {
-                let plainView = NSView()
-                plainView.wantsLayer = true
-                plainView.layer = CALayer()
-                plainView.layer?.backgroundColor = Theme.toastBackgroundColor.cgColor
-                backgroundView = plainView
-            }
+            // A solid dark pill in both appearances: the paper apps keep
+            // floating layers opaque, and the .hudWindow frost the dark mode
+            // used read as a second material beside the light mode's fill.
+            let backgroundView = NSView()
+            backgroundView.wantsLayer = true
+            backgroundView.layer = CALayer()
+            backgroundView.layer?.backgroundColor = Theme.toastBackgroundColor.cgColor
 
             backgroundView.identifier = NSUserInterfaceItemIdentifier("ToastBackgroundView")
             backgroundView.translatesAutoresizingMaskIntoConstraints = false
             backgroundView.layer?.cornerRadius = configuration.cornerRadius
             backgroundView.layer?.borderWidth = Theme.usesModernSystemChrome ? 0.5 : 0
-            // The toast surface is always dark (pinned dark glass above, fixed
-            // dark fill below), so resolve the hairline against a dark
+            // The toast surface is always a dark fill, so resolve the hairline
+            // against a dark
             // appearance too. Otherwise the light-mode window appearance makes
             // the border fade out and the toast loses the subtle edge it has in
             // dark mode.
