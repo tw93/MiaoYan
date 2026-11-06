@@ -169,8 +169,22 @@ class FileSystemEventManager {
         }
         // MiaoYan's own deletes retire the note before the event arrives, so
         // a missing note here is expected, not an error worth logging.
-        guard let note = listedNote(at: url) else { return }
+        guard let note = listedNote(at: url) else {
+            refreshTrashRow(afterLosing: url)
+            return
+        }
         removeNote(note: note)
+    }
+
+    /// The Trash row shows only while the Trash holds a note, and the Trash
+    /// is not loaded until opened, so a Trash file another device removed
+    /// (emptied, restored) has no note here to retire; the sidebar still has
+    /// to look again or the row stays with nothing in it.
+    private func refreshTrashRow(afterLosing url: URL) {
+        guard storage.getProjectBy(url: url)?.isTrash == true else { return }
+        Task { @MainActor [weak self] in
+            self?.delegate?.fsReloadSidebar()
+        }
     }
 
     private func handleFileMove(url: URL) throws {
@@ -200,6 +214,8 @@ class FileSystemEventManager {
         guard let note = fileExistsInFS ? storage.getBy(url: url) : listedNote(at: url) else {
             if fileExistsInFS {
                 importNote(url)
+            } else {
+                refreshTrashRow(afterLosing: url)
             }
             return
         }
@@ -300,9 +316,11 @@ class FileSystemEventManager {
     }
 
     private func removeNote(note: Note) {
+        let leavesTrash = note.isTrash()
         storage.removeNotes(notes: [note], fsRemove: false) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.delegate?.fsRemove([note])
+                if leavesTrash { self?.delegate?.fsReloadSidebar() }
             }
         }
     }

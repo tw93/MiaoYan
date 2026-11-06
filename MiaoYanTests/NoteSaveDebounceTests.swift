@@ -839,6 +839,42 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: libraryTrash.path))
     }
 
+    /// Another device emptied the Trash: the Mac had loaded one of its notes
+    /// and never loaded the other, and the sidebar looks again for both, or
+    /// the Trash row stays with nothing in it.
+    @MainActor
+    func testTrashFilesRemovedElsewhereRefreshTheSidebar() async throws {
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "library", isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        storage.checkLibraryTrash()
+        let trash = try XCTUnwrap(storage.getDefaultTrash())
+        try FileManager.default.createDirectory(at: trash.url, withIntermediateDirectories: true)
+        let loadedURL = trash.url.appendingPathComponent("loaded.md")
+        let unloadedURL = trash.url.appendingPathComponent("unloaded.md")
+        try "loaded".write(to: loadedURL, atomically: true, encoding: .utf8)
+        try "unloaded".write(to: unloadedURL, atomically: true, encoding: .utf8)
+        let loaded = Note(url: loadedURL, with: trash)
+        loaded.sharedStorage = storage
+        storage.add(loaded)
+
+        let host = FileEventHostStub()
+        let reloaded = expectation(description: "the sidebar looks again for each Trash file")
+        reloaded.expectedFulfillmentCount = 2
+        host.onReloadSidebar = { reloaded.fulfill() }
+        let manager = FileSystemEventManager(storage: storage, delegate: host)
+
+        try FileManager.default.removeItem(at: loadedURL)
+        try FileManager.default.removeItem(at: unloadedURL)
+        func diskPath(_ url: URL) -> String { url.path.hasPrefix("/var/") ? "/private" + url.path : url.path }
+        let removedFile = UInt32(kFSEventStreamEventFlagItemIsFile) | UInt32(kFSEventStreamEventFlagItemRemoved)
+        manager.handleFileSystemEvent(FileWatcherEvent(1, diskPath(loadedURL), removedFile))
+        manager.handleFileSystemEvent(FileWatcherEvent(2, diskPath(unloadedURL), removedFile))
+
+        await fulfillment(of: [reloaded], timeout: 2)
+        XCTAssertFalse(storage.trashHasNotes())
+    }
+
     @MainActor
     func testFailedRemovalKeepsTheNoteWritable() throws {
         let sourceURL = tempDir.appendingPathComponent("failed-delete.md")
@@ -973,10 +1009,11 @@ final class NoteSaveDebounceTests: XCTestCase {
 @MainActor
 private final class FileEventHostStub: FileSystemEventHost {
     var onRemove: (([Note]) -> Void)?
+    var onReloadSidebar: (() -> Void)?
 
     func fsReloadList(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?) { completion?() }
     func fsInsert(_ note: Note) {}
-    func fsReloadSidebar() {}
+    func fsReloadSidebar() { onReloadSidebar?() }
     func fsSelectFirstNote() {}
     func fsRemove(_ notes: [Note]) { onRemove?(notes) }
     func fsReload(_ note: Note) {}
