@@ -12,7 +12,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://raw.githubusercontent.com/tw93/static/main/miaoyan/miaoyan.gif" width="900px" />
+<img src="https://miaoyan.app/assets/shots/readme-en.webp" width="900" alt="Mac、iPad、iPhone の MiaoYan" />
 
 ## 特徴
 
@@ -35,7 +35,7 @@
 
 3. **GitHub Releases**: [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) から最新 DMG をダウンロード（macOS 12.0+）
 
-Homebrew と GitHub Releases でインストールされるのは、同じ無料のオープンソース Mac 版で、開発も続いています。おすすめは App Store 版で、一度の購入で iPhone、iPad、Mac のすべてで使え、どれも同じ iCloud Drive フォルダを開き、自動でアップデートされます。
+Homebrew と GitHub Releases でインストールされるのは、同じ無料のオープンソース Mac 版で、開発も続いています。Mac だけで書くならオープンソース版で十分、iPhone や iPad でも続きを書きたいなら App Store 版を選んでください。
 
 ## Nutstore や他のクラウドストレージとの同期
 
@@ -63,7 +63,7 @@ miao update                 # CLI をアップデート
 
 編集ペインとプレビューペインを並べて表示します。`⌘\` で切り替えるか、設定の「エディタ」で「標準のモード」を「分割」にすると有効になります。なぜ Typora のような WYSIWYG にしないのか。Markdown の原文を見ながら書いてほしいからで、Swift でネイティブの WYSIWYG を作ると重く、安定させるのも難しくなります。分割モードなら書くことに集中でき、すぐ隣にリアルタイムのプレビューがあります。
 
-<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="2ペイン編集・プレビューモード" />
+<img src="https://miaoyan.app/assets/shots/en-split-2400.webp" width="100%" alt="2ペイン編集・プレビューモード" />
 
 ## ドキュメント
 

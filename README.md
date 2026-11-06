@@ -12,7 +12,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://raw.githubusercontent.com/tw93/static/main/miaoyan/miaoyan.gif" width="900px" />
+<img src="https://miaoyan.app/assets/shots/readme-en.webp" width="900" alt="MiaoYan on Mac, iPad and iPhone" />
 
 ## Features
 
@@ -35,7 +35,7 @@
 
 3. **GitHub Releases**: download the latest DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 12.0+)
 
-Homebrew and GitHub Releases install the same free, open-source Mac app, which keeps being developed. The App Store version is recommended: one purchase gets you MiaoYan on iPhone, iPad and Mac, all opening the same iCloud Drive folder, with automatic updates.
+Homebrew and GitHub Releases install the same free, open-source Mac app, which keeps being developed. If you only write on a Mac, the open-source version is enough; to keep writing on iPhone and iPad, get the App Store version.
 
 ## Sync with Nutstore or Other Cloud Drives
 
@@ -63,7 +63,7 @@ miao update               # Update CLI
 
 Edit and preview sit side by side. Press `⌘\` to toggle split mode, or open Preferences, go to Editor, and set Default Mode to Split. Why not WYSIWYG like Typora? Pure Markdown editing is the whole point. Native WYSIWYG in Swift is heavy and fragile; split mode keeps writing focused while giving you instant, synchronized visual feedback.
 
-<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Split Editor & Preview Mode" />
+<img src="https://miaoyan.app/assets/shots/en-split-2400.webp" width="100%" alt="Split Editor & Preview Mode" />
 
 ## Documentation
 

@@ -12,7 +12,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://raw.githubusercontent.com/tw93/static/main/miaoyan/miaoyan.gif" width="900px" />
+<img src="https://miaoyan.app/assets/shots/readme-en.webp" width="900" alt="MiaoYan sur Mac, iPad et iPhone" />
 
 ## Fonctionnalités
 
@@ -35,7 +35,7 @@
 
 3. **GitHub Releases** : téléchargez le dernier DMG depuis [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 12.0+)
 
-Homebrew et GitHub Releases installent la même application Mac gratuite et open source, qui continue d'évoluer. La version App Store est recommandée : un seul achat couvre l'iPhone, l'iPad et le Mac, qui ouvrent tous le même dossier iCloud Drive, avec des mises à jour automatiques.
+Homebrew et GitHub Releases installent la même application Mac gratuite et open source, qui continue d'évoluer. Si vous n'écrivez que sur Mac, la version open source suffit, et pour continuer sur iPhone et iPad, prenez la version App Store.
 
 ## Synchronisation avec Nutstore ou d'autres services cloud
 
@@ -63,7 +63,7 @@ miao update                # Mettre à jour le CLI
 
 Édition et aperçu s'affichent côte à côte. Appuyez sur `⌘\` pour basculer en mode divisé, ou ouvrez les Préférences, section Editor, et réglez Default Mode sur Split. Pourquoi pas de WYSIWYG comme Typora ? L'écriture en Markdown pur est au cœur du projet. Un WYSIWYG natif en Swift est lourd et fragile ; le mode divisé garantit une écriture concentrée tout en offrant un retour visuel instantané et fluide.
 
-<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Mode Éditeur et Aperçu divisé" />
+<img src="https://miaoyan.app/assets/shots/en-split-2400.webp" width="100%" alt="Mode Éditeur et Aperçu divisé" />
 
 ## Documentation
 

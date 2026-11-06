@@ -12,7 +12,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://raw.githubusercontent.com/tw93/static/main/miaoyan/miaoyan.gif" width="900px" />
+<img src="https://miaoyan.app/assets/shots/readme-en.webp" width="900" alt="MiaoYan auf Mac, iPad und iPhone" />
 
 ## Funktionen
 
@@ -35,7 +35,7 @@
 
 3. **GitHub Releases**: Neueste DMG von [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) herunterladen (macOS 12.0+)
 
-Homebrew und GitHub Releases installieren dieselbe kostenlose Open-Source-Mac-App, die weiterentwickelt wird. Empfohlen ist die App-Store-Version: Ein Kauf gilt für iPhone, iPad und Mac, alle öffnen denselben iCloud-Drive-Ordner, und Updates kommen automatisch.
+Homebrew und GitHub Releases installieren dieselbe kostenlose Open-Source-Mac-App, die weiterentwickelt wird. Wer nur auf dem Mac schreibt, kommt mit der Open-Source-Version aus, wer auf iPhone und iPad weiterschreiben will, nimmt die App-Store-Version.
 
 ## Synchronisation mit Nutstore oder anderen Cloud-Diensten
 
@@ -63,7 +63,7 @@ miao update               # CLI aktualisieren
 
 Editor und Vorschau stehen nebeneinander. Drücke `⌘\`, um die geteilte Ansicht umzuschalten, oder stelle in den Einstellungen unter Editor den Default Mode auf Split. Warum kein Typora-ähnliches WYSIWYG? Reines Markdown-Schreiben ist das Kernprinzip. Ein natives Swift-WYSIWYG wäre schwerfällig und instabil. Die geteilte Ansicht ermöglicht ablenkungsfreies Schreiben bei sofortigem visuellem Feedback.
 
-<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Geteilte Ansicht (Editor & Vorschau)" />
+<img src="https://miaoyan.app/assets/shots/en-split-2400.webp" width="100%" alt="Geteilte Ansicht (Editor & Vorschau)" />
 
 ## Dokumentation
 

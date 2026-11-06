@@ -12,7 +12,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://raw.githubusercontent.com/tw93/static/main/miaoyan/miaoyan.gif" width="900px" />
+<img src="https://miaoyan.app/assets/shots/readme-en.webp" width="900" alt="Mac, iPad, iPhone의 MiaoYan" />
 
 ## 특징
 
@@ -35,7 +35,7 @@
 
 3. **GitHub Releases**: [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest)에서 최신 DMG 다운로드 (macOS 12.0+)
 
-Homebrew와 GitHub Releases는 계속 개발되는 무료 오픈소스 Mac 앱을 설치합니다. App Store 버전을 추천합니다. 한 번 구매로 iPhone, iPad, Mac에서 모두 쓸 수 있고, 모두 같은 iCloud Drive 폴더를 열며 자동으로 업데이트됩니다.
+Homebrew와 GitHub Releases는 계속 개발되는 무료 오픈소스 Mac 앱을 설치합니다. Mac에서만 쓴다면 오픈소스 버전으로 충분하고, iPhone과 iPad에서도 이어 쓰려면 App Store 버전을 고르세요.
 
 ## Nutstore 및 기타 클라우드 드라이브 동기화
 
@@ -63,7 +63,7 @@ miao update              # CLI 업데이트
 
 편집 영역과 미리보기를 나란히 배치합니다. `⌘\` 키로 분할 모드를 전환하거나 환경설정의 Editor에서 Default Mode를 Split으로 설정할 수 있습니다. 왜 Typora처럼 WYSIWYG로 만들지 않았을까요? 마크다운 원문을 보면서 쓰기를 바라기 때문입니다. Swift로 네이티브 WYSIWYG를 만들면 무겁고 안정적으로 유지하기도 어렵습니다. 분할 모드에서는 글쓰기에 집중하면서 바로 옆에서 실시간 미리보기를 볼 수 있습니다.
 
-<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="분할 편집 및 미리보기 모드" />
+<img src="https://miaoyan.app/assets/shots/en-split-2400.webp" width="100%" alt="분할 편집 및 미리보기 모드" />
 
 ## 문서
 

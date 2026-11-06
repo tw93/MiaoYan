@@ -11,7 +11,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
+<img src="https://miaoyan.app/assets/shots/readme-zh.webp" width="900" alt="妙言在 Mac、iPad 和 iPhone 上" />
 
 ## 特点
 
@@ -34,7 +34,7 @@
 
 3. **GitHub Releases**：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG（macOS 12.0+）
 
-Homebrew 与 GitHub Releases 分发的是同一个开源免费的 Mac 版本。更推荐购买 App Store 版：一次购买覆盖 iPhone、iPad 与 Mac，共享同一个 iCloud 云盘笔记目录，且支持自动更新。
+Homebrew 与 GitHub Releases 分发的是同一个开源免费的 Mac 版本，会一直更新，只在 Mac 上写的话开源版就够了，想在手机和平板上接着写，就选 App Store 版。
 
 ## 用坚果云或其他云盘同步妙言
 
@@ -62,7 +62,7 @@ miao update             # 更新 CLI
 
 编辑区和预览区并排显示，按 `⌘\` 切换分栏模式，或在设置的编辑器页把默认模式设为分栏。为什么不做 Typora 式所见即所得？我想让你一直看着 Markdown 原文写，用原生 Swift 做所见即所得很重，也难保证稳定，分栏模式能专心写字，旁边就是实时预览。
 
-<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview-zh.png" width="100%" alt="分栏编辑预览模式" />
+<img src="https://miaoyan.app/assets/shots/zh-split-2400.webp" width="100%" alt="分栏编辑预览模式" />
 
 ## 使用指南
 
