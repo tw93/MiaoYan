@@ -164,7 +164,7 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         let guidance =
             "MiaoYan does not bundle this font. "
             + "Double-click the downloaded file to install it, and MiaoYan switches to it on its own. "
-            + "Personal non-commercial use is free; commercial work needs a licence from Tsanger."
+            + "Personal non-commercial use is free; commercial work needs a license from Tsanger."
         let alert = MiaoYanAlert.make(
             message: I18n.str("Install the font first"), informativeText: I18n.str(guidance),
             buttons: [I18n.str("Download Font"), I18n.str("Cancel")])
