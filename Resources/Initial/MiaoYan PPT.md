@@ -7,7 +7,7 @@ controls: true
 progress: true
 -->
 
-# Try command + option + p
+# Try ⌥⌘P
 
 ---
 
@@ -40,7 +40,7 @@ slideNumber: c/t
 
 ## Getting Started
 
-- Method 1: Press `Command + Option + P` in any document
+- Method 1: Press `⌥⌘P` in any document
 - Method 2: Right-click document and select "MiaoYan PPT"
 - Documents with `---` separators are automatically recognized
 - Press Enter to preview slide outline

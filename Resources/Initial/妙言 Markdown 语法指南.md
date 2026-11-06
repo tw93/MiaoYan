@@ -83,7 +83,7 @@
 
 王子服的故事可参见[《聊斋志异》原文](https://zh.wikipedia.org/wiki/聊斋志异)。
 
-<img src="https://gw.alipayobjects.com/zos/k/ou/6B633I.jpg" width="500">
+<img src="https://miaoyan.app/assets/notes/liaozhai.jpg" width="500">
 
 更多蒲松龄作品请访问[古典文学网站](https://www.gushiwen.org)。
 

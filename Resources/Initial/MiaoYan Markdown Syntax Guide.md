@@ -83,7 +83,7 @@ The tea party happened on the 26<sup>th</sup> day of the month.
 
 Alice followed the [White Rabbit](https://en.wikipedia.org/wiki/White_Rabbit) down the rabbit hole.
 
-<img src="https://gw.alipayobjects.com/zos/k/5i/BE3Cxo.png" width="500" />
+<img src="https://miaoyan.app/assets/notes/white-rabbit.png" width="500" />
 
 Visit the [Alice in Wonderland Project](https://www.gutenberg.org/ebooks/11) for the full text.
 

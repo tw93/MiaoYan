@@ -1066,42 +1066,39 @@ class Storage {
         }
 
         // Detect system language
-        let isChinese = Locale.preferredLanguages.first?.hasPrefix("zh") ?? false
+        let language = Locale.preferredLanguages.first ?? ""
+        let isChinese = language.hasPrefix("zh")
+        let isTraditional = isChinese && ["Hant", "TW", "HK", "MO"].contains { language.contains($0) }
 
-        // Define folder structure
-        let folders = ["Guide", "Examples", "Notes", "Ideas"]
-
-        // File distribution mapping
-        let fileMapping: [String: [String]] = [
-            "Guide": [
-                isChinese ? "介绍妙言.md" : "Introduction to MiaoYan.md"
-            ],
-            "Examples": [
-                isChinese ? "妙言 PPT.md" : "MiaoYan PPT.md",
-                isChinese ? "妙言 Markdown 语法指南.md" : "MiaoYan Markdown Syntax Guide.md",
-            ],
-            "Notes": [
-                isChinese ? "欢迎使用.md" : "Welcome.md"
-            ],
-            "Ideas": [
-                isChinese ? "头脑风暴.md" : "Brainstorming.md"
-            ],
-        ]
+        // Folder names follow the notes' language, so a Chinese library
+        // does not open on four English folders.
+        let seed: [(folder: String, notes: [String])] =
+            isChinese
+            ? [
+                ("指南", ["介绍妙言.md"]),
+                ("示例", ["妙言 PPT.md", "妙言 Markdown 语法指南.md"]),
+                (isTraditional ? "筆記" : "笔记", ["欢迎使用.md"]),
+                (isTraditional ? "靈感" : "灵感", ["头脑风暴.md"]),
+            ]
+            : [
+                ("Guide", ["Introduction to MiaoYan.md"]),
+                ("Examples", ["MiaoYan PPT.md", "MiaoYan Markdown Syntax Guide.md"]),
+                ("Notes", ["Welcome.md"]),
+                ("Ideas", ["Brainstorming.md"]),
+            ]
 
         do {
             // Create folders and copy files
-            for folder in folders {
-                let folderURL = destination.appendingPathComponent(folder)
+            for entry in seed {
+                let folderURL = destination.appendingPathComponent(entry.folder)
                 try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true, attributes: nil)
 
-                if let files = fileMapping[folder] {
-                    for file in files {
-                        let sourcePath = "\(initialPath)/\(file)"
-                        let destPath = folderURL.appendingPathComponent(file).path
+                for file in entry.notes {
+                    let sourcePath = "\(initialPath)/\(file)"
+                    let destPath = folderURL.appendingPathComponent(file).path
 
-                        if FileManager.default.fileExists(atPath: sourcePath) {
-                            try? FileManager.default.copyItem(atPath: sourcePath, toPath: destPath)
-                        }
+                    if FileManager.default.fileExists(atPath: sourcePath) {
+                        try? FileManager.default.copyItem(atPath: sourcePath, toPath: destPath)
                     }
                 }
             }

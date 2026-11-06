@@ -1,5 +1,5 @@
 <p align="center">
-    <div align="center"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  /></div>
+    <div align="center"><img src="https://miaoyan.app/assets/notes/miaoyan.png" width="138" /></div>
     <h2 align="center">MiaoYan</h2>
     <div align="center">Lightweight Markdown note-taking app for macOS</div>
 
@@ -9,41 +9,40 @@
 
 - **Fantastic**: Local-first, privacy-focused, syntax highlighting, PPT mode, LaTeX, Mermaid diagrams
 - **Beautiful**: Minimalist design, three-column layout, dark mode, distraction-free
-- **Fast**: Swift 6 native, better performance than Electron-based apps
+- **Fast**: Native, quick to launch and to switch between notes
 - **Simple**: Lightweight, keyboard shortcuts, auto-formatting
 
 ## Getting Started
 
-1. MiaoYan supports macOS 12.0 and later
-2. On first launch, create a `MiaoYan` folder in iCloud, a desktop cloud-drive folder, or your preferred location, then set it as the default storage in Settings
-3. Click the new folder icon in the upper left to create document categories
-4. Customize the default font in Settings if needed
+1. Every note is a plain Markdown file; see or change where they are kept in Settings
+2. Press `⇧⌘N` to create a folder and sort your notes
+3. Customize the default font in Settings if needed
 
 ## Keyboard Shortcuts
 
 #### Window Operations
 
-- `command + 1` - Toggle folder sidebar
-- `command + 2` - Toggle file list
-- `command + 3` - Toggle preview mode
-- `command + 4` - Toggle presentation mode
-- `command + 5` - Toggle table of contents
-- `command + \` - Toggle split view
-- `command + option + 0` - Show the main window
-- `command + option + m` - Show/hide MiaoYan globally
+- `⌘1` - Toggle folder sidebar
+- `⌘2` - Toggle file list
+- `⌘3` - Toggle preview mode
+- `⌘4` - Toggle presentation mode
+- `⌘5` - Toggle table of contents
+- `⌘\` - Toggle split view
+- `⌥⌘0` - Show the main window
+- `⌥⌘M` - Show/hide MiaoYan globally
 
 #### Document Operations
 
-- `command + n` - New document
-- `command + r` - Rename document
-- `command + d` - Duplicate document
-- `command + o` - Open a file or folder in Single Mode
-- `command + delete` - Move document to Trash
-- `command + shift + n` - New folder
-- `command + shift + l` - Auto-format
-- `command + option + r` - Show in Finder
-- `command + option + i` - Show document properties
-- `command + option + p` - Launch PPT preview
+- `⌘N` - New document
+- `⌘R` - Rename document
+- `⌘D` - Duplicate document
+- `⌘O` - Open a file or folder in Single Mode
+- `⌘⌫` - Move document to Trash
+- `⇧⌘N` - New folder
+- `⇧⌘L` - Auto-format
+- `⌥⌘R` - Show in Finder
+- `⌥⌘I` - Show document properties
+- `⌥⌘P` - Launch PPT preview
 
 Explore more shortcuts in the app.
 
@@ -51,9 +50,9 @@ Explore more shortcuts in the app.
 
 ### Preview Table of Contents
 
-- Press `command + 5`, or switch to preview mode (`command + 3`) and hover over the slim handle near the top-right edge, to reveal the table of contents panel.
+- Press `⌘5`, or switch to preview mode (`⌘3`) and hover over the slim handle near the top-right edge, to reveal the table of contents panel.
 - Notes with at least two headings generate the outline automatically. Click any heading to jump to that section in the preview.
-- Press `esc` or click outside the panel to close it; the handle fades out again when you stop using it.
+- Press `Esc` or click outside the panel to close it; the handle fades out again when you stop using it.
 
 ### Tab Quick Input Templates
 
@@ -63,7 +62,7 @@ Explore more shortcuts in the app.
 
 ## Markdown Workflow Tips
 
-- Use `command + shift + l` after pasting plain text to clean up headings, lists, and spacing automatically.
+- Use `⇧⌘L` after pasting plain text to clean up headings, lists, and spacing automatically.
 - Press `return` inside a list or todo item to continue it; press `return` twice to break out and keep writing normally.
 - Toggle todos from the keyboard via `Format > Todo` or click the checkbox directly in preview mode.
 - For ready-made Markdown patterns, open **MiaoYan Markdown Syntax Guide** from the Examples folder in the sidebar.
@@ -77,9 +76,9 @@ Explore more shortcuts in the app.
 
 ## MiaoYan PPT
 
-1. New users get templates by default. Existing users can create a "MiaoYan PPT" note manually to try it out
-2. Press `command + option + p` to launch PPT preview, or right-click a document and select "MiaoYan PPT"
-3. PPT mode works with documents containing `---` separators. Press Enter to preview outline, ESC to exit
+1. "MiaoYan PPT" in the Examples folder is a ready-made deck, open it to try
+2. Press `⌥⌘P` to launch PPT preview, or right-click a document and select "MiaoYan PPT"
+3. PPT mode works with documents containing `---` separators. Press Return to preview the outline, `Esc` to exit
 4. Use HTML for custom effects. See [Reveal](https://revealjs.com/markdown/) docs for advanced usage
 
 ## Why MiaoYan
