@@ -244,8 +244,11 @@ final class PrefsWindowControllerTests: XCTestCase {
     @MainActor
     func testStoryboardColumnsAreAdoptedOnlyOnce() throws {
         guard #available(macOS 14, *) else { throw XCTSkip("The shell needs macOS 14") }
-        let suite = "miaoyan-shell-columns-\(UUID().uuidString)"
+        // A fixed name: a removed domain still leaves its empty plist in
+        // ~/Library/Preferences, so a UUID name left one file per run.
+        let suite = "miaoyan-shell-columns-tests"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defaults.removePersistentDomain(forName: suite)
         defer { defaults.removePersistentDomain(forName: suite) }
         defaults.set(["0.000000, 0.000000, 0.000000, 680.000000, NO, NO", "1.000000, 0.000000, 1279.000000, 680.000000, NO, NO"], forKey: "NSSplitView Subview Frames SidebarSplitView")
         defaults.set(["0.000000, 0.000000, 300.000000, 680.000000, NO, NO", "301.000000, 0.000000, 978.000000, 680.000000, NO, NO"], forKey: "NSSplitView Subview Frames EditorSplitView")

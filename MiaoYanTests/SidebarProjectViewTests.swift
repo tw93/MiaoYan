@@ -235,8 +235,11 @@ final class SidebarProjectViewTests: XCTestCase {
     /// brand row took row 0 that number reopened the folder above.
     @MainActor
     func testAV450SidebarRowMovesDownOnceForTheBrandRow() throws {
-        let suite = "miaoyan-sidebar-row-\(UUID().uuidString)"
+        // Fixed names: a removed domain still leaves its empty plist in
+        // ~/Library/Preferences, so UUID names left a file per run.
+        let suite = "miaoyan-sidebar-row-tests"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defaults.removePersistentDomain(forName: suite)
         defer { defaults.removePersistentDomain(forName: suite) }
         defaults.set(3, forKey: "lastProject")
 
@@ -245,8 +248,9 @@ final class SidebarProjectViewTests: XCTestCase {
         UserDefaultsManagement.migrateLegacySidebarRow(defaults)
         XCTAssertEqual(defaults.integer(forKey: "lastProject"), 4, "the shift runs once")
 
-        let pathSuite = "miaoyan-sidebar-path-\(UUID().uuidString)"
+        let pathSuite = "miaoyan-sidebar-path-tests"
         let withPath = try XCTUnwrap(UserDefaults(suiteName: pathSuite))
+        withPath.removePersistentDomain(forName: pathSuite)
         defer { withPath.removePersistentDomain(forName: pathSuite) }
         withPath.set(3, forKey: "lastProject")
         withPath.set("/tmp/Work", forKey: "lastProjectPath")
