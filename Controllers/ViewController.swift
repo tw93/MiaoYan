@@ -331,9 +331,13 @@ class ViewController:
             // it draws underneath them.
             emptyEditAreaView.wantsLayer = true
             emptyEditAreaView.layer?.zPosition = 10
+            // The sidebar's bird in the hint's grey: the brand green stays
+            // with the lockup, and the colour cardinal with the alerts.
             emptyEditAreaImage.image = NSImage(named: "emptyStateBird")
+            emptyEditAreaImage.imageScaling = .scaleProportionallyUpOrDown
+            emptyEditAreaImage.contentTintColor = Theme.Ink.tertiary
             emptyEditAreaImage.alphaValue = 1
-            emptyEditAreaImage.frame = NSRect(x: 76, y: 112, width: 88, height: 88)
+            emptyEditAreaImage.frame = NSRect(x: 96, y: 112, width: 48, height: 48)
             emptyEditTitle.stringValue = search.stringValue.isEmpty ? I18n.str("Press ⌘N to create a note") : I18n.str("No results")
             emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
             emptyEditTitle.textColor = Theme.Ink.tertiary
