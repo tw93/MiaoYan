@@ -56,6 +56,23 @@ gantt
 
 `dateFormat` 说明任务行里日期的写法，Mermaid 文档给出的默认值是 `YYYY-MM-DD`，每个 `section` 把任务分组，任务行是标题、冒号，再接 id、起始日期或 `after <id>`、时长这样的元数据，示例里的日期只是示意。
 
+## 时间线
+
+````markdown
+```mermaid
+timeline
+    title Writing a book
+    section Draft
+        January : Outline
+        February : First chapters : Research trip
+    section Revise
+        March : Second draft
+        April : Copy edit
+```
+````
+
+每行是一个时间段、一个冒号和一个事件，同一时间段有多个事件就继续加冒号，或者换行后以冒号开头接着写，时间段只是普通文字，不一定是日期，写 `Q1`、`第三周`、`草稿` 和写年份一样可以。`section` 把几个时间段归成一组，同组共用一种颜色，`title` 是图上方的标题。时间段按书写顺序从左往右排，写成 `timeline TD` 就改成从上往下排，在手机上或条目很多时更好读，这个写法是 Mermaid 11.14.0 才加的，妙言 V4.7.0 自带的就是这个版本，更旧的 Mermaid 不认。只在乎事情的先后时用时间线，要日期和时长就用上面的甘特图。
+
 ## PlantUML 和 Markmap 作为补充
 
 Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时选它。
@@ -107,7 +124,7 @@ Markmap 不太一样，它把普通的 Markdown 大纲变成可交互的思维�
 
 ## 限制
 
-Mermaid 的效果取决于应用打包的版本，而版本号没有记录在应用的清单里，所以较新的图类型可能缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次，PDF 怎么分页见[在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。做演示文稿时三种图表在演示模式里都会初始化，见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)。
+Mermaid 的效果取决于应用打包的版本，妙言 V4.7.0 带的是 Mermaid 11.14.0，比它新的图类型会缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次，PDF 怎么分页见[在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。做演示文稿时三种图表在演示模式里都会初始化，见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)。
 
 相关阅读有讲围栏语法的 [Markdown 语法速查](/zh/blog/markdown-cheat-sheet/) 和讲公式的 [Markdown 里写 LaTeX 公式](/zh/blog/latex-math-in-markdown/)。妙言在 [App Store](https://apps.apple.com/app/id6759252269) 上，源码在 [github.com/tw93/MiaoYan](https://github.com/tw93/MiaoYan)。
 

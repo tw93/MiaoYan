@@ -28,11 +28,11 @@
       <description>Write inline and block math in Markdown, use common LaTeX constructs, avoid dollar and underscore pitfalls, and see how MiaoYan renders KaTeX.</description>
     </item>
     <item>
-      <title>Mermaid diagrams in Markdown: flowchart, sequence, Gantt</title>
+      <title>Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples</title>
       <link>https://miaoyan.app/blog/mermaid-diagrams-in-markdown/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-diagrams-in-markdown/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline.</description>
+      <description>Copy-ready Mermaid examples for flowcharts, sequence diagrams, Gantt charts and timelines in Markdown, plus PlantUML and Markmap, and which ones MiaoYan renders offline.</description>
     </item>
     <item>
       <title>Markdown to slides: --- separators and MiaoYan PPT mode</title>
@@ -196,11 +196,11 @@
       <description>Write a Markdown table, align columns, escape pipes, break lines in cells, handle wide tables in MiaoYan, and fall back to HTML for merged cells.</description>
     </item>
     <item>
-      <title>Markdown task lists and checkboxes: syntax and pitfalls</title>
+      <title>Markdown checkboxes: task lists with - [ ] and - [x]</title>
       <link>https://miaoyan.app/blog/markdown-task-lists/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-task-lists/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep.</description>
+      <description>Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep.</description>
     </item>
     <item>
       <title>Markmap mind maps from a Markdown outline</title>
@@ -238,11 +238,11 @@
       <description>Write comments in Markdown with &lt;!-- --&gt; or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export.</description>
     </item>
     <item>
-      <title>Markdown bold, italic and strikethrough: syntax and pitfalls</title>
+      <title>Bold, italic and strikethrough in Markdown, and why they break</title>
       <link>https://miaoyan.app/blog/markdown-bold-italic-strikethrough/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-bold-italic-strikethrough/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan&#x27;s Format menu shortcuts.</description>
+      <description>Write **bold**, *italic* and ~~strikethrough~~ in Markdown, see why emphasis fails next to punctuation or Chinese text, and where GitHub&#x27;s strikethrough differs from CommonMark.</description>
     </item>
     <item>
       <title>Markdown underline, color and center text with HTML</title>

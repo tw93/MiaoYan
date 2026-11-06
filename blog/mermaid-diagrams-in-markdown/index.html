@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ed">
 <script>document.documentElement.classList.add('js')</script>
-<title>Mermaid diagrams in Markdown: flowchart, sequence, Gantt · MiaoYan Blog</title>
-<meta name="description" content="Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline.">
+<title>Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples · MiaoYan Blog</title>
+<meta name="description" content="Copy-ready Mermaid examples for flowcharts, sequence diagrams, Gantt charts and timelines in Markdown, plus PlantUML and Markmap, and which ones MiaoYan renders offline.">
 <link rel="canonical" href="https://miaoyan.app/blog/mermaid-diagrams-in-markdown/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/mermaid-diagrams-in-markdown/">
 <link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/">
@@ -14,11 +14,11 @@
 <link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/blog/mermaid-diagrams-in-markdown/">
-<meta property="og:title" content="Mermaid diagrams in Markdown: flowchart, sequence, Gantt · MiaoYan Blog">
-<meta property="og:description" content="Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline.">
+<meta property="og:title" content="Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples · MiaoYan Blog">
+<meta property="og:description" content="Copy-ready Mermaid examples for flowcharts, sequence diagrams, Gantt charts and timelines in Markdown, plus PlantUML and Markmap, and which ones MiaoYan renders offline.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/mermaid-diagrams-in-markdown.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -672,7 +672,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid diagrams in Markdown: flowchart, sequence, Gantt", "item": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/#article", "headline": "Mermaid diagrams in Markdown: flowchart, sequence, Gantt", "description": "Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline.", "url": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/mermaid-diagrams-in-markdown.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I draw a diagram without a network connection?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, with Mermaid or Markmap in MiaoYan. PlantUML needs the public server."}}, {"@type": "Question", "name": "Which should I learn first?", "acceptedAnswer": {"@type": "Answer", "text": "Mermaid. It has the broadest coverage with the shortest syntax, and many Markdown tools render it, including VS Code's built-in preview."}}, {"@type": "Question", "name": "Do other editors render the same fences?", "acceptedAnswer": {"@type": "Answer", "text": "Often. Typora lists Mermaid, flowchart.js and sequence diagrams, and VS Code's built-in preview renders mermaid blocks. PlantUML and Markmap support varies, so check before moving a note."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples", "item": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/#article", "headline": "Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples", "description": "Copy-ready Mermaid examples for flowcharts, sequence diagrams, Gantt charts and timelines in Markdown, plus PlantUML and Markmap, and which ones MiaoYan renders offline.", "url": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/blog/mermaid-diagrams-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/mermaid-diagrams-in-markdown.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I draw a diagram without a network connection?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, with Mermaid or Markmap in MiaoYan. PlantUML needs the public server."}}, {"@type": "Question", "name": "Which should I learn first?", "acceptedAnswer": {"@type": "Answer", "text": "Mermaid. It has the broadest coverage with the shortest syntax, and many Markdown tools render it, including VS Code's built-in preview."}}, {"@type": "Question", "name": "Do other editors render the same fences?", "acceptedAnswer": {"@type": "Answer", "text": "Often. Typora lists Mermaid, flowchart.js and sequence diagrams, and VS Code's built-in preview renders mermaid blocks. PlantUML and Markmap support varies, so check before moving a note."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -692,7 +692,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <main class="blog-post">
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
-    <h1 class="blog-title">Mermaid diagrams in Markdown: flowchart, sequence, Gantt</h1>
+    <h1 class="blog-title">Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples</h1>
     <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/mermaid-diagrams-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
@@ -737,6 +737,19 @@ gantt
 ```
 </code></pre>
 <p><code>dateFormat</code> specifies how dates in task lines are formatted, and the Mermaid documentation gives <code>YYYY-MM-DD</code> as the default. Each <code>section</code> groups tasks. A task line is a title, a colon, then metadata such as an id, a start date or <code>after &lt;id&gt;</code>, and a duration. Dates in the example are illustrative.</p>
+<h2 id="timelines">Timelines</h2>
+<pre><code class="language-markdown">```mermaid
+timeline
+    title Writing a book
+    section Draft
+        January : Outline
+        February : First chapters : Research trip
+    section Revise
+        March : Second draft
+        April : Copy edit
+```
+</code></pre>
+<p>Each line is a time period, a colon and an event. More events for the same period take more colons, or go on the next lines starting with a colon. Periods are plain text rather than dates, so <code>Q1</code>, <code>Week 3</code> or <code>Draft</code> work as well as years. <code>section</code> groups periods so they share one colour, and <code>title</code> sits above the chart. Periods run left to right in the order you write them; <code>timeline TD</code> stacks them top to bottom instead, which reads better on a phone or with a long list. <code>TD</code> arrived in Mermaid 11.14.0, the version MiaoYan V4.7.0 bundles, and older Mermaid versions do not accept it. Reach for a timeline when only the order of events matters, and for the Gantt chart above when dates and durations do.</p>
 <h2 id="plantuml-and-markmap-as-alternatives">PlantUML and Markmap as alternatives</h2>
 <p>Mermaid covers flowcharts, sequence diagrams, Gantt charts, class diagrams and more, with concise syntax. PlantUML has a longer history with UML, and its syntax is more verbose. Choose it when you already have PlantUML sources or need a UML construct Mermaid draws poorly.</p>
 <pre><code class="language-markdown">```plantuml
@@ -773,7 +786,7 @@ A -&gt; B: message
 </ul>
 <p>A quick test is to insert <code>/mermaid</code> plus <code>Tab</code>, switch to preview with <code>⌘3</code> or split mode with <code>⌘\</code>, and confirm that three connected boxes appear. Then disconnect Wi-Fi, reload, and confirm Mermaid still renders while PlantUML does not.</p>
 <h2 id="limits">Limits</h2>
-<p>Mermaid's rendering depends on the version bundled in the app, and the version string is not recorded in the app's manifest, so newer diagram types may be missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter; <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a> covers page breaks in a PDF. For deck use, all three diagram types are initialized in presentation mode, covered in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
+<p>Mermaid's rendering depends on the version bundled in the app, Mermaid 11.14.0 as of MiaoYan V4.7.0, so a diagram type added after it is missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter; <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a> covers page breaks in a PDF. For deck use, all three diagram types are initialized in presentation mode, covered in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
 <p>Related reading: the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> for the fence syntax and <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a> for formulas. MiaoYan is on the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a>, and its source is at <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>.</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="can-i-draw-a-diagram-without-a-network-connection">Can I draw a diagram without a network connection?</h3>

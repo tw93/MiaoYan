@@ -45,15 +45,15 @@
     {
       "slug": "mermaid-diagrams-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
-        "title": "Mermaid diagrams in Markdown: flowchart, sequence, Gantt",
-        "description": "Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline."
+        "title": "Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples",
+        "description": "Copy-ready Mermaid examples for flowcharts, sequence diagrams, Gantt charts and timelines in Markdown, plus PlantUML and Markmap, and which ones MiaoYan renders offline."
       },
       "zh": {
-        "title": "Markdown 里画 Mermaid 图",
-        "description": "用围栏代码块画流程图、时序图和甘特图，对比 PlantUML 与 Markmap，并说明妙言哪些图离线可用。"
+        "title": "Markdown 里画 Mermaid 图：流程图、时序图、甘特图和时间线",
+        "description": "流程图、时序图、甘特图和时间线的 Mermaid 写法示例，对比 PlantUML 与 Markmap，并说明妙言哪些图离线可用。"
       }
     },
     {
@@ -381,11 +381,11 @@
     {
       "slug": "markdown-task-lists",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
-        "title": "Markdown task lists and checkboxes: syntax and pitfalls",
-        "description": "Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep."
+        "title": "Markdown checkboxes: task lists with - [ ] and - [x]",
+        "description": "Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep."
       },
       "zh": {
         "title": "Markdown 待办列表与复选框写法",
@@ -465,11 +465,11 @@
     {
       "slug": "markdown-bold-italic-strikethrough",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
-        "title": "Markdown bold, italic and strikethrough: syntax and pitfalls",
-        "description": "Write bold, italic and strikethrough, and fix emphasis that fails next to punctuation or Chinese text, with MiaoYan's Format menu shortcuts."
+        "title": "Bold, italic and strikethrough in Markdown, and why they break",
+        "description": "Write **bold**, *italic* and ~~strikethrough~~ in Markdown, see why emphasis fails next to punctuation or Chinese text, and where GitHub's strikethrough differs from CommonMark."
       },
       "zh": {
         "title": "Markdown 加粗、斜体与删除线的写法和坑",
