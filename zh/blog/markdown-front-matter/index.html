@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f5f4ed">
 <script>document.documentElement.classList.add('js')</script>
 <title>Markdown front matter 写法与渲染 · 妙言博客</title>
-<meta name="description" content="YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。">
+<meta name="description" content="YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言的处理。">
 <link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-front-matter/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-front-matter/">
 <link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-front-matter/">
@@ -15,10 +15,10 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-front-matter/">
 <meta property="og:title" content="Markdown front matter 写法与渲染 · 妙言博客">
-<meta property="og:description" content="YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。">
+<meta property="og:description" content="YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言的处理。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-front-matter.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown front matter 写法与渲染", "item": "https://miaoyan.app/zh/blog/markdown-front-matter/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-front-matter/#article", "headline": "Markdown front matter 写法与渲染", "description": "YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。", "url": "https://miaoyan.app/zh/blog/markdown-front-matter/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-front-matter/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-front-matter.webp", "timeRequired": "PT5M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Front matter 算 Markdown 的一部分吗？", "acceptedAnswer": {"@type": "Answer", "text": "不算。CommonMark 没有定义它，这是静态站点生成器和部分编辑器的约定，它们会在渲染正文之前把它剥掉。"}}, {"@type": "Question", "name": "能在笔记开头用 --- 当分隔线吗？", "acceptedAnswer": {"@type": "Answer", "text": "用 ***，或者先写一个标题。在妙言里，以 --- 开头且后面还有另一行 --- 的笔记会被当成 front matter。"}}, {"@type": "Question", "name": "GitHub 的 README 会显示 front matter 吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 2013 年的公告说，文档顶部的 YAML 元数据会显示成表格，它的写作与格式文档里没有提到 front matter。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown front matter 写法与渲染", "item": "https://miaoyan.app/zh/blog/markdown-front-matter/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-front-matter/#article", "headline": "Markdown front matter 写法与渲染", "description": "YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言的处理。", "url": "https://miaoyan.app/zh/blog/markdown-front-matter/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-front-matter/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-front-matter.webp", "timeRequired": "PT5M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Front matter 算 Markdown 的一部分吗？", "acceptedAnswer": {"@type": "Answer", "text": "不算。CommonMark 没有定义它，这是静态站点生成器和部分编辑器的约定，它们会在渲染正文之前把它剥掉。"}}, {"@type": "Question", "name": "能在笔记开头用 --- 当分隔线吗？", "acceptedAnswer": {"@type": "Answer", "text": "用 ***，或者先写一个标题。在妙言里，以 --- 开头、后面直到另一行 --- 都是 key: value 行的笔记会被当成 front matter。"}}, {"@type": "Question", "name": "GitHub 的 README 会显示 front matter 吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 2013 年的公告说，文档顶部的 YAML 元数据会显示成表格，它的写作与格式文档里没有提到 front matter。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -697,7 +697,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 5 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-front-matter.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Front matter 是 Markdown 文件最顶部的一段元数据，用两行 <code>---</code> 围起来，内容写成 YAML，这样静态站点生成器在渲染正文之前就能读到标题、日期和标签。它必须放在第一行，上面不能有任何东西，结尾要有独占一行的 <code>---</code>，值里带冒号时要加引号。妙言 V4.5.0 会在预览和导出里隐藏这样的一段，前提是文件以 <code>---</code> 开头并用另一行 <code>---</code> 收尾，用 <code>+++</code> 写的 TOML front matter 不会被识别。</p>
+<p>Front matter 是 Markdown 文件最顶部的一段元数据，用两行 <code>---</code> 围起来，内容写成 YAML，这样静态站点生成器在渲染正文之前就能读到标题、日期和标签。它必须放在第一行，上面不能有任何东西，结尾要有独占一行的 <code>---</code>，值里带冒号时要加引号。妙言会在预览和导出里隐藏这样的一段，前提是文件以 <code>---</code> 开头、用另一行 <code>---</code> 收尾，而且中间看起来像 YAML，用 <code>+++</code> 写的 TOML front matter 不会被识别。</p>
 <h2 id="写法">写法</h2>
 <pre><code class="language-markdown">---
 title: Markdown front matter
@@ -746,35 +746,35 @@ date = 2026-10-19
 tags = [&quot;markdown&quot;, &quot;notes&quot;]
 +++
 </code></pre>
-<p>Hugo 按每个文件的分隔符选解析器，只认 <code>---</code> 写法的工具会把 <code>+++</code> 块当普通文字显示，妙言 V4.5.0 就是这样。</p>
+<p>Hugo 按每个文件的分隔符选解析器，只认 <code>---</code> 写法的工具会把 <code>+++</code> 块当普通文字显示，妙言就是这样。</p>
 <h2 id="github-怎么显示">GitHub 怎么显示</h2>
 <p>GitHub 在 2013 年的博客里宣布（文章 2019 年更新过），会把文档顶部的 YAML 元数据渲染成横向的表格，读起来更方便，针对的正是 GitHub Pages 上 Jekyll 站点依赖的那段元数据。这对所有 GitHub 支持的文档格式都适用，不只是 Markdown。GitHub 的写作与格式文档里没有讲 front matter，能参考的就是这篇公告。</p>
-<h2 id="妙言-v450-怎么处理">妙言 V4.5.0 怎么处理</h2>
-<p>规则写在 <code>Business/Note.swift</code> 的 <code>Note.cleanMetaData</code> 里。只有文本以 <code>---</code> 加换行开头，或者 <code>---</code> 加 Windows 换行开头，才会当作有 front matter。之后代码找下一行以 <code>---</code> 开头的位置，这一行必须独占一行，才会把这一行及之前的内容全部去掉。结果用于预览、HTML 导出和 PDF 导出（二者建立在预览之上），也用于字数统计。编辑器里仍然显示原文，所以元数据照常编辑。</p>
+<h2 id="妙言怎么处理">妙言怎么处理</h2>
+<p>规则写在 <code>MiaoYanCore</code> 的 <code>Frontmatter.body</code> 里，<code>Business/Note.swift</code> 的 <code>Note.cleanMetaData</code> 调用它。只有文本以 <code>---</code> 加换行开头，或者 <code>---</code> 加 Windows 换行开头，才会当作有 front matter。之后代码找下一行以 <code>---</code> 开头的位置，这一行必须独占一行，而且中间的块看起来像 YAML，才会把这一行及之前的内容全部去掉。结果用于预览、HTML 导出和 PDF 导出（二者建立在预览之上），也用于字数统计。编辑器里仍然显示原文，所以元数据照常编辑。</p>
 <p>这个函数在 <code>NoteFrontmatterTests</code> 里有测试，固定了几种边界情况：</p>
 <ul>
-<li>开头的块不管有没有 <code>title:</code> 键都会隐藏。</li>
+<li>开头由 <code>key: value</code> 行组成的块，不管有没有 <code>title:</code> 键都会隐藏。</li>
 <li>没有结尾分隔线的文件原样保留，全部显示。</li>
 <li>结尾行写成 <code>----</code> 不算分隔线，整篇笔记连元数据一起显示。</li>
 <li>只有 front matter 的文件，预览是空的。</li>
 <li>笔记中间的三条短横线仍然是普通水平线。</li>
 </ul>
-<p>妙言不会读这些键，那一段也不会按 YAML 解析，所以一篇笔记只要顶部恰好有两行 <code>---</code> 夹着一些文字，预览里这些文字也会消失。同样没有 YAML 校验，能让 Jekyll 报错的笔误在妙言里看不出来。</p>
+<p>妙言不会读这些键，只检查那一段看起来像不像 YAML，所以一篇笔记顶部恰好有两行 <code>---</code> 夹着一些文字，预览里这些文字照样显示。同样没有 YAML 校验，能让 Jekyll 报错的笔误在妙言里看不出来。</p>
 <h2 id="幻灯片模式和-分隔符">幻灯片模式和 <code>---</code> 分隔符</h2>
-<p>幻灯片模式里 <code>---</code> 同时是分页符。V4.5.0 在文本交给幻灯片渲染之前就去掉了 front matter，所以顶部的元数据块不会变成一页。要留意以 <code>---</code> 当分隔符开头的幻灯片，如果后面还有一行 <code>---</code>，两行之间的内容会被当成 front matter 而消失。幻灯片从标题开始写，元数据放进一个干净的块里。分隔符本身的用法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p>幻灯片模式里 <code>---</code> 同时是分页符。妙言在文本交给幻灯片渲染之前就去掉了 front matter，所以顶部的元数据块不会变成一页。以 <code>---</code> 当分隔符开头的幻灯片会保留第一页，因为两行之间的文字不是 YAML。元数据放进一个只有 <code>key: value</code> 行的干净块里。分隔符本身的用法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
 <h2 id="没有生效时">没有生效时</h2>
 <ul>
 <li><strong>预览里显示出元数据。</strong> 第一个 <code>---</code> 前面有空行或空格，结尾行是 <code>----</code> 或 <code>...</code>，或者这个块用的是 <code>+++</code>。</li>
 <li><strong>正文上方出现标题。</strong> 块没有被识别为 front matter 时，后面紧跟 <code>---</code> 的一行文字在 CommonMark 里是 setext 标题，某个键就会变成一个大标题。</li>
 <li><strong>生成器忽略了文件。</strong> 检查文件开头有没有字节顺序标记，值里有没有没加引号的冒号。</li>
-<li><strong>文字不见了。</strong> 笔记顶部的两行 <code>---</code> 在妙言里会隐藏它们之间的所有内容，即使那是想写的正文。</li>
+<li><strong>文字不见了。</strong> 笔记顶部的两行 <code>---</code> 之间如果每一行都是 <code>key: value</code> 这样的 YAML 写法，妙言会把它们隐藏，即使那是想写的正文。</li>
 </ul>
 <p>笔记还要发布到别处的话，可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>，了解各家渲染器在 CommonMark 之外加了什么。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="front-matter-算-markdown-的一部分吗">Front matter 算 Markdown 的一部分吗？</h3>
 <p>不算。CommonMark 没有定义它，这是静态站点生成器和部分编辑器的约定，它们会在渲染正文之前把它剥掉。</p>
 <h3 id="能在笔记开头用-当分隔线吗">能在笔记开头用 <code>---</code> 当分隔线吗？</h3>
-<p>用 <code>***</code>，或者先写一个标题。在妙言里，以 <code>---</code> 开头且后面还有另一行 <code>---</code> 的笔记会被当成 front matter。</p>
+<p>用 <code>***</code>，或者先写一个标题。在妙言里，以 <code>---</code> 开头、后面直到另一行 <code>---</code> 都是 <code>key: value</code> 行的笔记会被当成 front matter。</p>
 <h3 id="github-的-readme-会显示-front-matter-吗">GitHub 的 README 会显示 front matter 吗？</h3>
 <p>GitHub 2013 年的公告说，文档顶部的 YAML 元数据会显示成表格，它的写作与格式文档里没有提到 front matter。</p>
     </div>

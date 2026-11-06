@@ -28,19 +28,19 @@ GitHub documents two behaviors. In issues, pull requests and discussions, a sing
 
 Other editors choose their own side. Some preview panes follow the strict rule, some break at every newline to feel closer to a chat box, and some expose a switch. If you move notes between tools, the text file is identical and only the renderer's flag changes. That is also why a spec-conforming parser and a note app can disagree about the same file without either being buggy.
 
-## MiaoYan's Line Break setting
+## MiaoYan's Line Breaks setting
 
-MiaoYan exposes the switch. Open Preferences, choose the Editor tab, and find the row labeled `Line Break:` (in Chinese, 「偏好设置」 then 「编辑器」 and the row 「换行方式」). It is a pop-up with two values, `MiaoYan` and `Github`. In the Chinese interface the first reads 「妙言」 and the second stays `Github`. The default is `MiaoYan`.
+MiaoYan exposes the switch. Open Preferences, choose the Editor tab, and find the row labeled `Line Breaks` (in Chinese, 「偏好设置」 then 「编辑器」 and the row 「换行方式」). It is a pop-up with two values, `Every Newline` and `GitHub Style`, and a line under the row says what the chosen one does. In the Chinese interface they read 「每次换行」 and 「GitHub 风格」. The default is `Every Newline`.
 
-The values map to two cmark-gfm render flags in the v4.5.0 source. `MiaoYan` renders every newline as a `<br>`, so lines typed one under the other stay on separate lines and a blank line still starts a new paragraph. `Github` renders a soft break as a space, which is the `.md` file rule from the previous section. In both modes a trailing backslash, two trailing spaces and a raw `<br>` still produce a break, because those are hard breaks or inline HTML rather than soft breaks.
+The values map to two cmark-gfm render flags in the source. `Every Newline` renders every newline as a `<br>`, so lines typed one under the other stay on separate lines and a blank line still starts a new paragraph. `GitHub Style` renders a soft break as a space, which is the `.md` file rule from the previous section. In both modes a trailing backslash, two trailing spaces and a raw `<br>` still produce a break, because those are hard breaks or inline HTML rather than soft breaks.
 
-The label is easy to misread. `Github` does not mean "behave like GitHub comments". Comments break at every newline, which is closer to MiaoYan's default. `Github` means "behave like a GitHub `.md` file", the strict rule.
+The label is easy to misread. `GitHub Style` does not mean "behave like GitHub comments". Comments break at every newline, which is closer to MiaoYan's default. `GitHub Style` means "behave like a GitHub `.md` file", the strict rule.
 
 The setting is read whenever the preview or an HTML export is rendered, and PDF export prints the rendered preview, so all three follow it. Nothing is written into your note; the file keeps exactly the text you typed. Only how that text is turned into HTML changes. The editing pane is unaffected, since it shows raw text, which is also why a soft break is invisible there.
 
 ## Which mode should you use
 
-Match the place the text will end up. If notes stay inside MiaoYan, the default is the more forgiving choice: you type a line, press Return and see a new line, with no invisible characters to manage. If the note becomes a README, a docs page, a static-site post or anything rendered by CommonMark, switch to `Github` while you write so the preview shows what the reader will get, and use a blank line between paragraphs or a backslash where you want a break inside one.
+Match the place the text will end up. If notes stay inside MiaoYan, the default is the more forgiving choice: you type a line, press Return and see a new line, with no invisible characters to manage. If the note becomes a README, a docs page, a static-site post or anything rendered by CommonMark, switch to `GitHub Style` while you write so the preview shows what the reader will get, and use a blank line between paragraphs or a backslash where you want a break inside one.
 
 A note that reads well in the default mode but has no blank lines between paragraphs will run together everywhere else. The quick fix is a blank line, which behaves the same in every renderer. When you edit a note someone else wrote, ask which mode they assumed; the file itself does not say.
 
@@ -60,7 +60,7 @@ two
 three
 ```
 
-If the preview shows three lines, the renderer breaks at every newline. If it shows `one two three`, it follows the strict rule. In MiaoYan, switch `Line Break:` between the two values and compare the preview. To test a break marker, add a backslash after `one` and see whether `one` and `two` split in strict mode.
+If the preview shows three lines, the renderer breaks at every newline. If it shows `one two three`, it follows the strict rule. In MiaoYan, switch `Line Breaks` between the two values and compare the preview. To test a break marker, add a backslash after `one` and see whether `one` and `two` split in strict mode.
 
 If a shared file looks wrong, check for these causes in order: the viewer's newline rule, trailing spaces removed by a formatter or a save hook, and a backslash typed with a space after it, which is a literal backslash and not a break. For other syntax differences between GFM and CommonMark, the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) covers the extensions MiaoYan renders, and [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) shows what the export includes.
 
@@ -74,7 +74,7 @@ Your renderer treats a single newline as a soft break, which becomes a space. En
 
 The backslash. Both are valid CommonMark hard breaks, but trailing spaces are invisible and often stripped when a file is saved or formatted.
 
-### Does MiaoYan's Line Break setting change my file?
+### Does MiaoYan's Line Breaks setting change my file?
 
 No. It only changes how the preview, HTML export and PDF export are rendered. The note keeps the text you typed.
 

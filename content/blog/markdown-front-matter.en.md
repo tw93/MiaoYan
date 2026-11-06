@@ -1,4 +1,4 @@
-Front matter is a block of metadata at the very top of a Markdown file, fenced by two `---` lines and written in YAML, so a static site generator can read the title, date and tags before it renders the body. Put it on the first line with nothing above it, close it with a `---` line of its own, and quote values that contain a colon. MiaoYan V4.5.0 hides a block like this in the preview and in exports, but only when the file starts with `---` and ends the block with another `---`; TOML front matter written with `+++` is not recognized.
+Front matter is a block of metadata at the very top of a Markdown file, fenced by two `---` lines and written in YAML, so a static site generator can read the title, date and tags before it renders the body. Put it on the first line with nothing above it, close it with a `---` line of its own, and quote values that contain a colon. MiaoYan hides a block like this in the preview and in exports, but only when the file starts with `---`, the block ends with another `---` and the lines between look like YAML; TOML front matter written with `+++` is not recognized.
 
 ## The syntax
 
@@ -39,36 +39,36 @@ tags = ["markdown", "notes"]
 +++
 ```
 
-Hugo reads each file's delimiters to pick the parser. A tool that only knows the `---` form shows a `+++` block as ordinary text, and MiaoYan V4.5.0 is one of them.
+Hugo reads each file's delimiters to pick the parser. A tool that only knows the `---` form shows a `+++` block as ordinary text, and MiaoYan is one of them.
 
 ## How GitHub shows it
 
 GitHub announced on its blog in 2013 (the post was updated in 2019) that it renders the YAML metadata at the top of a document as a horizontal table, for easier reading, aimed at the metadata that Jekyll sites on GitHub Pages depend on. The post says this applies to every prose document GitHub supports, not only Markdown. GitHub's writing and formatting docs do not cover front matter, so that announcement is the reference.
 
-## How MiaoYan V4.5.0 treats it
+## How MiaoYan treats it
 
-The rule lives in `Note.cleanMetaData` in `Business/Note.swift`. The note is treated as having front matter only if its text begins with `---` followed by a newline, or `---` and a Windows line ending. The code then looks for the next line that starts with `---`, and if that line stands alone, everything up to and including it is dropped. The result is used for the preview, for HTML export and PDF export, which are built on the preview, and for the word count. The editor still shows the raw text, so you keep editing the metadata normally.
+The rule lives in `Frontmatter.body` in `MiaoYanCore`, which `Note.cleanMetaData` in `Business/Note.swift` calls. The note is treated as having front matter only if its text begins with `---` followed by a newline, or `---` and a Windows line ending. The code then looks for the next line that starts with `---`, and if that line stands alone and the block between looks like YAML, everything up to and including it is dropped. The result is used for the preview, for HTML export and PDF export, which are built on the preview, and for the word count. The editor still shows the raw text, so you keep editing the metadata normally.
 
 The same function has tests in `NoteFrontmatterTests`, which pin the edge cases:
 
-- Any leading block is hidden, with or without a `title:` key.
+- A leading block of `key: value` lines is hidden, with or without a `title:` key.
 - A file with no closing fence is left untouched and shows everything.
 - A closing line of `----` is not a fence, so the whole note is shown, metadata included.
 - A file that is only front matter produces an empty preview.
 - Three dashes in the middle of a note stay an ordinary horizontal rule.
 
-MiaoYan does not read the keys. The block is not parsed as YAML, which is why a file that merely has two `---` lines around some text also loses that text in the preview. There is no YAML validation either: a typo that breaks Jekyll will not show up in MiaoYan.
+MiaoYan does not read the keys. It only checks that the block looks like YAML, so a file that merely has two `---` lines around some text keeps that text in the preview. There is no YAML validation either: a typo that breaks Jekyll will not show up in MiaoYan.
 
 ## Slide mode and the `---` separator
 
-In slide mode `---` is also the slide separator. In V4.5.0 the front matter is removed before the text reaches the slide renderer, so a block at the top does not become a slide. The catch is a deck that opens with a `---` line meant as a separator, because if another `---` line follows, everything between the two is taken for front matter and vanishes. Start a deck with its title, and keep metadata in one clean block. The separators themselves are covered in [Markdown to slides](/blog/markdown-to-slides/).
+In slide mode `---` is also the slide separator. The front matter is removed before the text reaches the slide renderer, so a block at the top does not become a slide. A deck that opens with a `---` line meant as a separator keeps its first slide, because the text between the two lines is not YAML. Keep metadata in one clean block of `key: value` lines. The separators themselves are covered in [Markdown to slides](/blog/markdown-to-slides/).
 
 ## When it does not work
 
 - **The metadata shows in the preview.** There is a blank line or a space before the first `---`, the closing line is `----` or `...`, or the block uses `+++`.
 - **A heading appears above the body.** If the block is not recognized as front matter, a line of text directly followed by `---` is a setext heading in CommonMark, so one of your keys turns into a large heading.
 - **A generator ignores the file.** Check for a byte order mark at the start of the file and for an unquoted colon in a value.
-- **Text vanished.** Two `---` lines at the top of a note hide everything between them in MiaoYan, even a section that was meant to be body text.
+- **Text vanished.** Two `---` lines at the top of a note hide everything between them in MiaoYan when every line between them looks like `key: value` YAML, even if it was meant to be body text.
 
 For notes that you also publish elsewhere, see [Markdown cheat sheet](/blog/markdown-cheat-sheet/) for what each renderer adds beyond CommonMark.
 
@@ -80,7 +80,7 @@ No. CommonMark does not define it. It is a convention of static site generators 
 
 ### Can I use `---` as a divider at the top of a note?
 
-Use `***` or put a title first. A note that starts with `---` and has another `---` line later is read as front matter in MiaoYan.
+Use `***` or put a title first. A note that starts with `---` and has `key: value` lines up to another `---` line is read as front matter in MiaoYan.
 
 ### Does GitHub show front matter in a README?
 

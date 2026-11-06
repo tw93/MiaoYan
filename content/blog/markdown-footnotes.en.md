@@ -1,4 +1,4 @@
-Write a footnote as a marker in the text, `[^1]`, and a definition on its own line, `[^1]: The note text.`. The renderer collects the definitions at the bottom of the page and numbers them in the order the markers appear. Footnotes are not part of CommonMark, so whether they work depends on the app: MiaoYan V4.5.0, GitHub and Pandoc render them, and some other Markdown processors print the brackets as plain text.
+Write a footnote as a marker in the text, `[^1]`, and a definition on its own line, `[^1]: The note text.`. The renderer collects the definitions at the bottom of the page and numbers them in the order the markers appear. Footnotes are not part of CommonMark, so whether they work depends on the app: MiaoYan, GitHub and Pandoc render them, and some other Markdown processors print the brackets as plain text.
 
 ## The syntax
 
@@ -25,7 +25,7 @@ A footnote can run over more than one line. GitHub's syntax page says to add two
     Second paragraph, indented by four spaces.
 ```
 
-That multi-paragraph form is documented for Pandoc. GitHub's page does not cover it. MiaoYan V4.5.0's cmark-gfm keeps an indented second paragraph inside the same note, and a paragraph that is not indented goes back to the body. For any other renderer, test one long footnote before writing a whole chapter that depends on it.
+That multi-paragraph form is documented for Pandoc. GitHub's page does not cover it. MiaoYan's cmark-gfm keeps an indented second paragraph inside the same note, and a paragraph that is not indented goes back to the body. For any other renderer, test one long footnote before writing a whole chapter that depends on it.
 
 Pandoc also has inline notes, `^[text of the note]`, which need no label and no separate definition. It is a Pandoc extension, so it only helps if Pandoc is in your pipeline.
 
@@ -37,17 +37,17 @@ Pandoc also has inline notes, `^[text of the note]`, which need no label and no 
 | GitHub `.md` files, issues and pull requests | Supported, definitions render at the bottom. |
 | GitHub wikis | Not supported, according to GitHub's syntax page. |
 | Pandoc | Supported, with indented multi-paragraph notes and inline notes. |
-| MiaoYan V4.5.0 | Supported in the preview and the exports that use the preview renderer, see below. |
+| MiaoYan | Supported in the preview and the exports that use the preview renderer, see below. |
 
 The common mistake is moving a note between these. A note written for MiaoYan or Pandoc and pasted into a GitHub wiki page leaves `[^1]` visible in the text.
 
-## What MiaoYan V4.5.0 does
+## What MiaoYan does
 
-MiaoYan renders Markdown with a Swift package of cmark-gfm. In `Business/Markdown.swift` at V4.5.0, the parser is created with the footnotes option and then four syntax extensions are attached by name: `table`, `footnotes`, `strikethrough` and `tasklist`. Footnotes are therefore on by default, with no setting to turn on. The parser output goes to HTML with raw HTML allowed, and the web view shows it. HTML export and PDF export build on the same rendering, so a footnote that works in the preview works there too. cmark-gfm turns each marker into a superscript number linking to the note, and collects the definitions into a numbered list in a `footnotes` section at the end, each with a link back to the text. Clicking a marker in the preview scrolls to its note.
+MiaoYan renders Markdown with a Swift package of cmark-gfm. In `Business/Markdown.swift`, the parser is created with the footnotes option and then four syntax extensions are attached by name: `table`, `footnotes`, `strikethrough` and `tasklist`. Footnotes are therefore on by default, with no setting to turn on. The parser output goes to HTML with raw HTML allowed, and the web view shows it. HTML export and PDF export build on the same rendering, so a footnote that works in the preview works there too. cmark-gfm turns each marker into a superscript number linking to the note, and collects the definitions into a numbered list in a `footnotes` section at the end, each with a link back to the text. Clicking a marker in the preview scrolls to its note.
 
 The bundled syntax guide that ships with the app also has a Footnotes section with five definitions, which you can open to copy a working pattern. The preview bundle ships no footnote-specific styling, so expect the default look of the page.
 
-Slide mode is the exception. There MiaoYan hands the note to reveal.js's Markdown plugin, which uses the `marked` library, not cmark-gfm. The plugin source at V4.5.0 has no footnote handling, so do not count on footnotes in a deck. If you need citations on slides, put the source in small text under the point, as described in [Markdown to slides](/blog/markdown-to-slides/).
+Slide mode is the exception. There MiaoYan hands the note to reveal.js's Markdown plugin, which uses the `marked` library, not cmark-gfm. The plugin source has no footnote handling, so do not count on footnotes in a deck. If you need citations on slides, put the source in small text under the point, as described in [Markdown to slides](/blog/markdown-to-slides/).
 
 ## When a footnote does not render
 
@@ -68,7 +68,7 @@ Yes. GitHub's syntax page documents `[^1]` markers with definitions, rendered at
 
 ### Can I put a footnote inside a table cell or a list item?
 
-Pandoc's manual says footnote definitions may appear anywhere except inside other block elements such as lists, block quotes and tables. The marker itself is inline text. In MiaoYan V4.5.0 a marker inside a table cell renders as a normal footnote; elsewhere, check the result in your renderer before relying on it.
+Pandoc's manual says footnote definitions may appear anywhere except inside other block elements such as lists, block quotes and tables. The marker itself is inline text. In MiaoYan a marker inside a table cell renders as a normal footnote; elsewhere, check the result in your renderer before relying on it.
 
 ### Is there a limit on how many footnotes a note can have?
 

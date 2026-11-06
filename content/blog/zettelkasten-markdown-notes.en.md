@@ -1,4 +1,4 @@
-A Zettelkasten is a collection of small notes that each hold one idea, carry a permanent address, and point to related notes, so that you find ideas by following links instead of looking them up in a folder tree. You can run one with nothing but Markdown files in a folder: one file per note, a unique name, `[[wikilinks]]` between them, and a search box. MiaoYan V4.5.0 covers that core with wikilinks, a backlinks list and full-text search. It has no graph view, so if you want to see the network drawn, Obsidian fits better. The system works or fails on habits, not on the app.
+A Zettelkasten is a collection of small notes that each hold one idea, carry a permanent address, and point to related notes, so that you find ideas by following links instead of looking them up in a folder tree. You can run one with nothing but Markdown files in a folder: one file per note, a unique name, `[[wikilinks]]` between them, and a search box. MiaoYan covers that core with wikilinks, a backlinks list and full-text search. It has no graph view, so if you want to see the network drawn, Obsidian fits better. The system works or fails on habits, not on the app.
 
 ## What Luhmann actually built
 
@@ -30,11 +30,11 @@ An ID plus title, such as `202610191402 Spaced repetition needs retrieval.md`, s
 
 [[figure:zettelkasten-markdown-notes|A reading or idea becomes a single note in your own words, saved under a unique file name in a Markdown folder, linked with a wikilink to related notes, with the best notes listed in an index note and backlinks pointing back.|Each idea becomes one file with its own name, links make the connections, and the backlinks list shows what points back.]]
 
-## Wikilinks and backlinks in MiaoYan V4.5.0
+## Wikilinks and backlinks in MiaoYan
 
 Write the title between double brackets, without the extension. The match is exact, so case and spacing count. MiaoYan treats everything between the brackets as the title, so the Obsidian forms `[[Note|alias]]` and `[[Note#Heading]]` are not supported: there is no alias and no jump to a heading, and the backlinks list records the whole text as the title. The [wikilinks and backlinks](/blog/wikilinks-and-backlinks/) post lists the rules and the error messages.
 
-The backlinks list is in the panel opened by Show Info (`⌘⌥I`), next to the word count and the created and modified dates. It shows the titles of notes that link to the current one, or "None". The titles are text, not links, so you jump to one with the search field. The index reads the text of notes MiaoYan has loaded in the current list, so a link written in a note you have not opened since launch may not show up until you open or save that note.
+The backlinks list is in the panel opened by Show Info (`⌘⌥I`), next to the word count and the created and modified dates. It shows the titles of notes that link to the current one, or "None". The titles are text, not links, so you jump to one with the search field. The index is built at launch from every note file in the library and updated whenever a note is saved, renamed or deleted.
 
 For finding things, the search field matches the words you type against titles and note bodies, and a folder structure still works alongside links. A common compromise is a few broad folders such as `Inbox`, `Notes` and `Sources`, with the links doing the real organizing inside them. MiaoYan's [local-first](/blog/local-first-markdown-notes/) setup keeps all of it as ordinary files you can open in another app.
 

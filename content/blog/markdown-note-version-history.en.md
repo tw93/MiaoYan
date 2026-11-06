@@ -6,7 +6,7 @@ MiaoYan keeps up to 20 earlier versions of each note, saved automatically while 
 2. The window lists "Current Version" at the top, then saved versions with their time and a relative description such as "2 hours ago". Click one to preview its text.
 3. Click "Restore to This Version". MiaoYan replaces the note's text with that version and shows a confirmation, "Restored to version from" followed by that version's time.
 
-If the note has no snapshots yet, the window says "No Version History" and explains that "Versions are saved automatically every 5 minutes while editing".
+If the note has no snapshots yet, the window says "No Version History".
 
 Restoring is itself recoverable. Before it replaces the text, MiaoYan saves your current text as a new snapshot, so your pre-restore text appears in the same list as a new snapshot and you can go back.
 
@@ -22,7 +22,7 @@ This is read from the app's source, so it describes behavior rather than promise
 
 **How many.** At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted.
 
-**Renames, moves and deletions.** Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash gives it a new path, and its earlier history stays filed under the old one. The history window then starts again from the new path.
+**Renames, moves and deletions.** Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash moves its history to the new path along with it, and the history comes back if the delete is undone. Moving the whole library in Finder is not tracked, so the history stays under the old path.
 
 **The five-minute timer is per session.** The record of when the last snapshot happened lives in memory, so after you quit and reopen the app, the first save of a note can create a snapshot straight away, provided the text differs from the newest saved version.
 
@@ -60,7 +60,7 @@ What MiaoYan's history does not cover:
 - **The window says "No Version History".** The note is new, empty, or has not been saved twice with different text. Edit it, wait, switch to another note and come back.
 - **A version you expected is missing.** The newest 20 are kept, and near-identical saves are skipped. Check whether the text differs only by spacing.
 - **Restore did not seem to change the file.** The text is replaced in the editor and written to disk after the usual short delay. Re-open the note to confirm.
-- **You moved the library folder.** Snapshots are keyed by the note's full path. If you relocate the whole library in Finder, or rename or move a note, the paths change and the old history is no longer found for those notes.
+- **You moved the library folder.** Snapshots are keyed by the note's full path. If you relocate the whole library in Finder, the paths change and the old history is no longer found for those notes.
 
 MiaoYan is a Mac app for plain Markdown folders. The source is on [GitHub](https://github.com/tw93/MiaoYan), and the [App Store](https://apps.apple.com/app/id6759252269) version covers Mac, iPhone and iPad.
 
@@ -80,4 +80,4 @@ No, in the app's support folder, so they do not appear in Finder next to your no
 
 ### Can I recover a note I deleted?
 
-Notes sent to the Trash can be recovered from the Trash. The history window looks the note up by its path, so the versions from before it was trashed only show again once the note is back at its original path.
+Notes sent to the Trash can be recovered from the Trash. The history window looks the note up by its path, and the versions follow the note into the Trash and back when the delete is undone.

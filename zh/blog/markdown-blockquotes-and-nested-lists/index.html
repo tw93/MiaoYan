@@ -18,7 +18,7 @@
 <meta property="og:description" content="引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 引用与嵌套列表的缩进规则", "item": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/#article", "headline": "Markdown 引用与嵌套列表的缩进规则", "description": "引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。", "url": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "引用可以放在列表项里面吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以。把 > 行缩进到该项的内容列，- 下面就是两个空格，每一行都带同样的缩进。"}}, {"@type": "Question", "name": "为什么我的引用丢了第二行？", "acceptedAnswer": {"@type": "Answer", "text": "那一行不算段落延续，比如它开启了列表，或者前面有空行。每行行首都写 >。"}}, {"@type": "Question", "name": "所有 Markdown 应用都支持提示框吗？", "acceptedAnswer": {"@type": "Answer", "text": "不是。GitHub 和妙言 V4.5.0 会渲染，别的应用会显示成以 [!NOTE] 开头的普通引用。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 引用与嵌套列表的缩进规则", "item": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/#article", "headline": "Markdown 引用与嵌套列表的缩进规则", "description": "引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。", "url": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "引用可以放在列表项里面吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以。把 > 行缩进到该项的内容列，- 下面就是两个空格，每一行都带同样的缩进。"}}, {"@type": "Question", "name": "为什么我的引用丢了第二行？", "acceptedAnswer": {"@type": "Answer", "text": "那一行不算段落延续，比如它开启了列表，或者前面有空行。每行行首都写 >。"}}, {"@type": "Question", "name": "所有 Markdown 应用都支持提示框吗？", "acceptedAnswer": {"@type": "Answer", "text": "不是。GitHub 和妙言会渲染，别的应用会显示成以 [!NOTE] 开头的普通引用。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -697,7 +697,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-blockquotes-and-nested-lists.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>引用就是行首的 <code>&gt;</code>，再加一个 <code>&gt;</code> 就是嵌套引用。嵌套列表要看父项文字从哪一列开始，子项的标记必须落在这一列或更靠后，<code>-</code> 下面缩进 2 个空格，<code>1.</code> 下面 3 个，<code>10.</code> 下面 4 个。缩进放错地方，四个空格会把一行变成代码块，而 Markdown 本身没有段落首行缩进的语法。妙言 V4.5.0 会把 <code>&gt; [!NOTE]</code> 渲染成和 GitHub 一样的提示框，编辑器里按 <code>Tab</code> 缩进两个空格，上一行是编号项时缩进三个，编号到 10 之前都够用。</p>
+<p>引用就是行首的 <code>&gt;</code>，再加一个 <code>&gt;</code> 就是嵌套引用。嵌套列表要看父项文字从哪一列开始，子项的标记必须落在这一列或更靠后，<code>-</code> 下面缩进 2 个空格，<code>1.</code> 下面 3 个，<code>10.</code> 下面 4 个。缩进放错地方，四个空格会把一行变成代码块，而 Markdown 本身没有段落首行缩进的语法。妙言会把 <code>&gt; [!NOTE]</code> 渲染成和 GitHub 一样的提示框，编辑器里按 <code>Tab</code> 缩进两个空格，上一行是编号项时缩进三个，编号到 10 之前都够用。</p>
 <h2 id="引用的写法">引用的写法</h2>
 <pre><code class="language-markdown">&gt; 一句引用。
 &gt; 同一个引用的第二行。
@@ -726,7 +726,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 &gt; 回到外层。
 </code></pre>
 <p>每多一个 <code>&gt;</code> 就深一层，<code>&gt; &gt;</code> 和 <code>&gt;&gt;</code> 等价，「回到外层」前面那行单独的 <code>&gt;</code> 不能省，否则这句话会接在内层段落后面。</p>
-<p>提示框是第一行带标记的引用，妙言 V4.5.0 认五种，大小写都行：</p>
+<p>提示框是第一行带标记的引用，妙言认五种，大小写都行：</p>
 <pre><code class="language-markdown">&gt; [!NOTE]
 &gt; 补充说明。
 
@@ -762,7 +762,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </tr>
 </tbody>
 </table>
-<p>GitHub 的文档给的也是这个办法，数一数项目文字前面有几个字符，就打几个空格。这些例子在妙言 V4.5.0 自带的 cmark-gfm 0.29.0.gfm.3 里跑过，扩展和选项也一样。<code>1. one</code> 下面跟两个空格的 <code>- sub</code>，得到的是两个并列的列表，没有嵌套，<code>- a</code> 下面只缩进一个空格，子项变成同级，<code>10. one</code> 下面缩进三个空格是一个独立的无序列表，缩进四个才嵌进去。所以无序列表缩进 2 到 5 个空格都行，6 个以上会变成文字或代码，「两个空格还是四个」的争论只在数字列表下面有意义，那里要的是标记的宽度。</p>
+<p>GitHub 的文档给的也是这个办法，数一数项目文字前面有几个字符，就打几个空格。这些例子在妙言自带的 cmark-gfm 0.29.0.gfm.3 里跑过，扩展和选项也一样。<code>1. one</code> 下面跟两个空格的 <code>- sub</code>，得到的是两个并列的列表，没有嵌套，<code>- a</code> 下面只缩进一个空格，子项变成同级，<code>10. one</code> 下面缩进三个空格是一个独立的无序列表，缩进四个才嵌进去。所以无序列表缩进 2 到 5 个空格都行，6 个以上会变成文字或代码，「两个空格还是四个」的争论只在数字列表下面有意义，那里要的是标记的宽度。</p>
 <p>标记还决定列表从哪里开始、到哪里结束，<code>-</code>、<code>*</code>、<code>+</code> 之间换用，或者 <code>.</code> 和 <code>)</code> 之间换用，都会另起一个列表。起始数字由第一项决定，<code>3.</code> 接 <code>4.</code> 会从 3 开始排，<code>0.</code> 也可以，后面的数字被忽略，所以每行都写 <code>1.</code> 也会正确递增。标记是一到九位数字，只有以 <code>1</code> 开头的列表才能打断段落，段落中间的 <code>2024. was a year</code> 因此仍是文字，放在行首要怎么处理见 <a href="/zh/blog/markdown-escape-characters/">转义字符</a>。</p>
 <p>想在列表项后面接一个段落或代码，空一行以后缩进到同一列：</p>
 <pre><code class="language-markdown">- 第一步
@@ -785,7 +785,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </code></pre>
 <p><code>&amp;nbsp;</code> 实体会渲染成真正的空格，全角空格（U+3000）对解析器来说是普通字符，不会触发代码块。代价是缩进写在了文字里，每一段都得自己加。</p>
 <h2 id="在妙言编辑器里缩进">在妙言编辑器里缩进</h2>
-<p>V4.5.0 里 <code>Tab</code> 会让当前行或所有选中的行缩进两个空格，<code>Shift+Tab</code> 每次去掉最多三个行首空格或一个制表符，「格式」菜单里也有这一对命令，<code>⌘]</code> 增加缩进，<code>⌘[</code> 减少缩进。如果上一行是编号项，<code>Tab</code> 改缩进三个空格，同时把这一行的编号改成 <code>1</code>，所以 <code>2. two</code> 会变成 <code>1. two</code>，正好是嵌套编号列表的开头。</p>
+<p><code>Tab</code> 会让当前行或所有选中的行缩进两个空格，<code>Shift+Tab</code> 每次去掉最多三个行首空格或一个制表符，「格式」菜单里也有这一对命令，<code>⌘]</code> 增加缩进，<code>⌘[</code> 减少缩进。如果上一行是编号项，<code>Tab</code> 改缩进三个空格，同时把这一行的编号改成 <code>1</code>，所以 <code>2. two</code> 会变成 <code>1. two</code>，正好是嵌套编号列表的开头。</p>
 <p>宽度看的是上一行，不是父项标记的宽度，所以在 <code>10. item</code> 下面只会缩进三个空格，前面的表格说过这是同级的列表，再补一个空格并看预览。列表或引用行末尾按 <code>Return</code> 会带出同样的标记，数字加一，在空标记上再按一次 <code>Return</code> 会清掉它。只有第一个标记会被带出，所以在 <code>&gt; &gt;</code> 引用里第二个 <code>&gt;</code> 要自己打。</p>
 <h2 id="出问题时怎么查">出问题时怎么查</h2>
 <p>看预览，不看编辑器。子项和父项同级，说明缩进对这个标记来说不够；一行变成等宽字体，是空行之后缩进过多；出现原样的 <code>&gt;</code>，是前面有四个以上空格；列表从 1 重新开始，是标记字符换了。</p>
@@ -795,12 +795,12 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <h3 id="为什么我的引用丢了第二行">为什么我的引用丢了第二行？</h3>
 <p>那一行不算段落延续，比如它开启了列表，或者前面有空行。每行行首都写 <code>&gt;</code>。</p>
 <h3 id="所有-markdown-应用都支持提示框吗">所有 Markdown 应用都支持提示框吗？</h3>
-<p>不是。GitHub 和妙言 V4.5.0 会渲染，别的应用会显示成以 <code>[!NOTE]</code> 开头的普通引用。</p>
+<p>不是。GitHub 和妙言会渲染，别的应用会显示成以 <code>[!NOTE]</code> 开头的普通引用。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-underline-and-color/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 下划线、文字颜色与居中的写法</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-to-html/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 HTML：命令行与妙言导出</span><span class="blog-related-meta">约 8 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-underline-and-color/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 下划线、文字颜色与居中的写法</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-to-html/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 HTML：命令行与妙言导出</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

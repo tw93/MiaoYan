@@ -3,7 +3,7 @@
     {
       "slug": "markdown-editor-for-mac",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Choosing a Markdown editor for Mac",
@@ -17,7 +17,7 @@
     {
       "slug": "markdown-cheat-sheet",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown cheat sheet: CommonMark, GFM and extensions",
@@ -31,7 +31,7 @@
     {
       "slug": "latex-math-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "LaTeX math in Markdown: syntax, KaTeX and pitfalls",
@@ -59,7 +59,7 @@
     {
       "slug": "markdown-to-slides",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown to slides: --- separators and MiaoYan PPT mode",
@@ -73,7 +73,7 @@
     {
       "slug": "markdown-to-pdf-mac",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown to PDF on Mac",
@@ -87,7 +87,7 @@
     {
       "slug": "typora-alternative-mac",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Typora alternative for Mac: split preview with MiaoYan",
@@ -101,7 +101,7 @@
     {
       "slug": "local-first-markdown-notes",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Local-first Markdown notes: keep them as plain files",
@@ -115,7 +115,7 @@
     {
       "slug": "sync-markdown-notes-across-devices",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Sync Markdown notes across devices without a sync service",
@@ -129,7 +129,7 @@
     {
       "slug": "wikilinks-and-backlinks",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Wikilinks and backlinks in Markdown notes",
@@ -143,7 +143,7 @@
     {
       "slug": "markdown-notes-from-terminal",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Markdown notes from the terminal with the miao CLI",
@@ -157,7 +157,7 @@
     {
       "slug": "obsidian-alternative-mac",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "A lighter Obsidian alternative for Mac",
@@ -171,7 +171,7 @@
     {
       "slug": "markdown-note-version-history",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Markdown note version history: MiaoYan, Time Machine, git",
@@ -185,7 +185,7 @@
     {
       "slug": "apple-notes-to-markdown",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Export Apple Notes as Markdown and open the files",
@@ -199,7 +199,7 @@
     {
       "slug": "bear-alternative-mac",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "A Bear alternative for Mac: plain Markdown files",
@@ -227,7 +227,7 @@
     {
       "slug": "commonmark-vs-gfm",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "CommonMark vs GFM: which Markdown flavor to write",
@@ -241,7 +241,7 @@
     {
       "slug": "markdown-code-blocks",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown code blocks: fences, language tags and nesting",
@@ -255,7 +255,7 @@
     {
       "slug": "markdown-collapsible-sections",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown collapsible sections with details and summary",
@@ -283,49 +283,49 @@
     {
       "slug": "markdown-footnotes",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown footnotes: syntax, support and fallbacks",
-        "description": "Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text."
+        "description": "Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan render them, and fix footnotes that show as plain text."
       },
       "zh": {
         "title": "Markdown 脚注怎么写，哪里能渲染",
-        "description": "脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。"
+        "description": "脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言的支持情况和排错。"
       }
     },
     {
       "slug": "markdown-front-matter",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown front matter: YAML, TOML and MiaoYan",
-        "description": "Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export."
+        "description": "Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan hides in preview and export."
       },
       "zh": {
         "title": "Markdown front matter 写法与渲染",
-        "description": "YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。"
+        "description": "YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言的处理。"
       }
     },
     {
       "slug": "markdown-images",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown images: syntax, size and broken paths",
-        "description": "Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images."
+        "description": "Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan stores, previews and exports images."
       },
       "zh": {
         "title": "Markdown 图片：插入、调整大小与路径",
-        "description": "图片语法、用 HTML 设宽度、路径为何会坏，以及妙言 V4.5.0 的图片存放、预览和导出行为。"
+        "description": "图片语法、用 HTML 设宽度、路径为何会坏，以及妙言的图片存放、预览和导出行为。"
       }
     },
     {
       "slug": "markdown-line-breaks",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown line breaks: soft, hard and MiaoYan's setting",
@@ -339,7 +339,7 @@
     {
       "slug": "markdown-links-and-anchors",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown links and anchors: inline, reference, headings",
@@ -353,7 +353,7 @@
     {
       "slug": "markdown-on-ipad",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Markdown on iPad: files, sync and editors",
@@ -395,7 +395,7 @@
     {
       "slug": "markmap-mind-maps",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markmap mind maps from a Markdown outline",
@@ -409,7 +409,7 @@
     {
       "slug": "plantuml-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "PlantUML in Markdown: fences, server rendering and privacy",
@@ -437,11 +437,11 @@
     {
       "slug": "markdown-horizontal-line",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown horizontal line: ---, *** and ___",
-        "description": "Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0."
+        "description": "Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan."
       },
       "zh": {
         "title": "Markdown 分割线怎么写，以及 --- 的坑",
@@ -451,7 +451,7 @@
     {
       "slug": "markdown-comments",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown comments: HTML comments and [//]: # (note)",
@@ -479,7 +479,7 @@
     {
       "slug": "markdown-underline-and-color",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown underline, color and center text with HTML",
@@ -493,7 +493,7 @@
     {
       "slug": "markdown-blockquotes-and-nested-lists",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown blockquotes and nested lists: indent rules",
@@ -507,7 +507,7 @@
     {
       "slug": "open-md-file-mac",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "How to open a .md file on Mac",
@@ -521,35 +521,35 @@
     {
       "slug": "markdown-to-html",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown to HTML: Pandoc, markdown-it and MiaoYan export",
-        "description": "Convert Markdown to HTML with Pandoc, cmark-gfm or markdown-it, fragment vs full page, raw HTML safety, and what MiaoYan V4.5.0's HTML export includes."
+        "description": "Convert Markdown to HTML with Pandoc, cmark-gfm or markdown-it, fragment vs full page, raw HTML safety, and what MiaoYan's HTML export includes."
       },
       "zh": {
         "title": "Markdown 转 HTML：命令行与妙言导出",
-        "description": "用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。"
+        "description": "用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言的 HTML 导出。"
       }
     },
     {
       "slug": "markdown-to-word",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "writing",
       "en": {
         "title": "Markdown to Word: Pandoc, reference.docx and MiaoYan exports",
-        "description": "Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead."
+        "description": "Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan exports instead."
       },
       "zh": {
         "title": "Markdown 转 Word：Pandoc 与妙言导出",
-        "description": "用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。"
+        "description": "用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言能导出什么。"
       }
     },
     {
       "slug": "zettelkasten-markdown-notes",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-06",
       "category": "notes",
       "en": {
         "title": "Zettelkasten with Markdown files: IDs, links and a weekly routine",

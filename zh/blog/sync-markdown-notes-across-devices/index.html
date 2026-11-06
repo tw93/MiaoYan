@@ -18,7 +18,7 @@
 <meta property="og:description" content="用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="笔记管理">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "跨设备同步 Markdown 笔记的几种做法", "item": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/#article", "headline": "跨设备同步 Markdown 笔记的几种做法", "description": "用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。", "url": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp", "timeRequired": "PT7M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言有自己的同步服务吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，它读写你选的文件夹，由 iCloud 云盘、坚果云、Dropbox 或别的客户端去同步这个文件夹。"}}, {"@type": "Question", "name": "可以配合坚果云使用吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，在坚果云桌面客户端同步的本地文件夹里新建一个文件夹，设为笔记位置即可，妙言不直接连接坚果云或 WebDAV。"}}, {"@type": "Question", "name": "哪种方式最适合 iPhone？", "acceptedAnswer": {"@type": "Answer", "text": "iCloud 云盘，因为 README 写明了第三方网盘可能没有在系统的「文件」App 里提供可写的文件夹。"}}, {"@type": "Question", "name": "为什么改了文件夹没有生效？", "acceptedAnswer": {"@type": "Answer", "text": "笔记库是在启动时打开的，选了新的笔记位置之后需要重新启动妙言才会生效。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "跨设备同步 Markdown 笔记的几种做法", "item": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/#article", "headline": "跨设备同步 Markdown 笔记的几种做法", "description": "用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。", "url": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp", "timeRequired": "PT7M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言有自己的同步服务吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，它读写你选的文件夹，由 iCloud 云盘、坚果云、Dropbox 或别的客户端去同步这个文件夹。"}}, {"@type": "Question", "name": "可以配合坚果云使用吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，在坚果云桌面客户端同步的本地文件夹里新建一个文件夹，设为笔记位置即可，妙言不直接连接坚果云或 WebDAV。"}}, {"@type": "Question", "name": "哪种方式最适合 iPhone？", "acceptedAnswer": {"@type": "Answer", "text": "iCloud 云盘，因为 README 写明了第三方网盘可能没有在系统的「文件」App 里提供可写的文件夹。"}}, {"@type": "Question", "name": "为什么改了文件夹没有生效？", "acceptedAnswer": {"@type": "Answer", "text": "笔记库是在启动时打开的，选了新的笔记位置之后需要重新启动妙言才会生效。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -740,9 +740,9 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <li>在同步位置里新建一个文件夹，叫 <code>MiaoYan</code> 或别的名字都行，位置可以是 iCloud 云盘、坚果云桌面客户端同步的本地文件夹、Dropbox 文件夹，或者 git 仓库的工作目录。</li>
 <li>按 ⌘, 打开偏好设置，找到「笔记位置」。</li>
 <li>点「更改」，选择这个文件夹。</li>
-<li>在弹出的「重新启动妙言后生效」提示里点「确定」，因为妙言在启动时打开笔记库，新文件夹要到下次启动才会用上，取消的话仍然保留原来的文件夹。</li>
+<li>点这一行里出现的「重新启动」，因为妙言在启动时打开笔记库，新文件夹要到下次启动才会用上。</li>
 </ol>
-<p>接受文件夹之前，妙言会检查能不能读写，检查不通过就保留当前位置，并提示「妙言无法读取这个文件夹。如果这是云盘目录，请打开云盘应用，确认该文件夹已在访达中可见。」README 还补充说，这种情况不会被当作妙言的同步故障，问题出在文件夹或网盘，不在应用。</p>
+<p>接受文件夹之前，妙言会检查能不能读写，检查不通过就保留当前位置，并提示「妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在 Finder 中可见。」README 还补充说，这种情况不会被当作妙言的同步故障，问题出在文件夹或网盘，不在应用。</p>
 <p>妙言不会登录 WebDAV 或网盘账号，它能看到的只有这个文件夹。</p>
 <h2 id="iphone-和-ipad">iPhone 和 iPad</h2>
 <p>iPhone 上用系统的「文件」App 选同一个网盘文件夹。README 写明了限制，如果某个网盘在「文件」里没有提供可写的文件夹，就改用 iCloud 云盘，或者先在那个网盘自己的 App 里把文件夹设为离线可用。实际结论是 iPhone 和 iPad 版用 iCloud 云盘最稳，第三方网盘取决于它的「文件」集成是否提供可写、可离线的访问。</p>
@@ -754,7 +754,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </ul>
 <h2 id="出问题时怎么查怎么恢复">出问题时怎么查、怎么恢复</h2>
 <p><strong>出现了一篇笔记的两份副本。</strong> 两份都打开，把需要的内容复制到要保留的那份，删掉另一份。同步服务会给多出来的文件加标记，比如 Dropbox 的「conflicted copy」，搜这几个字就能找到。</p>
-<p><strong>妙言提示检测到外部修改。</strong> 同步服务拉下了你正打开的笔记的新版本时，妙言会从磁盘重新加载，如果你没保存的编辑内容和磁盘上的不同，它会先把你的文字存进笔记库顶层隐藏的 <code>.miaoyan-conflicts</code> 文件夹，并提示「检测到外部修改，本地内容已备份~」，备份至少保留最近的 100 份，以及 30 天以内的所有文件。怀疑文字丢了的时候，先看一下这个文件夹。</p>
+<p><strong>妙言提示检测到外部修改。</strong> 同步服务拉下了你正打开的笔记的新版本时，妙言会从磁盘重新加载，如果你没保存的编辑内容和磁盘上的不同，它会先把你的文字存进笔记库顶层隐藏的 <code>.miaoyan-conflicts</code> 文件夹，并提示「检测到外部修改，本地内容已备份」，备份至少保留最近的 100 份，以及 30 天以内的所有文件。怀疑文字丢了的时候，先看一下这个文件夹。</p>
 <p><strong>某篇笔记是空的。</strong> 文件可能还没下载完，在访达里打开文件夹，把文件设为离线可用，等同步结束。</p>
 <p><strong>版本历史不在云端。</strong> 妙言把快照存在自己的支持目录里，不在笔记文件夹中，所以不会同步，见 <a href="/zh/blog/markdown-note-version-history/">Markdown 笔记的版本历史</a>。</p>
 <p><strong>用 git 配合妙言。</strong> 在笔记库文件夹里提交，把 <code>.miaoyan-conflicts/</code> 加进 <code>.gitignore</code>，避免备份文件被提交，另外除非你清楚后果，不要在同一个文件夹上同时跑 git 和网盘同步。</p>

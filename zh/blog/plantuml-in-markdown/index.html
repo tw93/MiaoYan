@@ -18,7 +18,7 @@
 <meta property="og:description" content="用 plantuml 围栏画时序图、类图和活动图，妙言如何经 plantuml.com 渲染、隐私代价，以及本地渲染和 Mermaid 的替代做法。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/plantuml-in-markdown.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里写 PlantUML：围栏、服务器渲染与隐私", "item": "https://miaoyan.app/zh/blog/plantuml-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/plantuml-in-markdown/#article", "headline": "Markdown 里写 PlantUML：围栏、服务器渲染与隐私", "description": "用 plantuml 围栏画时序图、类图和活动图，妙言如何经 plantuml.com 渲染、隐私代价，以及本地渲染和 Mermaid 的替代做法。", "url": "https://miaoyan.app/zh/blog/plantuml-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/plantuml-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/plantuml-in-markdown.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言里的 PlantUML 能离线用吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，图片来自 www.plantuml.com，没有网络时看到的是源文本。"}}, {"@type": "Question", "name": "妙言里能用自己的 PlantUML 服务器吗？", "acceptedAnswer": {"@type": "Answer", "text": "V4.5.0 里不能，地址写死在预览脚本里。"}}, {"@type": "Question", "name": "哪些图不该发到公共服务器？", "acceptedAnswer": {"@type": "Answer", "text": "带内部服务名、客户数据或未发布架构的图，这些用 Mermaid 或本地渲染的 SVG。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里写 PlantUML：围栏、服务器渲染与隐私", "item": "https://miaoyan.app/zh/blog/plantuml-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/plantuml-in-markdown/#article", "headline": "Markdown 里写 PlantUML：围栏、服务器渲染与隐私", "description": "用 plantuml 围栏画时序图、类图和活动图，妙言如何经 plantuml.com 渲染、隐私代价，以及本地渲染和 Mermaid 的替代做法。", "url": "https://miaoyan.app/zh/blog/plantuml-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/plantuml-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/plantuml-in-markdown.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言里的 PlantUML 能离线用吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，图片来自 www.plantuml.com，没有网络时看到的是源文本。"}}, {"@type": "Question", "name": "妙言里能用自己的 PlantUML 服务器吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，地址写死在预览脚本里。"}}, {"@type": "Question", "name": "哪些图不该发到公共服务器？", "acceptedAnswer": {"@type": "Answer", "text": "带内部服务名、客户数据或未发布架构的图，这些用 Mermaid 或本地渲染的 SVG。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -697,7 +697,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/plantuml-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>想在 Markdown 里画 UML 图，做法是在语言名为 <code>plantuml</code> 的围栏代码块里，把 PlantUML 文本写在 <code>@startuml</code> 和 <code>@enduml</code> 之间。妙言会把这个块变成图片，但不是在你的 Mac 上画的，V4.5.0 的预览会把图的文字编码进一个网址，再从 <code>www.plantuml.com</code> 这个公共服务器加载图片。所以它必须联网才能显示，而且每个预览过的 PlantUML 块的文字都会发到那台服务器。图如果是私密的，可以在同一篇笔记里改用 Mermaid，或者用 PlantUML 自己在本地渲染，再把生成的 SVG 插进笔记。</p>
+<p>想在 Markdown 里画 UML 图，做法是在语言名为 <code>plantuml</code> 的围栏代码块里，把 PlantUML 文本写在 <code>@startuml</code> 和 <code>@enduml</code> 之间。妙言会把这个块变成图片，但不是在你的 Mac 上画的，预览会把图的文字编码进一个网址，再从 <code>www.plantuml.com</code> 这个公共服务器加载图片。所以它必须联网才能显示，而且每个预览过的 PlantUML 块的文字都会发到那台服务器。图如果是私密的，可以在同一篇笔记里改用 Mermaid，或者用 PlantUML 自己在本地渲染，再把生成的 SVG 插进笔记。</p>
 <h2 id="写法">写法</h2>
 <pre><code class="language-markdown">```plantuml
 @startuml
@@ -747,7 +747,7 @@ stop
 <p>这个网址写死在预览脚本里，没有设置可以改，所以没法把预览指向你自己的服务器。第 2 步带来两个实际后果，一是你自己写的 <code>skinparam</code> 会被丢掉，没法在笔记里给图改样式；二是删除是逐行进行的，带花括号的多行 <code>skinparam</code> 块会丢掉第一行而留下其余部分，服务器随之返回一张语法错误图，所以在妙言里避免这种写法。</p>
 <h2 id="隐私">隐私</h2>
 <p>编码后的文字放在一个普通 HTTPS 请求的路径里，PlantUML 的编码只是 Deflate 压缩加一套类似 base64 的字符表，不是加密。所以每次预览渲染时，服务器都能读到你的图内容，类名、服务名、主机名和箭头上的标签都在里面，外加你的 IP 地址这类常规请求信息。PlantUML 的服务器页面没有说公共服务器会把收到的内容保留多久，所以应当把内容视为已经共享给了第三方。</p>
-<p>PlantUML 的服务器页面也讲了怎么自己部署服务器，各家应用的区别在于是否允许你选择地址，妙言 V4.5.0 不允许。</p>
+<p>PlantUML 的服务器页面也讲了怎么自己部署服务器，各家应用的区别在于是否允许你选择地址，妙言不允许。</p>
 <h2 id="在本地运行-plantuml">在本地运行 PlantUML</h2>
 <p>图不应该离开你的电脑时，就自己渲染再嵌入图片。PlantUML 命令行文档里写的是：</p>
 <pre><code class="language-bash">java -jar plantuml.jar --svg diagram.puml
@@ -769,7 +769,7 @@ cat diagram.puml | java -jar plantuml.jar --svg -pipe &gt; diagram.svg
 <h3 id="妙言里的-plantuml-能离线用吗">妙言里的 PlantUML 能离线用吗？</h3>
 <p>不能，图片来自 <code>www.plantuml.com</code>，没有网络时看到的是源文本。</p>
 <h3 id="妙言里能用自己的-plantuml-服务器吗">妙言里能用自己的 PlantUML 服务器吗？</h3>
-<p>V4.5.0 里不能，地址写死在预览脚本里。</p>
+<p>不能，地址写死在预览脚本里。</p>
 <h3 id="哪些图不该发到公共服务器">哪些图不该发到公共服务器？</h3>
 <p>带内部服务名、客户数据或未发布架构的图，这些用 Mermaid 或本地渲染的 SVG。</p>
     </div>

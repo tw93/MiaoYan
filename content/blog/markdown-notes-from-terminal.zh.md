@@ -33,17 +33,17 @@ miao update               # 更新 CLI
 
 **`miao new`** 用标题和可选的正文拼出一个 `miaoyan://new/` 地址交给应用，所以要装有妙言。正文是第二个参数，记得加引号。
 
-**`miao update`** 从妙言仓库 main 分支下载当前的 `miao` 脚本并替换已安装的，想更新 CLI 时再跑，不要把它当作脚本里的例行步骤。
+**`miao update`** 从妙言仓库最新的 GitHub release 标签下载 `miao` 脚本并替换已安装的，想更新 CLI 时再跑，不要把它当作脚本里的例行步骤。
 
 ## 它怎么找到你的笔记
 
 CLI 不需要配置，但知道它怎么找笔记库，出问题时就好排查。
 
 1. 如果设置了环境变量 `MIAOYAN_PATH`，就优先使用。
-2. 否则通过 `defaults read com.tw93.miaoyan` 读取妙言在你选择文件夹时保存的 `storageUrl` 偏好设置。
-3. 如果这样依然拿不到文件夹，再依次尝试 `~/Documents/MiaoYan`、`~/Save/MiaoYan` 和 `~/MiaoYan`。
+2. 否则依次读取直接下载版和 App Store 版的偏好设置文件里，妙言在你选择文件夹时保存的 `storageUrl`。
+3. 如果这样依然拿不到文件夹，再依次尝试妙言自己的 iCloud 云盘文件夹、`~/Documents/MiaoYan`、`~/Save/MiaoYan` 和 `~/MiaoYan`。
 
-都不存在时，它会打印「Error: Notes directory not found.」并提示设置 `MIAOYAN_PATH`。笔记库放在不常见的位置时（包括 CLI 不会去找的妙言自己的 iCloud 云盘文件夹），把路径写进 shell 配置：
+都不存在时，它会打印「Error: Notes directory not found.」并提示设置 `MIAOYAN_PATH`。笔记库放在不常见的位置时，把路径写进 shell 配置：
 
 ```bash
 export MIAOYAN_PATH="$HOME/Notes"

@@ -72,7 +72,7 @@ A backslash before the dollar sign tells the renderer to leave it alone. MiaoYan
 
 1. **Nothing renders and the dollar signs show.** The closing delimiter is missing or crosses a code span. Math cannot start in a code span and end outside it.
 2. **The formula is cut after an underscore.** The text was read as Markdown. In MiaoYan this is already protected, but in other apps use `\_` or switch to a block.
-3. **A block formula stays in a paragraph with stray line breaks.** Put `$$` on its own lines with a blank line before and after. MiaoYan also cleans line breaks inside single-paragraph `$$` blocks.
+3. **A block formula stays in a paragraph with stray line breaks.** Put `$$` on its own lines with a blank line before and after. MiaoYan also cleans line breaks inside single-paragraph `$$` blocks, and multi-line formulas render the same under either line-break setting.
 4. **Unbalanced braces.** Every `{` needs a `}`. The engine will not typeset a formula with unbalanced braces.
 5. **A command does nothing.** It may be outside KaTeX's supported list. Check the KaTeX "Supported Functions" page before assuming a bug.
 

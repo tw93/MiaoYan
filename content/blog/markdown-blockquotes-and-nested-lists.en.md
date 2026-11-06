@@ -1,4 +1,4 @@
-A blockquote is a line that starts with `>`, and a quote nests by adding another `>`. A nested list nests when the child's marker sits at or past the column where the parent's text begins: two spaces under `- `, three under `1. `, four under `10. `. Four spaces in the wrong place turn a line into a code block, and Markdown has no syntax for indenting a paragraph at all. MiaoYan V4.5.0 turns `> [!NOTE]` quotes into callouts like GitHub does, and its Tab key indents by two spaces, or three under a numbered line, which is enough until a number reaches 10.
+A blockquote is a line that starts with `>`, and a quote nests by adding another `>`. A nested list nests when the child's marker sits at or past the column where the parent's text begins: two spaces under `- `, three under `1. `, four under `10. `. Four spaces in the wrong place turn a line into a code block, and Markdown has no syntax for indenting a paragraph at all. MiaoYan turns `> [!NOTE]` quotes into callouts like GitHub does, and its Tab key indents by two spaces, or three under a numbered line, which is enough until a number reaches 10.
 
 ## Blockquote syntax
 
@@ -42,7 +42,7 @@ The preview also depends on the Line Break setting. cmark-gfm joins lazy lines w
 
 Each extra `>` adds a level, and `> >` and `>>` mean the same. The bare `>` before "Back in the outer one" matters, because without it that text would continue the inner paragraph.
 
-A callout is a quote whose first line is a marker. MiaoYan V4.5.0 recognizes five, in any letter case:
+A callout is a quote whose first line is a marker. MiaoYan recognizes five, in any letter case:
 
 ```markdown
 > [!NOTE]
@@ -65,7 +65,7 @@ A list item owns the following lines that are indented to its content column, th
 | `10. ` | 4 spaces |
 | `100. ` | 5 spaces |
 
-GitHub's guide gives the same method: count the characters before the item text and type that many spaces. These cases were run through cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan V4.5.0, with the same extensions and options. `1. one` followed by `  - sub` with two spaces gave two separate lists, not a nested one. One space under `- a` made a sibling. Three spaces under `10. one` made a separate bullet list, and four nested it. So for bullets any indent from 2 to 5 spaces works (six or more is read as text or code), and the "2 or 4 spaces" argument only matters under numbers, where you need the marker width.
+GitHub's guide gives the same method: count the characters before the item text and type that many spaces. These cases were run through cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan, with the same extensions and options. `1. one` followed by `  - sub` with two spaces gave two separate lists, not a nested one. One space under `- a` made a sibling. Three spaces under `10. one` made a separate bullet list, and four nested it. So for bullets any indent from 2 to 5 spaces works (six or more is read as text or code), and the "2 or 4 spaces" argument only matters under numbers, where you need the marker width.
 
 Markers also decide where lists start and end. Switching between `-`, `*` and `+`, or between `.` and `)`, starts a new list. The first number sets the start, so `3.` then `4.` renders as an ordered list starting at 3, `0.` is allowed, and later numbers are ignored, so `1.` on every line still counts up. A marker is one to nine digits, and only a list starting with `1` can interrupt a paragraph, which is why `2024. was a year` inside a paragraph stays text; [escape characters](/blog/markdown-escape-characters/) has the fix for the start of one.
 
@@ -102,7 +102,7 @@ The `&nbsp;` entities render as real spaces, and the full-width space (U+3000) i
 
 ## Indenting in MiaoYan's editor
 
-In V4.5.0, `Tab` indents the current line, or every selected line, by two spaces, and `Shift+Tab` removes up to three leading spaces or one tab. The Format menu has the same pair as Shift Right (`⌘]`) and Shift Left (`⌘[`). If the line above is a numbered item, `Tab` indents by three spaces, and it rewrites the number on a numbered line to `1`, so `2. two` becomes `   1. two`, the start of a nested numbered list.
+`Tab` indents the current line, or every selected line, by two spaces, and `Shift+Tab` removes up to three leading spaces or one tab. The Format menu has the same pair as Shift Right (`⌘]`) and Shift Left (`⌘[`). If the line above is a numbered item, `Tab` indents by three spaces, and it rewrites the number on a numbered line to `1`, so `2. two` becomes `   1. two`, the start of a nested numbered list.
 
 The width follows the line above, not the parent's marker, so under `10. item` you get three spaces, which the table above showed is a sibling list. Add a space and check the preview. `Return` at the end of a list or quote line starts the next with the same marker, with numbers counted up by one, and `Return` on an empty marker clears it. Only the first marker is copied, so in a `> >` quote you type the second `>` yourself.
 
@@ -122,4 +122,4 @@ That line was not a paragraph continuation, for example it started a list or cam
 
 ### Do callouts work in every Markdown app?
 
-No. GitHub and MiaoYan V4.5.0 render them, and others show a plain quote that begins with `[!NOTE]`.
+No. GitHub and MiaoYan render them, and others show a plain quote that begins with `[!NOTE]`.

@@ -35,9 +35,9 @@ Here is how it works, based on the source.
 
 **Pattern matching.** The editor and the index both look for `[[` followed by text and `]]`. The editor highlights the title as a link while you write. The index uses a separate pattern that takes any run of characters that is not a closing bracket, trims surrounding spaces, and treats the result as the target title.
 
-**The index.** Each time the note list refreshes, MiaoYan rebuilds the index from the notes in that list and records for each title the set of titles it links to (outgoing links) and the set of titles that link to it (incoming links). It reads the text each note already has loaded. Notes not opened since launch have no loaded text yet, so their links only count once you open or save them. Saving a note updates its entry in the index.
+**The index.** At launch, MiaoYan builds the index from every note file under the library folders, reading from disk the notes whose text is not loaded, and records for each title the set of titles it links to (outgoing links) and the set of titles that link to it (incoming links). Saving a note updates its entry in the index.
 
-**Clicking a link.** A wikilink becomes a `miaoyan://goto/<title>` address, the same URL scheme the `miao open` command uses. MiaoYan looks for a note with exactly that title. One match opens it. No match shows "Please make sure your title exists~" and creates nothing. Several matches, for example two folders that each contain `Meeting notes.md`, start a search for that title and show "Found that there are multiple titles of this~". So unique titles are not just tidy, they are what makes a link unambiguous.
+**Clicking a link.** A wikilink becomes a `miaoyan://goto/<title>` address, the same URL scheme the `miao open` command uses. MiaoYan looks for a note with exactly that title. One match opens it. No match shows "No note has this title" and creates nothing. Several matches, for example two folders that each contain `Meeting notes.md`, start a search for that title and show "Several notes share this title. Showing search results". So unique titles are not just tidy, they are what makes a link unambiguous.
 
 **Preview and export.** For the rendered preview, MiaoYan rewrites each wikilink into an ordinary Markdown link of the form `[Title](miaoyan://goto/Title)` before rendering, and skips anything inside code spans and fenced code blocks, so an `[[example]]` in a code sample stays as text. The export path uses the same preparation, which means an exported file contains `miaoyan://` links that only work on a Mac with MiaoYan installed.
 
@@ -52,9 +52,9 @@ The list is plain text and the titles are not clickable, so use the search field
 ## What goes wrong and how to check
 
 - **A link opens the wrong note or starts a search.** Two notes share a title. Rename one, since MiaoYan uses the file name as the identity.
-- **"Please make sure your title exists~".** The target does not match any file name exactly. Check case, spaces and punctuation, and remember that `Project plan.md` is `Project plan`.
+- **"No note has this title".** The target does not match any file name exactly. Check case, spaces and punctuation, and remember that `Project plan.md` is `Project plan`.
 - **You renamed a note and links elsewhere stopped working.** MiaoYan does not rewrite links in other notes when you rename a file. Search for the old title with the search field, which looks in both titles and bodies, and update the links.
-- **Backlinks look incomplete.** The index only counts links from notes in the current list whose text is loaded, meaning notes opened or saved since launch. Open the note that holds the link, or save it, and the backlink appears.
+- **Backlinks look incomplete.** The index covers every note file in the library, so a missing backlink usually means the title inside the link does not match the note's title exactly. Check case, spaces and punctuation.
 - **A link written for another app shows as text.** Aliases, heading links and embeds such as `![[image.png]]` are Obsidian syntax and MiaoYan does not support them. Convert them to plain titles or standard Markdown.
 
 ## When to use plain links instead

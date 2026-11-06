@@ -1,4 +1,4 @@
-Markdown has no syntax for image size. Write the image as `![alt text](path "optional title")`, and when you need a width, switch that one image to HTML: `<img src="/i/photo.png" width="320" alt="alt text">`. In MiaoYan V4.5.0 the HTML form works in the preview because raw HTML is allowed, and the width you set is capped at the column width. Keep images next to the notes and refer to them by a relative path, because that is the part that breaks when a note moves.
+Markdown has no syntax for image size. Write the image as `![alt text](path "optional title")`, and when you need a width, switch that one image to HTML: `<img src="/i/photo.png" width="320" alt="alt text">`. In MiaoYan the HTML form works in the preview because raw HTML is allowed, and the width you set is capped at the column width. Keep images next to the notes and refer to them by a relative path, because that is the part that breaks when a note moves.
 
 ## Image syntax, alt text and titles
 
@@ -12,15 +12,15 @@ Write the description for someone who cannot see the picture: what it shows, not
 
 ## Where the image file lives
 
-When you paste an image into a note, or insert an image file through the file picker, MiaoYan V4.5.0 copies it into an `i/` folder inside the folder the note is in, creating it if needed, and writes `![](/i/<filename>)` into the text. The folder name `i` is fixed, and files that are not images go to a `files/` folder in the same way. Image files keep their name, with each run of characters other than letters, digits, `-` and `_` turned into one `-`. A pasted screenshot has no file name, so it is saved as JPEG under a lowercase UUID, and a name that is already taken also falls back to a UUID. The mobile editor writes into the same `i/` folder, so after sync a note opened in the other app finds its pictures.
+When you paste an image into a note, or insert an image file through the file picker, MiaoYan copies it into an `i/` folder inside the folder the note is in, creating it if needed, and writes `![](/i/<filename>)` into the text. The folder name `i` is fixed, and files that are not images go to a `files/` folder in the same way. Image files keep their name, with each run of characters other than letters, digits, `-` and `_` turned into one `-`. A pasted screenshot has no file name, so it is saved as JPEG under a lowercase UUID, and a name that is already taken also falls back to a UUID. The mobile editor writes into the same `i/` folder, so after sync a note opened in the other app finds its pictures. Images and files dragged from Finder into the editor are copied in and linked the same way.
 
 In the preview, MiaoYan resolves `/i/harbor.jpg` against the folder the note is in, not against the root of your disk. A leading slash therefore does not mean what it means on a web server. GitHub's syntax page lists `/assets/images/electrocat.png` as the relative link for a file on the same branch and tells you to prefer relative links over absolute ones for images in a repository.
 
 ## How the preview resolves a path
 
-For each `<img>` the preview checks the `src` value. An `http://` or `https://` address is left alone. A path that starts with `/` but not `/i/` is treated as an absolute system path and used only if the file exists. Anything else, including `/i/...` and `images/fig.png`, is looked up relative to the note's folder and turned into a `file://` address. If the file is missing, MiaoYan replaces the whole image with a gray box that says `Image Not Found`. The first image loads straight away and later ones load lazily as you scroll, and a click zooms an image that sits in a paragraph.
+For each `<img>` the preview checks the `src` value. An `http://` or `https://` address is left alone. A path that starts with `/` but not `/i/` is treated as an absolute system path and used only if the file exists. Anything else, including `/i/...` and `images/fig.png`, is looked up relative to the note's folder and turned into a `file://` address. If the file is missing, MiaoYan replaces the whole image with a gray box that says `Image Not Found`. The first image loads straight away and later ones load lazily as you scroll, and a click zooms an image that sits in a paragraph. While an image is still loading, its box keeps its shape and shows a small turning arc.
 
-[[figure:markdown-images|Pasted images are copied into an i/ folder and referenced in the note text; the preview resolves the reference against the note's folder, PDF export prints the preview, and HTML export cannot find local images.|Pasting copies the file into i/ and writes its path into the note, so the preview and PDF find it, while HTML export does not.]]
+[[figure:markdown-images|Pasted images are copied into an i/ folder and referenced in the note text; the preview resolves the reference against the note's folder, PDF export prints the preview, and HTML export embeds them.|Pasting copies the file into i/ and writes its path into the note, so the preview, PDF and HTML export all carry it.]]
 
 A note that uses `/i/harbor.jpg` or `i/harbor.jpg` works on any Mac as long as the `i/` folder travels with the note. A note that uses `/Users/you/Pictures/harbor.jpg` works only on the Mac that has that file, and shows the placeholder everywhere else.
 
@@ -31,7 +31,7 @@ A note that uses `/i/harbor.jpg` or `i/harbor.jpg` works on any Mac as long as t
 - **The path is absolute.** It names a location on one machine.
 - **The link is remote and the page moved or the site blocks hotlinks.** The note then depends on someone else's server.
 
-Local files cost disk space and need to move with the note. Remote images keep the note small and need a network every time you open it. If you want remote links without hand-uploading, the Editor pane of MiaoYan's Settings has an `Upload Service:` menu with None, uPic, PicGo, Picsee and PicList. MiaoYan sends the pasted image over HTTP to PicGo or PicList, which must be running, and runs the uPic or Picsee app installed in `/Applications` to upload it. When an upload succeeds the remote URL goes into the note and the local copy is deleted; when it fails, the local `/i/` path stays and MiaoYan shows a failure message.
+Local files cost disk space and need to move with the note. Remote images keep the note small and need a network every time you open it. If you want remote links without hand-uploading, the Editor pane of MiaoYan's Settings has an `Image Upload` setting with None, uPic, PicGo, Picsee and PicList. MiaoYan sends the pasted image over HTTP to PicGo or PicList, which must be running, and runs the uPic or Picsee app installed in `/Applications` to upload it. When an upload succeeds the remote URL goes into the note and the local copy is deleted; when it fails, the local `/i/` path stays and MiaoYan shows a failure message.
 
 ## Resizing an image
 
@@ -52,7 +52,7 @@ One edge case is that if the file is missing, the `Image Not Found` replacement 
 
 PDF export prints the preview. It waits for images to have a width and swaps the lazy placeholders back to the real addresses, so local `/i/` images appear in the PDF. The details are in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/).
 
-HTML export is different in V4.5.0. It renders the Markdown without the local-image step and adds a base address of `https://cdn.miaoyan.app/Resources/DownView.bundle/`, so a file opened from Downloads cannot find `/i/harbor.jpg` or `images/fig.png`. Remote images do load. For a shareable single file today, use remote image URLs in the note, or export to PDF.
+HTML export embeds local images in the file as data, so `/i/harbor.jpg` and `images/fig.png` travel with it when you open it from Downloads or send it on. Remote images stay links and load from their address. The page still takes its styles and scripts from the base address `https://cdn.miaoyan.app/Resources/DownView.bundle/`, so it needs a network to look right.
 
 ## Checking the result
 

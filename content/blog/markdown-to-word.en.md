@@ -1,4 +1,4 @@
-The reliable way to turn Markdown into a Word file is Pandoc: `pandoc note.md -o note.docx` converts headings, lists, tables, code and math into real Word structures, and `--reference-doc` lets you set the fonts and styles of the result. MiaoYan V4.5.0 does not write `.docx`. Its exports are HTML, PNG image and PDF, so inside MiaoYan the choices are to export something Word can read or paste, or to run Pandoc on the same note file. Diagrams, callouts and wikilinks need a manual step in either case.
+The reliable way to turn Markdown into a Word file is Pandoc: `pandoc note.md -o note.docx` converts headings, lists, tables, code and math into real Word structures, and `--reference-doc` lets you set the fonts and styles of the result. MiaoYan does not write `.docx`. Its exports are HTML, PNG image and PDF, so inside MiaoYan the choices are to export something Word can read or paste, or to run Pandoc on the same note file. Diagrams, callouts and wikilinks need a manual step in either case.
 
 ## The Pandoc route
 
@@ -48,7 +48,7 @@ The default `reference.docx` also carries page size and margins. If the converte
 MiaoYan's File > Export submenu has HTML, Image, PDF and MiaoYan PPT PDF. None is a Word format, and none is a Pandoc substitute for editing. They are useful when the reader needs the document as rendered rather than as editable text.
 
 - **PDF.** File > Export > PDF prints the preview onto a fixed A4 page and saves it in Downloads. Use it when the recipient only reads, or when diagrams must stay exactly as drawn. [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers what it contains.
-- **HTML.** File > Export > HTML writes `Title.html`. Its styles and scripts load from MiaoYan's CDN and local image paths point at that CDN too, so they do not load, as described in [Markdown to HTML](/blog/markdown-to-html/). You can open it in a browser, select the content and paste it into Word, but what Word keeps from pasted HTML varies, so try it with your own note and check the result. Only remote images can come along.
+- **HTML.** File > Export > HTML writes `Title.html`. Its styles and scripts load from MiaoYan's CDN and local images are embedded in the file, as described in [Markdown to HTML](/blog/markdown-to-html/). You can open it in a browser, select the content and paste it into Word, but what Word keeps from pasted HTML varies, so try it with your own note and check the result.
 - **Image.** Writes a PNG of the whole preview, which suits a single figure more than a document.
 
 ## What survives and what breaks
@@ -82,7 +82,7 @@ Pandoc's raw blocks can insert Word-specific XML, such as a page break, into a d
 
 ### Can MiaoYan save a .docx directly?
 
-No. V4.5.0 exports HTML, Image, PDF and MiaoYan PPT PDF. Use Pandoc on the note file for a docx.
+No. MiaoYan exports HTML, Image, PDF and MiaoYan PPT PDF. Use Pandoc on the note file for a docx.
 
 ### Why do my Chinese characters look different from the English ones?
 

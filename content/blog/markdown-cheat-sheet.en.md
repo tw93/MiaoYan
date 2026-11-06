@@ -82,9 +82,9 @@ so this one starts on a new line.
 A blank line starts a new paragraph.
 ```
 
-In CommonMark, a single newline inside a paragraph is a soft break that renders as a space, and a blank line starts a new paragraph. To force a line break without starting a paragraph, end the line with a backslash or with two spaces; both turn into a `<br>`. Apps differ here. MiaoYan has a Line Break setting in its Editor settings with two options: MiaoYan (the default, each newline starts a new line in the preview) or Github (a new line in the preview needs a blank line). In Github mode MiaoYan follows the CommonMark rule exactly, so a single newline becomes a space and the backslash or two spaces still give you a break. The preview and HTML or PDF export both follow the setting. If your text looks joined together or spread out in one app and not another, this is usually why.
+In CommonMark, a single newline inside a paragraph is a soft break that renders as a space, and a blank line starts a new paragraph. To force a line break without starting a paragraph, end the line with a backslash or with two spaces; both turn into a `<br>`. Apps differ here. MiaoYan has a Line Breaks setting in its Editor settings with two options: Every Newline (the default, each newline starts a new line in the preview) or GitHub Style (a new line in the preview needs a blank line). In GitHub Style MiaoYan follows the CommonMark rule exactly, so a single newline becomes a space and the backslash or two spaces still give you a break. The preview and HTML or PDF export both follow the setting. If your text looks joined together or spread out in one app and not another, this is usually why.
 
-Two pitfalls follow from that. A note written in MiaoYan's default mode can look right in MiaoYan and run together on GitHub or in other editors, which use the soft-break rule, so switch to Github mode while writing anything you will publish elsewhere and the preview will match. And trailing spaces are invisible and often stripped by editors that trim whitespace on save, which is why the backslash is the more reliable way to break a line in a file you share.
+Two pitfalls follow from that. A note written in MiaoYan's default mode can look right in MiaoYan and run together on GitHub or in other editors, which use the soft-break rule, so switch to GitHub Style while writing anything you will publish elsewhere and the preview will match. And trailing spaces are invisible and often stripped by editors that trim whitespace on save, which is why the backslash is the more reliable way to break a line in a file you share.
 
 ### Escaping
 
@@ -119,7 +119,7 @@ In MiaoYan's preview, a table spans the width of the note, and a table too wide 
 
 A task item is a list item whose text starts with `[ ]` for an open task or `[x]` for a done one, followed by a space. The space inside the brackets matters: `[]` stays literal text, and so does `-[ ]` with no space after the hyphen. Task items nest like any other list item.
 
-In MiaoYan, you can click the checkbox in preview mode to toggle it, and the change is written back to the file as `- [x]` or `- [ ]`, so the note stays plain Markdown. To find the line to change, MiaoYan counts the `- [ ]` and `- [x]` items in the note. Write task items with a hyphen and a lowercase `x`: items written with `*`, `+`, a number or a capital `X` still show as checkboxes, but clicking one can flip a different line.
+In MiaoYan, you can click the checkbox in preview mode to toggle it, and the change is written back to the file as `- [x]` or `- [ ]`, so the note stays plain Markdown. To find the line to change, MiaoYan uses the item's own line in the note, so items written with a hyphen, `*`, `+` or a number, and with a lowercase `x` or a capital `X`, all toggle the right line.
 
 ### Strikethrough
 
@@ -171,11 +171,11 @@ MiaoYan renders raw HTML in the preview, and `/fold` followed by `Tab` inserts t
 
 ### Wikilinks and frontmatter
 
-`[[Project plan]]` links to another note by its exact title, without the `.md` suffix, and MiaoYan builds backlinks from them. A block at the very start of the note between two `---` lines is treated as frontmatter and hidden in the rendered preview.
+`[[Project plan]]` links to another note by its exact title, without the `.md` suffix, and MiaoYan builds backlinks from them. A YAML block at the very start of the note between two `---` lines is treated as frontmatter and hidden in the rendered preview.
 
 ### Subscript and superscript
 
-MiaoYan's bundled syntax guide shows `H~2~O` and `26^th^`, but MiaoYan reads `~2~` as strikethrough and leaves `^th^` as plain text. Use `<sub>` and `<sup>` HTML if you need either.
+MiaoYan's bundled syntax guide writes `H<sub>2</sub>O` and `26<sup>th</sup>`, because MiaoYan reads `~2~` as strikethrough and leaves `^th^` as plain text. Use `<sub>` and `<sup>` HTML if you need either.
 
 ## How the pieces fit
 
@@ -199,7 +199,7 @@ CommonMark is a precise specification of the core syntax. GFM is a superset that
 
 ### Do I need two spaces at the end of a line?
 
-Only if your app follows strict CommonMark and you want a line break without a new paragraph. MiaoYan's default Line Break setting breaks at every newline.
+Only if your app follows strict CommonMark and you want a line break without a new paragraph. MiaoYan's default Line Breaks setting breaks at every newline.
 
 ### Can I paste a cheat sheet into MiaoYan to test it?
 

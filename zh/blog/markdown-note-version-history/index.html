@@ -18,7 +18,7 @@
 <meta property="og:description" content="妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="笔记管理">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 笔记的版本历史怎么用", "item": "https://miaoyan.app/zh/blog/markdown-note-version-history/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-note-version-history/#article", "headline": "Markdown 笔记的版本历史怎么用", "description": "妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。", "url": "https://miaoyan.app/zh/blog/markdown-note-version-history/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-note-version-history/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp", "timeRequired": "PT7M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言每次输入都会存一个版本吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会，编辑时每篇笔记最多每五分钟保存一个，另外离开笔记时还会强制保存一个。"}}, {"@type": "Question", "name": "能关掉版本历史吗？", "acceptedAnswer": {"@type": "Answer", "text": "应用设置里没有提供这个开关，所以它一直开着。"}}, {"@type": "Question", "name": "版本存在我的笔记文件夹里吗？", "acceptedAnswer": {"@type": "Answer", "text": "不在，存在应用的支持目录里，所以不会出现在访达里你的笔记旁边，也不会跟着同步。"}}, {"@type": "Question", "name": "能找回我删掉的笔记吗？", "acceptedAnswer": {"@type": "Answer", "text": "放进废纸篓的笔记可以从废纸篓里恢复。历史窗口按路径查找版本，所以放进废纸篓之前的版本，要等笔记回到原来的路径才会重新出现。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 笔记的版本历史怎么用", "item": "https://miaoyan.app/zh/blog/markdown-note-version-history/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-note-version-history/#article", "headline": "Markdown 笔记的版本历史怎么用", "description": "妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。", "url": "https://miaoyan.app/zh/blog/markdown-note-version-history/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-note-version-history/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp", "timeRequired": "PT7M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言每次输入都会存一个版本吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会，编辑时每篇笔记最多每五分钟保存一个，另外离开笔记时还会强制保存一个。"}}, {"@type": "Question", "name": "能关掉版本历史吗？", "acceptedAnswer": {"@type": "Answer", "text": "应用设置里没有提供这个开关，所以它一直开着。"}}, {"@type": "Question", "name": "版本存在我的笔记文件夹里吗？", "acceptedAnswer": {"@type": "Answer", "text": "不在，存在应用的支持目录里，所以不会出现在访达里你的笔记旁边，也不会跟着同步。"}}, {"@type": "Question", "name": "能找回我删掉的笔记吗？", "acceptedAnswer": {"@type": "Answer", "text": "放进废纸篓的笔记可以从废纸篓里恢复。历史窗口按路径查找版本，放进废纸篓时版本会跟着笔记走，撤销删除后再回来。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -704,7 +704,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <li>窗口顶部是「当前版本」，下面是保存下来的版本，显示时间和「2 小时前」这样的相对描述，点一个就能预览它的文字。</li>
 <li>点「恢复到此版本」，妙言会用那个版本替换笔记内容，并提示「已恢复到」加上那个版本的时间。</li>
 </ol>
-<p>如果这篇笔记还没有快照，窗口会显示「暂无历史版本」，并说明「编辑时每 5 分钟自动保存一个版本」。</p>
+<p>如果这篇笔记还没有快照，窗口会显示「暂无历史版本」。</p>
 <p>恢复本身也是可以撤回的。替换文字之前，妙言会先把你当前的文字保存成一个新快照，所以替换前的文字会作为一个新快照出现在同一个列表里，你随时可以回去。</p>
 <h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
 <p>下面是看源码梳理出来的实现逻辑，不是产品承诺。</p>
@@ -712,7 +712,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <p><strong>哪些会被跳过。</strong> 空白笔记不会保存。如果一个快照和最新的已保存版本相比，逐行去掉首尾空白并忽略空行之后完全一样，也会被跳过，所以单纯的空格改动不会产生新条目。</p>
 <p><strong>文件放在哪。</strong> 每篇笔记在 <code>Library/Application Support/com.tw93.miaoyan/Versions/</code> 下有自己的文件夹，名字是笔记文件名加上完整路径的哈希，里面是按 UTC 时间戳命名的 <code>.md</code> 文件，比如 <code>2026-10-18T15-42-07Z.md</code>，本身就是普通文本，任何编辑器都能打开，历史窗口里显示的则是你本地时间的日期。</p>
 <p><strong>保留多少。</strong> 每篇最多 20 个，保存新版本时如果文件夹里超过 20 个，最旧的会被删除。</p>
-<p><strong>重命名、移动和删除。</strong> 版本是按路径归档的，重命名笔记、把它移到别的文件夹或者放进废纸篓都会让它换一个路径，之前的历史仍留在旧路径下，历史窗口会从新路径重新开始。</p>
+<p><strong>重命名、移动和删除。</strong> 版本是按路径归档的，重命名笔记、把它移到别的文件夹或者放进废纸篓历史都会跟着搬到新路径下，撤销删除时也会回来。在访达里整体搬走笔记库不会被跟踪，历史仍留在旧路径下。</p>
 <p><strong>五分钟的计时只在本次运行内有效。</strong> 上一次保存快照的时间记录在内存里，所以退出再打开应用之后，一篇笔记的第一次保存可能立刻产生快照，前提是文字和最新的已保存版本不同。</p>
 <h2 id="它能覆盖什么不能覆盖什么">它能覆盖什么，不能覆盖什么</h2>
 <table>
@@ -784,7 +784,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <li><strong>窗口显示「暂无历史版本」。</strong> 这篇笔记是新的、空的，或者没有用不同的文字保存过两次。编辑一下，等一会儿，切到别的笔记再回来。</li>
 <li><strong>预期的版本不见了。</strong> 历史只保留最新的 20 个，而且内容基本一致的保存会被跳过，看看文字是不是只差了空白。</li>
 <li><strong>恢复后文件好像没变。</strong> 文字先在编辑器里替换，经过平常的短暂延迟才写进磁盘，重新打开笔记确认一下。</li>
-<li><strong>你移动过笔记库文件夹。</strong> 快照按笔记的完整路径归档，如果在访达里把整个笔记库搬走，或者重命名、移动笔记，路径都会发生变化，原路径下的历史版本就找不到了。</li>
+<li><strong>你移动过笔记库文件夹。</strong> 快照按笔记的完整路径归档，如果在访达里把整个笔记库搬走，路径会发生变化，原路径下的历史版本就找不到了。</li>
 </ul>
 <p>妙言是面向纯 Markdown 文件夹的 Mac 应用，源码在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本覆盖 Mac、iPhone 和 iPad。</p>
 <h2 id="常见问题">常见问题</h2>
@@ -795,7 +795,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <h3 id="版本存在我的笔记文件夹里吗">版本存在我的笔记文件夹里吗？</h3>
 <p>不在，存在应用的支持目录里，所以不会出现在访达里你的笔记旁边，也不会跟着同步。</p>
 <h3 id="能找回我删掉的笔记吗">能找回我删掉的笔记吗？</h3>
-<p>放进废纸篓的笔记可以从废纸篓里恢复。历史窗口按路径查找版本，所以放进废纸篓之前的版本，要等笔记回到原来的路径才会重新出现。</p>
+<p>放进废纸篓的笔记可以从废纸篓里恢复。历史窗口按路径查找版本，放进废纸篓时版本会跟着笔记走，撤销删除后再回来。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

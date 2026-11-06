@@ -61,7 +61,7 @@ Lists, tables, images and fenced code all work inside once the blank lines are r
 
 ## How MiaoYan renders it
 
-MiaoYan parses Markdown with cmark-gfm and renders HTML with the option that allows raw HTML (`CMARK_OPT_UNSAFE`) in V4.5.0, so a `<details>` block reaches the preview unchanged and the WebKit view draws it as a native disclosure widget. The preview's stylesheet gives `summary` a pointer cursor and a small left padding, and nothing more elaborate than that.
+MiaoYan parses Markdown with cmark-gfm and renders HTML with the option that allows raw HTML (`CMARK_OPT_UNSAFE`), so a `<details>` block reaches the preview unchanged and the WebKit view draws it as a native disclosure widget. The preview's stylesheet gives `summary` a pointer cursor and a small left padding, and nothing more elaborate than that.
 
 In the editor, type `/fold` and press `Tab` to insert the block. The template it inserts is the one above: `<details>`, a `<summary>` line with selected placeholder text, a blank line, a body line and the closing tag. The placeholder text is Chinese in the shipped template, so replace it before sharing. The [cheat sheet](/blog/markdown-cheat-sheet/) lists this shortcut next to the other slash commands.
 
@@ -69,7 +69,7 @@ Two things are easy to trip over. A heading inside a closed block is hidden, and
 
 ## Export and printing
 
-Export offers HTML, Image and PDF, and in V4.5.0 the image and PDF exports both start from the preview as it is at that moment: Image takes a snapshot of the preview page, and PDF copies the preview's current HTML into the print step. Nothing in that path opens `<details>` blocks. When you click a summary, the browser adds or removes the `open` attribute on that element, so a block you opened in the preview exports open, and a closed block exports as its label alone. If you export while only the editor is showing, MiaoYan turns on the preview first, and blocks start closed unless they carry `open`.
+Export offers HTML, Image and PDF, and the image and PDF exports both start from the preview as it is at that moment: Image takes a snapshot of the preview page, and PDF copies the preview's current HTML into the print step. Nothing in that path opens `<details>` blocks. When you click a summary, the browser adds or removes the `open` attribute on that element, so a block you opened in the preview exports open, and a closed block exports as its label alone. If you export while only the editor is showing, MiaoYan turns on the preview first, and blocks start closed unless they carry `open`.
 
 If the content must appear on paper, write `<details open>` for those blocks. They then start expanded in the preview and in the export. [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers the rest of the PDF settings.
 

@@ -1,4 +1,4 @@
-把 Markdown 转成 Word，最稳的办法是 Pandoc，`pandoc note.md -o note.docx` 会把标题、列表、表格、代码和公式转成真正的 Word 结构，再用 `--reference-doc` 指定字体和样式。妙言 V4.5.0 不直接写 `.docx`，它的导出是 HTML、图片和 PDF，所以在妙言里要么导出 Word 能读或能粘贴的东西，要么对同一个笔记文件跑 Pandoc。图表、提示块和双链，两条路都需要手动处理一步。
+把 Markdown 转成 Word，最稳的办法是 Pandoc，`pandoc note.md -o note.docx` 会把标题、列表、表格、代码和公式转成真正的 Word 结构，再用 `--reference-doc` 指定字体和样式。妙言不直接写 `.docx`，它的导出是 HTML、图片和 PDF，所以在妙言里要么导出 Word 能读或能粘贴的东西，要么对同一个笔记文件跑 Pandoc。图表、提示块和双链，两条路都需要手动处理一步。
 
 ## Pandoc 这条路
 
@@ -48,7 +48,7 @@ pandoc note.md -o note.docx --reference-doc=custom-reference.docx
 妙言的文件 > 导出子菜单有 HTML、图片、PDF 和妙言 PPT PDF，没有一个是 Word 格式，也不能替代 Pandoc 去编辑，适合的情形是读的人要的是渲染后的样子，而不是可编辑文字。
 
 - **PDF。** 文件 > 导出 > PDF 把预览打印到固定的 A4 页面，保存在下载目录，对方只读，或者图表必须保持原样时用它，内容见 [Mac 上把 Markdown 导出 PDF](/zh/blog/markdown-to-pdf-mac/)。
-- **HTML。** 文件 > 导出 > HTML 写出 `标题.html`，样式和脚本从妙言的 CDN 加载，本地图片的路径也指向那个 CDN，加载不出来，见 [Markdown 转 HTML](/zh/blog/markdown-to-html/)。可以用浏览器打开，选中内容再粘贴进 Word，但 Word 对粘贴进来的 HTML 保留多少并不固定，拿自己的笔记试一次再检查结果，能跟着过来的只有远程图片。
+- **HTML。** 文件 > 导出 > HTML 写出 `标题.html`，样式和脚本从妙言的 CDN 加载，本地图片则嵌在文件里，见 [Markdown 转 HTML](/zh/blog/markdown-to-html/)。可以用浏览器打开，选中内容再粘贴进 Word，但 Word 对粘贴进来的 HTML 保留多少并不固定，拿自己的笔记试一次再检查结果。
 - **图片。** 写出整个预览的 PNG，更适合单张插图，不适合当文档。
 
 ## 哪些能保留，哪些会丢
@@ -82,7 +82,7 @@ Pandoc 的 raw 块可以往 docx 里插入 Word 专用的 XML，比如分页符�
 
 ### 妙言能直接存成 .docx 吗？
 
-不能，V4.5.0 导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。
+不能，妙言导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。
 
 ### 为什么中文和英文看起来不是一个字体？
 

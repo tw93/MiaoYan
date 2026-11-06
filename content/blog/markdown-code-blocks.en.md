@@ -63,7 +63,7 @@ This is highlighting of a text convention, not a Markdown feature, so it works w
 
 ## How MiaoYan renders code blocks
 
-MiaoYan parses Markdown with cmark-gfm, which turns a fenced block into `<pre><code class="language-...">`. The preview then loads highlight.js 11.5.1, the version recorded in the bundle's vendor manifest at V4.5.0, and colors every `pre code` element. Three behaviors follow from how that library works.
+MiaoYan parses Markdown with cmark-gfm, which turns a fenced block into `<pre><code class="language-...">`. The preview then loads highlight.js 11.5.1, the version recorded in the bundle's vendor manifest, and colors every `pre code` element. Three behaviors follow from how that library works.
 
 First, the bundle is a trimmed build, not the full highlight.js catalog. It registers 34 language definitions: Bash, C, C++, C#, CSS, Diff, Go, HTML and XML, INI and TOML, Java, JavaScript, JSON, Kotlin, Less, Lua, Makefile, Markdown, Objective-C, Perl, PHP, PHP template, plain text, Python, Python REPL, R, Ruby, Rust, SCSS, Shell Session, SQL, Swift, TypeScript, Visual Basic .NET and YAML. Common short names such as `js`, `ts`, `py`, `sh`, `yml`, `md`, `rs` and `rb` are aliases. There is no Dockerfile or GraphQL definition, for example.
 
@@ -81,7 +81,7 @@ Math is different: it is not a fence. Dollar-delimited math is handled outside c
 
 ## Copying and exporting
 
-The V4.5.0 preview has no copy button on code blocks, so you select the text and copy it as usual. In the other direction, when you paste structured HTML copied from a web page, MiaoYan converts it to Markdown, and a code block becomes a fence carrying the language class it found, with a longer fence if the code itself contains three backticks.
+The preview has no copy button on code blocks, so you select the text and copy it as usual. In the other direction, when you paste structured HTML copied from a web page, MiaoYan converts it to Markdown, and a code block becomes a fence carrying the language class it found, with a longer fence if the code itself contains three backticks.
 
 The Export submenu offers HTML, Image and PDF. PDF export is covered in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/). An exported HTML file points at MiaoYan's CDN for the highlighter and diagram scripts, so colors and diagrams in that file need a network connection when it is opened.
 

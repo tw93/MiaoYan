@@ -18,7 +18,7 @@
 <meta property="og:description" content="用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-slides.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转幻灯片：用 --- 分页", "item": "https://miaoyan.app/zh/blog/markdown-to-slides/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-slides/#article", "headline": "Markdown 转幻灯片：用 --- 分页", "description": "用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。", "url": "https://miaoyan.app/zh/blog/markdown-to-slides/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-slides/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-slides.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "能导出成 PowerPoint 吗", "acceptedAnswer": {"@type": "Answer", "text": "妙言不支持，PPT 模式导出的是 PDF，Marp 列出了 PowerPoint 输出。"}}, {"@type": "Question", "name": "需要懂 reveal.js 吗", "acceptedAnswer": {"@type": "Answer", "text": "写基础演示稿不需要，不过了解它的属性注释对设置背景和逐步显示有帮助。"}}, {"@type": "Question", "name": "同一个文件能在别的工具里用吗", "acceptedAnswer": {"@type": "Answer", "text": "--- 分隔符可以带到 Marp 和 Slidev，但 <!-- .slide: --> 这类注释是 reveal.js 专用的。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转幻灯片：用 --- 分页", "item": "https://miaoyan.app/zh/blog/markdown-to-slides/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-slides/#article", "headline": "Markdown 转幻灯片：用 --- 分页", "description": "用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。", "url": "https://miaoyan.app/zh/blog/markdown-to-slides/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-slides/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-slides.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "能导出成 PowerPoint 吗", "acceptedAnswer": {"@type": "Answer", "text": "妙言不支持，PPT 模式导出的是 PDF，Marp 列出了 PowerPoint 输出。"}}, {"@type": "Question", "name": "需要懂 reveal.js 吗", "acceptedAnswer": {"@type": "Answer", "text": "写基础演示稿不需要，不过了解它的属性注释对设置背景和逐步显示有帮助。"}}, {"@type": "Question", "name": "同一个文件能在别的工具里用吗", "acceptedAnswer": {"@type": "Answer", "text": "--- 分隔符可以带到 Marp 和 Slidev，但 <!-- .slide: --> 这类注释是 reveal.js 专用的。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -718,7 +718,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 2. 导出
 </code></pre>
 <p>分隔符之间的每一块就是一页，第一块是开场页，所以一个一级标题加一行副标题就是封面。<code>---</code> 要独占一行，同一行不能有别的字符。妙言自带的 PPT 指南和 Agent skill 都写明，一页里面不能再放横线，因为同样的字符会被当作分页符。</p>
-<p>如果在没有 <code>---</code> 的笔记上按快捷键，妙言会提示「没有分隔符 --- 标识，无法使用妙言 PPT」，幻灯片不会打开。</p>
+<p>如果在没有 <code>---</code> 的笔记上按快捷键，妙言会提示「用 --- 分隔幻灯片后才能演示」，幻灯片不会打开。</p>
 <h2 id="在妙言里怎么用">在妙言里怎么用</h2>
 <ol>
 <li>打开或新建一篇笔记，在页与页之间加上 <code>---</code>。</li>
@@ -804,8 +804,8 @@ let b = 2
 <p>表里的信息来自 marp.app、revealjs.com 和 sli.dev，核对日期是 2026-10-18。需要给别人一个 <code>.pptx</code> 文件，选 Marp。想在 YAML 里按页设置布局和背景，并且不介意搭它的工具链，选 Slidev。想完全掌控页面，直接用 reveal.js。演示稿只是平时笔记的副产品，想用一个快捷键就开讲，选妙言的这个模式。</p>
 <h2 id="出问题时怎么查">出问题时怎么查</h2>
 <ul>
-<li><strong>按快捷键只弹出一条提示。</strong> 笔记里没有 <code>---</code> 行，妙言会提示「没有分隔符 --- 标识，无法使用妙言 PPT」。</li>
-<li><strong>第一页不见了。</strong> 笔记如果以一行 <code>---</code> 开头，到下一行 <code>---</code> 为止的内容都会被当作 frontmatter 隐藏，所以演示稿要从标题开始写，不要以分隔符开头。</li>
+<li><strong>按快捷键只弹出一条提示。</strong> 笔记里没有 <code>---</code> 行，妙言会提示「用 --- 分隔幻灯片后才能演示」。</li>
+<li><strong>第一页不见了。</strong> 笔记如果以一行 <code>---</code> 开头，而到下一行 <code>---</code> 为止的内容看起来像 YAML 的 <code>key: value</code>，这一段会被当作 frontmatter 隐藏，所以第一页不要写成 <code>key: value</code> 的样子。</li>
 <li><strong>一页里想放横线。</strong> 换成标题或者留白。</li>
 <li><strong>图片不显示。</strong> 笔记里改用 <code>/i/&lt;文件名&gt;</code> 或 <code>https://</code> 地址，不要用 <code>file://</code> 路径。</li>
 <li><strong>需要 PowerPoint 文件。</strong> 妙言导出的是 PPT PDF，不是 <code>.pptx</code>。</li>

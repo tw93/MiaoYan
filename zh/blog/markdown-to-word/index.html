@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f5f4ed">
 <script>document.documentElement.classList.add('js')</script>
 <title>Markdown 转 Word：Pandoc 与妙言导出 · 妙言博客</title>
-<meta name="description" content="用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。">
+<meta name="description" content="用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言能导出什么。">
 <link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-to-word/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-to-word/">
 <link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-to-word/">
@@ -15,10 +15,10 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-to-word/">
 <meta property="og:title" content="Markdown 转 Word：Pandoc 与妙言导出 · 妙言博客">
-<meta property="og:description" content="用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。">
+<meta property="og:description" content="用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言能导出什么。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-word.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转 Word：Pandoc 与妙言导出", "item": "https://miaoyan.app/zh/blog/markdown-to-word/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-word/#article", "headline": "Markdown 转 Word：Pandoc 与妙言导出", "description": "用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。", "url": "https://miaoyan.app/zh/blog/markdown-to-word/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-word/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-word.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言能直接存成 .docx 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，V4.5.0 导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。"}}, {"@type": "Question", "name": "为什么中文和英文看起来不是一个字体？", "acceptedAnswer": {"@type": "Answer", "text": "样式里西文和中文各指定了一个字体，在参考文档的样式里设置东亚字体。"}}, {"@type": "Question", "name": "需要装 LaTeX 吗？", "acceptedAnswer": {"@type": "Answer", "text": "转 docx 不需要，Pandoc 对 LaTeX 的依赖在它默认的 PDF 路径上，不在 Word 文件上。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转 Word：Pandoc 与妙言导出", "item": "https://miaoyan.app/zh/blog/markdown-to-word/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-word/#article", "headline": "Markdown 转 Word：Pandoc 与妙言导出", "description": "用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言能导出什么。", "url": "https://miaoyan.app/zh/blog/markdown-to-word/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-word/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-word.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言能直接存成 .docx 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，妙言导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。"}}, {"@type": "Question", "name": "为什么中文和英文看起来不是一个字体？", "acceptedAnswer": {"@type": "Answer", "text": "样式里西文和中文各指定了一个字体，在参考文档的样式里设置东亚字体。"}}, {"@type": "Question", "name": "需要装 LaTeX 吗？", "acceptedAnswer": {"@type": "Answer", "text": "转 docx 不需要，Pandoc 对 LaTeX 的依赖在它默认的 PDF 路径上，不在 Word 文件上。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -697,7 +697,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-word.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>把 Markdown 转成 Word，最稳的办法是 Pandoc，<code>pandoc note.md -o note.docx</code> 会把标题、列表、表格、代码和公式转成真正的 Word 结构，再用 <code>--reference-doc</code> 指定字体和样式。妙言 V4.5.0 不直接写 <code>.docx</code>，它的导出是 HTML、图片和 PDF，所以在妙言里要么导出 Word 能读或能粘贴的东西，要么对同一个笔记文件跑 Pandoc。图表、提示块和双链，两条路都需要手动处理一步。</p>
+<p>把 Markdown 转成 Word，最稳的办法是 Pandoc，<code>pandoc note.md -o note.docx</code> 会把标题、列表、表格、代码和公式转成真正的 Word 结构，再用 <code>--reference-doc</code> 指定字体和样式。妙言不直接写 <code>.docx</code>，它的导出是 HTML、图片和 PDF，所以在妙言里要么导出 Word 能读或能粘贴的东西，要么对同一个笔记文件跑 Pandoc。图表、提示块和双链，两条路都需要手动处理一步。</p>
 <h2 id="pandoc-这条路">Pandoc 这条路</h2>
 <pre><code class="language-bash">pandoc note.md -o note.docx
 </code></pre>
@@ -725,7 +725,7 @@ pandoc note.md -o note.docx --reference-doc=custom-reference.docx
 <p>妙言的文件 &gt; 导出子菜单有 HTML、图片、PDF 和妙言 PPT PDF，没有一个是 Word 格式，也不能替代 Pandoc 去编辑，适合的情形是读的人要的是渲染后的样子，而不是可编辑文字。</p>
 <ul>
 <li><strong>PDF。</strong> 文件 &gt; 导出 &gt; PDF 把预览打印到固定的 A4 页面，保存在下载目录，对方只读，或者图表必须保持原样时用它，内容见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>。</li>
-<li><strong>HTML。</strong> 文件 &gt; 导出 &gt; HTML 写出 <code>标题.html</code>，样式和脚本从妙言的 CDN 加载，本地图片的路径也指向那个 CDN，加载不出来，见 <a href="/zh/blog/markdown-to-html/">Markdown 转 HTML</a>。可以用浏览器打开，选中内容再粘贴进 Word，但 Word 对粘贴进来的 HTML 保留多少并不固定，拿自己的笔记试一次再检查结果，能跟着过来的只有远程图片。</li>
+<li><strong>HTML。</strong> 文件 &gt; 导出 &gt; HTML 写出 <code>标题.html</code>，样式和脚本从妙言的 CDN 加载，本地图片则嵌在文件里，见 <a href="/zh/blog/markdown-to-html/">Markdown 转 HTML</a>。可以用浏览器打开，选中内容再粘贴进 Word，但 Word 对粘贴进来的 HTML 保留多少并不固定，拿自己的笔记试一次再检查结果。</li>
 <li><strong>图片。</strong> 写出整个预览的 PNG，更适合单张插图，不适合当文档。</li>
 </ul>
 <h2 id="哪些能保留哪些会丢">哪些能保留，哪些会丢</h2>
@@ -789,7 +789,7 @@ pandoc note.md -o note.docx --reference-doc=custom-reference.docx
 <p>Pandoc 的 raw 块可以往 docx 里插入 Word 专用的 XML，比如分页符，手册在 <code>raw_attribute</code> 扩展那一节给了例子，这个扩展在 Pandoc 自己的 Markdown 里开着、在 <code>gfm</code> 里关着，按 GFM 读时要写成 <code>-f gfm+raw_attribute</code>，Markdown 表达不了的版式细节可以这样控制。Markdown 本身能写什么，见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="妙言能直接存成-docx-吗">妙言能直接存成 .docx 吗？</h3>
-<p>不能，V4.5.0 导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。</p>
+<p>不能，妙言导出 HTML、图片、PDF 和妙言 PPT PDF，要 docx 就对笔记文件跑 Pandoc。</p>
 <h3 id="为什么中文和英文看起来不是一个字体">为什么中文和英文看起来不是一个字体？</h3>
 <p>样式里西文和中文各指定了一个字体，在参考文档的样式里设置东亚字体。</p>
 <h3 id="需要装-latex-吗">需要装 LaTeX 吗？</h3>
@@ -798,7 +798,7 @@ pandoc note.md -o note.docx --reference-doc=custom-reference.docx
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-to-html/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 HTML：命令行与妙言导出</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-to-html/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转 HTML：命令行与妙言导出</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-blockquotes-and-nested-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 引用与嵌套列表的缩进规则</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

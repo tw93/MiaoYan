@@ -31,7 +31,7 @@ The Mac app reads a folder you choose in Preferences. The iPad app finds the lib
 
 So the sync path is: the Mac saves a `.md` file in iCloud Drive, iCloud uploads it, the iPad sees the file appear and lists it. MiaoYan has no sync of its own. That is why the folder on the Mac must be the same iCloud Drive folder the iPad opens. The details are in [Sync Markdown notes across devices](/blog/sync-markdown-notes-across-devices/).
 
-One more detail: the iPad app first reads the catalog of notes iCloud reports and then their contents. During a first launch it shows "Found N notes…", and until the files arrive search shows "iCloud notes still downloading; results will improve as they sync." A list that looks short right after install is usually this, not data loss.
+One more detail: the iPad app first reads the catalog of notes iCloud reports and then their contents. During a first launch it shows "Found N notes…", and until the files arrive search shows a count such as "12 iCloud notes still downloading" A list that looks short right after install is usually this, not data loss.
 
 ## When a note does not show up on the other device
 
@@ -40,7 +40,7 @@ Work down this list.
 1. **Check the Mac saved it.** The Mac app writes the file about a second and a half after you stop typing. Open the folder in Finder and confirm the `.md` file is there.
 2. **Check both devices point at the same folder.** On the Mac, Preferences > "Note Location". On the iPad, Settings > Library. A different folder on either side means two separate libraries.
 3. **Look for a sync status.** In Settings > Library the iPad app shows Syncing, Synced, Offline or "Sync issue". Offline means the app could not reach its iCloud container, so check that iCloud Drive is on for the iPad.
-4. **Wait for the first launch to finish.** The app says "Downloading your iCloud notes. Next launch will be instant." on a large library.
+4. **Wait for the first launch to finish.** The app says "Downloading your iCloud notes…" on a large library.
 5. **Pull down on the note list** to reload it if a note exists on disk but not in the list.
 6. **Open Files.** If the note is in iCloud Drive in Files, the problem is the app. If it is not, the problem is iCloud.
 

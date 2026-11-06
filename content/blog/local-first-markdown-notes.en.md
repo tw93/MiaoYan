@@ -55,17 +55,17 @@ A few rules keep it working:
 
 This mechanism explains most surprises.
 
-You choose the folder in Preferences (⌘,) under "Note Location" with the "Change" button. MiaoYan checks that the folder is a writable directory before switching and keeps the old location if the check fails. The new folder takes effect after a restart. MiaoYan prompts you to restart, and keeps the old location if you cancel.
+You choose the folder in Preferences (⌘,) under "Note Location" with the "Change" button. MiaoYan checks that the folder is a writable directory before switching and keeps the old location if the check fails. The new folder takes effect after a restart. A "Restart" button appears in the row, and the old folder stays in use until you restart.
 
-Once the folder is open, MiaoYan lists each subfolder as a folder in the sidebar and each `.md`, `.markdown` or `.txt` file as a note. It skips hidden folders (names starting with a dot), the attachment folders `i` and `files`, folders named `assets`, and folders that contain only attachments. Trashed notes go to the system Trash, or to a `Trash` folder inside the library on a volume that has none.
+Once the folder is open, MiaoYan lists each subfolder as a folder in the sidebar and each `.md`, `.markdown` or `.txt` file as a note. It skips hidden folders (names starting with a dot), the attachment folders `i` and `files`, `assets` folders that hold no notes, and folders that contain only attachments. Trashed notes go to the system Trash, or to a `Trash` folder inside the library on a volume that has none.
 
-A file watcher based on macOS file system events keeps the app in step with the disk. When another program changes a note that is open in the editor, MiaoYan reloads the file from disk. If your unsaved editor text differs from what is now on disk, it first writes your version to a hidden `.miaoyan-conflicts` folder in the library root and shows "External change detected. Local copy backed up~". Those backups are kept for 30 days, with at least the 100 most recent preserved.
+A file watcher based on macOS file system events keeps the app in step with the disk. When another program changes a note that is open in the editor, MiaoYan reloads the file from disk. If your unsaved editor text differs from what is now on disk, it first writes your version to a hidden `.miaoyan-conflicts` folder in the library root and shows "Changed on disk. Your version was backed up". Those backups are kept for 30 days, with at least the 100 most recent preserved.
 
 Local images use the form `![name](/i/name.png)`, which MiaoYan resolves against the note's own folder. That convention is specific to MiaoYan, so if you open the same folder in a tool that expects relative paths, check that images still show.
 
 ## What goes wrong, and how to check
 
-- **A note is missing from the list.** Confirm the extension is `.md`, `.markdown` or `.txt` and the folder is not hidden or named `i`, `files` or `assets`.
+- **A note is missing from the list.** Confirm the extension is `.md`, `.markdown` or `.txt` and the folder is not hidden or named `i` or `files`, or an `assets` folder with no notes in it.
 - **The folder is rejected.** Cloud-drive folders sometimes are not exposed as real folders. MiaoYan's message says to open the provider app and make sure the folder is visible in Finder, or to enable offline access.
 - **Two copies of one note.** This is nearly always a sync conflict. Look for a second file with a suffix added by the sync service.
 - **You edit in two apps at once.** MiaoYan will reload from disk and back up your unsaved text, but the safest habit is one editor at a time.

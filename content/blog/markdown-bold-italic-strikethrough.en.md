@@ -1,4 +1,4 @@
-Use `**bold**`, `*italic*` and `~~strikethrough~~`. Asterisks also work inside words, underscores do not, and strikethrough is a GitHub Flavored Markdown extension rather than core CommonMark. When emphasis fails and you see literal asterisks, the cause is nearly always the character touching the delimiter: a `**` that opens next to punctuation or closes right after it has to be separated from the neighbouring text by a space or more punctuation. That bites hardest in Chinese text, such as `**注意：**这样不行`. MiaoYan V4.5.0 has Bold, Italic and Deleteline in the Format menu, and you can fall back to `<b>` and `<del>` tags when the rules get in the way.
+Use `**bold**`, `*italic*` and `~~strikethrough~~`. Asterisks also work inside words, underscores do not, and strikethrough is a GitHub Flavored Markdown extension rather than core CommonMark. When emphasis fails and you see literal asterisks, the cause is nearly always the character touching the delimiter: a `**` that opens next to punctuation or closes right after it has to be separated from the neighbouring text by a space or more punctuation. That bites hardest in Chinese text, such as `**注意：**这样不行`. MiaoYan has Bold, Italic and Deleteline in the Format menu, and you can fall back to `<b>` and `<del>` tags when the rules get in the way.
 
 ## Asterisks, underscores and combinations
 
@@ -18,7 +18,7 @@ The difference is intraword behaviour. `un*frigging*believable` italicizes the m
 
 CommonMark decides by looking at the characters on each side of a run of `*` or `_`. In plain words: a run can open emphasis only if what follows is not whitespace, and if what follows is punctuation, what precedes must be whitespace or punctuation. A run can close only if what precedes is not whitespace, and if what precedes is punctuation, what follows must be whitespace or punctuation. The spec calls these left-flanking and right-flanking runs. Underscore adds the intraword rule on top.
 
-These were run through cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan V4.5.0, with its four extensions on:
+These were run through cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan, with its four extensions on:
 
 | Source | Result |
 | --- | --- |
@@ -31,13 +31,13 @@ These were run through cmark-gfm 0.29.0.gfm.3, the version bundled with MiaoYan 
 | `这是_斜体_文字` | fails, `_` is blocked inside a word |
 | `这是*斜体*文字` | works |
 
-The failing rows share one shape: punctuation on the inside of the delimiter, an ordinary character on the outside. Full-width punctuation such as `：`, `“` and `（` counts as punctuation, and Chinese has no spaces to satisfy the rule. Three fixes worked in the same runs: move the punctuation outside, `**注意**：这样可以`; put a space or more punctuation beside the delimiter, `**注意：** 这样可以` or `（**括号**）继续`; or use `<strong>` tags.
+The failing rows share one shape: punctuation on the inside of the delimiter, an ordinary character on the outside. Full-width punctuation such as `：`, `“` and `（` counts as punctuation, and Chinese has no spaces to satisfy the rule. Three fixes worked in the same runs: move the punctuation outside, `**注意**：这样可以`; put a space or more punctuation beside the delimiter, `**注意：** 这样可以` or `（**括号**）继续`; or use `<strong>` tags. In the preview, emphasis on Chinese, Japanese or Korean text stays upright, since those faces draw no italic, and only Latin emphasis slants.
 
 One more thing is engine-dependent. The CommonMark 0.31.2 spec counts symbols such as `¥` as punctuation, while MiaoYan's cmark-gfm build still bolds `价格**¥100**元`. A note that renders in MiaoYan can therefore break in a parser that follows the 0.31 rule, so test the place it will be published. MiaoYan's editor pane also tints bold and italic with its own regular expressions, not cmark, and that pattern only checks for non-space characters inside the marks, so a span like `**注意：**这样` is tinted as bold in the editor while the preview shows asterisks. Judge by the preview.
 
 ## Strikethrough
 
-`~~text~~` is a GFM extension, and MiaoYan V4.5.0 enables it. The GFM spec says one or two tildes work, and GitHub's docs list `~~ ~~` or `~ ~`. In the test runs, `~one~` struck through, but unequal counts such as `~~a~` and three tildes mid-line stayed literal.
+`~~text~~` is a GFM extension, and MiaoYan enables it. The GFM spec says one or two tildes work, and GitHub's docs list `~~ ~~` or `~ ~`. In the test runs, `~one~` struck through, but unequal counts such as `~~a~` and three tildes mid-line stayed literal.
 
 The single tilde is a trap for Chinese and technical text. `3~5 天，6~10 天` rendered as `3`, then a struck-through "5 天，6", then `10 天`. Pairs like `~5` and `~10` with a space before them are safe, and `~/Documents` stays literal. For a range, write `3-5`, use the full-width `～`, or escape with `\~`; the [escape characters](/blog/markdown-escape-characters/) article has the rest of the list. Two tildes are safer for deliberate strikethrough. The editor's own strike pattern recognises only the double-tilde form, so a single-tilde strike shows up in the preview but gets no styling in the editor.
 
@@ -45,7 +45,7 @@ Strikethrough is not in the CommonMark spec. A parser without the extension prin
 
 ## The menu and shortcuts in MiaoYan
 
-In V4.5.0, the Format menu (in Chinese, 格式) holds these items:
+The Format menu (in Chinese, 格式) holds these items:
 
 | Menu item | Chinese label | Shortcut | Inserts |
 | --- | --- | --- | --- |

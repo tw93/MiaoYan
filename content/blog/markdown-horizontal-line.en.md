@@ -1,4 +1,4 @@
-Put `---`, `***` or `___` on a line of its own and keep a blank line above it. All three draw the same horizontal line (CommonMark calls it a thematic break), but `---` has a trap: directly under a line of text it turns that text into a heading instead. In MiaoYan V4.5.0 there are two more things to know, because the same `---` line is also the slide separator in PPT mode and the fence of front matter at the top of a note.
+Put `---`, `***` or `___` on a line of its own and keep a blank line above it. All three draw the same horizontal line (CommonMark calls it a thematic break), but `---` has a trap: directly under a line of text it turns that text into a heading instead. In MiaoYan there are two more things to know, because the same `---` line is also the slide separator in PPT mode and the fence of front matter at the top of a note.
 
 ## The three forms
 
@@ -47,7 +47,7 @@ Markdown has no syntax for a class or inline style on a rule, so HTML is the onl
 
 ## How MiaoYan draws it
 
-MiaoYan V4.5.0 renders notes with cmark-gfm, then shows the HTML in a web view. The line comes out as an `<hr>` element, and the preview stylesheet (`typography.css` in the bundled DownView resources) gives it a height of 1 pixel, no border, a background taken from the theme's border color, and a margin of 1.6em above and below. In the light theme that color is `#e6e6e6` and in the dark theme `#454545`, so the line stays quiet in both.
+MiaoYan renders notes with cmark-gfm, then shows the HTML in a web view. The line comes out as an `<hr>` element, and the preview stylesheet (`typography.css` in the bundled DownView resources) gives it a height of 1 pixel, no border, a background taken from the theme's border color, and a margin of 2em above and below. In the light theme that color is `#E8E6DC` and in the dark theme `#3A3936`, so the line stays quiet in both.
 
 For your own pages, styling a rule is a CSS job, not a Markdown one:
 
@@ -72,13 +72,13 @@ The shortcut only checks that the note contains the text `---` somewhere. A tabl
 
 ### Front matter fence
 
-A note whose first line is `---` is treated as front matter up to the next line that begins with three dashes. If that line is exactly `---`, MiaoYan hides everything between the two lines in the preview, PPT mode and exports; if it is `----` or has more text after the dashes, nothing is hidden. Three dashes in the middle of a note stay an ordinary rule. This is why a note that opens with a decorative `---` loses its first section; open with a title or use `***` for the top line. The full rules are in [Markdown front matter](/blog/markdown-front-matter/).
+A note whose first line is `---` is treated as front matter up to the next line that begins with three dashes. If that line is exactly `---` and the lines between look like YAML, MiaoYan hides them in the preview, PPT mode and exports; if it is `----`, has more text after the dashes, or the lines between are ordinary text, nothing is hidden. Three dashes in the middle of a note stay an ordinary rule. A note that opens with a decorative `---` followed by plain text keeps its first section; open with a title or use `***` for the top line anyway. The full rules are in [Markdown front matter](/blog/markdown-front-matter/).
 
 ## When the line does not show up
 
 - **A heading appears instead of a line.** There is text directly above `---`. Add a blank line, or switch to `***`.
 - **The line is literal text.** There are fewer than three characters, mixed characters, other characters on the line, or four spaces of indentation.
-- **The top of the note vanished.** The note starts with `---` and a later line is exactly `---`, so everything between was read as front matter.
+- **The top of the note vanished.** The note starts with `---` and a later line is exactly `---`, and everything between looks like `key: value` YAML, so it was read as front matter.
 - **A slide split in the wrong place.** In PPT mode every `---` line is a boundary. Replace dividers with `***` or `<hr>`.
 - **No line in an app other than MiaoYan.** The renderer may filter raw `<hr>`. Use `---` with a blank line above it.
 - **Pandoc drops the line, makes a one-cell table or stops.** Pandoc's own Markdown, the reader behind a [Word conversion](/blog/markdown-to-word/), takes a `---` with text directly below it as the start of a YAML metadata block, which its manual allows anywhere after a blank line. With Pandoc 3.12.1, `---`, `key: value`, `---` vanished from the output, the same fence around lines that are not YAML stopped the run with `Error parsing YAML metadata`, and one line of text between two rules came out as a one-cell table. A blank line below the rule as well as above it fixes all three, which is what the manual recommends.

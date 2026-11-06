@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 待办列表与复选框写法", "item": "https://miaoyan.app/zh/blog/markdown-task-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-task-lists/#article", "headline": "Markdown 待办列表与复选框写法", "description": "- [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。", "url": "https://miaoyan.app/zh/blog/markdown-task-lists/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-task-lists/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-task-lists.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "为什么我的复选框显示成 [ ] 文字？", "acceptedAnswer": {"@type": "Answer", "text": "渲染器没有 GFM 的待办扩展，或者写法有一点偏差。检查连字符后和右括号后是否有空格，以及括号之间是否正好一个字符。"}}, {"@type": "Question", "name": "不点击能直接在文件里勾选吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，把括号里的空格改成 x 就行，任何编辑器里的点击做的也只是这件事。"}}, {"@type": "Question", "name": "大写的 [X] 有效吗？", "acceptedAnswer": {"@type": "Answer", "text": "GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，但妙言的点击切换只匹配小写 x，所以小写更稳妥。"}}, {"@type": "Question", "name": "导出的 PDF 或 HTML 里待办还在吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出是从预览生成的，所以重要的话可以检查一次导出文件。导出文件里的复选框只是笔记当时的快照，不能用来修改笔记。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 待办列表与复选框写法", "item": "https://miaoyan.app/zh/blog/markdown-task-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-task-lists/#article", "headline": "Markdown 待办列表与复选框写法", "description": "- [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。", "url": "https://miaoyan.app/zh/blog/markdown-task-lists/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-task-lists/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-task-lists.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "为什么我的复选框显示成 [ ] 文字？", "acceptedAnswer": {"@type": "Answer", "text": "渲染器没有 GFM 的待办扩展，或者写法有一点偏差。检查连字符后和右括号后是否有空格，以及括号之间是否正好一个字符。"}}, {"@type": "Question", "name": "不点击能直接在文件里勾选吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，把括号里的空格改成 x 就行，任何编辑器里的点击做的也只是这件事。"}}, {"@type": "Question", "name": "大写的 [X] 有效吗？", "acceptedAnswer": {"@type": "Answer", "text": "GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，点击切换也都认，只是多数工具写的是小写。"}}, {"@type": "Question", "name": "导出的 PDF 或 HTML 里待办还在吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出是从预览生成的，所以重要的话可以检查一次导出文件。导出文件里的复选框只是笔记当时的快照，不能用来修改笔记。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -710,23 +710,23 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <p>嵌套和普通列表一样，子项在连字符下缩进两个空格即可，规范自带的示例也是这样。子项全部勾完以后父项不会自动勾上，在文件里每个框彼此独立。</p>
 <h2 id="无序和有序待办">无序和有序待办</h2>
 <p>列表符号可以是 <code>-</code>、<code>*</code> 或 <code>+</code>，规范对列表项的描述也适用于 <code>1. [ ] 第一步</code> 这样的有序项，妙言预览背后的 cmark-gfm 会把它画成带复选框的编号列表，适合步骤有先后的清单。</p>
-<p>这是标准层面的说法，具体编辑器写回文件时可以更严格，所以连字符在这里有分量。妙言自己的点击逻辑（下面会讲）只认 <code>- [ ]</code> 和 <code>- [x]</code>，想让点击稳定，就用连字符加小写 <code>x</code>。GFM 的其他补充可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
+<p>这是标准层面的说法。妙言的点击逻辑（下面会讲）这些符号和大小写的 <code>x</code> 都认，不过连字符加小写 <code>x</code> 兼容的工具最多。GFM 的其他补充可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
 <h2 id="各处渲染差异">各处渲染差异</h2>
 <ul>
 <li><strong>GitHub。</strong> GitHub 的格式指南用的就是这套写法，在 issue 和评论里，官方文档说待办会渲染成可以点击的复选框。这个点击是 GitHub 的功能，不属于 Markdown 本身。</li>
 <li><strong>不带 GFM 扩展的 CommonMark。</strong> 它就是一个普通的无序列表项，文字以 <code>[ ]</code> 开头，你看到的是方括号。</li>
 <li><strong>其他编辑器。</strong> 渲染出来的框能不能点击不在规范里，各家自己决定，依赖点击之前先试一次。</li>
 </ul>
-<p>妙言的预览用的是 Swift 版 cmark-gfm，开启了表格、脚注、删除线和待办四个扩展（V4.5.0 的 <code>Business/Markdown.swift</code>），所以待办列表在预览里是真正的 <code>input</code> 复选框。</p>
+<p>妙言的预览用的是 Swift 版 cmark-gfm，开启了表格、脚注、删除线和待办四个扩展（<code>Business/Markdown.swift</code>），所以待办列表在预览里是真正的 <code>input</code> 复选框。</p>
 <h2 id="在妙言里点击复选框发生了什么">在妙言里点击复选框发生了什么</h2>
-<p>V4.5.0 的预览页脚本（<code>common.js</code>）会启用所有复选框，并按文档顺序编号。点击时把编号发给应用，应用（<code>MPreviewHandlers.swift</code> 里的 <code>HandlerCheckbox</code>）遍历笔记正文，找到对应顺位的 <code>- [ ]</code> 或 <code>- [x]</code>，换成另一种写法并保存笔记。</p>
-<p>边界情况都由这个机制决定。应用是按位置匹配的，预览里第 N 个复选框，被当成源文本里第 N 个 <code>- [ ]</code> 或 <code>- [x]</code>。笔记里如果有正则不统计的写法，比如 <code>* [ ]</code>、<code>+ [ ]</code>、<code>1. [ ]</code> 或大写 <code>X</code>，预览照样画出框，编号就会错位，点一下可能改到另一行。如果 <code>- [ ]</code> 出现在不会被渲染成待办的地方，比如围栏代码块或引用块里，也会错位，因为文本匹配不认识代码围栏和引用。点击改错了行时，先查这两种原因。</p>
-<p>编辑时可以用「格式」菜单里的「待办」（<code>⌘T</code>），当前行不是待办就插入 <code>- [ ]</code>，已经是待办就在 <code>- [ ]</code> 和 <code>- [x]</code> 之间切换。它改写的是这一行开头的六个字符，用在缩进的子任务上会把标记弄坏，子任务在预览里点框更稳。输入 <code>/task</code> 再按 <code>Tab</code> 会插入三行模板，两条未完成、一条已完成，占位文字是中文，「Tab快捷输入」菜单里也列着这一项。</p>
+<p>预览页脚本（<code>common.js</code>）会启用所有复选框，并记下每个待办项在源文本里的行号。点击时把行号发给应用，应用（<code>MPreviewHandlers.swift</code> 里的 <code>HandlerCheckbox</code>）找到那一行的复选框，把括号里的空格或 <code>x</code> 换成另一个并保存笔记。</p>
+<p>边界情况都由这个机制决定。应用按源文本的行号处理，点的是哪个框就改哪个，不管笔记用的是 <code>-</code>、<code>*</code>、<code>+</code>、<code>1.</code> 还是 <code>1)</code>，大写 <code>X</code> 和引用行里的待办也都算。围栏代码块里的 <code>- [ ]</code> 不会画出复选框，也就点不到、改不到。点了没反应时，先看那一行是不是真的被渲染成了待办。</p>
+<p>编辑时可以用「格式」菜单里的「待办」（<code>⌘T</code>），当前行不是待办就插入 <code>- [ ]</code>，已经是待办就在 <code>- [ ]</code> 和 <code>- [x]</code> 之间切换。它只改括号中间的那个字符，缩进的子任务和编号待办也能用，在待办行按回车会新开一条未勾选的。输入 <code>/task</code> 再按 <code>Tab</code> 会插入三行模板，两条未完成、一条已完成，占位文字是中文，「Tab快捷输入」菜单里也列着这一项。</p>
 <h2 id="引用块里的待办">引用块里的待办</h2>
 <pre><code class="language-markdown">&gt; - [ ] 问清截止时间
 &gt; - [x] 发出初稿
 </code></pre>
-<p>妙言 V4.5.0 用的 cmark-gfm 不会把这里画成复选框，引用块里是一个普通的无序列表，每项文字以 <code>[ ]</code> 和 <code>[x]</code> 开头，每行都带 <code>&gt;</code>、列表前再加一行空的 <code>&gt;</code> 也一样。别的渲染器可能处理得不同，笔记最终在哪里看，就在哪里试一下。在妙言里还有一层代价，点击切换照样会把引用块里的 <code>- [ ]</code> 算进去，于是笔记里排在它后面的复选框都会改错行。待办最好放在引用块外面，需要引用的背景写成列表上方的一段。</p>
+<p>妙言用的 cmark-gfm 不会把这里画成复选框，引用块里是一个普通的无序列表，每项文字以 <code>[ ]</code> 和 <code>[x]</code> 开头，每行都带 <code>&gt;</code>、列表前再加一行空的 <code>&gt;</code> 也一样。别的渲染器可能处理得不同，笔记最终在哪里看，就在哪里试一下。在妙言里这里也没有可点的框。待办最好放在引用块外面，需要引用的背景写成列表上方的一段。</p>
 <h2 id="在多篇笔记里找未完成事项">在多篇笔记里找未完成事项</h2>
 <p>待办是纯文本，所以搜索工具就能列出还剩什么。笔记文件夹里用 ripgrep 可以带着文件名和行号列出所有未完成项：</p>
 <pre><code class="language-bash">rg -n -F -- '- [ ]' ~/Notes
@@ -743,7 +743,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <h3 id="不点击能直接在文件里勾选吗">不点击能直接在文件里勾选吗？</h3>
 <p>可以，把括号里的空格改成 <code>x</code> 就行，任何编辑器里的点击做的也只是这件事。</p>
 <h3 id="大写的-x-有效吗">大写的 <code>[X]</code> 有效吗？</h3>
-<p>GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，但妙言的点击切换只匹配小写 <code>x</code>，所以小写更稳妥。</p>
+<p>GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，点击切换也都认，只是多数工具写的是小写。</p>
 <h3 id="导出的-pdf-或-html-里待办还在吗">导出的 PDF 或 HTML 里待办还在吗？</h3>
 <p>导出是从预览生成的，所以重要的话可以检查一次导出文件。导出文件里的复选框只是笔记当时的快照，不能用来修改笔记。</p>
     </div>

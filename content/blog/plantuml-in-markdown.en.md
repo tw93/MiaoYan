@@ -1,4 +1,4 @@
-To draw a UML diagram in Markdown, write PlantUML text between `@startuml` and `@enduml` inside a fenced code block tagged `plantuml`. MiaoYan turns that block into an image, but not on your Mac: in V4.5.0 the preview encodes the diagram text into a URL and loads the picture from the public server at `www.plantuml.com`. The diagram renders only with a network connection, and the text of every PlantUML block you preview is sent to that server. For private diagrams, use Mermaid in the same note, or render locally with PlantUML itself and insert the resulting SVG.
+To draw a UML diagram in Markdown, write PlantUML text between `@startuml` and `@enduml` inside a fenced code block tagged `plantuml`. MiaoYan turns that block into an image, but not on your Mac: the preview encodes the diagram text into a URL and loads the picture from the public server at `www.plantuml.com`. The diagram renders only with a network connection, and the text of every PlantUML block you preview is sent to that server. For private diagrams, use Mermaid in the same note, or render locally with PlantUML itself and insert the resulting SVG.
 
 ## Syntax
 
@@ -66,7 +66,7 @@ The URL is hardcoded in the preview script, and there is no setting to change it
 
 The encoded text sits in the path of an ordinary HTTPS request. PlantUML's encoding is Deflate compression plus a base64-like alphabet, not encryption, so the server can read your diagram in full, plus the usual request metadata such as your IP address, each time the preview renders it. Class names, service names, hostnames and the labels on arrows are all part of that text. PlantUML's server page says nothing about how long the public server keeps what it receives, so treat the content as shared with a third party.
 
-PlantUML's server page also explains how to host the server yourself. What differs between apps is whether they let you choose the address. MiaoYan V4.5.0 does not.
+PlantUML's server page also explains how to host the server yourself. What differs between apps is whether they let you choose the address. MiaoYan does not.
 
 ## Running PlantUML locally
 
@@ -101,7 +101,7 @@ No. The picture comes from `www.plantuml.com`, so without a connection you see t
 
 ### Can I use my own PlantUML server in MiaoYan?
 
-Not in V4.5.0. The address is fixed in the preview script.
+No. The address is fixed in the preview script.
 
 ### Which diagrams should I keep off the public server?
 

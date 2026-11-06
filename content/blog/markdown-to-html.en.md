@@ -1,4 +1,4 @@
-Converting Markdown to HTML takes two steps: a parser reads the Markdown and builds a document tree, and a renderer writes that tree out as HTML tags. For a one-off page, a command-line tool such as Pandoc (`pandoc -s note.md -o note.html`) gives a complete file you can host anywhere. In MiaoYan V4.5.0, File > Export > HTML does the same from the app, with one limit that matters: the file loads its styles and scripts from MiaoYan's CDN and does not carry your local images.
+Converting Markdown to HTML takes two steps: a parser reads the Markdown and builds a document tree, and a renderer writes that tree out as HTML tags. For a one-off page, a command-line tool such as Pandoc (`pandoc -s note.md -o note.html`) gives a complete file you can host anywhere. In MiaoYan, File > Export > HTML does the same from the app, with one limit that matters: the file loads its styles and scripts from MiaoYan's CDN, though your local images are embedded in it.
 
 ## Fragment or full page
 
@@ -36,16 +36,16 @@ Everything else in a "converted" page is added after rendering: the head, the st
 
 ## MiaoYan's HTML export
 
-In MiaoYan V4.5.0, select a note and choose File > Export > HTML, or press `Control + Shift + H` in the MiaoYan window. It does not need the preview to be open. The file is written to Downloads as `Title.html`, where the title is the note title with `/` replaced by `_`, and a name that already exists gets a timestamp appended; if Downloads cannot be written, a save panel opens instead. The toast reads `Saved to Downloads folder~`.
+In MiaoYan, select a note and choose File > Export > HTML, or press `Control + Shift + H` in the MiaoYan window. It does not need the preview to be open. The file is written to Downloads as `Title.html`, where the title is the note title with `/` replaced by `_`, and a name that already exists gets a timestamp appended; if Downloads cannot be written, a save panel opens instead. The toast reads `Saved to Downloads`.
 
 What the file contains:
 
 - The body is cmark-gfm's output with raw HTML allowed, so tags you typed are kept. Front matter at the top of the note is removed first.
-- MiaoYan puts the note title in an `<h1>` at the top. The check meant to skip this when the note already opens with a `#` heading never matches in V4.5.0, so the title line is added above your own heading too, and when the two are the same the title appears twice; delete one in the exported file if that matters.
+- MiaoYan puts the note title in an `<h1>` at the top. The check meant to skip this when the note already opens with a `#` heading never matches, so the title line is added above your own heading too, and when the two are the same the title appears twice; delete one in the exported file if that matters.
 - The page uses the preview template, with your Preview Font setting, a content column limited to 760 pixels, and light or dark colors depending on the current theme.
-- It does not inline anything. A `<base>` tag points to `https://cdn.miaoyan.app/Resources/DownView.bundle/`, so the template's stylesheets and scripts for typography, KaTeX, highlight.js, Mermaid and Markmap load from there. Opened offline, the file keeps the background, text color and column width written into the page itself but loses the typography stylesheet, and math and diagrams are not drawn.
+- Apart from local images, it inlines nothing. A `<base>` tag points to `https://cdn.miaoyan.app/Resources/DownView.bundle/`, so the template's stylesheets and scripts for typography, KaTeX, highlight.js, Mermaid and Markmap load from there. Opened offline, the file keeps the background, text color and column width written into the page itself but loses the typography stylesheet, and math and diagrams are not drawn.
 
-The limit that surprises people is images. HTML export renders the Markdown without the step that preview and PDF export use to find local images, and the `<base>` tag makes every relative path resolve against the CDN, so `/i/photo.png` becomes `https://cdn.miaoyan.app/i/photo.png` and `images/fig.png` a path under `DownView.bundle/` there, neither of which exists. Copying the images next to the HTML file does not help either. Remote images with an `https://` address load. For a file you plan to share, either use remote image URLs in the note, or export a PDF as covered in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/). [Markdown images](/blog/markdown-images/) has the details on image paths.
+Images are the part that does work offline. HTML export turns every local image into a data URI inside the file, so `/i/photo.png` and `images/fig.png` travel with it and the file grows by the size of the images. Remote images with an `https://` address stay links and load from there. For a file that has to look right with no network at all, export a PDF as covered in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/). [Markdown images](/blog/markdown-images/) has the details on image paths.
 
 ## Putting the result online
 
@@ -62,7 +62,7 @@ DOMPurify describes itself as a DOM-only XSS sanitizer for HTML, MathML and SVG,
 ## What goes wrong
 
 - **The page is unstyled.** A Pandoc page has no stylesheet of yours unless you pass `--css`, and a MiaoYan export opened offline cannot load its stylesheet.
-- **Images are broken.** Local paths in a MiaoYan export resolve against MiaoYan's CDN. Use remote URLs, or use `--embed-resources` in Pandoc.
+- **Images are broken.** A local image that was missing or unreadable at export time stays a plain path and resolves against MiaoYan's CDN. Check the path in the preview first, or use `--embed-resources` in Pandoc.
 - **A table appears as pipes.** The converter is a plain CommonMark parser with no table extension. Pandoc and markdown-it read pipe tables by default, and cmark-gfm reads them once its table extension is attached.
 - **Math shows as raw dollar signs.** The page has no math renderer. In MiaoYan's export it needs the CDN to be reachable.
 - **A hosted page 404s.** The entry file is not named `index.html` or not at the top level of the published folder.

@@ -63,7 +63,7 @@ console.log("inner");
 
 ## 妙言怎么渲染代码块
 
-妙言用 cmark-gfm 解析 Markdown，围栏块会变成 `<pre><code class="language-...">`，预览再加载 highlight.js 11.5.1（V4.5.0 里 vendor 清单记录的版本）给每个 `pre code` 上色。下面三个行为都来自这个库本身的工作方式。
+妙言用 cmark-gfm 解析 Markdown，围栏块会变成 `<pre><code class="language-...">`，预览再加载 highlight.js 11.5.1（vendor 清单记录的版本）给每个 `pre code` 上色。下面三个行为都来自这个库本身的工作方式。
 
 第一，内置的是裁剪过的版本，不是 highlight.js 的完整语言库，一共注册了 34 种语言定义，Bash、C、C++、C#、CSS、Diff、Go、HTML 和 XML、INI 和 TOML、Java、JavaScript、JSON、Kotlin、Less、Lua、Makefile、Markdown、Objective-C、Perl、PHP、PHP 模板、纯文本、Python、Python REPL、R、Ruby、Rust、SCSS、Shell 会话、SQL、Swift、TypeScript、Visual Basic .NET 和 YAML。`js`、`ts`、`py`、`sh`、`yml`、`md`、`rs`、`rb` 这些常见短名是别名，像 Dockerfile 和 GraphQL 就不在里面。
 
@@ -81,7 +81,7 @@ console.log("inner");
 
 ## 复制和导出
 
-V4.5.0 的预览里代码块没有复制按钮，选中文字照常复制即可。反过来，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的围栏。
+预览里代码块没有复制按钮，选中文字照常复制即可。反过来，从网页复制带结构的 HTML 再粘贴进来，妙言会转成 Markdown，代码块会变成带语言类的围栏，代码里自带三个反引号时还会自动用更长的围栏。
 
 「导出」子菜单里有 HTML、图片和 PDF，PDF 的细节见 [在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。导出的 HTML 文件会从妙言的 CDN 加载高亮和图表脚本，所以打开那个文件时，要联网才有颜色和图。
 

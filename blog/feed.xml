@@ -151,21 +151,21 @@
       <link>https://miaoyan.app/blog/markdown-footnotes/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-footnotes/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text.</description>
+      <description>Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan render them, and fix footnotes that show as plain text.</description>
     </item>
     <item>
       <title>Markdown front matter: YAML, TOML and MiaoYan</title>
       <link>https://miaoyan.app/blog/markdown-front-matter/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-front-matter/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export.</description>
+      <description>Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan hides in preview and export.</description>
     </item>
     <item>
       <title>Markdown images: syntax, size and broken paths</title>
       <link>https://miaoyan.app/blog/markdown-images/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-images/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images.</description>
+      <description>Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan stores, previews and exports images.</description>
     </item>
     <item>
       <title>Markdown line breaks: soft, hard and MiaoYan&#x27;s setting</title>
@@ -228,7 +228,7 @@
       <link>https://miaoyan.app/blog/markdown-horizontal-line/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-horizontal-line/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan V4.5.0.</description>
+      <description>Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan.</description>
     </item>
     <item>
       <title>Markdown comments: HTML comments and [//]: # (note)</title>
@@ -270,14 +270,14 @@
       <link>https://miaoyan.app/blog/markdown-to-html/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-to-html/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Convert Markdown to HTML with Pandoc, cmark-gfm or markdown-it, fragment vs full page, raw HTML safety, and what MiaoYan V4.5.0&#x27;s HTML export includes.</description>
+      <description>Convert Markdown to HTML with Pandoc, cmark-gfm or markdown-it, fragment vs full page, raw HTML safety, and what MiaoYan&#x27;s HTML export includes.</description>
     </item>
     <item>
       <title>Markdown to Word: Pandoc, reference.docx and MiaoYan exports</title>
       <link>https://miaoyan.app/blog/markdown-to-word/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-to-word/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan V4.5.0 exports instead.</description>
+      <description>Convert Markdown to a .docx with Pandoc, set fonts including Chinese through a reference document, and what MiaoYan exports instead.</description>
     </item>
     <item>
       <title>Zettelkasten with Markdown files: IDs, links and a weekly routine</title>

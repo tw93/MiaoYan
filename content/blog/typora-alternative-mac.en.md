@@ -14,7 +14,7 @@ If none of those apply to you, staying with Typora is reasonable.
 
 ## WYSIWYG versus split preview
 
-In Typora you type and the formatting appears in place. The pane is also the document, so there is one place to look. In MiaoYan you write Markdown in the editor and read the rendered note beside it, with scroll sync between the two. Press `⌘\` to toggle split mode, or open Preferences (`⌘,`), and in General set Editor Mode to Split Mode. `⌘3` switches to a full preview.
+In Typora you type and the formatting appears in place. The pane is also the document, so there is one place to look. In MiaoYan you write Markdown in the editor and read the rendered note beside it, with scroll sync between the two. Press `⌘\` to toggle split mode, or open Preferences (`⌘,`), and in Editor set Default Mode to Split. `⌘3` switches to a full preview.
 
 The MiaoYan README explains the choice directly: native WYSIWYG in Swift is heavy and fragile, so the app keeps pure Markdown editing and gives you synchronized visual feedback instead. That is a product decision, not a limitation to be fixed later, so decide whether it suits how you write.
 
@@ -37,7 +37,7 @@ Both apps work with files, so most of the move is pointing a new app at your fol
 2. **Images.** MiaoYan resolves relative image paths from the note's folder, so `images/photo.png` next to the note works. Its own convention is an `i/` folder and links written `/i/photo.png`, which it uses when you paste or drop images. Both forms can live in one folder.
 3. **Math.** `$...$` and `$$...$$` carry over. KaTeX supports a subset of what MathJax does, so open any note with unusual macros and check it.
 4. **Diagrams.** Fenced `mermaid` blocks carry over. Typora's flowchart.js blocks are not Mermaid and will not render in MiaoYan.
-5. **Themes.** Typora CSS themes do not carry over. MiaoYan has its own appearance settings: system, light or dark, fonts, preview width and code background.
+5. **Themes.** Typora CSS themes do not carry over. MiaoYan has its own appearance settings: system, light or dark, fonts and preview width.
 
 Do the move on a copy first. Open three notes that use tables, images and math, and compare them side by side with Typora before pointing at the real folder. Because both apps read the same folder, you can also keep using Typora for any note that needs it, though avoid editing the same file in both at once.
 
@@ -45,11 +45,11 @@ Do the move on a copy first. Open three notes that use tables, images and math, 
 
 Typora keeps a rendered view as the editing surface and writes Markdown to disk when you save. MiaoYan keeps the Markdown as the editing surface and renders a second view from it. Its renderer is cmark-gfm with table, footnote, strikethrough and task-list extensions. After parsing, the HTML goes into a web view, where bundled KaTeX and the diagram libraries run. The file on disk is the text in the editor, so what you see in the editor is exactly what is saved.
 
-Different renderers can disagree on edge cases, so test your own notes. The core rules are in the [Markdown cheat sheet](/blog/markdown-cheat-sheet/). One MiaoYan default to know: its Line Break setting defaults to MiaoYan, so each newline starts a new line in the preview. Switch it to Github if your notes depend on a blank line to break.
+Different renderers can disagree on edge cases, so test your own notes. The core rules are in the [Markdown cheat sheet](/blog/markdown-cheat-sheet/). One MiaoYan default to know: its Line Breaks setting defaults to Every Newline, so each newline starts a new line in the preview. Switch it to GitHub Style if your notes depend on a blank line to break.
 
 ## What goes wrong
 
-- **Line breaks look different.** Check MiaoYan's Line Break setting as above.
+- **Line breaks look different.** Check MiaoYan's Line Breaks setting as above.
 - **Images are missing.** The relative path no longer matches the note's folder, usually because the notes moved without the image folder.
 - **A formula fails.** It uses a MathJax-only feature. Rewrite it with KaTeX-supported syntax.
 - **You miss typing into rendered text.** That is the real cost of this swap. Try split mode for a week before deciding, and keep Typora until you are sure.

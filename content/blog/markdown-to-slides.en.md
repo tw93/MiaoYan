@@ -24,7 +24,7 @@ Notes for the team
 
 Each block between separators is one slide. The first block becomes the opening slide, so a top-level heading and a subtitle make a title slide. Keep the `---` alone on its line with nothing else on it. MiaoYan's bundled PPT guide and agent skill both say a horizontal rule inside a slide is not possible, because the same characters are the slide boundary.
 
-If you press the shortcut on a note with no `---`, MiaoYan tells you that no delimiter was found and the slideshow cannot start.
+If you press the shortcut on a note with no `---`, MiaoYan tells you to separate slides with `---` before it can present.
 
 ## Running it in MiaoYan
 
@@ -99,8 +99,8 @@ Facts in the table are from marp.app, revealjs.com and sli.dev, checked on 2026-
 
 ## What goes wrong
 
-- **The shortcut only shows a message.** There is no `---` line in the note, so MiaoYan reports that no delimiter was found.
-- **The first slide is missing.** When a note opens with a `---` line, everything up to the next `---` line is hidden as frontmatter, so start the deck with its title, not with a separator.
+- **The shortcut only shows a message.** There is no `---` line in the note, so MiaoYan asks you to separate slides with `---`.
+- **The first slide is missing.** When a note opens with a `---` line, and the lines up to the next `---` look like YAML `key: value` pairs, that block is hidden as frontmatter, so do not write the first slide as `key: value` lines.
 - **A horizontal rule breaks the slide.** Replace it with a heading or spacing.
 - **Images are missing.** Use `/i/<file>` in the note or an `https://` address, not a `file://` path.
 - **Need a PowerPoint file.** MiaoYan exports a PPT PDF, not `.pptx`.

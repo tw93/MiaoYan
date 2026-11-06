@@ -1,4 +1,4 @@
-To get a mind map from a Markdown outline, put the outline in a fenced code block tagged `markmap`: headings and nested list items become branches, and the preview draws them as an SVG tree. In MiaoYan the Markmap library is bundled inside the app, so a plain outline renders offline and its text does not leave your Mac. The trade-off is control. In V4.5.0 the colors, spacing and starting expansion are fixed by the app, the map in the normal preview does not respond to clicks or the scroll wheel, and the options you may know from Markmap's own documentation do not change anything here.
+To get a mind map from a Markdown outline, put the outline in a fenced code block tagged `markmap`: headings and nested list items become branches, and the preview draws them as an SVG tree. In MiaoYan the Markmap library is bundled inside the app, so a plain outline renders offline and its text does not leave your Mac. The trade-off is control. The colors, spacing and starting expansion are fixed by the app, the map in the normal preview does not respond to clicks or the scroll wheel, and the options you may know from Markmap's own documentation do not change anything here.
 
 ## What Markmap does
 
@@ -31,7 +31,7 @@ You do not have to type the fence. In MiaoYan, type `/markmap` and press `Tab`, 
 
 A fenced block with a language tag reaches the page as a code element with the class `language-markmap`. After the preview loads, a script (`diagram-handler.js`) finds those elements and hands each one to the bundled Markmap loader (`markmap.min.js`, with `markmap-view.min.js` and `d3.min.js` beside it). The loader reads the text of the block, strips the common indentation, converts the outline into a tree and draws it into an SVG that replaces the code. All of those files are packaged in the preview bundle (markmap-lib 0.14.1 and markmap-view 0.14.0) and referenced by relative path, so a plain outline sends no request. Math is the exception: a node with `$x^2$` makes the Markmap library fetch KaTeX styles and fonts from jsDelivr, so keep formulas out of maps that must stay offline.
 
-Reading the V4.5.0 loader, a few behaviors are fixed:
+Reading the loader, a few behaviors are fixed:
 
 - The box height is computed from the block: roughly 30 pixels per non-empty line plus a depth allowance, with a minimum of 300 pixels. A long outline gets a taller box, not a smaller font.
 - Node colors come from a built-in palette of twelve colors cycled by depth. The diagram background follows the light or dark appearance through the app's CSS, but a branch palette you choose is not read.
@@ -50,13 +50,13 @@ markmap:
 ---
 ````
 
-The Markmap library bundled with MiaoYan V4.5.0 recognises this block inside a fence and strips it from the outline. But the app's own loader creates the map with fixed options and does not feed the parsed ones back. Loading the V4.5.0 preview files with `initialExpandLevel: 1` still drew every level. If you need collapsed levels or custom colors, use the Markmap web tools or a full Markmap-enabled editor for that map, then bring a screenshot into the note.
+The Markmap library bundled with MiaoYan recognises this block inside a fence and strips it from the outline. But the app's own loader creates the map with fixed options and does not feed the parsed ones back. Loading the preview files with `initialExpandLevel: 1` still drew every level. If you need collapsed levels or custom colors, use the Markmap web tools or a full Markmap-enabled editor for that map, then bring a screenshot into the note.
 
 One option does exist in MiaoYan, but only in presentation mode: a comment `<!--markmap-height=400-->` inside the block sets the pixel height when you present the note as slides. In the normal preview the height is computed.
 
 ## Markmap or Mermaid mindmap
 
-Mermaid has its own `mindmap` diagram type, started with the keyword `mindmap` and built from indentation, with one root and several node shapes. The Mermaid documentation calls it experimental. The Mermaid bundled with MiaoYan V4.5.0 is version 11.14.0 and draws a `mindmap` block, but since the syntax may still change, keep a small example to check after updates.
+Mermaid has its own `mindmap` diagram type, started with the keyword `mindmap` and built from indentation, with one root and several node shapes. The Mermaid documentation calls it experimental. The Mermaid bundled with MiaoYan is version 11.14.0 and draws a `mindmap` block, but since the syntax may still change, keep a small example to check after updates.
 
 The two solve different problems. Markmap reads the headings and lists you already have, so it suits an outline that doubles as a note. Mermaid mindmap is a separate syntax, useful when the map should live in the same document language as your flowcharts and sequence diagrams. The [Mermaid diagrams in Markdown](/blog/mermaid-diagrams-in-markdown/) post covers that side, and the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) shows the fence form for all three diagram languages.
 
@@ -78,7 +78,7 @@ Not for a plain outline. The library files ship inside the app, unlike PlantUML,
 
 ### Can I make the map start collapsed?
 
-No. In V4.5.0 the front matter options are ignored and the preview map does not respond to clicks, so every level shows. Split a large outline into several blocks instead.
+No. The front matter options are ignored and the preview map does not respond to clicks, so every level shows. Split a large outline into several blocks instead.
 
 ### Can I edit the map directly?
 

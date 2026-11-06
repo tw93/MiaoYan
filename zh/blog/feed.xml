@@ -151,21 +151,21 @@
       <link>https://miaoyan.app/zh/blog/markdown-footnotes/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-footnotes/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。</description>
+      <description>脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言的支持情况和排错。</description>
     </item>
     <item>
       <title>Markdown front matter 写法与渲染</title>
       <link>https://miaoyan.app/zh/blog/markdown-front-matter/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-front-matter/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。</description>
+      <description>YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言的处理。</description>
     </item>
     <item>
       <title>Markdown 图片：插入、调整大小与路径</title>
       <link>https://miaoyan.app/zh/blog/markdown-images/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-images/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>图片语法、用 HTML 设宽度、路径为何会坏，以及妙言 V4.5.0 的图片存放、预览和导出行为。</description>
+      <description>图片语法、用 HTML 设宽度、路径为何会坏，以及妙言的图片存放、预览和导出行为。</description>
     </item>
     <item>
       <title>Markdown 换行：软换行、硬换行与妙言的设置</title>
@@ -270,14 +270,14 @@
       <link>https://miaoyan.app/zh/blog/markdown-to-html/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-to-html/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。</description>
+      <description>用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言的 HTML 导出。</description>
     </item>
     <item>
       <title>Markdown 转 Word：Pandoc 与妙言导出</title>
       <link>https://miaoyan.app/zh/blog/markdown-to-word/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-to-word/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
-      <description>用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言 V4.5.0 能导出什么。</description>
+      <description>用 Pandoc 把 Markdown 转成 docx，用参考文档设置含中文的字体，以及妙言能导出什么。</description>
     </item>
     <item>
       <title>用 Markdown 文件做卡片笔记法</title>

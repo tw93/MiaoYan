@@ -1,4 +1,4 @@
-CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言 4.5.0 用的是 cmark-gfm 解析器，打开了四个扩展，然后在预览里另外加上公式、提示框和图表。
+CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言用的是 cmark-gfm 解析器，打开了四个扩展，然后在预览里另外加上公式、提示框和图表。
 
 ## 为什么会有这么多方言
 
@@ -22,18 +22,18 @@ John Gruber 在 2004 年发布 Markdown，当时是一份语法说明加一个 P
 
 **应用扩展**就是其余的一切。脚注、美元符号公式、`> [!NOTE]` 提示框、双链、Mermaid 图表都很常见，但没有一个写在 CommonMark 或 GFM 规范里。GitHub 自己的语法文档里写了脚注和提示框，那是 GitHub 的功能，不属于已发布的 GFM 规范。
 
-## 妙言 4.5.0 实现到哪一层
+## 妙言实现到哪一层
 
-妙言用 cmark-gfm 渲染 Markdown。4.5.0 的源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，`table`、`footnotes`、`strikethrough` 和 `tasklist`，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。
+妙言用 cmark-gfm 渲染 Markdown。源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，`table`、`footnotes`、`strikethrough` 和 `tasklist`，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。
 
 - 扩展自动链接没有挂上，所以裸 URL 不会被解析器变成链接，要写 `<https://example.com>` 或者普通链接。
 - tagfilter 也没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，`<details>` 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。
 
-解析之前，妙言会先保护公式，`$$ ... $$`、`$ ... $`、`\( ... \)` 和 `\[ ... \]` 里的下划线和星号不会被当成强调，预览里再由 KaTeX 排版。解析之后有一步后处理，把 `> [!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 这五种引用块变成提示框，和 GitHub 的写法一致。预览页的脚本再把围栏里的 `mermaid`、`plantuml`、`markmap` 画出来，用 highlight.js 给代码上色，文件开头的 `---` front matter 在预览里会被去掉。
+解析之前，妙言会先保护公式，`$$ ... $$`、`$ ... $`、`\( ... \)` 和 `\[ ... \]` 里的下划线和星号不会被当成强调，预览里再由 KaTeX 排版。解析之后有一步后处理，把 `> [!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 这五种引用块变成提示框，和 GitHub 的写法一致。预览页的脚本再把围栏里的 `mermaid`、`plantuml`、`markmap` 画出来，用 highlight.js 给代码上色，文件开头的 `---` front matter 在预览里会被去掉（前提是中间看起来像 YAML）。
 
 [[figure:commonmark-vs-gfm|Markdown 笔记依次经过公式保护、带四个扩展的 cmark-gfm 解析器、提示框改写，再由运行 KaTeX、图表脚本和 highlight.js 的网页视图生成预览。|解析器负责 CommonMark 加表格、脚注、删除线和任务列表，公式、提示框和图表是在它前后额外加的。]]
 
-妙言设置里还有一项「换行方式」，两个选项是「妙言」和「Github」，底层是在「每个换行都当成换行」和「换行当成空格」之间切换，后者就是 CommonMark 的规则，实际效果在[语法速查](/zh/blog/markdown-cheat-sheet/)里有讲。
+妙言设置里还有一项「换行方式」，两个选项是「每次换行」和「GitHub 风格」，底层是在「每个换行都当成换行」和「换行当成空格」之间切换，后者就是 CommonMark 的规则，实际效果在[语法速查](/zh/blog/markdown-cheat-sheet/)里有讲。
 
 妙言会索引双链（`[[项目计划]]`）来生成反向链接，见[双链与反向链接](/zh/blog/wikilinks-and-backlinks/)，双链不在 CommonMark 或 GFM 里，没实现的渲染器会把方括号原样显示。
 
@@ -90,7 +90,7 @@ graph LR
 
 结果这样读。两行连成一行说明应用遵循 CommonMark 的软换行规则，两行分开说明它在每个换行处断行；表格或任务框显示成文字，说明缺 GFM 扩展；`www.example.com` 有没有变成链接，能看出有没有扩展自动链接；引用块里还显示着 `[!NOTE]`，说明没有提示框；美元符号原样出现，说明没有公式渲染；代码块里显示 Mermaid 源码，说明没有图表渲染。
 
-在妙言 4.5.0 里，表格、任务框和删除线会渲染，`www.example.com` 保持纯文本，脚注、提示框、公式和图表会渲染，两行是连起来还是分开取决于换行方式设置。
+在妙言里，表格、任务框和删除线会渲染，`www.example.com` 保持纯文本，脚注、提示框、公式和图表会渲染，两行是连起来还是分开取决于换行方式设置。
 
 ## 其他工具有什么不同
 
@@ -110,4 +110,4 @@ GitHub 渲染 GFM 规范，它的[语法文档](https://docs.github.com/en/get-s
 
 ### 妙言支持脚注和公式吗？
 
-4.5.0 支持，脚注由解析器处理，公式在预览里由 KaTeX 排版，见 [Markdown 里写 LaTeX 公式](/zh/blog/latex-math-in-markdown/)。
+支持，脚注由解析器处理，公式在预览里由 KaTeX 排版，见 [Markdown 里写 LaTeX 公式](/zh/blog/latex-math-in-markdown/)。

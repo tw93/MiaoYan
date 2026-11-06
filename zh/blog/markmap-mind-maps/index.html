@@ -18,7 +18,7 @@
 <meta property="og:description" content="用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markmap-mind-maps.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "用 Markdown 大纲画 Markmap 思维导图", "item": "https://miaoyan.app/zh/blog/markmap-mind-maps/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markmap-mind-maps/#article", "headline": "用 Markdown 大纲画 Markmap 思维导图", "description": "用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。", "url": "https://miaoyan.app/zh/blog/markmap-mind-maps/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markmap-mind-maps/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markmap-mind-maps.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言里的 Markmap 需要联网吗？", "acceptedAnswer": {"@type": "Answer", "text": "普通大纲不需要，库文件随应用打包，和 PlantUML 不同，后者会把图发到公共服务器。节点里有公式是例外，它会从 CDN 加载 KaTeX。"}}, {"@type": "Question", "name": "能让导图默认折叠吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，V4.5.0 会忽略 front matter 里的选项，预览里的导图也不响应点击，所有层级都会显示，大纲太大就拆成几个块。"}}, {"@type": "Question", "name": "能直接编辑导图吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，导图由文字画出来，改大纲，预览会随之更新。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "用 Markdown 大纲画 Markmap 思维导图", "item": "https://miaoyan.app/zh/blog/markmap-mind-maps/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markmap-mind-maps/#article", "headline": "用 Markdown 大纲画 Markmap 思维导图", "description": "用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。", "url": "https://miaoyan.app/zh/blog/markmap-mind-maps/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markmap-mind-maps/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markmap-mind-maps.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言里的 Markmap 需要联网吗？", "acceptedAnswer": {"@type": "Answer", "text": "普通大纲不需要，库文件随应用打包，和 PlantUML 不同，后者会把图发到公共服务器。节点里有公式是例外，它会从 CDN 加载 KaTeX。"}}, {"@type": "Question", "name": "能让导图默认折叠吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，应用会忽略 front matter 里的选项，预览里的导图也不响应点击，所有层级都会显示，大纲太大就拆成几个块。"}}, {"@type": "Question", "name": "能直接编辑导图吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，导图由文字画出来，改大纲，预览会随之更新。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -697,7 +697,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markmap-mind-maps.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>想把一份 Markdown 大纲变成思维导图，做法是把大纲放进语言名为 <code>markmap</code> 的围栏代码块，标题和嵌套的列表项会变成分支，预览里画成 SVG 树。妙言把 Markmap 库打包在应用里，所以普通大纲离线也能渲染，文字不会离开你的 Mac。代价是可控的东西少，V4.5.0 里颜色、间距和初始展开层级都由应用固定，普通预览里的导图不响应点击和滚轮，Markmap 官方文档里的那些选项在这里也不会生效。</p>
+<p>想把一份 Markdown 大纲变成思维导图，做法是把大纲放进语言名为 <code>markmap</code> 的围栏代码块，标题和嵌套的列表项会变成分支，预览里画成 SVG 树。妙言把 Markmap 库打包在应用里，所以普通大纲离线也能渲染，文字不会离开你的 Mac。代价是可控的东西少，颜色、间距和初始展开层级都由应用固定，普通预览里的导图不响应点击和滚轮，Markmap 官方文档里的那些选项在这里也不会生效。</p>
 <h2 id="markmap-是什么">Markmap 是什么</h2>
 <p>Markmap 官方文档把它描述成 Markdown 和思维导图的结合，它解析 Markdown，取出层级结构，再渲染成可以交互的导图，标题级别或列表缩进决定谁是谁的父节点。输入就是普通大纲，所以可以先把结构当笔记写下来，再让它渲染成导图，笔记在任何编辑器里仍然是可读的文字。</p>
 <h2 id="写法">写法</h2>
@@ -720,7 +720,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <p>围栏不用手打，在妙言里输入 <code>/markmap</code> 再按 <code>Tab</code>，或者在「格式」菜单的「Tab快捷输入」子菜单里选 <code>/markmap</code> 那一项，会插入一个带根节点、两个分支和三个条目的小模板，根节点标题处于选中状态，占位文字是中文。</p>
 <h2 id="妙言里是怎么渲染的">妙言里是怎么渲染的</h2>
 <p>带语言名的围栏块到达页面时是一个类名为 <code>language-markmap</code> 的 code 元素，预览加载完成以后，脚本（<code>diagram-handler.js</code>）找到这些元素，交给打包好的 Markmap 加载器（<code>markmap.min.js</code>，旁边是 <code>markmap-view.min.js</code> 和 <code>d3.min.js</code>）。加载器读取块里的文字，去掉公共缩进，把大纲转成树，再画成 SVG 替换原来的代码。这些文件都在预览资源包里（markmap-lib 0.14.1 和 markmap-view 0.14.0），用相对路径引用，普通大纲不会发出网络请求。例外是公式，节点里写了 <code>$x^2$</code> 这类公式，Markmap 库会去 jsDelivr 拉 KaTeX 的样式和字体，要保持离线的导图里别放公式。</p>
-<p>读 V4.5.0 的加载器代码，有几个行为是固定的：</p>
+<p>读加载器代码，有几个行为是固定的：</p>
 <ul>
 <li>盒子高度由内容算出来，大约每个非空行 30 像素，再加上随深度增加的余量，最低 300 像素，大纲越长盒子越高，字号不会变小。</li>
 <li>节点颜色来自内置的十二色调色板，按深度循环使用，图的背景随浅色或深色外观由应用的 CSS 决定，你自己指定的分支配色不会被读取。</li>
@@ -735,10 +735,10 @@ markmap:
   colorFreezeLevel: 2
 ---
 </code></pre>
-<p>妙言 V4.5.0 打包的 Markmap 库能识别围栏里的这段并把它从大纲中剥掉，但应用自己的加载器是用固定选项创建导图的，不会把解析出来的选项再传回去。用 V4.5.0 的预览文件加载带 <code>initialExpandLevel: 1</code> 的块，所有层级照样全部画出来。需要折叠层级或自定义颜色的话，可以用 Markmap 官方的网页工具或支持完整选项的编辑器画这一张，再把截图放进笔记。</p>
+<p>妙言打包的 Markmap 库能识别围栏里的这段并把它从大纲中剥掉，但应用自己的加载器是用固定选项创建导图的，不会把解析出来的选项再传回去。用预览文件加载带 <code>initialExpandLevel: 1</code> 的块，所有层级照样全部画出来。需要折叠层级或自定义颜色的话，可以用 Markmap 官方的网页工具或支持完整选项的编辑器画这一张，再把截图放进笔记。</p>
 <p>妙言里有一个选项，但只在演示模式下有效：块里写一行 <code>&lt;!--markmap-height=400--&gt;</code>，把笔记当幻灯片演示时，导图高度就按这个像素值来，普通预览里高度仍然是算出来的。</p>
 <h2 id="markmap-还是-mermaid-的-mindmap">Markmap 还是 Mermaid 的 mindmap</h2>
-<p>Mermaid 有自己的 <code>mindmap</code> 图表类型，以关键字 <code>mindmap</code> 开头，靠缩进表示层级，只有一个根节点，节点可以有多种形状，Mermaid 文档把它标为实验性功能。妙言 V4.5.0 打包的 Mermaid 是 11.14.0，能画出 <code>mindmap</code> 块，不过语法以后还可能变，留一个小例子，更新以后试一下。</p>
+<p>Mermaid 有自己的 <code>mindmap</code> 图表类型，以关键字 <code>mindmap</code> 开头，靠缩进表示层级，只有一个根节点，节点可以有多种形状，Mermaid 文档把它标为实验性功能。妙言打包的 Mermaid 是 11.14.0，能画出 <code>mindmap</code> 块，不过语法以后还可能变，留一个小例子，更新以后试一下。</p>
 <p>两者解决的问题不同。Markmap 读你已经写好的标题和列表，适合本身就是笔记的大纲，Mermaid mindmap 是另一套语法，适合希望导图和流程图、时序图用同一种图表语言写在一份文档里的情况。后一种可以看 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>，三种图表语言的围栏写法在 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a> 里也有。</p>
 <h2 id="导出与常见问题排查">导出与常见问题排查</h2>
 <ul>
@@ -753,7 +753,7 @@ markmap:
 <h3 id="妙言里的-markmap-需要联网吗">妙言里的 Markmap 需要联网吗？</h3>
 <p>普通大纲不需要，库文件随应用打包，和 PlantUML 不同，后者会把图发到公共服务器。节点里有公式是例外，它会从 CDN 加载 KaTeX。</p>
 <h3 id="能让导图默认折叠吗">能让导图默认折叠吗？</h3>
-<p>不能，V4.5.0 会忽略 front matter 里的选项，预览里的导图也不响应点击，所有层级都会显示，大纲太大就拆成几个块。</p>
+<p>不能，应用会忽略 front matter 里的选项，预览里的导图也不响应点击，所有层级都会显示，大纲太大就拆成几个块。</p>
 <h3 id="能直接编辑导图吗">能直接编辑导图吗？</h3>
 <p>不能，导图由文字画出来，改大纲，预览会随之更新。</p>
     </div>

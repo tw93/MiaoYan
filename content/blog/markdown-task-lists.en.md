@@ -20,7 +20,7 @@ Nesting works as it does for any list: indent the child by two spaces under a hy
 
 The list marker can be `-`, `*` or `+`, and the spec's wording about a list item also covers an ordered item such as `1. [ ] Step one`. cmark-gfm, the parser behind MiaoYan's preview, draws that as a numbered list with checkboxes, which suits a runbook where order matters.
 
-That is the standard. A specific editor can be stricter about what it writes back, and this is where hyphens matter. MiaoYan's own toggle logic, described below, only recognises `- [ ] ` and `- [x] `, so use a hyphen and a lowercase `x` if you want clicking to be reliable. The [Markdown cheat sheet](/blog/markdown-cheat-sheet/) lists the other GFM additions.
+That is the standard. MiaoYan's click toggle, described below, accepts all of those markers and either case of `x`, but a hyphen and a lowercase `x` are the most portable spelling. The [Markdown cheat sheet](/blog/markdown-cheat-sheet/) lists the other GFM additions.
 
 ## What renders where
 
@@ -28,15 +28,15 @@ That is the standard. A specific editor can be stricter about what it writes bac
 - **CommonMark without the GFM extension.** The item is a normal bullet whose text begins with `[ ]`. You see the brackets.
 - **Other editors.** Whether a rendered box can be clicked is not part of the spec, so each editor decides for itself. Test a click once before relying on it.
 
-MiaoYan's preview uses a Swift build of cmark-gfm with four extensions turned on: table, footnotes, strikethrough and tasklist (`Business/Markdown.swift` at the V4.5.0 tag). So task lists render as real `input` checkboxes in the preview.
+MiaoYan's preview uses a Swift build of cmark-gfm with four extensions turned on: table, footnotes, strikethrough and tasklist (`Business/Markdown.swift`). So task lists render as real `input` checkboxes in the preview.
 
 ## How clicking a checkbox works in MiaoYan
 
-In the V4.5.0 preview, the page script (`common.js`) enables every checkbox and numbers them in document order. A click sends that number to the app, and the app (`HandlerCheckbox` in `MPreviewHandlers.swift`) walks through the note's text, finds the matching occurrence of `- [ ] ` or `- [x] `, swaps it for the other form and saves the note.
+In the preview, the page script (`common.js`) enables every checkbox and records the source line of its list item. A click sends that line to the app, and the app (`HandlerCheckbox` in `MPreviewHandlers.swift`) finds the box on that line, swaps the space or `x` between the brackets for the other one and saves the note.
 
-This mechanism explains the edge cases. The app matches by position: the Nth checkbox in the preview is assumed to be the Nth `- [ ] ` or `- [x] ` in the source text. If your note contains task syntax the regex does not count, such as `* [ ]`, `+ [ ]`, `1. [ ]` or a capital `X`, the preview still draws a box, but the numbering drifts and a click may change a different line. The same thing can happen if `- [ ] ` appears in a place that is not rendered as a task, for example inside a fenced code block or a blockquote, because the text match does not know about code fences or quotes. If a click toggles the wrong line, look for those two causes first.
+This mechanism explains the edge cases. The app works from the source line, so the box you click is the one that changes, whichever marker the note uses: `-`, `*`, `+`, `1.` or `1)`, a lowercase or capital `X`, and a task on a quoted line all count. Text such as `- [ ] ` inside a fenced code block draws no checkbox, so it is never clicked and never changed. If a click changes nothing, check that the line really renders as a task.
 
-In the editor, the Format menu has a "Todo" item (`⌘T`, labeled 「待办」 in the Chinese interface). On a line that is not a task it inserts `- [ ] `, and on a task it switches between `- [ ] ` and `- [x] `. It rewrites the first six characters of the line, so on an indented sub-task it breaks the marker; click the box in the preview for those. Typing `/task` and pressing `Tab` inserts a three-line template, two open tasks and one done, with Chinese placeholder text; the Tab Quick Input menu lists it as "/task - Task List".
+In the editor, the Format menu has a "Todo" item (`⌘T`, labeled 「待办」 in the Chinese interface). On a line that is not a task it inserts `- [ ] `, and on a task it switches between `- [ ] ` and `- [x] `. It changes only the character between the brackets, so indented and numbered tasks work too, and pressing Return on a task line starts the next one unticked. Typing `/task` and pressing `Tab` inserts a three-line template, two open tasks and one done, with Chinese placeholder text; the Tab Quick Input menu lists it as "/task - Task List".
 
 ## Tasks inside blockquotes
 
@@ -45,7 +45,7 @@ In the editor, the Format menu has a "Todo" item (`⌘T`, labeled 「待办」 i
 > - [x] Send the draft
 ````
 
-The cmark-gfm version in MiaoYan V4.5.0 does not turn these into checkboxes. The quote holds a normal bulleted list whose items start with the text `[ ]` and `[x]`, and that stays the same with `>` on every line and a blank `>` line before the list. Other renderers may treat this differently, so test the one your notes end up in. In MiaoYan there is a second cost: the click toggle still counts `- [ ] ` inside the quote, so every checkbox after it in the note changes the wrong line. Keep tasks outside blockquotes, and put the quoted context in a paragraph above the list.
+MiaoYan's cmark-gfm does not turn these into checkboxes. The quote holds a normal bulleted list whose items start with the text `[ ]` and `[x]`, and that stays the same with `>` on every line and a blank `>` line before the list. Other renderers may treat this differently, so test the one your notes end up in. In MiaoYan there is no box to click there either. Keep tasks outside blockquotes, and put the quoted context in a paragraph above the list.
 
 ## Finding open tasks across notes
 
@@ -79,7 +79,7 @@ Yes. Change the space between the brackets to `x`. That is all a click does in a
 
 ### Is `[X]` with a capital letter valid?
 
-The GFM spec accepts both cases, and MiaoYan's preview draws a checked box for it. MiaoYan's click toggle only matches a lowercase `x`, so lowercase is safer.
+The GFM spec accepts both cases, and MiaoYan's preview draws a checked box for it. MiaoYan's click toggle handles both too, though lowercase is what most tools write.
 
 ### Do task lists work in exported PDF or HTML?
 

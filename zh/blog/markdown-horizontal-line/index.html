@@ -18,7 +18,7 @@
 <meta property="og:description" content="三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 分割线怎么写，以及 --- 的坑", "item": "https://miaoyan.app/zh/blog/markdown-horizontal-line/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-horizontal-line/#article", "headline": "Markdown 分割线怎么写，以及 --- 的坑", "description": "三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。", "url": "https://miaoyan.app/zh/blog/markdown-horizontal-line/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-horizontal-line/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "三种写法该用哪个？", "acceptedAnswer": {"@type": "Answer", "text": "--- 最常见，纯文本里最好读。线可能紧贴在段落下面时用 ***，它不会变成标题。"}}, {"@type": "Question", "name": "能让分割线变粗或者变色吗？", "acceptedAnswer": {"@type": "Answer", "text": "Markdown 里不行，没有这种语法。在显示 HTML 的页面里给 hr 写 CSS。"}}, {"@type": "Question", "name": "为什么我的 --- 变成了大标题？", "acceptedAnswer": {"@type": "Answer", "text": "它直接贴在一行文字下面，CommonMark 把它当成 setext 标题的下划线，在两者之间加一个空行。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 分割线怎么写，以及 --- 的坑", "item": "https://miaoyan.app/zh/blog/markdown-horizontal-line/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-horizontal-line/#article", "headline": "Markdown 分割线怎么写，以及 --- 的坑", "description": "三种分割线写法、紧贴文字变标题的坑、HTML 写法，以及妙言里 --- 兼作分页符和 front matter 围栏。", "url": "https://miaoyan.app/zh/blog/markdown-horizontal-line/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-horizontal-line/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "三种写法该用哪个？", "acceptedAnswer": {"@type": "Answer", "text": "--- 最常见，纯文本里最好读。线可能紧贴在段落下面时用 ***，它不会变成标题。"}}, {"@type": "Question", "name": "能让分割线变粗或者变色吗？", "acceptedAnswer": {"@type": "Answer", "text": "Markdown 里不行，没有这种语法。在显示 HTML 的页面里给 hr 写 CSS。"}}, {"@type": "Question", "name": "为什么我的 --- 变成了大标题？", "acceptedAnswer": {"@type": "Answer", "text": "它直接贴在一行文字下面，CommonMark 把它当成 setext 标题的下划线，在两者之间加一个空行。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -697,7 +697,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-horizontal-line.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>单独一行写 <code>---</code>、<code>***</code> 或 <code>___</code>，上面留一个空行，三种写法画出来的都是同一条分割线（CommonMark 里叫 thematic break），但 <code>---</code> 有个坑，直接贴在一行文字下面时，那行文字会变成标题而不是分割线。在妙言 V4.5.0 里还要多记两件事，同样的 <code>---</code> 在 PPT 模式里是幻灯片的分页符，写在笔记最开头时又是 front matter 的围栏。</p>
+<p>单独一行写 <code>---</code>、<code>***</code> 或 <code>___</code>，上面留一个空行，三种写法画出来的都是同一条分割线（CommonMark 里叫 thematic break），但 <code>---</code> 有个坑，直接贴在一行文字下面时，那行文字会变成标题而不是分割线。在妙言里还要多记两件事，同样的 <code>---</code> 在 PPT 模式里是幻灯片的分页符，写在笔记最开头时又是 front matter 的围栏。</p>
 <h2 id="三种写法">三种写法</h2>
 <pre><code class="language-markdown">线上面的段落。
 
@@ -727,7 +727,7 @@ ___
 <p>Markdown 允许内嵌 HTML，三种写法最后生成的就是 <code>&lt;hr&gt;</code>。妙言预览渲染时开着 cmark-gfm 的 unsafe 选项，原样放行 HTML，所以 <code>&lt;hr&gt;</code> 在这里能用。有些发布平台会过滤内嵌 HTML，在那里还是写 Markdown 形式更稳。</p>
 <p>Markdown 没有给分割线加 class 或内联样式的语法，要加只能写 HTML，能不能保留要看渲染器的 HTML 过滤。</p>
 <h2 id="妙言怎么画它">妙言怎么画它</h2>
-<p>妙言 V4.5.0 用 cmark-gfm 渲染笔记，再把 HTML 放进网页视图。分割线输出为 <code>&lt;hr&gt;</code>，预览样式表（内置 DownView 资源里的 <code>typography.css</code>）给它 1 像素高、无边框、背景取主题的边框色，上下各留 1.6em 的外边距。浅色主题的边框色是 <code>#e6e6e6</code>，深色主题是 <code>#454545</code>，两种主题下都比较淡。</p>
+<p>妙言用 cmark-gfm 渲染笔记，再把 HTML 放进网页视图。分割线输出为 <code>&lt;hr&gt;</code>，预览样式表（内置 DownView 资源里的 <code>typography.css</code>）给它 1 像素高、无边框、背景取主题的边框色，上下各留 2em 的外边距。浅色主题的边框色是 <code>#E8E6DC</code>，深色主题是 <code>#3A3936</code>，两种主题下都比较淡。</p>
 <p>自己的网页里要改分割线的样子，是 CSS 的事，不是 Markdown 的事：</p>
 <pre><code class="language-css">hr {
   border: 0;
@@ -742,12 +742,12 @@ ___
 <p><code>***</code>、<code>___</code> 和 <code>&lt;hr&gt;</code> 匹配不上这个模式，会留在当前这页里，和其他行一样交给 reveal 的 Markdown 渲染器，一页内要分隔线就试它们，演示前在 PPT 模式里看一眼这一页。完整流程见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
 <p>快捷键只检查笔记里有没有 <code>---</code> 这三个字符，表格分隔行 <code>|---|---|</code> 里就含有，所以只有表格、没有真正分页符的笔记也会启动 PPT 模式。</p>
 <h3 id="front-matter-围栏">front matter 围栏</h3>
-<p>笔记第一行是 <code>---</code> 时，妙言会往下找下一个以三个短横线开头的行，这一行正好是 <code>---</code>，两行之间的内容就当成 front matter，在预览、PPT 模式和导出里隐藏，如果是 <code>----</code> 或者短横线后面还有别的字，就什么都不隐藏。笔记中间的三个短横线仍然是普通分割线。所以开头写一条装饰性的 <code>---</code> 会让第一段消失，开头先写标题，或者顶上那条用 <code>***</code>。完整规则见 <a href="/zh/blog/markdown-front-matter/">Markdown front matter</a>。</p>
+<p>笔记第一行是 <code>---</code> 时，妙言会往下找下一个以三个短横线开头的行，这一行正好是 <code>---</code>，而且两行之间看起来像 YAML，这些内容就当成 front matter，在预览、PPT 模式和导出里隐藏，如果是 <code>----</code>、短横线后面还有别的字，或者中间是普通文字，就什么都不隐藏。笔记中间的三个短横线仍然是普通分割线。开头写一条装饰性的 <code>---</code> 再接普通文字，第一段不会消失，不过还是建议开头先写标题，或者顶上那条用 <code>***</code>。完整规则见 <a href="/zh/blog/markdown-front-matter/">Markdown front matter</a>。</p>
 <h2 id="分割线没出来时">分割线没出来时</h2>
 <ul>
 <li><strong>出现的是标题而不是线。</strong> <code>---</code> 上面紧贴着文字，加一个空行，或者换成 <code>***</code>。</li>
 <li><strong>线是字面字符。</strong> 少于三个字符、字符混用、同一行有别的字符，或者缩进了四个空格。</li>
-<li><strong>笔记开头不见了。</strong> 笔记以 <code>---</code> 开头，后面某行正好是 <code>---</code>，中间的内容被当成了 front matter。</li>
+<li><strong>笔记开头不见了。</strong> 笔记以 <code>---</code> 开头，后面某行正好是 <code>---</code>，中间全是 <code>key: value</code> 这样的 YAML 写法，被当成了 front matter。</li>
 <li><strong>幻灯片在不该分的地方分了。</strong> PPT 模式下每一行 <code>---</code> 都是边界，分隔线换成 <code>***</code> 或 <code>&lt;hr&gt;</code>。</li>
 <li><strong>在妙言以外的应用里没有线。</strong> 渲染器可能过滤了 <code>&lt;hr&gt;</code>，改用 <code>---</code> 并在上面留空行。</li>
 <li><strong>Pandoc 把线吞掉、变成单格表格，或者直接报错。</strong> Pandoc 自己的 Markdown，也就是<a href="/zh/blog/markdown-to-word/">转 Word</a> 时读文件的那一套，看到 <code>---</code> 下面紧贴着文字，会当成 YAML 元数据块的开头，手册写明这种块只要前面有空行，放在文档哪里都行。用 Pandoc 3.12.1 试过，<code>---</code>、<code>key: value</code>、<code>---</code> 这三行在输出里整个消失，同样的围栏里放不是 YAML 的文字，转换直接停在 <code>Error parsing YAML metadata</code>，两条线中间夹一行普通文字，出来的是一个只有一格的表格。分割线下面也留一个空行，三种情况都能避开，手册本身就是这么建议的。</li>

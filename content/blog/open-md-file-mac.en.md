@@ -46,19 +46,19 @@ Two options cover most cases.
 
 ## How MiaoYan opens .md files
 
-MiaoYan, in its V4.5.0 release, declares itself in its Info.plist as an editor for Markdown files with the extensions `md` and `markdown`, under the type `net.daringfireball.markdown`. That is what lets it appear in Open With and in the Open with pop-up of Get Info. It does not list `mdown`, `mkd` or other rarer extensions itself, so whether macOS offers it for those files depends on what other installed apps declare.
+MiaoYan declares itself in its Info.plist as an editor for Markdown files with the extensions `md` and `markdown`, under the type `net.daringfireball.markdown`. That is what lets it appear in Open With and in the Open with pop-up of Get Info. It does not list `mdown`, `mkd` or other rarer extensions itself, so whether macOS offers it for those files depends on what other installed apps declare.
 
 Terminal shows the same thing. `mdls -name kMDItemContentType note.md` prints the type macOS gave the file, `net.daringfireball.markdown` for a `.md` file, while an extension that no installed app declares comes back as a value starting with `dyn.`, as `.mdown` and `.mkd` did on a Mac with MiaoYan installed. `open -a MiaoYan note.md` opens one file in MiaoYan without changing any default, and `open -e note.md` opens it in TextEdit.
 
 Double-clicking a file starts what the app calls Single Mode, whose menu item is File > Single Mode (`⌘O`), in Chinese 「单独模式」. The same mode starts when you choose that menu item and pick a file or folder. The note list shows the files that sit next to the one you opened. The app's own prompt says to leave this mode with `Command+Shift+W`.
 
-Which neighbors appear depends on the extension. In V4.5.0 the list is built from files ending in `md`, `markdown` or `txt`, and the code compares that text exactly, with the case you typed. A file named `README.MD` is therefore not matched by that scan, so if a file with an uppercase extension does not show up next to its neighbors, rename it to lowercase `.md`. When it reads a folder, MiaoYan also skips files that macOS does not identify as text and files of 100 MB or more.
+Which neighbors appear depends on the extension. The list is built from files ending in `md`, `markdown` or `txt`, in any letter case, so `README.MD` shows up like `README.md`. When it reads a folder, MiaoYan also skips files that macOS does not identify as text and files of 100 MB or more.
 
 To bring files into your own notes folder instead of browsing them in place, use File > Import (「导入」), which accepts files and folders and copies Markdown files in.
 
 ## Garbled text and encoding
 
-A `.md` file is text, but text still has an encoding, and a file saved in an older encoding, such as GBK for Chinese text, can look garbled in an app that assumes UTF-8. MiaoYan tries UTF-8 first and, if that fails, asks the system to detect the encoding and reads the file with that. TextEdit lets you choose: under TextEdit > Settings > Open and Save, the Plain Text File Encoding pop-up menus set the default encoding for opening and saving plain text files. If a file looks wrong in one app, try another that detects the encoding before you edit and save it, because saving rewrites the file in the encoding the app chooses.
+A `.md` file is text, but text still has an encoding, and a file saved in an older encoding, such as GBK for Chinese text, can look garbled in an app that assumes UTF-8. MiaoYan tries UTF-8 first and, if that fails, asks the system to detect the encoding and reads the file with that, with GB18030 as the last fallback for GBK and GB2312 files. MiaoYan always saves UTF-8, and a file with damaged bytes opens read-only. TextEdit lets you choose: under TextEdit > Settings > Open and Save, the Plain Text File Encoding pop-up menus set the default encoding for opening and saving plain text files. If a file looks wrong in one app, try another that detects the encoding before you edit and save it, because saving rewrites the file in the encoding the app chooses.
 
 ## Which one to use
 

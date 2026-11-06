@@ -18,7 +18,7 @@
 <meta property="og:description" content="[[wikilink]] 和普通 Markdown 链接有什么不同，妙言支持什么，反向链接怎么生成，可移植性上要付出什么。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="笔记管理">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 笔记里的 Wikilink 与反向链接", "item": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/#article", "headline": "Markdown 笔记里的 Wikilink 与反向链接", "description": "[[wikilink]] 和普通 Markdown 链接有什么不同，妙言支持什么，反向链接怎么生成，可移植性上要付出什么。", "url": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp", "timeRequired": "PT6M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的 wikilink 需要写 .md 扩展名吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要，只写标题，比如 [[项目计划]]。"}}, {"@type": "Question", "name": "支持 [[笔记|别名]] 或 [[笔记#标题]] 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不支持，括号之间的全部文字都会被当作标题，这些写法无法解析。"}}, {"@type": "Question", "name": "代码块里的 wikilink 会生效吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会生效，在行内代码和围栏代码块里它们保持为纯文本。"}}, {"@type": "Question", "name": "有关系图谱吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，Mac 版不带关系图谱，反向链接以列表的形式显示在文档属性面板里。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 笔记里的 Wikilink 与反向链接", "item": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/#article", "headline": "Markdown 笔记里的 Wikilink 与反向链接", "description": "[[wikilink]] 和普通 Markdown 链接有什么不同，妙言支持什么，反向链接怎么生成，可移植性上要付出什么。", "url": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp", "timeRequired": "PT6M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的 wikilink 需要写 .md 扩展名吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要，只写标题，比如 [[项目计划]]。"}}, {"@type": "Question", "name": "支持 [[笔记|别名]] 或 [[笔记#标题]] 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不支持，括号之间的全部文字都会被当作标题，这些写法无法解析。"}}, {"@type": "Question", "name": "代码块里的 wikilink 会生效吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会生效，在行内代码和围栏代码块里它们保持为纯文本。"}}, {"@type": "Question", "name": "有关系图谱吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，Mac 版不带关系图谱，反向链接以列表的形式显示在文档属性面板里。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -752,8 +752,8 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <h2 id="妙言是怎么实现的">妙言是怎么实现的</h2>
 <p>下面是从源码里读出来的机制。</p>
 <p><strong>一个写法，两份工作。</strong> 编辑器和索引都会匹配 <code>[[</code> 与 <code>]]</code> 之间的文字，编辑器负责把标题高亮成链接样式，索引则用另一套规则提取不含右方括号的字符，去掉两端空格后作为目标标题。</p>
-<p><strong>索引。</strong> 笔记列表每次刷新时，妙言会用列表里的笔记重建索引，为每个标题记下它指向的标题集合（出链）和指向它的标题集合（入链）。它读的是每篇笔记已经载入的文字，启动后没打开过的笔记还没有载入，所以它里面的链接要等你打开或保存它之后才算数。保存笔记时会更新这一篇的条目。</p>
-<p><strong>点击链接。</strong> Wikilink 会变成 <code>miaoyan://goto/&lt;标题&gt;</code> 这样的地址，和 <code>miao open</code> 命令用的是同一个 URL scheme。妙言查找标题完全一致的笔记，找到一篇就打开，找不到会提示「请确定你填写的标题是否存在~」并且不会新建，找到多篇时，比如两个文件夹里都有 <code>会议记录.md</code>，会以这个标题发起搜索，并提示「发现这里有多个标题，使用搜索能力~」。所以标题唯一不只是整洁，它决定链接有没有歧义。</p>
+<p><strong>索引。</strong> 启动时，妙言会用笔记库文件夹下的每个笔记文件建立索引，没有载入文字的笔记直接从磁盘读，为每个标题记下它指向的标题集合（出链）和指向它的标题集合（入链）。保存笔记时会更新这一篇的条目。</p>
+<p><strong>点击链接。</strong> Wikilink 会变成 <code>miaoyan://goto/&lt;标题&gt;</code> 这样的地址，和 <code>miao open</code> 命令用的是同一个 URL scheme。妙言查找标题完全一致的笔记，找到一篇就打开，找不到会提示「没有找到这个标题的笔记」并且不会新建，找到多篇时，比如两个文件夹里都有 <code>会议记录.md</code>，会以这个标题发起搜索，并提示「有多篇同名笔记，已显示搜索结果」。所以标题唯一不只是整洁，它决定链接有没有歧义。</p>
 <p><strong>预览和导出。</strong> 渲染预览之前，妙言把每个 wikilink 改写成 <code>[标题](miaoyan://goto/标题)</code> 这种普通 Markdown 链接，行内代码和围栏代码块里的内容会被跳过，所以代码示例里的 <code>[[example]]</code> 仍然是文字。导出走的是同一套处理，所以导出的文件里带着 <code>miaoyan://</code> 链接，只有装了妙言的 Mac 上才有作用。</p>
 <p><strong>复制外链。</strong> 笔记的「复制外链」命令放进剪贴板的也是这个地址，可以把某篇笔记的链接贴到别的应用里。</p>
 <h2 id="反向链接">反向链接</h2>
@@ -762,9 +762,9 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <h2 id="出问题时怎么查">出问题时怎么查</h2>
 <ul>
 <li><strong>链接打开了别的笔记或者发起了搜索。</strong> 说明有两篇笔记同名，文件名就是唯一标识，把其中一篇改名即可。</li>
-<li><strong>提示「请确定你填写的标题是否存在~」。</strong> 目标和任何文件名都不完全一致，检查一下大小写、空格和标点，<code>项目计划.md</code> 对应的就是 <code>项目计划</code>。</li>
+<li><strong>提示「没有找到这个标题的笔记」。</strong> 目标和任何文件名都不完全一致，检查一下大小写、空格和标点，<code>项目计划.md</code> 对应的就是 <code>项目计划</code>。</li>
 <li><strong>重命名之后别处的链接失效了。</strong> 妙言在重命名文件时不会联动修改其他笔记里的链接，用搜索框搜旧标题，它会同时查标题和正文，然后逐个改掉即可。</li>
-<li><strong>反向链接看起来不全。</strong> 索引只统计当前列表里已经载入文字的笔记，也就是启动后打开过或保存过的笔记，打开或保存一下带链接的那篇，反向链接就会出现。</li>
+<li><strong>反向链接看起来不全。</strong> 索引覆盖笔记库里的每个笔记文件，所以反向链接缺了，多半是链接里的标题和笔记标题对不上，检查一下大小写、空格和标点。</li>
 <li><strong>为其他应用写的链接显示成文字。</strong> 别名、标题链接和 <code>![[image.png]]</code> 这样的嵌入是 Obsidian 的语法，妙言没有处理，改成纯标题或标准 Markdown。</li>
 </ul>
 <h2 id="什么时候用普通链接">什么时候用普通链接</h2>

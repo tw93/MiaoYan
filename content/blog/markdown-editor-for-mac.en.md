@@ -39,7 +39,7 @@ Pick Typora if you want the cleanest WYSIWYG writing surface and work across mac
 
 ## Where MiaoYan fits
 
-MiaoYan is a native Mac app for local Markdown notes. It uses three columns: folders, a note list, and the editor. You set a storage folder in Preferences (`⌘,`), and the notes are `.md`, `.markdown` or `.txt` files inside it. Split mode puts the editor and preview side by side, toggled with `⌘\`, or you can set Editor Mode to Split Mode in Preferences. The project README explains why there is no WYSIWYG: native WYSIWYG in Swift is heavy and fragile, and split mode keeps you writing against the Markdown source.
+MiaoYan is a native Mac app for local Markdown notes. It uses three columns: folders, a note list, and the editor. You set a storage folder in Preferences (`⌘,`), and the notes are `.md`, `.markdown` or `.txt` files inside it. Split mode puts the editor and preview side by side, toggled with `⌘\`, or you can set Default Mode to Split in the Editor tab of Preferences. The project README explains why there is no WYSIWYG: native WYSIWYG in Swift is heavy and fragile, and split mode keeps you writing against the Markdown source.
 
 Built-in features include KaTeX math, Mermaid, PlantUML and Markmap diagrams, `[[wikilinks]]` with backlinks, per-note version history, auto-format (`⌘⇧L`), HTML, PDF and image export, a `miao` command-line tool, and a presentation mode that turns a note with `---` separators into slides (see [Markdown to slides](/blog/markdown-to-slides/)). There is no plugin system, so you cannot add features that are not built in.
 

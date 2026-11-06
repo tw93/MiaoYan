@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f5f4ed">
 <script>document.documentElement.classList.add('js')</script>
 <title>Markdown footnotes: syntax, support and fallbacks · MiaoYan Blog</title>
-<meta name="description" content="Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text.">
+<meta name="description" content="Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan render them, and fix footnotes that show as plain text.">
 <link rel="canonical" href="https://miaoyan.app/blog/markdown-footnotes/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-footnotes/">
 <link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-footnotes/">
@@ -15,10 +15,10 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/blog/markdown-footnotes/">
 <meta property="og:title" content="Markdown footnotes: syntax, support and fallbacks · MiaoYan Blog">
-<meta property="og:description" content="Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text.">
+<meta property="og:description" content="Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan render them, and fix footnotes that show as plain text.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-footnotes.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -672,7 +672,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown footnotes: syntax, support and fallbacks", "item": "https://miaoyan.app/blog/markdown-footnotes/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-footnotes/#article", "headline": "Markdown footnotes: syntax, support and fallbacks", "description": "Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text.", "url": "https://miaoyan.app/blog/markdown-footnotes/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-footnotes/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-footnotes.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do GitHub README files support footnotes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. GitHub's syntax page documents [^1] markers with definitions, rendered at the bottom of the file. It states that footnotes are not supported in wikis."}}, {"@type": "Question", "name": "Can I put a footnote inside a table cell or a list item?", "acceptedAnswer": {"@type": "Answer", "text": "Pandoc's manual says footnote definitions may appear anywhere except inside other block elements such as lists, block quotes and tables. The marker itself is inline text. In MiaoYan V4.5.0 a marker inside a table cell renders as a normal footnote; elsewhere, check the result in your renderer before relying on it."}}, {"@type": "Question", "name": "Is there a limit on how many footnotes a note can have?", "acceptedAnswer": {"@type": "Answer", "text": "The GitHub and Pandoc documentation and the MiaoYan parser setup state no limit. Named labels make a long list easier to maintain."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown footnotes: syntax, support and fallbacks", "item": "https://miaoyan.app/blog/markdown-footnotes/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-footnotes/#article", "headline": "Markdown footnotes: syntax, support and fallbacks", "description": "Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan render them, and fix footnotes that show as plain text.", "url": "https://miaoyan.app/blog/markdown-footnotes/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-footnotes/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-footnotes.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do GitHub README files support footnotes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. GitHub's syntax page documents [^1] markers with definitions, rendered at the bottom of the file. It states that footnotes are not supported in wikis."}}, {"@type": "Question", "name": "Can I put a footnote inside a table cell or a list item?", "acceptedAnswer": {"@type": "Answer", "text": "Pandoc's manual says footnote definitions may appear anywhere except inside other block elements such as lists, block quotes and tables. The marker itself is inline text. In MiaoYan a marker inside a table cell renders as a normal footnote; elsewhere, check the result in your renderer before relying on it."}}, {"@type": "Question", "name": "Is there a limit on how many footnotes a note can have?", "acceptedAnswer": {"@type": "Answer", "text": "The GitHub and Pandoc documentation and the MiaoYan parser setup state no limit. Named labels make a long list easier to maintain."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -696,7 +696,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>5 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-footnotes.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Write a footnote as a marker in the text, <code>[^1]</code>, and a definition on its own line, <code>[^1]: The note text.</code>. The renderer collects the definitions at the bottom of the page and numbers them in the order the markers appear. Footnotes are not part of CommonMark, so whether they work depends on the app: MiaoYan V4.5.0, GitHub and Pandoc render them, and some other Markdown processors print the brackets as plain text.</p>
+<p>Write a footnote as a marker in the text, <code>[^1]</code>, and a definition on its own line, <code>[^1]: The note text.</code>. The renderer collects the definitions at the bottom of the page and numbers them in the order the markers appear. Footnotes are not part of CommonMark, so whether they work depends on the app: MiaoYan, GitHub and Pandoc render them, and some other Markdown processors print the brackets as plain text.</p>
 <h2 id="the-syntax">The syntax</h2>
 <p>A footnote has two parts that share a label.</p>
 <pre><code class="language-markdown">Markdown has no official size syntax.[^size] Most apps accept HTML instead.[^html]
@@ -712,7 +712,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 
     Second paragraph, indented by four spaces.
 </code></pre>
-<p>That multi-paragraph form is documented for Pandoc. GitHub's page does not cover it. MiaoYan V4.5.0's cmark-gfm keeps an indented second paragraph inside the same note, and a paragraph that is not indented goes back to the body. For any other renderer, test one long footnote before writing a whole chapter that depends on it.</p>
+<p>That multi-paragraph form is documented for Pandoc. GitHub's page does not cover it. MiaoYan's cmark-gfm keeps an indented second paragraph inside the same note, and a paragraph that is not indented goes back to the body. For any other renderer, test one long footnote before writing a whole chapter that depends on it.</p>
 <p>Pandoc also has inline notes, <code>^[text of the note]</code>, which need no label and no separate definition. It is a Pandoc extension, so it only helps if Pandoc is in your pipeline.</p>
 <h2 id="where-footnotes-render">Where footnotes render</h2>
 <table>
@@ -740,16 +740,16 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <td>Supported, with indented multi-paragraph notes and inline notes.</td>
 </tr>
 <tr>
-<td>MiaoYan V4.5.0</td>
+<td>MiaoYan</td>
 <td>Supported in the preview and the exports that use the preview renderer, see below.</td>
 </tr>
 </tbody>
 </table>
 <p>The common mistake is moving a note between these. A note written for MiaoYan or Pandoc and pasted into a GitHub wiki page leaves <code>[^1]</code> visible in the text.</p>
-<h2 id="what-miaoyan-v450-does">What MiaoYan V4.5.0 does</h2>
-<p>MiaoYan renders Markdown with a Swift package of cmark-gfm. In <code>Business/Markdown.swift</code> at V4.5.0, the parser is created with the footnotes option and then four syntax extensions are attached by name: <code>table</code>, <code>footnotes</code>, <code>strikethrough</code> and <code>tasklist</code>. Footnotes are therefore on by default, with no setting to turn on. The parser output goes to HTML with raw HTML allowed, and the web view shows it. HTML export and PDF export build on the same rendering, so a footnote that works in the preview works there too. cmark-gfm turns each marker into a superscript number linking to the note, and collects the definitions into a numbered list in a <code>footnotes</code> section at the end, each with a link back to the text. Clicking a marker in the preview scrolls to its note.</p>
+<h2 id="what-miaoyan-does">What MiaoYan does</h2>
+<p>MiaoYan renders Markdown with a Swift package of cmark-gfm. In <code>Business/Markdown.swift</code>, the parser is created with the footnotes option and then four syntax extensions are attached by name: <code>table</code>, <code>footnotes</code>, <code>strikethrough</code> and <code>tasklist</code>. Footnotes are therefore on by default, with no setting to turn on. The parser output goes to HTML with raw HTML allowed, and the web view shows it. HTML export and PDF export build on the same rendering, so a footnote that works in the preview works there too. cmark-gfm turns each marker into a superscript number linking to the note, and collects the definitions into a numbered list in a <code>footnotes</code> section at the end, each with a link back to the text. Clicking a marker in the preview scrolls to its note.</p>
 <p>The bundled syntax guide that ships with the app also has a Footnotes section with five definitions, which you can open to copy a working pattern. The preview bundle ships no footnote-specific styling, so expect the default look of the page.</p>
-<p>Slide mode is the exception. There MiaoYan hands the note to reveal.js's Markdown plugin, which uses the <code>marked</code> library, not cmark-gfm. The plugin source at V4.5.0 has no footnote handling, so do not count on footnotes in a deck. If you need citations on slides, put the source in small text under the point, as described in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
+<p>Slide mode is the exception. There MiaoYan hands the note to reveal.js's Markdown plugin, which uses the <code>marked</code> library, not cmark-gfm. The plugin source has no footnote handling, so do not count on footnotes in a deck. If you need citations on slides, put the source in small text under the point, as described in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
 <h2 id="when-a-footnote-does-not-render">When a footnote does not render</h2>
 <ul>
 <li><strong>The brackets show as text.</strong> The processor has no footnote extension, or you are on a GitHub wiki. Check the table above.</li>
@@ -763,7 +763,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 <h3 id="do-github-readme-files-support-footnotes">Do GitHub README files support footnotes?</h3>
 <p>Yes. GitHub's syntax page documents <code>[^1]</code> markers with definitions, rendered at the bottom of the file. It states that footnotes are not supported in wikis.</p>
 <h3 id="can-i-put-a-footnote-inside-a-table-cell-or-a-list-item">Can I put a footnote inside a table cell or a list item?</h3>
-<p>Pandoc's manual says footnote definitions may appear anywhere except inside other block elements such as lists, block quotes and tables. The marker itself is inline text. In MiaoYan V4.5.0 a marker inside a table cell renders as a normal footnote; elsewhere, check the result in your renderer before relying on it.</p>
+<p>Pandoc's manual says footnote definitions may appear anywhere except inside other block elements such as lists, block quotes and tables. The marker itself is inline text. In MiaoYan a marker inside a table cell renders as a normal footnote; elsewhere, check the result in your renderer before relying on it.</p>
 <h3 id="is-there-a-limit-on-how-many-footnotes-a-note-can-have">Is there a limit on how many footnotes a note can have?</h3>
 <p>The GitHub and Pandoc documentation and the MiaoYan parser setup state no limit. Named labels make a long list easier to maintain.</p>
     </div>

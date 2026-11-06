@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f5f4ed">
 <script>document.documentElement.classList.add('js')</script>
 <title>Markdown 转 HTML：命令行与妙言导出 · 妙言博客</title>
-<meta name="description" content="用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。">
+<meta name="description" content="用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言的 HTML 导出。">
 <link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-to-html/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-to-html/">
 <link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-to-html/">
@@ -15,10 +15,10 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-to-html/">
 <meta property="og:title" content="Markdown 转 HTML：命令行与妙言导出 · 妙言博客">
-<meta property="og:description" content="用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。">
+<meta property="og:description" content="用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言的 HTML 导出。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-html.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-06">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -673,7 +673,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转 HTML：命令行与妙言导出", "item": "https://miaoyan.app/zh/blog/markdown-to-html/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-html/#article", "headline": "Markdown 转 HTML：命令行与妙言导出", "description": "用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言 V4.5.0 的 HTML 导出。", "url": "https://miaoyan.app/zh/blog/markdown-to-html/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-html/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-html.webp", "timeRequired": "PT8M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "一定要托管吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要，用浏览器从磁盘直接打开就行，只是妙言导出的文件要联网才能加载样式和脚本。"}}, {"@type": "Question", "name": "哪个工具输出的 HTML 最干净？", "acceptedAnswer": {"@type": "Answer", "text": "cmark-gfm 和 markdown-it 给的是朴素的片段，Pandoc 加 -s 给完整页面，输出取决于你启用了哪些扩展。"}}, {"@type": "Question", "name": "妙言能整个文件夹一起转吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出菜单只作用于选中的那一篇笔记。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转 HTML：命令行与妙言导出", "item": "https://miaoyan.app/zh/blog/markdown-to-html/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-html/#article", "headline": "Markdown 转 HTML：命令行与妙言导出", "description": "用 Pandoc、cmark-gfm、markdown-it 转 HTML，片段与完整页面，原始 HTML 的安全，以及妙言的 HTML 导出。", "url": "https://miaoyan.app/zh/blog/markdown-to-html/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-html/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-html.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "一定要托管吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要，用浏览器从磁盘直接打开就行，只是妙言导出的文件要联网才能加载样式和脚本。"}}, {"@type": "Question", "name": "哪个工具输出的 HTML 最干净？", "acceptedAnswer": {"@type": "Answer", "text": "cmark-gfm 和 markdown-it 给的是朴素的片段，Pandoc 加 -s 给完整页面，输出取决于你启用了哪些扩展。"}}, {"@type": "Question", "name": "妙言能整个文件夹一起转吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出菜单只作用于选中的那一篇笔记。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -694,10 +694,10 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
     <h1 class="blog-title">Markdown 转 HTML：命令行与妙言导出</h1>
-    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 8 分钟</span></p>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-html.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 转 HTML 分两步，解析器先读懂 Markdown 并建出文档树，渲染器再把这棵树写成 HTML 标签。临时转一个页面，命令行里用 Pandoc（<code>pandoc -s note.md -o note.html</code>）就能得到一份完整的、放哪儿都能用的文件；在妙言 V4.5.0 里，文件 &gt; 导出 &gt; HTML 在应用里做同样的事，只有一个限制要先知道，导出的文件从妙言的 CDN 加载样式和脚本，并且不带本地图片。</p>
+<p>Markdown 转 HTML 分两步，解析器先读懂 Markdown 并建出文档树，渲染器再把这棵树写成 HTML 标签。临时转一个页面，命令行里用 Pandoc（<code>pandoc -s note.md -o note.html</code>）就能得到一份完整的、放哪儿都能用的文件；在妙言里，文件 &gt; 导出 &gt; HTML 在应用里做同样的事，只有一个限制要先知道，导出的文件从妙言的 CDN 加载样式和脚本，不过本地图片会嵌在文件里。</p>
 <h2 id="片段还是完整页面">片段还是完整页面</h2>
 <p>解析器默认给的是片段，一堆 <code>&lt;h1&gt;</code>、<code>&lt;p&gt;</code>、<code>&lt;ul&gt;</code>，没有 <code>&lt;html&gt;</code> 和 <code>&lt;body&gt;</code>，要把 HTML 放进模板、CMS 或邮件时，要的就是它。完整页面则需要在片段外面包一层带字符集、标题和样式表链接的 head。</p>
 <p>Pandoc 的手册写得很明确，默认只生成文档片段，加 <code>-s</code> 或 <code>--standalone</code> 才生成带 <code>&lt;head&gt;</code> 和 <code>&lt;body&gt;</code> 的完整文档，<code>--css</code> 要和 <code>-s</code> 一起用，因为样式表的链接是写进文档头部的。</p>
@@ -720,15 +720,15 @@ npx markdown-it note.md -o note.html
 <p>Markdown 是文本格式，所有工具走的是同一条流水线，块解析器判断每一行是段落、标题、列表还是代码围栏，行内解析器处理其中的强调、链接和代码片段，结果是一棵树，渲染器遍历这棵树再打印标签。CommonMark 规定了核心语法对应的 HTML，GFM 在上面加了表格和任务列表，所以两个启用了不同扩展的工具，对同一个文件可能输出不同的 HTML，这就是同一张表在一个工具里是表格、在另一个里是一堆竖线的原因。</p>
 <p>「转换好的页面」里其他东西都是渲染之后才加的，head、样式表，以及画公式和图表的脚本。转换器替不替你加，才是工具之间真正的差别。CommonMark 和 GFM 各规定了什么，见 <a href="/zh/blog/commonmark-vs-gfm/">CommonMark 与 GFM 的区别</a>。</p>
 <h2 id="妙言的-html-导出">妙言的 HTML 导出</h2>
-<p>在妙言 V4.5.0 里选中一篇笔记，点文件 &gt; 导出 &gt; HTML，或者在妙言窗口里按 <code>Control + Shift + H</code>，不需要先打开预览。文件以 <code>标题.html</code> 写进下载目录，标题里的 <code>/</code> 换成 <code>_</code>，重名时在后面加时间戳，下载目录写不进去时会弹出保存面板，提示是「已导出到下载目录~」。</p>
+<p>在妙言里选中一篇笔记，点文件 &gt; 导出 &gt; HTML，或者在妙言窗口里按 <code>Control + Shift + H</code>，不需要先打开预览。文件以 <code>标题.html</code> 写进下载目录，标题里的 <code>/</code> 换成 <code>_</code>，重名时在后面加时间戳，下载目录写不进去时会弹出保存面板，提示是「已导出到下载文件夹」。</p>
 <p>文件里有什么：</p>
 <ul>
 <li>正文是 cmark-gfm 的输出，原始 HTML 放行，所以你写的标签会保留，笔记开头的 front matter 会先被去掉。</li>
-<li>妙言会在顶部补一个笔记标题的 <code>&lt;h1&gt;</code>，本来笔记以 <code>#</code> 标题开头时应该跳过，但 V4.5.0 里这个判断从来不成立，所以你自己的标题上面也会再加一行，两者相同时标题就出现两次，介意的话在导出的文件里删掉一个。</li>
+<li>妙言会在顶部补一个笔记标题的 <code>&lt;h1&gt;</code>，本来笔记以 <code>#</code> 标题开头时应该跳过，但这个判断从来不成立，所以你自己的标题上面也会再加一行，两者相同时标题就出现两次，介意的话在导出的文件里删掉一个。</li>
 <li>页面用的是预览的模板，字体取你设置的预览字体，正文宽度限制在 760 像素，颜色按当前主题的浅色或深色。</li>
-<li>它不内联任何东西。一个 <code>&lt;base&gt;</code> 标签指向 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>，模板里排版、KaTeX、highlight.js、Mermaid 和 Markmap 的样式与脚本都从那里加载，离线打开时，写在页面里的背景色、文字颜色和正文宽度还在，排版样式表加载不到，公式和图表也画不出来。</li>
+<li>除了本地图片，它不内联别的东西。一个 <code>&lt;base&gt;</code> 标签指向 <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>，模板里排版、KaTeX、highlight.js、Mermaid 和 Markmap 的样式与脚本都从那里加载，离线打开时，写在页面里的背景色、文字颜色和正文宽度还在，排版样式表加载不到，公式和图表也画不出来。</li>
 </ul>
-<p>最容易让人意外的是图片。HTML 导出渲染 Markdown 时没有走预览和 PDF 导出用来查找本地图片的那一步，而 <code>&lt;base&gt;</code> 标签又让所有相对路径都按 CDN 地址解析，<code>/i/photo.png</code> 变成 <code>https://cdn.miaoyan.app/i/photo.png</code>，<code>images/fig.png</code> 变成那边 <code>DownView.bundle/</code> 下的路径，都不存在，把图片拷到 HTML 旁边也没用，<code>https://</code> 开头的远程图片可以正常加载。要分享的文件，要么笔记里用远程图片地址，要么导出 PDF，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>，图片路径的细节见 <a href="/zh/blog/markdown-images/">Markdown 图片</a>。</p>
+<p>图片倒是离线也能用。HTML 导出会把每张本地图片转成数据嵌进文件，所以 <code>/i/photo.png</code> 和 <code>images/fig.png</code> 会跟着文件走，文件也会多出图片那么大，<code>https://</code> 开头的远程图片仍是链接，从原地址加载。要在完全没有网络时也看着正常的文件，就导出 PDF，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出 PDF</a>，图片路径的细节见 <a href="/zh/blog/markdown-images/">Markdown 图片</a>。</p>
 <h2 id="放到网上">放到网上</h2>
 <p>不需要服务器的文件可以放到任何静态托管上。比如 GitHub Pages，会把仓库里的 HTML、CSS 和 JavaScript 文件发布成网站，入口文件找的是 <code>index.html</code>，要放在发布目录的最顶层。把转换好的页面命名为 <code>index.html</code>，图片放在旁边，Markdown 里用相对路径，搬过去之后路径仍然成立。</p>
 <p>用 Pandoc 的 <code>--embed-resources</code> 得到的是一个文件，发邮件或上传都不会漏东西；用妙言导出的要记得 CDN 这层依赖，页面放到你的站点上，样式仍然来自 <code>cdn.miaoyan.app</code>。</p>
@@ -738,7 +738,7 @@ npx markdown-it note.md -o note.html
 <h2 id="常见问题的排查">常见问题的排查</h2>
 <ul>
 <li><strong>页面没有样式。</strong> Pandoc 的页面不加 <code>--css</code> 就没有你自己的样式表，妙言导出的文件离线打开则加载不到它的样式。</li>
-<li><strong>图片是坏的。</strong> 妙言导出里的本地路径会按妙言的 CDN 地址解析，改用远程地址，或者在 Pandoc 里用 <code>--embed-resources</code>。</li>
+<li><strong>图片是坏的。</strong> 导出时找不到或读不了的本地图片会保持原来的路径，按妙言的 CDN 地址解析，先在预览里确认路径，或者在 Pandoc 里用 <code>--embed-resources</code>。</li>
 <li><strong>表格显示成竖线。</strong> 用的是没有表格扩展的纯 CommonMark 解析器，Pandoc 和 markdown-it 默认就能读管道表格，cmark-gfm 要挂上表格扩展才行。</li>
 <li><strong>公式显示成原始的美元符号。</strong> 页面没有公式渲染器，妙言导出的页面需要 CDN 能访问。</li>
 <li><strong>托管后 404。</strong> 入口文件不叫 <code>index.html</code>，或者不在发布目录的顶层。</li>

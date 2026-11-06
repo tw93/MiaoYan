@@ -6,7 +6,7 @@
 
 焦点在笔记列表上，而且没有开着幻灯片模式时，`Control + Shift + P` 导出 PDF，`Control + Shift + I` 导出图片，`Option + Control + Shift + P` 导出妙言 PPT PDF。幻灯片模式开着的时候这几个键会被忽略。
 
-PDF 和图片如果当时没开预览，会先打开预览，等一秒再导出，这次导出打开的预览，结束时再关掉。提示先显示带百分比的「正在导出」，成功是「已导出到下载目录~」，失败是「导出失败」。文件名用笔记标题，标题里的 `/` 换成 `_`，再加 `.pdf`，标题如果还是一串 UUID，会变成「无标题」。下载目录里已有同名文件时，后面补 `_yyyy-MM-dd_HH-mm-ss`，写不进去就弹出存储面板。用预览打开这份 PDF，核对插入的标题、页脚的 `1 / N`，以及 h1 到 h3 的大纲，同一菜单里的图片写出的是同一份预览的 PNG。
+PDF 和图片如果当时没开预览，会先打开预览，等一秒再导出，这次导出打开的预览，结束时再关掉。提示先显示带百分比的「正在导出」，成功是「已导出到下载文件夹」，失败是「导出失败」。文件名用笔记标题，标题里的 `/` 换成 `_`，再加 `.pdf`，标题如果还是一串 UUID，会变成「无标题」。下载目录里已有同名文件时，后面补 `_yyyy-MM-dd_HH-mm-ss`，写不进去就弹出存储面板。用预览打开这份 PDF，核对插入的标题、页脚的 `1 / N`，以及 h1 到 h3 的大纲，同一菜单里的图片写出的是同一份预览的 PNG。
 
 ## PDF 里有什么
 
@@ -26,7 +26,7 @@ h1 到 h3 写成 PDF 大纲，每条书签落在哪一页，按标题在不分�
 
 ## 幻灯片是另一份 PDF
 
-笔记文本里出现 `---` 时，导出菜单里的妙言 PPT PDF 会写出 `标题_PPT.pdf`，没有这三个字符就提示「没有分隔符 --- 标识，无法使用妙言 PPT~」。这个判断是子串搜索，表格行 `|---|` 也能通过。一行 `---` 怎样变成一页，见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)。
+笔记文本里出现 `---` 时，导出菜单里的妙言 PPT PDF 会写出 `标题_PPT.pdf`，没有这三个字符就提示「用 --- 分隔幻灯片后才能演示」。这个判断是子串搜索，表格行 `|---|` 也能通过。一行 `---` 怎样变成一页，见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)。
 
 `Command + Option + P` 用来开关妙言 PPT。选妙言 PPT PDF 时如果幻灯片模式没开，会先打开它，窗口当时不是全屏幕就进入全屏幕，等 1.2 秒，按 reveal.js 的打印布局抓取，并把 `pdfMaxPagesPerSlide` 设成 1，若是这次导出打开的模式，抓完再关掉。
 
@@ -60,7 +60,7 @@ Typora 支持页上的导出入口是 File > Export > PDF，也能导出 HTML �
 
 VS Code 里，yzane 的 Markdown PDF 扩展把 `markdown-pdf: Export (pdf)` 放在编辑器的右键菜单里，用 F1 打开的命令面板里也有这一项。打印经过本机的 Chrome、Edge、Chromium，或者扩展自己下载的 Chromium。公式用 KaTeX，不需要网络，Mermaid 围栏也包含在导出里，不过 Mermaid 脚本默认从 CDN 加载（`markdown-pdf.mermaidServer`），`markdown-pdf.displayHeaderFooter` 的默认值是 true。
 
-妙言没有「打印」命令，这条路要在另一个能打开笔记的应用里走。Apple 的 Mac 使用手册给的办法是，在能打印的文稿里从文件菜单选打印，再打开 PDF 弹出式菜单，选取保存为 PDF，纸张大小也在同一个打印对话框里定。妙言导出的 HTML 不适合拿到浏览器里打印，文件的 base URL 是 `https://cdn.miaoyan.app/Resources/DownView.bundle/`，本地图片也不会像预览那样改成 `file://`，`images/fig.png` 会被拿到这个 CDN 上去找，加载不出来。
+妙言没有「打印」命令，这条路要在另一个能打开笔记的应用里走。Apple 的 Mac 使用手册给的办法是，在能打印的文稿里从文件菜单选打印，再打开 PDF 弹出式菜单，选取保存为 PDF，纸张大小也在同一个打印对话框里定。妙言导出的 HTML 不适合拿到浏览器里打印，文件的 base URL 是 `https://cdn.miaoyan.app/Resources/DownView.bundle/`，样式和脚本要从这个 CDN 加载，需要联网，本地图片则已经嵌进文件里，照常显示。
 
 ## 对不上的时候
 

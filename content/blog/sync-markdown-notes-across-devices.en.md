@@ -24,9 +24,9 @@ One situation looks like a conflict but is not. A file that is still downloading
 1. Create a folder named `MiaoYan` (any name works) inside the synced location: iCloud Drive, the local folder your Nutstore desktop client syncs, your Dropbox folder, or the working copy of a git repository.
 2. Open Preferences with ⌘, and find "Note Location".
 3. Click "Change" and choose the folder.
-4. Confirm the restart prompt that appears. MiaoYan loads its library at launch, so the new folder takes effect on the next start, and cancelling the prompt keeps the old folder.
+4. Click "Restart" in the row when it appears. MiaoYan loads its library at launch, so the new folder takes effect on the next start.
 
-Before it accepts the folder, MiaoYan checks that it can read and write there. If the check fails, it keeps your current location and shows a message such as "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." The Chinese README adds that this is not reported as a MiaoYan sync failure, because the problem is the folder or the cloud drive, not the app.
+Before it accepts the folder, MiaoYan checks that it can read and write there. If the check fails, it keeps your current location and shows a message such as "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." The Chinese README adds that this is not reported as a MiaoYan sync failure, because the problem is the folder or the cloud drive, not the app.
 
 MiaoYan does not sign in to WebDAV or cloud-drive accounts. It only sees the folder.
 
@@ -44,7 +44,7 @@ On iPhone, pick the same cloud-drive folder in the system Files app. The README 
 
 **You get two copies of a note.** Open both, copy what you need into the one you want to keep, and delete the other. A sync service names the extra file, for example with "conflicted copy" for Dropbox, so searching for that text finds them.
 
-**MiaoYan says an external change was detected.** If a sync brings in a newer version of a note you have open, MiaoYan reloads it from disk. When your unsaved editor text differs, it first saves your text into a hidden `.miaoyan-conflicts` folder at the root of the library and shows "External change detected. Local copy backed up~". The backups keep at least the 100 most recent files and anything younger than 30 days. Check that folder before assuming text was lost.
+**MiaoYan says an external change was detected.** If a sync brings in a newer version of a note you have open, MiaoYan reloads it from disk. When your unsaved editor text differs, it first saves your text into a hidden `.miaoyan-conflicts` folder at the root of the library and shows "Changed on disk. Your version was backed up". The backups keep at least the 100 most recent files and anything younger than 30 days. Check that folder before assuming text was lost.
 
 **A note looks empty.** The file may not have downloaded yet. Open the folder in Finder, make the files available offline, and let the sync finish.
 

@@ -33,17 +33,17 @@ miao update               # update the CLI
 
 **`miao new`** builds a `miaoyan://new/` address with the title and the optional text, and hands it to the app, so MiaoYan has to be installed. The text is the second argument, so quote it.
 
-**`miao update`** downloads the current `miao` script from the main branch of the MiaoYan repository and replaces the installed one. Run it when you want to update the CLI, not as a routine step in a script.
+**`miao update`** downloads the `miao` script from the latest GitHub release tag of the MiaoYan repository and replaces the installed one. Run it when you want to update the CLI, not as a routine step in a script.
 
 ## How it finds your notes
 
 The CLI does not need configuration, but knowing how it finds the library helps when something does not work.
 
 1. If the `MIAOYAN_PATH` environment variable is set, it uses that.
-2. Otherwise it reads the `storageUrl` preference that MiaoYan saved when you picked a folder, with `defaults read com.tw93.miaoyan`.
-3. If that gives no folder, it tries `~/Documents/MiaoYan`, `~/Save/MiaoYan` and `~/MiaoYan`.
+2. Otherwise it reads the `storageUrl` preference that MiaoYan saved when you picked a folder, reading the preferences file of the direct-download app and then the one of the App Store app.
+3. If that gives no folder, it tries MiaoYan's own iCloud Drive folder, then `~/Documents/MiaoYan`, `~/Save/MiaoYan` and `~/MiaoYan`.
 
-If none of them exist, it prints "Error: Notes directory not found." and tells you to set `MIAOYAN_PATH`. Set it in your shell profile if you keep the library somewhere unusual, including MiaoYan's own iCloud Drive folder, which the CLI does not look for:
+If none of them exist, it prints "Error: Notes directory not found." and tells you to set `MIAOYAN_PATH`. Set it in your shell profile if you keep the library somewhere unusual:
 
 ```bash
 export MIAOYAN_PATH="$HOME/Notes"

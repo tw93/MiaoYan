@@ -31,7 +31,7 @@ MiaoYan reads a folder of `.md`, `.markdown` or `.txt` files, so the import is a
 
 1. Copy the export folder to where you want the library, for example a `MiaoYan` folder in iCloud Drive.
 2. Open Preferences with ⌘, and find "Note Location".
-3. Click "Change", choose the folder, and confirm the restart prompt. MiaoYan loads the library at launch, and cancelling the prompt keeps the old folder.
+3. Click "Change", choose the folder, and click "Restart" when it appears in the row. MiaoYan loads the library at launch.
 
 Sub-folders become sidebar folders. Bear had no folders, so your export is probably one flat list. Make a handful of folders by hand and drag notes in, sorted by the thing that used to be your top-level tag. MiaoYan reads relative image paths from the note's folder and saves its own pasted images as `![name](/i/name.png)` in an `i/` folder there, so open a few notes with images after the move and fix any links that do not resolve. The [Obsidian migration post](/blog/obsidian-alternative-mac/) shows the same kind of cleanup with `rg`.
 
