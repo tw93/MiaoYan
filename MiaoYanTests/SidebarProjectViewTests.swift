@@ -253,9 +253,12 @@ final class SidebarProjectViewTests: XCTestCase {
         let iconFromTop = height - cell.icon.frame.midY
         let iconToBottom = cell.icon.frame.midY
         let iconOffset = Theme.Metrics.sidebarBrandMarkIconOffsetY
-        XCTAssertEqual(iconFromTop, 26 + iconOffset + drop, accuracy: 0.01, "the lockup moves down by the drop")
-        XCTAssertEqual(iconToBottom, 26 - iconOffset, accuracy: 0.01, "the gap under the lockup stays")
-        XCTAssertEqual(height - cell.label.frame.midY, height / 2 + drop / 2, accuracy: 0.01, "the wordmark moves with the bird")
+        // Auto Layout snaps frames to device pixels: a half-point centre
+        // lands half a point off on a 1x screen (CI) and exact on 2x.
+        let snap = 0.5 / (NSScreen.main?.backingScaleFactor ?? 1) + 0.01
+        XCTAssertEqual(iconFromTop, 26 + iconOffset + drop, accuracy: snap, "the lockup moves down by the drop")
+        XCTAssertEqual(iconToBottom, 26 - iconOffset, accuracy: snap, "the gap under the lockup stays")
+        XCTAssertEqual(height - cell.label.frame.midY, height / 2 + drop / 2, accuracy: snap, "the wordmark moves with the bird")
     }
 
     @MainActor
