@@ -7,11 +7,11 @@
       "category": "writing",
       "en": {
         "title": "Choosing a Markdown editor for Mac",
-        "description": "What to check in a Mac Markdown editor: plain files, WYSIWYG or split preview, math, sync and speed, with Typora, Obsidian, VS Code and MiaoYan compared."
+        "description": "What to check in a Mac Markdown editor: plain files, WYSIWYG or split preview, math, sync and speed, with Typora, Obsidian, iA Writer, Bear, Zettlr, VS Code and MiaoYan compared."
       },
       "zh": {
         "title": "Mac 上怎么选 Markdown 编辑器",
-        "description": "从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、VS Code 与妙言。"
+        "description": "从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、iA Writer、Bear、Zettlr、VS Code 与妙言。"
       }
     },
     {

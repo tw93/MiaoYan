@@ -4,7 +4,7 @@
 
 ### 纯文件还是私有存储
 
-Markdown 本身就是纯文本，最稳的用法是每篇笔记就是普通文件夹里的一个 `.md` 文件，可以在访达里直接打开，用 Time Machine 备份，用 `grep` 搜索，哪天想换编辑器也只是换个应用打开同一个文件夹。Obsidian 官网写的是笔记以纯文本 Markdown 文件存在本地。Bear 官网没有说明笔记是数据库还是单个文件，所以如果打算长期用，先试一下它的导出流程再决定。这一条决定了以后迁移有多麻烦，建议放在第一位看。
+Markdown 本身就是纯文本，最稳的用法是每篇笔记就是普通文件夹里的一个 `.md` 文件，可以在访达里直接打开，用 Time Machine 备份，用 `grep` 搜索，哪天想换编辑器也只是换个应用打开同一个文件夹。Obsidian 官网写的是笔记以纯文本 Markdown 文件存在本地。Bear 的帮助页写明笔记存在 SQLite 数据库里，要拿出来得走它的导出，没法直接打开一个文件夹。这一条决定了以后迁移有多麻烦，建议放在第一位看。
 
 ### 所见即所得还是源码加预览
 
@@ -24,18 +24,20 @@ Mac 上多数 Markdown 编辑器自己不做同步，只读一个文件夹，文
 
 ## 主要选项
 
-| 选项 | 风格 | 笔记存放 | 备注 |
-|---|---|---|---|
-| Typora | 所见即所得，单窗格 | 文件 | 公式用 MathJax，支持 Mermaid，导出格式多，覆盖 macOS、Windows 和 Linux |
-| Obsidian | 带插件的 Markdown 笔记库 | vault 里的本地 `.md` | 插件很多，Sync 可选付费，官网写的是免费不限量（商用要看它的授权页） |
-| iA Writer | 纯文本加预览切换 | 纯文本文件 | 有专注模式，官网没有提到公式和图表 |
-| Bear | 带样式的 Markdown 编辑器 | 官网未说明 | Mac、iPhone、iPad，iCloud 同步在 Pro 里 |
-| VS Code | 代码编辑器，并排预览 | 文件 | 内置预览，KaTeX 公式和 Mermaid，没有面向写作的界面 |
-| 妙言 | 源码编辑加同步滚动预览 | 你选定文件夹里的文件 | Swift 原生，KaTeX、Mermaid、PlantUML、Markmap，PPT 模式 |
+| 选项 | 风格 | 笔记存放 | 平台 | 开源 | 备注 |
+|---|---|---|---|---|---|
+| Typora | 所见即所得，单窗格 | 文件 | macOS、Windows、Linux | 否 | 公式用 MathJax，支持 Mermaid，导出格式多，一次买断，有免费试用 |
+| Obsidian | 带插件的 Markdown 笔记库 | vault 里的本地 `.md` | macOS、Windows、Linux、iOS、Android | 否 | 插件很多，MathJax 公式和 Mermaid，Sync 可选付费，授权页写明个人和商用都免费 |
+| iA Writer | 纯文本加预览切换 | 你添加的文件夹里的纯文本文件 | macOS、Windows、iPhone、iPad | 否 | 有专注模式，KaTeX 公式，官网没提 Mermaid，每个平台单独买断 |
+| Bear | 带样式的 Markdown 编辑器 | SQLite 数据库 | Mac、iPhone、iPad | 否 | MathJax 公式和 Mermaid，iCloud 同步在 Pro 订阅里 |
+| Zettlr | 渲染程度可调 | 普通文件夹里的文件 | macOS、Windows、Linux | 是，GPL-3.0 | 免费，编辑区里直接渲染 LaTeX 公式和 Mermaid |
+| MarkText | 所见即所得，带源码模式 | 文件 | macOS 13+、Windows、Linux | 是，MIT | 免费，KaTeX 公式 |
+| VS Code | 代码编辑器，并排预览 | 文件 | macOS、Windows、Linux | 源码是 MIT | 内置预览，KaTeX 公式和 Mermaid，没有面向写作的界面 |
+| 妙言 | 源码编辑加同步滚动预览 | 你选定文件夹里的文件 | Mac、iPhone、iPad | Mac 版是 MIT | Swift 原生，KaTeX、Mermaid、PlantUML、Markmap，PPT 模式 |
 
-表里厂商的说法都来自各自官网，核对日期是 2026-10-18，价格会变，所以这里不写价格。
+表里厂商的说法都来自各自官网，核对日期是 2026-11-06，价格会变，所以这里不写价格。
 
-想要最干净的所见即所得，并且会在 macOS、Windows 和 Linux 之间切换，选 Typora。想要一个互相链接的知识库，并且不介意自己维护插件，选 Obsidian。想要几乎没有界面的纯文字写作，不需要公式，选 iA Writer。日常就泡在 VS Code 里，笔记和代码放在一起，选 VS Code。
+想要最干净的所见即所得，并且会在 macOS、Windows 和 Linux 之间切换，选 Typora。想要一个互相链接的知识库，并且不介意自己维护插件，选 Obsidian。想要几乎没有界面的纯文字写作，不需要公式，选 iA Writer。想要免费开源、Windows 和 Linux 也能用的，选 Zettlr 或 MarkText。日常就泡在 VS Code 里，笔记和代码放在一起，选 VS Code。
 
 ## 妙言适合什么
 

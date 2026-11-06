@@ -4,7 +4,7 @@ A good Markdown editor for Mac is one that keeps your notes as ordinary `.md` fi
 
 ### Plain files or a proprietary store
 
-Markdown is a plain text format, so the safest setup is one where each note is a `.md` file in a normal folder. You can open the folder in Finder, back it up with Time Machine, search it with `grep`, and move to another editor on any afternoon. Obsidian describes its notes as "plain text Markdown files" stored locally. Bear's site, on the other hand, does not say whether notes sit in a database or as files, so check how its export works before you commit. If you ever want to switch apps, check this first, because it decides how painful switching is.
+Markdown is a plain text format, so the safest setup is one where each note is a `.md` file in a normal folder. You can open the folder in Finder, back it up with Time Machine, search it with `grep`, and move to another editor on any afternoon. Obsidian describes its notes as "plain text Markdown files" stored locally. Bear's FAQ says its notes are stored in an SQLite database, so you get them out through its export, not by opening a folder. If you ever want to switch apps, check this first, because it decides how painful switching is.
 
 ### WYSIWYG or source plus preview
 
@@ -24,18 +24,20 @@ MiaoYan is a native Swift app and does not ship an Electron runtime, according t
 
 ## The main options
 
-| Option | Style | Notes stored as | Worth knowing |
-|---|---|---|---|
-| Typora | WYSIWYG, one pane | Files | Math via MathJax, Mermaid, many export formats, runs on macOS, Windows and Linux |
-| Obsidian | Markdown notes with plugins | Local `.md` in a vault | Thousands of plugins, optional paid Sync, homepage says "Free without limits" (check its license page for commercial use) |
-| iA Writer | Plain text with a Preview switch | Plain text files | Focus Mode, no math or diagrams mentioned on its site |
-| Bear | Styled Markdown editor | Not stated on its site | Mac, iPhone and iPad, iCloud sync in Pro |
-| VS Code | Code editor with side-by-side preview | Files | Built-in preview, KaTeX math and Mermaid, no writing-focused chrome |
-| MiaoYan | Source editor plus synced preview | Files in a folder you choose | Native Swift, KaTeX, Mermaid, PlantUML, Markmap, PPT mode |
+| Option | Style | Notes stored as | Platforms | Open source | Worth knowing |
+|---|---|---|---|---|---|
+| Typora | WYSIWYG, one pane | Files | macOS, Windows, Linux | No | MathJax math, Mermaid, many export formats, one-time purchase with a free trial |
+| Obsidian | Markdown notes with plugins | Local `.md` in a vault | macOS, Windows, Linux, iOS, Android | No | Thousands of plugins, MathJax and Mermaid, optional paid Sync, its license page says free for personal and commercial use |
+| iA Writer | Plain text with a Preview switch | Plain text files in folders you add | macOS, Windows, iPhone, iPad | No | Focus Mode, KaTeX math, no Mermaid on its site, one-time purchase per platform |
+| Bear | Styled Markdown editor | An SQLite database | Mac, iPhone, iPad | No | MathJax math and Mermaid, iCloud sync in the Pro subscription |
+| Zettlr | Adjustable live rendering | Files in ordinary folders | macOS, Windows, Linux | Yes, GPL-3.0 | Free, LaTeX math and Mermaid rendered in the editor |
+| MarkText | WYSIWYG with a source mode | Files | macOS 13+, Windows, Linux | Yes, MIT | Free, KaTeX math |
+| VS Code | Code editor with side-by-side preview | Files | macOS, Windows, Linux | Source is MIT | Built-in preview, KaTeX math and Mermaid, no writing-focused chrome |
+| MiaoYan | Source editor plus synced preview | Files in a folder you choose | Mac, iPhone, iPad | Mac app is MIT | Native Swift, KaTeX, Mermaid, PlantUML, Markmap, PPT mode |
 
-All vendor claims in the table are from each product's own site, checked on 2026-10-18. Prices change, so none are listed here.
+All vendor claims in the table are from each product's own site, checked on 2026-11-06. Prices change, so none are listed here.
 
-Pick Typora if you want the cleanest WYSIWYG writing surface and work across macOS, Windows and Linux. Pick Obsidian if you want a linked knowledge base and are happy to maintain plugins. Pick iA Writer if you want plain prose with almost no chrome and do not need math. Pick VS Code if you already live in it and your notes sit next to code.
+Pick Typora if you want the cleanest WYSIWYG writing surface and work across macOS, Windows and Linux. Pick Obsidian if you want a linked knowledge base and are happy to maintain plugins. Pick iA Writer if you want plain prose with almost no chrome and do not need math. Pick Zettlr or MarkText if you want a free, open-source editor that also runs on Windows and Linux. Pick VS Code if you already live in it and your notes sit next to code.
 
 ## Where MiaoYan fits
 
