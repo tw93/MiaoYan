@@ -12,7 +12,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://miaoyan.app/assets/shots/readme-en.webp" width="900" alt="Mac、iPad、iPhone の MiaoYan" />
+<img src="https://miaoyan.app/assets/shots/readme-en.webp?v=20261106" width="900" alt="Mac、iPad、iPhone の MiaoYan" />
 
 ## 特徴
 

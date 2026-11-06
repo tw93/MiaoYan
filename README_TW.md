@@ -11,7 +11,7 @@
   <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
 </div>
 
-<img src="https://miaoyan.app/assets/shots/readme-zh.webp" width="900" alt="妙言在 Mac、iPad 和 iPhone 上" />
+<img src="https://miaoyan.app/assets/shots/readme-zh.webp?v=20261106" width="900" alt="妙言在 Mac、iPad 和 iPhone 上" />
 
 ## 特點
 
