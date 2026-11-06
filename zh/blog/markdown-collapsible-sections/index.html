@@ -388,6 +388,7 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 .faq summary::after { content: "+"; color: var(--stone); }
 .faq details[open] summary::after { content: "−"; }
 .faq p { margin: 0; padding-top: 10px; color: var(--dark-warm); }
+.faq p code { font-family: "SF Mono", Menlo, monospace; font-size: var(--text-meta); background: var(--warm-sand); padding: 1px 5px; border-radius: 5px; letter-spacing: 0; overflow-wrap: anywhere; }
 /* Open and close like the sibling sites' FAQ: the answer's height and opacity
    ease in, where it used to snap open. The answer's gap is padding, not margin,
    because margins sit outside the animated height and would jump. Browsers
@@ -606,6 +607,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .faq summary, .blog-card-title, .blog-body h3 { font-size: 17px; }
   .contact .contact-title, .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
   .blog-body code { font-size: 0.85em; }
+  .faq p code { font-size: 15px; }
   .blog-body pre code { font-size: 14px; }
 }
 /* Phone-only stacking starts at 560 so OPPO Pad mini portrait (640) and every
@@ -642,7 +644,11 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   /* French carries the two longest labels beside their icons and keeps 14px
      sides, so it still shares one row at 393 (from 375, as before). */
   html[lang="fr"] .hero-cta .btn { padding: 0 14px; }
-  @media (max-width: 374px) {
+  /* The family drops to 14px sides with no minimum under 375px. MiaoYan's
+     store labels ran up to 17px over at 375 and 2px at 390 (en, tw, ja, de,
+     es; measured 2026-11-06), so here the step reaches up to 392px and the
+     393px iPhones keep the 22px sides. */
+  @media (max-width: 392px) {
     .hero-cta .btn { min-width: 0; padding: 0 14px; }
   }
 }
