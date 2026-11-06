@@ -3,6 +3,33 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>4.7.1</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description xml:lang="en"><![CDATA[
+  <ol>
+    <li>Images and files dragged from Finder into the editor are copied in and linked as a paste is, where before dragged images were lost once the note saved</li>
+    <li>Edits made just before deleting their folder are no longer lost, Command-Z after Format undoes it in one step, Clean Unused Attachments no longer removes files a subfolder note links from a parent folder, and a note with garbled text opens read-only so it is never saved over</li>
+    <li>Notes deleted or renamed in Finder, git or a sync app leave the list right away, and editing the open note on iPhone no longer moves the Mac's preview or split view</li>
+    <li>Titles in the note list and sidebar no longer set their last character apart, SOP showing as SO P, and folders with Trash in their name appear in the sidebar again</li>
+    <li>In split view, new math, headings and local videos render as they do when the note opens, PNG export waits for diagrams to finish, switching light and dark recolours the preview in place, and dark text is softer</li>
+    <li>Hovering a heading in the preview shows a link icon, a loading image shows a small turning arc, and Return after a ticked task starts an unticked one</li>
+  </ol>
+          ]]>      </description>
+      <description xml:lang="zh-Hans"><![CDATA[
+  <ol>
+    <li>从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失</li>
+    <li>删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖</li>
+    <li>在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置</li>
+    <li>笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏</li>
+    <li>分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和</li>
+    <li>鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Fri, 06 Nov 2026 03:33:56 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V4.7.1/MiaoYan_V4.7.1.zip" sparkle:shortVersionString="4.7.1" sparkle:version="4.7.1" sparkle:edSignature="8wHlY5sJES/MCSAcpIoUhNX2SLZqzald6p1aLRlt/vpWBOmvjBXL8XbUTKs8Ld+TgnU0L2YaFyqN9bf79VHnBA==" length="11988154" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>12.0</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>4.7.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description xml:lang="en"><![CDATA[
