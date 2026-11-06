@@ -1009,15 +1009,20 @@ final class ShellModel {
         let listed = notes.map(\.url)
         let open = selectedNoteURL
         let removed = Set(removing.map(\.url))
+        // A note left behind gets its own failure toast; an Undo toast after
+        // it would replace that explanation, so then only Command-Z undoes.
+        var someFailed = false
         storage.removeNotes(
             notes: removing,
             partialFailure: { [weak self] count in
+                someFailed = true
                 Task { @MainActor in
                     self?.host?.toast(
                         message: String(format: I18n.str("Couldn't move %d note(s) to Trash"), count), style: .failure)
                 }
             }
         ) { [weak self] urls in
+            let offerToast = !someFailed
             Task { @MainActor in
                 guard let self else { return }
                 // A drop on the Trash can take notes other than the open one.
@@ -1032,10 +1037,9 @@ final class ShellModel {
                 // gone, All Notes is chosen, as in the storyboard sidebar.
                 self.reload()
                 if undoable, let urls, !urls.isEmpty {
-                    self.notesUndoManager.registerUndo(withTarget: self) { model in
-                        MainActor.assumeIsolated { model.restoreDeleted(urls) }
+                    TrashUndo.register(on: self.notesUndoManager, toastIn: offerToast ? self.host : nil) { [weak self] in
+                        self?.restoreDeleted(urls)
                     }
-                    self.notesUndoManager.setActionName(I18n.str("Move to Trash"))
                     // The storyboard list keeps focus after a delete, where
                     // Command-Z brings the notes back.
                     self.focusRequest = .list

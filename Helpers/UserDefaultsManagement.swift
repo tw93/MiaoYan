@@ -103,7 +103,7 @@ public enum UserDefaultsManagement {
     static let letterSpacingEm = 0.02
     static var editorLetterSpacing: Double { Double(fontSize) * letterSpacingEm }
     static var titleFontSize = 20
-    static var emptyEditTitleFontSize = 36
+    static var emptyEditTitleFontSize = 14
     static var nameFontSize = 14
     static var searchFontSize = 12
     static var dateFontSize = 11

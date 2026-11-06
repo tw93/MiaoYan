@@ -2,9 +2,15 @@ import AppKit
 
 // MARK: - Toast Configuration
 struct ToastConfiguration: Sendable {
-    var animationDuration: TimeInterval = 1.5
-    var fadeKeyTimes: [NSNumber] = [0, 0.05, 0.85, 1]
-    var fadeValues: [Float] = [0, 0.92, 0.92, 0]
+    /// A short toast ("Saved") stays this long, fades included.
+    var minimumDuration: TimeInterval = 1.5
+    /// A long sentence never holds the corner longer than this.
+    var maximumDuration: TimeInterval = 6
+    /// A toast with an action (Undo) stays long enough to reach it.
+    var actionDuration: TimeInterval = 5
+    /// After the pointer leaves a toast it stays this long before fading.
+    var hoverLinger: TimeInterval = 1
+    var opacity: Float = 0.92
     var cornerRadius: CGFloat = 12
     var horizontalPadding: CGFloat = 12
     var verticalPadding: CGFloat = 6
@@ -16,6 +22,17 @@ struct ToastConfiguration: Sendable {
     var iconVerticalOffset: CGFloat = 1.2
 
     static let `default` = ToastConfiguration()
+
+    /// How long a message stays readable. A 1.5 s toast left about 1.2 s to
+    /// read "This note no longer exists on disk, so edits are not saved", so
+    /// the time grows with the text: a Han or kana character counts as one
+    /// unit, any other character as half, at 80 ms a unit.
+    func readingDuration(for text: String) -> TimeInterval {
+        let units = text.unicodeScalars.reduce(0.0) { sum, scalar in
+            sum + (scalar.properties.isIdeographic || (0x3040...0x30FF).contains(scalar.value) ? 1 : 0.5)
+        }
+        return min(maximumDuration, max(minimumDuration, 1 + units * 0.08))
+    }
 }
 
 public enum ToastStyle {
@@ -55,6 +72,7 @@ final class ToastManager {
     private let configuration: ToastConfiguration
     private var currentToast: NSView?
     private var currentAnimationLayer: CALayer?
+    private var pendingFade: DispatchWorkItem?
 
     init(configuration: ToastConfiguration = .default) {
         self.configuration = configuration
@@ -64,7 +82,8 @@ final class ToastManager {
         _ toast: NSView,
         in container: NSView,
         persistent: Bool = false,
-        duration: TimeInterval? = nil
+        duration: TimeInterval? = nil,
+        message: String? = nil
     ) {
 
         dismissCurrentToast()
@@ -74,11 +93,10 @@ final class ToastManager {
         currentAnimationLayer = toast.layer
 
         if persistent {
-            toast.layer?.opacity = 0.92
+            toast.layer?.opacity = configuration.opacity
         } else {
-            animateToastFade(
-                toast,
-                duration: duration ?? configuration.animationDuration)
+            let hold = duration ?? message.map { configuration.readingDuration(for: $0) } ?? configuration.minimumDuration
+            show(toast, for: hold)
         }
     }
 
@@ -107,7 +125,15 @@ final class ToastManager {
         }
     }
 
+    /// Dismisses `toast` only while it is still the one on screen.
+    func dismiss(_ toast: NSView?) {
+        guard let toast, toast === currentToast else { return }
+        dismissCurrentToast()
+    }
+
     func dismissCurrentToast() {
+        pendingFade?.cancel()
+        pendingFade = nil
         if let layer = currentAnimationLayer {
             layer.removeAllAnimations()
         }
@@ -187,34 +213,73 @@ final class ToastManager {
         ])
     }
 
-    private func animateToastFade(_ toast: NSView, duration: TimeInterval) {
+    /// Fades the toast in, holds it, then fades it out. The pointer resting
+    /// on it holds it in place; leaving starts a short linger, then the fade.
+    private func show(_ toast: NSView, for duration: TimeInterval) {
         guard let layer = toast.layer else { return }
-
-        layer.opacity = 0
-
-        let anim = CAKeyframeAnimation(keyPath: "opacity")
-        anim.values = configuration.fadeValues
-        anim.keyTimes = configuration.fadeKeyTimes
-        anim.duration = duration
-        anim.isRemovedOnCompletion = true
-        anim.fillMode = .removed
-        anim.calculationMode = .linear
 
         toast.layer?.borderWidth = Theme.usesModernSystemChrome ? 0 : 0.5
         toast.layer?.borderColor = NSColor.white.withAlphaComponent(0.12).cgColor
 
-        CATransaction.begin()
-        CATransaction.setCompletionBlock { [weak self, weak toast] in
-            guard let self, let toast else { return }
-            toast.removeFromSuperview()
-            if self.currentToast == toast {
-                self.currentToast = nil
-                self.currentAnimationLayer = nil
+        animateOpacity(layer, to: configuration.opacity, duration: Theme.Motion.feedback)
+        scheduleFadeOut(toast, after: max(0, duration - Theme.Motion.change))
+
+        (toast as? ToastContainerView)?.onHoverChange = { [weak self, weak toast] inside in
+            guard let self, let toast, self.currentToast === toast else { return }
+            if inside {
+                self.pendingFade?.cancel()
+                self.pendingFade = nil
+                layer.removeAllAnimations()
+                layer.opacity = self.configuration.opacity
+            } else {
+                self.scheduleFadeOut(toast, after: self.configuration.hoverLinger)
             }
         }
-        layer.add(anim, forKey: "toast.opacity")
-        CATransaction.commit()
     }
+
+    private func scheduleFadeOut(_ toast: NSView, after delay: TimeInterval) {
+        pendingFade?.cancel()
+        let work = DispatchWorkItem { [weak self, weak toast] in
+            guard let self, let toast, self.currentToast === toast, let layer = toast.layer else { return }
+            self.animateOpacity(layer, to: 0, duration: Theme.Motion.change)
+            let removal = DispatchWorkItem { [weak self, weak toast] in
+                guard let self, let toast, self.currentToast === toast else { return }
+                toast.removeFromSuperview()
+                self.currentToast = nil
+                self.currentAnimationLayer = nil
+                self.pendingFade = nil
+            }
+            self.pendingFade = removal
+            DispatchQueue.main.asyncAfter(deadline: .now() + Theme.Motion.change, execute: removal)
+        }
+        pendingFade = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
+    }
+
+    private func animateOpacity(_ layer: CALayer, to value: Float, duration: TimeInterval) {
+        let anim = CABasicAnimation(keyPath: "opacity")
+        anim.fromValue = layer.presentation()?.opacity ?? layer.opacity
+        anim.toValue = value
+        anim.duration = duration
+        anim.timingFunction = Theme.Motion.curve
+        layer.opacity = value
+        layer.add(anim, forKey: "toast.opacity")
+    }
+}
+
+/// The toast's own view: it reports the pointer entering and leaving, so a
+/// message being read stays put, and it lets an action button take a click.
+final class ToastContainerView: NSView {
+    var onHoverChange: ((Bool) -> Void)?
+
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        trackingAreas.forEach(removeTrackingArea)
+        addTrackingArea(NSTrackingArea(rect: .zero, options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect], owner: self))
+    }
+
+    override func mouseEntered(with event: NSEvent) { onHoverChange?(true) }
+    override func mouseExited(with event: NSEvent) { onHoverChange?(false) }
 }
 
 // MARK: - Toast Factory
@@ -227,7 +292,7 @@ enum ToastFactory {
         style: ToastStyle = .info,
         configuration: ToastConfiguration = .default
     ) -> NSView {
-        let container = NSView()
+        let container = ToastContainerView()
         container.translatesAutoresizingMaskIntoConstraints = false
         container.wantsLayer = true
         container.layer = CALayer()
@@ -248,6 +313,32 @@ enum ToastFactory {
                 style: style,
                 configuration: configuration)
         }
+    }
+
+    /// A one-line toast with a text button after the message (Undo).
+    @MainActor
+    static func makeActionToast(
+        message: String,
+        actionTitle: String,
+        configuration: ToastConfiguration = .default,
+        action: @escaping () -> Void
+    ) -> NSView {
+        let container = makeToast(message: message, configuration: configuration)
+        guard let row = container.subviews.first,
+            let label = row.subviews.compactMap({ $0 as? NSTextField }).first
+        else { return container }
+
+        let button = ToastActionButton(title: actionTitle, action: action)
+        row.addSubview(button)
+        if let trailing = row.constraints.first(where: { ($0.firstItem as? NSTextField) === label && $0.firstAttribute == .trailing }) {
+            trailing.isActive = false
+        }
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 12),
+            button.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+            button.firstBaselineAnchor.constraint(equalTo: label.firstBaselineAnchor),
+        ])
+        return container
     }
 
     @MainActor
@@ -401,18 +492,58 @@ enum ToastFactory {
     }
 }
 
+/// The text button inside an action toast. It runs its action once and
+/// closes the toast, the way a toast's Undo does on iPhone.
+final class ToastActionButton: NSButton {
+    private var handler: (() -> Void)?
+
+    convenience init(title: String, action: @escaping () -> Void) {
+        self.init(frame: .zero)
+        translatesAutoresizingMaskIntoConstraints = false
+        isBordered = false
+        setButtonType(.momentaryChange)
+        handler = action
+        attributedTitle = NSAttributedString(
+            string: title,
+            attributes: [
+                .font: NSFont.systemFont(ofSize: 13, weight: .semibold),
+                .foregroundColor: Theme.toastTextColor,
+            ])
+        setContentHuggingPriority(.required, for: .horizontal)
+        setContentCompressionResistancePriority(.required, for: .horizontal)
+        target = self
+        self.action = #selector(run)
+    }
+
+    @objc private func run() {
+        let handler = self.handler
+        self.handler = nil
+        ToastManager.shared.dismissCurrentToast()
+        handler?()
+    }
+}
+
 // MARK: - NSViewController Extension
 extension NSViewController {
     @MainActor
     public func toast(message: String, title: String, style: ToastStyle = .info) {
         let toast = ToastFactory.makeToast(message: message, title: title, style: style)
-        ToastManager.shared.showToast(toast, in: view)
+        ToastManager.shared.showToast(toast, in: view, message: title + message)
     }
 
     @MainActor
     public func toast(message: String, duration: TimeInterval? = nil, style: ToastStyle = .info) {
         let toast = ToastFactory.makeToast(message: message, style: style)
-        ToastManager.shared.showToast(toast, in: view, duration: duration)
+        ToastManager.shared.showToast(toast, in: view, duration: duration, message: message)
+    }
+
+    /// A toast that offers to take back what just happened (Undo).
+    @MainActor
+    @discardableResult
+    public func toast(message: String, actionTitle: String, action: @escaping () -> Void) -> NSView {
+        let toast = ToastFactory.makeActionToast(message: message, actionTitle: actionTitle, action: action)
+        ToastManager.shared.showToast(toast, in: view, duration: ToastConfiguration.default.actionDuration)
+        return toast
     }
 
     @MainActor
@@ -429,5 +560,45 @@ extension NSViewController {
     @MainActor
     public func toastDismiss() {
         ToastManager.shared.dismissCurrentToast()
+    }
+}
+
+// MARK: - Undo for a move to the Trash
+
+/// One move to the Trash and its way back. Command-Z and the toast's Undo
+/// both take back this move and nothing else: the window's undo manager also
+/// serves the search and title fields, so undoing whatever sits on top of it
+/// could clear a search while the notes stay in the Trash.
+@MainActor
+final class TrashUndo {
+    private var spent = false
+    private weak var toast: NSView?
+    private let restore: () -> Void
+
+    private init(restore: @escaping () -> Void) {
+        self.restore = restore
+    }
+
+    /// Registers the undo, and shows the Undo toast in `controller` unless it is nil.
+    static func register(on undoManager: UndoManager, toastIn controller: NSViewController?, restore: @escaping () -> Void) {
+        let undo = TrashUndo(restore: restore)
+        // The handler holds the token: the undo manager does not retain its target.
+        undoManager.registerUndo(withTarget: undo) { _ in
+            MainActor.assumeIsolated { undo.takeBack() }
+        }
+        undoManager.setActionName(I18n.str("Move to Trash"))
+        guard let controller else { return }
+        undo.toast = controller.toast(message: I18n.str("Moved to Trash"), actionTitle: I18n.str("Undo")) { [weak undoManager] in
+            guard !undo.spent else { return }
+            undoManager?.removeAllActions(withTarget: undo)
+            undo.takeBack()
+        }
+    }
+
+    private func takeBack() {
+        guard !spent else { return }
+        spent = true
+        ToastManager.shared.dismiss(toast)
+        restore()
     }
 }

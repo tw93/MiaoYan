@@ -428,7 +428,11 @@ extension ViewController {
 
         UserDataService.instance.searchTrigger = true
 
+        // A note left behind gets its own failure toast; an Undo toast after
+        // it would replace that explanation, so then only Command-Z undoes.
+        var someFailed = false
         let onPartialFailure: (Int) -> Void = { failedCount in
+            someFailed = true
             DispatchQueue.main.async { [weak vc] in
                 guard let vc = vc else { return }
                 vc.toast(
@@ -451,9 +455,13 @@ extension ViewController {
             {
                 let undoManager = md.notesListUndoManager
 
-                if let ntv = vc.notesTableView {
-                    undoManager.registerUndo(withTarget: ntv, selector: #selector(ntv.unDelete), object: urls)
-                    undoManager.setActionName(I18n.str("Move to Trash"))
+                // Command-Z is invisible to someone who has never used it, so
+                // the delete says where the notes went and offers the same
+                // undo, as the iPhone app does.
+                if let ntv = vc.notesTableView, let urls, !urls.isEmpty {
+                    TrashUndo.register(on: undoManager, toastIn: someFailed ? nil : vc) {
+                        ntv.unDelete(urls)
+                    }
                 }
 
                 UserDataService.instance.searchTrigger = false
@@ -875,6 +883,7 @@ extension ViewController {
         // would silently drop the typed input.
         editArea.publishStorage(NSAttributedString(string: text), owner: note)
         EditTextView.note = note
+        emptyEditAreaView.isHidden = true
 
         if sessionSplitMode {
             let previewOptions = FillOptions(

@@ -597,6 +597,9 @@ class NotesTableView: NSTableView {
         insertRows(at: IndexSet(integer: at), withAnimation: .effectFade)
         reloadData(forRowIndexes: IndexSet(integer: at), columnIndexes: [0])
         endUpdates()
+        // A note that arrives without being opened (undo, a file from Finder
+        // or iCloud) still ends the empty state.
+        vc.updateEmptyEditArea()
     }
 
     override func keyDown(with event: NSEvent) {

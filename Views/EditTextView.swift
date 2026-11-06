@@ -512,6 +512,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard viewController != nil || isShellHosted else {
             return
         }
+        viewController?.emptyEditAreaView?.isHidden = true
 
         // Prevent filling during note creation to avoid content flashing
         if UserDataService.instance.shouldBlockEditAreaUpdate(forceUpdate: options.force) {
@@ -749,6 +750,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             viewController.updateTitle(newTitle: "")
         }
         EditTextView.note = nil
+        (window?.contentViewController as? ViewController)?.updateEmptyEditArea()
     }
 
     // MARK: - Editor Utility Helpers

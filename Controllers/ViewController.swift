@@ -319,6 +319,33 @@ class ViewController:
         return popover
     }()
 
+    /// The editor pane when there is no note to show (an empty folder, the
+    /// last note deleted, a search with no match): the bird and one line
+    /// with the next step, instead of a blank page (maintainer 2026-11-06).
+    /// `EditTextView.clear()` asks for it and `fill` takes it away.
+    func updateEmptyEditArea() {
+        let empty = notesTableView.noteList.isEmpty && EditTextView.note == nil && !UserDefaultsManagement.isSingleMode
+        if empty {
+            // The editor scroll view and the preview are layer-backed and
+            // added after this storyboard view, so without a layer of its own
+            // it draws underneath them.
+            emptyEditAreaView.wantsLayer = true
+            emptyEditAreaView.layer?.zPosition = 10
+            emptyEditAreaImage.image = NSImage(named: "alertIcon")
+            emptyEditAreaImage.alphaValue = 1
+            emptyEditAreaImage.frame = NSRect(x: 76, y: 112, width: 88, height: 88)
+            emptyEditTitle.stringValue = search.stringValue.isEmpty ? I18n.str("Press ⌘N to create a note") : I18n.str("No results")
+            emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
+            emptyEditTitle.textColor = Theme.Ink.tertiary
+            // The line sits 12pt under the bird rather than at the foot of the old 166pt artwork.
+            for constraint in emptyEditAreaView.constraints
+            where (constraint.firstItem as? NSView) === emptyEditTitle && constraint.firstAttribute == .centerY {
+                constraint.constant = 30
+            }
+        }
+        emptyEditAreaView.isHidden = !empty
+    }
+
     // MARK: - Apply live UI preferences
     public func applyInterfacePreferences() {
         search.font = UserDefaultsManagement.searchFont
@@ -380,7 +407,7 @@ class ViewController:
     override func viewDidLoad() {
         observeChosenFontInstalls()
         appContext.bind(viewController: self)
-        // Hide empty state UI (no longer used)
+        // Shown by updateEmptyEditArea once the list turns out empty.
         emptyEditAreaView.isHidden = true
         configureShortcuts()
         configureDelegates()

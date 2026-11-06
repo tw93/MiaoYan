@@ -342,3 +342,7 @@
 "Used in the editor" = "エディタで使用";
 "Used in the preview and exports" = "プレビューと書き出しで使用";
 "The folder your notes are stored in" = "ノートを保存するフォルダ";
+"Moved to Trash" = "ゴミ箱に移動しました";
+"Undo" = "取り消す";
+"Press ⌘N to create a note" = "⌘N で新規ノートを作成";
+"No results" = "結果なし";
