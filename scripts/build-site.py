@@ -73,7 +73,7 @@ COPY = {
         "features": [
             ("Local-first", "Your Markdown files stay in a folder you choose. MiaoYan does not collect note data; iCloud Drive, Nutstore, or another file-sync client can handle cross-device sync."),
             ("Focused", "A clear three-column layout keeps folders, notes, and writing together. Dark mode, distraction-free writing, and keyboard shortcuts are built in without a plugin system to maintain."),
-            ("Native", "Built natively with Swift 6 instead of Electron. Split mode pairs real-time preview with 60fps bidirectional scroll sync."),
+            ("Native", "Built natively with Swift 6 instead of Electron. Split mode pairs real-time preview with two-way scroll sync."),
             ("Capable", "Wikilinks and backlinks, LaTeX, Mermaid, version history, auto-formatting, a CLI, and Markdown presentations cover the work around writing."),
         ],
         "compare_title": "Who MiaoYan is for",
@@ -108,9 +108,9 @@ COPY = {
         "tabs": {"edit": "编辑", "preview": "预览", "split": "分栏", "dark": "深色"},
         "captions": {
             "edit": "纯 Markdown 编辑，标题、链接与代码各有色彩，层次分明",
-            "preview": "排版如书，图片、表格和代码按最终阅读形态呈现",
-            "split": "左边写右边实时预览，60fps 双向滚动与 Mermaid 流程图随手即得",
-            "dark": "跟随系统昼夜轮转，专为夜间书写调校的暖调深色",
+            "preview": "图片、表格和代码按读者看到的样子排好",
+            "split": "左边写右边实时预览，两边滚动同步，Mermaid 流程图也一起画出来",
+            "dark": "深色模式跟随系统，底色是偏暖的深灰",
         },
         "alts": {
             "edit": "妙言编辑一篇 Markdown 笔记，左侧是文件夹和笔记列表",
@@ -126,8 +126,8 @@ COPY = {
         "features_title": "为什么选择妙言",
         "features": [
             ("本地", "Markdown 文件保存在你选择的本地文件夹，不收集笔记数据。跨设备时，可交给 iCloud 云盘、坚果云或你熟悉的文件同步工具。"),
-            ("专注", "三栏经典布局将目录、笔记与编辑器融为一体。支持深色模式、无干扰写作和常用快捷键，无需维护复杂插件系统。"),
-            ("原生", "使用 Swift 6 原生开发，不依赖 Electron。分栏模式实时预览，编辑区和预览以 60fps 双向滚动同步，丝滑跟手。"),
+            ("专注", "三栏布局把文件夹、笔记列表和编辑器放在一起。支持深色模式、无干扰写作和常用快捷键，无需维护复杂插件系统。"),
+            ("原生", "使用 Swift 6 原生开发，不依赖 Electron。分栏模式实时预览，编辑区和预览双向滚动同步。"),
             ("称手", "内置双向链接与反向链接、LaTeX 公式、Mermaid 图表、版本历史、自动排版与命令行工具，也能一键开启幻灯片演示。"),
         ],
         "compare_title": "妙言适合谁",
@@ -162,9 +162,9 @@ COPY = {
         "tabs": {"edit": "編輯", "preview": "預覽", "split": "分欄", "dark": "深色"},
         "captions": {
             "edit": "純 Markdown 編輯，標題、連結與程式碼各有色彩，層次分明",
-            "preview": "排版如書，圖片、表格和程式碼按最終閱讀形態呈現",
-            "split": "左邊寫右邊即時預覽，60fps 雙向捲動與 Mermaid 流程圖隨手即得",
-            "dark": "跟隨系統晝夜輪轉，專為夜間書寫調校的暖調深色",
+            "preview": "圖片、表格和程式碼按讀者看到的樣子排好",
+            "split": "左邊寫右邊即時預覽，兩邊捲動同步，Mermaid 流程圖也一起畫出來",
+            "dark": "深色模式跟隨系統，底色是偏暖的深灰",
         },
         "alts": {
             "edit": "妙言編輯一篇 Markdown 筆記，左側是檔案夾和筆記列表",
@@ -180,8 +180,8 @@ COPY = {
         "features_title": "為什麼選擇妙言",
         "features": [
             ("本地", "Markdown 檔案保存在你選擇的本機檔案夾，不收集筆記資料。跨裝置時，可交給 iCloud 雲碟、堅果雲或你熟悉的檔案同步工具。"),
-            ("專注", "三欄經典佈局將目錄、筆記與編輯器融為一體。支援深色模式、無干擾寫作和常用快捷鍵，無需維護複雜外掛系統。"),
-            ("原生", "使用 Swift 6 原生開發，不依賴 Electron。分欄模式即時預覽，編輯區和預覽以 60fps 雙向捲動同步，絲滑跟手。"),
+            ("專注", "三欄佈局把檔案夾、筆記列表和編輯器放在一起。支援深色模式、無干擾寫作和常用快捷鍵，無需維護複雜外掛系統。"),
+            ("原生", "使用 Swift 6 原生開發，不依賴 Electron。分欄模式即時預覽，編輯區和預覽雙向捲動同步。"),
             ("稱手", "內建雙向連結與反向連結、LaTeX 公式、Mermaid 圖表、版本歷史、自動排版與命令列工具，也能一鍵開啟投影片簡報。"),
         ],
         "compare_title": "妙言適合誰",
@@ -235,7 +235,7 @@ COPY = {
         "features": [
             ("ローカルファースト", "Markdownファイルは自分で選んだフォルダに保存され、MiaoYanはノートのデータを集めません。デバイス間の同期はiCloud DriveやNutstoreなどのファイル同期ツールに任せられます。"),
             ("集中", "フォルダ、ノート一覧、エディタの3ペイン構成で、書くのに必要なものがひとつの画面に揃います。ダークモード、集中して書ける画面、キーボードショートカットを内蔵し、管理するプラグインはありません。"),
-            ("ネイティブ", "ElectronではなくSwift 6でネイティブに開発しています。分割モードはリアルタイムプレビューと60fpsの双方向スクロール同期で、Markdownの編集に集中できます。"),
+            ("ネイティブ", "ElectronではなくSwift 6でネイティブに開発しています。分割モードはリアルタイムプレビューと双方向スクロール同期で、Markdownの編集に集中できます。"),
             ("必要十分", "双方向リンクとバックリンク、LaTeX、Mermaid、バージョン履歴、自動整形、CLI、Markdownプレゼンテーションで、書くまわりの作業もこなせます。"),
         ],
         "compare_title": "MiaoYanが向いている人",
@@ -289,7 +289,7 @@ COPY = {
         "features": [
             ("로컬 우선", "마크다운 파일은 직접 고른 폴더에 저장되고, MiaoYan은 노트 데이터를 수집하지 않습니다. 기기 간 동기화는 iCloud Drive나 Nutstore 같은 파일 동기화 도구에 맡기면 됩니다."),
             ("집중", "폴더, 노트 목록, 편집기로 이루어진 3단 구성으로 쓰는 데 필요한 것이 한 화면에 모입니다. 다크 모드, 방해 없는 글쓰기, 키보드 단축키가 들어 있고 관리할 플러그인은 없습니다."),
-            ("네이티브", "Electron이 아닌 Swift 6으로 만든 네이티브 앱입니다. 분할 모드는 실시간 미리보기와 60fps 양방향 스크롤 동기화로 마크다운 편집에 집중하게 해 줍니다."),
+            ("네이티브", "Electron이 아닌 Swift 6으로 만든 네이티브 앱입니다. 분할 모드는 실시간 미리보기와 양방향 스크롤 동기화로 마크다운 편집에 집중하게 해 줍니다."),
             ("충분한 기능", "양방향 링크와 백링크, LaTeX, Mermaid, 버전 기록, 자동 서식, CLI, 마크다운 프레젠테이션으로 글쓰기에 필요한 부가 작업까지 두루 뒷받침합니다."),
         ],
         "compare_title": "MiaoYan이 맞는 사람",
@@ -343,7 +343,7 @@ COPY = {
         "features": [
             ("Lokal zuerst", "Deine Markdown-Dateien bleiben in einem Ordner deiner Wahl. MiaoYan erfasst keine Notizdaten; iCloud Drive, Nutstore oder ein anderer Sync-Client gleicht sie zwischen Geräten ab."),
             ("Fokussiert", "Ordner, Notizen und Editor in drei klaren Spalten. Dark Mode, ablenkungsfreies Schreiben und Tastaturkürzel sind eingebaut, ohne Plugin-System, das gepflegt werden muss."),
-            ("Nativ", "Nativ mit Swift 6 statt Electron gebaut. Der geteilte Modus verbindet Echtzeitvorschau mit synchronem Scrollen in beide Richtungen bei 60 fps."),
+            ("Nativ", "Nativ mit Swift 6 statt Electron gebaut. Der geteilte Modus verbindet Echtzeitvorschau mit synchronem Scrollen in beide Richtungen."),
             ("Gut ausgestattet", "Wikilinks und Backlinks, LaTeX, Mermaid, Versionsverlauf, automatische Formatierung, eine CLI und Markdown-Präsentationen decken die Arbeit rund ums Schreiben ab."),
         ],
         "compare_title": "Für wen MiaoYan gedacht ist",
@@ -397,7 +397,7 @@ COPY = {
         "features": [
             ("Local d'abord", "Vos fichiers Markdown restent dans le dossier de votre choix. MiaoYan ne collecte aucune donnée de vos notes ; iCloud Drive, Nutstore ou un autre client de synchronisation s'occupe des autres appareils."),
             ("Épuré", "Dossiers, notes et éditeur sur trois colonnes claires. Mode sombre, écriture sans distraction et raccourcis clavier sont intégrés, sans système d'extensions à entretenir."),
-            ("Natif", "Développé nativement en Swift 6 plutôt qu'avec Electron. Le mode partagé associe aperçu en temps réel et défilement synchronisé à 60 fps dans les deux sens."),
+            ("Natif", "Développé nativement en Swift 6 plutôt qu'avec Electron. Le mode partagé associe aperçu en temps réel et défilement synchronisé dans les deux sens."),
             ("Bien équipé", "Wikilinks et rétroliens, LaTeX, Mermaid, historique des versions, mise en forme automatique, une CLI et des présentations Markdown couvrent tout ce qui entoure l'écriture."),
         ],
         "compare_title": "À qui s'adresse MiaoYan",
@@ -451,7 +451,7 @@ COPY = {
         "features": [
             ("Local primero", "Tus archivos Markdown se quedan en la carpeta que elijas. MiaoYan no recopila datos de tus notas; iCloud Drive, Nutstore u otro cliente de sincronización se encarga del resto de dispositivos."),
             ("Enfocado", "Carpetas, notas y editor en tres columnas claras. Modo oscuro, escritura sin distracciones y atajos de teclado integrados, sin un sistema de plugins que mantener."),
-            ("Nativo", "Hecho de forma nativa con Swift 6 en lugar de Electron. El modo dividido combina vista previa en tiempo real con desplazamiento sincronizado a 60 fps en ambos sentidos."),
+            ("Nativo", "Hecho de forma nativa con Swift 6 en lugar de Electron. El modo dividido combina vista previa en tiempo real con desplazamiento sincronizado en ambos sentidos."),
             ("Completo", "Wikilinks y backlinks, LaTeX, Mermaid, historial de versiones, formato automático, una CLI y presentaciones en Markdown cubren el trabajo alrededor de la escritura."),
         ],
         "compare_title": "Para quién es MiaoYan",
