@@ -680,9 +680,6 @@ ANALYTICS = (
     "function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}"
     "function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}"
     "document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>"
-    # GEOInflow counts page views without cookies and waits out a hover prerender itself;
-    # it loads after the load event, so a slow fetch never holds the page.
-    "\n<script>(function(){function go(){var s=document.createElement('script');s.async=true;s.src='https://geo.tw93.fun/geo.js';s.dataset.websiteId='275f0b5b-797e-4500-a9d2-a7383b2fa236';s.dataset.domains='miaoyan.app';document.head.appendChild(s)}document.readyState==='complete'?go():addEventListener('load',go,{once:true})})()</script>"
 )
 
 SPECULATION_RULES = json.dumps(
