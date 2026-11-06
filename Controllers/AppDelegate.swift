@@ -59,30 +59,33 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         storage.loadDocuments {}
     }
 
-    // Attempt to migrate preferences from the old suite "com.tw93.MiaoYan" to the standard suite
+    /// The preferences domain from before the bundle id was lowercased. On a
+    /// case-insensitive volume it is the same file as `com.tw93.miaoyan`'s,
+    /// so a build with any other bundle id (`com.tw93.miaoyan.qa` for local
+    /// tests) read the maintainer's real settings through it and copied them
+    /// in on first launch, fonts and library location included.
+    static let legacyPreferencesDomain = "com.tw93.MiaoYan"
+    static let shippedBundleIdentifier = "com.tw93.miaoyan"
+    static let legacyMigrationKey = "HasMigratedFromOldSuite"
+
     private func migratePreferences() {
-        let migrationKey = "HasMigratedFromOldSuite"
-        let standardDefaults = UserDefaults.standard
+        Self.migrateLegacyPreferences(
+            into: UserDefaults.standard,
+            legacy: UserDefaults.standard.persistentDomain(forName: Self.legacyPreferencesDomain),
+            bundleIdentifier: Bundle.main.bundleIdentifier)
+    }
 
-        // Skip if already migrated
-        guard !standardDefaults.bool(forKey: migrationKey) else { return }
-
-        let oldSuiteName = "com.tw93.MiaoYan"
-        guard let oldDefaults = UserDefaults(suiteName: oldSuiteName) else {
-            standardDefaults.set(true, forKey: migrationKey)
-            return
+    /// Copies keys the standard domain lacks from the legacy domain, once, and
+    /// only for the shipped bundle id. `legacy` is that domain's own keys, not
+    /// a suite's `dictionaryRepresentation()`, which also carries the global
+    /// domain (AppleLanguages and the like).
+    static func migrateLegacyPreferences(into standard: UserDefaults, legacy: [String: Any]?, bundleIdentifier: String?) {
+        guard bundleIdentifier == shippedBundleIdentifier else { return }
+        guard !standard.bool(forKey: legacyMigrationKey) else { return }
+        for (key, value) in legacy ?? [:] where standard.object(forKey: key) == nil {
+            standard.set(value, forKey: key)
         }
-
-        let oldDict = oldDefaults.dictionaryRepresentation()
-
-        // Migrate all values from old suite that don't exist in standard defaults
-        for (key, value) in oldDict where standardDefaults.object(forKey: key) == nil {
-            standardDefaults.set(value, forKey: key)
-        }
-
-        // Mark migration as completed
-        standardDefaults.set(true, forKey: migrationKey)
-        standardDefaults.synchronize()
+        standard.set(true, forKey: legacyMigrationKey)
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
