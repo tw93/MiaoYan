@@ -550,6 +550,57 @@ extension NSViewController {
 
 // MARK: - Undo for a move to the Trash
 
+/// The way back for the notes one delete moved to the Trash. Each Trash
+/// file's identity is read when the delete finishes, so Undo does not move
+/// back a different note that later took the same name there (the iPhone and
+/// iPad share this Trash) on a volume that reports file identities (APFS,
+/// HFS+, SMB), and a move never replaces a file at the original path.
+@MainActor
+struct TrashReturn {
+    private struct Entry {
+        let trashed: URL
+        let original: URL
+        let identity: NSObject?
+    }
+
+    private let entries: [Entry]
+
+    init(_ urls: [URL: URL]) {
+        entries = urls.map { Entry(trashed: $0.key, original: $0.value, identity: Self.identity(of: $0.key)) }
+    }
+
+    private static func identity(of url: URL) -> NSObject? {
+        // A URL caches resource values, so reading the same URL again would
+        // return the identity of the file that was there before.
+        var fresh = url
+        fresh.removeAllCachedResourceValues()
+        return (try? fresh.resourceValues(forKeys: [.fileResourceIdentifierKey]))?.fileResourceIdentifier as? NSObject
+    }
+
+    /// Moves each note back and calls `moved` after each move that succeeded.
+    /// Returns how many notes stayed in the Trash.
+    func perform(_ moved: (_ trashed: URL, _ original: URL) -> Void) -> Int {
+        var failed = 0
+        for entry in entries {
+            do {
+                if let expected = entry.identity, Self.identity(of: entry.trashed)?.isEqual(expected) != true {
+                    failed += 1
+                    AppDelegate.trackError(
+                        CocoaError(.fileNoSuchFile, userInfo: [NSFilePathErrorKey: entry.trashed.path]),
+                        context: "TrashReturn.identityChanged")
+                    continue
+                }
+                try FileManager.default.moveItem(at: entry.trashed, to: entry.original)
+                moved(entry.trashed, entry.original)
+            } catch {
+                failed += 1
+                AppDelegate.trackError(error, context: "TrashReturn.perform")
+            }
+        }
+        return failed
+    }
+}
+
 /// One move to the Trash and its way back. Command-Z and the toast's Undo
 /// both take back this move and nothing else: the window's undo manager also
 /// serves the search and title fields, so undoing whatever sits on top of it

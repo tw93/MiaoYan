@@ -459,8 +459,12 @@ extension ViewController {
                 // the delete says where the notes went and offers the same
                 // undo, as the iPhone app does.
                 if let ntv = vc.notesTableView, let urls, !urls.isEmpty {
+                    let way = TrashReturn(urls)
                     TrashUndo.register(on: undoManager, toastIn: someFailed ? nil : vc) {
-                        ntv.unDelete(urls)
+                        let failed = ntv.unDelete(way)
+                        if failed > 0 {
+                            vc.toast(message: I18n.count("Couldn't restore %d note(s) from the Trash", failed), style: .failure)
+                        }
                     }
                 }
 

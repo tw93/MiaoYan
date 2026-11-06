@@ -427,7 +427,7 @@ final class NoteSaveDebounceTests: XCTestCase {
 
         let table = NotesTableView(frame: .zero)
         table.storage = Storage(loadsLibrary: false)
-        table.unDelete([trashed: original])
+        table.unDelete(TrashReturn([trashed: original]))
         manager.waitForPendingWork()
 
         let restored = Note(url: original, with: project)
@@ -453,11 +453,30 @@ final class NoteSaveDebounceTests: XCTestCase {
 
         let table = NotesTableView(frame: .zero)
         table.storage = storage
-        table.unDelete([trashed: occupied])
+        XCTAssertEqual(table.unDelete(TrashReturn([trashed: occupied])), 1, "the failure is counted for the toast")
 
         XCTAssertTrue(storage.noteList.contains { $0 === note }, "a restore that failed leaves the note listed")
         XCTAssertEqual(try String(contentsOf: occupied, encoding: .utf8), "someone else")
         XCTAssertTrue(FileManager.default.fileExists(atPath: trashed.path))
+    }
+
+    /// The Trash is shared with the iPhone: after it was emptied there and
+    /// another note of the same name was deleted into it, Undo on the Mac
+    /// moved that other note into the first note's folder.
+    @MainActor
+    func testUndoLeavesAFileThatReplacedTheTrashedNote() throws {
+        let trashed = tempDir.appendingPathComponent("same-name.md")
+        let original = tempDir.appendingPathComponent("restored-\(UUID().uuidString).md")
+        try "deleted on the Mac".write(to: trashed, atomically: false, encoding: .utf8)
+        let way = TrashReturn([trashed: original])
+        try FileManager.default.removeItem(at: trashed)
+        try "deleted on the iPhone".write(to: trashed, atomically: false, encoding: .utf8)
+
+        let table = NotesTableView(frame: .zero)
+        table.storage = Storage(loadsLibrary: false)
+        XCTAssertEqual(table.unDelete(way), 1)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: original.path), "a different note is not moved back")
+        XCTAssertEqual(try String(contentsOf: trashed, encoding: .utf8), "deleted on the iPhone")
     }
 
     @MainActor

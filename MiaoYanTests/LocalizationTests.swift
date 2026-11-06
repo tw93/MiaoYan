@@ -54,4 +54,12 @@ final class LocalizationTests: XCTestCase {
         XCTAssertFalse(Storage.seedsTraditionalChinese("en-HK"))
     }
 
+    @MainActor
+    func testRestoreFailureCountsInEnglish() throws {
+        let key = "Couldn't restore %d note(s) from the Trash"
+        try withLanguage("en") {
+            XCTAssertEqual(I18n.count(key, 1), "Couldn't restore 1 note from the Trash")
+            XCTAssertEqual(I18n.count(key, 2), "Couldn't restore 2 notes from the Trash")
+        }
+    }
 }

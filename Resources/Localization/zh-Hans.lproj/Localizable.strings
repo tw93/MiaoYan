@@ -138,6 +138,7 @@
 "Changed on disk. Your version was backed up" = "检测到外部修改，本地内容已备份";
 "Can't switch notes while exporting" = "导出过程中无法切换笔记";
 "Couldn't move %d note(s) to Trash" = "%d 篇笔记未能移到废纸篓，可能受权限或同步限制";
+"Couldn't restore %d note(s) from the Trash" = "%d 篇笔记未能从废纸篓恢复";
 "Uploading image…" = "图片上传中…";
 "Upload failed. The local image was kept" = "图片上传失败，已保留本地路径";
 "Install and set up %@ first" = "请先安装并配置 %@";

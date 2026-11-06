@@ -16,6 +16,7 @@
 "Changed on disk. Your version was backed up" = "檢測到外部修改，本地內容已備份";
 "Can't switch notes while exporting" = "匯出過程中無法切換筆記";
 "Couldn't move %d note(s) to Trash" = "%d 篇筆記未能移到垃圾桶，可能受權限或同步限制";
+"Couldn't restore %d note(s) from the Trash" = "%d 篇筆記未能從垃圾桶還原";
 "Uploading image…" = "正在上傳圖片";
 "Upload failed. The local image was kept" = "圖片上傳失敗，改放在本機端，可手動上傳";
 "Install and set up %@ first" = "請確定你的 Mac 已經安裝並設定好 %@";

@@ -559,19 +559,16 @@ class NotesTableView: NSTableView {
         }
     }
 
-    @objc public func unDelete(_ urls: [URL: URL]) {
-        for (src, dst) in urls {
-            do {
-                // Moved first, as the shell's restoreDeleted does: a failed
-                // move leaves the note where it is, listed in the Trash.
-                try FileManager.default.moveItem(at: src, to: dst)
-                // Deleting filed the history under the Trash path; bring it back.
-                NoteVersionManager.shared.moveVersions(from: src, to: dst)
-                if let note = storage.getBy(url: src) {
-                    storage.removeBy(note: note)
-                }
-            } catch {
-                AppDelegate.trackError(error, context: "NotesTableView.reloadRow")
+    /// Returns how many notes could not be moved back.
+    @discardableResult
+    func unDelete(_ way: TrashReturn) -> Int {
+        // Moved first, as the shell's restoreDeleted does: a failed move
+        // leaves the note where it is, listed in the Trash.
+        way.perform { src, dst in
+            // Deleting filed the history under the Trash path; bring it back.
+            NoteVersionManager.shared.moveVersions(from: src, to: dst)
+            if let note = storage.getBy(url: src) {
+                storage.removeBy(note: note)
             }
         }
     }

@@ -169,6 +169,7 @@
 "Changed on disk. Your version was backed up" = "外部からの変更を検出しました。ローカルの内容をバックアップしました。";
 "Can't switch notes while exporting" = "書き出し中はノートを切り替えできません。";
 "Couldn't move %d note(s) to Trash" = "%d 件のノートをゴミ箱に移動できませんでした。";
+"Couldn't restore %d note(s) from the Trash" = "%d 件のノートをゴミ箱から戻せませんでした。";
 "Uploading image…" = "画像アップロード中";
 "Upload failed. The local image was kept" = "画像のアップロードに失敗しました。ローカルを使用してください";
 "Install and set up %@ first" = "Macに %@ をインストールされていることを確認してください。";

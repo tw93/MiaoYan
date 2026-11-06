@@ -1037,8 +1037,9 @@ final class ShellModel {
                 // gone, All Notes is chosen, as in the storyboard sidebar.
                 self.reload()
                 if undoable, let urls, !urls.isEmpty {
+                    let way = TrashReturn(urls)
                     TrashUndo.register(on: self.notesUndoManager, toastIn: offerToast ? self.host : nil) { [weak self] in
-                        self?.restoreDeleted(urls)
+                        self?.restoreDeleted(way)
                     }
                     // The storyboard list keeps focus after a delete, where
                     // Command-Z brings the notes back.
@@ -1060,16 +1061,10 @@ final class ShellModel {
 
     /// Moves deleted notes back from the Trash (`NotesTableView.unDelete`).
     /// They are listed here at once instead of waiting for the file watcher.
-    func restoreDeleted(_ urls: [URL: URL]) {
+    func restoreDeleted(_ way: TrashReturn) {
         var restored: URL?
-        for (trashed, original) in urls {
-            do {
-                try FileManager.default.moveItem(at: trashed, to: original)
-            } catch {
-                // The note stays where it is, listed in the Trash.
-                AppDelegate.trackError(error, context: "ShellModel.restoreDeleted")
-                continue
-            }
+        // A note that cannot go back stays where it is, listed in the Trash.
+        let failed = way.perform { trashed, original in
             // Deleting filed the history under the Trash path; bring it back.
             AppEnvironment.current.versionManager.moveVersions(from: trashed, to: original)
             if let note = storage.getBy(url: trashed) {
@@ -1081,6 +1076,9 @@ final class ShellModel {
                 storage.add(note)
             }
             restored = original
+        }
+        if failed > 0 {
+            host?.toast(message: I18n.count("Couldn't restore %d note(s) from the Trash", failed), style: .failure)
         }
         guard let restored else { return }
         // Open it only where it is listed; elsewhere the detail would go blank.
