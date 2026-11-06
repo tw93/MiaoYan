@@ -331,7 +331,7 @@ class ViewController:
             // it draws underneath them.
             emptyEditAreaView.wantsLayer = true
             emptyEditAreaView.layer?.zPosition = 10
-            emptyEditAreaImage.image = NSImage(named: "alertIcon")
+            emptyEditAreaImage.image = NSImage(named: "emptyStateBird")
             emptyEditAreaImage.alphaValue = 1
             emptyEditAreaImage.frame = NSRect(x: 76, y: 112, width: 88, height: 88)
             emptyEditTitle.stringValue = search.stringValue.isEmpty ? I18n.str("Press ⌘N to create a note") : I18n.str("No results")
