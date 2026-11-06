@@ -1,17 +1,19 @@
-# V4.7.1 Rathalos 🔥
+# V4.8.0 Brachydios 💥
 
-1. 从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失
-2. 删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖
-3. 在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置
-4. 笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏
-5. 分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和
-6. 鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的
+1. 删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失
+2. 磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你
+3. 删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失
+4. 没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白
+5. 繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走
+6. 第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致
+7. 侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了
 
 ---
 
-1. Images and files dragged from Finder into the editor are copied in and linked as a paste is, where before dragged images were lost once the note saved
-2. Edits made just before deleting their folder are no longer lost, Command-Z after Format undoes it in one step, Clean Unused Attachments no longer removes files a subfolder note links from a parent folder, and a note with garbled text opens read-only so it is never saved over
-3. Notes deleted or renamed in Finder, git or a sync app leave the list right away, and editing the open note on iPhone no longer moves the Mac's preview or split view
-4. Titles in the note list and sidebar no longer set their last character apart, SOP showing as SO P, and folders with Trash in their name appear in the sidebar again
-5. In split view, new math, headings and local videos render as they do when the note opens, PNG export waits for diagrams to finish, switching light and dark recolours the preview in place, and dark text is softer
-6. Hovering a heading in the preview shows a link icon, a loading image shows a small turning arc, and Return after a ticked task starts an unticked one
+1. Deleted notes go to the library's own Trash, so iPhone, iPad and Mac share one Trash, and emptying it on iPhone removes the Mac's Trash row too
+2. When the disk is full or a folder cannot be written, a failed save is reported once instead of over and over while you type, and Command-S tells you when it still cannot save
+3. Deleting a note shows Moved to Trash with an Undo button, an empty folder or a search with no match shows a short hint instead of a blank editor, and toasts stay long enough to read and while the pointer is over them
+4. Formulas typeset correctly offline, and mind maps draw their branches in MiaoYan's own colours and no longer come out blank in PDF and image exports
+5. Traditional Chinese, Japanese and Spanish menus and messages use native wording, English note counts read 1 note and 2 notes, English and Spanish word counts count words, and version history dates follow the app language
+6. On first launch the sample folders are named in the system language, and the sample notes write shortcuts as the menus show them
+7. Folder names in the sidebar line up with their icons, the MiaoYan logo sits further below the window buttons, interface greys are warmer, note list dates are larger, other find matches sit on a light green tint, and the find bar's shadow now shows
