@@ -1718,7 +1718,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     private func applyEditorSearchHighlights(for ranges: [NSRange]) {
         guard let layoutManager = layoutManager else { return }
-        let highlightColor = Theme.selectionBackgroundColor.withAlphaComponent(0.35)
+        let highlightColor = Theme.searchMatch
         for range in ranges {
             layoutManager.addTemporaryAttribute(.backgroundColor, value: highlightColor, forCharacterRange: range)
         }

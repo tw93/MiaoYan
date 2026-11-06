@@ -237,6 +237,10 @@ enum Theme {
     nonisolated static let brand = dynamic(0x1C5D33, 0x54C59F)
     /// Kami's warm sand, the selection plate.
     nonisolated static let sand = dynamic(0xE8E6DC, 0xFFFFFF, darkAlpha: 0.08)
+    /// The editor's other find matches: MiaoYan green, 18% light and 22% dark
+    /// (maintainer's pick of three, 2026-11-06). Sand at 35% sat 1.07:1 on
+    /// the paper and the matches could not be found by eye.
+    nonisolated static let searchMatch = dynamic(0x1C5D33, 0x54C59F, lightAlpha: 0.18, darkAlpha: 0.22)
 
     /// The Settings window's colours: the shell's warm paper, Kami's warm
     /// greys and sand, and MiaoYan green for switches and actions. Opaque on
