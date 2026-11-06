@@ -1,5 +1,5 @@
 /* Class = "NSTextFieldCell"; title = "Code FontName"; ObjectID = "0UJ-Ss-20u"; */
-"0UJ-Ss-20u.title" = "程式碼字型名稱";
+"0UJ-Ss-20u.title" = "程式碼字體名稱";
 
 /* Class = "NSMenu"; title = "Find"; ObjectID = "1b7-l0-nxx"; */
 "1b7-l0-nxx.title" = "尋找";
@@ -110,7 +110,7 @@
 "8LY-2s-GJ7.title" = "匯出";
 
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "9Fg-2C-7a5"; */
-"9Fg-2C-7a5.title" = "複製超連結";
+"9Fg-2C-7a5.title" = "拷貝連結";
 
 /* Class = "NSMenuItem"; title = "Toggle Presentation"; ObjectID = "9ib-os-JZv"; */
 "9ib-os-JZv.title" = "切換簡報模式";
@@ -137,7 +137,7 @@
 "Adc-zl-sqX.ibShadowedToolTip" = "格式";
 
 /* Class = "NSTextFieldCell"; title = "Presentation FontSize"; ObjectID = "AOs-Fb-J09"; */
-"AOs-Fb-J09.title" = "簡報字型大小";
+"AOs-Fb-J09.title" = "簡報字體大小";
 
 /* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
 "AYu-sK-qS6.title" = "主選單";
@@ -155,7 +155,7 @@
 "Bn7-FD-jzc.ibShadowedToolTip" = "預覽";
 
 /* Class = "NSMenuItem"; title = "Preferences…"; ObjectID = "BOF-NM-1cW"; */
-"BOF-NM-1cW.title" = "偏好設定…";
+"BOF-NM-1cW.title" = "設定…";
 
 /* Class = "NSMenuItem"; title = "Check for Updates"; ObjectID = "BWp-m7-ySj"; */
 "BWp-m7-ySj.title" = "檢查更新";
@@ -227,7 +227,7 @@
 "dRJ-4n-Yzg.title" = "還原";
 
 /* Class = "NSTextFieldCell"; title = "Preview FontName"; ObjectID = "DSZ-lK-z6c"; */
-"DSZ-lK-z6c.title" = "預覽字型名稱";
+"DSZ-lK-z6c.title" = "預覽字體名稱";
 
 /* Class = "NSMenuItem"; title = "16"; ObjectID = "DTe-57-Kqf"; */
 "DTe-57-Kqf.title" = "16";
@@ -383,7 +383,7 @@
 "kIy-TN-XMS.title" = "關閉";
 
 /* Class = "NSWindow"; title = "Preferences"; ObjectID = "ldu-U8-PD1"; */
-"ldu-U8-PD1.title" = "偏好設定";
+"ldu-U8-PD1.title" = "設定";
 
 /* Class = "NSMenu"; title = "Export"; ObjectID = "LoU-Gc-oM3"; */
 "LoU-Gc-oM3.title" = "匯出";
@@ -404,7 +404,7 @@
 "MAj-uB-BTI.title" = "Menlo";
 
 /* Class = "NSTextFieldCell"; title = "Editor FontSize"; ObjectID = "Mhq-eB-UoB"; */
-"Mhq-eB-UoB.title" = "編輯器字型大小";
+"Mhq-eB-UoB.title" = "編輯器字體大小";
 
 /* Class = "NSMenuItem"; title = "20"; ObjectID = "miK-8H-a4Z"; */
 "miK-8H-a4Z.title" = "20";
@@ -542,7 +542,7 @@
 "U5e-2D-yd5.title" = "PicGo";
 
 /* Class = "NSTextFieldCell"; title = "Window FontName"; ObjectID = "Ubt-AP-PLa"; */
-"Ubt-AP-PLa.title" = "視窗字型名稱";
+"Ubt-AP-PLa.title" = "視窗字體名稱";
 
 /* Class = "NSMenuItem"; title = "PDF"; ObjectID = "UcZ-Ne-qv1"; */
 "UcZ-Ne-qv1.title" = "PDF";
@@ -596,7 +596,7 @@
 "Wju-FE-YsQ.title" = "14";
 
 /* Class = "NSMenuItem"; title = "Copy"; ObjectID = "x3v-GG-iWU"; */
-"x3v-GG-iWU.title" = "複製";
+"x3v-GG-iWU.title" = "拷貝";
 
 /* Class = "NSTextFieldCell"; title = "Appearance"; ObjectID = "X8u-wB-WWq"; */
 "X8u-wB-WWq.title" = "外觀";
@@ -605,7 +605,7 @@
 "XBB-Sr-T1D.title" = "重新命名";
 
 /* Class = "NSTextFieldCell"; title = "Editor FontName"; ObjectID = "xdH-tR-vpQ"; */
-"xdH-tR-vpQ.title" = "編輯器字型名稱";
+"xdH-tR-vpQ.title" = "編輯器字體名稱";
 
 /* Class = "NSMenuItem"; title = "15"; ObjectID = "xoA-rd-vlO"; */
 "xoA-rd-vlO.title" = "15";
@@ -620,7 +620,7 @@
 "y7T-Rc-etT.title" = "Name";
 
 /* Class = "NSButton"; ibShadowedToolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
-"Yei-Or-qiI.ibShadowedToolTip" = "新專案";
+"Yei-Or-qiI.ibShadowedToolTip" = "新增檔案夾";
 
 /* Class = "NSMenuItem"; title = "Find and Replace…"; ObjectID = "YEy-JH-Tfz"; */
 "YEy-JH-Tfz.title" = "尋找並取代…";
@@ -662,8 +662,8 @@
 "OiT-01-iTm.title" = "在終端機中開啟";
 "InC-Cd-Mnu.title" = "行內程式碼";
 "CdB-Blk-Mnu.title" = "程式碼區塊";
-"Yei-Or-qiI.toolTip" = "新建檔案夾";
-"CpP-01-iTm.title" = "複製路徑";
+"Yei-Or-qiI.toolTip" = "新增檔案夾";
+"CpP-01-iTm.title" = "拷貝路徑";
 
 /* Class = "NSMenuItem"; title = "Move to…"; ObjectID = "MvF-01-iTm"; */
 "MvF-01-iTm.title" = "移動到…";

@@ -119,7 +119,7 @@
 "bJC-he-nDV.title" = "笔记字体：";
 
 /* Class = "NSMenuItem"; title = "Preferences…"; ObjectID = "BOF-NM-1cW"; */
-"BOF-NM-1cW.title" = "偏好设置…";
+"BOF-NM-1cW.title" = "设置…";
 
 /* Class = "NSMenuItem"; title = "Use Selection for Find"; ObjectID = "buJ-ug-pKt"; */
 "buJ-ug-pKt.title" = "使用选择查找";
@@ -218,7 +218,7 @@
 "fzU-ZR-Ubv.title" = "重命名文件夹";
 
 /* Class = "NSMenuItem"; title = "Clean Unused Attachments"; ObjectID = "G9H-Lg-TXE"; */
-"G9H-Lg-TXE.title" = "清理孤立附件";
+"G9H-Lg-TXE.title" = "清理未使用的附件";
 
 /* Class = "NSButtonCell"; title = "Modification date"; ObjectID = "GCG-C6-9cg"; */
 "GCG-C6-9cg.title" = "修改日期";
@@ -287,7 +287,7 @@
 "kIy-TN-XMS.title" = "关闭";
 
 /* Class = "NSWindow"; title = "Preferences"; ObjectID = "ldu-U8-PD1"; */
-"ldu-U8-PD1.title" = "偏好设置";
+"ldu-U8-PD1.title" = "设置";
 
 /* Class = "NSMenuItem"; title = "Bold"; ObjectID = "LTw-w4-tEo"; */
 "LTw-w4-tEo.title" = "粗体";
@@ -317,7 +317,7 @@
 "ieJ-a6-SUU.title" = "文档排版";
 
 /* Class = "NSMenuItem"; title = "Clean Typography"; ObjectID = "tyC-le-mn1"; */
-"tyC-le-mn1.title" = "排版净化";
+"tyC-le-mn1.title" = "清理排版";
 
 /* Class = "NSMenuItem"; title = "Toggle Preview"; ObjectID = "PdU-Em-Ugm"; */
 "PdU-Em-Ugm.title" = "切换预览";
@@ -395,7 +395,7 @@
 "TjZ-PX-YVo.title" = "移到废纸篓";
 
 /* Class = "NSTabViewController"; title = "Preferences"; ObjectID = "tR0-Uj-4tB"; */
-"tR0-Uj-4tB.title" = "偏好设置";
+"tR0-Uj-4tB.title" = "设置";
 
 /* Class = "NSTabViewController"; title = "Preferences"; ObjectID = "BWp-m7-ySj"; */
 "BWp-m7-ySj.title" = "检查更新";

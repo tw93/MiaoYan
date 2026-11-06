@@ -5,7 +5,6 @@
 "Add" = "Añadir";
 
 /* No comment provided by engineer. */
-"Move %d note(s) to the system Trash?" = "¿Mover %d nota(s) a la Papelera del sistema?";
 
 /* No comment provided by engineer. */
 
@@ -16,10 +15,10 @@
 "Copy HTML" = "Copiar HTML";
 
 /* No comment provided by engineer. */
-"Copy Link" = "Copiar Enlace";
+"Copy Link" = "Copiar enlace";
 
 /* No comment provided by engineer. */
-"Copy Plain Text" = "Copiar Texto Sin Formato";
+"Copy Plain Text" = "Copiar texto sin formato";
 
 /* No comment provided by engineer. */
 
@@ -39,9 +38,9 @@
 "Export" = "Exportar";
 
 /* 設定 - セクション */
-"Appearance & Language" = "Apariencia e Idioma";
-"Interface & Upload" = "Interfaz y Subida";
-"Storage Location" = "Ubicación de Almacenamiento";
+"Appearance & Language" = "Apariencia e idioma";
+"Interface & Upload" = "Interfaz y subida";
+"Storage Location" = "Ubicación de almacenamiento";
 "Note Location" = "Ubicación de las notas";
 "Interface" = "Interfaz";
 "Experience" = "Experiencia";
@@ -53,8 +52,8 @@
 "General" = "General";
 "Editor" = "Editor";
 "Fonts" = "Fuentes";
-"Editor Behavior" = "Comportamiento del Editor";
-"Preview" = "Vista Previa";
+"Editor Behavior" = "Comportamiento del editor";
+"Preview" = "Vista previa";
 "Yes" = "Sí";
 "No" = "No";
 
@@ -80,13 +79,13 @@
 "New" = "Nuevo";
 
 /* No comment provided by engineer. */
-"New Folder" = "Nueva Carpeta";
+"New Folder" = "Nueva carpeta";
 
 /* No comment provided by engineer. */
-"New Subfolder" = "Nueva Subcarpeta";
+"New Subfolder" = "Nueva subcarpeta";
 
 /* No comment provided by engineer. */
-"New project" = "Nuevo proyecto";
+"New project" = "Nueva carpeta";
 
 /* Sidebar label */
 "Notes" = "Notas";
@@ -98,13 +97,13 @@
 "Please enter image title:" = "Por favor ingresa el título de la imagen:";
 
 /* No comment provided by engineer. */
-"Please enter project name:" = "Por favor ingresa el nombre del proyecto:";
+"Please enter project name:" = "Por favor ingresa el nombre de la carpeta:";
 
 /* No comment provided by engineer. */
 "Please try again" = "Por favor inténtalo de nuevo";
 
 /* No comment provided by engineer. */
-"Preferences" = "Preferencias";
+"Preferences" = "Ajustes";
 
 /* No comment provided by engineer. */
 "Quit MiaoYan" = "Salir de MiaoYan";
@@ -112,14 +111,14 @@
 /* Delete menu */
 
 /* No comment provided by engineer. */
-"Move to Trash" = "Mover a la Papelera";
+"Move to Trash" = "Mover a la papelera";
 
 /* No comment provided by engineer. */
-"Rename Folder" = "Renombrar Carpeta";
+"Rename Folder" = "Renombrar carpeta";
 
 /* No comment provided by engineer. */
-"Show in Finder" = "Mostrar en Finder";
-"Reveal in Finder" = "Mostrar en Finder";
+"Show in Finder" = "Mostrar en el Finder";
+"Reveal in Finder" = "Mostrar en el Finder";
 
 /* View menu */
 "Sort by" = "Ordenar por";
@@ -132,7 +131,7 @@
 /* Delete menu */
 
 /* No comment provided by engineer. */
-"Toggle Preview" = "Alternar Vista Previa";
+"Toggle Preview" = "Alternar vista previa";
 
 /* Sidebar label */
 "Trash" = "Papelera";
@@ -141,7 +140,7 @@
 "Underline" = "Subrayado";
 
 /* Untitled Note */
-"Untitled Note" = "Nota Sin Título";
+"Untitled Note" = "Nota sin título";
 
 /* No comment provided by engineer. */
 "URL has been copied to clipboard" = "La URL se ha copiado al portapapeles";
@@ -158,31 +157,30 @@
 
 
 /* Toast messages without emoji prefix */
-"Formatted" = "Composición tipográfica automática exitosa";
+"Formatted" = "Texto formateado";
 "Typography cleaned up" = "Tipografía limpiada";
 "Typography is already clean" = "La tipografía ya está limpia";
-"Press Esc to exit" = "Presiona la tecla ESC para salir";
+"Press Esc to exit" = "Pulsa Esc para salir";
 "Exit preview to format" = "El formato solo es posible después de salir del modo de vista previa";
-"Saved to Downloads" = "Guardado en la carpeta de Descargas";
+"Saved to Downloads" = "Guardado en Descargas";
 "Saved" = "Guardado";
 "Changed on disk. Your version was backed up" = "Cambio externo detectado. Copia local respaldada";
 "Can't switch notes while exporting" = "No se puede cambiar de nota durante la exportación";
-"Couldn't move %d note(s) to Trash" = "No se pudo mover %d nota(s) a la Papelera";
 "Uploading image…" = "Subida de imagen en progreso";
 "Upload failed. The local image was kept" = "Falló la subida de imagen, usando local";
 "Install and set up %@ first" = "Por favor asegúrate de que tu Mac tenga instalado %@";
-"Press ⌘⇧W to leave single-file mode" = "En el modo de apertura única, sal con Command+Shift+W";
-"No note has this title" = "Por favor asegúrate de que tu título exista";
-"Several notes share this title. Showing search results" = "Se encontró que hay múltiples títulos de esto";
+"Press ⌘⇧W to leave single-file mode" = "En el modo único, sal con ⌘⇧W";
+"No note has this title" = "No hay ninguna nota con este título";
+"Several notes share this title. Showing search results" = "Varias notas tienen este título";
 "Note link copied" = "La URL se copió correctamente, úsala en cualquier lugar";
-"Separate slides with --- to present" = "No hay identificador de delimitador ---, no se puede usar MiaoYan PPT";
+"Separate slides with --- to present" = "Separa las diapositivas con --- para presentar";
 "Formatting failed" = "No se pudo dar formato";
 "“%@” already exists in this folder" = "Ya existe «%@» en esta carpeta";
 "Formatting cancelled" = "Formato cancelado";
 
 
-"Edit Link…" = "Editar Enlace…";
-"Remove Link" = "Eliminar Enlace";
+"Edit Link…" = "Editar enlace…";
+"Remove Link" = "Eliminar enlace";
 
 
 /* Font Names */
@@ -194,18 +192,17 @@
 "Hold ⌘ Command key to preview images" = "Mantén la tecla ⌘ Command para previsualizar imágenes";
 
 /* Missing translations */
-"Preview Settings" = "Configuración de Vista Previa";
-"Code Background:" = "Fondo de Código:";
+"Preview Settings" = "Configuración de vista previa";
+"Code Background:" = "Fondo de código:";
 
 /* Preview Search Bar */
 "Previous" = "Anterior";
 "Next" = "Siguiente";
 "Done" = "Hecho";
 "Replace" = "Reemplazar";
-"Replace All" = "Reemplazar Todo";
+"Replace All" = "Reemplazar todo";
 
 /* Clean attachments */
-"Moved %d unused attachment(s) to Trash" = "Se movieron %d archivo(s) adjunto(s) sin usar a la Papelera";
 "Some attachments could not be removed" = "Algunos archivos adjuntos no pudieron ser eliminados";
 "Some notes could not be read, so no attachments were cleaned" = "No se pudieron leer algunas notas, así que no se limpió ningún adjunto";
 "MiaoYan PPT PDF" = "MiaoYan PPT PDF";
@@ -216,25 +213,25 @@
 "Export failed" = "Exportación fallida";
 "System version too low" = "Versión del sistema demasiado baja";
 "Enter title" = "Ingresar título";
-"Save Failed" = "Error al Guardar";
-"Critical Error" = "Error Crítico";
+"Save Failed" = "Error al guardar";
+"Critical Error" = "Error crítico";
 "Failed to initialize main window. Please restart the application." = "Error al inicializar la ventana principal. Por favor, reinicia la aplicación.";
-"Move Images to Trash" = "Mover imágenes a la Papelera";
-"Restore Images" = "Restaurar Imágenes";
+"Move Images to Trash" = "Mover imágenes a la papelera";
+"Restore Images" = "Restaurar imágenes";
 "Quit" = "Salir";
 "Formatting... click again to cancel" = "Dando formato… haz clic nuevamente para cancelar";
 "Format" = "Formato";
 "Presentation" = "Presentación";
-"Toggle Note List" = "Alternar Lista de Notas";
-"Toggle Split Mode" = "Alternar Modo Dividido";
+"Toggle Note List" = "Alternar lista de notas";
+"Toggle Split Mode" = "Alternar modo dividido";
 
 /* Always On Top */
 "Window stays on top" = "La ventana se mantiene visible";
 "Window normal mode" = "Modo de ventana normal";
 
 /* Menu Items */
-"Always On Top" = "Siempre Visible";
-"Pin Note" = "Fijar Nota";
+"Always On Top" = "Siempre visible";
+"Pin Note" = "Fijar nota";
 
 /* File Operations */
 "Duplicate note name" = "Nombre de nota duplicado";
@@ -247,7 +244,7 @@
 "MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "MiaoYan no puede escribir en esta carpeta. Elige una carpeta editable o activa el acceso sin conexión en la app de la nube.";
 
 /* Reload Note */
-"Reload Note" = "Recargar Nota";
+"Reload Note" = "Recargar nota";
 "You have unsaved changes. Reload will discard them." = "Tienes cambios sin guardar. Recargar los descartará.";
 "Reload" = "Recargar";
 "Note reloaded" = "Nota recargada";
@@ -274,7 +271,7 @@
 "Latin" = "Latina";
 "Same as Text" = "Igual que el texto";
 "Rename" = "Renombrar";
-"Unpin Note" = "Desfijar Nota";
+"Unpin Note" = "Desfijar nota";
 "Image" = "Imagen";
 "This note could not be read, so it was left as it is" = "No se pudo leer esta nota, así que se ha dejado como estaba";
 "This note's text encoding could not be determined, so it opened read-only" = "No se pudo determinar la codificación de esta nota, así que se ha abierto en modo de solo lectura";
@@ -283,12 +280,12 @@
 "Open in Terminal" = "Abrir en Terminal";
 "File path copied" = "Ruta copiada";
 "Version" = "Versión";
-"Show Info" = "Mostrar Información";
+"Show Info" = "Mostrar información";
 "Copy URL" = "Copiar URL";
 "Copy Path" = "Copiar ruta";
 "Duplicate" = "Duplicar";
 "MiaoYan PPT" = "MiaoYan PPT";
-"Toggle Split View" = "Alternar Vista Dividida";
+"Toggle Split View" = "Alternar vista dividida";
 
 /* Folder moving */
 "Move to…" = "Mover a…";
@@ -330,9 +327,8 @@
 "Presentation Font Size" = "Tamaño de fuente de presentación";
 "Used for MiaoYan PPT slides" = "Para las diapositivas de MiaoYan PPT";
 /* Kept in English: the local name overflows the sidebar at its default width. */
-"All Notes" = "All Notes";
-"Move the folder “%@” and everything in it to the Trash?" = "¿Mover la carpeta “%@” y todo su contenido a la Papelera?";
-"Move %d unused attachment(s) to Trash?" = "¿Mover %d archivo(s) adjunto(s) sin usar a la Papelera?";
+"All Notes" = "Todas las notas";
+"Move the folder “%@” and everything in it to the Trash?" = "¿Mover la carpeta “%@” y todo su contenido a la papelera?";
 "No unused attachments" = "No hay archivos adjuntos sin usar";
 "Title not saved. Click it again to rename" = "Título no guardado. Haz clic de nuevo para renombrarlo";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "MiaoYan no puede leer esta carpeta. Si está en una unidad en la nube, abre su app y confirma que la carpeta aparece en Finder.";
@@ -342,7 +338,7 @@
 "Used in the editor" = "Para el editor";
 "Used in the preview and exports" = "Para la vista previa y las exportaciones";
 "The folder your notes are stored in" = "La carpeta donde se guardan tus notas";
-"Moved to Trash" = "Movido a la Papelera";
+"Moved to Trash" = "Movido a la papelera";
 "Undo" = "Deshacer";
 "Press ⌘N to create a note" = "Pulsa ⌘N para crear una nota";
 "No results" = "Sin resultados";

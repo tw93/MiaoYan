@@ -9,9 +9,9 @@
 "Formatted" = "排版完成";
 "Typography cleaned up" = "排版已清理";
 "Typography is already clean" = "排版無需清理";
-"Press Esc to exit" = "按 ESC 鍵結束簡報模式";
+"Press Esc to exit" = "按 Esc 鍵結束簡報模式";
 "Exit preview to format" = "退出預覽後才能排版";
-"Saved to Downloads" = "已經輸出到下載目錄";
+"Saved to Downloads" = "已輸出到下載項目檔案夾";
 "Saved" = "已儲存";
 "Changed on disk. Your version was backed up" = "檢測到外部修改，本地內容已備份";
 "Can't switch notes while exporting" = "匯出過程中無法切換筆記";
@@ -19,14 +19,14 @@
 "Uploading image…" = "正在上傳圖片";
 "Upload failed. The local image was kept" = "圖片上傳失敗，改放在本機端，可手動上傳";
 "Install and set up %@ first" = "請確定你的 Mac 已經安裝並設定好 %@";
-"Press ⌘⇧W to leave single-file mode" = "在單獨編輯器模式中，可以敲下 Command+Shift+W 結束";
-"No note has this title" = "請確定填寫的標題是否存在";
-"Several notes share this title. Showing search results" = "這裡有好幾個標題，使用搜尋能力";
-"Note link copied" = "成功複製外部連結，可以在其他地方使用了";
-"File path copied" = "路徑成功複製";
-"Separate slides with --- to present" = "沒有分隔符號 --- 標示，無法使用妙言 PPT";
+"Press ⌘⇧W to leave single-file mode" = "在單獨編輯器模式中，可以敲下 ⌘⇧W 結束";
+"No note has this title" = "沒有找到這個標題的筆記";
+"Several notes share this title. Showing search results" = "有多篇同名筆記，已顯示搜尋結果";
+"Note link copied" = "已拷貝筆記連結";
+"File path copied" = "已拷貝檔案路徑";
+"Separate slides with --- to present" = "用 --- 分隔投影片後才能簡報";
 "Formatting failed" = "排版失敗";
-"“%@” already exists in this folder" = "這個資料夾裡已有「%@」";
+"“%@” already exists in this folder" = "這個檔案夾裡已有「%@」";
 "Formatting cancelled" = "已取消排版";
 
 
@@ -67,12 +67,12 @@
 "Export" = "導出";
 
 /* No comment provided by engineer. */
-"New project" = "建立專案";
+"New project" = "新增檔案夾";
 
 /* No comment provided by engineer. */
 
 /* No comment provided by engineer. */
-"Preferences" = "偏好設定";
+"Preferences" = "設定";
 
 /* 偏好設定 - 分組標題 */
 "Appearance & Language" = "外觀與語言";
@@ -160,8 +160,8 @@
 "Link" = "連結";
 "MiaoYan [preview]" = "妙言 [預覽]";
 "New" = "新建";
-"New Folder" = "新建檔案夾";
-"New Subfolder" = "新建子檔案夾";
+"New Folder" = "新增檔案夾";
+"New Subfolder" = "新增子檔案夾";
 "Notes" = "妙言";
 "OK" = "好的";
 "Please enter image title:" = "請輸入圖片標題：";
@@ -172,7 +172,7 @@
 "Strikethrough" = "刪除線";
 "Toggle Preview" = "切換預覽";
 "Underline" = "底線";
-"URL has been copied to clipboard" = "URL已複製到剪貼簿";
+"URL has been copied to clipboard" = "連結已拷貝到剪貼簿";
 "Preview Settings" = "預覽設定";
 "Code Background:" = "程式碼背景：";
 
@@ -209,7 +209,7 @@
 
 /* Always On Top */
 "Window stays on top" = "視窗已置頂";
-"Window normal mode" = "視窗正常模式";
+"Window normal mode" = "視窗已取消置頂";
 
 /* Menu Items */
 "Always On Top" = "視窗置頂";
@@ -219,7 +219,7 @@
 "Duplicate note name" = "筆記名稱重複";
 "Note \"%@\" already exists" = "筆記「%@」已存在";
 "Please select default storage directory" = "請選擇預設儲存目錄";
-"Select Markdown files or folders to import" = "選擇要匯入的 Markdown 檔案或資料夾";
+"Select Markdown files or folders to import" = "選擇要匯入的 Markdown 檔案或檔案夾";
 "No Markdown files to import" = "沒有找到可匯入的 Markdown 檔案";
 "Could not use this folder" = "無法使用這個檔案夾";
 "Selected storage folder is not a folder." = "所選儲存位置不是檔案夾。";
@@ -242,13 +242,13 @@
 "Modified" = "修改";
 "Created" = "建立";
 "Backlinks" = "反向連結";
-"Project name" = "資料夾名稱";
+"Project name" = "檔案夾名稱";
 "Recommended" = "推薦";
 "All Fonts" = "全部字體";
 "Not installed" = "未安裝";
-"Install the font first" = "需要先安裝字型";
-"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "妙言不內建這個字型，下載後按兩下檔案安裝，裝好之後會自動換上，個人非商業使用免費，商用需要向倉耳另外購買授權。";
-"Download Font" = "下載字型";
+"Install the font first" = "需要先安裝字體";
+"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "妙言不內建這個字體，下載後按兩下檔案安裝，裝好之後會自動換上，個人非商業使用免費，商用需要向倉耳另外購買授權。";
+"Download Font" = "下載字體";
 "Chinese" = "中文";
 "Latin" = "西文";
 "Same as Text" = "跟隨正文";
@@ -261,20 +261,20 @@
 "This note no longer exists on disk, so edits are not saved" = "這篇筆記已不在磁碟上，修改不會儲存";
 "Version" = "版本";
 "Show Info" = "顯示資訊";
-"Copy URL" = "複製超連結";
-"Copy Path" = "複製路徑";
+"Copy URL" = "拷貝連結";
+"Copy Path" = "拷貝路徑";
 "Duplicate" = "複製";
 "MiaoYan PPT" = "妙言 PPT";
 "Toggle Split View" = "切換分欄";
 
 /* Folder moving */
 "Move to…" = "移動到…";
-"This folder cannot be moved." = "此資料夾無法移動。";
-"Choose a folder in the same library." = "選擇同一個筆記庫內的資料夾。";
-"A folder cannot be moved into itself or its subfolders." = "不能將資料夾移入自身或其子資料夾。";
-"A folder with this name already exists at the destination." = "目標位置已有同名資料夾。";
-"Save the pending changes before moving this folder." = "先儲存未儲存的內容，再移動資料夾。";
-"A folder is already being moved." = "已有資料夾正在移動。";
+"This folder cannot be moved." = "此檔案夾無法移動。";
+"Choose a folder in the same library." = "選擇同一個筆記庫內的檔案夾。";
+"A folder cannot be moved into itself or its subfolders." = "不能將檔案夾移入自身或其子檔案夾。";
+"A folder with this name already exists at the destination." = "目標位置已有同名檔案夾。";
+"Save the pending changes before moving this folder." = "先儲存未儲存的內容，再移動檔案夾。";
+"A folder is already being moved." = "已有檔案夾正在移動。";
 
 /* Settings window */
 "Restart" = "重新啟動";
@@ -322,3 +322,4 @@
 "Undo" = "還原";
 "Press ⌘N to create a note" = "按 ⌘N 新增筆記";
 "No results" = "沒有結果";
+"%@: %@" = "%@：%@";

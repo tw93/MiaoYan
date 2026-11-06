@@ -36,7 +36,7 @@
 "Move" = "移動";
 
 /* Menu */
-"Export" = "輸出";
+"Export" = "書き出す";
 
 /* 設定 - セクション */
 "Appearance & Language" = "外観と言語";
@@ -98,13 +98,13 @@
 "Please enter image title:" = "画像のタイトルを入力してください：";
 
 /* No comment provided by engineer. */
-"Please enter project name:" = "プロジェクト名を入力してください：";
+"Please enter project name:" = "フォルダ名を入力してください：";
 
 /* No comment provided by engineer. */
 "Please try again" = "もう一度お試しください";
 
 /* No comment provided by engineer. */
-"Preferences" = "環境設定";
+"Preferences" = "設定";
 
 /* No comment provided by engineer. */
 "Quit MiaoYan" = "妙言を終了する";
@@ -159,28 +159,28 @@
 
 
 /* Toast messages without emoji prefix */
-"Formatted" = "自動組版完了しました。";
+"Formatted" = "整形しました。";
 "Typography cleaned up" = "組版をクリーンアップしました。";
 "Typography is already clean" = "組版はすでにきれいです。";
-"Press Esc to exit" = "ESC キーを押して終了します。";
-"Exit preview to format" = "フォーマットの為に、プレビューモードを終了してください。";
+"Press Esc to exit" = "Esc キーを押して終了します。";
+"Exit preview to format" = "整形するには、プレビューモードを終了してください。";
 "Saved to Downloads" = "ダウンロードフォルダに保存されました。";
 "Saved" = "保存しました。";
 "Changed on disk. Your version was backed up" = "外部からの変更を検出しました。ローカルの内容をバックアップしました。";
-"Can't switch notes while exporting" = "エクスポート中はノートを切り替えできません。";
+"Can't switch notes while exporting" = "書き出し中はノートを切り替えできません。";
 "Couldn't move %d note(s) to Trash" = "%d 件のノートをゴミ箱に移動できませんでした。";
 "Uploading image…" = "画像アップロード中";
 "Upload failed. The local image was kept" = "画像のアップロードに失敗しました。ローカルを使用してください";
 "Install and set up %@ first" = "Macに %@ をインストールされていることを確認してください。";
-"Press ⌘⇧W to leave single-file mode" = "シングルモードでは、Command+Shift+W で終了します";
-"No note has this title" = "タイトルが既にあることを確認してください";
+"Press ⌘⇧W to leave single-file mode" = "単独モードは ⌘⇧W で終了します";
+"No note has this title" = "このタイトルのノートはありません";
 "Several notes share this title. Showing search results" = "複数のタイトルが見つかりました、検索を利用ください。";
 "Note link copied" = "URLがコピーされました。ご利用ください。";
 "File path copied" = "パスがコピーされました。";
 "Separate slides with --- to present" = "区切り「---」がなければ、MiaoYan PPT使えません。";
-"Formatting failed" = "フォーマットに失敗しました";
+"Formatting failed" = "整形に失敗しました";
 "“%@” already exists in this folder" = "このフォルダにはすでに「%@」があります";
-"Formatting cancelled" = "フォーマットをキャンセルしました";
+"Formatting cancelled" = "整形をキャンセルしました";
 
 
 "Edit Link…" = "リンクを編集";
@@ -214,13 +214,13 @@
 "Clean" = "整理";
 
 /* Export Messages */
-"Exporting..." = "エクスポート中";
-"Export failed" = "エクスポートに失敗しました";
+"Exporting..." = "書き出し中";
+"Export failed" = "書き出しに失敗しました";
 "System version too low" = "システムバージョンが低すぎます";
 "Enter title" = "タイトルを入力";
 "Save Failed" = "保存に失敗しました";
 "Critical Error" = "重大なエラー";
-"Failed to initialize main window. Please restart the application." = "メインウィンドウの初期化に失敗しました。アプリを再起動してください。";
+"Failed to initialize main window. Please restart the application." = "メインウインドウの初期化に失敗しました。アプリを再起動してください。";
 "Move Images to Trash" = "画像をゴミ箱に移動";
 "Restore Images" = "画像を復元";
 "Quit" = "終了";
@@ -231,8 +231,8 @@
 "Toggle Split Mode" = "分割";
 
 /* Always On Top */
-"Window stays on top" = "ウィンドウを最前面に固定";
-"Window normal mode" = "ウィンドウ通常モード";
+"Window stays on top" = "ウインドウを最前面に固定";
+"Window normal mode" = "ウインドウ通常モード";
 
 /* Menu Items */
 "Always On Top" = "常に最前面に表示";
@@ -330,7 +330,7 @@
 "Presentation Font Size" = "プレゼンテーションの文字サイズ";
 "Used for MiaoYan PPT slides" = "MiaoYan PPT のスライドで使用";
 /* Kept in English: the local name overflows the sidebar at its default width. */
-"All Notes" = "All Notes";
+"All Notes" = "すべてのノート";
 "Move the folder “%@” and everything in it to the Trash?" = "フォルダ「%@」とその中のすべてのファイルをゴミ箱に移動しますか？";
 "Move %d unused attachment(s) to Trash?" = "未使用の添付ファイル %d 件をゴミ箱に移動しますか？";
 "No unused attachments" = "未使用の添付ファイルはありません";
@@ -346,3 +346,4 @@
 "Undo" = "取り消す";
 "Press ⌘N to create a note" = "⌘N で新規ノートを作成";
 "No results" = "結果なし";
+"%@: %@" = "%@：%@";

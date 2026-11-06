@@ -65,7 +65,7 @@
 "Please try again" = "请再试一次";
 
 /* No comment provided by engineer. */
-"Preferences" = "偏好设置";
+"Preferences" = "设置";
 
 /* No comment provided by engineer. */
 "Quit MiaoYan" = "退出妙言";
@@ -117,7 +117,7 @@
 
 /* Clean attachments */
 "Moved %d unused attachment(s) to Trash" = "已将 %d 个未使用的附件移到废纸篓";
-"Some attachments could not be removed" = "部分附件无法清理";
+"Some attachments could not be removed" = "部分附件无法移到废纸篓";
 "Some notes could not be read, so no attachments were cleaned" = "部分笔记读取失败，这次没有清理附件";
 "MiaoYan PPT PDF" = "妙言 PPT PDF";
 "Clean" = "清理";
@@ -251,7 +251,7 @@
 
 /* Reload Note */
 "Reload Note" = "重新加载";
-"You have unsaved changes. Reload will discard them." = "你有未保存的更改，重新加载将丢弃它们。";
+"You have unsaved changes. Reload will discard them." = "你有未保存的更改，重新加载会丢弃这些更改。";
 "Reload" = "重新加载";
 "Note reloaded" = "笔记已重新加载";
 "Font size: %d" = "字体大小：%d";
@@ -348,3 +348,4 @@
 "Undo" = "撤销";
 "Press ⌘N to create a note" = "按 ⌘N 新建笔记";
 "No results" = "无结果";
+"%@: %@" = "%@：%@";
