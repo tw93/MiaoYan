@@ -64,7 +64,13 @@
   <script defer src="js/katex.min.js"></script>
   <script defer src="js/auto-render.min.js"></script>
   <script defer src="js/emoji.min.js"></script>
+  <script defer src="js/frame-fallback.js"></script>
   <script defer src="js/d3.min.js"></script>
+  <!-- DiagramHandler draws every map itself. Left automatic, the loader
+       redraws any .markmap element when a page loads, and the PDF export
+       loads the preview's HTML, where drawn maps carry that class: it drew
+       each one again from its SVG's text and the PDF showed a blank box. -->
+  <script>window.markmap = { autoLoader: { manual: true } };</script>
   <script defer src="js/markmap.min.js"></script>
   <script defer src="js/markmap-view.min.js"></script>
 

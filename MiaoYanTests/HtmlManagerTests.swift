@@ -777,28 +777,122 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertEqual(state.last as? Bool, true, "the redraw starts from the note's source")
     }
 
+    /// A page off screen (the PDF export's window, a preview behind other
+    /// windows) gets no animation frames. The handler waited on two of them
+    /// before drawing and d3 steps Markmap's transitions on them, so mind maps
+    /// stayed blank in PDF and PNG exports; frame-fallback.js runs them from a
+    /// timer there. The export's readiness check must not pass before the map
+    /// has finished drawing, read here at the first moment it passes.
     @MainActor
-    private func loadMarkmapPage() throws -> WKWebView {
+    func testMarkmapDrawsAndShowsWithoutAnimationFrames() async throws {
+        let webView = try loadMarkmapPage(standInFrames: false)
+        let ready = try await waitForMarkmap(webView, every: 30_000_000) { $0["pending"] as? Int == 0 }
+        XCTAssertEqual(ready["pending"] as? Int, 0, "\(ready)")
+        XCTAssertEqual(ready["visible"] as? String, "visible", "\(ready)")
+        XCTAssertEqual(ready["nodes"] as? Int, 4, "\(ready)")
+        XCTAssertEqual(ready["settledLinks"] as? Int, 3, "links at their full width when the export may start: \(ready)")
+        XCTAssertEqual(ready["opaqueLabels"] as? Int, 4, "labels faded in when the export may start: \(ready)")
+    }
+
+    /// The PDF export prints the preview's own HTML, maps already drawn.
+    /// Markmap's loader, left automatic, redrew every `.markmap` element from
+    /// the text of its SVG, so the PDF showed an empty box where the preview
+    /// had a map. A map saved before it settled is drawn again from its source
+    /// rather than holding the export until its wait runs out.
+    @MainActor
+    func testADrawnMarkmapSurvivesThePageBeingLoadedAgain() async throws {
+        let first = try loadMarkmapPage(standInFrames: false)
+        let drawn = try await waitForMarkmap(first) { $0["pending"] as? Int == 0 }
+        XCTAssertEqual(drawn["settledLinks"] as? Int, 3, "\(drawn)")
+        let savedHTML = try await first.evaluateJavaScript("document.querySelector('pre').outerHTML")
+        let saved = try XCTUnwrap(savedHTML as? String)
+        XCTAssertTrue(saved.contains("data-markmap-shown=\"true\""), saved)
+
+        let second = try loadMarkmapPage(standInFrames: false, body: saved)
+        try await Task.sleep(nanoseconds: 1_500_000_000)
+        let reloaded = try await waitForMarkmap(second) { _ in true }
+        XCTAssertEqual(reloaded["pending"] as? Int, 0, "\(reloaded)")
+        XCTAssertEqual(reloaded["visible"] as? String, "visible", "\(reloaded)")
+        XCTAssertEqual(reloaded["svgs"] as? Int, 1, "\(reloaded)")
+        XCTAssertEqual(reloaded["nodes"] as? Int, 4, "the saved map, not one drawn from its SVG's text: \(reloaded)")
+        XCTAssertEqual(reloaded["settledLinks"] as? Int, 3, "\(reloaded)")
+
+        let unsettled = saved.replacingOccurrences(of: " data-markmap-shown=\"true\"", with: "")
+        let third = try loadMarkmapPage(standInFrames: false, body: unsettled)
+        let redrawn = try await waitForMarkmap(third) { $0["pending"] as? Int == 0 }
+        XCTAssertEqual(redrawn["pending"] as? Int, 0, "a half-drawn map holds the export up: \(redrawn)")
+        XCTAssertEqual(redrawn["svgs"] as? Int, 1, "\(redrawn)")
+        XCTAssertEqual(redrawn["nodes"] as? Int, 4, "\(redrawn)")
+        XCTAssertEqual(redrawn["settledLinks"] as? Int, 3, "\(redrawn)")
+    }
+
+    /// Reads the page's map until `done` holds or ten seconds pass. A link is
+    /// settled at markmap's final width for its depth, a label once its fade
+    /// has reached full opacity.
+    @MainActor
+    private func waitForMarkmap(
+        _ webView: WKWebView, every interval: UInt64 = 200_000_000, until done: ([String: Any]) -> Bool
+    ) async throws -> [String: Any] {
+        let probe = """
+            (() => {
+              const code = document.querySelector('code.language-markmap');
+              if (!code) return {};
+              return {
+                pending: \(HtmlManager.pendingDiagramsExpression),
+                visible: getComputedStyle(code).visibility,
+                svgs: code.querySelectorAll('svg').length,
+                nodes: code.querySelectorAll('g.markmap-node').length,
+                settledLinks: Array.from(code.querySelectorAll('path.markmap-link')).filter((p) =>
+                  Number(p.getAttribute('stroke-width')) === Math.max(4 - 2 * Number(p.getAttribute('data-depth')), 1.5)).length,
+                opaqueLabels: Array.from(code.getElementsByTagName('foreignObject'))
+                  .filter((f) => Number(f.style.opacity || 0) === 1).length
+              };
+            })()
+            """
+        var last: [String: Any] = [:]
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            last = (try? await webView.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
+            if !last.isEmpty, done(last) { break }
+            try await Task.sleep(nanoseconds: interval)
+        }
+        return last
+    }
+
+    /// A page shaped like index.html: frame-fallback.js ahead of d3, and the
+    /// markmap loader settings index.html sets, read from the file itself.
+    @MainActor
+    private func loadMarkmapPage(standInFrames: Bool = true, body: String? = nil) throws -> WKWebView {
         let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
-        let scripts = ["d3.min.js", "markmap.min.js", "markmap-view.min.js", "theme-config.js", "diagram-handler.js"]
+        let scripts = ["frame-fallback.js", "d3.min.js", "markmap.min.js", "markmap-view.min.js", "theme-config.js", "diagram-handler.js"]
             .map { "<script src=\"\(js.appendingPathComponent($0).absoluteString)\"></script>" }
             .joined()
-        // An offscreen web view gets no animation frames, which both the
-        // handler and d3's transitions wait on; timers stand in for them.
-        let page = """
-            <!doctype html><html><head><meta charset="utf-8"><script>
-            window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);
-            window.ThemeConfig = { isDarkMode: () => window.__dark === true };
-            </script>
-            \(scripts)
-            </head><body><pre><code class="language-markmap">- Root
+        let index = try String(contentsOf: downViewBundleURL.appendingPathComponent("index.html"), encoding: .utf8)
+        let loaderSettings = index.components(separatedBy: "\n")
+            .filter { $0.contains("<script>window.markmap") }
+            .joined(separator: "\n")
+        // The palette test steps frames on timers of its own; the others run
+        // on what an offscreen page gets, which is no animation frames.
+        let frames = standInFrames ? "window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);" : ""
+        let note = """
+            <pre><code class="language-markmap">- Root
               - One
                 - Two
                   - Three</code></pre>
+            """
+        let content = body ?? note
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8"><script>
+            \(frames)
+            window.ThemeConfig = { isDarkMode: () => window.__dark === true };
+            </script>
+            \(loaderSettings)
+            \(scripts)
+            </head><body>\(content)
             <script>window.addEventListener('load', () => DiagramHandler.initializeMarkmap());</script>
             </body></html>
             """
-        let url = try write(page: page, named: "markmap")
+        let url = try write(page: page, named: body == nil ? "markmap" : "markmap-saved")
         let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
         webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
         return webView

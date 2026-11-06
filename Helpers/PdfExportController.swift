@@ -185,7 +185,8 @@ final class PdfExportController: NSObject {
         // - PlantUML: data-processed is set synchronously *before* the
         //   <img>.src request resolves; the imgs.complete check below is
         //   what actually proves the diagram is rendered
-        // - Markmap: data-markmap-rendered is set after autoLoader.render
+        // - Markmap: data-markmap-shown is set once the map is visible and
+        //   its fit has settled, data-markmap-failed when it could not be drawn
         let probe = """
             (function() {
                 var imgs = Array.prototype.slice.call(document.images || []);

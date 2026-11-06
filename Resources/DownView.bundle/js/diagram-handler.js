@@ -201,6 +201,8 @@ const DiagramHandler = {
       if (element.dataset.markmapRendered !== 'true') return;
       element.textContent = element.dataset.markmapSource;
       delete element.dataset.markmapRendered;
+      delete element.dataset.markmapShown;
+      delete element.dataset.markmapFailed;
       markmapChanged = true;
     });
     if (markmapChanged) this.renderMarkmap();
@@ -250,6 +252,15 @@ const DiagramHandler = {
   },
 
   processMarkmapElement(element) {
+    // The PDF export prints the preview's own HTML, so its maps arrive drawn
+    // and are left as they are. One saved while it was still settling never
+    // gets its shown mark and would hold the export until its wait ran out,
+    // so it is drawn again from its source.
+    if (element.querySelector('svg')) {
+      if (element.dataset.markmapShown === 'true' || !element.dataset.markmapSource) return;
+      element.textContent = element.dataset.markmapSource;
+      delete element.dataset.markmapRendered;
+    }
     if (!element.dataset.markmapSource) element.dataset.markmapSource = element.textContent;
 
     element.style.visibility = 'hidden';
@@ -299,18 +310,34 @@ const DiagramHandler = {
                 if (element.markmap && typeof element.markmap.fit === 'function') {
                   element.markmap.fit();
                 }
+                this.markWhenSettled(element, svg);
 
                 element.classList.add('markmap');
                 element.style.visibility = 'visible';
+              } else {
+                element.dataset.markmapFailed = 'true';
               }
             }, 150);
           } catch (error) {
+            element.dataset.markmapFailed = 'true';
             console.error('Failed to render markmap block', error);
             this.showError(loader, 'Failed to render Markmap');
           }
         });
       });
     });
+  },
+
+  // Exports wait for data-markmap-shown, so it goes on only once d3 has no
+  // transition left on the map: fit() resolves early when a later fit
+  // interrupts it, and an export then caught links and labels still growing.
+  markWhenSettled(element, svg, waited = 0) {
+    const moving = svg.__transition || Array.from(svg.querySelectorAll('*')).some((node) => node.__transition);
+    if (!moving || waited >= 3000) {
+      element.dataset.markmapShown = 'true';
+      return;
+    }
+    setTimeout(() => this.markWhenSettled(element, svg, waited + 50), 50);
   },
 
   updateContainerStyles() {

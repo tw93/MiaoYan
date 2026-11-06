@@ -960,11 +960,13 @@ class HtmlManager {
 
     /// Diagrams still being drawn, by the markers DiagramHandler sets:
     /// Mermaid's `data-processed` once its SVG is in (or it fell back to the
-    /// source), Markmap's `data-markmap-rendered`. A PlantUML diagram is an
+    /// source), Markmap's `data-markmap-shown` once its fit has settled
+    /// (`data-markmap-rendered` comes while it is still hidden and its
+    /// transitions run), or `data-markmap-failed`. A PlantUML diagram is an
     /// image, which the image checks cover.
     static let pendingDiagramsExpression =
         "document.querySelectorAll('code.language-mermaid:not([data-processed])').length"
-        + " + document.querySelectorAll('code.language-markmap:not([data-markmap-rendered])').length"
+        + " + document.querySelectorAll('code.language-markmap:not([data-markmap-shown]):not([data-markmap-failed])').length"
 
     /// PNG export's readiness check on the live preview: false until every
     /// image has loaded and every diagram is drawn.
