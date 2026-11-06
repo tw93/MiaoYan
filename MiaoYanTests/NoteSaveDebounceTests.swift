@@ -63,6 +63,38 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(note.needsSave)
     }
 
+    /// A write that keeps failing (a folder that turned read-only, a full
+    /// disk) is reported once, not on every debounced retry while typing,
+    /// and a write that succeeds again re-arms the report.
+    @MainActor
+    func testFailedWriteIsReportedOnceUntilASaveSucceeds() throws {
+        let folder = tempDir.appendingPathComponent("locked")
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        let url = folder.appendingPathComponent("locked.md")
+        try "first".write(to: url, atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: Project(url: folder, label: "locked", isRoot: true))
+        note.load()
+
+        let previous = Note.showWriteFailure
+        defer { Note.showWriteFailure = previous }
+        var reports = 0
+        Note.showWriteFailure = { _ in reports += 1 }
+
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: folder.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: folder.path) }
+        for text in ["second", "third", "fourth"] {
+            note.save(attributed: NSAttributedString(string: text))
+            XCTAssertFalse(note.flushPendingSave(globalStorage: false), "the folder refuses the write")
+        }
+        RunLoop.main.run(until: Date().addingTimeInterval(0.2))
+        XCTAssertEqual(reports, 1, "three failed writes, one report")
+
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: folder.path)
+        note.save(attributed: NSAttributedString(string: "fifth"))
+        XCTAssertTrue(note.flushPendingSave(globalStorage: false))
+        XCTAssertFalse(note.announcedWriteFailure, "a successful write re-arms the report")
+    }
+
     /// A note whose file exists but cannot be read opens as an empty buffer.
     /// Switching away used to save that empty buffer over the real file.
     @MainActor

@@ -1509,6 +1509,10 @@ final class ShellModel {
         let allSaved = storage.flushPendingSaves()
         if hadUnsavedChanges, allSaved {
             host?.toast(message: I18n.str("Saved"), style: .success)
+        } else if !allSaved {
+            // The save sheet shows once per failing note; a deliberate
+            // Command-S still has to say it did not save.
+            host?.toast(message: I18n.str("Save Failed"), style: .failure)
         }
     }
 

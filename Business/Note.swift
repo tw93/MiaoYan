@@ -58,6 +58,18 @@ public class Note: NSObject {
     /// A save refused because the file is gone has told the user once; a
     /// successful write re-arms it.
     private(set) var announcedMissingFile = false
+    /// A write that failed (disk full, no permission) has been reported; the
+    /// debounced save retries every 1.5 s while typing, and each retry used to
+    /// raise the same sheet again. A successful write re-arms it.
+    private(set) var announcedWriteFailure = false
+    /// Reports a failed write. Tests replace it to count the reports.
+    static var showWriteFailure: @MainActor (Error) -> Void = { error in
+        MiaoYanAlert.show(
+            message: I18n.str("Save Failed"),
+            informativeText: I18n.str(error.localizedDescription),
+            style: .warning
+        )
+    }
     /// Shows a failed save as a toast in the front window; false when no
     /// window could show it. Tests replace it to see the message.
     static var showFailure: @MainActor (String) -> Bool = { message in
@@ -735,12 +747,9 @@ public class Note: NSObject {
             AppDelegate.trackError(error, context: "Note.writeError")
             AppDelegate.trackError(error, context: "Note.write")
 
-            Task { @MainActor in
-                MiaoYanAlert.show(
-                    message: I18n.str("Save Failed"),
-                    informativeText: I18n.str(error.localizedDescription),
-                    style: .warning
-                )
+            if !announcedWriteFailure {
+                announcedWriteFailure = true
+                Task { @MainActor in Note.showWriteFailure(error) }
             }
             return false
         }
@@ -750,6 +759,7 @@ public class Note: NSObject {
         }
         allowsInitialFileCreation = false
         announcedMissingFile = false
+        announcedWriteFailure = false
         hasUnpersistedChanges = false
         return true
     }
