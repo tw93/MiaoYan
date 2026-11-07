@@ -211,20 +211,8 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--near-black); flex: none; }
 .brand img { width: 24px; height: 24px; }
-/* Baseline on the mark's ink bottom, measured at 6x. */
-.brand b { font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; font-size: 18px; line-height: 1; position: relative; top: 4.6px; }
-/* On a phone the hero wordmark sits right below, so the name only reads as a
-   second title. Clipped, not `display: none`: the link keeps its accessible name. */
-@media (max-width: 640px) {
-  .brand b {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-}
+/* Baseline midway between centred on the mark and on its ink bottom. */
+.brand b { font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; font-size: 18px; line-height: 1; position: relative; top: 2.8px; }
 .nav-links { display: flex; gap: 2px; margin-left: 8px; }
 .nav-links a {
   font-size: var(--text-meta); font-weight: 500; line-height: 1; color: var(--olive); text-decoration: none;
@@ -595,7 +583,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .blog-cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 880px) {
-  :root { --inset: 24px; --gap: 64px; --anchor-clear: 105px; }
+  :root { --inset: 24px; --gap: 72px; --anchor-clear: 105px; }
   .nav { margin: 16px -6px 40px; }
   .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
   .nav:has(+ main:not([class])) { margin-bottom: 40px; }
@@ -614,6 +602,8 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 }
 @media (max-width: 640px) {
   .hero h1 { font-size: 66px; }
+  /* The bar lands on a half pixel here, which rounds the name up by one. */
+  .brand b { top: 3.3px; }
 }
 /* Phone type ladder shared by the product sites (2026-10-26): body 16 for
    articles, ledes and FAQ answers, secondary 15 for card copy, contact cards
@@ -672,6 +662,13 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   @media (max-width: 392px) {
     .hero-cta .btn { min-width: 0; padding: 0 14px; }
   }
+}
+
+/* The name needs 5px more than a 320px bar has. */
+@media (max-width: 340px) {
+  .nav-bar { padding-left: 10px; gap: 6px; }
+  .nav-end { gap: 6px; }
+  .brand { gap: 5px; }
 }
 
 /* Readers who ask the system for less motion get state changes without the
