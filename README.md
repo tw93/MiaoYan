@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/app.icon/Assets/43.png" width="138" /></a>
   <h1>MiaoYan</h1>
-  <p><b>A light, local Markdown notes app</b></p>
+  <p><b>A native Mac app for local Markdown notes</b></p>
   <p>MiaoYan is 妙言 in Chinese, words beyond words.</p>
   <p>English · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
   <a href="https://x.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=x"></a>
