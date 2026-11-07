@@ -586,6 +586,8 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 }
 @media (max-width: 640px) {
   .hero h1 { font-size: 66px; }
+  /* The bar lands on a half pixel here, which rounds the name up by one. */
+  .brand b { top: 1.9px; }
 }
 /* Phone type ladder shared by the product sites (2026-10-26): body 16 for
    articles, ledes and FAQ answers, secondary 15 for card copy, contact cards
