@@ -46,7 +46,7 @@ EN_ALTS = {
 
 COPY = {
     "en": {
-        "title": "MiaoYan · A light Markdown notebook",
+        "title": "MiaoYan · Markdown notes for Mac, iPhone and iPad",
         "description": "MiaoYan is a native Markdown note app for Mac, iPhone and iPad. Your notes are plain Markdown files in a folder you choose.",
         "nav": ["Features", "iPhone & iPad", "FAQ"],
         "language": "Language",
@@ -95,7 +95,7 @@ COPY = {
         "foot": (("Get", "Help", "Connect"), ("FAQ", "Privacy")),
     },
     "zh": {
-        "title": "妙言 · 轻灵的 Markdown 笔记本",
+        "title": "妙言 MiaoYan · Mac、iPhone 和 iPad 上的 Markdown 笔记",
         "description": "妙言是原生的 Markdown 笔记应用，笔记就是你选定文件夹里的 Markdown 文件，Mac、iPhone 和 iPad 都能打开。",
         "nav": ["功能", "多端体验", "常见问题"],
         "language": "语言",
@@ -149,7 +149,7 @@ COPY = {
         "foot": (("获取", "帮助", "联系"), ("常见问题", "隐私政策")),
     },
     "tw": {
-        "title": "妙言 · 輕靈的 Markdown 筆記本",
+        "title": "妙言 MiaoYan · Mac、iPhone 和 iPad 上的 Markdown 筆記",
         "description": "妙言是原生的 Markdown 筆記 App，筆記就是你選定檔案夾裡的 Markdown 檔案，Mac、iPhone 和 iPad 都能打開。",
         "nav": ["功能", "多端體驗", "常見問題"],
         "language": "語言",
@@ -203,7 +203,7 @@ COPY = {
         "foot": (("取得", "說明", "聯絡"), ("常見問題", "隱私權政策")),
     },
     "ja": {
-        "title": "MiaoYan · 軽やかな Markdown ノート",
+        "title": "MiaoYan · Mac・iPhone・iPadのためのMarkdownノート",
         "description": "MiaoYanはネイティブのMarkdownノートアプリです。ノートは自分で選んだフォルダにあるMarkdownファイルで、Mac、iPhone、iPadのどれからでも開けます。",
         "nav": ["機能", "iPhoneとiPad", "よくある質問"],
         "language": "言語",
@@ -257,7 +257,7 @@ COPY = {
         "foot": (("入手", "ヘルプ", "連絡先"), ("よくある質問", "プライバシー")),
     },
     "ko": {
-        "title": "MiaoYan · 가벼운 마크다운 노트",
+        "title": "MiaoYan · Mac·iPhone·iPad를 위한 마크다운 노트",
         "description": "MiaoYan은 네이티브 마크다운 노트 앱입니다. 노트는 직접 고른 폴더 안의 마크다운 파일이며, Mac, iPhone, iPad 어디서든 열 수 있습니다.",
         "nav": ["기능", "iPhone과 iPad", "자주 묻는 질문"],
         "language": "언어",
@@ -311,7 +311,7 @@ COPY = {
         "foot": (("받기", "도움말", "연락"), ("자주 묻는 질문", "개인정보 처리방침")),
     },
     "de": {
-        "title": "MiaoYan · Ein leichtes Markdown-Notizbuch",
+        "title": "MiaoYan · Markdown-Notizen für Mac, iPhone und iPad",
         "description": "MiaoYan ist eine native Markdown-Notiz-App für Mac, iPhone und iPad. Deine Notizen sind einfache Markdown-Dateien in einem Ordner deiner Wahl.",
         "nav": ["Funktionen", "iPhone & iPad", "FAQ"],
         "language": "Sprache",
@@ -365,7 +365,7 @@ COPY = {
         "foot": (("Laden", "Hilfe", "Kontakt"), ("FAQ", "Datenschutz")),
     },
     "fr": {
-        "title": "MiaoYan · Un carnet Markdown léger",
+        "title": "MiaoYan · Notes Markdown pour Mac, iPhone et iPad",
         "description": "MiaoYan est une app native de notes Markdown pour Mac, iPhone et iPad. Vos notes sont de simples fichiers Markdown dans le dossier de votre choix.",
         "nav": ["Fonctionnalités", "iPhone et iPad", "FAQ"],
         "language": "Langue",
@@ -419,7 +419,7 @@ COPY = {
         "foot": (("Obtenir", "Aide", "Contact"), ("FAQ", "Confidentialité")),
     },
     "es": {
-        "title": "MiaoYan · Un cuaderno Markdown ligero",
+        "title": "MiaoYan · Notas Markdown para Mac, iPhone y iPad",
         "description": "MiaoYan es una app nativa de notas Markdown para Mac, iPhone y iPad. Tus notas son archivos Markdown normales en la carpeta que elijas.",
         "nav": ["Funciones", "iPhone y iPad", "Preguntas"],
         "language": "Idioma",
