@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f5f4ed">
 <script>document.documentElement.classList.add('js')</script>
 
-<title>MiaoYan, notas Markdown para Mac, iPhone y iPad</title>
+<title>MiaoYan · Notas Markdown para Mac, iPhone y iPad</title>
 <meta name="description" content="MiaoYan es una app nativa de notas Markdown para Mac, iPhone y iPad. Tus notas son archivos Markdown normales en la carpeta que elijas.">
 <link rel="canonical" href="https://miaoyan.app/es/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/">
@@ -21,7 +21,7 @@
 <link rel="alternate" type="text/plain" href="https://miaoyan.app/llms.txt" title="MiaoYan product facts">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://miaoyan.app/es/">
-<meta property="og:title" content="MiaoYan, notas Markdown para Mac, iPhone y iPad">
+<meta property="og:title" content="MiaoYan · Notas Markdown para Mac, iPhone y iPad">
 <meta property="og:description" content="MiaoYan es una app nativa de notas Markdown para Mac, iPhone y iPad. Tus notas son archivos Markdown normales en la carpeta que elijas.">
 <meta property="og:image" content="https://miaoyan.app/assets/shots/og-en.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -284,7 +284,7 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 .hero { margin-bottom: var(--gap); }
 .hero h1 {
   font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--olive);
-  font-size: 100px; line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 calc(28px - 0.115em);
+  font-size: 100px; line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 calc(40px - 0.115em);
 }
 .hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.016em); }
 /* Tracking, olive and the Han glyph's 0.84em follow mole.fit's wordmark
@@ -325,7 +325,7 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 }
 .tagline { font-family: var(--serif); font-size: var(--text-title); line-height: 1.45; color: var(--near-black); margin: 0 0 10px; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; }
-.tagline + .trust { margin-top: 18px; }
+.tagline + .trust { margin-top: 16px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
 /* Every item carries its dot in a left gutter the list clips, so the item
    that starts a wrapped row loses its dot: German, French, Spanish and
@@ -358,7 +358,7 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 .section-title + .cards, .section-title + details { margin-top: 24px; }
 
 /* Gallery: tabs under a framed screenshot. */
-.gallery-frame { border-radius: 14px; overflow: hidden; background: #d9d4c7; aspect-ratio: 2400 / 1560; cursor: pointer; }
+.gallery-frame { border-radius: 12px; overflow: hidden; background: #d9d4c7; aspect-ratio: 2400 / 1560; cursor: pointer; }
 .gallery-frame img { width: 100%; height: 100%; object-fit: cover; }
 .gallery-frame img[hidden] { display: none; }
 .gallery-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
@@ -391,7 +391,7 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 /* Feature cards */
 .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 48px; }
 .card { padding: 0; }
-.card h3 { font-weight: 600; font-size: var(--text-title); color: var(--near-black); margin: 0 0 8px; }
+.card h3 { font-weight: 500; font-size: var(--text-title); color: var(--near-black); margin: 0 0 8px; }
 .card p { margin: 0; font-size: var(--text-body); color: var(--dark-warm); }
 
 /* FAQ */
@@ -564,6 +564,13 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.blog-post, .blog-index) :is(pre, 
 
 /* Footer: mole.fit's dark band in MiaoYan's night, the name and one product
    line on the left, small titled link columns on the right, Mole's text steps. */
+.blog-latest { margin-top: var(--gap); }
+.blog-latest .section-title a { color: inherit; text-decoration: none; }
+.blog-latest-list { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.blog-latest-list a { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; color: var(--dark-warm); text-decoration: none; }
+.blog-latest-title { font-size: var(--text-lede); line-height: 1.5; }
+.blog-latest-date { flex: none; font-size: var(--text-meta); color: var(--stone); font-variant-numeric: tabular-nums; }
+@media (hover: hover) { .blog-latest .section-title a:hover, .blog-latest-list a:hover .blog-latest-title { color: var(--brand); } }
 footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62%, transparent); padding: 60px 0 48px; font-size: var(--text-meta); }
 .foot { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
 .foot-mark { max-width: 26em; }
@@ -593,11 +600,10 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   :root { --inset: 24px; --gap: 72px; --anchor-clear: 105px; }
   .nav { margin: 16px -6px 40px; }
   .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
-  .nav:has(+ main:not([class])) { margin-bottom: 40px; }
+  .nav:has(+ main:not([class])) { margin-bottom: 44px; }
   /* 64px with -1px tracking under 880, as on pake.run, hina.day and yado.house
      (maintainer 2026-11-04: one lockup size across the product sites). */
-  .hero h1 { font-size: 84px; margin-bottom: calc(20px - 0.115em); }
-  .tagline { font-size: 20px; }
+  .hero h1 { font-size: 84px; margin-bottom: calc(40px - 0.115em); }
   .section-title { font-size: 26px; }
   .devices { gap: 32px; }
   .device.pad { width: min(460px, 62%); }
@@ -608,7 +614,8 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 16px; align-self: stretch; }
 }
 @media (max-width: 640px) {
-  .hero h1 { font-size: 66px; }
+  .nav:has(+ main:not([class])) { margin-bottom: 40px; }
+  .hero h1 { font-size: 66px; margin-bottom: calc(24px - 0.115em); }
   /* The bar lands on a half pixel here, which rounds the name up by one. */
   .brand b { top: 1.9px; }
 }
@@ -621,9 +628,9 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   footer, .foot-mark p.foot-about, .contact .contact-desc, .contact-head b, .blog-card-desc { font-size: 15px; }
   /* Phone sizes the desktop ladder moved off stay as they were (2026-11-01). */
   .section-title { font-size: 26px; }
-  .card h3 { font-size: 19px; }
-  .faq summary, .blog-card-title, .blog-body h3 { font-size: 17px; }
+  .blog-card-title, .blog-body h3 { font-size: 17px; }
   .contact .contact-title, .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
+  .blog-title, .legal h1 { font-size: 26px; }
   .blog-body code { font-size: 0.85em; }
   .faq p code { font-size: 15px; }
   .blog-body pre code { font-size: 14px; }
@@ -639,11 +646,18 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .device.phone { width: min(260px, 70%); }
   .cards, .blog-cards, .blog-related-list { grid-template-columns: 1fr; }
   .trust { --trust-gap: 16px; gap: 2px 0; }
+  .gallery-caption { display: none; }
   .trust li { font-size: 13px; }
   .trust li::before { content: none; }
 }
+@media (max-width: 640px) {
+  .blog-latest-list { gap: 20px; }
+  .blog-latest-list a { flex-direction: column; gap: 4px; }
+}
 @media (max-width: 480px) {
-  .nav-bar { padding-left: 14px; gap: 10px; }
+  /* The 48px bar lands on a whole pixel again. */
+  .brand b { top: .9px; }
+  .nav-bar { min-height: 48px; padding-block: 6px; padding-left: 14px; gap: 10px; }
   .nav-end { gap: 10px; }
   /* MiaoYan is the longest name: the lockup is about 4.2em plus the 18px gap,
      with the orbiting dot, so it stays at 64px down to about 350px and only then
@@ -698,7 +712,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 }
 /* CJK hero tagline on desktop: 20px, the ladder's one exception (maintainer
    2026-11-01, from 16/18/20/21 drawn on mole.fit's Chinese home). */
-@media (min-width: 881px) {
+@media (min-width: 641px) {
   html:is([lang^="zh"], [lang="ja"], [lang="ko"]) .tagline { font-size: 20px; }
 }
 </style>
