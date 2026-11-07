@@ -71,15 +71,13 @@
    /fonts/, ahead of Songti, so Android and Windows, which have no Chinese
    serif, render the same text as a Mac or an iPhone. Latin stays with Charter,
    or Georgia where Charter is missing. */
-/* The hero wordmark is the system Charter Roman that macOS and iOS ship
-   (maintainer 2026-11-06, over Source Serif 4 Display). Elsewhere it falls
-   back to XCharter, Bitstream's free release of the same outlines, cut to
-   the letters of MiaoYan with Apple's kerning and line metrics so the two
-   render the same. It rides inline: fetched on its own it would paint the
-   fallback serif first and then swap (2026-10-30). */
+/* The hero wordmark and the nav's name are STIX Two Text Regular (OFL, Reserved
+   Font Name "TM Math"), cut to this name's letters by Kata
+   scripts/wordmark-font.py (maintainer 2026-11-07, over Charter Roman, whose M
+   read wide and stiff). Copyright and licence stay in the font's name table. */
 @font-face {
   font-family: "MiaoYan Wordmark";
-  src: local("Charter Roman"), local("Charter-Roman"), url("data:font/woff2;base64,T1RUTwAKAIAAAwAgQ0ZGIFW15EoAAAskAAADLUdQT1OwA76zAAAOVAAAAFBPUy8yWa1idQAAARAAAABgY21hcADgAZ8AAAqwAAAAVGhlYWQTDzvpAAAArAAAADZoaGVhBwwCZQAAAOQAAAAkaG10eA8HANMAAA6kAAAAHG1heHAAB1AAAAABCAAAAAZuYW1l62fI9AAAAXAAAAk9cG9zdP+1AD0AAAsEAAAAIAABAAAAATiTtm+QeF8PPPUACwPoAAAAAM9+BrEAAAAA4Ty5Bf/z//cDQgLEAAAACAACAAAAAAAAAAEAAAPU/xAAAANi//P/6wNCAAEAAAAAAAAAAAAAAAAAAAAHAABQAAAHAAAABAI9AZAABQAAAooCvAAAAIwCigK8AAAB4AAxAQIAAAIABQMAAAAAAAAAAAABAAAAAAAAAAAAAAAAUGZFZABAAE0AbwPU/xAAAAPDAOwAAAABAAAAAAHhAp8AIAAgAAIAAAAOAK4AAQAAAAAAAQAQAAAAAQAAAAAAAgAHABAAAQAAAAAAAwAVABcAAQAAAAAABAAQAAAAAQAAAAAABgAQACwAAQAAAAAADQILADwAAwABBAkAAAGgAkcAAwABBAkAAQAgA+cAAwABBAkAAgAOBAcAAwABBAkAAwAqBBUAAwABBAkABAAgA+cAAwABBAkABQAaBD8AAwABBAkABgAgBFkAAwABBAkADQQWBHlNaWFvWWFuIFdvcmRtYXJrUmVndWxhck1pYW9ZYW5Xb3JkbWFyazsxLjIyMU1pYW9ZYW4tV29yZG1hcmsoYykgQ29weXJpZ2h0IDE5ODktMTk5MiwgQml0c3RyZWFtIEluYy4sIENhbWJyaWRnZSwgTUEuIFlvdSBhcmUgaGVyZWJ5IGdyYW50ZWQgcGVybWlzc2lvbiB1bmRlciBhbGwgQml0c3RyZWFtIHByb3ByaWV0eSByaWdodHMgdG8gdXNlLCBjb3B5LCBtb2RpZnksIHN1YmxpY2Vuc2UsIHNlbGwsIGFuZCByZWRpc3RyaWJ1dGUgdGhlIDQgQml0c3RyZWFtIENoYXJ0ZXIgKHIpIFR5cGUgMSBvdXRsaW5lIGZvbnRzIGZvciBhbnkgcHVycG9zZSBhbmQgd2l0aG91dCByZXN0cmljdGlvbjsgcHJvdmlkZWQsIHRoYXQgdGhpcyBub3RpY2UgaXMgbGVmdCBpbnRhY3Qgb24gYWxsIGNvcGllcyBvZiBzdWNoIGZvbnRzIGFuZCB0aGF0IEJpdHN0cmVhbSdzIHRyYWRlbWFyayBpcyBhY2tub3dsZWRnZWQgYXMgc2hvd24gYmVsb3cgb24gYWxsIHVubW9kaWZpZWQgY29waWVzIG9mIHRoZSA0IENoYXJ0ZXIgVHlwZSAxIGZvbnRzLiBCSVRTVFJFQU0gQ0hBUlRFUiBpcyBhIHJlZ2lzdGVyZWQgdHJhZGVtYXJrIG9mIEJpdHN0cmVhbSBJbmMuAEMAbwBwAHkAcgBpAGcAaAB0ACAAMQA5ADkAMAAgAGEAcwAgAGEAbgAgAHUAbgBwAHUAYgBsAGkAcwBoAGUAZAAgAHcAbwByAGsAIABiAHkAIABCAGkAdABzAHQAcgBlAGEAbQAgAEkAbgBjAC4AIAAgAEEAbABsACAAcgBpAGcAaAB0AHMAIAByAGUAcwBlAHIAdgBlAGQALgAgAAoAQwBvAHAAeQByAGkAZwBoAHQAIAAoAGMAKQAgADIAMAAwADkALAAgADIAMAAxADAALAAgADIAMAAxADEALAAgADIAMAAxADIAIABBAG4AZAByAGUAeQAgAFYALgAgAFAAYQBuAG8AdgAgAAoAQwBvAHAAeQByAGkAZwBoAHQAIAAoAGMAKQAgADIAMAAxADMALQAtADIAMAAyADMAIABNAGkAYwBoAGEAZQBsACAAUwBoAGEAcgBwAGUALAAgAGIAYQBzAGUAZAAgAG8AbgAgAEIAaQB0AHMAdAByAGUAYQBtACAAQwBoAGEAcgB0AGUAcgAgAFIAbwBtAGEAbgAuAAoATQBpAGEAbwBZAGEAbgAgAFcAbwByAGQAbQBhAHIAawBSAGUAZwB1AGwAYQByAE0AaQBhAG8AWQBhAG4AVwBvAHIAZABtAGEAcgBrADsAMQAuADIAMgAxAFYAZQByAHMAaQBvAG4AIAAxAC4AMgAyADEATQBpAGEAbwBZAGEAbgAtAFcAbwByAGQAbQBhAHIAawAoAGMAKQAgAEMAbwBwAHkAcgBpAGcAaAB0ACAAMQA5ADgAOQAtADEAOQA5ADIALAAgAEIAaQB0AHMAdAByAGUAYQBtACAASQBuAGMALgAsACAAQwBhAG0AYgByAGkAZABnAGUALAAgAE0AQQAuACAAWQBvAHUAIABhAHIAZQAgAGgAZQByAGUAYgB5ACAAZwByAGEAbgB0AGUAZAAgAHAAZQByAG0AaQBzAHMAaQBvAG4AIAB1AG4AZABlAHIAIABhAGwAbAAgAEIAaQB0AHMAdAByAGUAYQBtACAAcAByAG8AcAByAGkAZQB0AHkAIAByAGkAZwBoAHQAcwAgAHQAbwAgAHUAcwBlACwAIABjAG8AcAB5ACwAIABtAG8AZABpAGYAeQAsACAAcwB1AGIAbABpAGMAZQBuAHMAZQAsACAAcwBlAGwAbAAsACAAYQBuAGQAIAByAGUAZABpAHMAdAByAGkAYgB1AHQAZQAgAHQAaABlACAANAAgAEIAaQB0AHMAdAByAGUAYQBtACAAQwBoAGEAcgB0AGUAcgAgACgAcgApACAAVAB5AHAAZQAgADEAIABvAHUAdABsAGkAbgBlACAAZgBvAG4AdABzACAAZgBvAHIAIABhAG4AeQAgAHAAdQByAHAAbwBzAGUAIABhAG4AZAAgAHcAaQB0AGgAbwB1AHQAIAByAGUAcwB0AHIAaQBjAHQAaQBvAG4AOwAgAHAAcgBvAHYAaQBkAGUAZAAsACAAdABoAGEAdAAgAHQAaABpAHMAIABuAG8AdABpAGMAZQAgAGkAcwAgAGwAZQBmAHQAIABpAG4AdABhAGMAdAAgAG8AbgAgAGEAbABsACAAYwBvAHAAaQBlAHMAIABvAGYAIABzAHUAYwBoACAAZgBvAG4AdABzACAAYQBuAGQAIAB0AGgAYQB0ACAAQgBpAHQAcwB0AHIAZQBhAG0AJwBzACAAdAByAGEAZABlAG0AYQByAGsAIABpAHMAIABhAGMAawBuAG8AdwBsAGUAZABnAGUAZAAgAGEAcwAgAHMAaABvAHcAbgAgAGIAZQBsAG8AdwAgAG8AbgAgAGEAbABsACAAdQBuAG0AbwBkAGkAZgBpAGUAZAAgAGMAbwBwAGkAZQBzACAAbwBmACAAdABoAGUAIAA0ACAAQwBoAGEAcgB0AGUAcgAgAFQAeQBwAGUAIAAxACAAZgBvAG4AdABzAC4AIABCAEkAVABTAFQAUgBFAEEATQAgAEMASABBAFIAVABFAFIAIABpAHMAIABhACAAcgBlAGcAaQBzAHQAZQByAGUAZAAgAHQAcgBhAGQAZQBtAGEAcgBrACAAbwBmACAAQgBpAHQAcwB0AHIAZQBhAG0AIABJAG4AYwAuAAAAAAAAAgAAAAMAAAAUAAMAAQAAABQABABAAAAADAAIAAIABABNAFkAYQBpAG///wAAAE0AWQBhAGkAbv///7T/qf+i/5v/lwABAAAAAAAAAAAAAAAAAAMAAAAAAAD/sgA9AAAAAAAAAAAAAAAAAAAAAAAAAAABAAQCAAEBARBNaWFvWWFuV29yZG1hcmsAAQEBKPgbAPgcAfgdAvgdA/geBPsBDAPIDAR+gvnW+VgF980Pjvm+EvfaEQAEAQEG1ubsMS4yMjFDb3B5cmlnaHQgMTk5MCBhcyBhbiB1bnB1Ymxpc2hlZCB3b3JrIGJ5IEJpdHN0cmVhbSBJbmMuICBBbGwgcmlnaHRzIHJlc2VydmVkLiAKQ29weXJpZ2h0IChjKSAyMDA5LCAyMDEwLCAyMDExLCAyMDEyIEFuZHJleSBWLiBQYW5vdiAKQ29weXJpZ2h0IChjKSAyMDEzLS0yMDIzIE1pY2hhZWwgU2hhcnBlLCBiYXNlZCBvbiBCaXRzdHJlYW0gQ2hhcnRlciBSb21hbi4KTWlhb1lhbiBXb3JkbWFya05vcm1hbAAAAAAuADoAQgBKAE8AUAAHAgABABcAbQCwAQ8BSwGbAdI0vRb4JPip/CQGvfx3FfhF98D8RQcO96uqFvdntAZOk3mei/i293j8+raL94H5BIv8yIF9SYaLYveDi4u0TJB/mYv4uwWXmcqRi7P7aouLbPtS/Ib7UPiKi6b7aIuLY82FmH2L/LN5eE+DBQ6KfvkzFYtjyIH3W/vxi/toe31Hhoti95eLi7RHkHuZi/d192T34ciYi7MF+2BjBsiAlH37PPuf+y33p5WWxJGLswUOO/fixRWYUfchi4uvVpB5m4v3tgXwX7Yi+xI/V05zk4SiHtDfBqaWo5CkiwjTn2o8H2sH+1xbL22LI4tAvFbaiwi7i8ChyrYIrQRZbmJ7aotZi22si7yL1Mqm9yGyCA77x/cm+VgVa3FyamulcqurpaSrH6txpWsej/tyFfsHZ4tsBdH7/gZ6e1aGi2f3dYuLr1WQBXmbi/hBBQ54qRb3b68GW5B6m4v34wW2obCWq4sI1aZtQh+L+516e1uGi2f3b4uLr1WQepuL964F71u/NB5gi1h0SGYIwmUH+whni2zSi4v7/np7VYYFDlv3ofh/FfsbKib7Kfso7SX3Gvca7vH3KPcoKfH7Gx9gBNzFPfsV+xZRPjo7Udn3FfcWxNjcHw743xUAAAAAAQAAAAoAHgAsAAFERkxUAAgABAAAAAD//wABAAAAAWtlcm4ACAAAAAEAAAABAAQAAgAAAAEACAABAAwABAAAAAEAEgABAAEAAgABAAP/oAH0ADIDYgAeAkr/8wH7ACoBGAAjAjgAHgIbACU=") format("woff2");
+  src: url("data:font/woff2;base64,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") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: block;
@@ -92,13 +90,11 @@
   font-display: swap;
   unicode-range: U+8A9E;
 }
-/* The hero's Han glyph is SemiBold so its strokes meet Charter Roman's,
-   which a parchment edge thins (maintainer 2026-11-06, candidate D);
-   footers keep the regular cut. Cut by Kata scripts/mark-font.py from
-   SourceHanSerifTC-SemiBold.otf. */
+/* The hero's Han glyph is SemiBold: its stems measure 7.4px beside STIX Two's
+   8.0 at 100px, with no stroke on either side. Cut by Kata scripts/mark-font.py. */
 @font-face {
   font-family: "MiaoYan Mark";
-  src: url("data:font/woff2;base64,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") format("woff2");
+  src: url("data:font/woff2;base64,d09GMk9UVE8AAAXMAA8AAAAACmgAAAV6AAIAxAAAAAAAAAAAAAAAAAAAAAAAAAAAGYFeDYh0GyAcgRwGYA4IADQBNgIkAwgEBgWECAcgFyQYCBtlCVGUUE4XxBcFtjFt8IaWQ8TMGuuxUYQDjYfG5o1jDRRFIBTwY4uhfO7POvyXdUHykziJJzM7TeH76fSHOwGOfdpKyKPik1MZTgEepqk8+FzsbysbpHBU4ElQvU7j49I801Dy2ce9RrtpdS2EofTx1kESLo0C2sBO6BTf/Ns5g87RAjiPt1Ye8VctSmfyP38s9f27pgqLtjvQw+MDO7Cjilpk6mwT20CisYPGG0XxdMhm9+AeM54IEABBOSePX0IfPrBw6dUTHF3rEuPoxr6CBR8UHsBnXrnpcYQDAEBh6DJkanVLRG8kTZ6yUWj2WaSKkZtxDFXevSgsr7+mOrG6pV5R9ZagTmYEN54BANIewCSgQOoxyvbL/l3qGn6cL75LqieUmTq/JVdRS9Se17qiDhJ1KVGPFvWZfW5/lcnzva4l/FpPBzA314ait5zonzeZ+tzGYnAFQgLCkXXQQz9gNIncz/Ozncg1QcCmmZBrcYXEjInSzBLQNMK7uKV5BPLOrnLYdtCYdlyZXw/K8g+LIkv0M+vdfEzIdL6HhfnS6sfqNbF3y1a/OZJVKm5ye9MHa4f9njGbjGaMszkzEa938d5mM0LUbp3Y3fZfpgGgzx0EgALoBISOUGq9/hNk7yVrtGzP4r1cs1w4hsq9yafmFVkxIMFe1hEOmIPylqJmT9oJUm68NvFWSbXESoYaRWjAtjuV5dEB3/gI6+s/0gQixWV1UMxxsNyG/RnnL1MQih4czI0Ldy31ck89NxtG3GasATxkKK8UjqJsf+zZptQwEMyiARuyjSDey3lSoxW/IbqYh5TjeYhYyBXui4qUw26RP6tTR44+Bhejr/Xl9535FPC21KZFm1aqfaKekwFSR6ujIClNFedaPnJTLrtEPr6zQ4dvg8tYfrSa33PipkQTKPDn++r52VSKDs8hizWTxxp8/uvBpGU5Gm/jn4WPu34EXGNemTEgWygVEGAFUOq+5JNblBMtbZNBsih//DFuzZ7MI4fE3f/SOhgjwzX8ntOXIsAbUpsWxVyluydbZIC00voYplV0Bu8APBJHRRpdt2pjinRHBWvuqmXMNC8+suJ1ZeQoavdmnBqQG4N+HMSNUVlJPUu7A6G4HWu5jPlcTas4EA/ppGllqH1ldmwiWiAyXF7L/uduYdfBfZImEpw/kdTsyjs4r8APQlGh6Dh7ctXFPYaY+8/0IREusoIj4XxMNzG3WMPvPn7rLD2Q2tALsHQsyIEp53Q4uoH8K3Xo0K0hC4mQpJJokDdd2GBqFUXD+hM1KE590FR3XXYgAJK06UIzuOIARsGcm2OBLM/XnwFit7Bb2C3sFnZr8RabvaljwBNB/vT8RlBfg7PWDkeotS5IMOhlxkFni9cNh8O3cAst3VDr44g3RderTIcCoN4mExD1J3SGtXAGoJKDgiIYCAHL2TMw+XX3qPq5ccBsSFd5FSqp5wD0ARkgFm1sC4AGoIyGamkMfcS4ELPITBJ/Ok0guNj1153fv5sh739Cjv4IAF7/pr7b3fVnfz2pEPY+irATs82+BgQJfYqAFSCFE3W8WzFiAOKBBsDLlIN2EgCwGjRKEEerJRRZdyW0eP8LGZiElR7mJ+HYRj/soc+RPQdubJKrOnKmL4BjygQxV66pqWqPXQnbll9SYH2GJUVMapkFa/raqKY/JJFoEHVtwiGhjNdEYrGUIGaSmJa6gJhmK4Zi5hfzSBKb0SpEkp23RGn3MybhFHNWLMUEq1v7P3v2nHgJcOHMs33Gds/sqV+0EDuf/fSlL3i6QTWwmJToXs40BR2dbR8cLBWj2b0Giwmod0h0CQOXK5O57KlwTqFz7gRH3dEB0H+2Ry79rRjXdQDIUKRsWAE=") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: block;
@@ -222,7 +218,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--near-black); flex: none; }
 .brand img { width: 24px; height: 24px; }
-.brand b { font-family: Charter, Georgia, serif; font-weight: 700; font-size: var(--text-lede); letter-spacing: 0.2px; }
+.brand b { font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; font-size: 18px; line-height: 1; position: relative; top: 0.9px; }
 .nav-links { display: flex; gap: 2px; margin-left: 8px; }
 .nav-links a {
   font-size: var(--text-meta); font-weight: 500; line-height: 1; color: var(--olive); text-decoration: none;
@@ -287,22 +283,20 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 .hero { margin-bottom: var(--gap); }
 .hero h1 {
   font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--olive);
-  font-size: 96px; line-height: 1.02; letter-spacing: -0.05em; -webkit-text-stroke: 0.0095em var(--parchment); margin: 0 0 28px;
+  font-size: 100px; line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 calc(28px - 0.115em);
 }
-.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.04em); }
-/* Tracking, olive and the Han glyph's 0.88em follow mole.fit's wordmark
+.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.016em); }
+/* Tracking, olive and the Han glyph's 0.84em follow mole.fit's wordmark
    (maintainer 2026-11-06; reasons in its styles.css). The glyph size sits on the
    orbit wrapper so the dot's em-based path shrinks with it, and the margin adds
    back what the last letter's tracking takes from the gap. */
-.hero h1 .cn-orbit { font-size: 0.88em; }
+.hero h1 .cn-orbit { font-size: 0.84em; }
 .hero h1 .cn {
   display: inline-block;
   font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif;
   font-weight: 600;
-  -webkit-text-stroke: 0;
   letter-spacing: 0;
 }
-@media (forced-colors: active) { .hero h1 { -webkit-text-stroke: 0; } }
 /* One small dot circles 語, as mole.fit's does around 鼴; each family site
    gets its own orbit (tilt, direction, pace) so the motion stays theirs. */
 @property --mark-orbit {
@@ -601,7 +595,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .nav:has(+ main:not([class])) { margin-bottom: 40px; }
   /* 64px with -1px tracking under 880, as on pake.run, hina.day and yado.house
      (maintainer 2026-11-04: one lockup size across the product sites). */
-  .hero h1 { font-size: 80px; margin-bottom: 20px; }
+  .hero h1 { font-size: 84px; margin-bottom: calc(20px - 0.115em); }
   .tagline { font-size: 20px; }
   .section-title { font-size: 26px; }
   .devices { gap: 32px; }
@@ -613,7 +607,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .foot-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 16px; align-self: stretch; }
 }
 @media (max-width: 640px) {
-  .hero h1 { font-size: 64px; }
+  .hero h1 { font-size: 66px; }
 }
 /* Phone type ladder shared by the product sites (2026-10-26): body 16 for
    articles, ledes and FAQ answers, secondary 15 for card copy, contact cards
@@ -624,7 +618,6 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   footer, .foot-mark p.foot-about, .contact .contact-desc, .contact-head b, .blog-card-desc { font-size: 15px; }
   /* Phone sizes the desktop ladder moved off stay as they were (2026-11-01). */
   .section-title { font-size: 26px; }
-  .brand b { font-size: 18px; }
   .card h3 { font-size: 19px; }
   .faq summary, .blog-card-title, .blog-body h3 { font-size: 17px; }
   .contact .contact-title, .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
@@ -652,7 +645,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   /* MiaoYan is the longest name: the lockup is about 4.2em plus the 18px gap,
      with the orbiting dot, so it stays at 64px down to about 350px and only then
      shrinks to fit. */
-  .hero h1 { font-size: min(64px, calc((100vw - 54px) / 4.6)); }
+  .hero h1 { font-size: min(66px, calc((100vw - 54px) / 4.6)); }
   .btn { width: 100%; }
   /* Phone hero buttons keep their label's width and share one row (maintainer
      2026-10-27: 不要两行，控制一行就好了) with a 6px icon gap, labels short
