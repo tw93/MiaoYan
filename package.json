@@ -1,7 +1,7 @@
 {
   "name": "MiaoYan",
   "version": "1.0.0",
-  "description": "轻灵的本地 Markdown 笔记应用",
+  "description": "轻灵的本地 Mac Markdown 笔记应用",
   "main": "index.js",
   "scripts": {
     "build": "postcss tailwind.css -o build.css",
