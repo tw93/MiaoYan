@@ -257,7 +257,7 @@ COPY = {
         "foot": (("入手", "ヘルプ", "連絡先"), ("よくある質問", "プライバシー")),
     },
     "ko": {
-        "title": "MiaoYan · 가벼운 Mac 네이티브 마크다운 노트북",
+        "title": "MiaoYan · 가벼운 Mac 네이티브 마크다운 노트",
         "description": "MiaoYan은 네이티브 마크다운 노트 앱입니다. 노트는 직접 고른 폴더 안의 마크다운 파일이며, Mac, iPhone, iPad 어디서든 열 수 있습니다.",
         "nav": ["기능", "iPhone과 iPad", "자주 묻는 질문"],
         "language": "언어",
