@@ -253,9 +253,9 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 .hero { margin-bottom: var(--gap); }
 .hero h1 {
   font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--olive);
-  font-size: 84px; line-height: 1.02; letter-spacing: -0.042em; -webkit-text-stroke: 0.0095em var(--parchment); margin: 0 0 28px;
+  font-size: 96px; line-height: 1.02; letter-spacing: -0.05em; -webkit-text-stroke: 0.0095em var(--parchment); margin: 0 0 28px;
 }
-.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.031em); }
+.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.04em); }
 /* Tracking, olive and the Han glyph's 0.88em follow mole.fit's wordmark
    (maintainer 2026-11-06; reasons in its styles.css). The glyph size sits on the
    orbit wrapper so the dot's em-based path shrinks with it, and the margin adds
