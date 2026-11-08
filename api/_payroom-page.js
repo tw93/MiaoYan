@@ -69,7 +69,7 @@ td small{color:var(--subtle);font-size:12px}
 .login-card input,.login-card button{width:100%;min-height:48px;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:6px;padding:0 12px}
 .login-card input{background:var(--panel);color:var(--ink)}
 .login-card input::placeholder{color:var(--subtle)}
-.login-card input:focus-visible{outline:2px solid var(--accent);outline-offset:-1px}
+.login-card input:focus,.login-card input:focus-visible{outline:none}
 .login-card button{background:var(--ink);border-color:var(--ink);color:#fffdf7;font-weight:650;cursor:pointer}
 @media (max-width:1080px){.grid{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
