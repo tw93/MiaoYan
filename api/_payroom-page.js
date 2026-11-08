@@ -273,7 +273,7 @@ function renderDashboard(view) {
   const metrics = [
     metric(isAll ? '累计到手' : '到手', money(t.proceeds, view.currency), `销售额 ${money(t.net, view.currency)}<span class="wide-only"> · 自 ${esc(view.from.slice(2))}</span>`),
     metric(isAll ? '累计售出' : '售出', `${int(t.sold)} 份`, t.refunded ? `退款 ${int(t.refunded)} 份 · ${percent(t.refundRate)}` : '没有退款'),
-    metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date)} 售出 ${int(latest.units)} 份` : ''),
+    metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date.slice(5))} 售出 ${int(latest.units)} 份` : ''),
     metric(isAll ? '官网累计访问' : '官网访问', view.traffic.available ? int(view.traffic.sessions) : '没有', view.traffic.available ? `页面浏览 ${int(view.traffic.views)}` : ''),
   ].join('');
   const panels = [recentSection(view), trafficSection(view), splitTable(view, '国家和地区', view.countries, country, '国家和地区'), channels(view), splitTable(view, '设备', view.devices, (k) => k, '设备'), storeSection(view), financeSection(view), refundsSection(view), reviewsSection(view)].join('');
