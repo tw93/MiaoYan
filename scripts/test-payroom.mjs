@@ -109,7 +109,7 @@ assert.ok(!html.includes('<img src=x'), 'a review title is escaped');
 assert.ok(html.includes('&lt;script&gt;alert(1)'), 'the escaped text still shows');
 checks += 3;
 const fresh = lib.emptyState();
-assert.ok(page.renderDashboard(lib.buildView(fresh, { today })).includes('已向 Apple 申请渠道报告'), 'an empty store still renders');
+assert.ok(page.renderDashboard(lib.buildView(fresh, { today })).includes('<h1>Payroom</h1>'), 'an empty store still renders');
 checks += 1;
 
 // ---- runSync against a stubbed network ----------------------------------

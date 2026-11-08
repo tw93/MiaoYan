@@ -263,8 +263,6 @@ function renderDashboard(view) {
   const sync = [stamp, view.latestSalesDate ? `销售数据到 ${view.latestSalesDate.slice(5)}` : '', view.usdCny ? `汇率 ${view.usdCny.toFixed(2)}` : ''].filter(Boolean).map((t) => `<em class="window-note">${esc(t)}</em>`).join(' ');
   const warnings = [...view.errors];
   if (view.syncStale) warnings.push('超过 12 小时没有同步成功，下面的数字可能不是最新的');
-  if (view.trafficStale) warnings.push(`官网统计 ${view.trafficStale} 之后没有新数据，流量数字只算到这一天`);
-  if (!view.analytics.available) warnings.push('已向 Apple 申请渠道报告，首批生成后这里会显示搜索、浏览、网页跳转各带来多少购买');
   if (t.unconverted) warnings.push(`有 ${t.unconverted} 份的货币没有汇率，金额里没算`);
   const warn = warnings.length ? `<div class="note">${warnings.map((w) => `<div>${esc(w)}</div>`).join('')}</div>` : '';
   const metric = (label, value, note = '') => `<article class="metric"><span>${esc(label)}</span><strong>${value}</strong><em>${note}</em></article>`;
