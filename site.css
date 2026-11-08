@@ -246,11 +246,11 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 /* Hero */
 .hero { margin-bottom: var(--gap); }
 .hero h1 {
-  font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--olive);
+  font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--dark-warm);
   font-size: 97px; line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 calc(40px - 0.115em);
 }
 .hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.016em); }
-/* Tracking, olive and the Han glyph's 0.84em follow mole.fit's wordmark
+/* Tracking and the Han glyph's 0.84em follow mole.fit's wordmark
    (maintainer 2026-11-06; reasons in its styles.css). The glyph size sits on the
    orbit wrapper so the dot's em-based path shrinks with it, and the margin adds
    back what the last letter's tracking takes from the gap. */
@@ -286,7 +286,7 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 @keyframes mark-orbit {
   to { --mark-orbit: 360deg; }
 }
-.tagline { font-family: var(--serif); font-size: var(--text-title); line-height: 1.45; color: var(--near-black); margin: 0 0 10px; }
+.tagline { font-family: var(--serif); font-size: var(--text-title); line-height: 1.45; color: var(--olive); margin: 0 0 10px; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; }
 .tagline + .trust { margin-top: 16px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
@@ -669,10 +669,10 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 @media (max-width: 640px) {
   :root { --text-meta: 13px; }
 }
-/* CJK hero tagline on desktop: 20px, the ladder's one exception (maintainer
-   2026-11-01, from 16/18/20/21 drawn on mole.fit's Chinese home). */
+/* CJK hero tagline on desktop: 18px, the ladder's one exception (maintainer
+   2026-11-08: 20 read big once Clear Han's firmer strokes arrived). */
 @media (min-width: 641px) {
-  html:is([lang^="zh"], [lang="ja"], [lang="ko"]) .tagline { font-size: 20px; }
+  html:is([lang^="zh"], [lang="ja"], [lang="ko"]) .tagline { font-size: 18px; }
 }
 
 /* Chinese pass of 2026-11-08, from mole.fit (maintainer's picks there): tracking
