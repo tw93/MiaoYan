@@ -25,23 +25,24 @@ h2{font-size:20px;letter-spacing:0}
 .switch a:hover{color:var(--accent)}
 .switch a[aria-current=true]{background:var(--accent-soft);color:var(--accent);font-weight:750}
 .month{margin:0}
-.month select{appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 26px 0 10px;background-color:var(--panel);background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;color:var(--muted);font:inherit;font-size:11px;font-weight:650;cursor:pointer}
-.month select[data-active=true]{background-color:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent);font-weight:750}
+.month select:focus,.month select:focus-visible{outline:none}
+.month select{width:62px;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 26px 0 10px;background-color:var(--panel);background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;color:var(--muted);font:inherit;font-size:11px;font-weight:650;cursor:pointer}
+.month select[data-active=true]{width:86px;background-color:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent);font-weight:750}
 main{padding:12px clamp(18px,4vw,54px) 42px;display:grid;gap:12px}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px}
 .metric{min-height:126px;padding:16px;display:grid;align-content:space-between;gap:10px}
 .metric>span,.metric>em,.head p{color:var(--muted);font-style:normal;font-size:13px;line-height:1.45}
 .metric strong{font-family:var(--serif);font-size:28px;line-height:1.12;white-space:nowrap}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
-.panel{padding:18px;display:grid;gap:16px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
+.panel{padding:18px;display:grid;gap:16px;min-width:0;align-content:start}
 .wide{grid-column:1/-1}
 .scroll{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:10px 8px;text-align:right;vertical-align:middle;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:13px;line-height:18px}
+th,td{min-width:64px;padding:7px 0 7px 20px;text-align:right;vertical-align:middle;white-space:nowrap}
 th{color:var(--muted);font-size:11px;font-weight:650}
-th:first-child,td:first-child{text-align:left;padding-left:0;white-space:normal}
-th:last-child,td:last-child{padding-right:0}
+th:first-child,td:first-child{width:100%;min-width:0;text-align:left;padding-left:0;white-space:normal}
+td.zero{color:var(--subtle)}
 td.refund{color:var(--danger)}
 td small{color:var(--subtle);font-size:12px}
 .note{color:var(--muted);font-size:13px;line-height:1.45;padding:12px;border:1px solid var(--line);border-radius:7px;background:var(--panel-3)}
@@ -71,10 +72,11 @@ td small{color:var(--subtle);font-size:12px}
 .login-card input::placeholder{color:var(--subtle)}
 .login-card input:focus,.login-card input:focus-visible{outline:none}
 .login-card button{background:var(--ink);border-color:var(--ink);color:#fffdf7;font-weight:650;cursor:pointer}
+@media (min-width:1500px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.span2{grid-column:span 2}}
 @media (max-width:1080px){.grid{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){.chart-value.dense{display:none}}
-@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.grid{gap:10px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{padding:8px 6px}.filters{margin-left:0;justify-content:flex-start}.month select{font-size:16px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}}
+@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.grid{gap:10px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}}
 `;
 
 function shell(title, body) {
@@ -128,7 +130,7 @@ const PLATFORM_LABELS = { MAC_OS: 'Mac', IOS: 'iPhone 和 iPad' };
 function money(value, currency) {
   const digits = Math.abs(value) >= 1000 ? 0 : 2;
   if (!/^[A-Z]{3}$/.test(String(currency))) return value.toFixed(2);
-  return new Intl.NumberFormat('zh-CN', { style: 'currency', currency, minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
+  return new Intl.NumberFormat('zh-CN', { style: 'currency', currency, currencyDisplay: 'narrowSymbol', minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
 }
 const compactMoney = (v, c) => money(v, c).replace(/\.\d+$/, '');
 const percent = (v) => (v === null || v === undefined ? '' : `${(v * 100).toFixed(1).replace(/\.0$/, '')}%`);
@@ -137,21 +139,27 @@ const shanghai = (iso) => new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Sha
 
 const updatedAt = (iso) => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
 
+const cell = (n, cls = '') => `<td${n ? (cls ? ` class="${cls}"` : '') : ' class="zero"'}>${int(n)}</td>`;
+
 function recentSection(view) {
+  const hasVisits = view.recent.some((d) => d.sessions !== null);
   const rows = view.recent.map((d) => {
     const income = d.known
-      ? `<td>${int(d.sold)}</td><td${d.refunded ? ' class="refund"' : ''}>${int(d.refunded)}</td><td>${d.sold || d.refunded ? money(d.proceeds, view.currency) : '0'}</td>`
+      ? `${cell(d.sold)}${cell(d.refunded, 'refund')}<td${d.sold || d.refunded ? '' : ' class="zero"'}>${d.sold || d.refunded ? money(d.proceeds, view.currency) : '0'}</td>`
       : '<td colspan="3"><small>等 Apple 报表</small></td>';
-    return `<tr><td>${esc(d.date.slice(5))}</td>${income}<td>${d.sessions === null ? '' : int(d.sessions)}</td></tr>`;
+    const visits = hasVisits ? `<td>${d.sessions === null ? '' : int(d.sessions)}</td>` : '';
+    return `<tr><td>${esc(d.date.slice(5))}</td>${income}${visits}</tr>`;
   }).join('');
-  return `<section class="panel"><h2>每天入账</h2><div class="scroll"><table><thead><tr><th scope="col"></th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th><th scope="col">官网访问</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+  return `<section class="panel"><h2>每天入账</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th>${hasVisits ? '<th scope="col">官网访问</th>' : ''}</tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
+
+const sourceName = (s) => (s === '(direct)' ? '直接打开' : s === '(not set)' ? '未知' : s);
 
 function trafficSection(view) {
   const t = view.traffic;
   if (!t.available || !t.sources.length) return '';
-  const rows = t.sources.map((s) => `<tr><td>${esc(s.source === '(direct)' ? '直接打开' : s.source)}</td><td>${int(s.count)}</td></tr>`).join('');
-  return `<section class="panel"><h2>官网流量来源</h2><div class="scroll"><table><thead><tr><th scope="col"></th><th scope="col">访问</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+  const rows = t.sources.slice(0, view.recent.length).map((s) => `<tr><td>${esc(sourceName(s.source))}</td><td>${int(s.count)}</td></tr>`).join('');
+  return `<section class="panel"><h2>官网流量来源</h2><div class="scroll"><table><thead><tr><th scope="col">来源</th><th scope="col">访问</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 
 function chart(view) {
@@ -177,10 +185,10 @@ function chart(view) {
   return `<section class="panel"><div class="head"><h2>收入走势</h2>${caption}</div><div class="chart-frame" role="img" aria-label="售出和退款份数" style="--up:calc((100% - 24px) * ${(maxUp / total).toFixed(4)});--down:calc((100% - 24px) * ${(maxDown / total).toFixed(4)})">${columns}</div></section>`;
 }
 
-function splitTable(view, title, rows, nameOf) {
+function splitTable(view, title, rows, nameOf, head) {
   if (!rows.length) return '';
-  const body = rows.map((r) => `<tr><td>${esc(nameOf(r.key))}</td><td>${int(r.sold)}</td><td${r.refunded ? ' class="refund"' : ''}>${int(r.refunded)}</td><td>${money(r.gross, view.currency)}</td><td>${money(r.proceeds, view.currency)}</td></tr>`).join('');
-  return `<section class="panel"><h2>${esc(title)}</h2><div class="scroll"><table><thead><tr><th scope="col"></th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">销售额</th><th scope="col">到手</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
+  const body = rows.map((r) => `<tr><td>${esc(nameOf(r.key))}</td>${cell(r.sold)}${cell(r.refunded, 'refund')}<td>${money(r.gross, view.currency)}</td><td>${money(r.proceeds, view.currency)}</td></tr>`).join('');
+  return `<section class="panel"><h2>${esc(title)}</h2><div class="scroll"><table><thead><tr><th scope="col">${esc(head)}</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">销售额</th><th scope="col">到手</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
 function channels(view) {
@@ -191,10 +199,10 @@ function channels(view) {
   const hasPurchases = a.funnel.purchases > 0;
   const rows = a.sources.filter((s) => s.purchases || s.downloads || s.pageViews).map((s) => `<tr><td>${esc(sourceLabel(s.type))}</td><td>${int(s.purchases)}</td><td>${int(s.downloads)}</td><td>${int(s.pageViews)}</td>${hasPurchases ? `<td>${money(s.proceeds, view.currency)}</td>` : ''}</tr>`).join('');
   const table = rows
-    ? `<div class="scroll"><table><thead><tr><th scope="col"></th><th scope="col">购买</th><th scope="col">首次下载</th><th scope="col">产品页浏览</th>${hasPurchases ? '<th scope="col">到手</th>' : ''}</tr></thead><tbody>${rows}</tbody></table></div>`
+    ? `<div class="scroll"><table><thead><tr><th scope="col">渠道</th><th scope="col">购买</th><th scope="col">首次下载</th><th scope="col">产品页浏览</th>${hasPurchases ? '<th scope="col">到手</th>' : ''}</tr></thead><tbody>${rows}</tbody></table></div>`
     : '<p class="empty">这段时间 Apple 的渠道报告里没有记录</p>';
   const details = a.details.filter((d) => d.purchases || d.downloads).map((d) => `<tr><td>${esc(d.info)} <small>${esc(sourceLabel(d.type))}</small></td><td>${int(d.purchases)}</td><td>${int(d.downloads)}</td></tr>`).join('');
-  const detailTable = details ? `<h2>来源明细</h2><div class="scroll"><table><thead><tr><th scope="col"></th><th scope="col">购买</th><th scope="col">首次下载</th></tr></thead><tbody>${details}</tbody></table></div>` : '';
+  const detailTable = details ? `<h2>来源明细</h2><div class="scroll"><table><thead><tr><th scope="col">来源</th><th scope="col">购买</th><th scope="col">首次下载</th></tr></thead><tbody>${details}</tbody></table></div>` : '';
   const f = a.funnel;
   const u = a.usage;
   const funnel = (f.impressions || f.pageViews) ? `<p class="line">曝光 ${int(f.impressions)}，产品页浏览 ${int(f.pageViews)}，首次下载 ${int(f.firstDownloads)}，购买 ${int(f.purchases)}</p>` : '';
@@ -206,23 +214,27 @@ function channels(view) {
 function refundsSection(view) {
   if (!view.refunds.length) return '';
   const body = view.refunds.map((r) => `<tr><td>${esc(r.date)}</td><td>${esc(country(r.country))}</td><td>${esc(r.device)}</td><td>${esc(r.version)}</td><td>${r.units}</td><td class="refund">${money(r.price * r.units, r.currency)}</td></tr>`).join('');
-  return `<section class="panel"><h2>退款明细</h2><div class="scroll"><table><thead><tr><th scope="col"></th><th scope="col">国家和地区</th><th scope="col">设备</th><th scope="col">版本</th><th scope="col">份数</th><th scope="col">金额</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
+  return `<section class="panel span2"><h2>退款明细</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">国家和地区</th><th scope="col">设备</th><th scope="col">版本</th><th scope="col">份数</th><th scope="col">金额</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
 function financeSection(view) {
   if (!view.finance.length) return '';
   const body = view.finance.map((f) => `<tr><td>${esc(f.start)} 到 ${esc(f.end)}</td><td>${int(f.units)}</td><td>${money(f.amount, view.currency)}${f.unconverted ? ' <small>部分货币未折算</small>' : ''}</td></tr>`).join('');
-  return `<section class="panel"><h2>Apple 结算月</h2><div class="scroll"><table><thead><tr><th scope="col"></th><th scope="col">净份数</th><th scope="col">到手</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
+  return `<section class="panel"><h2>Apple 结算月</h2><div class="scroll"><table><thead><tr><th scope="col">结算周期</th><th scope="col">净份数</th><th scope="col">到手</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
 function storeSection(view) {
-  if (!view.store.length) return '';
   const body = view.store.map((s) => {
     const label = STATE_LABELS[s.state] || s.state;
     const since = s.submitted ? `${shanghai(s.submitted)} 提交` : '';
     return `<tr><td>${esc(PLATFORM_LABELS[s.platform] || s.platform)}</td><td>${esc(s.version)}</td><td>${esc(label)}</td><td>${esc(since)}</td></tr>`;
   }).join('');
-  return `<section class="panel"><h2>App Store 状态</h2><div class="scroll"><table><tbody>${body}</tbody></table></div></section>`;
+  const status = body ? `<div class="scroll"><table><thead><tr><th scope="col">平台</th><th scope="col">版本</th><th scope="col">状态</th><th scope="col">提交时间</th></tr></thead><tbody>${body}</tbody></table></div>` : '';
+  const t = view.totals;
+  const others = [['兑换码和免费', t.free], ['重新下载', t.redownload], ['更新', t.update]].filter(([, n]) => n);
+  const other = others.length ? `<div class="scroll"><table><thead><tr><th scope="col">其他下载</th><th scope="col">次数</th></tr></thead><tbody>${others.map(([k, n]) => `<tr><td>${esc(k)}</td><td>${int(n)}</td></tr>`).join('')}</tbody></table></div>` : '';
+  if (!status && !other) return '';
+  return `<section class="panel"><h2>App Store</h2>${status}${other}</section>`;
 }
 
 function reviewsSection(view) {
@@ -257,7 +269,6 @@ function renderDashboard(view) {
   if (view.trafficStale) warnings.push(`官网统计 ${view.trafficStale} 之后没有新数据，流量数字只算到这一天`);
   if (t.unconverted) warnings.push(`有 ${t.unconverted} 份的货币没有汇率，金额里没算`);
   const warn = warnings.length ? `<div class="note">${warnings.map((w) => `<div>${esc(w)}</div>`).join('')}</div>` : '';
-  const extras = [t.free ? `兑换码和免费 ${int(t.free)}` : '', t.redownload ? `重新下载 ${int(t.redownload)}` : '', t.update ? `更新 ${int(t.update)}` : ''].filter(Boolean).join('，');
   const metric = (label, value, note = '') => `<article class="metric"><span>${esc(label)}</span><strong>${value}</strong><em>${note}</em></article>`;
   const isAll = view.range === 'all';
   const latest = view.latest;
@@ -267,8 +278,8 @@ function renderDashboard(view) {
     metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date)} 售出 ${int(latest.units)} 份` : ''),
     metric(isAll ? '官网累计访问' : '官网访问', view.traffic.available ? int(view.traffic.sessions) : '没有', view.traffic.available ? `页面浏览 ${int(view.traffic.views)}` : ''),
   ].join('');
-  const panels = [recentSection(view), trafficSection(view), channels(view), splitTable(view, '设备', view.devices, (k) => k), splitTable(view, '国家和地区', view.countries, country), refundsSection(view), financeSection(view), storeSection(view), reviewsSection(view)].join('');
-  const body = `<header class="topbar"><div class="brand"><h1>Payroom</h1><div>${sync}</div></div>${controls(view)}</header><main>${warn}<div class="metrics">${metrics}</div>${chart(view)}<div class="grid">${panels}</div>${extras ? `<p class="line">${extras}</p>` : ''}</main>`;
+  const panels = [recentSection(view), trafficSection(view), splitTable(view, '国家和地区', view.countries, country, '国家和地区'), channels(view), splitTable(view, '设备', view.devices, (k) => k, '设备'), storeSection(view), financeSection(view), refundsSection(view), reviewsSection(view)].join('');
+  const body = `<header class="topbar"><div class="brand"><h1>Payroom</h1><div>${sync}</div></div>${controls(view)}</header><main>${warn}<div class="metrics">${metrics}</div>${chart(view)}<div class="grid">${panels}</div></main>`;
   return shell('妙言 Payroom', body);
 }
 
