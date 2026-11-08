@@ -663,6 +663,7 @@ def contact_html(key):
 # builds the blog pages from the helpers below, so the chrome stays one copy.
 BLOG_LABEL = {"en": "Blog", "zh": "博客", "tw": "部落格", "ja": "ブログ", "ko": "블로그", "de": "Blog", "fr": "Blog", "es": "Blog"}
 BLOG_NAV_LANGS = ("en", "zh")
+UPDATES_LABEL = {"en": "Free updates", "zh": "持续更新", "tw": "持續更新", "ja": "無料アップデート", "ko": "무료 업데이트", "de": "Kostenlose Updates", "fr": "Mises à jour gratuites", "es": "Actualizaciones gratuitas"}
 RELEASES_LABEL = {"en": "Release Notes", "zh": "更新日志", "tw": "更新日誌", "ja": "リリースノート", "ko": "릴리스 노트", "de": "Versionshinweise", "fr": "Notes de version", "es": "Notas de versión"}
 
 ICONS = (
@@ -876,6 +877,7 @@ def page(key):
         f'<link rel="alternate" hreflang="{la}" href="{SITE}{p}">' for _, p, la, _, _, _ in LANGS
     )
     trust = "".join(f"<li>{esc(t(x))}</li>" for x in c["trust"])
+    trust += f'<li><a class="trust-link" href="{releases_path(key)}">{esc(UPDATES_LABEL[key])}</a></li>'
     tabs = "".join(
         f'<button type="button" data-shot="{s}" aria-pressed="{"true" if i == 0 else "false"}">{esc(c["tabs"][s])}</button>'
         for i, s in enumerate(SHOTS)

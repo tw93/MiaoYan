@@ -95,14 +95,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=4f28a907a9da") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=fb708155e7fb") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=d993f0fc0d56") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=406f51850d58") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -309,6 +309,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { l
    a stray middot. */
 .trust { --trust-gap: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0 0 32px calc(-1 * var(--trust-gap)); padding: 0; list-style: none; clip-path: inset(0 0 0 var(--trust-gap)); }
 .trust li { position: relative; margin-left: var(--trust-gap); font-size: var(--text-meta); line-height: 1.5; color: var(--stone); white-space: nowrap; }
+.trust-link { color: inherit; text-decoration: none; transition: color 0.12s ease-out; }
+.trust-link:hover { color: var(--near-black); }
 .trust li::before { content: "\00B7"; position: absolute; left: calc(-1 * var(--trust-gap)); width: var(--trust-gap); text-align: center; color: var(--stone); opacity: 0.6; }
 .cta { display: flex; flex-wrap: wrap; gap: 12px 16px; }
 .btn {
