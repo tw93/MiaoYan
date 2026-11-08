@@ -744,14 +744,14 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
       totals.gross += amount;
       sumByKey(devices, label, { sold: units, gross: amount, proceeds: net });
       sumByKey(countries, country, { sold: units, gross: amount, proceeds: net });
-      sumByKey(series, bucket, { sold: units });
+      sumByKey(series, bucket, { sold: units, proceeds: net });
     } else if (units < 0) {
       const n = -units;
       totals.refunded += n;
       totals.refundAmount += amount;
       sumByKey(devices, label, { refunded: n, gross: -amount, proceeds: net });
       sumByKey(countries, country, { refunded: n, gross: -amount, proceeds: net });
-      sumByKey(series, bucket, { refunded: n });
+      sumByKey(series, bucket, { refunded: n, proceeds: net });
       refunds.push({ date, country, device: label, version, units: n, amount, currency: cur, price });
     }
   }
@@ -785,7 +785,7 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
       refundRate: totals.sold ? totals.refunded / totals.sold : null,
     },
     byMonth,
-    series: [...points.entries()].sort().map(([key, v]) => ({ key, sold: v.sold || 0, refunded: v.refunded || 0 })),
+    series: [...points.entries()].sort().map(([key, v]) => ({ key, sold: v.sold || 0, refunded: v.refunded || 0, proceeds: v.proceeds || 0 })),
     devices: toList(devices),
     countries: toList(countries),
     refunds: refunds.sort((a, b) => (a.date < b.date ? 1 : -1)),
@@ -801,6 +801,7 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
     errors: state.errors || [],
     trafficStale: isTrafficStale(state, today),
     fxAt: state.fx && state.fx.at,
+    usdCny: state.fx && state.fx.rates ? state.fx.rates.CNY : null,
     syncStale: Boolean(state.syncedAt) && Date.now() - Date.parse(state.syncedAt) > SYNC_STALE_MS,
     latestSalesDate,
   };

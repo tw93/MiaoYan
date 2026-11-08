@@ -5,11 +5,11 @@
 
 const crypto = require('node:crypto');
 const { buildView, pacificToday, readState } = require('./_payroom-lib');
-const { renderDashboard, renderLogin } = require('./_payroom-page');
+const { renderDashboard, renderLogin, renderMessage } = require('./_payroom-page');
 
 const COOKIE = 'miaoyan_payroom';
 const SESSION_SECONDS = 30 * 24 * 3600;
-const CSP = "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'";
+const CSP = "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'";
 
 function hmac(payload) {
   return crypto.createHmac('sha256', process.env.MIAOYAN_PAYROOM_SESSION_SECRET).update(payload).digest('base64url');
@@ -109,8 +109,8 @@ module.exports = async function handler(req, res) {
     state = await readState();
   } catch (error) {
     console.error('payroom read failed', error.message);
-    return send(res, 503, '<!doctype html><meta charset="utf-8"><title>妙言 Payroom</title><p>数据暂时读不到，稍后刷新</p>');
+    return send(res, 503, renderMessage('数据暂时读不到，稍后刷新。'));
   }
-  if (!state) return send(res, 200, '<!doctype html><meta charset="utf-8"><title>妙言 Payroom</title><p>还没有同步过数据</p>');
+  if (!state) return send(res, 200, renderMessage('还没有同步过数据。'));
   return send(res, 200, renderDashboard(buildView(state, { ...query(req), today: pacificToday() })));
 };
