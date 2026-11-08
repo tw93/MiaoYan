@@ -14,7 +14,7 @@ a{color:inherit}
 h1,h2,p{margin:0}
 h1,h2{font-family:var(--serif)}
 h1{font-size:36px;line-height:1.05;margin-top:6px;letter-spacing:0}
-h2{font-size:20px;letter-spacing:0}
+h2{font-size:20px;line-height:28px;letter-spacing:0}
 .topbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:28px clamp(18px,4vw,54px) 8px}
 .brand{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 24px;min-width:0}
 .window-note{color:var(--subtle);font-size:11px;font-style:normal}
@@ -274,7 +274,7 @@ function renderDashboard(view) {
   const latest = view.latest;
   const metrics = [
     metric(isAll ? '累计到手' : '到手', money(t.proceeds, view.currency), `销售额 ${money(t.net, view.currency)}<span class="wide-only"> · 自 ${esc(view.from.slice(2))}</span>`),
-    metric(isAll ? '累计售出' : '售出', `${int(t.sold)} 份`, t.refunded ? `退款 ${int(t.refunded)} 份，退款率 ${percent(t.refundRate)}` : '没有退款'),
+    metric(isAll ? '累计售出' : '售出', `${int(t.sold)} 份`, t.refunded ? `退款 ${int(t.refunded)} 份 · ${percent(t.refundRate)}` : '没有退款'),
     metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date)} 售出 ${int(latest.units)} 份` : ''),
     metric(isAll ? '官网累计访问' : '官网访问', view.traffic.available ? int(view.traffic.sessions) : '没有', view.traffic.available ? `页面浏览 ${int(view.traffic.views)}` : ''),
   ].join('');
