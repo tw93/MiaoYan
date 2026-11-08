@@ -81,8 +81,8 @@ function shell(title, body) {
   return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>${esc(title)}</title><link rel="icon" href="/favicon.ico"><style>${CSS}</style></head><body>${body}</body></html>`;
 }
 
-function renderLogin({ failed = false, unconfigured = false } = {}) {
-  const note = unconfigured ? '<p class="login-error">还没有配置密码。</p>' : failed ? '<p class="login-error">密码不正确。</p>' : '';
+function renderLogin({ failed = false, unconfigured = false, blocked = false } = {}) {
+  const note = unconfigured ? '<p class="login-error">还没有配置密码。</p>' : blocked ? '<p class="login-error">这次提交被拦下了，刷新页面再试。</p>' : failed ? '<p class="login-error">密码不正确。</p>' : '';
   return shell('妙言 Payroom', `<main class="login-shell"><form class="login-card" method="post" action="/payroom"><h1>Payroom</h1><p>输入私有密码，查看妙言的售卖数据。</p>${note}<input name="password" type="password" placeholder="密码" aria-label="密码" autocomplete="current-password" autofocus required><button type="submit">打开面板</button></form></main>`);
 }
 

@@ -176,4 +176,24 @@ lateRefund.fx = { rates: { USD: 1, CNY: 7 } };
 lateRefund.sales.rows = [['2026-11-05', '1F', 3, 10, 'CNY', 20, 'CNY', 'CN', 'iPhone', '', ''], ['2026-11-05', '1F', -1, 10, 'CNY', 20, 'CNY', 'CN', 'iPhone', '', '']];
 near(lib.buildView(lateRefund, { today }).latest.proceeds, 20, 'the newest income nets a same-day refund');
 
+// ---- the login form, as a browser posts it ------------------------------
+process.env.MIAOYAN_PAYROOM_PASSWORD = 'yes@!';
+process.env.MIAOYAN_PAYROOM_SESSION_SECRET = 'session';
+const handler = (await import('../api/payroom.js')).default;
+function call(method, headers = {}, body = undefined) {
+  return new Promise((resolve) => {
+    const seen = {};
+    const res = { statusCode: 200, setHeader(k, v) { seen[k.toLowerCase()] = v; }, end(html) { resolve({ status: this.statusCode, headers: seen, html: String(html || '') }); } };
+    handler({ method, headers, url: '/payroom', body }, res);
+  });
+}
+const loginPage = await call('GET');
+eq(loginPage.headers['referrer-policy'], 'same-origin', 'the page lets a browser send its real Origin; no-referrer makes it null and the form is refused');
+eq((await call('POST', { host: 'miaoyan.app', origin: 'https://miaoyan.app' }, { password: 'yes@!' })).status, 303, 'the right password from the page logs in');
+eq((await call('POST', { host: 'miaoyan.app', origin: 'https://miaoyan.app' }, { password: 'no' })).status, 401, 'a wrong password is refused');
+const crossSite = await call('POST', { host: 'miaoyan.app', origin: 'https://evil.example' }, { password: 'yes@!' });
+eq(crossSite.status, 403, 'another site cannot post the form');
+assert.ok(!crossSite.html.includes('密码不正确'), 'a blocked post does not blame the password');
+checks += 1;
+
 console.log(`payroom: ${checks} checks passed`);

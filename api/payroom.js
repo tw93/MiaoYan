@@ -43,7 +43,9 @@ function send(res, status, html) {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-  res.setHeader('Referrer-Policy', 'no-referrer');
+  // Not no-referrer: under it a browser posts this page's form with `Origin: null`,
+  // which sameOrigin() refuses, so no one could log in from a browser.
+  res.setHeader('Referrer-Policy', 'same-origin');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Content-Security-Policy', CSP);
   res.end(html);
@@ -88,7 +90,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method === 'POST') {
     if (!configured) return send(res, 503, renderLogin({ unconfigured: true }));
-    if (!sameOrigin(req)) return send(res, 403, renderLogin({ failed: true }));
+    if (!sameOrigin(req)) return send(res, 403, renderLogin({ blocked: true }));
     if (!safeEqual(await formPassword(req), password)) return send(res, 401, renderLogin({ failed: true }));
     res.setHeader('Set-Cookie', sessionCookie());
     res.statusCode = 303;
