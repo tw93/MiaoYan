@@ -1,5 +1,7 @@
 .idea/
 Releases
+!/releases/
+!/zh/releases/
 .DS_Store
 Resources/.DS_Store
 .vscode/
