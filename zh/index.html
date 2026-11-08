@@ -538,17 +538,17 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
    hidden, which keeps the list a list to VoiceOver, and the dot is drawn on the first
    line. It rides the baseline, not the line box: line-height differs by locale and the
    baseline snaps to whole pixels, so a dot placed from the top drifts per language.
-   .36em lies between Chinese ink (.38) and Latin caps (.335). A border still prints. */
+   .36em lies between Chinese ink (.38) and Latin caps (.335). */
 :is(.blog-body, .legal) ul:not([class]) > li::marker { color: transparent; }
 :is(.blog-body, .legal) ul:not([class]) > li::before, :is(.blog-body, .legal) ul:not([class]) > li > p:first-child::before {
   content: "";
   display: inline-block;
-  box-sizing: border-box;
   width: 5px;
   height: 5px;
   margin: 0 .5em 0 calc(-.5em - 5px);
-  border: 2.5px solid;
   border-radius: 50%;
+  background: currentColor;
+  print-color-adjust: exact;
   vertical-align: calc(.36em - 2.5px);
 }
 :is(.blog-body, .legal) ul:not([class]) > li:has(> p:first-child)::before { content: none; }
