@@ -187,13 +187,11 @@ function call(method, headers = {}, body = undefined) {
     handler({ method, headers, url: '/payroom', body }, res);
   });
 }
-const loginPage = await call('GET');
-eq(loginPage.headers['referrer-policy'], 'same-origin', 'the page lets a browser send its real Origin; no-referrer makes it null and the form is refused');
-eq((await call('POST', { host: 'miaoyan.app', origin: 'https://miaoyan.app' }, { password: 'yes@!' })).status, 303, 'the right password from the page logs in');
-eq((await call('POST', { host: 'miaoyan.app', origin: 'https://miaoyan.app' }, { password: 'no' })).status, 401, 'a wrong password is refused');
-const crossSite = await call('POST', { host: 'miaoyan.app', origin: 'https://evil.example' }, { password: 'yes@!' });
-eq(crossSite.status, 403, 'another site cannot post the form');
-assert.ok(!crossSite.html.includes('密码不正确'), 'a blocked post does not blame the password');
-checks += 1;
+// A browser under no-referrer posts `Origin: null`, and curl sends none: the login
+// has to work for both, because an Origin check locked the maintainer out while
+// every curl test passed.
+eq((await call('POST', { host: 'miaoyan.app', origin: 'null' }, { password: 'yes@!' })).status, 303, 'the right password logs in with Origin: null');
+eq((await call('POST', { host: 'miaoyan.app', origin: 'https://miaoyan.app' }, { password: 'yes@!' })).status, 303, 'the right password logs in with the real Origin');
+eq((await call('POST', { host: 'miaoyan.app', origin: 'null' }, { password: 'no' })).status, 401, 'a wrong password is refused');
 
 console.log(`payroom: ${checks} checks passed`);
