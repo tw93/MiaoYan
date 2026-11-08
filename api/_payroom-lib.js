@@ -670,7 +670,7 @@ function buildTraffic(state, from, to) {
     latest: Object.keys(t.days).sort().pop() || null,
     sessions,
     views,
-    sources: [...sources.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([source, count]) => ({ source, count })),
+    sources: [...sources.entries()].sort((a, b) => b[1] - a[1]).slice(0, 50).map(([source, count]) => ({ source, count })),
   };
 }
 
@@ -703,7 +703,7 @@ function buildRecent(state, convert, today, latestSalesDate) {
     const date = addDays(today, -1 - i);
     if (!row(date).known) wanted.add(date);
   }
-  return [...wanted].sort().reverse().slice(0, RECENT_DAYS).map(row);
+  return [...wanted].sort().reverse().map(row);
 }
 
 // GA reports a day late at most, so a longer silence means counting stopped.

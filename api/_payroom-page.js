@@ -36,6 +36,13 @@ main{padding:12px clamp(18px,4vw,54px) 42px;display:grid;gap:12px}
 .metric strong{font-family:var(--serif);font-size:28px;line-height:1.12;white-space:nowrap}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
 .panel{padding:18px;display:grid;gap:16px;min-width:0;align-content:start}
+.compact{display:flex;gap:12px}
+.compact .panel{flex:1 1 0}
+.compact th,.compact td{min-width:44px;padding-left:12px}
+.compact th:first-child,.compact td:first-child{min-width:0;padding-left:0}
+.grid>.panel:not(.wide){max-height:380px;grid-template-rows:auto minmax(0,1fr);align-content:stretch}
+.grid>.panel:not(.wide)>.scroll{min-height:0;overflow:auto;overscroll-behavior:contain}
+.grid>.panel:not(.wide) th{position:sticky;top:0;z-index:1;background:var(--panel)}
 .wide{grid-column:1/-1}
 .scroll{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:13px;line-height:18px}
@@ -71,8 +78,8 @@ td small{color:var(--subtle);font-size:12px}
 .login-card input::placeholder{color:var(--subtle)}
 .login-card input:focus,.login-card input:focus-visible{outline:none}
 .login-card button{background:var(--ink);border-color:var(--ink);color:#fffdf7;font-weight:650;cursor:pointer}
-@media (min-width:1500px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.span2{grid-column:span 2}}
-@media (max-width:1080px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (min-width:1500px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1080px){.grid{grid-template-columns:minmax(0,1fr)}.compact{flex-direction:column}}
 @media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){.chart-value.dense{display:none}}
 @media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.grid{gap:10px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}}
@@ -155,7 +162,7 @@ const sourceName = (s) => (s === '(direct)' ? '直接打开' : s === '(not set)'
 function trafficSection(view) {
   const t = view.traffic;
   if (!t.available || !t.sources.length) return '';
-  const rows = t.sources.slice(0, 14).map((s) => `<tr><td>${esc(sourceName(s.source))}</td><td>${int(s.count)}</td></tr>`).join('');
+  const rows = t.sources.map((s) => `<tr><td>${esc(sourceName(s.source))}</td><td>${int(s.count)}</td></tr>`).join('');
   return `<section class="panel"><h2>官网流量来源</h2><div class="scroll"><table><thead><tr><th scope="col">来源</th><th scope="col">访问</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 
@@ -205,7 +212,7 @@ function channels(view) {
   const funnel = (f.impressions || f.pageViews) ? `<p class="line">曝光 ${int(f.impressions)}，产品页浏览 ${int(f.pageViews)}，首次下载 ${int(f.firstDownloads)}，购买 ${int(f.purchases)}</p>` : '';
   const usage = (u.installs || u.deletions || u.sessions) ? `<p class="line">安装 ${int(u.installs)}，卸载 ${int(u.deletions)}，打开 ${int(u.sessions)} 次</p>` : '';
   const coverage = a.coverage ? `<p class="line">渠道报告覆盖 ${esc(a.coverage.from)} 到 ${esc(a.coverage.to)}${a.pending ? `，还有 ${int(a.pending)} 份待下次同步` : ''}</p>` : '';
-  return `<section class="panel"><h2>购买渠道</h2>${table}${funnel}${usage}${coverage}${detailTable}</section>`;
+  return `<section class="panel wide"><h2>购买渠道</h2>${table}${funnel}${usage}${coverage}${detailTable}</section>`;
 }
 
 function refundsSection(view) {
@@ -223,21 +230,24 @@ function financeSection(view) {
 function storeSection(view) {
   const body = view.store.map((s) => {
     const label = STATE_LABELS[s.state] || s.state;
-    const since = s.submitted ? `${shanghai(s.submitted)} 提交` : '';
+    const since = s.submitted ? shanghai(s.submitted) : '';
     return `<tr><td>${esc(PLATFORM_LABELS[s.platform] || s.platform)}</td><td>${esc(s.version)}</td><td>${esc(label)}</td><td class="wide-only">${esc(since)}</td></tr>`;
   }).join('');
   const status = body ? `<div class="scroll"><table><thead><tr><th scope="col">平台</th><th scope="col">版本</th><th scope="col">状态</th><th scope="col" class="wide-only">提交时间</th></tr></thead><tbody>${body}</tbody></table></div>` : '';
+  return status ? `<section class="panel"><h2>App Store</h2>${status}</section>` : '';
+}
+
+function otherDownloadsSection(view) {
   const t = view.totals;
   const others = [['兑换码和免费', t.free], ['重新下载', t.redownload], ['更新', t.update]].filter(([, n]) => n);
-  const other = others.length ? `<div class="scroll"><table><thead><tr><th scope="col">其他下载</th><th scope="col">次数</th></tr></thead><tbody>${others.map(([k, n]) => `<tr><td>${esc(k)}</td><td>${int(n)}</td></tr>`).join('')}</tbody></table></div>` : '';
-  if (!status && !other) return '';
-  return `<section class="panel"><h2>App Store</h2>${status}${other}</section>`;
+  if (!others.length) return '';
+  return `<section class="panel"><h2>其他下载</h2><div class="scroll"><table><thead><tr><th scope="col">类型</th><th scope="col">次数</th></tr></thead><tbody>${others.map(([k, n]) => `<tr><td>${esc(k)}</td><td>${int(n)}</td></tr>`).join('')}</tbody></table></div></section>`;
 }
 
 function reviewsSection(view) {
   if (!view.reviews.length) return '';
   const items = view.reviews.map((r) => `<div class="review"><div class="top"><span class="stars" aria-label="${esc(r.rating)} 星">${'★'.repeat(Math.max(0, Math.min(5, Number(r.rating) || 0)))}</span><span>${esc(r.title)}</span><span class="meta">${esc(r.nickname)}，${esc(country(iso3to2(r.territory)))}，${esc(String(r.created || '').slice(0, 10))}</span></div><p>${esc(r.body)}</p></div>`).join('');
-  return `<section class="panel ${view.analytics.available ? '' : 'span2'}"><h2>评论</h2>${items}</section>`;
+  return `<section class="panel"><h2>评论</h2><div class="scroll">${items}</div></section>`;
 }
 
 // customerReviews reports territories as alpha-3; the region names want alpha-2.
@@ -274,8 +284,9 @@ function renderDashboard(view) {
     metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date.slice(5))} 售出 ${int(latest.units)} 份` : ''),
     metric(isAll ? '官网累计访问' : '官网访问', view.traffic.available ? int(view.traffic.sessions) : '没有', view.traffic.available ? `页面浏览 ${int(view.traffic.views)}` : ''),
   ].join('');
-  const panels = [recentSection(view), trafficSection(view), splitTable(view, '国家和地区', view.countries, country, '国家和地区'), channels(view), splitTable(view, '设备', view.devices, (k) => k, '设备'), storeSection(view), financeSection(view), refundsSection(view), reviewsSection(view)].join('');
-  const body = `<header class="topbar"><div class="brand"><h1>Payroom</h1><div>${sync}</div></div>${controls(view)}</header><main>${warn}<div class="metrics">${metrics}</div>${chart(view)}<div class="grid">${panels}</div></main>`;
+  const compact = [splitTable(view, '设备', view.devices, (k) => k, '设备'), storeSection(view), otherDownloadsSection(view)].join('');
+  const panels = [channels(view), recentSection(view), splitTable(view, '国家和地区', view.countries, country, '国家和地区'), trafficSection(view), reviewsSection(view), financeSection(view), refundsSection(view)].join('');
+  const body = `<header class="topbar"><div class="brand"><h1>Payroom</h1><div>${sync}</div></div>${controls(view)}</header><main>${warn}<div class="metrics">${metrics}</div>${chart(view)}${compact ? `<div class="compact">${compact}</div>` : ''}<div class="grid">${panels}</div></main>`;
   return shell('妙言 Payroom', body);
 }
 
