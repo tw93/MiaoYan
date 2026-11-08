@@ -12,7 +12,8 @@ mainland China). mole.fit does the same.
     python3 scripts/build-fonts.py --check  verify the shipped subsets cover
                                             every character on the pages
 
-The source OTFs are not committed (24 MB each). Put SourceHanSerifSC-Regular.otf,
+The source fonts are not committed (24 MB each). Put ClearHanSerif-Regular.ttf
+(https://github.com/izfsk-ium/Clear-Han-Serif, Simplified reading text only),
 SourceHanSerifSC-SemiBold.otf and the two TC files in `.fontcache/`, from
 https://github.com/adobe-fonts/source-han-serif/releases. Run this after every
 Chinese copy change: a character missing from the subset falls back to the
@@ -20,6 +21,7 @@ system face, which is the mixed-font look this file exists to prevent. The
 build step in scripts/build-site.py runs --check for that reason.
 """
 
+import hashlib
 import html
 import pathlib
 import re
@@ -36,7 +38,7 @@ FONT_CACHE = ROOT / ".fontcache"
 # face too, its index and every article.
 SC_PAGES = ["zh/index.html", "zh/blog/**/index.html"]
 SUBSETS = [
-    ("sc", "regular", "SourceHanSerifSC-Regular.otf", SC_PAGES),
+    ("sc", "regular", "ClearHanSerif-Regular.ttf", SC_PAGES),
     ("sc", "semibold", "SourceHanSerifSC-SemiBold.otf", SC_PAGES),
     ("tc", "regular", "SourceHanSerifTC-Regular.otf", ["tw/index.html"]),
     ("tc", "semibold", "SourceHanSerifTC-SemiBold.otf", ["tw/index.html"]),
@@ -69,6 +71,9 @@ def charset(pages):
         text = re.sub(r"<style.*?</style>", " ", text, flags=re.S)
         text = re.sub(r"<[^>]+>", " ", text)
         chars.update(c for c in html.unescape(text + " " + painted) if in_range(ord(c)))
+    # A regular expression in a code example ends its range at U+9FFF. Clear Han
+    # Serif has no such glyph, and that line is set in the code font anyway.
+    chars.discard("\u9fff")
     return chars
 
 
@@ -167,6 +172,37 @@ def reserved_names(path):
     return [n for n in names if _renamed(n) != n]
 
 
+# site.css asks for each font as `/fonts/<name>?v=<content hash>`, the same hash
+# build-site.py gives the preload links, so vercel.json can cache /fonts as
+# immutable and a regenerated font still reaches every visitor.
+SITE_CSS = ROOT / "site.css"
+FONT_URL = re.compile(r'url\("/fonts/([\w.-]+\.woff2)(?:\?v=([0-9a-f]+))?"\)')
+
+
+def font_hash(name):
+    return hashlib.sha256((FONT_DIR / name).read_bytes()).hexdigest()[:12]
+
+
+def stamp():
+    css = SITE_CSS.read_text()
+    new = FONT_URL.sub(lambda m: f'url("/fonts/{m.group(1)}?v={font_hash(m.group(1))}")', css)
+    if new != css:
+        SITE_CSS.write_text(new)
+    return 0
+
+
+def stale_font_urls(css):
+    return [m.group(1) for m in FONT_URL.finditer(css)
+            if not (FONT_DIR / m.group(1)).exists() or m.group(2) != font_hash(m.group(1))]
+
+
+def song_faces_not_blocking(css):
+    """A Chinese face that is not `block` paints the system face first, which is
+    the flash first visits showed (maintainer 2026-11-08)."""
+    faces = re.findall(r'@font-face \{[^}]*"MiaoYan Serif (?:SC|TC)"[^}]*\}', css)
+    return not faces or any("font-display: block" not in face or "local(" in face for face in faces)
+
+
 def check():
     from fontTools.ttLib import TTFont
 
@@ -196,6 +232,14 @@ def check():
         if found:
             print(f"fonts/{path.name} still carries a reserved font name ({found[0]}); regenerate it", file=sys.stderr)
             failed = True
+    css = SITE_CSS.read_text()
+    stale = stale_font_urls(css)
+    if stale:
+        print(f"site.css has stale font URLs ({', '.join(stale)}); run python3 scripts/build-fonts.py --stamp, then build-site.py and build-blog.py", file=sys.stderr)
+        failed = True
+    if song_faces_not_blocking(css):
+        print('site.css: every "MiaoYan Serif" face must be font-display: block with no local() source', file=sys.stderr)
+        failed = True
     if failed:
         return 1
     print("site-fonts-ok")
@@ -203,4 +247,4 @@ def check():
 
 
 if __name__ == "__main__":
-    sys.exit(check() if "--check" in sys.argv else regenerate())
+    sys.exit(check() if "--check" in sys.argv else stamp() if "--stamp" in sys.argv else regenerate())

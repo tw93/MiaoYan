@@ -9,6 +9,7 @@ ships. The output is committed; Vercel serves it as static files.
     python3 scripts/build-site.py
 """
 
+import hashlib
 import html
 import json
 import pathlib
@@ -770,10 +771,8 @@ def font_preload(key):
     if not script:
         return ""
     return "".join(
-        f'<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-{script}-{w}.woff2" crossorigin>\n'
-        # Only the regular cut: a preload downloads even when the visitor has
-        # the face installed, and the semibold one serves headings alone.
-        for w in ("regular",)
+        f'<link rel="preload" as="font" type="font/woff2" href="/fonts/{name}?v={hashlib.sha256((ROOT / "fonts" / name).read_bytes()).hexdigest()[:12]}" crossorigin fetchpriority="high">\n'
+        for name in (f"miaoyan-serif-{script}-{w}.woff2" for w in ("regular", "semibold"))
     )
 
 
