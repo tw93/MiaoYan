@@ -663,6 +663,7 @@ def contact_html(key):
 # builds the blog pages from the helpers below, so the chrome stays one copy.
 BLOG_LABEL = {"en": "Blog", "zh": "博客", "tw": "部落格", "ja": "ブログ", "ko": "블로그", "de": "Blog", "fr": "Blog", "es": "Blog"}
 BLOG_NAV_LANGS = ("en", "zh")
+RELEASES_LABEL = {"en": "Release Notes", "zh": "更新日志", "tw": "更新日誌", "ja": "リリースノート", "ko": "릴리스 노트", "de": "Versionshinweise", "fr": "Notes de version", "es": "Notas de versión"}
 
 ICONS = (
     '<link rel="icon" href="/favicon.ico" sizes="32x32">\n'
@@ -766,6 +767,10 @@ def blog_path(key):
     return "/zh/blog/" if key in ("zh", "tw") else "/blog/"
 
 
+def releases_path(key):
+    return "/zh/releases/" if key in ("zh", "tw") else "/releases/"
+
+
 def font_preload(key):
     script = {"zh": "sc", "tw": "tc"}.get(key)
     if not script:
@@ -837,6 +842,7 @@ def footer_html(key, *, faq_href="#faq"):
         f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
         f'<a href="{faq_href}">{esc(faq_label)}</a><a href="{blog_path(key)}">{esc(BLOG_LABEL[key])}</a>'
+        f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
         f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
         f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'

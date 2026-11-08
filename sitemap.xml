@@ -31,6 +31,16 @@
   <url>
     <loc>https://miaoyan.app/es/</loc>
   </url>
+  <url>
+    <loc>https://miaoyan.app/releases/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://miaoyan.app/zh/releases/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
   <!-- blog:start -->
   <url>
     <loc>https://miaoyan.app/blog/</loc>

@@ -1,0 +1,1146 @@
+[
+  {
+    "version": "4.8.0",
+    "tag": "V4.8.0",
+    "codename": "Brachydios",
+    "date": "2026-11-06",
+    "en": [
+      "Deleted notes go to the library's own Trash, so iPhone, iPad and Mac share one Trash, and emptying it on iPhone removes the Mac's Trash row too",
+      "When the disk is full or a folder cannot be written, a failed save is reported once instead of over and over while you type, and Command-S tells you when it still cannot save",
+      "Deleting a note shows Moved to Trash with an Undo button, an empty folder or a search with no match shows a short hint instead of a blank editor, and toasts stay long enough to read and while the pointer is over them",
+      "Formulas typeset correctly offline, and mind maps draw their branches in MiaoYan's own colours and no longer come out blank in PDF and image exports",
+      "Traditional Chinese, Japanese and Spanish menus and messages use native wording, English note counts read 1 note and 2 notes, English and Spanish word counts count words, and version history dates follow the app language",
+      "On first launch the sample folders are named in the system language, and the sample notes write shortcuts as the menus show them",
+      "Folder names in the sidebar line up with their icons, the MiaoYan logo sits further below the window buttons, interface greys are warmer, note list dates are larger, other find matches sit on a light green tint, and the find bar's shadow now shows"
+    ],
+    "zh": [
+      "删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失",
+      "磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你",
+      "删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失",
+      "没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白",
+      "繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走",
+      "第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致",
+      "侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了"
+    ]
+  },
+  {
+    "version": "4.7.1",
+    "tag": "V4.7.1",
+    "codename": "Rathalos",
+    "date": "2026-11-06",
+    "en": [
+      "Images and files dragged from Finder into the editor are copied in and linked as a paste is, where before dragged images were lost once the note saved",
+      "Edits made just before deleting their folder are no longer lost, Command-Z after Format undoes it in one step, Clean Unused Attachments no longer removes files a subfolder note links from a parent folder, and a note with garbled text opens read-only so it is never saved over",
+      "Notes deleted or renamed in Finder, git or a sync app leave the list right away, and editing the open note on iPhone no longer moves the Mac's preview or split view",
+      "Titles in the note list and sidebar no longer set their last character apart, SOP showing as SO P, and folders with Trash in their name appear in the sidebar again",
+      "In split view, new math, headings and local videos render as they do when the note opens, PNG export waits for diagrams to finish, switching light and dark recolours the preview in place, and dark text is softer",
+      "Hovering a heading in the preview shows a link icon, a loading image shows a small turning arc, and Return after a ticked task starts an unticked one"
+    ],
+    "zh": [
+      "从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失",
+      "删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖",
+      "在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置",
+      "笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏",
+      "分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和",
+      "鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的"
+    ]
+  },
+  {
+    "version": "4.7.0",
+    "tag": "V4.7.0",
+    "codename": "Gore Magala",
+    "date": "2026-11-04",
+    "en": [
+      "Exported PDFs carry their styles and every image again; since V4.3.0 they lost the styling and images you had not scrolled to came out blank",
+      "Images in the preview hold their own shape before they load, so the text no longer jumps, a slow image shows a softly pulsing tint until it arrives, and videos show their first frame",
+      "Switching notes in preview no longer reloads the page or flashes blank, and split view or outside edits refresh only the changed paragraphs, keeping your place",
+      "The preview's line height, heading sizes and spacing are retuned to read more easily, Chinese emphasis stays upright, and links are MiaoYan green",
+      "The search field, note title and mode buttons sit on the same line as the window buttons"
+    ],
+    "zh": [
+      "导出的 PDF 重新带上排版样式和全部图片，V4.3.0 起导出会丢掉样式，没滚动到的图片也是空白",
+      "预览里的图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片先显示一块轻轻呼吸的底色，视频直接显示第一帧",
+      "预览模式下切换笔记不再整页重载，没有白闪，分栏编辑或外部改动时只刷新改到的段落，阅读位置保持不动",
+      "预览的行距、标题字号和段落间距重新调过，读起来更舒展，中文强调不再显示成斜体，链接改用妙言绿",
+      "窗口顶部的搜索框、笔记标题和模式按钮跟红绿灯放在同一行"
+    ]
+  },
+  {
+    "version": "4.6.1",
+    "tag": "V4.6.1",
+    "codename": "Glavenus",
+    "date": "2026-11-03",
+    "en": [
+      "Choosing a folder from File > Single Mode no longer crashes the app",
+      "Code in the editor and preview is back to V4.5.0's colours instead of a yellow cast",
+      "Multi-line math now renders in the preview and exports under the default line-break mode too",
+      "The sidebar logo reads 妙言 in Source Han Serif for Chinese and MiaoYan in other languages, the bird and name line up with the folder icons and names, and All Notes reads 全部 in Chinese",
+      "Delete actions say Move to Trash everywhere, Traditional Chinese calls it 垃圾桶, and messages use one style of quotes, ellipses and colons"
+    ],
+    "zh": [
+      "在「文件 > 单独模式」里选完文件夹后不再闪退",
+      "编辑器和预览里的代码换回 V4.5.0 的配色，不再整片发黄",
+      "默认换行模式下，跨多行的数学公式在预览和导出里也能正常渲染",
+      "侧栏 Logo 在中文界面显示用思源宋体排的「妙言」，其他语言显示 MiaoYan，小鸟和文字跟文件夹图标、名称对齐，中文的「全部笔记」缩成「全部」",
+      "删除相关的菜单和提示统一叫「移到废纸篓」，繁体中文改用「垃圾桶」，提示里的引号、省略号和冒号统一成一种写法"
+    ]
+  },
+  {
+    "version": "4.6.0",
+    "tag": "V4.6.0",
+    "codename": "Lagiacrus",
+    "date": "2026-10-26",
+    "en": [
+      "The sidebar, note list, editor and preview share one warm paper tone, list rows are parted by an inset hairline, the editor uses a calmer palette with quieter Markdown symbols, code, inline code and HTML tags share a soft gold that preview code blocks use too, and the format, presentation and pin icons are redrawn",
+      "The default font is now the system pairing, SF for Latin and PingFang for Chinese, and fonts you already chose, TsangerJinKai02 included, stay as they are",
+      "Settings is laid out as General, Editor and Fonts, each row a description on the left and its control on the right, with a Restart button in the row for settings that need one, the sidebar gains an All Notes row under the logo, and an upgrade reopens the folder you left",
+      "Confirmations sit on the app's paper with the bird alone as their icon and name the Trash the same way everywhere, quotes in the preview gain a thin bar on the left, and images keep their rounded corners as they scroll under the top edge",
+      "Folders gain Move to… in their context menu, carrying every subfolder and note along, and renaming a folder now keeps its subfolders, sort settings and version history, and libraries with over 100 folders, note folders named assets and libraries reached through a symlink are listed in full",
+      "Notes that cannot be read are never saved over with empty text, a save that worked no longer reports Save Failed, Clean Unused Attachments no longer trashes images used by notes you have not opened or notes in the Trash, and GBK, Big5 and UTF-16 notes open correctly, mostly English ones included, and are not rewritten unless you edit them",
+      "A note changed elsewhere shows its latest text when you open it again, notes ending in .MD refresh after outside edits, and version history follows renames, moves and the Trash and comes back when a delete is undone, and backlinks cover notes in every folder and follow renames and deletes, and notes added to a folder outside the app are listed",
+      "Split preview no longer flashes broken images or stays on another note, formulas and Mermaid diagrams render after the last quick edit, code blocks keep their colours while you type in split view, ticking a task in preview mode is saved, HTML export works without opening the preview and carries its images, a deck that opens with --- keeps its first slide, a task item with no text shows as a checkbox, exports no longer stick after a cancelled save panel, and copying a whole heading from the preview no longer brings its # marks",
+      "List shortcuts no longer fire twice, Return in the list no longer types into the note, the Format and Find menus work again, Main Window moves to ⌥⌘0, and confirming English with Return in a Chinese input method keeps focus in the title, a title of only spaces no longer moves the note out of its folder, typing while Format runs is kept, and leaving a presentation brings back only the columns that were open",
+      "Typing no longer copies the whole note on every key, long notes full of digits no longer lag, search, sorting and launch are faster, an image uploaded to PicGo lands where it was pasted, and menus and messages are fully translated into Japanese, Traditional Chinese and Spanish",
+      "The miao command line finds the notes folder the app actually uses, creates notes whose titles contain quotes, its installer no longer stops when the network is down, and miao update no longer installs unreleased code when the release lookup fails"
+    ],
+    "zh": [
+      "侧栏、列表、编辑器和预览统一成一种暖白纸色，列表行之间用缩进细线分开，编辑器换上更安静的配色，Markdown 符号淡下去，代码、行内代码和 HTML 标签统一成淡金色，预览里的代码块也是同一套颜色，格式、演示和置顶图标也重新画过",
+      "默认字体改成系统字体，英文用 SF，中文用苹方，之前选过仓耳今楷或其他字体的保持不变",
+      "设置窗口重新排成通用、编辑器、字体三页，每行左边是说明右边是控件，需要重启的设置在行内就能重启，侧栏 Logo 下面多了一行「全部笔记」，升级后也会回到上次打开的文件夹",
+      "确认弹框改成纸色底，图标只留小鸟，移入废纸篓的说法前后一致，预览里的引用左边多了一条细竖条，图片滚到顶部被遮住时也保留圆角",
+      "文件夹右键新增「移动到」，整个文件夹连同子文件夹和笔记都能挪到别处，重命名文件夹也会带上子文件夹、排序设置和版本历史，超过 100 个文件夹、名叫 assets 的笔记文件夹和通过符号链接打开的笔记库都能完整列出",
+      "读不出来的笔记不会再被空内容覆盖，保存成功后不再误报保存失败，清理未使用附件不会再删掉没打开过的笔记和废纸篓里的笔记还在用的图片，GBK、Big5 和 UTF-16 这类旧编码的笔记能正确打开，英文占多数的也一样，没改过就不会被改写",
+      "别处改过的笔记再打开时读到的是最新内容，后缀是 .MD 的笔记在外部修改后也会及时刷新，版本历史跟着改名、移动和废纸篓走，删除后撤销也会带回来，反向链接覆盖各层文件夹里的笔记并跟着改名和删除更新，在 App 外放进文件夹的笔记也会列出来",
+      "分栏预览不再闪出破图，也不会停在别的笔记上，快速改完公式和 Mermaid 图后预览会跟着渲染出来，分栏里打字后代码块不再丢掉高亮，预览模式里点任务框能正确保存，导出 HTML 不用先打开预览并会带上图片，以 --- 开头的幻灯片不再丢掉第一页，没写内容的任务项也显示成复选框，取消保存面板后导出不再卡住，从预览复制整个标题不会再带上 # 号",
+      "列表快捷键不再触发两次，在列表里按回车不会把换行打进笔记，格式和查找菜单恢复可用，主窗口改为 ⌥⌘0，标题里用中文输入法回车确认英文不会跳到正文，标题只填空格不会把笔记移出文件夹，排版时继续打字也不会被覆盖，退出演示后侧栏和列表会回到进入前的样子",
+      "打字时不再每次按键都复制整篇笔记，数字多的长笔记输入也不再卡顿，搜索、排序和启动都更快，粘贴图片上传到 PicGo 后链接会落在粘贴的位置，菜单和提示补齐了日文、繁体中文和西班牙语",
+      "命令行 miao 能找到 App 实际用的笔记目录，标题带引号也能正常新建，网络不通时安装脚本不再中途报错，miao update 查不到版本时不再装上开发中的代码"
+    ]
+  },
+  {
+    "version": "4.5.0",
+    "tag": "V4.5.0",
+    "codename": "Nargacuga",
+    "date": "2026-09-25",
+    "en": [
+      "Search runs in the background, so typing stays smooth in large libraries, and searching for \".\" or \"md\" no longer lists every note",
+      "On iPhone, opening a note no longer changes its modified date, trashed notes stay out of Recent and search, the interface is fully translated into Chinese, and GBK-encoded notes open",
+      "TsangerJinKai02 is the default font again: PingFang shows until it is installed, Settings can download it, it takes over on its own once installed, and fonts you already chose stay as they are",
+      "The code font follows the text font by default and applies only to code blocks, so inline code, quoted code and HTML tags such as img keep the text font, on iPhone too",
+      "Fixes preview text and bold headings looking thinner since 4.3.1, and tightens letter spacing in the preview, editor and note list",
+      "Settings is reorganized with aligned controls, clearer groups, a window that fits each page, and a page named Fonts",
+      "Find in preview matches plain text, so symbols like . and ( no longer break it"
+    ],
+    "zh": [
+      "搜索改到后台进行，笔记很多时输入也不会卡住，搜「.」或「md」不再把所有笔记都列出来",
+      "iPhone 上打开笔记不会再悄悄改动它的修改时间，废纸篓里的笔记不再混进最近和搜索，界面补齐了中文，GBK 编码的笔记也能打开",
+      "默认字体回到仓耳今楷，没装时先用苹方显示，在字体设置里点下载，装好后自动换上，之前选过的字体都保持不变",
+      "代码字体默认跟随正文，只用在代码块上，行内代码、引用里的代码和 img 这类 HTML 标签不再换成等宽字体，iPhone 上也一样",
+      "修复 4.3.1 起预览文字变细、标题加粗变淡的问题，预览、编辑器和笔记列表的字间距也收紧了一些",
+      "设置窗口重新整理，控件对齐、分组更清楚，窗口高度跟着每页内容走，字体那一页改叫「字体」",
+      "预览里的查找按普通文字匹配，输入 .、( 这类符号不再出错"
+    ]
+  },
+  {
+    "version": "4.3.2",
+    "tag": "V4.3.2",
+    "codename": "Seregios",
+    "date": "2026-09-20",
+    "en": [
+      "A chosen font sets the whole line again, including the English, which 4.3.1 had handed to the system face",
+      "The Recommended, Chinese and Latin headings in the font pickers can no longer be picked as if they were fonts"
+    ],
+    "zh": [
+      "修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走",
+      "修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题"
+    ]
+  },
+  {
+    "version": "4.3.1",
+    "tag": "V4.3.1",
+    "codename": "Lunagaron",
+    "date": "2026-09-20",
+    "en": [
+      "Preview sets English with the system face, instead of borrowing the Latin glyphs of whichever Chinese font is selected",
+      "Body text and headings share one antialiasing mode, so a line no longer mixes two stroke weights",
+      "Fonts without a real bold weight no longer get a synthesized one, which used to merge strokes in headings",
+      "The font pickers group into recommended, Chinese and Latin instead of listing every installed family, and the code picker lists only monospaced faces",
+      "Font names follow the interface language, so Chinese users read 苹方-简 and 宋体-简",
+      "The Sparkle update sheet shows release notes in the system language rather than stacking both"
+    ],
+    "zh": [
+      "预览的英文改由系统字体排版，选中文字体时不再拿它的西文字形凑数，中英混排明显干净",
+      "统一正文和标题的抗锯齿，同一行里正文和加粗不再是两种笔画粗细",
+      "没有真粗字重的字体不再合成伪粗体，标题和加粗的笔画不会糊在一起",
+      "字体设置从系统里的两百多个收成推荐、中文、西文三组，代码字体只列等宽",
+      "字体名跟着界面语言显示，中文下是苹方-简、宋体-简这样的名字",
+      "Sparkle 更新提示按系统语言显示更新日志，不再中英两份叠在一起"
+    ]
+  },
+  {
+    "version": "4.3.0",
+    "tag": "V4.3.0",
+    "codename": "Velkhana",
+    "date": "2026-09-20",
+    "en": [
+      "The minimum requirement moves to macOS 12; 4.2.0 is the last release for macOS 11",
+      "Wide tables scroll horizontally, columns size to their content, and cells no longer break words mid-token",
+      "Dark-theme PDF exports print body text, formulas and table cells in ink on white paper, with highlights restored",
+      "The preview search bar follows its own panel colour, so its field, counter and icons stay visible in dark mode",
+      "Inline math starting with a number no longer swallows the paragraphs and lists that follow it",
+      "iOS search covers the whole of a long note instead of stopping partway through",
+      "The bundled commercial font is replaced by system typography, with saved selections migrated and custom faces untouched",
+      "Reopening the window restores the preview mode that was in use instead of falling back to the default"
+    ],
+    "zh": [
+      "最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0",
+      "宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开",
+      "深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常",
+      "预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字",
+      "修复以数字开头的行内公式吞掉后面段落和列表的问题",
+      "iOS 搜索现在覆盖长笔记的全文，之前只搜到开头一部分",
+      "内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响",
+      "重新打开窗口时会恢复上次使用的预览模式，不再退回默认"
+    ]
+  },
+  {
+    "version": "4.2.0",
+    "tag": "V4.2.0",
+    "codename": "Zinogre",
+    "date": "2026-08-15",
+    "en": [
+      "Prevents deleted notes from being recreated by delayed saves after switching sections or restarting",
+      "Complex LaTeX formulas now render correctly in preview and PPT when subscripts, absolute values, and adaptive delimiters are combined",
+      "Sidebar folders remain horizontally aligned after deleting notes, reloading, or resizing the window",
+      "PDF exports no longer rerender Mermaid diagrams, and headings use the current note font",
+      "PPT keeps local images, and Preferences stays visible when windows are kept on top",
+      "HDR photos display with balanced tones instead of appearing overexposed in Markdown preview",
+      "New official MiaoYan Agent Skill teaches agents the app's Markdown, attachment, PPT, and CLI conventions"
+    ],
+    "zh": [
+      "修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现",
+      "修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合",
+      "修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度",
+      "改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体",
+      "修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题",
+      "改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝",
+      "新增官方 MiaoYan Agent Skill，让 Agent 能按妙言的语法、附件、PPT 与 CLI 规范处理笔记"
+    ]
+  },
+  {
+    "version": "4.1.0",
+    "tag": "V4.1.0",
+    "codename": "Aegis",
+    "date": "2026-07-18",
+    "en": [
+      "Fixes a rare case where switching notes could overwrite one note with another",
+      "Preview renders GitHub-style alert cards, all five kinds themed for light and dark",
+      "New Clean Typography command normalizes mixed CJK and Latin spacing and punctuation",
+      "Pasting from web pages or AI tools converts rich content to clean Markdown",
+      "Batch import Markdown files and folders to bring old notes into MiaoYan",
+      "iOS editor gains syntax highlight and image paste, plus external cloud folders"
+    ],
+    "zh": [
+      "修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验",
+      "预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题",
+      "新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样",
+      "从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样",
+      "支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便",
+      "iOS 编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化"
+    ]
+  },
+  {
+    "version": "4.0.0",
+    "tag": "V4.0.0",
+    "codename": "Valstrax",
+    "date": "2026-06-19",
+    "en": [
+      "iPhone and iPad are rolling out to the App Store, one purchase covers both",
+      "iPad brings a real three-column layout for folders, notes, and reading",
+      "First iOS version supports iCloud libraries, folders, pinned notes, and editing",
+      "New TOC menu and cmd+5 shortcut on macOS for faster long-note navigation",
+      "Fixes Sparkle signing and version drift, plus collapse and selection polish",
+      "Improves save, delete, version history, Finder-open, and iCloud sync"
+    ],
+    "zh": [
+      "iPhone 和 iPad 版本正在上架 App Store，一次购买覆盖双端，敬请期待",
+      "iPad 提供三栏布局，文件夹、笔记列表和阅读详情可同时展开",
+      "iOS 首版支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑",
+      "macOS 新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接",
+      "修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线",
+      "改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景"
+    ]
+  },
+  {
+    "version": "3.5.1",
+    "tag": "V3.5.1",
+    "codename": "",
+    "date": "2026-05-03",
+    "en": [
+      "Fix toolbar buttons showing grey background bar on macOS 26",
+      "Fix transparent sidebar and notes list background on macOS 26",
+      "Faster note switching: synchronous path for loaded notes, zero delay",
+      "Debounced save on note switch, no longer blocking main thread"
+    ],
+    "zh": [
+      "修复 macOS 26 上工具栏按钮出现灰色背景条的问题",
+      "修复侧边栏和笔记列表在 macOS 26 上背景透明的问题",
+      "优化笔记切换速度,已加载笔记走同步路径,切换无延迟",
+      "切换笔记时保存改为异步防抖,不再阻塞主线程"
+    ]
+  },
+  {
+    "version": "3.5.0",
+    "tag": "V3.5.0",
+    "codename": "Luowen",
+    "date": "2026-05-02",
+    "en": [
+      "Version history: right-click a note to view and restore any previous version",
+      "Notes are now moved to the system Trash instead of permanent deletion",
+      "Wikilink support: note info panel shows backlinks",
+      "macOS 26 glass toolbar adaptation",
+      "iCloud sync manager, laying the groundwork for cross-device sync",
+      "Open-source and App Store builds are now updated in sync, sharing the same codebase"
+    ],
+    "zh": [
+      "新增版本历史功能,右键笔记可查看和恢复到任意历史版本",
+      "删除笔记改为移到系统废纸篓,误删可恢复",
+      "新增 Wikilink 双向链接,笔记面板展示反向链接",
+      "适配 macOS 26 玻璃质感工具栏",
+      "新增 iCloud 同步管理器,为后续多端同步打基础",
+      "开源版和 App Store 版恢复同步更新,共享同一份代码"
+    ]
+  },
+  {
+    "version": "3.4.0",
+    "tag": "V3.4.0",
+    "codename": "Mizutsune",
+    "date": "2026-04-28",
+    "en": [
+      "Now available on the Mac App Store alongside the open-source build; both versions share the same codebase",
+      "Split-view scroll sync upgraded to line-based algorithm, accurate even in documents with images or code blocks",
+      "Opening a single .md from Finder now shows all sibling files correctly"
+    ],
+    "zh": [
+      "已上架 Mac App Store，与开源版共享同一份代码，同步更新",
+      "分栏滚动从比例模式升级为行级同步，图片、代码块多的文档也能精准对齐",
+      "从 Finder 打开单个 .md 能正确展示同目录所有文件"
+    ]
+  },
+  {
+    "version": "3.3.0",
+    "tag": "V3.3.0",
+    "codename": "Glavenus",
+    "date": "2026-04-27",
+    "en": [
+      "PDF export now produces real paginated output: properly sized A4 pages with margins, heading bookmarks, and correct rendering of images and diagrams — no more endless single-column scrolls",
+      "Split view scroll sync upgraded to line-based algorithm, keeping editor and preview locked in position even in documents with images or code blocks",
+      "Symbolic link directories now work in the sidebar without duplication, and opening a single .md from Finder shows all sibling files as expected",
+      "Switching to large notes no longer blocks the UI — content loads asynchronously so the app stays responsive",
+      "Cmd+E wraps selected text as inline code; Shift+Cmd+E wraps it in a fenced code block"
+    ],
+    "zh": [
+      "PDF 导出终于真正分页了：标准 A4 尺寸、留白边距、标题生成书签，图片和图表也能正确渲染，再也不是一张拉很长的滚动页",
+      "分栏滚动从比例模式升级为行级同步，含图片或代码块的文档也能精准对齐，不再偏位",
+      "符号链接目录在侧栏正常显示不重复，从 Finder 打开单个 .md 也能看到同目录所有文件",
+      "切换大文件时主线程不再卡顿，内容异步加载，界面保持流畅",
+      "Cmd+E 格式化行内代码，Shift+Cmd+E 包裹代码块"
+    ]
+  },
+  {
+    "version": "3.2.0",
+    "tag": "V3.2.0",
+    "codename": "Nargacuga",
+    "date": "2026-04-12",
+    "en": [
+      "Faster preview: Two-phase rendering shows text instantly while local images load lazily in the background, cutting perceived latency significantly",
+      "Open in Terminal: New Cmd+J shortcut opens the current folder in Terminal from anywhere in the app, with a folder context menu entry as well",
+      "Copy Path: Right-click any note to copy its full file path to the clipboard",
+      "Spanish localization: Full Spanish (es) UI translation covering all menus, settings, and system strings",
+      "Mermaid upgraded to v11.14.0, fixing subgraph edge rendering and adding new diagram features",
+      "Live reload fixed: Notes modified by external tools now reload correctly, including files inside symlinked directories (closes #502)",
+      "Launch and window fixes: Opening .md files directly from Finder no longer shows a blank window, and single-pane mode correctly restores notes on launch and quit",
+      "Export and mode transitions: Fixed blank preview on note switch, PPT/Presentation mode exit timing, and export timeout handling",
+      "Concurrency safety: Resolved ExportCache data race, scoped URL leaks, and stale-note assignment after async rendering"
+    ],
+    "zh": [
+      "预览更快：两阶段渲染让文字立即显示，本地图片在后台懒加载，明显减少预览首屏等待时间",
+      "终端快捷入口：新增 Cmd+J 全局快捷键，随时打开当前文件夹所在终端，文件夹右键菜单也有对应入口",
+      "复制路径：右键任意笔记可直接复制完整文件路径",
+      "西班牙语本地化：完整覆盖菜单、设置页和系统字符串的西班牙语翻译",
+      "Mermaid 升级至 v11.14.0，修复子图连线渲染问题并新增图表功能",
+      "实时重载修复：其他工具修改的笔记现在能正确触发重载，含符号链接目录内的文件（closes #502）",
+      "启动与窗口修复：从 Finder 直接打开 .md 文件不再出现白屏，单栏模式下启动和退出时也不会再丢失笔记",
+      "导出与模式切换：修复切换笔记时预览空白、PPT 演示模式退出时序混乱、导出超时处理异常等问题",
+      "并发安全：修复 ExportCache 数据竞争、安全作用域 URL 泄漏、异步渲染后笔记状态错乱等问题"
+    ]
+  },
+  {
+    "version": "3.1.1",
+    "tag": "V3.1.1",
+    "codename": "Astalos",
+    "date": "2026-03-12",
+    "en": [
+      "Better CLI: Expanded the miao command with search, list, open, and note viewing support, while improving path resolution and default list behavior.",
+      "Reload external edits: Added a quick way to reload the current note so changes made by other tools can be pulled back into the app faster.",
+      "Steadier sidebar: Fixed sidebar item overflow during launch and width changes, and restored the Cmd+1 shortcut for the sidebar.",
+      "Preview and access fixes: Fixed preview styles disappearing after idle and restored folder access in single-pane mode."
+    ],
+    "zh": [
+      "CLI 更顺手：扩展了 miao 命令，补全搜索、列出、打开和查看笔记等能力，并改进了路径解析与默认列表行为。",
+      "外部修改可重载：新增重新加载当前笔记的快捷入口，文件被其他工具改动后可以更快同步回应用。",
+      "侧边栏更稳定：修复窗口启动和宽度变化时侧边栏项目内容溢出的问题，并恢复 Cmd+1 侧边栏快捷键。",
+      "预览与访问修复：修复预览样式空闲后丢失的问题，并恢复单栏模式下的文件夹访问能力。"
+    ]
+  },
+  {
+    "version": "2.7.0",
+    "tag": "V2.7.0",
+    "codename": "Zinogre",
+    "date": "2026-02-28",
+    "en": [
+      "Apple Notarization complete: after investing ¥688 and writing to Tim Cook, finally done — no more \"app is damaged\" or \"Open Anyway\" hassles!",
+      "Preview stability upgrade: fixed intermittent blank preview and enhanced WebContent crash recovery.",
+      "Editing refinements: fixed IME issues in split mode, resolved system shortcut conflicts, and eliminated highlight flashing when switching notes.",
+      "App Store readiness: added sandbox entitlements and improved Security Scoped Bookmark persistence.",
+      "Internationalization polish: replaced hardcoded strings with i18n resources and improved first-launch templates."
+    ],
+    "zh": [
+      "Apple 公证完成：花了 688 元、给库克写信投诉才办下来，终于不会出现 App 损坏提示以及不用再去系统设置里点\"仍然打开\"了！",
+      "预览稳定性升级：修复预览偶发空白问题，增强 WebContent 进程异常后的恢复能力。",
+      "编辑体验优化：修复分栏模式下输入法问题，解决系统快捷键冲突，消除切换笔记时高亮闪烁。",
+      "App Store 能力完善：新增沙盒权限配置，强化存储路径持久化流程。",
+      "多语言打磨：将硬编码文案迁移到国际化资源，完善首启模板内容。"
+    ]
+  },
+  {
+    "version": "2.5.2",
+    "tag": "V2.5.0",
+    "codename": "More exquisite",
+    "date": "2026-02-07",
+    "en": [
+      "Editing experience upgrade: new Find & Replace flow in editor/preview, smoother split-view syncing, and more stable mode switching across Preview/Presentation/PPT.",
+      "Performance improvements for real-world writing: faster large-file typing/rendering with optimized Markdown highlighting, smarter code-block handling, and async/cancelable formatting.",
+      "Reliability and data safety enhancements: unified session-state routing (including export state), safer image/text replacement, improved local-image behavior in PPT, and stronger storage path persistence via Security Scoped Bookmark.",
+      "Polish and maintainability updates: improved localization/first-launch templates, refined window always-on-top behavior, and core architecture cleanup with modularized text pipeline and removed legacy network dependencies."
+    ],
+    "zh": [
+      "编辑体验升级：编辑区与预览区查找替换更统一，分屏同步更顺滑，预览/演示/PPT 模式切换更稳定。",
+      "性能进一步提升：大文档输入与渲染更流畅，Markdown 高亮与代码块处理优化，并支持异步可取消格式化。",
+      "可靠性与数据安全增强：导出等状态统一走 session 管理，图片与文本替换更安全，PPT 本地图片更稳定，存储路径持久化能力提升。",
+      "细节与架构优化：多语言与首启模板完善，窗口置顶行为更一致，文本处理链路模块化并移除旧网络依赖。"
+    ]
+  },
+  {
+    "version": "2.4.6",
+    "tag": "V2.4.5",
+    "codename": "Steady",
+    "date": "2026-01-03",
+    "en": [
+      "Support detecting the system language on first launch and generate more project templates.",
+      "Visual refinement: unified icon sizing/tints, clearer active states, better dark/light adaptability",
+      "Smoother preview toggle with soft reveal, plus editor selection/scroll preservation and steadier split-view resizing",
+      "Export overhaul: progress feedback, improved PDF/image/PPT output, dark-mode export matches preview",
+      "Sidebar subfolders with proper expansion state handling",
+      "Performance boosts: lazy-loaded note content, debounced preview updates, faster input/preview rendering",
+      "Search improvements and better error feedback when note saving fails",
+      "Reliability & privacy: save-before-reload to prevent data loss, symlink fix for single mode, telemetry removed",
+      "Single mode fixes: correct project selection, stable note focus, editor stays visible on launch",
+      "Sidebar resizing: width syncing, legacy layout repair, smoother split-view behavior",
+      "Content safety: prevent stale reloads during rapid split toggles",
+      "Preview/TOC/typography tweaks: alignment rules, image link underline removal, lighter TOC hover",
+      "Docs & release tooling: updated install guidance, new build script and export options"
+    ],
+    "zh": [
+      "视觉精致升级：图标统一尺寸与灰度状态，激活色更清晰，明暗模式更一致",
+      "预览切换体验优化：柔和显隐，保留选区/滚动，分栏与窗口缩放更稳定",
+      "导出体验全面升级：进度提示、标题注入、PDF/图片/PPT 输出改进，深色导出与预览一致",
+      "侧边栏支持子文件夹与展开状态维护，也即支持文件夹嵌套了",
+      "性能增强：笔记内容懒加载、预览更新防抖、输入/渲染更流畅",
+      "搜索能力增强，并在保存失败时提供更清晰的提示",
+      "可靠性与隐私：防止重载丢稿、单模式路径修复、移除遥测",
+      "单模式修复：正确定位项目与笔记，启动后编辑区保持可见",
+      "侧边栏宽度与分栏体验优化，修复旧版初始化宽度问题",
+      "内容安全增强：快速切换分屏时避免旧内容回滚",
+      "预览与样式细节优化：对齐规则、图片链接去下划线、TOC 提示更柔和",
+      "文档与发布流程升级：安装说明更新，新增构建脚本与导出配置"
+    ]
+  },
+  {
+    "version": "2.3.1",
+    "tag": "V2.3.0",
+    "codename": "Big change",
+    "date": "2025-12-16",
+    "en": [
+      "Added \"Split View\" mode with side-by-side editing and preview, featuring bidirectional scroll sync",
+      "Added \"Layout Cycle\" button for quick switching between sidebar, note list, and focus modes",
+      "Added \"Clean Orphan Attachments\" feature to scan and remove unreferenced images and files",
+      "Optimized startup experience: eliminated white flash with elegant window fade-in animation",
+      "Comprehensive performance optimizations: debounced saving, regex caching, scroll position memory for smoother experience",
+      "Fixed scroll sync jitter, preview rendering failures, menu lookup issues, and other known bugs"
+    ],
+    "zh": [
+      "新增「分栏预览」模式，支持左右分栏同时编辑与预览，双向滚动自动同步",
+      "新增「布局循环」按钮，支持在侧边栏、笔记列表、专注模式间快速切换",
+      "新增「清理孤立附件」功能，一键扫描并移除未被引用的图片和文件",
+      "优化启动体验，消除白屏闪烁，窗口淡入更优雅",
+      "全面性能优化：笔记保存防抖、正则缓存、滚动位置记忆，大幅提升流畅度",
+      "修复滚动同步抖动、预览渲染失效、菜单查找等多个已知问题"
+    ]
+  },
+  {
+    "version": "2.2.0",
+    "tag": "V2.2.0",
+    "codename": "More perfect",
+    "date": "2025-11-10",
+    "en": [
+      "Rewrite content search components, support search in editing and preview mode, and the experience is much better than before.",
+      "TOC supports pin control, which is convenient for friends who need to open it frequently.",
+      "The picture preview of the editor page is changed to command + hover to prevent the original direct display interference.",
+      "Fix the problem that double scroll bars may occur in some models in preview mode."
+    ],
+    "zh": [
+      "重写内容搜索组件，支持编辑和预览模式下的搜索，体验相比之前好很多了",
+      "TOC 支持 pin 控制，方便需要经常打开的小伙伴",
+      "编辑器页面的图片预览改成 command + hover 方式，防止原有直接展示干扰",
+      "修复预览模式下某些机型可能出现的双滚动条的问题"
+    ]
+  },
+  {
+    "version": "2.1",
+    "tag": "V2.1.6",
+    "codename": "New Discoveries",
+    "date": "2025-10-11",
+    "en": [
+      "2.1.6 Support icons of various modes under Mac26, fix Markmap rendering truncation, fix the bottom cache blocking editing problem",
+      "Improve the theme switching function, support adaptive system themes, fix list selection behavior, and improve the accuracy of file type detection.",
+      "Enhanced Navigation & Image Support – Added automatic TOC (Table of Contents) generation for article navigation, PicList image-hosting uploads, and support for referencing local images from any location.",
+      "Improved Editing Efficiency – Quick template insertion via the Tab key, automatic file change detection and refresh, and optimized bottom spacing in the editor.",
+      "Upgraded PPT Presentation Mode – More customizable configuration parameters, substantially refined styles, and a more professional presentation experience.",
+      "Major Preview Rendering Upgrade – Overall improvements to preview visuals and interactions; optimized styles for Mermaid, Markmap, and PlantUML; and better code block and inline code display.",
+      "Key Bug Fixes – Fixed preview styles failing after long sessions, resolved potential editor crashes, and corrected abnormal expand/collapse logic in the notes list.",
+      "Performance & UX Improvements – Significantly faster content search, optimized export to avoid timeouts, and disabled elastic scrolling for more precise operations.",
+      "Code Architecture Refactor – Rebuilt the DownView preview component and sidebar logic, modularized style files for easier maintenance, and even enabled development in VS Code."
+    ],
+    "zh": [
+      "2.1.6 支持 Mac26 下各种模式效果的图标，修复 Markmap 渲染截断，修复底部缓存挡住编辑问题",
+      "完善主题切换功能，支持自适应系统主题，修复列表选择行为，提升文件类型检测准确性",
+      "目录导航和图片功能增强 - 新增 TOC 目录模式自动生成文章导航，支持 PicList 图床上传，支持引用任意位置的本地图片",
+      "编辑效率提升 - 支持 Tab 快捷键模板一键输入，文件自动检测刷新，编辑器底部留白优化",
+      "PPT 演示模式增强 - 支持更多自定义配置参数，样式大幅优化，演示效果更专业",
+      "预览渲染大幅升级 - 整体预览效果和交互体验提升，优化 Mermaid、Markmap、PlantUML 等图表样式，改进代码块和内联代码显示",
+      "关键 Bug 修复 - 修复长时间使用后预览样式失效，修复编辑时可能崩溃问题，修复笔记列表展开折叠逻辑异常",
+      "性能和体验改进 - 大幅提升内容搜索速度，优化导出功能解决超时问题，禁用弹性滚动使操作更精准",
+      "代码架构重构 - DownView 预览组件和侧边栏逻辑重构，样式文件模块化便于维护，甚至支持 VSCode 开发了"
+    ]
+  },
+  {
+    "version": "2.0",
+    "tag": "V2.0.0",
+    "codename": "New Face",
+    "date": "2025-09-21",
+    "en": [
+      "Brand-new icon design clearer and more beautiful, smoother theme switching with standardized divider colors and unified background",
+      "Support top navigation and shortcut key operation, ESC/→ key switching is more convenient",
+      "Settings panel redesigned, improved font & language experience",
+      "Fixed title and search box switching issues, standardized search box, optimized search behavior to handle empty input",
+      "Asynchronous image upload for smoother experience, optimized preview performance, improved consistency in editing state",
+      "Optimized export effects with more stable output and refined layout display",
+      "Comprehensive upgrade to Swift 6 with optimized code implementation and annotations, adapted to new features for improved performance and stability",
+      "Removed recommended font dependencies, refactored code structure, optimized undo/redo functionality and fixed font selection issues"
+    ],
+    "zh": [
+      "全新图标设计更清晰美观，主题切换更流畅，分割线与背景色更统一",
+      "支持顶部导航和快捷键操作，ESC/→ 键切换更便捷",
+      "设置面板重构，字体和语言设置体验优化",
+      "修复标题和搜索框切换问题，搜索框标准化，搜索逻辑优化支持空输入",
+      "异步图片上传更丝滑，预览性能优化，编辑状态下体验更一致",
+      "导出效果优化，生成内容更加稳定，排版显示更精致",
+      "项目全面升级到 Swift 6，优化代码实现和注释，适配新特性提升应用性能和稳定性",
+      "移除推荐字体依赖，代码结构重构，撤销重做功能优化并修复字体选择问题"
+    ]
+  },
+  {
+    "version": "1.18.3",
+    "tag": "V1.18.3",
+    "codename": "Big Updates",
+    "date": "2025-08-10",
+    "en": [
+      "1.18.3 Fixed the issue where the name change did not take effect immediately and the view menu would crash when clicked. The search content shortcut key was changed to Command+F",
+      "Support for image preview in Markdown, more user-friendly",
+      "Folder drag-and-drop to reorder, more intuitive",
+      "Refactored three-column layout drag-to-collapse/expand effects, more comfortable",
+      "Remember last opened document position, faster access",
+      "Upgraded from CocoaPods to Swift Package Manager, better maintainability"
+    ],
+    "zh": [
+      "1.18.3修复单独模式显示问题、名称修改没有立即生效、点击视图菜单会闪退问题",
+      "搜索内容快捷键修改成 Command+F，搜索文件改成 Command+P",
+      "支持Markdown中的图片预览功能，更好用",
+      "文件夹支持拖拽修改原有的顺序，更巧妙",
+      "三栏布局拖拽收起展开的效果重构，更舒服",
+      "记住上次打开的文档位置，更迅速",
+      "从原有的 Pod 包管理升级到 Swift 包管理，好维护"
+    ]
+  },
+  {
+    "version": "1.17",
+    "tag": "V1.17.0",
+    "codename": "New Changes",
+    "date": "2025-08-04",
+    "en": [
+      "Compatible with the latest macOS Tahoe - update required or the app won't open",
+      "Long PDF exports are finally no longer split, plus optimized image/PPT export functionality",
+      "TsangerJinKai font now set as default, improved image/video rendering with click-to-zoom capability"
+    ],
+    "zh": [
+      "适配最新 macOS 26 Tahoe,需要更新不然打不开",
+      "导出长PDF终于不切割了,此外图片/PPT导出也优化了",
+      "默认使用仓耳今楷字体,图片/视频渲染效果优化,可点击放大"
+    ]
+  },
+  {
+    "version": "1.16",
+    "tag": "V1.16.0",
+    "codename": "Small delight",
+    "date": "2025-07-18",
+    "en": [
+      "Added a beautiful new font - update to TsangerJinKai in settings",
+      "Minimum Mac version support raised to 11.5, fixed crashes when inputting certain special formats",
+      "LaTeX formulas now support block rendering, fixed duplicate capitalization hints in titles, emails now show without highlighting/clickability"
+    ],
+    "zh": [
+      "新增了个很好看的字体，快去设置中更新 TsangerJinKai",
+      "最低 Mac 版本支持 11.5，修复输入某些特殊格式奔溃的问题",
+      "公式 Latex 支持块渲染、修复标题大小写重复提示、邮箱不高亮展示不点击"
+    ]
+  },
+  {
+    "version": "1.15",
+    "tag": "V1.15.0",
+    "codename": "Long time no see",
+    "date": "2024-05-26",
+    "en": [
+      "The display effect of the MiaoYan font has been upgraded. It is now blacker and slightly bolder, making it easier to read.",
+      "Supports lazy loading content in preview mode, allowing you to see the effect as quickly as possible.",
+      "Continuous optimization of Markdown rendering effect. Improvements in link, bold, and italic text compatibility.",
+      "Fixed window adaptation background color in PPT preview, unified text letter spacing in windows, and updated version date to 2024."
+    ],
+    "zh": [
+      "妙言字体显示效果升级，更黑稍粗更便于阅读。",
+      "预览的时候支持懒加载内容，让你可以最快速度看到效果。",
+      "Markdown 效果高亮持续优化，链接、粗体、斜体兼容性优化。",
+      "修复 PPT 预览下窗口适配背景、窗口文字字间距统一、更新版本日期。"
+    ]
+  },
+  {
+    "version": "1.14",
+    "tag": "V1.14.0",
+    "codename": "More Accurate",
+    "date": "2023-12-12",
+    "en": [
+      "Enhanced user experience in MiaoYan PPT mode, activation not required initially, improved pre-launch effect.",
+      "Fixed bugs with underline recognition, preview button state, opening in single mode, and dragging issues in the project list column.",
+      "Completed and patched missing parts in multi-language configurations, and conformed to case standards, spent some time compatible with XCode15."
+    ],
+    "zh": [
+      "妙言 PPT 模式下使用体验优化，无需首次触发，预发效果增强",
+      "修复下划线高亮识别、预览按钮状态、单独模式打开问题、项目列表栏拖动异常 Bug",
+      "多语言配置情况下的补全和查漏补缺以及大小写规范，花了点时间兼容 XCode15"
+    ]
+  },
+  {
+    "version": "1.13",
+    "tag": "V1.13.0",
+    "codename": "Comfort Improved",
+    "date": "2023-09-12",
+    "en": [
+      "Support for Traditional Chinese mode, now supports four languages: Chinese, English, Japanese, and Traditional Chinese",
+      "Adjusted the position of the title in single column editing mode, more comfortable now",
+      "Optimized the experience of exporting HTML files, and recommend using it",
+      "Optimized the copy/paste experience of the title, more in line with usage habits",
+      "Updated Mermaid to the latest version, supports various new drawing methods"
+    ],
+    "zh": [
+      "支持中文繁体模式，累计支持中/英/日/繁四种语言",
+      "单栏编辑模式下调整标题的位置，更舒服了",
+      "优化导出 HTML 文件的体验，并推荐使用",
+      "优化标题的复制/粘贴体验，更符合使用习惯",
+      "更新 Mermaid 到最新版本，各种新绘图方式支持"
+    ]
+  },
+  {
+    "version": "1.12.1",
+    "tag": "V1.12.1",
+    "codename": "",
+    "date": "2023-07-30",
+    "en": [
+      "Certificate update, please update the app for a better experience."
+    ],
+    "zh": [
+      "很抱歉，由于本地证书更新，辛苦大伙重新下载妙言进行更新，防止后续证书问题有可能会打不开软件。"
+    ]
+  },
+  {
+    "version": "1.11.0",
+    "tag": "V1.11.0",
+    "codename": "",
+    "date": "2023-07-12",
+    "en": [
+      "Significantly enhanced text writing performance, lighter, no lag for long texts",
+      "Fixed a bug where the cursor may be disordered when tabbing at the beginning of the line",
+      "Better export compatibility, PDF export is more useful for long texts, optimized PPT export effect",
+      "Fixed the issue where renaming a folder doesn't take effect, fixed the display effect of the text in the search box"
+    ],
+    "zh": [
+      "文字书写体验性能大幅增强，更加轻量化，长文不卡顿",
+      "解决首行Tab切换时光标可能会错乱的 Bug",
+      "导出更兼容，PDF 导出长文内容更好用，优化 PPT 导出的效果",
+      "修复文件夹重命名不生效问题、修复搜索框文字显示效果"
+    ]
+  },
+  {
+    "version": "1.10.1",
+    "tag": "V1.10.1",
+    "codename": "",
+    "date": "2023-03-30",
+    "en": [
+      "Significantly improved the experience of exporting PDF, supporting PPT/article pagination effects.",
+      "Optimized the use of PPT mode, allowing for scrolling display of more than one screen.",
+      "Improved preview experience for LaTeX, Mermaid, and PlantUML in dark mode.",
+      "Overall improved fault tolerance, updated font versions, resolved issues with opening individual modes, placement performance, and Japanese language experience.",
+      "Upgraded the architecture, no longer compatible with versions below 10.15, and XCode has been updated to the latest version."
+    ],
+    "zh": [
+      "大幅优化 PDF 的导出体验，支持 PPT 和文章分页效果",
+      "PPT模式下的使用优化，超过1屏的可以滚动展示更多",
+      "预览体验优化，LaTeX, Mermaid, PlantUML 黑暗模式下优化",
+      "整体使用容错性变好、升级字体版本、单独模式打开问题、放置性能问题、日文体验、格式化体验",
+      "架构升级，不再兼容 10.15 以下的版本了，XCode更新到最新"
+    ]
+  },
+  {
+    "version": "1.9.0",
+    "tag": "V1.9.0",
+    "codename": "",
+    "date": "2023-03-05",
+    "en": [
+      "Now supports Japanese version, thanks to @CharlesKan for the collaboration.",
+      "Optimize the problem of moving tabs to achieve a smoother and more user-friendly experience.",
+      "Preview styles are continuously optimized based on usage.",
+      "Fixed some bugs."
+    ],
+    "zh": [
+      "妙言支持日文版本了，感谢 @CharlesKan 共建",
+      "将原有的 tab 移动问题优化成之前的效果，更顺手",
+      "预览样式根据使用过程持续优化",
+      "修复了一些 Bug"
+    ]
+  },
+  {
+    "version": "1.8.0",
+    "tag": "V1.8.0",
+    "codename": "More ingenious",
+    "date": "2022-11-14",
+    "en": [
+      "Links in the editor require a Command click to jump, normal for editing.",
+      "Editor Tab works normally, left and right block movement is unified into Command + [].",
+      "Preview capability optimization, overall paragraph equal spacing adaptive height.",
+      "In standalone mode, files open as editor only, folders open as sidebar, remove repeated prompts.",
+      "Fix problem of local pictures in PPT mode, remember the last use status of column mode, and optimize focus of input box."
+    ],
+    "zh": [
+      "编辑器中的链接需 Command 点击才跳转，正常为编辑",
+      "编辑器 Tab 切换正常使用，左右区块移动统一成 Command + []",
+      "预览能力优化，整体段落等间距自适应高度，演示下效果更好",
+      "单独模式下，文件打开为仅编辑器，文件夹打开为侧边栏，去掉反复提示",
+      "修复PPT模式下本地图片使用问题，记住3栏模式上次使用状态，输入框焦点优化"
+    ]
+  },
+  {
+    "version": "1.7.1",
+    "tag": "V1.7.1",
+    "codename": "More happy",
+    "date": "2022-10-01",
+    "en": [
+      "Greatly optimize the editing performance of oversized text.",
+      "Command+t can quickly switch todo status.",
+      "Continue to optimize font effects，Keep LXGW WenKai Lite、SF Mono、Times New Roman.",
+      "Support setting whether the code block has a background color、Code preview line wrap、Hidden directly with Front matter preview."
+    ],
+    "zh": [
+      "大幅度优化超大文本下的编辑性能",
+      "Command+t 可以快捷切换 todo 的状态",
+      "字体强迫症继续细调，保留 LXGW WenKai Lite、SF Mono、Times New Roman",
+      "支持设置代码块是否有背景色、代码预览场景自动换行、编辑器有 Front matter 预览直接隐藏"
+    ]
+  },
+  {
+    "version": "1.6.4",
+    "tag": "V1.6.4",
+    "codename": "Better use",
+    "date": "2022-09-17",
+    "en": [
+      "Compared with 1.6.0, it fixes the problem of copy pictures to the editor, sorting by title, comfortable adjustment of window text spacing, and supports the mode of shift + enter without automatically adding serial numbers.",
+      "Fine tune 3 font rendering logics, Times New Roman, Helvetica Neue, JetBrains Mono, for a different style.",
+      "Export format support for Html, with improved PDF and Image export effects.",
+      "Markmap height can be set individually, and Markmap are now supported in PPT mode.",
+      "Formatting is even better with no sensation and remembering the position, a very senseless formatting experience.",
+      "For large preview scenes you can use the img tag loading=\"lazy\" for lazy loading, which renders much faster.",
+      "Fixing the carriage return flicker at the bottom of very few machines, adding a second confirmation for restart scenes, completely solving the blue underline, duplication of line feed titles, optimizing the carriage return, turning off text dragging, adding more features to mermaid, optimizing the position of PPT page turns, document deletion experience optimization."
+    ],
+    "zh": [
+      "较 1.6.0 版本，修复 copy 图片到编辑器、按标题排序问题、窗口文字间距舒服调整、支持 shift+回车 不自动补充序号的模式",
+      "底层细调 3 种字体渲染逻辑，Times New Roman、Helvetica Neue、JetBrains Mono，换一种风格，详细介绍在 V2EX",
+      "导出格式支持 Html，同时优化 PDF、Image 导出效果",
+      "脑图可单独设置高度，此外 PPT 模式中也支持 Markmap 脑图了",
+      "格式化更加好用无感并记住位置，一种很无感的格式化体验",
+      "大图预览场景可使用 img 标签 loading=\"lazy\" 进行懒加载，渲染快不少",
+      "修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT下翻页位置优化、文档删除体验优化"
+    ]
+  },
+  {
+    "version": "1.5.0",
+    "tag": "V1.5.0",
+    "codename": "Much Smarter",
+    "date": "2022-09-02",
+    "en": [
+      "Real support for auto-formatted typesetting, using Swift to call Prettier, much smarter, try Command + Shift + L",
+      "macOS Ventura is fully compatible with completion, sorting ability is better, title support '/', tab width becomes 2.",
+      "Fix problems such as underlining in quick sweep, cursor position when formatting, highlighting of titles between code blocks, code display in preview mode, preview not changing when switching between automatic appearance modes, preview effect optimization, indentation of list todoList display, etc. Thanks to shell-Raining、jievince、熏锅锅 to help catch bugs."
+    ],
+    "zh": [
+      "真正意义上的支持自动格式化排版，使用 Swift 调用 Prettier，聪明多了, Command + Shift + L 试试",
+      "macOS Ventura 全面兼容完成、排序功能更加好用、标题支持'/'形式、tab 宽度变成2",
+      "修复快速扫动出现划线、格式化时候光标位置、代码块之间标题高亮、预览模式下代码显示、自动外观模式下切换预览不会跟着变化、预览效果优化、列表 todoList 展示缩进等问题，感谢 shell-Raining、",
+      "jievince、熏锅锅帮忙捉虫"
+    ]
+  },
+  {
+    "version": "1.4.7",
+    "tag": "V1.4.7",
+    "codename": "More Stable",
+    "date": "2022-08-18",
+    "en": [
+      "Fix the problem of certificate expiration, and fix the problem of reinstallation failure of some models compared with version 1.4.3.",
+      "Support the use of markmap, use ```markmap ``` code syntax, reference this demo .",
+      "Start to adapt the MacOS Ventura version, basically almost.",
+      "In PPT mode, supports LaTeX, optimization of user experience.",
+      "Continue to optimize code, including crash. There are still a few problems that haven't been solved, welcome to feedback."
+    ],
+    "zh": [
+      "修复证书过期的问题，较之前版本修复部分机型重新安装失败的问题，如有问题，可重装1.4.7就好（被 Mac beta 坑死了）",
+      "支持使用 markmap 方式快捷写脑图，用 ```markmap ```代码语法即可，参考写法",
+      "开始着手去适配 macOS Ventura 版本，基本差不多了",
+      "PPT模式下支持 LaTeX 数学公式、使用体验优化",
+      "持续优化代码，包括 crash，不够还有少量问题未复现，欢迎反馈"
+    ]
+  },
+  {
+    "version": "1.3.1",
+    "tag": "V1.3.1",
+    "codename": "Hurry Up",
+    "date": "2022-08-08",
+    "en": [
+      "In the separate open mode, you can open files much faster.",
+      "Editing mode supports split screen use, the adaptive display of three buttons at the upper left corner.",
+      "Fix the problem that the article is more than one screen, and it is easy to shake when entering, continue to optimize the startup effect, and reduce the points prone to crash.",
+      "Compared with 1.3.0, fixed the bug of single file opening."
+    ],
+    "zh": [
+      "单独打开模式下支持打开文件速度快了不少",
+      "编辑模式下支持左上角3个按钮自适应显示、最小高宽度支持分屏使用",
+      "修复文章超过一屏，回车易抖动问题、继续优化启动效果、减少易Crash的点",
+      "较 1.3.0 修复了单文件打开的 bug"
+    ]
+  },
+  {
+    "version": "1.2.0",
+    "tag": "V1.2.0",
+    "codename": "Inner Beauty",
+    "date": "2022-08-05",
+    "en": [
+      "You will find that text of editor is more comfortable, optimize text spacing.",
+      "Support search and replacement within the note, shortcut keys are command+shift+f and command+shift+r.",
+      "Fixed several points that are easy to crash, and reduced the size to 23M."
+    ],
+    "zh": [
+      "你会发现编辑器的文字更舒服一些了，细调了下文字间距",
+      "支持文章内容的搜索替换，快捷键 command+shift+f 和 command+shift+r",
+      "修复了几个容易 Crash 的点，顺便减少了下包体积到 23M"
+    ]
+  },
+  {
+    "version": "1.1.1",
+    "tag": "V1.1.1",
+    "codename": "Easy to use",
+    "date": "2022-07-28",
+    "en": [
+      "Compared with V1.1.0, Fixes the flicker of PPT export, Optimization of preview experience, Supports the use of todolist.",
+      "Support more simple about MiaoYan. You can use Hover button in the setting.",
+      "Support embedding all kinds of interesting things, codepen/codeSandbox/youtube etc.",
+      "Miaoyan ppt optimizes a lot in combination with real use scenarios, and supports PDF export of PPT.",
+      "Solved problem that the title may flash during preview, and solve the complex LaTeX input problem, you can use span surround.",
+      "The TouchBar is useless, the spacing is adjusted at the title."
+    ],
+    "zh": [
+      "较 V1.1.0，修复了 PPT 导出时闪动、预览效果优化、支持 TodoList 使用",
+      "支持更简洁的妙言，你可以在设置中设置 Hover 才显示按钮",
+      "支持嵌入各类有趣的东西，codepen、codeSandbox、youtube 等等",
+      "妙言 PPT 结合真实使用场景优化了很多，同时支持导出 PPT 的 PDF",
+      "解决预览时标题可能会闪一下、解决复杂 LaTeX 输入，可用 span 标签包裹、优化输入 Emoji 的体验",
+      "TouchBar 菜单栏没啥用干掉了，整体框架视觉继续优化，标题处有间距调整"
+    ]
+  },
+  {
+    "version": "1.0.0",
+    "tag": "V1.0.0",
+    "codename": "Finally Coming",
+    "date": "2022-07-22",
+    "en": [
+      "MiaoYan support writing ppt quickly, which can be seen in Github.",
+      "It supports editing preview scrolling to the corresponding position, setting code font, and setting preview width.",
+      "Fix PicGo image upload compatibility problems, preview style optimization, editing experience optimization, and support in-line code."
+    ],
+    "zh": [
+      "妙言支持快速写PPT啦，详细可见Github",
+      "支持编辑预览滚动到对应位置、支持设置代码字体、支持设置预览宽度",
+      "修复 PicGo 图片上传兼容性问题、预览样式优化、编辑体验优化、支持行内代码"
+    ]
+  },
+  {
+    "version": "0.9.2",
+    "tag": "V0.9.2",
+    "codename": "More Beautiful",
+    "date": "2022-07-15",
+    "en": [
+      "A bug that may affect your use has been fixed on the basis of version 0.9.0.",
+      "Complement editor a large number of syntax color highlights. You will find that the editor is more fashionable.",
+      "Support shortcut key output bold/italic/strike/underline/link, Support block tab to move left and right.",
+      "Support Emoji shortname, The most suitable line height of different fonts, Export document auto add title, Set anchor scrolling, Can copy external url.",
+      "Shortcut keys are normalized, Number of displayed words is changed to command+option+i, Finder is opened and unified as command+option+r, New folder is unified as command+shift+n, Rename the folder to control+f6",
+      "Fix the occasional crash of repeated formatting, Fixed the dotted line display in the dark, and the occasional error of hyperlink highlighting."
+    ],
+    "zh": [
+      "在 0.9.0 版本基础上修复了一个可能会影响大家使用的 Bug",
+      "补全编辑器大量语法颜色高亮，你会发现编辑器更加潮流了",
+      "支持快捷键输出粗体/斜体/删除线/下划线/链接，支持块 tab 左右移动",
+      "支持 Emoji shortName、不同字体的最适应行高、导出文档支持添加标题、支持设置锚点滚动、支持外链打开",
+      "快捷键规范化，显示字数修改成 command+option+i，打开 Finder 统一成 command+option+r，新建文件夹统一成 command+shift+n，文件夹重命名修改成 control+f6",
+      "修复反复格式化偶现 crash 问题、修复黑暗下虚线展示、修复超链接高亮偶尔错误问题"
+    ]
+  },
+  {
+    "version": "0.8.0",
+    "tag": "V0.8.0",
+    "codename": "值得更新",
+    "date": "2022-07-11",
+    "en": [
+      "Jump between documents is supported. Try [[document title]] Click to seamlessly jump to the corresponding document.",
+      "Support separate editor mode. Try command+o to open the file, or drag the file to the icon.",
+      "command+shift + → attributes such as number of words can be displayed, and the up, down, left and right arrows can control document navigation, Support command+option+m global evoke wonderful words.",
+      "Optimize the exported style, focus selection, highlighting, search box style, ESC out of focus, upgrading, and support picsee upload."
+    ],
+    "zh": [
+      "支持文档间跳转，试试 [[对应文档标题]] 点击即可无缝跳转到对应文档",
+      "支持单独编辑器模式，试试 command+o 打开文件，或者文件拖到图标",
+      "command+shift+ → 可显示字数等属性，上下左右箭头可以控制文档导航，支持 command+option+m 全局唤起妙言",
+      "优化导出的样式、焦点选择、高亮、搜索框样式、ESC 失焦、升级，支持 Picsee 图床"
+    ]
+  },
+  {
+    "version": "0.7.0",
+    "tag": "V0.7.0",
+    "codename": "",
+    "date": "2022-07-03",
+    "en": [
+      "Finally, uPic and PicGo upload are supported, You can set them to open and try, Support copying pictures and uploading screenshots.",
+      "To complete latex performance optimization, You do not need to set the default on.",
+      "Support to copy the selected rich text directly from the preview interface with command+c.",
+      "Continuously optimize the editor experience, such as new creation, deletion, row height, focus, search, and number of notes."
+    ],
+    "zh": [
+      "终于支持 uPic、PicGo 图床了，可设置中打开，支持复制图片和截图上传",
+      "完成 LaTeX 性能优化，不需要设置默认开启",
+      "支持从预览界面 command+c 直接复制选中富文本",
+      "持续优化编辑器体验，如新建、删除、行高、焦点、搜索、笔记数"
+    ]
+  },
+  {
+    "version": "0.6.2",
+    "tag": "V0.6.2",
+    "codename": "",
+    "date": "2022-06-29",
+    "en": [
+      "Finally, Supports the rendering of PlantUML, Mermaid and PlantUML、Mermaid、LaTeX, LaTeX needs to be set to open.",
+      "Support preview rich text copy, the sorting function continues to be optimized. Rearrangement, update after deletion, and focus logic become smarter.",
+      "Repair the article and create a new minimum probability crash. Thank sbccznfy for helping to reproduce it.",
+      "The command + H window is hidden, the reading effect is continuously optimized, menu layout optimization."
+    ],
+    "zh": [
+      "终于支持了 PlantUML、Mermaid、LaTeX 的渲染，LaTeX 需设置打开",
+      "支持预览富文本复制，排序功能继续优化，重排、删除后更新、焦点逻辑变聪明了",
+      "修复文章新建极小概率 Crash，感谢 sbccznfy 帮忙复现",
+      "Command + H 窗口隐藏，阅读效果持续优化，菜单布局优化"
+    ]
+  },
+  {
+    "version": "0.6.1",
+    "tag": "V0.6.1",
+    "codename": "",
+    "date": "2022-06-24",
+    "en": [
+      "The sidebar supports the gesture of folding and expanding, Try sliding with both fingers in the title bar.",
+      "Fine tune the dark mode, which makes it more comfortable, It's good to switch it.",
+      "Optimize the editor experience, better support the ability of table display, row height, selection and search.",
+      "Fixed occasional horizontal scrolling in the sidebar, Initialize Title Focus, and table preview in dark color."
+    ],
+    "zh": [
+      "侧边栏支持手势收起展开，可以在标题栏位置双指滑动试试",
+      "细调了一下深色模式，更舒服了，你切换一下试试不错",
+      "优化编辑器的体验，更好支持表格展示、行高、选中、搜索的能力",
+      "修复侧边栏偶现横向滚动、初始化标题焦点、深色下表格预览问题"
+    ]
+  },
+  {
+    "version": "0.6.0",
+    "tag": "V0.6.0",
+    "codename": "",
+    "date": "2022-06-21",
+    "en": [
+      "This time, ARM64 packaging is really supported,Right click to display the introduction as 「common architecture」 .",
+      "Documents can be exported to PDF and Image , Right click on the document list.",
+      "Double click the title bar in the upper left corner to zoom in to the maximum size of the window and zoom out to the original size.",
+      "Re optimized the document sorting function and added the ascending and descending options."
+    ],
+    "zh": [
+      "这次真的支持 ARM64 打包了，右键显示简介为「通用架构」",
+      "文档支持导出成PDF和图片了，在文档列表右键看看",
+      "双击左上角标题栏，可以放大到窗口最大和缩小到原来",
+      "重新优化了一下文档排序的功能，增加升序降序选项"
+    ]
+  },
+  {
+    "version": "0.5.1",
+    "tag": "V0.5.1",
+    "codename": "",
+    "date": "2022-06-19",
+    "en": [],
+    "zh": [
+      "支持 ARM64 打包，不过我不是M1电脑，辛苦你帮忙试试",
+      "预览界面改成赫蹏样式增强，新增几个我喜欢的字体，可去设置看看",
+      "第一次使用时候优化默认宽度，默认文件夹，中文下 App 名称改成妙言",
+      "将妙言的域名修改成 miaoyan.app"
+    ]
+  },
+  {
+    "version": "0.5.0",
+    "tag": "V0.5.0",
+    "codename": "",
+    "date": "2022-06-18",
+    "en": [
+      "Support presentation mode, go try command + 4",
+      "Support document auto typesetting, go try command + shift + L",
+      "Added a page for feeding cans to TangYuan and Cola.",
+      "Support preview mode, full right click copy rich text to other places.",
+      "Fixed reset of selected current item in settings, completed compatibility with Mojave system."
+    ],
+    "zh": [
+      "支持演示模式，去试试 command + 4",
+      "支持文档自动排版，去试试 command + shift + L",
+      "给汤圆可乐增加了一个喂罐头的 页面",
+      "支持预览模式下，全选右键复制富文本到其他地方",
+      "修复设置中选中当前项也重置、完成对 Mojave 系统的兼容"
+    ]
+  },
+  {
+    "version": "0.4.0",
+    "tag": "V0.4.0",
+    "codename": "",
+    "date": "2022-06-14",
+    "en": [
+      "Support setting font and font size.",
+      "Optimize the presentation of dark mode,Darker than before.",
+      "The code supports pre tags, adds fade background, and optimizes visual presentation.",
+      "The copied pictures can be pasted, default width optimization, editing and preview switching optimization.",
+      "Fix the problem that the title can be edited in preview mode."
+    ],
+    "zh": [
+      "终于支持设置字体和字号啦",
+      "优化黑暗模式的展示，比之前更黑一些了",
+      "代码支持pre标签、增加淡化背景、视觉展示优化",
+      "支持复制的图片可以粘贴、默认宽度优化、编辑和预览切换优化",
+      "修复预览模式下标题还可以编辑的问题"
+    ]
+  },
+  {
+    "version": "0.3.2",
+    "tag": "V0.3.2",
+    "codename": "",
+    "date": "2022-06-12",
+    "en": [
+      "Fix bug that the default font of preview is not LXGW WenKai",
+      "Fix bug that will not appear in the mission control after the window is hidden"
+    ],
+    "zh": [
+      "修复预览页面默认字体不是霞鹜文楷的Bug",
+      "修复窗口隐藏以后不会再出现在调度中心的 Bug"
+    ]
+  },
+  {
+    "version": "0.3.1",
+    "tag": "V0.3.1",
+    "codename": "",
+    "date": "2022-06-11",
+    "en": [
+      "Fix full screen height bug.",
+      "The official website is ready."
+    ],
+    "zh": [
+      "修复全屏高度的问题",
+      "官网终于好了"
+    ]
+  },
+  {
+    "version": "0.3.0",
+    "tag": "V0.3.0",
+    "codename": "",
+    "date": "2022-06-09",
+    "en": [
+      "Support English, you can go to the settings to change.",
+      "Visual beautification, such as document date display time, small icon beautification, display, etc.",
+      "New help menu, you can follow me and give feedback to MiaoYan"
+    ],
+    "zh": [
+      "支持英语，可去设置中更改",
+      "视觉优化，如文档日期显示时间、小 icon 优化、显示等",
+      "新增帮助菜单，可以关注我以及给妙言反馈问题"
+    ]
+  },
+  {
+    "version": "0.2.0",
+    "tag": "V0.2.0",
+    "codename": "",
+    "date": "2022-06-07",
+    "en": [],
+    "zh": [
+      "全新视觉和编辑预览体验升级，兼容 macOS Monterey 版本",
+      "序号分号等支持自动递增，效果不错",
+      "默认的字体更新成 LxgwWenKai，漂亮了不少",
+      "修复标题更新有时候不保存的 bug",
+      "回车标题自动 focus 到内容区域",
+      "支持本地图片的展示和引入",
+      "支持自动更新 App"
+    ]
+  },
+  {
+    "version": "0.1",
+    "tag": "V0.1",
+    "codename": "",
+    "date": "2020-05-28",
+    "en": [],
+    "zh": [
+      "第一个正式的版本"
+    ]
+  }
+]
