@@ -6,21 +6,29 @@
     "date": "2026-11-06",
     "en": [
       "Deleted notes go to the library's own Trash, so iPhone, iPad and Mac share one Trash, and emptying it on iPhone removes the Mac's Trash row too",
-      "When the disk is full or a folder cannot be written, a failed save is reported once instead of over and over while you type, and Command-S tells you when it still cannot save",
-      "Deleting a note shows Moved to Trash with an Undo button, an empty folder or a search with no match shows a short hint instead of a blank editor, and toasts stay long enough to read and while the pointer is over them",
-      "Formulas typeset correctly offline, and mind maps draw their branches in MiaoYan's own colours and no longer come out blank in PDF and image exports",
-      "Traditional Chinese, Japanese and Spanish menus and messages use native wording, English note counts read 1 note and 2 notes, English and Spanish word counts count words, and version history dates follow the app language",
-      "On first launch the sample folders are named in the system language, and the sample notes write shortcuts as the menus show them",
-      "Folder names in the sidebar line up with their icons, the MiaoYan logo sits further below the window buttons, interface greys are warmer, note list dates are larger, other find matches sit on a light green tint, and the find bar's shadow now shows"
+      "Mac: When the disk is full or a folder cannot be written, a failed save is reported once instead of over and over while you type, and Command-S tells you when it still cannot save",
+      "Mac: Deleting a note shows Moved to Trash with an Undo button, an empty folder or a search with no match shows a short hint instead of a blank editor, and toasts stay long enough to read and while the pointer is over them",
+      "Mac: Formulas typeset correctly offline, and mind maps draw their branches in MiaoYan's own colours and no longer come out blank in PDF and image exports",
+      "Mac: Traditional Chinese, Japanese and Spanish menus and messages use native wording, English note counts read 1 note and 2 notes, English and Spanish word counts count words, and version history dates follow the app language",
+      "Mac: On first launch the sample folders are named in the system language, and the sample notes write shortcuts as the menus show them",
+      "Mac: Folder names in the sidebar line up with their icons, the MiaoYan logo sits further below the window buttons, interface greys are warmer, note list dates are larger, other find matches sit on a light green tint, and the find bar's shadow now shows",
+      "iPhone and iPad: No iCloud account needed to start: MiaoYan makes a library on this device, and you can see it in the Files app",
+      "iPhone and iPad: A note that can't be opened says why in one line, with a Try again button",
+      "iPhone and iPad: A folder's card counts the same notes its page lists, and without iCloud the header reads iCloud Off instead of Synced",
+      "iPhone and iPad: The Edit button is a plain pencil, and the launch screen uses the same paper as the app"
     ],
     "zh": [
       "删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失",
-      "磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你",
-      "删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失",
-      "没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白",
-      "繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走",
-      "第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致",
-      "侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了"
+      "Mac：磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你",
+      "Mac：删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失",
+      "Mac：没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白",
+      "Mac：繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走",
+      "Mac：第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致",
+      "Mac：侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了",
+      "iPhone 和 iPad：没有 iCloud 账号也能直接用，妙言会在这台设备上建好笔记库，在文件 App 里能看到",
+      "iPhone 和 iPad：打不开的笔记用一句话说明原因，并带一个重试按钮",
+      "iPhone 和 iPad：文件夹卡片上的数字和点进去看到的笔记数一致，没开 iCloud 时显示未开启，不再显示已同步",
+      "iPhone 和 iPad：笔记页的编辑按钮换成铅笔图标，启动画面和 App 用同一种纸色"
     ]
   },
   {
@@ -29,20 +37,20 @@
     "codename": "Rathalos",
     "date": "2026-11-06",
     "en": [
-      "Images and files dragged from Finder into the editor are copied in and linked as a paste is, where before dragged images were lost once the note saved",
-      "Edits made just before deleting their folder are no longer lost, Command-Z after Format undoes it in one step, Clean Unused Attachments no longer removes files a subfolder note links from a parent folder, and a note with garbled text opens read-only so it is never saved over",
-      "Notes deleted or renamed in Finder, git or a sync app leave the list right away, and editing the open note on iPhone no longer moves the Mac's preview or split view",
-      "Titles in the note list and sidebar no longer set their last character apart, SOP showing as SO P, and folders with Trash in their name appear in the sidebar again",
-      "In split view, new math, headings and local videos render as they do when the note opens, PNG export waits for diagrams to finish, switching light and dark recolours the preview in place, and dark text is softer",
-      "Hovering a heading in the preview shows a link icon, a loading image shows a small turning arc, and Return after a ticked task starts an unticked one"
+      "Mac: Images and files dragged from Finder into the editor are copied in and linked as a paste is, where before dragged images were lost once the note saved",
+      "Mac: Edits made just before deleting their folder are no longer lost, Command-Z after Format undoes it in one step, Clean Unused Attachments no longer removes files a subfolder note links from a parent folder, and a note with garbled text opens read-only so it is never saved over",
+      "Mac: Notes deleted or renamed in Finder, git or a sync app leave the list right away, and editing the open note on iPhone no longer moves the Mac's preview or split view",
+      "Mac: Titles in the note list and sidebar no longer set their last character apart, SOP showing as SO P, and folders with Trash in their name appear in the sidebar again",
+      "Mac: In split view, new math, headings and local videos render as they do when the note opens, PNG export waits for diagrams to finish, switching light and dark recolours the preview in place, and dark text is softer",
+      "Mac: Hovering a heading in the preview shows a link icon, a loading image shows a small turning arc, and Return after a ticked task starts an unticked one"
     ],
     "zh": [
-      "从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失",
-      "删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖",
-      "在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置",
-      "笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏",
-      "分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和",
-      "鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的"
+      "Mac：从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失",
+      "Mac：删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖",
+      "Mac：在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置",
+      "Mac：笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏",
+      "Mac：分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和",
+      "Mac：鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的"
     ]
   },
   {
@@ -51,18 +59,36 @@
     "codename": "Gore Magala",
     "date": "2026-11-04",
     "en": [
-      "Exported PDFs carry their styles and every image again; since V4.3.0 they lost the styling and images you had not scrolled to came out blank",
-      "Images in the preview hold their own shape before they load, so the text no longer jumps, a slow image shows a softly pulsing tint until it arrives, and videos show their first frame",
-      "Switching notes in preview no longer reloads the page or flashes blank, and split view or outside edits refresh only the changed paragraphs, keeping your place",
-      "The preview's line height, heading sizes and spacing are retuned to read more easily, Chinese emphasis stays upright, and links are MiaoYan green",
-      "The search field, note title and mode buttons sit on the same line as the window buttons"
+      "Mac: Exported PDFs carry their styles and every image again; since V4.3.0 they lost the styling and images you had not scrolled to came out blank",
+      "Mac: Images in the preview hold their own shape before they load, so the text no longer jumps, a slow image shows a softly pulsing tint until it arrives, and videos show their first frame",
+      "Mac: Switching notes in preview no longer reloads the page or flashes blank, and split view or outside edits refresh only the changed paragraphs, keeping your place",
+      "Mac: The preview's line height, heading sizes and spacing are retuned to read more easily, Chinese emphasis stays upright, and links are MiaoYan green",
+      "Mac: The search field, note title and mode buttons sit on the same line as the window buttons",
+      "iPhone and iPad: Pick a reading face, Sans Serif, Serif, Kaiti or Rounded, download Tsanger JinKai in the app, and set the size with a slider; the system font is the default, as on the Mac, and a font you picked before is kept",
+      "iPhone and iPad: The reader's line height and spacing are retuned, headings on iPhone are no longer oversized, text is left-aligned, Chinese emphasis stays upright, and links are MiaoYan green",
+      "iPhone and iPad: A note you have open picks up edits from your Mac right away, and needless conflict prompts are gone",
+      "iPhone and iPad: Folders can hold one level of subfolders, shown at the top of a folder on iPhone and in an expandable sidebar on iPad, and notes can be moved into them",
+      "iPhone and iPad: Rename a note by editing its title, and rename or move notes from the list with a long press",
+      "iPhone and iPad: New icons, the MiaoYan bird on the home screen and a tidier Settings, and note cards put a shorter date ahead of the preview, with only the time for today's notes",
+      "iPhone and iPad: Images hold their own shape before they load, so the text no longer jumps, a slow image shows a small turning arc until it arrives, and videos show their first frame",
+      "iPhone and iPad: Slides written for a dark background no longer vanish, code blocks stay inside the text column, tapping the reader no longer shows or hides the toolbars, and the refresh arrows always turn when tapped",
+      "iPhone and iPad: Coming back from a wikilink no longer leaves the note loading, the iPad sidebar shows sync status with a refresh button, new notes use your font and size, and the Search tab's header matches the other tabs"
     ],
     "zh": [
-      "导出的 PDF 重新带上排版样式和全部图片，V4.3.0 起导出会丢掉样式，没滚动到的图片也是空白",
-      "预览里的图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片先显示一块轻轻呼吸的底色，视频直接显示第一帧",
-      "预览模式下切换笔记不再整页重载，没有白闪，分栏编辑或外部改动时只刷新改到的段落，阅读位置保持不动",
-      "预览的行距、标题字号和段落间距重新调过，读起来更舒展，中文强调不再显示成斜体，链接改用妙言绿",
-      "窗口顶部的搜索框、笔记标题和模式按钮跟红绿灯放在同一行"
+      "Mac：导出的 PDF 重新带上排版样式和全部图片，V4.3.0 起导出会丢掉样式，没滚动到的图片也是空白",
+      "Mac：预览里的图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片先显示一块轻轻呼吸的底色，视频直接显示第一帧",
+      "Mac：预览模式下切换笔记不再整页重载，没有白闪，分栏编辑或外部改动时只刷新改到的段落，阅读位置保持不动",
+      "Mac：预览的行距、标题字号和段落间距重新调过，读起来更舒展，中文强调不再显示成斜体，链接改用妙言绿",
+      "Mac：窗口顶部的搜索框、笔记标题和模式按钮跟红绿灯放在同一行",
+      "iPhone 和 iPad：阅读字体可以在黑体、宋体、楷体、圆体之间切换，仓耳今楷可以在 App 里下载，字号改成滑块调节，默认和 Mac 一样用系统字体，之前选过的字体保持不变",
+      "iPhone 和 iPad：阅读页的行距和段落间距重新调过，手机上的标题不再那么大，正文改为左对齐，中文强调不再显示成斜体，链接改用妙言绿",
+      "iPhone 和 iPad：打开的笔记在 Mac 上改了会直接更新，也不再弹出没必要的冲突提示",
+      "iPhone 和 iPad：文件夹里可以再建一层子文件夹，iPhone 上点进文件夹就能看到，iPad 侧栏可以展开和收起，移动笔记时也能选到",
+      "iPhone 和 iPad：编辑时改标题就能给笔记改名，列表里长按也能改名和移动到文件夹",
+      "iPhone 和 iPad：全新的图标，首页换上妙言的红雀标志，设置页重新整理，笔记卡片把日期放到摘要前面并改成更短的写法，今天的笔记只显示时间",
+      "iPhone 和 iPad：图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片中间会转一个小圈，视频直接显示第一帧",
+      "iPhone 和 iPad：为深色背景写的幻灯片不再看不见，代码块不再超出正文宽度，轻点阅读页不再弹出或收起工具栏，点刷新时箭头总会转一圈",
+      "iPhone 和 iPad：从双链跳到另一篇再返回不再一直停在加载状态，iPad 侧栏可以看到同步状态并手动刷新，新建笔记跟随你设的字体和字号，搜索页的页头和另外两页一致"
     ]
   },
   {
@@ -71,18 +97,20 @@
     "codename": "Glavenus",
     "date": "2026-11-03",
     "en": [
-      "Choosing a folder from File > Single Mode no longer crashes the app",
-      "Code in the editor and preview is back to V4.5.0's colours instead of a yellow cast",
-      "Multi-line math now renders in the preview and exports under the default line-break mode too",
-      "The sidebar logo reads 妙言 in Source Han Serif for Chinese and MiaoYan in other languages, the bird and name line up with the folder icons and names, and All Notes reads 全部 in Chinese",
-      "Delete actions say Move to Trash everywhere, Traditional Chinese calls it 垃圾桶, and messages use one style of quotes, ellipses and colons"
+      "Mac: Choosing a folder from File > Single Mode no longer crashes the app",
+      "Mac: Code in the editor and preview is back to V4.5.0's colours instead of a yellow cast",
+      "Mac: Multi-line math now renders in the preview and exports under the default line-break mode too",
+      "Mac: The sidebar logo reads 妙言 in Source Han Serif for Chinese and MiaoYan in other languages, the bird and name line up with the folder icons and names, and All Notes reads 全部 in Chinese",
+      "Mac: Delete actions say Move to Trash everywhere, Traditional Chinese calls it 垃圾桶, and messages use one style of quotes, ellipses and colons",
+      "iPhone and iPad: Notes with a video no longer stay on the loading placeholder when you open them"
     ],
     "zh": [
-      "在「文件 > 单独模式」里选完文件夹后不再闪退",
-      "编辑器和预览里的代码换回 V4.5.0 的配色，不再整片发黄",
-      "默认换行模式下，跨多行的数学公式在预览和导出里也能正常渲染",
-      "侧栏 Logo 在中文界面显示用思源宋体排的「妙言」，其他语言显示 MiaoYan，小鸟和文字跟文件夹图标、名称对齐，中文的「全部笔记」缩成「全部」",
-      "删除相关的菜单和提示统一叫「移到废纸篓」，繁体中文改用「垃圾桶」，提示里的引号、省略号和冒号统一成一种写法"
+      "Mac：在「文件 > 单独模式」里选完文件夹后不再闪退",
+      "Mac：编辑器和预览里的代码换回 V4.5.0 的配色，不再整片发黄",
+      "Mac：默认换行模式下，跨多行的数学公式在预览和导出里也能正常渲染",
+      "Mac：侧栏 Logo 在中文界面显示用思源宋体排的「妙言」，其他语言显示 MiaoYan，小鸟和文字跟文件夹图标、名称对齐，中文的「全部笔记」缩成「全部」",
+      "Mac：删除相关的菜单和提示统一叫「移到废纸篓」，繁体中文改用「垃圾桶」，提示里的引号、省略号和冒号统一成一种写法",
+      "iPhone 和 iPad：带视频的笔记打开后不再一直停在加载状态"
     ]
   },
   {
@@ -91,30 +119,52 @@
     "codename": "Lagiacrus",
     "date": "2026-10-26",
     "en": [
-      "The sidebar, note list, editor and preview share one warm paper tone, list rows are parted by an inset hairline, the editor uses a calmer palette with quieter Markdown symbols, code, inline code and HTML tags share a soft gold that preview code blocks use too, and the format, presentation and pin icons are redrawn",
-      "The default font is now the system pairing, SF for Latin and PingFang for Chinese, and fonts you already chose, TsangerJinKai02 included, stay as they are",
-      "Settings is laid out as General, Editor and Fonts, each row a description on the left and its control on the right, with a Restart button in the row for settings that need one, the sidebar gains an All Notes row under the logo, and an upgrade reopens the folder you left",
-      "Confirmations sit on the app's paper with the bird alone as their icon and name the Trash the same way everywhere, quotes in the preview gain a thin bar on the left, and images keep their rounded corners as they scroll under the top edge",
-      "Folders gain Move to… in their context menu, carrying every subfolder and note along, and renaming a folder now keeps its subfolders, sort settings and version history, and libraries with over 100 folders, note folders named assets and libraries reached through a symlink are listed in full",
-      "Notes that cannot be read are never saved over with empty text, a save that worked no longer reports Save Failed, Clean Unused Attachments no longer trashes images used by notes you have not opened or notes in the Trash, and GBK, Big5 and UTF-16 notes open correctly, mostly English ones included, and are not rewritten unless you edit them",
-      "A note changed elsewhere shows its latest text when you open it again, notes ending in .MD refresh after outside edits, and version history follows renames, moves and the Trash and comes back when a delete is undone, and backlinks cover notes in every folder and follow renames and deletes, and notes added to a folder outside the app are listed",
-      "Split preview no longer flashes broken images or stays on another note, formulas and Mermaid diagrams render after the last quick edit, code blocks keep their colours while you type in split view, ticking a task in preview mode is saved, HTML export works without opening the preview and carries its images, a deck that opens with --- keeps its first slide, a task item with no text shows as a checkbox, exports no longer stick after a cancelled save panel, and copying a whole heading from the preview no longer brings its # marks",
-      "List shortcuts no longer fire twice, Return in the list no longer types into the note, the Format and Find menus work again, Main Window moves to ⌥⌘0, and confirming English with Return in a Chinese input method keeps focus in the title, a title of only spaces no longer moves the note out of its folder, typing while Format runs is kept, and leaving a presentation brings back only the columns that were open",
-      "Typing no longer copies the whole note on every key, long notes full of digits no longer lag, search, sorting and launch are faster, an image uploaded to PicGo lands where it was pasted, and menus and messages are fully translated into Japanese, Traditional Chinese and Spanish",
-      "The miao command line finds the notes folder the app actually uses, creates notes whose titles contain quotes, its installer no longer stops when the network is down, and miao update no longer installs unreleased code when the release lookup fails"
+      "Mac: The sidebar, note list, editor and preview share one warm paper tone, list rows are parted by an inset hairline, the editor uses a calmer palette with quieter Markdown symbols, code, inline code and HTML tags share a soft gold that preview code blocks use too, and the format, presentation and pin icons are redrawn",
+      "Mac: The default font is now the system pairing, SF for Latin and PingFang for Chinese, and fonts you already chose, TsangerJinKai02 included, stay as they are",
+      "Mac: Settings is laid out as General, Editor and Fonts, each row a description on the left and its control on the right, with a Restart button in the row for settings that need one, the sidebar gains an All Notes row under the logo, and an upgrade reopens the folder you left",
+      "Mac: Confirmations sit on the app's paper with the bird alone as their icon and name the Trash the same way everywhere, quotes in the preview gain a thin bar on the left, and images keep their rounded corners as they scroll under the top edge",
+      "Mac: Folders gain Move to… in their context menu, carrying every subfolder and note along, and renaming a folder now keeps its subfolders, sort settings and version history, and libraries with over 100 folders, note folders named assets and libraries reached through a symlink are listed in full",
+      "Mac: Notes that cannot be read are never saved over with empty text, a save that worked no longer reports Save Failed, Clean Unused Attachments no longer trashes images used by notes you have not opened or notes in the Trash, and GBK, Big5 and UTF-16 notes open correctly, mostly English ones included, and are not rewritten unless you edit them",
+      "Mac: A note changed elsewhere shows its latest text when you open it again, notes ending in .MD refresh after outside edits, and version history follows renames, moves and the Trash and comes back when a delete is undone, and backlinks cover notes in every folder and follow renames and deletes, and notes added to a folder outside the app are listed",
+      "Mac: Split preview no longer flashes broken images or stays on another note, formulas and Mermaid diagrams render after the last quick edit, code blocks keep their colours while you type in split view, ticking a task in preview mode is saved, HTML export works without opening the preview and carries its images, a deck that opens with --- keeps its first slide, a task item with no text shows as a checkbox, exports no longer stick after a cancelled save panel, and copying a whole heading from the preview no longer brings its # marks",
+      "Mac: List shortcuts no longer fire twice, Return in the list no longer types into the note, the Format and Find menus work again, Main Window moves to ⌥⌘0, and confirming English with Return in a Chinese input method keeps focus in the title, a title of only spaces no longer moves the note out of its folder, typing while Format runs is kept, and leaving a presentation brings back only the columns that were open",
+      "Mac: Typing no longer copies the whole note on every key, long notes full of digits no longer lag, search, sorting and launch are faster, an image uploaded to PicGo lands where it was pasted, and menus and messages are fully translated into Japanese, Traditional Chinese and Spanish",
+      "Mac: The miao command line finds the notes folder the app actually uses, creates notes whose titles contain quotes, its installer no longer stops when the network is down, and miao update no longer installs unreleased code when the release lookup fails",
+      "iPhone and iPad: When another device saves a note you are editing, a capsule asks which version to keep, and if you leave without choosing your typing is saved as a copy",
+      "iPhone and iPad: A version iCloud set aside in a conflict is offered back when you open the note, so you can keep both instead of losing one",
+      "iPhone and iPad: Typing stays safe across saves, backgrounding, renames, moves and the Trash, and a note's images move with it",
+      "iPhone and iPad: Card previews, folder lists and notes you have read show up right after launch",
+      "iPhone and iPad: Moving a note to the Trash happens at once with five seconds to Undo, instead of a confirmation",
+      "iPhone and iPad: Footnote and heading links in the reader jump to their place",
+      "iPhone and iPad: GBK, Big5, EUC-KR and UTF-16 notes get card previews, and previews leave out comments, table rules, code fences and footnote markers",
+      "iPhone and iPad: Justified English text in the reader is hyphenated, so word spacing stays even",
+      "iPhone and iPad: Colours and text sizes now match the Mac app",
+      "iPhone and iPad: A new note hints where to write, and asks before discarding text you typed",
+      "iPhone and iPad: iPhone Duo keeps the open note when it folds or unfolds"
     ],
     "zh": [
-      "侧栏、列表、编辑器和预览统一成一种暖白纸色，列表行之间用缩进细线分开，编辑器换上更安静的配色，Markdown 符号淡下去，代码、行内代码和 HTML 标签统一成淡金色，预览里的代码块也是同一套颜色，格式、演示和置顶图标也重新画过",
-      "默认字体改成系统字体，英文用 SF，中文用苹方，之前选过仓耳今楷或其他字体的保持不变",
-      "设置窗口重新排成通用、编辑器、字体三页，每行左边是说明右边是控件，需要重启的设置在行内就能重启，侧栏 Logo 下面多了一行「全部笔记」，升级后也会回到上次打开的文件夹",
-      "确认弹框改成纸色底，图标只留小鸟，移入废纸篓的说法前后一致，预览里的引用左边多了一条细竖条，图片滚到顶部被遮住时也保留圆角",
-      "文件夹右键新增「移动到」，整个文件夹连同子文件夹和笔记都能挪到别处，重命名文件夹也会带上子文件夹、排序设置和版本历史，超过 100 个文件夹、名叫 assets 的笔记文件夹和通过符号链接打开的笔记库都能完整列出",
-      "读不出来的笔记不会再被空内容覆盖，保存成功后不再误报保存失败，清理未使用附件不会再删掉没打开过的笔记和废纸篓里的笔记还在用的图片，GBK、Big5 和 UTF-16 这类旧编码的笔记能正确打开，英文占多数的也一样，没改过就不会被改写",
-      "别处改过的笔记再打开时读到的是最新内容，后缀是 .MD 的笔记在外部修改后也会及时刷新，版本历史跟着改名、移动和废纸篓走，删除后撤销也会带回来，反向链接覆盖各层文件夹里的笔记并跟着改名和删除更新，在 App 外放进文件夹的笔记也会列出来",
-      "分栏预览不再闪出破图，也不会停在别的笔记上，快速改完公式和 Mermaid 图后预览会跟着渲染出来，分栏里打字后代码块不再丢掉高亮，预览模式里点任务框能正确保存，导出 HTML 不用先打开预览并会带上图片，以 --- 开头的幻灯片不再丢掉第一页，没写内容的任务项也显示成复选框，取消保存面板后导出不再卡住，从预览复制整个标题不会再带上 # 号",
-      "列表快捷键不再触发两次，在列表里按回车不会把换行打进笔记，格式和查找菜单恢复可用，主窗口改为 ⌥⌘0，标题里用中文输入法回车确认英文不会跳到正文，标题只填空格不会把笔记移出文件夹，排版时继续打字也不会被覆盖，退出演示后侧栏和列表会回到进入前的样子",
-      "打字时不再每次按键都复制整篇笔记，数字多的长笔记输入也不再卡顿，搜索、排序和启动都更快，粘贴图片上传到 PicGo 后链接会落在粘贴的位置，菜单和提示补齐了日文、繁体中文和西班牙语",
-      "命令行 miao 能找到 App 实际用的笔记目录，标题带引号也能正常新建，网络不通时安装脚本不再中途报错，miao update 查不到版本时不再装上开发中的代码"
+      "Mac：侧栏、列表、编辑器和预览统一成一种暖白纸色，列表行之间用缩进细线分开，编辑器换上更安静的配色，Markdown 符号淡下去，代码、行内代码和 HTML 标签统一成淡金色，预览里的代码块也是同一套颜色，格式、演示和置顶图标也重新画过",
+      "Mac：默认字体改成系统字体，英文用 SF，中文用苹方，之前选过仓耳今楷或其他字体的保持不变",
+      "Mac：设置窗口重新排成通用、编辑器、字体三页，每行左边是说明右边是控件，需要重启的设置在行内就能重启，侧栏 Logo 下面多了一行「全部笔记」，升级后也会回到上次打开的文件夹",
+      "Mac：确认弹框改成纸色底，图标只留小鸟，移入废纸篓的说法前后一致，预览里的引用左边多了一条细竖条，图片滚到顶部被遮住时也保留圆角",
+      "Mac：文件夹右键新增「移动到」，整个文件夹连同子文件夹和笔记都能挪到别处，重命名文件夹也会带上子文件夹、排序设置和版本历史，超过 100 个文件夹、名叫 assets 的笔记文件夹和通过符号链接打开的笔记库都能完整列出",
+      "Mac：读不出来的笔记不会再被空内容覆盖，保存成功后不再误报保存失败，清理未使用附件不会再删掉没打开过的笔记和废纸篓里的笔记还在用的图片，GBK、Big5 和 UTF-16 这类旧编码的笔记能正确打开，英文占多数的也一样，没改过就不会被改写",
+      "Mac：别处改过的笔记再打开时读到的是最新内容，后缀是 .MD 的笔记在外部修改后也会及时刷新，版本历史跟着改名、移动和废纸篓走，删除后撤销也会带回来，反向链接覆盖各层文件夹里的笔记并跟着改名和删除更新，在 App 外放进文件夹的笔记也会列出来",
+      "Mac：分栏预览不再闪出破图，也不会停在别的笔记上，快速改完公式和 Mermaid 图后预览会跟着渲染出来，分栏里打字后代码块不再丢掉高亮，预览模式里点任务框能正确保存，导出 HTML 不用先打开预览并会带上图片，以 --- 开头的幻灯片不再丢掉第一页，没写内容的任务项也显示成复选框，取消保存面板后导出不再卡住，从预览复制整个标题不会再带上 # 号",
+      "Mac：列表快捷键不再触发两次，在列表里按回车不会把换行打进笔记，格式和查找菜单恢复可用，主窗口改为 ⌥⌘0，标题里用中文输入法回车确认英文不会跳到正文，标题只填空格不会把笔记移出文件夹，排版时继续打字也不会被覆盖，退出演示后侧栏和列表会回到进入前的样子",
+      "Mac：打字时不再每次按键都复制整篇笔记，数字多的长笔记输入也不再卡顿，搜索、排序和启动都更快，粘贴图片上传到 PicGo 后链接会落在粘贴的位置，菜单和提示补齐了日文、繁体中文和西班牙语",
+      "Mac：命令行 miao 能找到 App 实际用的笔记目录，标题带引号也能正常新建，网络不通时安装脚本不再中途报错，miao update 查不到版本时不再装上开发中的代码",
+      "iPhone 和 iPad：正在编辑的笔记被别的设备保存后，会弹出一个小胶囊问你保留哪一版，没选就离开时，你打的字会另存成一份副本",
+      "iPhone 和 iPad：iCloud 冲突时被搁在一边的另一版，打开笔记时会问你要不要两份都留，不再悄悄丢掉",
+      "iPhone 和 iPad：保存、切到后台、改名、移动和放进废纸篓时，正在打的字都不会丢，笔记的图片也会跟着一起移动",
+      "iPhone 和 iPad：启动后卡片预览、文件夹列表和看过的笔记直接显示，不用再等加载",
+      "iPhone 和 iPad：删除笔记直接放进废纸篓，5 秒内可以撤销，不再弹确认框",
+      "iPhone 和 iPad：阅读页里的脚注和标题链接点了能跳到对应位置",
+      "iPhone 和 iPad：GBK、Big5、EUC-KR 和 UTF-16 编码的笔记也有卡片预览，预览里不再出现注释、表格分隔线、代码围栏和脚注标记",
+      "iPhone 和 iPad：阅读页两端对齐的英文会自动断字，词间距更均匀",
+      "iPhone 和 iPad：配色和字号跟 Mac 版统一",
+      "iPhone 和 iPad：新建笔记的正文有提示，写了内容再取消会先问你要不要丢弃",
+      "iPhone 和 iPad：iPhone Duo 折叠和展开时，打开的笔记会保留"
     ]
   },
   {
@@ -123,22 +173,32 @@
     "codename": "Nargacuga",
     "date": "2026-09-25",
     "en": [
-      "Search runs in the background, so typing stays smooth in large libraries, and searching for \".\" or \"md\" no longer lists every note",
-      "On iPhone, opening a note no longer changes its modified date, trashed notes stay out of Recent and search, the interface is fully translated into Chinese, and GBK-encoded notes open",
-      "TsangerJinKai02 is the default font again: PingFang shows until it is installed, Settings can download it, it takes over on its own once installed, and fonts you already chose stay as they are",
-      "The code font follows the text font by default and applies only to code blocks, so inline code, quoted code and HTML tags such as img keep the text font, on iPhone too",
-      "Fixes preview text and bold headings looking thinner since 4.3.1, and tightens letter spacing in the preview, editor and note list",
-      "Settings is reorganized with aligned controls, clearer groups, a window that fits each page, and a page named Fonts",
-      "Find in preview matches plain text, so symbols like . and ( no longer break it"
+      "Mac: Search runs in the background, so typing stays smooth in large libraries, and searching for \".\" or \"md\" no longer lists every note",
+      "Mac: TsangerJinKai02 is the default font again: PingFang shows until it is installed, Settings can download it, it takes over on its own once installed, and fonts you already chose stay as they are",
+      "Mac: The code font follows the text font by default and applies only to code blocks, so inline code, quoted code and HTML tags such as img keep the text font",
+      "Mac: Fixes preview text and bold headings looking thinner since 4.3.1, and tightens letter spacing in the preview, editor and note list",
+      "Mac: Settings is reorganized with aligned controls, clearer groups, a window that fits each page, and a page named Fonts",
+      "Mac: Find in preview matches plain text, so symbols like . and ( no longer break it",
+      "iPhone and iPad: Opening a note no longer changes its modified date or moves it to the top of Recent",
+      "iPhone and iPad: Notes in the Trash stay out of Recent, All Notes and search",
+      "iPhone and iPad: The interface is fully translated into Chinese, including Settings, empty states and loading hints",
+      "iPhone and iPad: GBK-encoded notes open, and a file that cannot be read says so instead of loading forever",
+      "iPhone and iPad: Inline and quoted code use the text font, matching the Mac",
+      "iPhone and iPad: Card previews and search snippets no longer show a note's frontmatter"
     ],
     "zh": [
-      "搜索改到后台进行，笔记很多时输入也不会卡住，搜「.」或「md」不再把所有笔记都列出来",
-      "iPhone 上打开笔记不会再悄悄改动它的修改时间，废纸篓里的笔记不再混进最近和搜索，界面补齐了中文，GBK 编码的笔记也能打开",
-      "默认字体回到仓耳今楷，没装时先用苹方显示，在字体设置里点下载，装好后自动换上，之前选过的字体都保持不变",
-      "代码字体默认跟随正文，只用在代码块上，行内代码、引用里的代码和 img 这类 HTML 标签不再换成等宽字体，iPhone 上也一样",
-      "修复 4.3.1 起预览文字变细、标题加粗变淡的问题，预览、编辑器和笔记列表的字间距也收紧了一些",
-      "设置窗口重新整理，控件对齐、分组更清楚，窗口高度跟着每页内容走，字体那一页改叫「字体」",
-      "预览里的查找按普通文字匹配，输入 .、( 这类符号不再出错"
+      "Mac：搜索改到后台进行，笔记很多时输入也不会卡住，搜「.」或「md」不再把所有笔记都列出来",
+      "Mac：默认字体回到仓耳今楷，没装时先用苹方显示，在字体设置里点下载，装好后自动换上，之前选过的字体都保持不变",
+      "Mac：代码字体默认跟随正文，只用在代码块上，行内代码、引用里的代码和 img 这类 HTML 标签不再换成等宽字体",
+      "Mac：修复 4.3.1 起预览文字变细、标题加粗变淡的问题，预览、编辑器和笔记列表的字间距也收紧了一些",
+      "Mac：设置窗口重新整理，控件对齐、分组更清楚，窗口高度跟着每页内容走，字体那一页改叫「字体」",
+      "Mac：预览里的查找按普通文字匹配，输入 .、( 这类符号不再出错",
+      "iPhone 和 iPad：打开笔记不会再悄悄改动它的修改时间，笔记也不会因此跑到最近列表最上面",
+      "iPhone 和 iPad：废纸篓里的笔记不再混进最近、全部笔记和搜索",
+      "iPhone 和 iPad：界面补齐了中文，设置页、空状态和加载提示不再显示英文",
+      "iPhone 和 iPad：GBK 编码的笔记也能打开，读不出来的文件会直接提示，不再一直停在加载状态",
+      "iPhone 和 iPad：行内代码和引用里的代码改用正文字体，和 Mac 保持一致",
+      "iPhone 和 iPad：卡片预览和搜索摘要不再露出文件开头的元信息"
     ]
   },
   {
@@ -147,12 +207,12 @@
     "codename": "Seregios",
     "date": "2026-09-20",
     "en": [
-      "A chosen font sets the whole line again, including the English, which 4.3.1 had handed to the system face",
-      "The Recommended, Chinese and Latin headings in the font pickers can no longer be picked as if they were fonts"
+      "Mac: A chosen font sets the whole line again, including the English, which 4.3.1 had handed to the system face",
+      "Mac: The Recommended, Chinese and Latin headings in the font pickers can no longer be picked as if they were fonts"
     ],
     "zh": [
-      "修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走",
-      "修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题"
+      "Mac：修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走",
+      "Mac：修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题"
     ]
   },
   {
@@ -161,20 +221,20 @@
     "codename": "Lunagaron",
     "date": "2026-09-20",
     "en": [
-      "Preview sets English with the system face, instead of borrowing the Latin glyphs of whichever Chinese font is selected",
-      "Body text and headings share one antialiasing mode, so a line no longer mixes two stroke weights",
-      "Fonts without a real bold weight no longer get a synthesized one, which used to merge strokes in headings",
-      "The font pickers group into recommended, Chinese and Latin instead of listing every installed family, and the code picker lists only monospaced faces",
-      "Font names follow the interface language, so Chinese users read 苹方-简 and 宋体-简",
-      "The Sparkle update sheet shows release notes in the system language rather than stacking both"
+      "Mac: Preview sets English with the system face, instead of borrowing the Latin glyphs of whichever Chinese font is selected",
+      "Mac: Body text and headings share one antialiasing mode, so a line no longer mixes two stroke weights",
+      "Mac: Fonts without a real bold weight no longer get a synthesized one, which used to merge strokes in headings",
+      "Mac: The font pickers group into recommended, Chinese and Latin instead of listing every installed family, and the code picker lists only monospaced faces",
+      "Mac: Font names follow the interface language, so Chinese users read 苹方-简 and 宋体-简",
+      "Mac: The Sparkle update sheet shows release notes in the system language rather than stacking both"
     ],
     "zh": [
-      "预览的英文改由系统字体排版，选中文字体时不再拿它的西文字形凑数，中英混排明显干净",
-      "统一正文和标题的抗锯齿，同一行里正文和加粗不再是两种笔画粗细",
-      "没有真粗字重的字体不再合成伪粗体，标题和加粗的笔画不会糊在一起",
-      "字体设置从系统里的两百多个收成推荐、中文、西文三组，代码字体只列等宽",
-      "字体名跟着界面语言显示，中文下是苹方-简、宋体-简这样的名字",
-      "Sparkle 更新提示按系统语言显示更新日志，不再中英两份叠在一起"
+      "Mac：预览的英文改由系统字体排版，选中文字体时不再拿它的西文字形凑数，中英混排明显干净",
+      "Mac：统一正文和标题的抗锯齿，同一行里正文和加粗不再是两种笔画粗细",
+      "Mac：没有真粗字重的字体不再合成伪粗体，标题和加粗的笔画不会糊在一起",
+      "Mac：字体设置从系统里的两百多个收成推荐、中文、西文三组，代码字体只列等宽",
+      "Mac：字体名跟着界面语言显示，中文下是苹方-简、宋体-简这样的名字",
+      "Mac：Sparkle 更新提示按系统语言显示更新日志，不再中英两份叠在一起"
     ]
   },
   {
@@ -183,24 +243,24 @@
     "codename": "Velkhana",
     "date": "2026-09-20",
     "en": [
-      "The minimum requirement moves to macOS 12; 4.2.0 is the last release for macOS 11",
-      "Wide tables scroll horizontally, columns size to their content, and cells no longer break words mid-token",
-      "Dark-theme PDF exports print body text, formulas and table cells in ink on white paper, with highlights restored",
-      "The preview search bar follows its own panel colour, so its field, counter and icons stay visible in dark mode",
-      "Inline math starting with a number no longer swallows the paragraphs and lists that follow it",
-      "iOS search covers the whole of a long note instead of stopping partway through",
-      "The bundled commercial font is replaced by system typography, with saved selections migrated and custom faces untouched",
-      "Reopening the window restores the preview mode that was in use instead of falling back to the default"
+      "Mac: The minimum requirement moves to macOS 12; 4.2.0 is the last release for macOS 11",
+      "Mac: Wide tables scroll horizontally, columns size to their content, and cells no longer break words mid-token",
+      "Mac: Dark-theme PDF exports print body text, formulas and table cells in ink on white paper, with highlights restored",
+      "Mac: The preview search bar follows its own panel colour, so its field, counter and icons stay visible in dark mode",
+      "Mac: Inline math starting with a number no longer swallows the paragraphs and lists that follow it",
+      "iPhone and iPad: Search covers the whole of a long note instead of stopping partway through",
+      "Mac: The bundled commercial font is replaced by system typography, with saved selections migrated and custom faces untouched",
+      "Mac: Reopening the window restores the preview mode that was in use instead of falling back to the default"
     ],
     "zh": [
-      "最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0",
-      "宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开",
-      "深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常",
-      "预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字",
-      "修复以数字开头的行内公式吞掉后面段落和列表的问题",
-      "iOS 搜索现在覆盖长笔记的全文，之前只搜到开头一部分",
-      "内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响",
-      "重新打开窗口时会恢复上次使用的预览模式，不再退回默认"
+      "Mac：最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0",
+      "Mac：宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开",
+      "Mac：深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常",
+      "Mac：预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字",
+      "Mac：修复以数字开头的行内公式吞掉后面段落和列表的问题",
+      "iPhone 和 iPad：搜索现在覆盖长笔记的全文，之前只搜到开头一部分",
+      "Mac：内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响",
+      "Mac：重新打开窗口时会恢复上次使用的预览模式，不再退回默认"
     ]
   },
   {
@@ -209,21 +269,21 @@
     "codename": "Zinogre",
     "date": "2026-08-15",
     "en": [
-      "Prevents deleted notes from being recreated by delayed saves after switching sections or restarting",
-      "Complex LaTeX formulas now render correctly in preview and PPT when subscripts, absolute values, and adaptive delimiters are combined",
-      "Sidebar folders remain horizontally aligned after deleting notes, reloading, or resizing the window",
-      "PDF exports no longer rerender Mermaid diagrams, and headings use the current note font",
-      "PPT keeps local images, and Preferences stays visible when windows are kept on top",
-      "HDR photos display with balanced tones instead of appearing overexposed in Markdown preview",
+      "Mac: Prevents deleted notes from being recreated by delayed saves after switching sections or restarting",
+      "Mac: Complex LaTeX formulas now render correctly in preview and PPT when subscripts, absolute values, and adaptive delimiters are combined",
+      "Mac: Sidebar folders remain horizontally aligned after deleting notes, reloading, or resizing the window",
+      "Mac: PDF exports no longer rerender Mermaid diagrams, and headings use the current note font",
+      "Mac: PPT keeps local images, and Preferences stays visible when windows are kept on top",
+      "Mac: HDR photos display with balanced tones instead of appearing overexposed in Markdown preview",
       "New official MiaoYan Agent Skill teaches agents the app's Markdown, attachment, PPT, and CLI conventions"
     ],
     "zh": [
-      "修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现",
-      "修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合",
-      "修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度",
-      "改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体",
-      "修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题",
-      "改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝",
+      "Mac：修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现",
+      "Mac：修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合",
+      "Mac：修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度",
+      "Mac：改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体",
+      "Mac：修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题",
+      "Mac：改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝",
       "新增官方 MiaoYan Agent Skill，让 Agent 能按妙言的语法、附件、PPT 与 CLI 规范处理笔记"
     ]
   },
@@ -233,20 +293,20 @@
     "codename": "Aegis",
     "date": "2026-07-18",
     "en": [
-      "Fixes a rare case where switching notes could overwrite one note with another",
-      "Preview renders GitHub-style alert cards, all five kinds themed for light and dark",
-      "New Clean Typography command normalizes mixed CJK and Latin spacing and punctuation",
-      "Pasting from web pages or AI tools converts rich content to clean Markdown",
-      "Batch import Markdown files and folders to bring old notes into MiaoYan",
-      "iOS editor gains syntax highlight and image paste, plus external cloud folders"
+      "Mac: Fixes a rare case where switching notes could overwrite one note with another",
+      "Mac: Preview renders GitHub-style alert cards, all five kinds themed for light and dark",
+      "Mac: New Clean Typography command normalizes mixed CJK and Latin spacing and punctuation",
+      "Mac: Pasting from web pages or AI tools converts rich content to clean Markdown",
+      "Mac: Batch import Markdown files and folders to bring old notes into MiaoYan",
+      "iPhone and iPad: The editor gains syntax highlight and image paste, plus external cloud folders"
     ],
     "zh": [
-      "修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验",
-      "预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题",
-      "新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样",
-      "从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样",
-      "支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便",
-      "iOS 编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化"
+      "Mac：修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验",
+      "Mac：预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题",
+      "Mac：新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样",
+      "Mac：从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样",
+      "Mac：支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便",
+      "iPhone 和 iPad：编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化"
     ]
   },
   {
@@ -255,20 +315,18 @@
     "codename": "Valstrax",
     "date": "2026-06-19",
     "en": [
-      "iPhone and iPad are rolling out to the App Store, one purchase covers both",
-      "iPad brings a real three-column layout for folders, notes, and reading",
-      "First iOS version supports iCloud libraries, folders, pinned notes, and editing",
-      "New TOC menu and cmd+5 shortcut on macOS for faster long-note navigation",
-      "Fixes Sparkle signing and version drift, plus collapse and selection polish",
-      "Improves save, delete, version history, Finder-open, and iCloud sync"
+      "iPhone and iPad: The first version arrives, with iCloud libraries, folders, pinned notes and editing, and one purchase covers both",
+      "iPad: A real three-column layout for folders, notes and reading",
+      "Mac: New TOC menu and cmd+5 shortcut for faster long-note navigation",
+      "Mac: Fixes Sparkle signing and version drift, plus collapse and selection polish",
+      "Mac: Improves save, delete, version history, Finder-open and iCloud sync"
     ],
     "zh": [
-      "iPhone 和 iPad 版本正在上架 App Store，一次购买覆盖双端，敬请期待",
-      "iPad 提供三栏布局，文件夹、笔记列表和阅读详情可同时展开",
-      "iOS 首版支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑",
-      "macOS 新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接",
-      "修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线",
-      "改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景"
+      "iPhone 和 iPad：首个版本上线，支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑，一次购买两端都能用",
+      "iPad：提供三栏布局，文件夹、笔记列表和阅读详情可同时展开",
+      "Mac：新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接",
+      "Mac：修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线",
+      "Mac：改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景"
     ]
   },
   {

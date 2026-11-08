@@ -23,8 +23,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=fcc42711596e" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=f3a92cd9d672" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5abbac6d660f" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=ec1bc4500d12" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -96,14 +96,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=fcc42711596e") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5abbac6d660f") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=f3a92cd9d672") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=ec1bc4500d12") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -781,51 +781,51 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <p class="section-lede">妙言每个版本改了什么，最新的在最前面。</p>
   <section class="release" id="v4-8-0">
     <h2 class="release-title">V4.8.0 <span class="release-name">Brachydios</span> <time class="release-date" datetime="2026-11-06">2026-11-06</time></h2>
-    <div class="blog-body"><ul><li>删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失</li><li>磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你</li><li>删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失</li><li>没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白</li><li>繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走</li><li>第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致</li><li>侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了</li></ul></div>
+    <div class="blog-body"><ul><li>删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失</li><li>Mac：磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你</li><li>Mac：删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失</li><li>Mac：没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白</li><li>Mac：繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走</li><li>Mac：第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致</li><li>Mac：侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了</li><li>iPhone 和 iPad：没有 iCloud 账号也能直接用，妙言会在这台设备上建好笔记库，在文件 App 里能看到</li><li>iPhone 和 iPad：打不开的笔记用一句话说明原因，并带一个重试按钮</li><li>iPhone 和 iPad：文件夹卡片上的数字和点进去看到的笔记数一致，没开 iCloud 时显示未开启，不再显示已同步</li><li>iPhone 和 iPad：笔记页的编辑按钮换成铅笔图标，启动画面和 App 用同一种纸色</li></ul></div>
   </section>
   <section class="release" id="v4-7-1">
     <h2 class="release-title">V4.7.1 <span class="release-name">Rathalos</span> <time class="release-date" datetime="2026-11-06">2026-11-06</time></h2>
-    <div class="blog-body"><ul><li>从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失</li><li>删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖</li><li>在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置</li><li>笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏</li><li>分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和</li><li>鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失</li><li>Mac：删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖</li><li>Mac：在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置</li><li>Mac：笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏</li><li>Mac：分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和</li><li>Mac：鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的</li></ul></div>
   </section>
   <section class="release" id="v4-7-0">
     <h2 class="release-title">V4.7.0 <span class="release-name">Gore Magala</span> <time class="release-date" datetime="2026-11-04">2026-11-04</time></h2>
-    <div class="blog-body"><ul><li>导出的 PDF 重新带上排版样式和全部图片，V4.3.0 起导出会丢掉样式，没滚动到的图片也是空白</li><li>预览里的图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片先显示一块轻轻呼吸的底色，视频直接显示第一帧</li><li>预览模式下切换笔记不再整页重载，没有白闪，分栏编辑或外部改动时只刷新改到的段落，阅读位置保持不动</li><li>预览的行距、标题字号和段落间距重新调过，读起来更舒展，中文强调不再显示成斜体，链接改用妙言绿</li><li>窗口顶部的搜索框、笔记标题和模式按钮跟红绿灯放在同一行</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：导出的 PDF 重新带上排版样式和全部图片，V4.3.0 起导出会丢掉样式，没滚动到的图片也是空白</li><li>Mac：预览里的图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片先显示一块轻轻呼吸的底色，视频直接显示第一帧</li><li>Mac：预览模式下切换笔记不再整页重载，没有白闪，分栏编辑或外部改动时只刷新改到的段落，阅读位置保持不动</li><li>Mac：预览的行距、标题字号和段落间距重新调过，读起来更舒展，中文强调不再显示成斜体，链接改用妙言绿</li><li>Mac：窗口顶部的搜索框、笔记标题和模式按钮跟红绿灯放在同一行</li><li>iPhone 和 iPad：阅读字体可以在黑体、宋体、楷体、圆体之间切换，仓耳今楷可以在 App 里下载，字号改成滑块调节，默认和 Mac 一样用系统字体，之前选过的字体保持不变</li><li>iPhone 和 iPad：阅读页的行距和段落间距重新调过，手机上的标题不再那么大，正文改为左对齐，中文强调不再显示成斜体，链接改用妙言绿</li><li>iPhone 和 iPad：打开的笔记在 Mac 上改了会直接更新，也不再弹出没必要的冲突提示</li><li>iPhone 和 iPad：文件夹里可以再建一层子文件夹，iPhone 上点进文件夹就能看到，iPad 侧栏可以展开和收起，移动笔记时也能选到</li><li>iPhone 和 iPad：编辑时改标题就能给笔记改名，列表里长按也能改名和移动到文件夹</li><li>iPhone 和 iPad：全新的图标，首页换上妙言的红雀标志，设置页重新整理，笔记卡片把日期放到摘要前面并改成更短的写法，今天的笔记只显示时间</li><li>iPhone 和 iPad：图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片中间会转一个小圈，视频直接显示第一帧</li><li>iPhone 和 iPad：为深色背景写的幻灯片不再看不见，代码块不再超出正文宽度，轻点阅读页不再弹出或收起工具栏，点刷新时箭头总会转一圈</li><li>iPhone 和 iPad：从双链跳到另一篇再返回不再一直停在加载状态，iPad 侧栏可以看到同步状态并手动刷新，新建笔记跟随你设的字体和字号，搜索页的页头和另外两页一致</li></ul></div>
   </section>
   <section class="release" id="v4-6-1">
     <h2 class="release-title">V4.6.1 <span class="release-name">Glavenus</span> <time class="release-date" datetime="2026-11-03">2026-11-03</time></h2>
-    <div class="blog-body"><ul><li>在「文件 &gt; 单独模式」里选完文件夹后不再闪退</li><li>编辑器和预览里的代码换回 V4.5.0 的配色，不再整片发黄</li><li>默认换行模式下，跨多行的数学公式在预览和导出里也能正常渲染</li><li>侧栏 Logo 在中文界面显示用思源宋体排的「妙言」，其他语言显示 MiaoYan，小鸟和文字跟文件夹图标、名称对齐，中文的「全部笔记」缩成「全部」</li><li>删除相关的菜单和提示统一叫「移到废纸篓」，繁体中文改用「垃圾桶」，提示里的引号、省略号和冒号统一成一种写法</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：在「文件 &gt; 单独模式」里选完文件夹后不再闪退</li><li>Mac：编辑器和预览里的代码换回 V4.5.0 的配色，不再整片发黄</li><li>Mac：默认换行模式下，跨多行的数学公式在预览和导出里也能正常渲染</li><li>Mac：侧栏 Logo 在中文界面显示用思源宋体排的「妙言」，其他语言显示 MiaoYan，小鸟和文字跟文件夹图标、名称对齐，中文的「全部笔记」缩成「全部」</li><li>Mac：删除相关的菜单和提示统一叫「移到废纸篓」，繁体中文改用「垃圾桶」，提示里的引号、省略号和冒号统一成一种写法</li><li>iPhone 和 iPad：带视频的笔记打开后不再一直停在加载状态</li></ul></div>
   </section>
   <section class="release" id="v4-6-0">
     <h2 class="release-title">V4.6.0 <span class="release-name">Lagiacrus</span> <time class="release-date" datetime="2026-10-26">2026-10-26</time></h2>
-    <div class="blog-body"><ul><li>侧栏、列表、编辑器和预览统一成一种暖白纸色，列表行之间用缩进细线分开，编辑器换上更安静的配色，Markdown 符号淡下去，代码、行内代码和 HTML 标签统一成淡金色，预览里的代码块也是同一套颜色，格式、演示和置顶图标也重新画过</li><li>默认字体改成系统字体，英文用 SF，中文用苹方，之前选过仓耳今楷或其他字体的保持不变</li><li>设置窗口重新排成通用、编辑器、字体三页，每行左边是说明右边是控件，需要重启的设置在行内就能重启，侧栏 Logo 下面多了一行「全部笔记」，升级后也会回到上次打开的文件夹</li><li>确认弹框改成纸色底，图标只留小鸟，移入废纸篓的说法前后一致，预览里的引用左边多了一条细竖条，图片滚到顶部被遮住时也保留圆角</li><li>文件夹右键新增「移动到」，整个文件夹连同子文件夹和笔记都能挪到别处，重命名文件夹也会带上子文件夹、排序设置和版本历史，超过 100 个文件夹、名叫 assets 的笔记文件夹和通过符号链接打开的笔记库都能完整列出</li><li>读不出来的笔记不会再被空内容覆盖，保存成功后不再误报保存失败，清理未使用附件不会再删掉没打开过的笔记和废纸篓里的笔记还在用的图片，GBK、Big5 和 UTF-16 这类旧编码的笔记能正确打开，英文占多数的也一样，没改过就不会被改写</li><li>别处改过的笔记再打开时读到的是最新内容，后缀是 .MD 的笔记在外部修改后也会及时刷新，版本历史跟着改名、移动和废纸篓走，删除后撤销也会带回来，反向链接覆盖各层文件夹里的笔记并跟着改名和删除更新，在 App 外放进文件夹的笔记也会列出来</li><li>分栏预览不再闪出破图，也不会停在别的笔记上，快速改完公式和 Mermaid 图后预览会跟着渲染出来，分栏里打字后代码块不再丢掉高亮，预览模式里点任务框能正确保存，导出 HTML 不用先打开预览并会带上图片，以 --- 开头的幻灯片不再丢掉第一页，没写内容的任务项也显示成复选框，取消保存面板后导出不再卡住，从预览复制整个标题不会再带上 # 号</li><li>列表快捷键不再触发两次，在列表里按回车不会把换行打进笔记，格式和查找菜单恢复可用，主窗口改为 ⌥⌘0，标题里用中文输入法回车确认英文不会跳到正文，标题只填空格不会把笔记移出文件夹，排版时继续打字也不会被覆盖，退出演示后侧栏和列表会回到进入前的样子</li><li>打字时不再每次按键都复制整篇笔记，数字多的长笔记输入也不再卡顿，搜索、排序和启动都更快，粘贴图片上传到 PicGo 后链接会落在粘贴的位置，菜单和提示补齐了日文、繁体中文和西班牙语</li><li>命令行 miao 能找到 App 实际用的笔记目录，标题带引号也能正常新建，网络不通时安装脚本不再中途报错，miao update 查不到版本时不再装上开发中的代码</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：侧栏、列表、编辑器和预览统一成一种暖白纸色，列表行之间用缩进细线分开，编辑器换上更安静的配色，Markdown 符号淡下去，代码、行内代码和 HTML 标签统一成淡金色，预览里的代码块也是同一套颜色，格式、演示和置顶图标也重新画过</li><li>Mac：默认字体改成系统字体，英文用 SF，中文用苹方，之前选过仓耳今楷或其他字体的保持不变</li><li>Mac：设置窗口重新排成通用、编辑器、字体三页，每行左边是说明右边是控件，需要重启的设置在行内就能重启，侧栏 Logo 下面多了一行「全部笔记」，升级后也会回到上次打开的文件夹</li><li>Mac：确认弹框改成纸色底，图标只留小鸟，移入废纸篓的说法前后一致，预览里的引用左边多了一条细竖条，图片滚到顶部被遮住时也保留圆角</li><li>Mac：文件夹右键新增「移动到」，整个文件夹连同子文件夹和笔记都能挪到别处，重命名文件夹也会带上子文件夹、排序设置和版本历史，超过 100 个文件夹、名叫 assets 的笔记文件夹和通过符号链接打开的笔记库都能完整列出</li><li>Mac：读不出来的笔记不会再被空内容覆盖，保存成功后不再误报保存失败，清理未使用附件不会再删掉没打开过的笔记和废纸篓里的笔记还在用的图片，GBK、Big5 和 UTF-16 这类旧编码的笔记能正确打开，英文占多数的也一样，没改过就不会被改写</li><li>Mac：别处改过的笔记再打开时读到的是最新内容，后缀是 .MD 的笔记在外部修改后也会及时刷新，版本历史跟着改名、移动和废纸篓走，删除后撤销也会带回来，反向链接覆盖各层文件夹里的笔记并跟着改名和删除更新，在 App 外放进文件夹的笔记也会列出来</li><li>Mac：分栏预览不再闪出破图，也不会停在别的笔记上，快速改完公式和 Mermaid 图后预览会跟着渲染出来，分栏里打字后代码块不再丢掉高亮，预览模式里点任务框能正确保存，导出 HTML 不用先打开预览并会带上图片，以 --- 开头的幻灯片不再丢掉第一页，没写内容的任务项也显示成复选框，取消保存面板后导出不再卡住，从预览复制整个标题不会再带上 # 号</li><li>Mac：列表快捷键不再触发两次，在列表里按回车不会把换行打进笔记，格式和查找菜单恢复可用，主窗口改为 ⌥⌘0，标题里用中文输入法回车确认英文不会跳到正文，标题只填空格不会把笔记移出文件夹，排版时继续打字也不会被覆盖，退出演示后侧栏和列表会回到进入前的样子</li><li>Mac：打字时不再每次按键都复制整篇笔记，数字多的长笔记输入也不再卡顿，搜索、排序和启动都更快，粘贴图片上传到 PicGo 后链接会落在粘贴的位置，菜单和提示补齐了日文、繁体中文和西班牙语</li><li>Mac：命令行 miao 能找到 App 实际用的笔记目录，标题带引号也能正常新建，网络不通时安装脚本不再中途报错，miao update 查不到版本时不再装上开发中的代码</li><li>iPhone 和 iPad：正在编辑的笔记被别的设备保存后，会弹出一个小胶囊问你保留哪一版，没选就离开时，你打的字会另存成一份副本</li><li>iPhone 和 iPad：iCloud 冲突时被搁在一边的另一版，打开笔记时会问你要不要两份都留，不再悄悄丢掉</li><li>iPhone 和 iPad：保存、切到后台、改名、移动和放进废纸篓时，正在打的字都不会丢，笔记的图片也会跟着一起移动</li><li>iPhone 和 iPad：启动后卡片预览、文件夹列表和看过的笔记直接显示，不用再等加载</li><li>iPhone 和 iPad：删除笔记直接放进废纸篓，5 秒内可以撤销，不再弹确认框</li><li>iPhone 和 iPad：阅读页里的脚注和标题链接点了能跳到对应位置</li><li>iPhone 和 iPad：GBK、Big5、EUC-KR 和 UTF-16 编码的笔记也有卡片预览，预览里不再出现注释、表格分隔线、代码围栏和脚注标记</li><li>iPhone 和 iPad：阅读页两端对齐的英文会自动断字，词间距更均匀</li><li>iPhone 和 iPad：配色和字号跟 Mac 版统一</li><li>iPhone 和 iPad：新建笔记的正文有提示，写了内容再取消会先问你要不要丢弃</li><li>iPhone 和 iPad：iPhone Duo 折叠和展开时，打开的笔记会保留</li></ul></div>
   </section>
   <section class="release" id="v4-5-0">
     <h2 class="release-title">V4.5.0 <span class="release-name">Nargacuga</span> <time class="release-date" datetime="2026-09-25">2026-09-25</time></h2>
-    <div class="blog-body"><ul><li>搜索改到后台进行，笔记很多时输入也不会卡住，搜「.」或「md」不再把所有笔记都列出来</li><li>iPhone 上打开笔记不会再悄悄改动它的修改时间，废纸篓里的笔记不再混进最近和搜索，界面补齐了中文，GBK 编码的笔记也能打开</li><li>默认字体回到仓耳今楷，没装时先用苹方显示，在字体设置里点下载，装好后自动换上，之前选过的字体都保持不变</li><li>代码字体默认跟随正文，只用在代码块上，行内代码、引用里的代码和 img 这类 HTML 标签不再换成等宽字体，iPhone 上也一样</li><li>修复 4.3.1 起预览文字变细、标题加粗变淡的问题，预览、编辑器和笔记列表的字间距也收紧了一些</li><li>设置窗口重新整理，控件对齐、分组更清楚，窗口高度跟着每页内容走，字体那一页改叫「字体」</li><li>预览里的查找按普通文字匹配，输入 .、( 这类符号不再出错</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：搜索改到后台进行，笔记很多时输入也不会卡住，搜「.」或「md」不再把所有笔记都列出来</li><li>Mac：默认字体回到仓耳今楷，没装时先用苹方显示，在字体设置里点下载，装好后自动换上，之前选过的字体都保持不变</li><li>Mac：代码字体默认跟随正文，只用在代码块上，行内代码、引用里的代码和 img 这类 HTML 标签不再换成等宽字体</li><li>Mac：修复 4.3.1 起预览文字变细、标题加粗变淡的问题，预览、编辑器和笔记列表的字间距也收紧了一些</li><li>Mac：设置窗口重新整理，控件对齐、分组更清楚，窗口高度跟着每页内容走，字体那一页改叫「字体」</li><li>Mac：预览里的查找按普通文字匹配，输入 .、( 这类符号不再出错</li><li>iPhone 和 iPad：打开笔记不会再悄悄改动它的修改时间，笔记也不会因此跑到最近列表最上面</li><li>iPhone 和 iPad：废纸篓里的笔记不再混进最近、全部笔记和搜索</li><li>iPhone 和 iPad：界面补齐了中文，设置页、空状态和加载提示不再显示英文</li><li>iPhone 和 iPad：GBK 编码的笔记也能打开，读不出来的文件会直接提示，不再一直停在加载状态</li><li>iPhone 和 iPad：行内代码和引用里的代码改用正文字体，和 Mac 保持一致</li><li>iPhone 和 iPad：卡片预览和搜索摘要不再露出文件开头的元信息</li></ul></div>
   </section>
   <section class="release" id="v4-3-2">
     <h2 class="release-title">V4.3.2 <span class="release-name">Seregios</span> <time class="release-date" datetime="2026-09-20">2026-09-20</time></h2>
-    <div class="blog-body"><ul><li>修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走</li><li>修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走</li><li>Mac：修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题</li></ul></div>
   </section>
   <section class="release" id="v4-3-1">
     <h2 class="release-title">V4.3.1 <span class="release-name">Lunagaron</span> <time class="release-date" datetime="2026-09-20">2026-09-20</time></h2>
-    <div class="blog-body"><ul><li>预览的英文改由系统字体排版，选中文字体时不再拿它的西文字形凑数，中英混排明显干净</li><li>统一正文和标题的抗锯齿，同一行里正文和加粗不再是两种笔画粗细</li><li>没有真粗字重的字体不再合成伪粗体，标题和加粗的笔画不会糊在一起</li><li>字体设置从系统里的两百多个收成推荐、中文、西文三组，代码字体只列等宽</li><li>字体名跟着界面语言显示，中文下是苹方-简、宋体-简这样的名字</li><li>Sparkle 更新提示按系统语言显示更新日志，不再中英两份叠在一起</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：预览的英文改由系统字体排版，选中文字体时不再拿它的西文字形凑数，中英混排明显干净</li><li>Mac：统一正文和标题的抗锯齿，同一行里正文和加粗不再是两种笔画粗细</li><li>Mac：没有真粗字重的字体不再合成伪粗体，标题和加粗的笔画不会糊在一起</li><li>Mac：字体设置从系统里的两百多个收成推荐、中文、西文三组，代码字体只列等宽</li><li>Mac：字体名跟着界面语言显示，中文下是苹方-简、宋体-简这样的名字</li><li>Mac：Sparkle 更新提示按系统语言显示更新日志，不再中英两份叠在一起</li></ul></div>
   </section>
   <section class="release" id="v4-3-0">
     <h2 class="release-title">V4.3.0 <span class="release-name">Velkhana</span> <time class="release-date" datetime="2026-09-20">2026-09-20</time></h2>
-    <div class="blog-body"><ul><li>最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0</li><li>宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开</li><li>深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常</li><li>预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字</li><li>修复以数字开头的行内公式吞掉后面段落和列表的问题</li><li>iOS 搜索现在覆盖长笔记的全文，之前只搜到开头一部分</li><li>内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响</li><li>重新打开窗口时会恢复上次使用的预览模式，不再退回默认</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0</li><li>Mac：宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开</li><li>Mac：深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常</li><li>Mac：预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字</li><li>Mac：修复以数字开头的行内公式吞掉后面段落和列表的问题</li><li>iPhone 和 iPad：搜索现在覆盖长笔记的全文，之前只搜到开头一部分</li><li>Mac：内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响</li><li>Mac：重新打开窗口时会恢复上次使用的预览模式，不再退回默认</li></ul></div>
   </section>
   <section class="release" id="v4-2-0">
     <h2 class="release-title">V4.2.0 <span class="release-name">Zinogre</span> <time class="release-date" datetime="2026-08-15">2026-08-15</time></h2>
-    <div class="blog-body"><ul><li>修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现</li><li>修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合</li><li>修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度</li><li>改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体</li><li>修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题</li><li>改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝</li><li>新增官方 MiaoYan Agent Skill，让 Agent 能按妙言的语法、附件、PPT 与 CLI 规范处理笔记</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现</li><li>Mac：修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合</li><li>Mac：修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度</li><li>Mac：改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体</li><li>Mac：修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题</li><li>Mac：改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝</li><li>新增官方 MiaoYan Agent Skill，让 Agent 能按妙言的语法、附件、PPT 与 CLI 规范处理笔记</li></ul></div>
   </section>
   <section class="release" id="v4-1-0">
     <h2 class="release-title">V4.1.0 <span class="release-name">Aegis</span> <time class="release-date" datetime="2026-07-18">2026-07-18</time></h2>
-    <div class="blog-body"><ul><li>修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验</li><li>预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题</li><li>新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样</li><li>从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样</li><li>支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便</li><li>iOS 编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化</li></ul></div>
+    <div class="blog-body"><ul><li>Mac：修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验</li><li>Mac：预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题</li><li>Mac：新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样</li><li>Mac：从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样</li><li>Mac：支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便</li><li>iPhone 和 iPad：编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化</li></ul></div>
   </section>
   <section class="release" id="v4-0-0">
     <h2 class="release-title">V4.0.0 <span class="release-name">Valstrax</span> <time class="release-date" datetime="2026-06-19">2026-06-19</time></h2>
-    <div class="blog-body"><ul><li>iPhone 和 iPad 版本正在上架 App Store，一次购买覆盖双端，敬请期待</li><li>iPad 提供三栏布局，文件夹、笔记列表和阅读详情可同时展开</li><li>iOS 首版支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑</li><li>macOS 新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接</li><li>修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线</li><li>改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景</li></ul></div>
+    <div class="blog-body"><ul><li>iPhone 和 iPad：首个版本上线，支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑，一次购买两端都能用</li><li>iPad：提供三栏布局，文件夹、笔记列表和阅读详情可同时展开</li><li>Mac：新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接</li><li>Mac：修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线</li><li>Mac：改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景</li></ul></div>
   </section>
   <section class="release" id="v3-5-1">
     <h2 class="release-title">V3.5.1 <time class="release-date" datetime="2026-05-03">2026-05-03</time></h2>
