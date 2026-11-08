@@ -346,6 +346,13 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 }
 .tabs button:hover { background: var(--warm-sand); color: var(--near-black); }
 .tabs button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+/* Android's Chromium can round a font's ascent up and descent down, which lifted the
+   words in these pills 2.5px on a real tablet while a Mac stayed centred (2026-11-08).
+   Trimming the text box to the glyphs takes those metrics out of the sum. Same height
+   as before; an older browser keeps the padding above. */
+@supports (text-box: trim-both cap alphabetic) {
+  html .tabs button { height: calc(1lh + 12px); padding-block: 0; text-box: trim-both cap alphabetic; }
+}
 
 /* iPhone and iPad */
 /* Apple's product bezels, shown as is. The iPhone is drawn larger than its
