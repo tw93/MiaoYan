@@ -131,6 +131,21 @@ def fetch():
     print(f"releases: {len(rows)} in {DATA.relative_to(ROOT)}")
 
 
+# The notes name a device once per item for GitHub and the App Store; here the
+# device heads its group, or a release reads as the same words ten times.
+DEVICE_RE = re.compile(r"^(Mac|iPhone and iPad|iPhone 和 iPad|iPhone|iPad)\s*[:：]\s*")
+
+
+def grouped(items):
+    """Items as (device, notes): the ones every device got first, under no head."""
+    groups = {"": []}
+    for item in items:
+        found = DEVICE_RE.match(item)
+        device = found.group(1) if found else ""
+        groups.setdefault(device, []).append(item[found.end():] if found else item)
+    return [(device, notes) for device, notes in groups.items() if notes]
+
+
 COPY = {
     "en": ("Release Notes", "What changed in each version of MiaoYan, newest first.", "MiaoYan"),
     "zh": ("更新日志", "妙言每个版本改了什么，最新的在最前面。", "妙言"),
@@ -160,12 +175,16 @@ def page(lang, rows, site, blog):
         items = row[lang] or row[other]
         anchor = "v" + row["version"].replace(".", "-")
         name = f' <span class="release-name">{site.esc(row["codename"])}</span>' if row["codename"] else ""
-        notes = "".join(f"<li>{site.esc(item)}</li>" for item in items)
+        notes = ""
+        for device, lines in grouped(items):
+            if device:
+                notes += f'<h3 class="release-device">{site.esc(device)}</h3>'
+            notes += "<ul>" + "".join(f"<li>{site.esc(line)}</li>" for line in lines) + "</ul>"
         sections.append(
             f'  <section class="release" id="{anchor}">\n'
             f'    <h2 class="release-title">V{site.esc(row["version"])}{name}'
             f' <time class="release-date" datetime="{row["date"]}">{row["date"]}</time></h2>\n'
-            f'    <div class="blog-body"><ul>{notes}</ul></div>\n'
+            f'    <div class="blog-body">{notes}</div>\n'
             f"  </section>\n"
         )
     main = (
