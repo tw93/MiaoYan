@@ -30,3 +30,5 @@ dist/
 .agents/
 .fontcache
 __pycache__/
+.vercel
+.env*

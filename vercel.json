@@ -2,6 +2,23 @@
   "github": {
     "silent": true
   },
+  "functions": {
+    "api/payroom-sync.js": {
+      "maxDuration": 300
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/payroom-sync",
+      "schedule": "17 */3 * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/payroom",
+      "destination": "/api/payroom"
+    }
+  ],
   "redirects": [
     {
       "source": "/cats.html",
