@@ -129,7 +129,7 @@ function stub({ blob, sales, json = () => answer(500) }) {
     if (u.includes('.blob.vercel-storage.com')) return blob();
     if (u.includes('/api/blob/')) { writes.push(JSON.parse(zlib.gunzipSync(init.body).toString())); return answer(200, '{}'); }
     if (u.includes('/v1/salesReports')) return sales(u);
-    return json(u);
+    return json(u, init);
   };
   return writes;
 }
@@ -167,6 +167,30 @@ assert.ok(afterDrop.sales.rows.length > 1, 'and keep their rows');
 checks += 1;
 const dropView = lib.buildView(afterDrop, { today });
 eq(Object.fromEntries(dropView.recent.map((d) => [d.date, d.known]))['2026-11-05'], false, 'a day that failed reads as unknown, not zero');
+
+// ---- traffic counts only the product's own pages -------------------------
+{
+  const gaBodies = [];
+  const { privateKey: gaKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = JSON.stringify({ client_email: 'a@b.c', private_key: gaKey.export({ type: 'pkcs8', format: 'pem' }) });
+  stub({
+    blob: stored(seeded),
+    sales: () => answer(404),
+    json: (u, init) => {
+      if (u.includes('oauth2')) return answer(200, JSON.stringify({ access_token: 't' }));
+      if (u.includes('analyticsdata')) { gaBodies.push(JSON.parse(init.body)); return answer(200, '{"rows":[]}'); }
+      return answer(500);
+    },
+  });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+  eq(gaBodies.length, 3, 'all three traffic queries ran');
+  for (const body of gaBodies) {
+    const filter = JSON.stringify(body.dimensionFilter);
+    assert.ok(filter.includes('"miaoyan.app"') && filter.includes('/cats'), 'each query is limited to the site');
+    checks += 1;
+  }
+  process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = '{bad';
+}
 
 // ---- the page ------------------------------------------------------------
 const bad = lib.emptyState();

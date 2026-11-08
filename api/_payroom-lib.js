@@ -447,6 +447,17 @@ function gaDate(raw) {
 
 // The whole history each time: GA restates recent days, and a day this site
 // had no visits is simply absent, which the page reads as zero.
+// The GA property also receives other sites and local builds that copied this
+// measurement ID, and the old /cats pages; only the product's own pages count.
+const SITE_ONLY = {
+  andGroup: {
+    expressions: [
+      { filter: { fieldName: 'hostName', stringFilter: { matchType: 'EXACT', value: 'miaoyan.app' } } },
+      { notExpression: { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'BEGINS_WITH', value: '/cats' } } } },
+    ],
+  },
+};
+
 async function syncTraffic(state, today) {
   const property = process.env.MIAOYAN_GA_PROPERTY_ID;
   const token = await googleToken();
@@ -454,7 +465,7 @@ async function syncTraffic(state, today) {
     const res = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${property}:runReport`, {
       method: 'POST',
       headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ dateRanges: [{ startDate, endDate }], limit: 100000, ...body }),
+      body: JSON.stringify({ dateRanges: [{ startDate, endDate }], limit: 100000, dimensionFilter: SITE_ONLY, ...body }),
       signal: AbortSignal.timeout(60000),
     });
     if (!res.ok) throw new Error(`ga ${res.status}`);
