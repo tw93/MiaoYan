@@ -35,7 +35,7 @@ main{padding:12px clamp(18px,4vw,54px) 42px;display:grid;gap:12px}
 .metric>span,.metric>em,.head p{color:var(--muted);font-style:normal;font-size:13px;line-height:1.45}
 .metric strong{font-family:var(--serif);font-size:28px;line-height:1.12;white-space:nowrap}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
-.panel{padding:18px;display:grid;gap:16px;min-width:0;align-content:start}
+.panel{padding:18px;display:grid;gap:8px;min-width:0;align-content:start}
 .compact{display:flex;gap:12px}
 .compact .panel{flex:1 1 0}
 .compact th,.compact td{min-width:44px;padding-left:12px}
