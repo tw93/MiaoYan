@@ -861,8 +861,40 @@ def footer_html(key, *, faq_href="#faq"):
 </footer>"""
 
 
+FOOT_CHROME_JS = """// A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
+// body's colour, not only theme-color and the root, so body takes the footer's colour and a
+// gradient of the page's own ground covers everything above the footer.
+(function () {
+  var foot = document.querySelector("footer");
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!foot || !meta || !window.IntersectionObserver) return;
+  var page = meta.getAttribute("content");
+  var dark = getComputedStyle(foot).backgroundColor;
+  var root = document.documentElement;
+  var body = document.body;
+  var ground = getComputedStyle(body).backgroundColor;
+  var seen = false;
+  function paint() {
+    meta.setAttribute("content", seen ? dark : page);
+    root.style.backgroundColor = seen ? dark : "";
+    if (!seen) {
+      body.style.background = "";
+      return;
+    }
+    var below = Math.ceil(body.getBoundingClientRect().bottom - foot.getBoundingClientRect().top);
+    body.style.background = "linear-gradient(" + ground + ", " + ground + ") top / 100% calc(100% - " + below + "px) no-repeat " + dark;
+  }
+  new IntersectionObserver(function (entries) {
+    seen = entries[entries.length - 1].isIntersecting;
+    paint();
+  }).observe(foot);
+  window.addEventListener("resize", paint);
+})();
+"""
+
+
 def page_script(*parts):
-    return "<script>\n(function () {\n" + "".join(parts) + "})();\n</script>"
+    return "<script>\n" + FOOT_CHROME_JS + "(function () {\n" + "".join(parts) + "})();\n</script>"
 
 
 def page(key):

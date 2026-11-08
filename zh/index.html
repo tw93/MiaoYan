@@ -859,6 +859,35 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </div>
 </footer>
 <script>
+// A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
+// body's colour, not only theme-color and the root, so body takes the footer's colour and a
+// gradient of the page's own ground covers everything above the footer.
+(function () {
+  var foot = document.querySelector("footer");
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!foot || !meta || !window.IntersectionObserver) return;
+  var page = meta.getAttribute("content");
+  var dark = getComputedStyle(foot).backgroundColor;
+  var root = document.documentElement;
+  var body = document.body;
+  var ground = getComputedStyle(body).backgroundColor;
+  var seen = false;
+  function paint() {
+    meta.setAttribute("content", seen ? dark : page);
+    root.style.backgroundColor = seen ? dark : "";
+    if (!seen) {
+      body.style.background = "";
+      return;
+    }
+    var below = Math.ceil(body.getBoundingClientRect().bottom - foot.getBoundingClientRect().top);
+    body.style.background = "linear-gradient(" + ground + ", " + ground + ") top / 100% calc(100% - " + below + "px) no-repeat " + dark;
+  }
+  new IntersectionObserver(function (entries) {
+    seen = entries[entries.length - 1].isIntersecting;
+    paint();
+  }).observe(foot);
+  window.addEventListener("resize", paint);
+})();
 (function () {
   var captions = {"edit": "纯 Markdown 编辑，标题、链接和代码一眼分得清", "preview": "图片、表格和代码按读者看到的样子排好", "split": "左边写右边实时预览，两边滚动同步，Mermaid 流程图也一起画出来", "dark": "深色模式跟随系统，底色是偏暖的深灰"};
   var frame = document.querySelector('.gallery-frame');

@@ -856,6 +856,35 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </div>
 </footer>
 <script>
+// A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
+// body's colour, not only theme-color and the root, so body takes the footer's colour and a
+// gradient of the page's own ground covers everything above the footer.
+(function () {
+  var foot = document.querySelector("footer");
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!foot || !meta || !window.IntersectionObserver) return;
+  var page = meta.getAttribute("content");
+  var dark = getComputedStyle(foot).backgroundColor;
+  var root = document.documentElement;
+  var body = document.body;
+  var ground = getComputedStyle(body).backgroundColor;
+  var seen = false;
+  function paint() {
+    meta.setAttribute("content", seen ? dark : page);
+    root.style.backgroundColor = seen ? dark : "";
+    if (!seen) {
+      body.style.background = "";
+      return;
+    }
+    var below = Math.ceil(body.getBoundingClientRect().bottom - foot.getBoundingClientRect().top);
+    body.style.background = "linear-gradient(" + ground + ", " + ground + ") top / 100% calc(100% - " + below + "px) no-repeat " + dark;
+  }
+  new IntersectionObserver(function (entries) {
+    seen = entries[entries.length - 1].isIntersecting;
+    paint();
+  }).observe(foot);
+  window.addEventListener("resize", paint);
+})();
 (function () {
   var captions = {"edit": "구문 강조가 적용된 순수 마크다운으로 제목, 링크, 코드가 한눈에 구분됩니다", "preview": "이미지, 표, 코드를 실제 읽는 모습 그대로 보여 줍니다", "split": "왼쪽에서 쓰고 오른쪽에서 확인하며, Mermaid 다이어그램도 바로 그려집니다", "dark": "다크 모드는 시스템 설정을 따릅니다"};
   var frame = document.querySelector('.gallery-frame');
