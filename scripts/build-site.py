@@ -671,13 +671,13 @@ ICONS = (
 )
 
 # gtag.js is 168KB, so it loads once the page is idle after load instead of
-# competing with the hero shot. Consent stays denied from the first line, and a
+# competing with the hero shot. It runs with GA's normal storage, as mole.fit
+# does, because consent denied stopped visits reaching the reports. A
 # page prerendered on hover waits until it is shown, so it never counts a visit
 # the reader did not make.
 ANALYTICS = (
-    "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',"
-    "{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});"
-    "(function(){function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y');"
+    "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}"
+    "(function(){function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true});"
     "var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}"
     "function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}"
     "function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}"
