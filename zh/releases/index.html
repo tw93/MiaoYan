@@ -487,15 +487,27 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
    index groups cards by category; an article is one centered reading column. */
 .blog-index, .blog-post { padding-bottom: var(--gap); }
 .blog-index > .section-lede { margin-bottom: 40px; }
-/* Release notes: one section per version, on the blog's prose and bullets. */
-.release + .release { margin-top: 48px; }
-.release-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 16px; scroll-margin-top: 96px; }
-.release-name { margin-left: 2px; font-size: var(--text-lede); font-weight: 400; color: var(--olive); }
-.release-date { margin-left: 6px; font-family: var(--sans); font-size: var(--text-meta); font-weight: 400; color: var(--stone); white-space: nowrap; }
-.release .release-device:first-child { margin-top: 0; }
-.release .blog-body ul { margin: 0; }
-.release .blog-body li { margin-bottom: 0; }
-.release .blog-body li + li { margin-top: 16px; }
+/* Release notes on mole.fit's geometry: a hairline between versions, numbered items
+   down one release, 1.65 leading; a device heads its group instead of prefixing each item. */
+.releases { max-width: 1000px; }
+.releases > .section-lede { margin-bottom: 36px; }
+.release { margin-bottom: 0; }
+.release + .release { margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(109, 108, 102, 0.12); }
+.release-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--dark-warm); margin: 0 0 24px; scroll-margin-top: 96px; }
+.release-name { margin-left: 4px; font-size: var(--text-lede); font-weight: 400; color: var(--olive); }
+.release-date { position: relative; top: -1px; margin-left: 4px; font-family: var(--sans); font-size: var(--text-meta); font-weight: 400; color: var(--stone); white-space: nowrap; }
+.release-notes { counter-reset: release-item; font-size: var(--text-lede); line-height: 1.65; color: var(--dark-warm); overflow-wrap: break-word; }
+.release-device { margin: 28px 0 12px; font-size: var(--text-lede); font-weight: 600; line-height: 1.65; color: var(--near-black); }
+.release-device:first-child { margin-top: 0; }
+.release-notes ol { list-style: none; margin: 0; padding: 0; }
+.release-notes li { position: relative; padding-left: 28px; counter-increment: release-item; }
+.release-notes li + li { margin-top: 16px; }
+.release-notes li::before { content: counter(release-item) "."; position: absolute; left: 0; top: 0; color: var(--stone); font-variant-numeric: tabular-nums; letter-spacing: 0; white-space: nowrap; }
+@media (max-width: 640px) {
+  .releases > .section-lede { margin-bottom: 32px; }
+  .release-title { font-size: 18px; }
+  .release-date { font-size: 14px; }
+}
 .blog-group { margin: 0; }
 .blog-group + .blog-group { margin-top: 56px; }
 .blog-group-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 6px; }
@@ -784,235 +796,235 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <p class="section-lede">妙言每个版本改了什么，最新的在最前面。</p>
   <section class="release" id="v4-8-0">
     <h2 class="release-title">V4.8.0 <span class="release-name">Brachydios</span> <time class="release-date" datetime="2026-11-06">2026-11-06</time></h2>
-    <div class="blog-body"><ul><li>删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失</li></ul><h3 class="release-device">Mac</h3><ul><li>磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你</li><li>删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失</li><li>没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白</li><li>繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走</li><li>第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致</li><li>侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了</li></ul><h3 class="release-device">iPhone 和 iPad</h3><ul><li>没有 iCloud 账号也能直接用，妙言会在这台设备上建好笔记库，在文件 App 里能看到</li><li>打不开的笔记用一句话说明原因，并带一个重试按钮</li><li>文件夹卡片上的数字和点进去看到的笔记数一致，没开 iCloud 时显示未开启，不再显示已同步</li><li>笔记页的编辑按钮换成铅笔图标，启动画面和 App 用同一种纸色</li></ul></div>
+    <div class="release-notes"><ol><li>删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失</li></ol><h3 class="release-device">Mac</h3><ol><li>磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你</li><li>删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失</li><li>没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白</li><li>繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走</li><li>第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致</li><li>侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了</li></ol><h3 class="release-device">iPhone 和 iPad</h3><ol><li>没有 iCloud 账号也能直接用，妙言会在这台设备上建好笔记库，在文件 App 里能看到</li><li>打不开的笔记用一句话说明原因，并带一个重试按钮</li><li>文件夹卡片上的数字和点进去看到的笔记数一致，没开 iCloud 时显示未开启，不再显示已同步</li><li>笔记页的编辑按钮换成铅笔图标，启动画面和 App 用同一种纸色</li></ol></div>
   </section>
   <section class="release" id="v4-7-1">
     <h2 class="release-title">V4.7.1 <span class="release-name">Rathalos</span> <time class="release-date" datetime="2026-11-06">2026-11-06</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失</li><li>删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖</li><li>在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置</li><li>笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏</li><li>分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和</li><li>鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>从访达拖进编辑器的图片和文件会像粘贴一样复制进来并插入链接，之前拖进来的图片在笔记保存后会丢失</li><li>删除文件夹前刚打的字不再丢失，格式化后按 Command-Z 能一步撤回，清理未使用附件不会再误清子文件夹笔记引用上级目录的文件，有乱码的笔记以只读打开，不会被保存覆盖</li><li>在访达、git 或同步工具里删掉或改名的笔记会马上从列表里消失，在 iPhone 上改了正在打开的笔记时，Mac 上的预览和分栏停在原来的位置</li><li>笔记列表和侧栏里标题的最后一个字不再被隔开，比如 SOP 不再显示成 SO P，名字里带 Trash 的文件夹重新出现在侧栏</li><li>分栏编辑时新写的公式、标题和本地视频跟打开时显示得一样，PNG 导出会等图表画完，切换浅色深色时预览直接换色，深色下的正文颜色更柔和</li><li>鼠标移到预览的标题上会出现链接图标，加载中的图片中间会转一个小圈，勾选过的任务按回车会新开一条没勾选的</li></ol></div>
   </section>
   <section class="release" id="v4-7-0">
     <h2 class="release-title">V4.7.0 <span class="release-name">Gore Magala</span> <time class="release-date" datetime="2026-11-04">2026-11-04</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>导出的 PDF 重新带上排版样式和全部图片，V4.3.0 起导出会丢掉样式，没滚动到的图片也是空白</li><li>预览里的图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片先显示一块轻轻呼吸的底色，视频直接显示第一帧</li><li>预览模式下切换笔记不再整页重载，没有白闪，分栏编辑或外部改动时只刷新改到的段落，阅读位置保持不动</li><li>预览的行距、标题字号和段落间距重新调过，读起来更舒展，中文强调不再显示成斜体，链接改用妙言绿</li><li>窗口顶部的搜索框、笔记标题和模式按钮跟红绿灯放在同一行</li></ul><h3 class="release-device">iPhone 和 iPad</h3><ul><li>阅读字体可以在黑体、宋体、楷体、圆体之间切换，仓耳今楷可以在 App 里下载，字号改成滑块调节，默认和 Mac 一样用系统字体，之前选过的字体保持不变</li><li>阅读页的行距和段落间距重新调过，手机上的标题不再那么大，正文改为左对齐，中文强调不再显示成斜体，链接改用妙言绿</li><li>打开的笔记在 Mac 上改了会直接更新，也不再弹出没必要的冲突提示</li><li>文件夹里可以再建一层子文件夹，iPhone 上点进文件夹就能看到，iPad 侧栏可以展开和收起，移动笔记时也能选到</li><li>编辑时改标题就能给笔记改名，列表里长按也能改名和移动到文件夹</li><li>全新的图标，首页换上妙言的红雀标志，设置页重新整理，笔记卡片把日期放到摘要前面并改成更短的写法，今天的笔记只显示时间</li><li>图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片中间会转一个小圈，视频直接显示第一帧</li><li>为深色背景写的幻灯片不再看不见，代码块不再超出正文宽度，轻点阅读页不再弹出或收起工具栏，点刷新时箭头总会转一圈</li><li>从双链跳到另一篇再返回不再一直停在加载状态，iPad 侧栏可以看到同步状态并手动刷新，新建笔记跟随你设的字体和字号，搜索页的页头和另外两页一致</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>导出的 PDF 重新带上排版样式和全部图片，V4.3.0 起导出会丢掉样式，没滚动到的图片也是空白</li><li>预览里的图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片先显示一块轻轻呼吸的底色，视频直接显示第一帧</li><li>预览模式下切换笔记不再整页重载，没有白闪，分栏编辑或外部改动时只刷新改到的段落，阅读位置保持不动</li><li>预览的行距、标题字号和段落间距重新调过，读起来更舒展，中文强调不再显示成斜体，链接改用妙言绿</li><li>窗口顶部的搜索框、笔记标题和模式按钮跟红绿灯放在同一行</li></ol><h3 class="release-device">iPhone 和 iPad</h3><ol><li>阅读字体可以在黑体、宋体、楷体、圆体之间切换，仓耳今楷可以在 App 里下载，字号改成滑块调节，默认和 Mac 一样用系统字体，之前选过的字体保持不变</li><li>阅读页的行距和段落间距重新调过，手机上的标题不再那么大，正文改为左对齐，中文强调不再显示成斜体，链接改用妙言绿</li><li>打开的笔记在 Mac 上改了会直接更新，也不再弹出没必要的冲突提示</li><li>文件夹里可以再建一层子文件夹，iPhone 上点进文件夹就能看到，iPad 侧栏可以展开和收起，移动笔记时也能选到</li><li>编辑时改标题就能给笔记改名，列表里长按也能改名和移动到文件夹</li><li>全新的图标，首页换上妙言的红雀标志，设置页重新整理，笔记卡片把日期放到摘要前面并改成更短的写法，今天的笔记只显示时间</li><li>图片在加载前就按原图比例留好位置，正文不再跟着跳动，加载慢的图片中间会转一个小圈，视频直接显示第一帧</li><li>为深色背景写的幻灯片不再看不见，代码块不再超出正文宽度，轻点阅读页不再弹出或收起工具栏，点刷新时箭头总会转一圈</li><li>从双链跳到另一篇再返回不再一直停在加载状态，iPad 侧栏可以看到同步状态并手动刷新，新建笔记跟随你设的字体和字号，搜索页的页头和另外两页一致</li></ol></div>
   </section>
   <section class="release" id="v4-6-1">
     <h2 class="release-title">V4.6.1 <span class="release-name">Glavenus</span> <time class="release-date" datetime="2026-11-03">2026-11-03</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>在「文件 &gt; 单独模式」里选完文件夹后不再闪退</li><li>编辑器和预览里的代码换回 V4.5.0 的配色，不再整片发黄</li><li>默认换行模式下，跨多行的数学公式在预览和导出里也能正常渲染</li><li>侧栏 Logo 在中文界面显示用思源宋体排的「妙言」，其他语言显示 MiaoYan，小鸟和文字跟文件夹图标、名称对齐，中文的「全部笔记」缩成「全部」</li><li>删除相关的菜单和提示统一叫「移到废纸篓」，繁体中文改用「垃圾桶」，提示里的引号、省略号和冒号统一成一种写法</li></ul><h3 class="release-device">iPhone 和 iPad</h3><ul><li>带视频的笔记打开后不再一直停在加载状态</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>在「文件 &gt; 单独模式」里选完文件夹后不再闪退</li><li>编辑器和预览里的代码换回 V4.5.0 的配色，不再整片发黄</li><li>默认换行模式下，跨多行的数学公式在预览和导出里也能正常渲染</li><li>侧栏 Logo 在中文界面显示用思源宋体排的「妙言」，其他语言显示 MiaoYan，小鸟和文字跟文件夹图标、名称对齐，中文的「全部笔记」缩成「全部」</li><li>删除相关的菜单和提示统一叫「移到废纸篓」，繁体中文改用「垃圾桶」，提示里的引号、省略号和冒号统一成一种写法</li></ol><h3 class="release-device">iPhone 和 iPad</h3><ol><li>带视频的笔记打开后不再一直停在加载状态</li></ol></div>
   </section>
   <section class="release" id="v4-6-0">
     <h2 class="release-title">V4.6.0 <span class="release-name">Lagiacrus</span> <time class="release-date" datetime="2026-10-26">2026-10-26</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>侧栏、列表、编辑器和预览统一成一种暖白纸色，列表行之间用缩进细线分开，编辑器换上更安静的配色，Markdown 符号淡下去，代码、行内代码和 HTML 标签统一成淡金色，预览里的代码块也是同一套颜色，格式、演示和置顶图标也重新画过</li><li>默认字体改成系统字体，英文用 SF，中文用苹方，之前选过仓耳今楷或其他字体的保持不变</li><li>设置窗口重新排成通用、编辑器、字体三页，每行左边是说明右边是控件，需要重启的设置在行内就能重启，侧栏 Logo 下面多了一行「全部笔记」，升级后也会回到上次打开的文件夹</li><li>确认弹框改成纸色底，图标只留小鸟，移入废纸篓的说法前后一致，预览里的引用左边多了一条细竖条，图片滚到顶部被遮住时也保留圆角</li><li>文件夹右键新增「移动到」，整个文件夹连同子文件夹和笔记都能挪到别处，重命名文件夹也会带上子文件夹、排序设置和版本历史，超过 100 个文件夹、名叫 assets 的笔记文件夹和通过符号链接打开的笔记库都能完整列出</li><li>读不出来的笔记不会再被空内容覆盖，保存成功后不再误报保存失败，清理未使用附件不会再删掉没打开过的笔记和废纸篓里的笔记还在用的图片，GBK、Big5 和 UTF-16 这类旧编码的笔记能正确打开，英文占多数的也一样，没改过就不会被改写</li><li>别处改过的笔记再打开时读到的是最新内容，后缀是 .MD 的笔记在外部修改后也会及时刷新，版本历史跟着改名、移动和废纸篓走，删除后撤销也会带回来，反向链接覆盖各层文件夹里的笔记并跟着改名和删除更新，在 App 外放进文件夹的笔记也会列出来</li><li>分栏预览不再闪出破图，也不会停在别的笔记上，快速改完公式和 Mermaid 图后预览会跟着渲染出来，分栏里打字后代码块不再丢掉高亮，预览模式里点任务框能正确保存，导出 HTML 不用先打开预览并会带上图片，以 --- 开头的幻灯片不再丢掉第一页，没写内容的任务项也显示成复选框，取消保存面板后导出不再卡住，从预览复制整个标题不会再带上 # 号</li><li>列表快捷键不再触发两次，在列表里按回车不会把换行打进笔记，格式和查找菜单恢复可用，主窗口改为 ⌥⌘0，标题里用中文输入法回车确认英文不会跳到正文，标题只填空格不会把笔记移出文件夹，排版时继续打字也不会被覆盖，退出演示后侧栏和列表会回到进入前的样子</li><li>打字时不再每次按键都复制整篇笔记，数字多的长笔记输入也不再卡顿，搜索、排序和启动都更快，粘贴图片上传到 PicGo 后链接会落在粘贴的位置，菜单和提示补齐了日文、繁体中文和西班牙语</li><li>命令行 miao 能找到 App 实际用的笔记目录，标题带引号也能正常新建，网络不通时安装脚本不再中途报错，miao update 查不到版本时不再装上开发中的代码</li></ul><h3 class="release-device">iPhone 和 iPad</h3><ul><li>正在编辑的笔记被别的设备保存后，会弹出一个小胶囊问你保留哪一版，没选就离开时，你打的字会另存成一份副本</li><li>iCloud 冲突时被搁在一边的另一版，打开笔记时会问你要不要两份都留，不再悄悄丢掉</li><li>保存、切到后台、改名、移动和放进废纸篓时，正在打的字都不会丢，笔记的图片也会跟着一起移动</li><li>启动后卡片预览、文件夹列表和看过的笔记直接显示，不用再等加载</li><li>删除笔记直接放进废纸篓，5 秒内可以撤销，不再弹确认框</li><li>阅读页里的脚注和标题链接点了能跳到对应位置</li><li>GBK、Big5、EUC-KR 和 UTF-16 编码的笔记也有卡片预览，预览里不再出现注释、表格分隔线、代码围栏和脚注标记</li><li>阅读页两端对齐的英文会自动断字，词间距更均匀</li><li>配色和字号跟 Mac 版统一</li><li>新建笔记的正文有提示，写了内容再取消会先问你要不要丢弃</li><li>iPhone Duo 折叠和展开时，打开的笔记会保留</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>侧栏、列表、编辑器和预览统一成一种暖白纸色，列表行之间用缩进细线分开，编辑器换上更安静的配色，Markdown 符号淡下去，代码、行内代码和 HTML 标签统一成淡金色，预览里的代码块也是同一套颜色，格式、演示和置顶图标也重新画过</li><li>默认字体改成系统字体，英文用 SF，中文用苹方，之前选过仓耳今楷或其他字体的保持不变</li><li>设置窗口重新排成通用、编辑器、字体三页，每行左边是说明右边是控件，需要重启的设置在行内就能重启，侧栏 Logo 下面多了一行「全部笔记」，升级后也会回到上次打开的文件夹</li><li>确认弹框改成纸色底，图标只留小鸟，移入废纸篓的说法前后一致，预览里的引用左边多了一条细竖条，图片滚到顶部被遮住时也保留圆角</li><li>文件夹右键新增「移动到」，整个文件夹连同子文件夹和笔记都能挪到别处，重命名文件夹也会带上子文件夹、排序设置和版本历史，超过 100 个文件夹、名叫 assets 的笔记文件夹和通过符号链接打开的笔记库都能完整列出</li><li>读不出来的笔记不会再被空内容覆盖，保存成功后不再误报保存失败，清理未使用附件不会再删掉没打开过的笔记和废纸篓里的笔记还在用的图片，GBK、Big5 和 UTF-16 这类旧编码的笔记能正确打开，英文占多数的也一样，没改过就不会被改写</li><li>别处改过的笔记再打开时读到的是最新内容，后缀是 .MD 的笔记在外部修改后也会及时刷新，版本历史跟着改名、移动和废纸篓走，删除后撤销也会带回来，反向链接覆盖各层文件夹里的笔记并跟着改名和删除更新，在 App 外放进文件夹的笔记也会列出来</li><li>分栏预览不再闪出破图，也不会停在别的笔记上，快速改完公式和 Mermaid 图后预览会跟着渲染出来，分栏里打字后代码块不再丢掉高亮，预览模式里点任务框能正确保存，导出 HTML 不用先打开预览并会带上图片，以 --- 开头的幻灯片不再丢掉第一页，没写内容的任务项也显示成复选框，取消保存面板后导出不再卡住，从预览复制整个标题不会再带上 # 号</li><li>列表快捷键不再触发两次，在列表里按回车不会把换行打进笔记，格式和查找菜单恢复可用，主窗口改为 ⌥⌘0，标题里用中文输入法回车确认英文不会跳到正文，标题只填空格不会把笔记移出文件夹，排版时继续打字也不会被覆盖，退出演示后侧栏和列表会回到进入前的样子</li><li>打字时不再每次按键都复制整篇笔记，数字多的长笔记输入也不再卡顿，搜索、排序和启动都更快，粘贴图片上传到 PicGo 后链接会落在粘贴的位置，菜单和提示补齐了日文、繁体中文和西班牙语</li><li>命令行 miao 能找到 App 实际用的笔记目录，标题带引号也能正常新建，网络不通时安装脚本不再中途报错，miao update 查不到版本时不再装上开发中的代码</li></ol><h3 class="release-device">iPhone 和 iPad</h3><ol><li>正在编辑的笔记被别的设备保存后，会弹出一个小胶囊问你保留哪一版，没选就离开时，你打的字会另存成一份副本</li><li>iCloud 冲突时被搁在一边的另一版，打开笔记时会问你要不要两份都留，不再悄悄丢掉</li><li>保存、切到后台、改名、移动和放进废纸篓时，正在打的字都不会丢，笔记的图片也会跟着一起移动</li><li>启动后卡片预览、文件夹列表和看过的笔记直接显示，不用再等加载</li><li>删除笔记直接放进废纸篓，5 秒内可以撤销，不再弹确认框</li><li>阅读页里的脚注和标题链接点了能跳到对应位置</li><li>GBK、Big5、EUC-KR 和 UTF-16 编码的笔记也有卡片预览，预览里不再出现注释、表格分隔线、代码围栏和脚注标记</li><li>阅读页两端对齐的英文会自动断字，词间距更均匀</li><li>配色和字号跟 Mac 版统一</li><li>新建笔记的正文有提示，写了内容再取消会先问你要不要丢弃</li><li>iPhone Duo 折叠和展开时，打开的笔记会保留</li></ol></div>
   </section>
   <section class="release" id="v4-5-0">
     <h2 class="release-title">V4.5.0 <span class="release-name">Nargacuga</span> <time class="release-date" datetime="2026-09-25">2026-09-25</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>搜索改到后台进行，笔记很多时输入也不会卡住，搜「.」或「md」不再把所有笔记都列出来</li><li>默认字体回到仓耳今楷，没装时先用苹方显示，在字体设置里点下载，装好后自动换上，之前选过的字体都保持不变</li><li>代码字体默认跟随正文，只用在代码块上，行内代码、引用里的代码和 img 这类 HTML 标签不再换成等宽字体</li><li>修复 4.3.1 起预览文字变细、标题加粗变淡的问题，预览、编辑器和笔记列表的字间距也收紧了一些</li><li>设置窗口重新整理，控件对齐、分组更清楚，窗口高度跟着每页内容走，字体那一页改叫「字体」</li><li>预览里的查找按普通文字匹配，输入 .、( 这类符号不再出错</li></ul><h3 class="release-device">iPhone 和 iPad</h3><ul><li>打开笔记不会再悄悄改动它的修改时间，笔记也不会因此跑到最近列表最上面</li><li>废纸篓里的笔记不再混进最近、全部笔记和搜索</li><li>界面补齐了中文，设置页、空状态和加载提示不再显示英文</li><li>GBK 编码的笔记也能打开，读不出来的文件会直接提示，不再一直停在加载状态</li><li>行内代码和引用里的代码改用正文字体，和 Mac 保持一致</li><li>卡片预览和搜索摘要不再露出文件开头的元信息</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>搜索改到后台进行，笔记很多时输入也不会卡住，搜「.」或「md」不再把所有笔记都列出来</li><li>默认字体回到仓耳今楷，没装时先用苹方显示，在字体设置里点下载，装好后自动换上，之前选过的字体都保持不变</li><li>代码字体默认跟随正文，只用在代码块上，行内代码、引用里的代码和 img 这类 HTML 标签不再换成等宽字体</li><li>修复 4.3.1 起预览文字变细、标题加粗变淡的问题，预览、编辑器和笔记列表的字间距也收紧了一些</li><li>设置窗口重新整理，控件对齐、分组更清楚，窗口高度跟着每页内容走，字体那一页改叫「字体」</li><li>预览里的查找按普通文字匹配，输入 .、( 这类符号不再出错</li></ol><h3 class="release-device">iPhone 和 iPad</h3><ol><li>打开笔记不会再悄悄改动它的修改时间，笔记也不会因此跑到最近列表最上面</li><li>废纸篓里的笔记不再混进最近、全部笔记和搜索</li><li>界面补齐了中文，设置页、空状态和加载提示不再显示英文</li><li>GBK 编码的笔记也能打开，读不出来的文件会直接提示，不再一直停在加载状态</li><li>行内代码和引用里的代码改用正文字体，和 Mac 保持一致</li><li>卡片预览和搜索摘要不再露出文件开头的元信息</li></ol></div>
   </section>
   <section class="release" id="v4-3-2">
     <h2 class="release-title">V4.3.2 <span class="release-name">Seregios</span> <time class="release-date" datetime="2026-09-20">2026-09-20</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走</li><li>修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走</li><li>修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题</li></ol></div>
   </section>
   <section class="release" id="v4-3-1">
     <h2 class="release-title">V4.3.1 <span class="release-name">Lunagaron</span> <time class="release-date" datetime="2026-09-20">2026-09-20</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>预览的英文改由系统字体排版，选中文字体时不再拿它的西文字形凑数，中英混排明显干净</li><li>统一正文和标题的抗锯齿，同一行里正文和加粗不再是两种笔画粗细</li><li>没有真粗字重的字体不再合成伪粗体，标题和加粗的笔画不会糊在一起</li><li>字体设置从系统里的两百多个收成推荐、中文、西文三组，代码字体只列等宽</li><li>字体名跟着界面语言显示，中文下是苹方-简、宋体-简这样的名字</li><li>Sparkle 更新提示按系统语言显示更新日志，不再中英两份叠在一起</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>预览的英文改由系统字体排版，选中文字体时不再拿它的西文字形凑数，中英混排明显干净</li><li>统一正文和标题的抗锯齿，同一行里正文和加粗不再是两种笔画粗细</li><li>没有真粗字重的字体不再合成伪粗体，标题和加粗的笔画不会糊在一起</li><li>字体设置从系统里的两百多个收成推荐、中文、西文三组，代码字体只列等宽</li><li>字体名跟着界面语言显示，中文下是苹方-简、宋体-简这样的名字</li><li>Sparkle 更新提示按系统语言显示更新日志，不再中英两份叠在一起</li></ol></div>
   </section>
   <section class="release" id="v4-3-0">
     <h2 class="release-title">V4.3.0 <span class="release-name">Velkhana</span> <time class="release-date" datetime="2026-09-20">2026-09-20</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0</li><li>宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开</li><li>深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常</li><li>预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字</li><li>修复以数字开头的行内公式吞掉后面段落和列表的问题</li><li>内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响</li><li>重新打开窗口时会恢复上次使用的预览模式，不再退回默认</li></ul><h3 class="release-device">iPhone 和 iPad</h3><ul><li>搜索现在覆盖长笔记的全文，之前只搜到开头一部分</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0</li><li>宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开</li><li>深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常</li><li>预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字</li><li>修复以数字开头的行内公式吞掉后面段落和列表的问题</li><li>内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响</li><li>重新打开窗口时会恢复上次使用的预览模式，不再退回默认</li></ol><h3 class="release-device">iPhone 和 iPad</h3><ol><li>搜索现在覆盖长笔记的全文，之前只搜到开头一部分</li></ol></div>
   </section>
   <section class="release" id="v4-2-0">
     <h2 class="release-title">V4.2.0 <span class="release-name">Zinogre</span> <time class="release-date" datetime="2026-08-15">2026-08-15</time></h2>
-    <div class="blog-body"><ul><li>新增官方 MiaoYan Agent Skill，让 Agent 能按妙言的语法、附件、PPT 与 CLI 规范处理笔记</li></ul><h3 class="release-device">Mac</h3><ul><li>修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现</li><li>修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合</li><li>修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度</li><li>改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体</li><li>修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题</li><li>改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝</li></ul></div>
+    <div class="release-notes"><ol><li>新增官方 MiaoYan Agent Skill，让 Agent 能按妙言的语法、附件、PPT 与 CLI 规范处理笔记</li></ol><h3 class="release-device">Mac</h3><ol><li>修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现</li><li>修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合</li><li>修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度</li><li>改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体</li><li>修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题</li><li>改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝</li></ol></div>
   </section>
   <section class="release" id="v4-1-0">
     <h2 class="release-title">V4.1.0 <span class="release-name">Aegis</span> <time class="release-date" datetime="2026-07-18">2026-07-18</time></h2>
-    <div class="blog-body"><h3 class="release-device">Mac</h3><ul><li>修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验</li><li>预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题</li><li>新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样</li><li>从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样</li><li>支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便</li></ul><h3 class="release-device">iPhone 和 iPad</h3><ul><li>编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验</li><li>预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题</li><li>新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样</li><li>从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样</li><li>支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便</li></ol><h3 class="release-device">iPhone 和 iPad</h3><ol><li>编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化</li></ol></div>
   </section>
   <section class="release" id="v4-0-0">
     <h2 class="release-title">V4.0.0 <span class="release-name">Valstrax</span> <time class="release-date" datetime="2026-06-19">2026-06-19</time></h2>
-    <div class="blog-body"><h3 class="release-device">iPhone 和 iPad</h3><ul><li>首个版本上线，支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑，一次购买两端都能用</li></ul><h3 class="release-device">iPad</h3><ul><li>提供三栏布局，文件夹、笔记列表和阅读详情可同时展开</li></ul><h3 class="release-device">Mac</h3><ul><li>新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接</li><li>修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线</li><li>改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景</li></ul></div>
+    <div class="release-notes"><h3 class="release-device">iPhone 和 iPad</h3><ol><li>首个版本上线，支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑，一次购买两端都能用</li></ol><h3 class="release-device">iPad</h3><ol><li>提供三栏布局，文件夹、笔记列表和阅读详情可同时展开</li></ol><h3 class="release-device">Mac</h3><ol><li>新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接</li><li>修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线</li><li>改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景</li></ol></div>
   </section>
   <section class="release" id="v3-5-1">
     <h2 class="release-title">V3.5.1 <time class="release-date" datetime="2026-05-03">2026-05-03</time></h2>
-    <div class="blog-body"><ul><li>修复 macOS 26 上工具栏按钮出现灰色背景条的问题</li><li>修复侧边栏和笔记列表在 macOS 26 上背景透明的问题</li><li>优化笔记切换速度,已加载笔记走同步路径,切换无延迟</li><li>切换笔记时保存改为异步防抖,不再阻塞主线程</li></ul></div>
+    <div class="release-notes"><ol><li>修复 macOS 26 上工具栏按钮出现灰色背景条的问题</li><li>修复侧边栏和笔记列表在 macOS 26 上背景透明的问题</li><li>优化笔记切换速度,已加载笔记走同步路径,切换无延迟</li><li>切换笔记时保存改为异步防抖,不再阻塞主线程</li></ol></div>
   </section>
   <section class="release" id="v3-5-0">
     <h2 class="release-title">V3.5.0 <span class="release-name">Luowen</span> <time class="release-date" datetime="2026-05-02">2026-05-02</time></h2>
-    <div class="blog-body"><ul><li>新增版本历史功能,右键笔记可查看和恢复到任意历史版本</li><li>删除笔记改为移到系统废纸篓,误删可恢复</li><li>新增 Wikilink 双向链接,笔记面板展示反向链接</li><li>适配 macOS 26 玻璃质感工具栏</li><li>新增 iCloud 同步管理器,为后续多端同步打基础</li><li>开源版和 App Store 版恢复同步更新,共享同一份代码</li></ul></div>
+    <div class="release-notes"><ol><li>新增版本历史功能,右键笔记可查看和恢复到任意历史版本</li><li>删除笔记改为移到系统废纸篓,误删可恢复</li><li>新增 Wikilink 双向链接,笔记面板展示反向链接</li><li>适配 macOS 26 玻璃质感工具栏</li><li>新增 iCloud 同步管理器,为后续多端同步打基础</li><li>开源版和 App Store 版恢复同步更新,共享同一份代码</li></ol></div>
   </section>
   <section class="release" id="v3-4-0">
     <h2 class="release-title">V3.4.0 <span class="release-name">Mizutsune</span> <time class="release-date" datetime="2026-04-28">2026-04-28</time></h2>
-    <div class="blog-body"><ul><li>已上架 Mac App Store，与开源版共享同一份代码，同步更新</li><li>分栏滚动从比例模式升级为行级同步，图片、代码块多的文档也能精准对齐</li><li>从 Finder 打开单个 .md 能正确展示同目录所有文件</li></ul></div>
+    <div class="release-notes"><ol><li>已上架 Mac App Store，与开源版共享同一份代码，同步更新</li><li>分栏滚动从比例模式升级为行级同步，图片、代码块多的文档也能精准对齐</li><li>从 Finder 打开单个 .md 能正确展示同目录所有文件</li></ol></div>
   </section>
   <section class="release" id="v3-3-0">
     <h2 class="release-title">V3.3.0 <span class="release-name">Glavenus</span> <time class="release-date" datetime="2026-04-27">2026-04-27</time></h2>
-    <div class="blog-body"><ul><li>PDF 导出终于真正分页了：标准 A4 尺寸、留白边距、标题生成书签，图片和图表也能正确渲染，再也不是一张拉很长的滚动页</li><li>分栏滚动从比例模式升级为行级同步，含图片或代码块的文档也能精准对齐，不再偏位</li><li>符号链接目录在侧栏正常显示不重复，从 Finder 打开单个 .md 也能看到同目录所有文件</li><li>切换大文件时主线程不再卡顿，内容异步加载，界面保持流畅</li><li>Cmd+E 格式化行内代码，Shift+Cmd+E 包裹代码块</li></ul></div>
+    <div class="release-notes"><ol><li>PDF 导出终于真正分页了：标准 A4 尺寸、留白边距、标题生成书签，图片和图表也能正确渲染，再也不是一张拉很长的滚动页</li><li>分栏滚动从比例模式升级为行级同步，含图片或代码块的文档也能精准对齐，不再偏位</li><li>符号链接目录在侧栏正常显示不重复，从 Finder 打开单个 .md 也能看到同目录所有文件</li><li>切换大文件时主线程不再卡顿，内容异步加载，界面保持流畅</li><li>Cmd+E 格式化行内代码，Shift+Cmd+E 包裹代码块</li></ol></div>
   </section>
   <section class="release" id="v3-2-0">
     <h2 class="release-title">V3.2.0 <span class="release-name">Nargacuga</span> <time class="release-date" datetime="2026-04-12">2026-04-12</time></h2>
-    <div class="blog-body"><ul><li>预览更快：两阶段渲染让文字立即显示，本地图片在后台懒加载，明显减少预览首屏等待时间</li><li>终端快捷入口：新增 Cmd+J 全局快捷键，随时打开当前文件夹所在终端，文件夹右键菜单也有对应入口</li><li>复制路径：右键任意笔记可直接复制完整文件路径</li><li>西班牙语本地化：完整覆盖菜单、设置页和系统字符串的西班牙语翻译</li><li>Mermaid 升级至 v11.14.0，修复子图连线渲染问题并新增图表功能</li><li>实时重载修复：其他工具修改的笔记现在能正确触发重载，含符号链接目录内的文件（closes #502）</li><li>启动与窗口修复：从 Finder 直接打开 .md 文件不再出现白屏，单栏模式下启动和退出时也不会再丢失笔记</li><li>导出与模式切换：修复切换笔记时预览空白、PPT 演示模式退出时序混乱、导出超时处理异常等问题</li><li>并发安全：修复 ExportCache 数据竞争、安全作用域 URL 泄漏、异步渲染后笔记状态错乱等问题</li></ul></div>
+    <div class="release-notes"><ol><li>预览更快：两阶段渲染让文字立即显示，本地图片在后台懒加载，明显减少预览首屏等待时间</li><li>终端快捷入口：新增 Cmd+J 全局快捷键，随时打开当前文件夹所在终端，文件夹右键菜单也有对应入口</li><li>复制路径：右键任意笔记可直接复制完整文件路径</li><li>西班牙语本地化：完整覆盖菜单、设置页和系统字符串的西班牙语翻译</li><li>Mermaid 升级至 v11.14.0，修复子图连线渲染问题并新增图表功能</li><li>实时重载修复：其他工具修改的笔记现在能正确触发重载，含符号链接目录内的文件（closes #502）</li><li>启动与窗口修复：从 Finder 直接打开 .md 文件不再出现白屏，单栏模式下启动和退出时也不会再丢失笔记</li><li>导出与模式切换：修复切换笔记时预览空白、PPT 演示模式退出时序混乱、导出超时处理异常等问题</li><li>并发安全：修复 ExportCache 数据竞争、安全作用域 URL 泄漏、异步渲染后笔记状态错乱等问题</li></ol></div>
   </section>
   <section class="release" id="v3-1-1">
     <h2 class="release-title">V3.1.1 <span class="release-name">Astalos</span> <time class="release-date" datetime="2026-03-12">2026-03-12</time></h2>
-    <div class="blog-body"><ul><li>CLI 更顺手：扩展了 miao 命令，补全搜索、列出、打开和查看笔记等能力，并改进了路径解析与默认列表行为。</li><li>外部修改可重载：新增重新加载当前笔记的快捷入口，文件被其他工具改动后可以更快同步回应用。</li><li>侧边栏更稳定：修复窗口启动和宽度变化时侧边栏项目内容溢出的问题，并恢复 Cmd+1 侧边栏快捷键。</li><li>预览与访问修复：修复预览样式空闲后丢失的问题，并恢复单栏模式下的文件夹访问能力。</li></ul></div>
+    <div class="release-notes"><ol><li>CLI 更顺手：扩展了 miao 命令，补全搜索、列出、打开和查看笔记等能力，并改进了路径解析与默认列表行为。</li><li>外部修改可重载：新增重新加载当前笔记的快捷入口，文件被其他工具改动后可以更快同步回应用。</li><li>侧边栏更稳定：修复窗口启动和宽度变化时侧边栏项目内容溢出的问题，并恢复 Cmd+1 侧边栏快捷键。</li><li>预览与访问修复：修复预览样式空闲后丢失的问题，并恢复单栏模式下的文件夹访问能力。</li></ol></div>
   </section>
   <section class="release" id="v2-7-0">
     <h2 class="release-title">V2.7.0 <span class="release-name">Zinogre</span> <time class="release-date" datetime="2026-02-28">2026-02-28</time></h2>
-    <div class="blog-body"><ul><li>Apple 公证完成：花了 688 元、给库克写信投诉才办下来，终于不会出现 App 损坏提示以及不用再去系统设置里点&quot;仍然打开&quot;了！</li><li>预览稳定性升级：修复预览偶发空白问题，增强 WebContent 进程异常后的恢复能力。</li><li>编辑体验优化：修复分栏模式下输入法问题，解决系统快捷键冲突，消除切换笔记时高亮闪烁。</li><li>App Store 能力完善：新增沙盒权限配置，强化存储路径持久化流程。</li><li>多语言打磨：将硬编码文案迁移到国际化资源，完善首启模板内容。</li></ul></div>
+    <div class="release-notes"><ol><li>Apple 公证完成：花了 688 元、给库克写信投诉才办下来，终于不会出现 App 损坏提示以及不用再去系统设置里点&quot;仍然打开&quot;了！</li><li>预览稳定性升级：修复预览偶发空白问题，增强 WebContent 进程异常后的恢复能力。</li><li>编辑体验优化：修复分栏模式下输入法问题，解决系统快捷键冲突，消除切换笔记时高亮闪烁。</li><li>App Store 能力完善：新增沙盒权限配置，强化存储路径持久化流程。</li><li>多语言打磨：将硬编码文案迁移到国际化资源，完善首启模板内容。</li></ol></div>
   </section>
   <section class="release" id="v2-5-2">
     <h2 class="release-title">V2.5.2 <span class="release-name">More exquisite</span> <time class="release-date" datetime="2026-02-07">2026-02-07</time></h2>
-    <div class="blog-body"><ul><li>编辑体验升级：编辑区与预览区查找替换更统一，分屏同步更顺滑，预览/演示/PPT 模式切换更稳定。</li><li>性能进一步提升：大文档输入与渲染更流畅，Markdown 高亮与代码块处理优化，并支持异步可取消格式化。</li><li>可靠性与数据安全增强：导出等状态统一走 session 管理，图片与文本替换更安全，PPT 本地图片更稳定，存储路径持久化能力提升。</li><li>细节与架构优化：多语言与首启模板完善，窗口置顶行为更一致，文本处理链路模块化并移除旧网络依赖。</li></ul></div>
+    <div class="release-notes"><ol><li>编辑体验升级：编辑区与预览区查找替换更统一，分屏同步更顺滑，预览/演示/PPT 模式切换更稳定。</li><li>性能进一步提升：大文档输入与渲染更流畅，Markdown 高亮与代码块处理优化，并支持异步可取消格式化。</li><li>可靠性与数据安全增强：导出等状态统一走 session 管理，图片与文本替换更安全，PPT 本地图片更稳定，存储路径持久化能力提升。</li><li>细节与架构优化：多语言与首启模板完善，窗口置顶行为更一致，文本处理链路模块化并移除旧网络依赖。</li></ol></div>
   </section>
   <section class="release" id="v2-4-6">
     <h2 class="release-title">V2.4.6 <span class="release-name">Steady</span> <time class="release-date" datetime="2026-01-03">2026-01-03</time></h2>
-    <div class="blog-body"><ul><li>视觉精致升级：图标统一尺寸与灰度状态，激活色更清晰，明暗模式更一致</li><li>预览切换体验优化：柔和显隐，保留选区/滚动，分栏与窗口缩放更稳定</li><li>导出体验全面升级：进度提示、标题注入、PDF/图片/PPT 输出改进，深色导出与预览一致</li><li>侧边栏支持子文件夹与展开状态维护，也即支持文件夹嵌套了</li><li>性能增强：笔记内容懒加载、预览更新防抖、输入/渲染更流畅</li><li>搜索能力增强，并在保存失败时提供更清晰的提示</li><li>可靠性与隐私：防止重载丢稿、单模式路径修复、移除遥测</li><li>单模式修复：正确定位项目与笔记，启动后编辑区保持可见</li><li>侧边栏宽度与分栏体验优化，修复旧版初始化宽度问题</li><li>内容安全增强：快速切换分屏时避免旧内容回滚</li><li>预览与样式细节优化：对齐规则、图片链接去下划线、TOC 提示更柔和</li><li>文档与发布流程升级：安装说明更新，新增构建脚本与导出配置</li></ul></div>
+    <div class="release-notes"><ol><li>视觉精致升级：图标统一尺寸与灰度状态，激活色更清晰，明暗模式更一致</li><li>预览切换体验优化：柔和显隐，保留选区/滚动，分栏与窗口缩放更稳定</li><li>导出体验全面升级：进度提示、标题注入、PDF/图片/PPT 输出改进，深色导出与预览一致</li><li>侧边栏支持子文件夹与展开状态维护，也即支持文件夹嵌套了</li><li>性能增强：笔记内容懒加载、预览更新防抖、输入/渲染更流畅</li><li>搜索能力增强，并在保存失败时提供更清晰的提示</li><li>可靠性与隐私：防止重载丢稿、单模式路径修复、移除遥测</li><li>单模式修复：正确定位项目与笔记，启动后编辑区保持可见</li><li>侧边栏宽度与分栏体验优化，修复旧版初始化宽度问题</li><li>内容安全增强：快速切换分屏时避免旧内容回滚</li><li>预览与样式细节优化：对齐规则、图片链接去下划线、TOC 提示更柔和</li><li>文档与发布流程升级：安装说明更新，新增构建脚本与导出配置</li></ol></div>
   </section>
   <section class="release" id="v2-3-1">
     <h2 class="release-title">V2.3.1 <span class="release-name">Big change</span> <time class="release-date" datetime="2025-12-16">2025-12-16</time></h2>
-    <div class="blog-body"><ul><li>新增「分栏预览」模式，支持左右分栏同时编辑与预览，双向滚动自动同步</li><li>新增「布局循环」按钮，支持在侧边栏、笔记列表、专注模式间快速切换</li><li>新增「清理孤立附件」功能，一键扫描并移除未被引用的图片和文件</li><li>优化启动体验，消除白屏闪烁，窗口淡入更优雅</li><li>全面性能优化：笔记保存防抖、正则缓存、滚动位置记忆，大幅提升流畅度</li><li>修复滚动同步抖动、预览渲染失效、菜单查找等多个已知问题</li></ul></div>
+    <div class="release-notes"><ol><li>新增「分栏预览」模式，支持左右分栏同时编辑与预览，双向滚动自动同步</li><li>新增「布局循环」按钮，支持在侧边栏、笔记列表、专注模式间快速切换</li><li>新增「清理孤立附件」功能，一键扫描并移除未被引用的图片和文件</li><li>优化启动体验，消除白屏闪烁，窗口淡入更优雅</li><li>全面性能优化：笔记保存防抖、正则缓存、滚动位置记忆，大幅提升流畅度</li><li>修复滚动同步抖动、预览渲染失效、菜单查找等多个已知问题</li></ol></div>
   </section>
   <section class="release" id="v2-2-0">
     <h2 class="release-title">V2.2.0 <span class="release-name">More perfect</span> <time class="release-date" datetime="2025-11-10">2025-11-10</time></h2>
-    <div class="blog-body"><ul><li>重写内容搜索组件，支持编辑和预览模式下的搜索，体验相比之前好很多了</li><li>TOC 支持 pin 控制，方便需要经常打开的小伙伴</li><li>编辑器页面的图片预览改成 command + hover 方式，防止原有直接展示干扰</li><li>修复预览模式下某些机型可能出现的双滚动条的问题</li></ul></div>
+    <div class="release-notes"><ol><li>重写内容搜索组件，支持编辑和预览模式下的搜索，体验相比之前好很多了</li><li>TOC 支持 pin 控制，方便需要经常打开的小伙伴</li><li>编辑器页面的图片预览改成 command + hover 方式，防止原有直接展示干扰</li><li>修复预览模式下某些机型可能出现的双滚动条的问题</li></ol></div>
   </section>
   <section class="release" id="v2-1">
     <h2 class="release-title">V2.1 <span class="release-name">New Discoveries</span> <time class="release-date" datetime="2025-10-11">2025-10-11</time></h2>
-    <div class="blog-body"><ul><li>2.1.6 支持 Mac26 下各种模式效果的图标，修复 Markmap 渲染截断，修复底部缓存挡住编辑问题</li><li>完善主题切换功能，支持自适应系统主题，修复列表选择行为，提升文件类型检测准确性</li><li>目录导航和图片功能增强 - 新增 TOC 目录模式自动生成文章导航，支持 PicList 图床上传，支持引用任意位置的本地图片</li><li>编辑效率提升 - 支持 Tab 快捷键模板一键输入，文件自动检测刷新，编辑器底部留白优化</li><li>PPT 演示模式增强 - 支持更多自定义配置参数，样式大幅优化，演示效果更专业</li><li>预览渲染大幅升级 - 整体预览效果和交互体验提升，优化 Mermaid、Markmap、PlantUML 等图表样式，改进代码块和内联代码显示</li><li>关键 Bug 修复 - 修复长时间使用后预览样式失效，修复编辑时可能崩溃问题，修复笔记列表展开折叠逻辑异常</li><li>性能和体验改进 - 大幅提升内容搜索速度，优化导出功能解决超时问题，禁用弹性滚动使操作更精准</li><li>代码架构重构 - DownView 预览组件和侧边栏逻辑重构，样式文件模块化便于维护，甚至支持 VSCode 开发了</li></ul></div>
+    <div class="release-notes"><ol><li>2.1.6 支持 Mac26 下各种模式效果的图标，修复 Markmap 渲染截断，修复底部缓存挡住编辑问题</li><li>完善主题切换功能，支持自适应系统主题，修复列表选择行为，提升文件类型检测准确性</li><li>目录导航和图片功能增强 - 新增 TOC 目录模式自动生成文章导航，支持 PicList 图床上传，支持引用任意位置的本地图片</li><li>编辑效率提升 - 支持 Tab 快捷键模板一键输入，文件自动检测刷新，编辑器底部留白优化</li><li>PPT 演示模式增强 - 支持更多自定义配置参数，样式大幅优化，演示效果更专业</li><li>预览渲染大幅升级 - 整体预览效果和交互体验提升，优化 Mermaid、Markmap、PlantUML 等图表样式，改进代码块和内联代码显示</li><li>关键 Bug 修复 - 修复长时间使用后预览样式失效，修复编辑时可能崩溃问题，修复笔记列表展开折叠逻辑异常</li><li>性能和体验改进 - 大幅提升内容搜索速度，优化导出功能解决超时问题，禁用弹性滚动使操作更精准</li><li>代码架构重构 - DownView 预览组件和侧边栏逻辑重构，样式文件模块化便于维护，甚至支持 VSCode 开发了</li></ol></div>
   </section>
   <section class="release" id="v2-0">
     <h2 class="release-title">V2.0 <span class="release-name">New Face</span> <time class="release-date" datetime="2025-09-21">2025-09-21</time></h2>
-    <div class="blog-body"><ul><li>全新图标设计更清晰美观，主题切换更流畅，分割线与背景色更统一</li><li>支持顶部导航和快捷键操作，ESC/→ 键切换更便捷</li><li>设置面板重构，字体和语言设置体验优化</li><li>修复标题和搜索框切换问题，搜索框标准化，搜索逻辑优化支持空输入</li><li>异步图片上传更丝滑，预览性能优化，编辑状态下体验更一致</li><li>导出效果优化，生成内容更加稳定，排版显示更精致</li><li>项目全面升级到 Swift 6，优化代码实现和注释，适配新特性提升应用性能和稳定性</li><li>移除推荐字体依赖，代码结构重构，撤销重做功能优化并修复字体选择问题</li></ul></div>
+    <div class="release-notes"><ol><li>全新图标设计更清晰美观，主题切换更流畅，分割线与背景色更统一</li><li>支持顶部导航和快捷键操作，ESC/→ 键切换更便捷</li><li>设置面板重构，字体和语言设置体验优化</li><li>修复标题和搜索框切换问题，搜索框标准化，搜索逻辑优化支持空输入</li><li>异步图片上传更丝滑，预览性能优化，编辑状态下体验更一致</li><li>导出效果优化，生成内容更加稳定，排版显示更精致</li><li>项目全面升级到 Swift 6，优化代码实现和注释，适配新特性提升应用性能和稳定性</li><li>移除推荐字体依赖，代码结构重构，撤销重做功能优化并修复字体选择问题</li></ol></div>
   </section>
   <section class="release" id="v1-18-3">
     <h2 class="release-title">V1.18.3 <span class="release-name">Big Updates</span> <time class="release-date" datetime="2025-08-10">2025-08-10</time></h2>
-    <div class="blog-body"><ul><li>1.18.3修复单独模式显示问题、名称修改没有立即生效、点击视图菜单会闪退问题</li><li>搜索内容快捷键修改成 Command+F，搜索文件改成 Command+P</li><li>支持Markdown中的图片预览功能，更好用</li><li>文件夹支持拖拽修改原有的顺序，更巧妙</li><li>三栏布局拖拽收起展开的效果重构，更舒服</li><li>记住上次打开的文档位置，更迅速</li><li>从原有的 Pod 包管理升级到 Swift 包管理，好维护</li></ul></div>
+    <div class="release-notes"><ol><li>1.18.3修复单独模式显示问题、名称修改没有立即生效、点击视图菜单会闪退问题</li><li>搜索内容快捷键修改成 Command+F，搜索文件改成 Command+P</li><li>支持Markdown中的图片预览功能，更好用</li><li>文件夹支持拖拽修改原有的顺序，更巧妙</li><li>三栏布局拖拽收起展开的效果重构，更舒服</li><li>记住上次打开的文档位置，更迅速</li><li>从原有的 Pod 包管理升级到 Swift 包管理，好维护</li></ol></div>
   </section>
   <section class="release" id="v1-17">
     <h2 class="release-title">V1.17 <span class="release-name">New Changes</span> <time class="release-date" datetime="2025-08-04">2025-08-04</time></h2>
-    <div class="blog-body"><ul><li>适配最新 macOS 26 Tahoe,需要更新不然打不开</li><li>导出长PDF终于不切割了,此外图片/PPT导出也优化了</li><li>默认使用仓耳今楷字体,图片/视频渲染效果优化,可点击放大</li></ul></div>
+    <div class="release-notes"><ol><li>适配最新 macOS 26 Tahoe,需要更新不然打不开</li><li>导出长PDF终于不切割了,此外图片/PPT导出也优化了</li><li>默认使用仓耳今楷字体,图片/视频渲染效果优化,可点击放大</li></ol></div>
   </section>
   <section class="release" id="v1-16">
     <h2 class="release-title">V1.16 <span class="release-name">Small delight</span> <time class="release-date" datetime="2025-07-18">2025-07-18</time></h2>
-    <div class="blog-body"><ul><li>新增了个很好看的字体，快去设置中更新 TsangerJinKai</li><li>最低 Mac 版本支持 11.5，修复输入某些特殊格式奔溃的问题</li><li>公式 Latex 支持块渲染、修复标题大小写重复提示、邮箱不高亮展示不点击</li></ul></div>
+    <div class="release-notes"><ol><li>新增了个很好看的字体，快去设置中更新 TsangerJinKai</li><li>最低 Mac 版本支持 11.5，修复输入某些特殊格式奔溃的问题</li><li>公式 Latex 支持块渲染、修复标题大小写重复提示、邮箱不高亮展示不点击</li></ol></div>
   </section>
   <section class="release" id="v1-15">
     <h2 class="release-title">V1.15 <span class="release-name">Long time no see</span> <time class="release-date" datetime="2024-05-26">2024-05-26</time></h2>
-    <div class="blog-body"><ul><li>妙言字体显示效果升级，更黑稍粗更便于阅读。</li><li>预览的时候支持懒加载内容，让你可以最快速度看到效果。</li><li>Markdown 效果高亮持续优化，链接、粗体、斜体兼容性优化。</li><li>修复 PPT 预览下窗口适配背景、窗口文字字间距统一、更新版本日期。</li></ul></div>
+    <div class="release-notes"><ol><li>妙言字体显示效果升级，更黑稍粗更便于阅读。</li><li>预览的时候支持懒加载内容，让你可以最快速度看到效果。</li><li>Markdown 效果高亮持续优化，链接、粗体、斜体兼容性优化。</li><li>修复 PPT 预览下窗口适配背景、窗口文字字间距统一、更新版本日期。</li></ol></div>
   </section>
   <section class="release" id="v1-14">
     <h2 class="release-title">V1.14 <span class="release-name">More Accurate</span> <time class="release-date" datetime="2023-12-12">2023-12-12</time></h2>
-    <div class="blog-body"><ul><li>妙言 PPT 模式下使用体验优化，无需首次触发，预发效果增强</li><li>修复下划线高亮识别、预览按钮状态、单独模式打开问题、项目列表栏拖动异常 Bug</li><li>多语言配置情况下的补全和查漏补缺以及大小写规范，花了点时间兼容 XCode15</li></ul></div>
+    <div class="release-notes"><ol><li>妙言 PPT 模式下使用体验优化，无需首次触发，预发效果增强</li><li>修复下划线高亮识别、预览按钮状态、单独模式打开问题、项目列表栏拖动异常 Bug</li><li>多语言配置情况下的补全和查漏补缺以及大小写规范，花了点时间兼容 XCode15</li></ol></div>
   </section>
   <section class="release" id="v1-13">
     <h2 class="release-title">V1.13 <span class="release-name">Comfort Improved</span> <time class="release-date" datetime="2023-09-12">2023-09-12</time></h2>
-    <div class="blog-body"><ul><li>支持中文繁体模式，累计支持中/英/日/繁四种语言</li><li>单栏编辑模式下调整标题的位置，更舒服了</li><li>优化导出 HTML 文件的体验，并推荐使用</li><li>优化标题的复制/粘贴体验，更符合使用习惯</li><li>更新 Mermaid 到最新版本，各种新绘图方式支持</li></ul></div>
+    <div class="release-notes"><ol><li>支持中文繁体模式，累计支持中/英/日/繁四种语言</li><li>单栏编辑模式下调整标题的位置，更舒服了</li><li>优化导出 HTML 文件的体验，并推荐使用</li><li>优化标题的复制/粘贴体验，更符合使用习惯</li><li>更新 Mermaid 到最新版本，各种新绘图方式支持</li></ol></div>
   </section>
   <section class="release" id="v1-12-1">
     <h2 class="release-title">V1.12.1 <time class="release-date" datetime="2023-07-30">2023-07-30</time></h2>
-    <div class="blog-body"><ul><li>很抱歉，由于本地证书更新，辛苦大伙重新下载妙言进行更新，防止后续证书问题有可能会打不开软件。</li></ul></div>
+    <div class="release-notes"><ol><li>很抱歉，由于本地证书更新，辛苦大伙重新下载妙言进行更新，防止后续证书问题有可能会打不开软件。</li></ol></div>
   </section>
   <section class="release" id="v1-11-0">
     <h2 class="release-title">V1.11.0 <time class="release-date" datetime="2023-07-12">2023-07-12</time></h2>
-    <div class="blog-body"><ul><li>文字书写体验性能大幅增强，更加轻量化，长文不卡顿</li><li>解决首行Tab切换时光标可能会错乱的 Bug</li><li>导出更兼容，PDF 导出长文内容更好用，优化 PPT 导出的效果</li><li>修复文件夹重命名不生效问题、修复搜索框文字显示效果</li></ul></div>
+    <div class="release-notes"><ol><li>文字书写体验性能大幅增强，更加轻量化，长文不卡顿</li><li>解决首行Tab切换时光标可能会错乱的 Bug</li><li>导出更兼容，PDF 导出长文内容更好用，优化 PPT 导出的效果</li><li>修复文件夹重命名不生效问题、修复搜索框文字显示效果</li></ol></div>
   </section>
   <section class="release" id="v1-10-1">
     <h2 class="release-title">V1.10.1 <time class="release-date" datetime="2023-03-30">2023-03-30</time></h2>
-    <div class="blog-body"><ul><li>大幅优化 PDF 的导出体验，支持 PPT 和文章分页效果</li><li>PPT模式下的使用优化，超过1屏的可以滚动展示更多</li><li>预览体验优化，LaTeX, Mermaid, PlantUML 黑暗模式下优化</li><li>整体使用容错性变好、升级字体版本、单独模式打开问题、放置性能问题、日文体验、格式化体验</li><li>架构升级，不再兼容 10.15 以下的版本了，XCode更新到最新</li></ul></div>
+    <div class="release-notes"><ol><li>大幅优化 PDF 的导出体验，支持 PPT 和文章分页效果</li><li>PPT模式下的使用优化，超过1屏的可以滚动展示更多</li><li>预览体验优化，LaTeX, Mermaid, PlantUML 黑暗模式下优化</li><li>整体使用容错性变好、升级字体版本、单独模式打开问题、放置性能问题、日文体验、格式化体验</li><li>架构升级，不再兼容 10.15 以下的版本了，XCode更新到最新</li></ol></div>
   </section>
   <section class="release" id="v1-9-0">
     <h2 class="release-title">V1.9.0 <time class="release-date" datetime="2023-03-05">2023-03-05</time></h2>
-    <div class="blog-body"><ul><li>妙言支持日文版本了，感谢 @CharlesKan 共建</li><li>将原有的 tab 移动问题优化成之前的效果，更顺手</li><li>预览样式根据使用过程持续优化</li><li>修复了一些 Bug</li></ul></div>
+    <div class="release-notes"><ol><li>妙言支持日文版本了，感谢 @CharlesKan 共建</li><li>将原有的 tab 移动问题优化成之前的效果，更顺手</li><li>预览样式根据使用过程持续优化</li><li>修复了一些 Bug</li></ol></div>
   </section>
   <section class="release" id="v1-8-0">
     <h2 class="release-title">V1.8.0 <span class="release-name">More ingenious</span> <time class="release-date" datetime="2022-11-14">2022-11-14</time></h2>
-    <div class="blog-body"><ul><li>编辑器中的链接需 Command 点击才跳转，正常为编辑</li><li>编辑器 Tab 切换正常使用，左右区块移动统一成 Command + []</li><li>预览能力优化，整体段落等间距自适应高度，演示下效果更好</li><li>单独模式下，文件打开为仅编辑器，文件夹打开为侧边栏，去掉反复提示</li><li>修复PPT模式下本地图片使用问题，记住3栏模式上次使用状态，输入框焦点优化</li></ul></div>
+    <div class="release-notes"><ol><li>编辑器中的链接需 Command 点击才跳转，正常为编辑</li><li>编辑器 Tab 切换正常使用，左右区块移动统一成 Command + []</li><li>预览能力优化，整体段落等间距自适应高度，演示下效果更好</li><li>单独模式下，文件打开为仅编辑器，文件夹打开为侧边栏，去掉反复提示</li><li>修复PPT模式下本地图片使用问题，记住3栏模式上次使用状态，输入框焦点优化</li></ol></div>
   </section>
   <section class="release" id="v1-7-1">
     <h2 class="release-title">V1.7.1 <span class="release-name">More happy</span> <time class="release-date" datetime="2022-10-01">2022-10-01</time></h2>
-    <div class="blog-body"><ul><li>大幅度优化超大文本下的编辑性能</li><li>Command+t 可以快捷切换 todo 的状态</li><li>字体强迫症继续细调，保留 LXGW WenKai Lite、SF Mono、Times New Roman</li><li>支持设置代码块是否有背景色、代码预览场景自动换行、编辑器有 Front matter 预览直接隐藏</li></ul></div>
+    <div class="release-notes"><ol><li>大幅度优化超大文本下的编辑性能</li><li>Command+t 可以快捷切换 todo 的状态</li><li>字体强迫症继续细调，保留 LXGW WenKai Lite、SF Mono、Times New Roman</li><li>支持设置代码块是否有背景色、代码预览场景自动换行、编辑器有 Front matter 预览直接隐藏</li></ol></div>
   </section>
   <section class="release" id="v1-6-4">
     <h2 class="release-title">V1.6.4 <span class="release-name">Better use</span> <time class="release-date" datetime="2022-09-17">2022-09-17</time></h2>
-    <div class="blog-body"><ul><li>较 1.6.0 版本，修复 copy 图片到编辑器、按标题排序问题、窗口文字间距舒服调整、支持 shift+回车 不自动补充序号的模式</li><li>底层细调 3 种字体渲染逻辑，Times New Roman、Helvetica Neue、JetBrains Mono，换一种风格，详细介绍在 V2EX</li><li>导出格式支持 Html，同时优化 PDF、Image 导出效果</li><li>脑图可单独设置高度，此外 PPT 模式中也支持 Markmap 脑图了</li><li>格式化更加好用无感并记住位置，一种很无感的格式化体验</li><li>大图预览场景可使用 img 标签 loading=&quot;lazy&quot; 进行懒加载，渲染快不少</li><li>修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT下翻页位置优化、文档删除体验优化</li></ul></div>
+    <div class="release-notes"><ol><li>较 1.6.0 版本，修复 copy 图片到编辑器、按标题排序问题、窗口文字间距舒服调整、支持 shift+回车 不自动补充序号的模式</li><li>底层细调 3 种字体渲染逻辑，Times New Roman、Helvetica Neue、JetBrains Mono，换一种风格，详细介绍在 V2EX</li><li>导出格式支持 Html，同时优化 PDF、Image 导出效果</li><li>脑图可单独设置高度，此外 PPT 模式中也支持 Markmap 脑图了</li><li>格式化更加好用无感并记住位置，一种很无感的格式化体验</li><li>大图预览场景可使用 img 标签 loading=&quot;lazy&quot; 进行懒加载，渲染快不少</li><li>修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT下翻页位置优化、文档删除体验优化</li></ol></div>
   </section>
   <section class="release" id="v1-5-0">
     <h2 class="release-title">V1.5.0 <span class="release-name">Much Smarter</span> <time class="release-date" datetime="2022-09-02">2022-09-02</time></h2>
-    <div class="blog-body"><ul><li>真正意义上的支持自动格式化排版，使用 Swift 调用 Prettier，聪明多了, Command + Shift + L 试试</li><li>macOS Ventura 全面兼容完成、排序功能更加好用、标题支持&#x27;/&#x27;形式、tab 宽度变成2</li><li>修复快速扫动出现划线、格式化时候光标位置、代码块之间标题高亮、预览模式下代码显示、自动外观模式下切换预览不会跟着变化、预览效果优化、列表 todoList 展示缩进等问题，感谢 shell-Raining、</li><li>jievince、熏锅锅帮忙捉虫</li></ul></div>
+    <div class="release-notes"><ol><li>真正意义上的支持自动格式化排版，使用 Swift 调用 Prettier，聪明多了, Command + Shift + L 试试</li><li>macOS Ventura 全面兼容完成、排序功能更加好用、标题支持&#x27;/&#x27;形式、tab 宽度变成2</li><li>修复快速扫动出现划线、格式化时候光标位置、代码块之间标题高亮、预览模式下代码显示、自动外观模式下切换预览不会跟着变化、预览效果优化、列表 todoList 展示缩进等问题，感谢 shell-Raining、</li><li>jievince、熏锅锅帮忙捉虫</li></ol></div>
   </section>
   <section class="release" id="v1-4-7">
     <h2 class="release-title">V1.4.7 <span class="release-name">More Stable</span> <time class="release-date" datetime="2022-08-18">2022-08-18</time></h2>
-    <div class="blog-body"><ul><li>修复证书过期的问题，较之前版本修复部分机型重新安装失败的问题，如有问题，可重装1.4.7就好（被 Mac beta 坑死了）</li><li>支持使用 markmap 方式快捷写脑图，用 ```markmap ```代码语法即可，参考写法</li><li>开始着手去适配 macOS Ventura 版本，基本差不多了</li><li>PPT模式下支持 LaTeX 数学公式、使用体验优化</li><li>持续优化代码，包括 crash，不够还有少量问题未复现，欢迎反馈</li></ul></div>
+    <div class="release-notes"><ol><li>修复证书过期的问题，较之前版本修复部分机型重新安装失败的问题，如有问题，可重装1.4.7就好（被 Mac beta 坑死了）</li><li>支持使用 markmap 方式快捷写脑图，用 ```markmap ```代码语法即可，参考写法</li><li>开始着手去适配 macOS Ventura 版本，基本差不多了</li><li>PPT模式下支持 LaTeX 数学公式、使用体验优化</li><li>持续优化代码，包括 crash，不够还有少量问题未复现，欢迎反馈</li></ol></div>
   </section>
   <section class="release" id="v1-3-1">
     <h2 class="release-title">V1.3.1 <span class="release-name">Hurry Up</span> <time class="release-date" datetime="2022-08-08">2022-08-08</time></h2>
-    <div class="blog-body"><ul><li>单独打开模式下支持打开文件速度快了不少</li><li>编辑模式下支持左上角3个按钮自适应显示、最小高宽度支持分屏使用</li><li>修复文章超过一屏，回车易抖动问题、继续优化启动效果、减少易Crash的点</li><li>较 1.3.0 修复了单文件打开的 bug</li></ul></div>
+    <div class="release-notes"><ol><li>单独打开模式下支持打开文件速度快了不少</li><li>编辑模式下支持左上角3个按钮自适应显示、最小高宽度支持分屏使用</li><li>修复文章超过一屏，回车易抖动问题、继续优化启动效果、减少易Crash的点</li><li>较 1.3.0 修复了单文件打开的 bug</li></ol></div>
   </section>
   <section class="release" id="v1-2-0">
     <h2 class="release-title">V1.2.0 <span class="release-name">Inner Beauty</span> <time class="release-date" datetime="2022-08-05">2022-08-05</time></h2>
-    <div class="blog-body"><ul><li>你会发现编辑器的文字更舒服一些了，细调了下文字间距</li><li>支持文章内容的搜索替换，快捷键 command+shift+f 和 command+shift+r</li><li>修复了几个容易 Crash 的点，顺便减少了下包体积到 23M</li></ul></div>
+    <div class="release-notes"><ol><li>你会发现编辑器的文字更舒服一些了，细调了下文字间距</li><li>支持文章内容的搜索替换，快捷键 command+shift+f 和 command+shift+r</li><li>修复了几个容易 Crash 的点，顺便减少了下包体积到 23M</li></ol></div>
   </section>
   <section class="release" id="v1-1-1">
     <h2 class="release-title">V1.1.1 <span class="release-name">Easy to use</span> <time class="release-date" datetime="2022-07-28">2022-07-28</time></h2>
-    <div class="blog-body"><ul><li>较 V1.1.0，修复了 PPT 导出时闪动、预览效果优化、支持 TodoList 使用</li><li>支持更简洁的妙言，你可以在设置中设置 Hover 才显示按钮</li><li>支持嵌入各类有趣的东西，codepen、codeSandbox、youtube 等等</li><li>妙言 PPT 结合真实使用场景优化了很多，同时支持导出 PPT 的 PDF</li><li>解决预览时标题可能会闪一下、解决复杂 LaTeX 输入，可用 span 标签包裹、优化输入 Emoji 的体验</li><li>TouchBar 菜单栏没啥用干掉了，整体框架视觉继续优化，标题处有间距调整</li></ul></div>
+    <div class="release-notes"><ol><li>较 V1.1.0，修复了 PPT 导出时闪动、预览效果优化、支持 TodoList 使用</li><li>支持更简洁的妙言，你可以在设置中设置 Hover 才显示按钮</li><li>支持嵌入各类有趣的东西，codepen、codeSandbox、youtube 等等</li><li>妙言 PPT 结合真实使用场景优化了很多，同时支持导出 PPT 的 PDF</li><li>解决预览时标题可能会闪一下、解决复杂 LaTeX 输入，可用 span 标签包裹、优化输入 Emoji 的体验</li><li>TouchBar 菜单栏没啥用干掉了，整体框架视觉继续优化，标题处有间距调整</li></ol></div>
   </section>
   <section class="release" id="v1-0-0">
     <h2 class="release-title">V1.0.0 <span class="release-name">Finally Coming</span> <time class="release-date" datetime="2022-07-22">2022-07-22</time></h2>
-    <div class="blog-body"><ul><li>妙言支持快速写PPT啦，详细可见Github</li><li>支持编辑预览滚动到对应位置、支持设置代码字体、支持设置预览宽度</li><li>修复 PicGo 图片上传兼容性问题、预览样式优化、编辑体验优化、支持行内代码</li></ul></div>
+    <div class="release-notes"><ol><li>妙言支持快速写PPT啦，详细可见Github</li><li>支持编辑预览滚动到对应位置、支持设置代码字体、支持设置预览宽度</li><li>修复 PicGo 图片上传兼容性问题、预览样式优化、编辑体验优化、支持行内代码</li></ol></div>
   </section>
   <section class="release" id="v0-9-2">
     <h2 class="release-title">V0.9.2 <span class="release-name">More Beautiful</span> <time class="release-date" datetime="2022-07-15">2022-07-15</time></h2>
-    <div class="blog-body"><ul><li>在 0.9.0 版本基础上修复了一个可能会影响大家使用的 Bug</li><li>补全编辑器大量语法颜色高亮，你会发现编辑器更加潮流了</li><li>支持快捷键输出粗体/斜体/删除线/下划线/链接，支持块 tab 左右移动</li><li>支持 Emoji shortName、不同字体的最适应行高、导出文档支持添加标题、支持设置锚点滚动、支持外链打开</li><li>快捷键规范化，显示字数修改成 command+option+i，打开 Finder 统一成 command+option+r，新建文件夹统一成 command+shift+n，文件夹重命名修改成 control+f6</li><li>修复反复格式化偶现 crash 问题、修复黑暗下虚线展示、修复超链接高亮偶尔错误问题</li></ul></div>
+    <div class="release-notes"><ol><li>在 0.9.0 版本基础上修复了一个可能会影响大家使用的 Bug</li><li>补全编辑器大量语法颜色高亮，你会发现编辑器更加潮流了</li><li>支持快捷键输出粗体/斜体/删除线/下划线/链接，支持块 tab 左右移动</li><li>支持 Emoji shortName、不同字体的最适应行高、导出文档支持添加标题、支持设置锚点滚动、支持外链打开</li><li>快捷键规范化，显示字数修改成 command+option+i，打开 Finder 统一成 command+option+r，新建文件夹统一成 command+shift+n，文件夹重命名修改成 control+f6</li><li>修复反复格式化偶现 crash 问题、修复黑暗下虚线展示、修复超链接高亮偶尔错误问题</li></ol></div>
   </section>
   <section class="release" id="v0-8-0">
     <h2 class="release-title">V0.8.0 <span class="release-name">值得更新</span> <time class="release-date" datetime="2022-07-11">2022-07-11</time></h2>
-    <div class="blog-body"><ul><li>支持文档间跳转，试试 [[对应文档标题]] 点击即可无缝跳转到对应文档</li><li>支持单独编辑器模式，试试 command+o 打开文件，或者文件拖到图标</li><li>command+shift+ → 可显示字数等属性，上下左右箭头可以控制文档导航，支持 command+option+m 全局唤起妙言</li><li>优化导出的样式、焦点选择、高亮、搜索框样式、ESC 失焦、升级，支持 Picsee 图床</li></ul></div>
+    <div class="release-notes"><ol><li>支持文档间跳转，试试 [[对应文档标题]] 点击即可无缝跳转到对应文档</li><li>支持单独编辑器模式，试试 command+o 打开文件，或者文件拖到图标</li><li>command+shift+ → 可显示字数等属性，上下左右箭头可以控制文档导航，支持 command+option+m 全局唤起妙言</li><li>优化导出的样式、焦点选择、高亮、搜索框样式、ESC 失焦、升级，支持 Picsee 图床</li></ol></div>
   </section>
   <section class="release" id="v0-7-0">
     <h2 class="release-title">V0.7.0 <time class="release-date" datetime="2022-07-03">2022-07-03</time></h2>
-    <div class="blog-body"><ul><li>终于支持 uPic、PicGo 图床了，可设置中打开，支持复制图片和截图上传</li><li>完成 LaTeX 性能优化，不需要设置默认开启</li><li>支持从预览界面 command+c 直接复制选中富文本</li><li>持续优化编辑器体验，如新建、删除、行高、焦点、搜索、笔记数</li></ul></div>
+    <div class="release-notes"><ol><li>终于支持 uPic、PicGo 图床了，可设置中打开，支持复制图片和截图上传</li><li>完成 LaTeX 性能优化，不需要设置默认开启</li><li>支持从预览界面 command+c 直接复制选中富文本</li><li>持续优化编辑器体验，如新建、删除、行高、焦点、搜索、笔记数</li></ol></div>
   </section>
   <section class="release" id="v0-6-2">
     <h2 class="release-title">V0.6.2 <time class="release-date" datetime="2022-06-29">2022-06-29</time></h2>
-    <div class="blog-body"><ul><li>终于支持了 PlantUML、Mermaid、LaTeX 的渲染，LaTeX 需设置打开</li><li>支持预览富文本复制，排序功能继续优化，重排、删除后更新、焦点逻辑变聪明了</li><li>修复文章新建极小概率 Crash，感谢 sbccznfy 帮忙复现</li><li>Command + H 窗口隐藏，阅读效果持续优化，菜单布局优化</li></ul></div>
+    <div class="release-notes"><ol><li>终于支持了 PlantUML、Mermaid、LaTeX 的渲染，LaTeX 需设置打开</li><li>支持预览富文本复制，排序功能继续优化，重排、删除后更新、焦点逻辑变聪明了</li><li>修复文章新建极小概率 Crash，感谢 sbccznfy 帮忙复现</li><li>Command + H 窗口隐藏，阅读效果持续优化，菜单布局优化</li></ol></div>
   </section>
   <section class="release" id="v0-6-1">
     <h2 class="release-title">V0.6.1 <time class="release-date" datetime="2022-06-24">2022-06-24</time></h2>
-    <div class="blog-body"><ul><li>侧边栏支持手势收起展开，可以在标题栏位置双指滑动试试</li><li>细调了一下深色模式，更舒服了，你切换一下试试不错</li><li>优化编辑器的体验，更好支持表格展示、行高、选中、搜索的能力</li><li>修复侧边栏偶现横向滚动、初始化标题焦点、深色下表格预览问题</li></ul></div>
+    <div class="release-notes"><ol><li>侧边栏支持手势收起展开，可以在标题栏位置双指滑动试试</li><li>细调了一下深色模式，更舒服了，你切换一下试试不错</li><li>优化编辑器的体验，更好支持表格展示、行高、选中、搜索的能力</li><li>修复侧边栏偶现横向滚动、初始化标题焦点、深色下表格预览问题</li></ol></div>
   </section>
   <section class="release" id="v0-6-0">
     <h2 class="release-title">V0.6.0 <time class="release-date" datetime="2022-06-21">2022-06-21</time></h2>
-    <div class="blog-body"><ul><li>这次真的支持 ARM64 打包了，右键显示简介为「通用架构」</li><li>文档支持导出成PDF和图片了，在文档列表右键看看</li><li>双击左上角标题栏，可以放大到窗口最大和缩小到原来</li><li>重新优化了一下文档排序的功能，增加升序降序选项</li></ul></div>
+    <div class="release-notes"><ol><li>这次真的支持 ARM64 打包了，右键显示简介为「通用架构」</li><li>文档支持导出成PDF和图片了，在文档列表右键看看</li><li>双击左上角标题栏，可以放大到窗口最大和缩小到原来</li><li>重新优化了一下文档排序的功能，增加升序降序选项</li></ol></div>
   </section>
   <section class="release" id="v0-5-1">
     <h2 class="release-title">V0.5.1 <time class="release-date" datetime="2022-06-19">2022-06-19</time></h2>
-    <div class="blog-body"><ul><li>支持 ARM64 打包，不过我不是M1电脑，辛苦你帮忙试试</li><li>预览界面改成赫蹏样式增强，新增几个我喜欢的字体，可去设置看看</li><li>第一次使用时候优化默认宽度，默认文件夹，中文下 App 名称改成妙言</li><li>将妙言的域名修改成 miaoyan.app</li></ul></div>
+    <div class="release-notes"><ol><li>支持 ARM64 打包，不过我不是M1电脑，辛苦你帮忙试试</li><li>预览界面改成赫蹏样式增强，新增几个我喜欢的字体，可去设置看看</li><li>第一次使用时候优化默认宽度，默认文件夹，中文下 App 名称改成妙言</li><li>将妙言的域名修改成 miaoyan.app</li></ol></div>
   </section>
   <section class="release" id="v0-5-0">
     <h2 class="release-title">V0.5.0 <time class="release-date" datetime="2022-06-18">2022-06-18</time></h2>
-    <div class="blog-body"><ul><li>支持演示模式，去试试 command + 4</li><li>支持文档自动排版，去试试 command + shift + L</li><li>给汤圆可乐增加了一个喂罐头的 页面</li><li>支持预览模式下，全选右键复制富文本到其他地方</li><li>修复设置中选中当前项也重置、完成对 Mojave 系统的兼容</li></ul></div>
+    <div class="release-notes"><ol><li>支持演示模式，去试试 command + 4</li><li>支持文档自动排版，去试试 command + shift + L</li><li>给汤圆可乐增加了一个喂罐头的 页面</li><li>支持预览模式下，全选右键复制富文本到其他地方</li><li>修复设置中选中当前项也重置、完成对 Mojave 系统的兼容</li></ol></div>
   </section>
   <section class="release" id="v0-4-0">
     <h2 class="release-title">V0.4.0 <time class="release-date" datetime="2022-06-14">2022-06-14</time></h2>
-    <div class="blog-body"><ul><li>终于支持设置字体和字号啦</li><li>优化黑暗模式的展示，比之前更黑一些了</li><li>代码支持pre标签、增加淡化背景、视觉展示优化</li><li>支持复制的图片可以粘贴、默认宽度优化、编辑和预览切换优化</li><li>修复预览模式下标题还可以编辑的问题</li></ul></div>
+    <div class="release-notes"><ol><li>终于支持设置字体和字号啦</li><li>优化黑暗模式的展示，比之前更黑一些了</li><li>代码支持pre标签、增加淡化背景、视觉展示优化</li><li>支持复制的图片可以粘贴、默认宽度优化、编辑和预览切换优化</li><li>修复预览模式下标题还可以编辑的问题</li></ol></div>
   </section>
   <section class="release" id="v0-3-2">
     <h2 class="release-title">V0.3.2 <time class="release-date" datetime="2022-06-12">2022-06-12</time></h2>
-    <div class="blog-body"><ul><li>修复预览页面默认字体不是霞鹜文楷的Bug</li><li>修复窗口隐藏以后不会再出现在调度中心的 Bug</li></ul></div>
+    <div class="release-notes"><ol><li>修复预览页面默认字体不是霞鹜文楷的Bug</li><li>修复窗口隐藏以后不会再出现在调度中心的 Bug</li></ol></div>
   </section>
   <section class="release" id="v0-3-1">
     <h2 class="release-title">V0.3.1 <time class="release-date" datetime="2022-06-11">2022-06-11</time></h2>
-    <div class="blog-body"><ul><li>修复全屏高度的问题</li><li>官网终于好了</li></ul></div>
+    <div class="release-notes"><ol><li>修复全屏高度的问题</li><li>官网终于好了</li></ol></div>
   </section>
   <section class="release" id="v0-3-0">
     <h2 class="release-title">V0.3.0 <time class="release-date" datetime="2022-06-09">2022-06-09</time></h2>
-    <div class="blog-body"><ul><li>支持英语，可去设置中更改</li><li>视觉优化，如文档日期显示时间、小 icon 优化、显示等</li><li>新增帮助菜单，可以关注我以及给妙言反馈问题</li></ul></div>
+    <div class="release-notes"><ol><li>支持英语，可去设置中更改</li><li>视觉优化，如文档日期显示时间、小 icon 优化、显示等</li><li>新增帮助菜单，可以关注我以及给妙言反馈问题</li></ol></div>
   </section>
   <section class="release" id="v0-2-0">
     <h2 class="release-title">V0.2.0 <time class="release-date" datetime="2022-06-07">2022-06-07</time></h2>
-    <div class="blog-body"><ul><li>全新视觉和编辑预览体验升级，兼容 macOS Monterey 版本</li><li>序号分号等支持自动递增，效果不错</li><li>默认的字体更新成 LxgwWenKai，漂亮了不少</li><li>修复标题更新有时候不保存的 bug</li><li>回车标题自动 focus 到内容区域</li><li>支持本地图片的展示和引入</li><li>支持自动更新 App</li></ul></div>
+    <div class="release-notes"><ol><li>全新视觉和编辑预览体验升级，兼容 macOS Monterey 版本</li><li>序号分号等支持自动递增，效果不错</li><li>默认的字体更新成 LxgwWenKai，漂亮了不少</li><li>修复标题更新有时候不保存的 bug</li><li>回车标题自动 focus 到内容区域</li><li>支持本地图片的展示和引入</li><li>支持自动更新 App</li></ol></div>
   </section>
   <section class="release" id="v0-1">
     <h2 class="release-title">V0.1 <time class="release-date" datetime="2020-05-28">2020-05-28</time></h2>
-    <div class="blog-body"><ul><li>第一个正式的版本</li></ul></div>
+    <div class="release-notes"><ol><li>第一个正式的版本</li></ol></div>
   </section>
 </main>
 </div>

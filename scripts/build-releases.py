@@ -179,12 +179,12 @@ def page(lang, rows, site, blog):
         for device, lines in grouped(items):
             if device:
                 notes += f'<h3 class="release-device">{site.esc(device)}</h3>'
-            notes += "<ul>" + "".join(f"<li>{site.esc(line)}</li>" for line in lines) + "</ul>"
+            notes += "<ol>" + "".join(f"<li>{site.esc(line)}</li>" for line in lines) + "</ol>"
         sections.append(
             f'  <section class="release" id="{anchor}">\n'
             f'    <h2 class="release-title">V{site.esc(row["version"])}{name}'
             f' <time class="release-date" datetime="{row["date"]}">{row["date"]}</time></h2>\n'
-            f'    <div class="blog-body">{notes}</div>\n'
+            f'    <div class="release-notes">{notes}</div>\n'
             f"  </section>\n"
         )
     main = (
