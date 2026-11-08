@@ -676,18 +676,23 @@ function buildRecent(state, convert, today, latestSalesDate) {
   }
   const days = (state.traffic && state.traffic.days) || {};
   const latestVisit = Object.keys(days).sort().pop() || '';
-  const out = [];
-  for (let i = 0; i < RECENT_DAYS; i += 1) {
-    const date = addDays(today, -1 - i);
+  const row = (date) => {
     const known = Boolean(latestSalesDate) && date <= latestSalesDate && Boolean(state.sales.dates[date]);
     const v = byDay.get(date) || {};
-    out.push({
+    return {
       date, known,
       sold: v.sold || 0, refunded: v.refunded || 0, proceeds: v.proceeds || 0,
       sessions: date > latestVisit ? null : (days[date] ? days[date][0] : 0),
-    });
+    };
+  };
+  // Days with income or a refund, plus recent days Apple has not reported: a
+  // quiet day says nothing, and an unreported one must not read as quiet.
+  const wanted = new Set([...byDay.keys()].filter((d) => d < today));
+  for (let i = 0; i < RECENT_DAYS; i += 1) {
+    const date = addDays(today, -1 - i);
+    if (!row(date).known) wanted.add(date);
   }
-  return out;
+  return [...wanted].sort().reverse().slice(0, RECENT_DAYS).map(row);
 }
 
 // GA reports a day late at most, so a longer silence means counting stopped.

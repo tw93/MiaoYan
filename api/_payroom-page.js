@@ -42,7 +42,6 @@ table{width:100%;border-collapse:collapse;font-size:13px;line-height:18px}
 th,td{min-width:64px;padding:7px 0 7px 20px;text-align:right;vertical-align:middle;white-space:nowrap}
 th{color:var(--muted);font-size:11px;font-weight:650}
 th:first-child,td:first-child{width:100%;min-width:0;text-align:left;padding-left:0;white-space:normal}
-td.zero{color:var(--subtle)}
 td.refund{color:var(--danger)}
 td small{color:var(--subtle);font-size:12px}
 .note{color:var(--muted);font-size:13px;line-height:1.45;padding:12px;border:1px solid var(--line);border-radius:7px;background:var(--panel-3)}
@@ -76,7 +75,7 @@ td small{color:var(--subtle);font-size:12px}
 @media (max-width:1080px){.grid{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){.chart-value.dense{display:none}}
-@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.grid{gap:10px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}}
+@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.grid{gap:10px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}}
 `;
 
 function shell(title, body) {
@@ -139,18 +138,16 @@ const shanghai = (iso) => new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Sha
 
 const updatedAt = (iso) => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
 
-const cell = (n, cls = '') => `<td${n ? (cls ? ` class="${cls}"` : '') : ' class="zero"'}>${int(n)}</td>`;
+const cell = (n, cls = '') => (n ? `<td${cls ? ` class="${cls}"` : ''}>${int(n)}</td>` : '<td></td>');
 
 function recentSection(view) {
-  const hasVisits = view.recent.some((d) => d.sessions !== null);
   const rows = view.recent.map((d) => {
     const income = d.known
-      ? `${cell(d.sold)}${cell(d.refunded, 'refund')}<td${d.sold || d.refunded ? '' : ' class="zero"'}>${d.sold || d.refunded ? money(d.proceeds, view.currency) : '0'}</td>`
+      ? `${cell(d.sold)}${cell(d.refunded, 'refund')}<td>${money(d.proceeds, view.currency)}</td>`
       : '<td colspan="3"><small>等 Apple 报表</small></td>';
-    const visits = hasVisits ? `<td>${d.sessions === null ? '' : int(d.sessions)}</td>` : '';
-    return `<tr><td>${esc(d.date.slice(5))}</td>${income}${visits}</tr>`;
+    return `<tr><td>${esc(d.date.slice(5))}</td>${income}</tr>`;
   }).join('');
-  return `<section class="panel"><h2>每天入账</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th>${hasVisits ? '<th scope="col">官网访问</th>' : ''}</tr></thead><tbody>${rows}</tbody></table></div></section>`;
+  return `<section class="panel"><h2>每天入账</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 
 const sourceName = (s) => (s === '(direct)' ? '直接打开' : s === '(not set)' ? '未知' : s);
@@ -158,7 +155,7 @@ const sourceName = (s) => (s === '(direct)' ? '直接打开' : s === '(not set)'
 function trafficSection(view) {
   const t = view.traffic;
   if (!t.available || !t.sources.length) return '';
-  const rows = t.sources.slice(0, view.recent.length).map((s) => `<tr><td>${esc(sourceName(s.source))}</td><td>${int(s.count)}</td></tr>`).join('');
+  const rows = t.sources.slice(0, 14).map((s) => `<tr><td>${esc(sourceName(s.source))}</td><td>${int(s.count)}</td></tr>`).join('');
   return `<section class="panel"><h2>官网流量来源</h2><div class="scroll"><table><thead><tr><th scope="col">来源</th><th scope="col">访问</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 
@@ -194,7 +191,7 @@ function splitTable(view, title, rows, nameOf, head) {
 function channels(view) {
   const a = view.analytics;
   if (!a.available) {
-    return '<section class="panel"><h2>购买渠道</h2><p class="empty">已向 Apple 申请渠道报告，首批生成后这里会显示搜索、浏览、网页跳转各带来多少购买</p></section>';
+    return '';
   }
   const hasPurchases = a.funnel.purchases > 0;
   const rows = a.sources.filter((s) => s.purchases || s.downloads || s.pageViews).map((s) => `<tr><td>${esc(sourceLabel(s.type))}</td><td>${int(s.purchases)}</td><td>${int(s.downloads)}</td><td>${int(s.pageViews)}</td>${hasPurchases ? `<td>${money(s.proceeds, view.currency)}</td>` : ''}</tr>`).join('');
@@ -213,8 +210,8 @@ function channels(view) {
 
 function refundsSection(view) {
   if (!view.refunds.length) return '';
-  const body = view.refunds.map((r) => `<tr><td>${esc(r.date)}</td><td>${esc(country(r.country))}</td><td>${esc(r.device)}</td><td>${esc(r.version)}</td><td>${r.units}</td><td class="refund">${money(r.price * r.units, r.currency)}</td></tr>`).join('');
-  return `<section class="panel span2"><h2>退款明细</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">国家和地区</th><th scope="col">设备</th><th scope="col">版本</th><th scope="col">份数</th><th scope="col">金额</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
+  const body = view.refunds.map((r) => `<tr><td>${esc(r.date)}</td><td>${esc(country(r.country))}</td><td>${esc(r.device)}</td><td class="wide-only">${esc(r.version)}</td><td class="wide-only">${r.units}</td><td class="refund">${money(r.price * r.units, r.currency)}</td></tr>`).join('');
+  return `<section class="panel"><h2>退款明细</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">国家和地区</th><th scope="col">设备</th><th scope="col" class="wide-only">版本</th><th scope="col" class="wide-only">份数</th><th scope="col">金额</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
 
 function financeSection(view) {
@@ -227,9 +224,9 @@ function storeSection(view) {
   const body = view.store.map((s) => {
     const label = STATE_LABELS[s.state] || s.state;
     const since = s.submitted ? `${shanghai(s.submitted)} 提交` : '';
-    return `<tr><td>${esc(PLATFORM_LABELS[s.platform] || s.platform)}</td><td>${esc(s.version)}</td><td>${esc(label)}</td><td>${esc(since)}</td></tr>`;
+    return `<tr><td>${esc(PLATFORM_LABELS[s.platform] || s.platform)}</td><td>${esc(s.version)}</td><td>${esc(label)}</td><td class="wide-only">${esc(since)}</td></tr>`;
   }).join('');
-  const status = body ? `<div class="scroll"><table><thead><tr><th scope="col">平台</th><th scope="col">版本</th><th scope="col">状态</th><th scope="col">提交时间</th></tr></thead><tbody>${body}</tbody></table></div>` : '';
+  const status = body ? `<div class="scroll"><table><thead><tr><th scope="col">平台</th><th scope="col">版本</th><th scope="col">状态</th><th scope="col" class="wide-only">提交时间</th></tr></thead><tbody>${body}</tbody></table></div>` : '';
   const t = view.totals;
   const others = [['兑换码和免费', t.free], ['重新下载', t.redownload], ['更新', t.update]].filter(([, n]) => n);
   const other = others.length ? `<div class="scroll"><table><thead><tr><th scope="col">其他下载</th><th scope="col">次数</th></tr></thead><tbody>${others.map(([k, n]) => `<tr><td>${esc(k)}</td><td>${int(n)}</td></tr>`).join('')}</tbody></table></div>` : '';
@@ -240,7 +237,7 @@ function storeSection(view) {
 function reviewsSection(view) {
   if (!view.reviews.length) return '';
   const items = view.reviews.map((r) => `<div class="review"><div class="top"><span class="stars" aria-label="${esc(r.rating)} 星">${'★'.repeat(Math.max(0, Math.min(5, Number(r.rating) || 0)))}</span><span>${esc(r.title)}</span><span class="meta">${esc(r.nickname)}，${esc(country(iso3to2(r.territory)))}，${esc(String(r.created || '').slice(0, 10))}</span></div><p>${esc(r.body)}</p></div>`).join('');
-  return `<section class="panel wide"><h2>评论</h2>${items}</section>`;
+  return `<section class="panel ${view.analytics.available ? '' : 'span2'}"><h2>评论</h2>${items}</section>`;
 }
 
 // customerReviews reports territories as alpha-3; the region names want alpha-2.
@@ -267,6 +264,7 @@ function renderDashboard(view) {
   const warnings = [...view.errors];
   if (view.syncStale) warnings.push('超过 12 小时没有同步成功，下面的数字可能不是最新的');
   if (view.trafficStale) warnings.push(`官网统计 ${view.trafficStale} 之后没有新数据，流量数字只算到这一天`);
+  if (!view.analytics.available) warnings.push('已向 Apple 申请渠道报告，首批生成后这里会显示搜索、浏览、网页跳转各带来多少购买');
   if (t.unconverted) warnings.push(`有 ${t.unconverted} 份的货币没有汇率，金额里没算`);
   const warn = warnings.length ? `<div class="note">${warnings.map((w) => `<div>${esc(w)}</div>`).join('')}</div>` : '';
   const metric = (label, value, note = '') => `<article class="metric"><span>${esc(label)}</span><strong>${value}</strong><em>${note}</em></article>`;
