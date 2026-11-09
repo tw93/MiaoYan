@@ -1,0 +1,23 @@
+{
+  "spec": 0,
+  "name": "MiaoYan",
+  "macos": {
+    "id": "com.tw93.miaoyan",
+    "paths": [
+      { "path": "~/Documents/MiaoYan", "kind": "user" },
+      { "path": "~/Library/Application Support/com.tw93.miaoyan", "kind": "data" },
+      { "path": "~/Library/Caches/com.tw93.miaoyan", "kind": "cache" },
+      { "path": "~/Library/HTTPStorages/com.tw93.miaoyan", "kind": "cache" },
+      { "path": "~/Library/HTTPStorages/com.tw93.miaoyan.binarycookies", "kind": "cache" },
+      { "path": "~/Library/WebKit/com.tw93.miaoyan", "kind": "data" },
+      { "path": "~/Library/Logs/MiaoYan", "kind": "log" },
+      { "path": "~/Library/Preferences/com.tw93.miaoyan.plist", "kind": "config" },
+      { "path": "~/Library/Saved Application State/com.tw93.miaoyan.savedState", "kind": "state" },
+      { "path": "~/.local/bin/miao", "kind": "component" },
+      { "path": "~/.local/bin/miaoyan", "kind": "component" },
+      { "path": "~/Library/Containers/com.tw93.miaoyan", "kind": "data" },
+      { "path": "~/Library/Application Scripts/com.tw93.miaoyan", "kind": "state" },
+      { "path": "~/Library/Mobile Documents/iCloud~com~tw93~miaoyan", "kind": "user" }
+    ]
+  }
+}
