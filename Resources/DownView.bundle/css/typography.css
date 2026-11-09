@@ -248,13 +248,16 @@ a {
 
 /* Blockquote: muted text beside a thin warm bar with round ends, which
    starts and stops with the text rather than running the block's height
-   (maintainer's pick, 2026-10-25; muted indent alone did not read as a quote) */
+   (maintainer's pick, 2026-10-25; muted indent alone did not read as a quote).
+   One pixel under the body, 9px from the bar, the bar as tall as the text, as
+   the Weekly and tw93.fun since 2026-11-08. */
 .heti blockquote {
   position: relative;
   margin: 0;
   margin-block-start: 1.15em;
   margin-block-end: 1.15em;
-  padding: 0 0 0 1.1em;
+  padding: 0 0 0 12px;
+  font-size: calc(1em - 1px);
   color: var(--text-secondary);
   line-height: 1;
   overflow: hidden;
@@ -267,8 +270,8 @@ a {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.55em;
-  bottom: 0.55em;
+  top: 0.62em;
+  bottom: 0.62em;
   width: 3px;
   border-radius: 1.5px;
   background: var(--quote-bar);
