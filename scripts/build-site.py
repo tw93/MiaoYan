@@ -86,7 +86,7 @@ COPY = {
         "faq_title": "Questions",
         "faq": [
             ("Is it a one-time purchase or a subscription?", "A one-time purchase with lifetime access, no subscriptions or in-app purchases. One purchase covers your Mac, iPhone and iPad on the same Apple account."),
-            ("What's the difference between the open-source and App Store versions?", "The Mac app is free and open source: install it with `brew install --cask miaoyan` or download it from GitHub Releases. The iPhone and iPad apps aren't open source, so they ship on the App Store together with the Mac app. One purchase covers all three, they open the same iCloud Drive folder, and updates arrive on their own. If you only write on a Mac, the open-source version is enough; to keep writing on iPhone and iPad, get the App Store version."),
+            ("What's the difference between the open-source and App Store versions?", "The Mac app is free and open source: install it with `brew install --cask miaoyan` or download it from GitHub Releases. The iPhone and iPad apps aren't open source, so they ship on the App Store together with the Mac app. One purchase covers all three, they open the same iCloud Drive folder, and updates arrive on their own. The writing features are the same in both Mac versions, so if you only write on a Mac, the open-source version is enough; to keep writing on iPhone and iPad, get the App Store version."),
             ("Where are my notes stored?", "In the folder you choose, as plain .md files. MiaoYan does not collect note data, and if you ever switch tools the folder comes with you."),
             ("How do notes sync across Mac, iPhone and iPad?", "Keep the folder in iCloud Drive and the Mac, iPhone and iPad all open the same notes. On the Mac, Nutstore or another file-sync client works too."),
             ("What Markdown does it support?", "GitHub Flavored Markdown, plus LaTeX, Mermaid, PlantUML and Markmap, wikilinks with backlinks, and slides split with ---."),
@@ -140,7 +140,7 @@ COPY = {
         "faq_title": "常见问题",
         "faq": [
             ("是买断制还是订阅制？", "一次性买断，终身使用，没有订阅或内购。同一次购买可在登录同一 Apple 账户的 Mac、iPhone 和 iPad 上完整使用。"),
-            ("开源版和 App Store 版有什么区别？", "Mac 版免费开源，用 `brew install --cask miaoyan` 安装或从 GitHub Releases 下载就能用。iPhone 和 iPad 版没有开源，所以和 Mac 版一起放在 App Store，一次购买三端通用，打开的是同一个 iCloud 云盘笔记文件夹，也会自动更新。只在 Mac 上写的话开源版就够了，想在手机和平板上接着写，就选 App Store 版。"),
+            ("开源版和 App Store 版有什么区别？", "Mac 版免费开源，用 `brew install --cask miaoyan` 安装或从 GitHub Releases 下载就能用。iPhone 和 iPad 版没有开源，所以和 Mac 版一起放在 App Store，一次购买三端通用，打开的是同一个 iCloud 云盘笔记文件夹，也会自动更新。Mac 上两个版本的写作功能相同，只在 Mac 上写的话开源版就够了，想在手机和平板上接着写，就选 App Store 版。"),
             ("笔记存在哪里？", "就在你选定的文件夹里，每篇都是普通的 .md 文件，妙言不收集笔记数据，以后换工具时整个文件夹带走就行。"),
             ("Mac、iPhone 和 iPad 之间怎么同步？", "把笔记文件夹放在 iCloud 云盘里，Mac、iPhone 和 iPad 打开的就是同一份笔记，Mac 上也可以用坚果云等文件同步工具。"),
             ("支持哪些 Markdown 语法？", "GitHub 风格的 Markdown，加上 LaTeX 公式、Mermaid、PlantUML 和 Markmap 图表、双向链接，以及用 --- 分页的演示模式。"),
@@ -194,7 +194,7 @@ COPY = {
         "faq_title": "常見問題",
         "faq": [
             ("是買斷制還是訂閱制？", "一次性買斷，終身使用，沒有訂閱或內購。同一次購買可在登入同一 Apple 帳號的 Mac、iPhone 和 iPad 上完整使用。"),
-            ("開源版和 App Store 版有什麼區別？", "Mac 版免費開源，用 `brew install --cask miaoyan` 安裝或從 GitHub Releases 下載就能用。iPhone 和 iPad 版沒有開源，所以和 Mac 版一起放在 App Store，一次購買三端通用，打開的是同一個 iCloud 雲碟筆記檔案夾，也會自動更新。只在 Mac 上寫的話開源版就夠了，想在手機和平板上接著寫，就選 App Store 版。"),
+            ("開源版和 App Store 版有什麼區別？", "Mac 版免費開源，用 `brew install --cask miaoyan` 安裝或從 GitHub Releases 下載就能用。iPhone 和 iPad 版沒有開源，所以和 Mac 版一起放在 App Store，一次購買三端通用，打開的是同一個 iCloud 雲碟筆記檔案夾，也會自動更新。Mac 上兩個版本的寫作功能相同，只在 Mac 上寫的話開源版就夠了，想在手機和平板上接著寫，就選 App Store 版。"),
             ("筆記存在哪裡？", "就在你選定的檔案夾裡，每篇都是普通的 .md 檔案，妙言不收集筆記資料，以後換工具時整個檔案夾帶走就行。"),
             ("Mac、iPhone 和 iPad 之間怎麼同步？", "把筆記檔案夾放在 iCloud 雲碟裡，Mac、iPhone 和 iPad 打開的就是同一份筆記，Mac 上也可以用堅果雲等檔案同步工具。"),
             ("支援哪些 Markdown 語法？", "GitHub 風格的 Markdown，加上 LaTeX 公式、Mermaid、PlantUML 和 Markmap 圖表、雙向連結，以及用 --- 分頁的簡報模式。"),
@@ -248,7 +248,7 @@ COPY = {
         "faq_title": "よくある質問",
         "faq": [
             ("買い切りですか、サブスクリプションですか？", "サブスクリプションやアプリ内課金のない、一度の買い切りです。同じAppleアカウントのMac、iPhone、iPadでそのまま使えます。"),
-            ("オープンソース版とApp Store版の違いは？", "Mac版は無料のオープンソースで、`brew install --cask miaoyan` でインストールするか、GitHub Releasesから入手できます。iPhone版とiPad版はオープンソースではないため、Mac版と一緒にApp Storeで提供しています。一度の購入で3つすべてで使え、同じiCloud Driveフォルダを開き、アップデートも自動です。Macだけで書くならオープンソース版で十分、iPhoneやiPadでも続きを書きたいならApp Store版を選んでください。"),
+            ("オープンソース版とApp Store版の違いは？", "Mac版は無料のオープンソースで、`brew install --cask miaoyan` でインストールするか、GitHub Releasesから入手できます。iPhone版とiPad版はオープンソースではないため、Mac版と一緒にApp Storeで提供しています。一度の購入で3つすべてで使え、同じiCloud Driveフォルダを開き、アップデートも自動です。Mac版の執筆機能はどちらも同じなので、Macだけで書くならオープンソース版で十分、iPhoneやiPadでも続きを書きたいならApp Store版を選んでください。"),
             ("ノートはどこに保存されますか？", "自分で選んだフォルダに、普通の.mdファイルとして保存されます。MiaoYanはノートのデータを集めず、ほかのツールに移るときもフォルダごと持っていけます。"),
             ("Mac、iPhone、iPadの間でどう同期しますか？", "フォルダをiCloud Driveに置けば、Mac、iPhone、iPadが同じノートを開きます。MacではNutstoreなどのファイル同期ツールも使えます。"),
             ("どんなMarkdownに対応していますか？", "GitHub Flavored Markdownに加えて、LaTeX、Mermaid、PlantUML、Markmap、双方向リンクとバックリンク、---で区切るスライドに対応しています。"),
@@ -302,7 +302,7 @@ COPY = {
         "faq_title": "자주 묻는 질문",
         "faq": [
             ("일회성 구매인가요, 구독제인가요?", "구독이나 인앱 결제가 없는 일회성 구매입니다. 동일한 Apple 계정의 Mac, iPhone, iPad에서 모두 사용할 수 있습니다."),
-            ("오픈 소스 버전과 App Store 버전은 무엇이 다른가요?", "Mac 버전은 무료 오픈 소스로, `brew install --cask miaoyan`으로 설치하거나 GitHub Releases에서 받을 수 있습니다. iPhone과 iPad 버전은 오픈 소스가 아니어서 Mac 버전과 함께 App Store에서 제공합니다. 한 번 구매로 세 기기 모두에서 쓸 수 있고, 같은 iCloud Drive 폴더를 열며 업데이트도 자동입니다. Mac에서만 쓴다면 오픈 소스 버전으로 충분하고, iPhone과 iPad에서도 이어 쓰려면 App Store 버전을 고르세요."),
+            ("오픈 소스 버전과 App Store 버전은 무엇이 다른가요?", "Mac 버전은 무료 오픈 소스로, `brew install --cask miaoyan`으로 설치하거나 GitHub Releases에서 받을 수 있습니다. iPhone과 iPad 버전은 오픈 소스가 아니어서 Mac 버전과 함께 App Store에서 제공합니다. 한 번 구매로 세 기기 모두에서 쓸 수 있고, 같은 iCloud Drive 폴더를 열며 업데이트도 자동입니다. 두 Mac 버전의 글쓰기 기능은 같으므로, Mac에서만 쓴다면 오픈 소스 버전으로 충분하고, iPhone과 iPad에서도 이어 쓰려면 App Store 버전을 고르세요."),
             ("노트는 어디에 저장되나요?", "직접 고른 폴더에 일반 .md 파일로 저장됩니다. MiaoYan은 노트 데이터를 수집하지 않으며, 다른 도구로 옮길 때도 폴더째 가져가면 됩니다."),
             ("Mac, iPhone, iPad 사이에서 어떻게 동기화하나요?", "폴더를 iCloud Drive에 두면 Mac, iPhone, iPad가 같은 노트를 엽니다. Mac에서는 Nutstore 같은 파일 동기화 도구도 쓸 수 있습니다."),
             ("어떤 마크다운을 지원하나요?", "GitHub Flavored Markdown과 함께 LaTeX, Mermaid, PlantUML, Markmap, 양방향 링크와 백링크, ---로 나누는 슬라이드를 지원합니다."),
@@ -356,7 +356,7 @@ COPY = {
         "faq_title": "Fragen",
         "faq": [
             ("Ist es ein Einmalkauf oder ein Abo?", "Ein einmaliger Kauf mit lebenslangem Zugriff, ohne Abo oder In-App-Käufe. Derselbe Kauf gilt für Mac, iPhone und iPad mit demselben Apple-Account."),
-            ("Was unterscheidet die Open-Source- von der App-Store-Version?", "Die Mac-App ist kostenlos und Open Source, per `brew install --cask miaoyan` oder als Download von GitHub Releases. Die Apps für iPhone und iPad sind nicht Open Source und erscheinen deshalb zusammen mit der Mac-App im App Store. Ein Kauf gilt für alle drei, alle öffnen denselben iCloud-Drive-Ordner, und Updates kommen automatisch. Wer nur auf dem Mac schreibt, kommt mit der Open-Source-Version aus, wer auf iPhone und iPad weiterschreiben will, nimmt die App-Store-Version."),
+            ("Was unterscheidet die Open-Source- von der App-Store-Version?", "Die Mac-App ist kostenlos und Open Source, per `brew install --cask miaoyan` oder als Download von GitHub Releases. Die Apps für iPhone und iPad sind nicht Open Source und erscheinen deshalb zusammen mit der Mac-App im App Store. Ein Kauf gilt für alle drei, alle öffnen denselben iCloud-Drive-Ordner, und Updates kommen automatisch. Beim Schreiben können beide Mac-Versionen dasselbe. Wer nur auf dem Mac schreibt, kommt mit der Open-Source-Version aus, wer auf iPhone und iPad weiterschreiben will, nimmt die App-Store-Version."),
             ("Wo werden meine Notizen gespeichert?", "In dem Ordner, den du wählst, als einfache .md-Dateien. MiaoYan erfasst keine Notizdaten, und wenn du das Werkzeug wechselst, nimmst du den Ordner einfach mit."),
             ("Wie werden Notizen zwischen Mac, iPhone und iPad abgeglichen?", "Leg den Ordner in iCloud Drive, dann öffnen Mac, iPhone und iPad dieselben Notizen. Auf dem Mac funktioniert auch Nutstore oder ein anderer Sync-Client."),
             ("Welches Markdown wird unterstützt?", "GitHub Flavored Markdown, dazu LaTeX, Mermaid, PlantUML und Markmap, Wikilinks mit Backlinks sowie Folien, die mit --- getrennt werden."),
@@ -410,7 +410,7 @@ COPY = {
         "faq_title": "Questions",
         "faq": [
             ("S'agit-il d'un achat unique ou d'un abonnement ?", "Un achat unique sans abonnement ni achat intégré. Le même achat fonctionne sur Mac, iPhone et iPad avec le même compte Apple."),
-            ("Quelle différence entre la version open source et la version App Store ?", "L'app Mac est gratuite et open source, à installer avec `brew install --cask miaoyan` ou à télécharger sur GitHub Releases. Les apps iPhone et iPad ne sont pas open source, elles sont donc proposées sur l'App Store avec l'app Mac. Un seul achat couvre les trois, qui ouvrent le même dossier iCloud Drive, avec des mises à jour automatiques. Si vous n'écrivez que sur Mac, la version open source suffit, et pour continuer sur iPhone et iPad, prenez la version App Store."),
+            ("Quelle différence entre la version open source et la version App Store ?", "L'app Mac est gratuite et open source, à installer avec `brew install --cask miaoyan` ou à télécharger sur GitHub Releases. Les apps iPhone et iPad ne sont pas open source, elles sont donc proposées sur l'App Store avec l'app Mac. Un seul achat couvre les trois, qui ouvrent le même dossier iCloud Drive, avec des mises à jour automatiques. Pour écrire, les deux versions Mac offrent les mêmes fonctions. Si vous n'écrivez que sur Mac, la version open source suffit, et pour continuer sur iPhone et iPad, prenez la version App Store."),
             ("Où sont stockées mes notes ?", "Dans le dossier que vous choisissez, sous forme de simples fichiers .md. MiaoYan ne collecte aucune donnée de vos notes, et si vous changez d'outil, le dossier part avec vous."),
             ("Comment les notes se synchronisent-elles entre le Mac, l'iPhone et l'iPad ?", "Placez le dossier dans iCloud Drive et le Mac, l'iPhone et l'iPad ouvrent les mêmes notes. Sur le Mac, Nutstore ou un autre client de synchronisation fonctionne aussi."),
             ("Quel Markdown est pris en charge ?", "Le GitHub Flavored Markdown, plus LaTeX, Mermaid, PlantUML et Markmap, les wikilinks avec rétroliens, et des diapositives séparées par ---."),
@@ -464,7 +464,7 @@ COPY = {
         "faq_title": "Preguntas",
         "faq": [
             ("¿Es compra única o suscripción?", "Una compra única para siempre, sin suscripciones ni compras dentro de la app. La misma compra sirve para Mac, iPhone y iPad con la misma cuenta de Apple."),
-            ("¿Qué diferencia hay entre la versión de código abierto y la del App Store?", "La app de Mac es gratis y de código abierto, se instala con `brew install --cask miaoyan` o se descarga desde GitHub Releases. Las apps de iPhone y iPad no son de código abierto, así que se publican en el App Store junto con la de Mac. Una sola compra sirve para las tres, todas abren la misma carpeta de iCloud Drive y las actualizaciones llegan solas. Si solo escribes en el Mac, basta con la versión de código abierto, y para seguir en iPhone y iPad, elige la del App Store."),
+            ("¿Qué diferencia hay entre la versión de código abierto y la del App Store?", "La app de Mac es gratis y de código abierto, se instala con `brew install --cask miaoyan` o se descarga desde GitHub Releases. Las apps de iPhone y iPad no son de código abierto, así que se publican en el App Store junto con la de Mac. Una sola compra sirve para las tres, todas abren la misma carpeta de iCloud Drive y las actualizaciones llegan solas. Para escribir, las dos versiones de Mac tienen las mismas funciones. Si solo escribes en el Mac, basta con la versión de código abierto, y para seguir en iPhone y iPad, elige la del App Store."),
             ("¿Dónde se guardan mis notas?", "En la carpeta que elijas, como archivos .md normales. MiaoYan no recopila datos de tus notas y, si algún día cambias de herramienta, la carpeta se va contigo."),
             ("¿Cómo se sincronizan las notas entre el Mac, el iPhone y el iPad?", "Guarda la carpeta en iCloud Drive y el Mac, el iPhone y el iPad abrirán las mismas notas. En el Mac también sirven Nutstore u otro cliente de sincronización."),
             ("¿Qué Markdown admite?", "GitHub Flavored Markdown, además de LaTeX, Mermaid, PlantUML y Markmap, wikilinks con backlinks y diapositivas separadas con ---."),

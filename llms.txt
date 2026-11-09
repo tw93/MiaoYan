@@ -27,7 +27,7 @@ MiaoYan is for people who want a focused, native writing app on Mac, iPhone and 
 - Mac app source code (MIT): https://github.com/tw93/MiaoYan
 - App Store: one purchase covers the Mac, iPhone and iPad apps, with automatic updates
 
-The Mac app's source code is open on GitHub and keeps being developed. The iPhone and iPad apps are not open source, so they ship on the App Store together with the Mac app. On every device MiaoYan opens the same notes folder, for example one in iCloud Drive.
+The Mac app's source code is open on GitHub and keeps being developed. The iPhone and iPad apps are not open source, so they ship on the App Store together with the Mac app. The writing features are the same in both Mac versions. On every device MiaoYan opens the same notes folder, for example one in iCloud Drive.
 
 ## Comparisons
 
