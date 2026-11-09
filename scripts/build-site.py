@@ -676,10 +676,15 @@ ICONS = (
 # competing with the hero shot. It runs with GA's normal storage, as mole.fit
 # does, because consent denied stopped visits reaching the reports. A
 # page prerendered on hover waits until it is shown, so it never counts a visit
-# the reader did not make.
+# the reader did not make. Two screen sizes that send zero-second, zero-engagement
+# visits and no real device reports are left out, as on mole.fit. store_click is
+# sent here because the Mac link is macappstore://, which GA's outbound click
+# measurement does not see.
 ANALYTICS = (
     "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}"
-    "(function(){function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true});"
+    "(function(){if(/^(1366x1366|1280x1200)$/.test(screen.width+'x'+screen.height))return;"
+    "document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-store]'))gtag('event','store_click')});"
+    "function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true});"
     "var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}"
     "function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}"
     "function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}"
@@ -908,6 +913,9 @@ def page(key):
     alternates = "\n".join(
         f'<link rel="alternate" hreflang="{la}" href="{SITE}{p}">' for _, p, la, _, _, _ in LANGS
     )
+    # zh-CN alone reaches readers in mainland China; zh-Hans also covers
+    # Simplified readers elsewhere, such as Singapore.
+    alternates += f'\n<link rel="alternate" hreflang="zh-Hans" href="{SITE}/zh/">'
     trust = "".join(f"<li>{esc(t(x))}</li>" for x in c["trust"])
     trust += f'<li><a class="trust-link" href="{releases_path(key)}">{esc(UPDATES_LABEL[key])}</a></li>'
     tabs = "".join(

@@ -280,6 +280,7 @@ def head(lang, *, title, desc, canonical, en_url, zh_url, og_type, image, jsonld
 <link rel="canonical" href="{canonical}">
 <link rel="alternate" hreflang="en" href="{en_url}">
 <link rel="alternate" hreflang="zh-CN" href="{zh_url}">
+<link rel="alternate" hreflang="zh-Hans" href="{zh_url}">
 <link rel="alternate" hreflang="x-default" href="{en_url}">
 <link rel="alternate" type="application/rss+xml" title="{esc(UI[lang]['index_title'])}" href="{SITE}{route(lang)}feed.xml">
 <meta property="og:type" content="{og_type}">
