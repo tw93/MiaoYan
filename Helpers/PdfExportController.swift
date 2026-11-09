@@ -157,6 +157,13 @@ final class PdfExportController: NSObject {
             s.textContent = \(HtmlManager.jsStringLiteral(css));
             document.head.appendChild(s);
 
+            // Paper is white whatever the window's appearance. A page copied
+            // from a dark preview keeps the dark theme's code colours and
+            // diagrams, which read dark on dark, until it switches and redraws.
+            if (document.documentElement.classList.contains('darkmode') && window.ThemeConfig) {
+                window.ThemeConfig.applyTheme(false);
+            }
+
             var container = document.getElementById('write') || document.body;
             // A note that opens with its own heading keeps it as the title,
             // as HTML export does, rather than printing two in a row.

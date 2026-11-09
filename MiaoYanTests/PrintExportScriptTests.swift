@@ -289,4 +289,42 @@ final class PrintExportScriptTests: XCTestCase {
         XCTAssertEqual(state?["deadShown"] as? Bool, false)
         XCTAssertEqual(state?["deadHeight"] as? Double, 0)
     }
+
+    /// A dark preview's copy kept the dark theme under the print sheet: Mermaid
+    /// and Markmap on dark panels with dark text, code colours meant for dark.
+    @MainActor
+    func testADarkPreviewPrintsWithTheLightTheme() async throws {
+        let wasDark = UserDataService.instance.isDark
+        UserDataService.instance.isDark = true
+        defer { UserDataService.instance.isDark = wasDark }
+        let markdown = "```mermaid\ngraph LR\n  A --> B\n```\n\n```swift\nlet a = 1\n```\n"
+        let body = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: true))
+        let webView = try await loadPrintedPreview(body)
+        let deadline = Date().addingTimeInterval(10)
+        let drawn = "(\(HtmlManager.pendingDiagramsExpression)) === 0 && !!document.querySelector('code.language-mermaid svg, .language-mermaid svg')"
+        while Date() < deadline, (try? await webView.evaluateJavaScript(drawn) as? Bool) != true {
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        let state =
+            try await webView.evaluateJavaScript(
+                """
+                (function() {
+                    var svg = document.querySelector('.language-mermaid svg');
+                    var label = svg && svg.querySelector('.nodeLabel, text');
+                    var style = getComputedStyle(document.documentElement);
+                    return {
+                        marked: document.querySelectorAll('.darkmode').length,
+                        panel: style.getPropertyValue('--diagram-bg').trim(),
+                        keyword: style.getPropertyValue('--hljs-keyword').trim(),
+                        label: label ? getComputedStyle(label).color : ''
+                    };
+                })();
+                """) as? [String: Any]
+        XCTAssertEqual(state?["marked"] as? Int, 0)
+        XCTAssertNotEqual(state?["panel"] as? String, "#282724")
+        XCTAssertEqual(state?["keyword"] as? String, "#d73a49")
+        let channels = try XCTUnwrap(state?["label"] as? String).split { !$0.isNumber }.compactMap { Int($0) }
+        XCTAssertEqual(channels.count, 3)
+        XCTAssertLessThan(channels.reduce(0, +), 3 * 128, "diagram text must be dark on the light panel")
+    }
 }
