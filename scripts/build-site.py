@@ -1100,7 +1100,7 @@ def chrome_pages():
             text = text.replace("</main>\n</div>\n", "</main>\n</div>\n" + footer + "\n", 1)
         text = text.replace("</footer>\n", "</footer>\n" + script + "\n", 1)
         if text.count("<script>\n") != 1:
-            sys.exit(f"{name}: expected one page script, found {text.count('<script>' + chr(10))}")
+            raise SystemExit(f"{name}: expected one page script, found {text.count(chr(60) + 'script>' + chr(10))}")
         path.write_text(text)
     print("wrote privacy.html, 404.html chrome")
 
