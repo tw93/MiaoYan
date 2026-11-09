@@ -1,3 +1,8 @@
+---
+paths:
+  - "**/*.swift"
+---
+
 # MiaoYan Swift Rules
 
 > 只写 MiaoYan 特有的部分。通用的 Swift 内存与线程纪律按常规来,不在这里重复。

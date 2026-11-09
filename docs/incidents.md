@@ -19,7 +19,7 @@ Layers, earliest first:
 - `unit`: `xcodebuild test` and `swift test --package-path Packages/MiaoYanCore`, locally and in CI.
 - `ci`: the rest of `.github/workflows/ci.yml`: the Debug build under CI's older Swift, SwiftLint, swift-format,
   ShellCheck and the release-notes smoke.
-- `review`: a diff review against AGENTS.md's Current Risk Areas.
+- `review`: a diff review against the risk areas in `.claude/rules/`.
 - `release-check`: the steps before a tag: version alignment, the release-notes source, Sparkle signature
   verification.
 - `hand-test`: launching the built app and running the changed flow, including the maintainer's daily copy.

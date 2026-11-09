@@ -32,7 +32,7 @@ TIERS = [
                   "helpers defined above their first use", [
         "scripts/install.sh", "scripts/miaoyan",
     ]),
-    ("notes", "a test red on the old code (AGENTS.md Testing); a review against Current Risk Areas: recoverable "
+    ("notes", "a test red on the old code (.claude/rules/testing.md); a review against the risk areas in .claude/rules: recoverable "
               "Trash, fail-closed saves, buffer ownership; the flow run in the built app", [
         "Business/Storage.swift", "Business/Note.swift", "Business/Project.swift", "Business/NoteVersionManager.swift",
         "Helpers/FileSystemEventManager.swift", "Helpers/FileWatcher*.swift", "Helpers/ClipboardManager.swift",

@@ -14,7 +14,7 @@ WKWebView preview MPreviewView with Resources/DownView.bundle, a SwiftUI shell i
 .claude/worktrees, build, .build and the vendored preview files (*.min.js, *.min.css, js/vendor,
 js/mermaid-layout-elk*.js, ppt/) from every grep. Scope: <SCOPE>. The iPhone and iPad app:
 <PRO> (its MiaoYanMobile/ and AGENTS.md; read-only, and never quote its code into this repo).
-Read AGENTS.md first: Working Rules, Current Risk Areas, Fonts And Preview Rendering and the
+Read AGENTS.md and every file in .claude/rules/ first: Working Rules, the risk areas, preview and fonts and the
 product preferences record decisions and measurements; before reporting a candidate, grep
 AGENTS.md, .claude/rules and docs/incidents.md for its symbol. Never report these decided items:
 <DECIDED>. Mechanical checks already run: <MECHANICAL>; do not redo them.
@@ -67,7 +67,7 @@ against their own rules before reporting.
 
 ```
 Find defects that lose, misplace or damage user data, or make a feature not work. Start from
-AGENTS.md Current Risk Areas: buffer ownership (storageNote, publishStorage,
+The risk areas in .claude/rules/: buffer ownership (storageNote, publishStorage,
 saveTextStorageContent), retiring removed notes, loadFailed, Trash and the
 removedFromTrashKey marker, iCloud placeholders, symlinked folders and path aliases, folder
 moves, Clean Unused Attachments, frontmatter stripping on every output surface, wikilinks and

@@ -59,7 +59,7 @@ failure scenario and the smallest fix.
    in the note list and sidebar, preview updates that reload instead of patching,
    unbounded caches, launch work, file-watcher storms.
 3. **Behaviour.** Defects that lose or misplace user data or make a feature not
-   work: the Current Risk Areas in AGENTS.md (buffer ownership, Trash, iCloud,
+   work: the risk areas in `.claude/rules/` (buffer ownership, Trash, iCloud,
    symlinks, folder moves, `loadFailed`), menu and shortcut parity between the
    storyboard window and the shell, localisation gaps.
 4. **Editing.** What a writer feels: input latency, CJK input and marked text,
