@@ -126,6 +126,22 @@ final class PdfExportController: NSObject {
         }
     }
 
+    /// True once every video without a poster has its first frame, or cannot
+    /// have one: a dead `<source>` sets `networkState` to no-source, not `error`.
+    static let videosSettledExpression = """
+        Array.prototype.every.call(document.querySelectorAll('video:not([poster])'), function(v) {
+            return v.readyState >= 2 || v.error || v.networkState === 3;
+        })
+        """
+
+    /// A video with no poster and no frame would print as an empty box as tall
+    /// as the picture it never got.
+    static let hideUndrawnVideosScript = """
+        document.querySelectorAll('video:not([poster])').forEach(function(video) {
+            if (video.readyState < 2) video.style.display = 'none';
+        });
+        """
+
     /// Adds the print sheet and the title, and swaps lazy images back to their
     /// real files: the offscreen print view never scrolls, so a placeholder
     /// would print as a blank box. The sheet and the title go in as JSON
@@ -161,6 +177,19 @@ final class PdfExportController: NSObject {
             if (toc) toc.style.display = 'none';
             if (tocTrigger) tocTrigger.style.display = 'none';
 
+            // Paper cannot play a video, and the player's controls would print
+            // over its picture. One with no poster moves to its first frame.
+            document.querySelectorAll('video').forEach(function(video) {
+                video.removeAttribute('controls');
+                video.removeAttribute('data-preload');
+                if (video.hasAttribute('poster')) return;
+                video.preload = 'metadata';
+                video.addEventListener('loadedmetadata', function() {
+                    video.currentTime = 0.001;
+                }, { once: true });
+                video.load();
+            });
+
             void document.body.offsetHeight;
             return true;
         })();
@@ -191,14 +220,17 @@ final class PdfExportController: NSObject {
             (function() {
                 var imgs = Array.prototype.slice.call(document.images || []);
                 var imgsReady = imgs.every(function(i) { return i.complete && i.naturalWidth > 0; });
-                return imgsReady && (\(HtmlManager.pendingDiagramsExpression)) === 0;
+                var videosReady = \(Self.videosSettledExpression);
+                return imgsReady && videosReady && (\(HtmlManager.pendingDiagramsExpression)) === 0;
             })();
             """
         web.evaluateJavaScript(probe) { [weak self] result, _ in
             guard let self else { return }
             let ready = (result as? Bool) ?? false
             if ready || self.mediaWaitAttempts >= Self.mediaWaitMaxAttempts {
-                self.extractHeadings()
+                web.evaluateJavaScript(Self.hideUndrawnVideosScript) { [weak self] _, _ in
+                    self?.extractHeadings()
+                }
             } else {
                 self.mediaWaitAttempts += 1
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { [weak self] in

@@ -76,7 +76,6 @@ class HtmlManager {
                     --pdf-muted: #6a6256;
                     --pdf-hairline: rgba(38, 35, 29, 0.13);
                     --pdf-code-bg: #f6f2ea;
-                    --pdf-quote-bg: #f3f7f2;
                 }
                 /* The PDF path captures the live preview's DOM as-is, so a
                    dark-theme export still carries `.darkmode * { color:
@@ -98,6 +97,7 @@ class HtmlManager {
                     --text-color: var(--pdf-ink) !important;
                     --bg-color: #ffffff !important;
                     --code-bg: var(--pdf-code-bg) !important;
+                    --quote-bar: #DDD9CD !important;
                 }
                 html, body {
                     margin: 0 !important;
@@ -166,12 +166,12 @@ class HtmlManager {
                     margin-right: auto;
                     border-radius: 8px !important;
                 }
-                blockquote {
+                /* A quote prints as it reads in the preview: muted text beside the
+                   thin bar, nothing behind it. The `*` has to outrank the `p`
+                   and `code` inks above, or quoted paragraphs print at full ink. */
+                .heti blockquote,
+                .heti blockquote * {
                     color: var(--pdf-muted) !important;
-                    background: var(--pdf-quote-bg) !important;
-                    border-left: none !important;
-                    border-radius: 6px !important;
-                    padding: 0.5em 0.9em !important;
                 }
                 code {
                     background: var(--pdf-code-bg) !important;
@@ -226,6 +226,25 @@ class HtmlManager {
                 .heti figure {
                     margin-block-start: 0.6em !important;
                     margin-block-end: 0.6em !important;
+                }
+                /* The preview pulls a caption paragraph up by 1.2em to close its
+                   wide paragraph gap. Against the 0.6em margins here the same
+                   pull lays the caption over the picture above it. */
+                .heti > p > small {
+                    margin-top: 0 !important;
+                }
+                /* A picture sharing a paragraph with text would touch the line
+                   above it. A video prints as a picture too. */
+                .heti p > img,
+                .heti p > video {
+                    display: block;
+                    margin-top: 0.5em !important;
+                }
+                /* The quote bar is inset to fit this margin, so it stays the
+                   preview's or the bar outgrows the text. */
+                .heti blockquote p {
+                    margin-block-start: 0.4em !important;
+                    margin-block-end: 0.4em !important;
                 }
                 .heti h1 {
                     margin-block-start: 0.9em !important;
