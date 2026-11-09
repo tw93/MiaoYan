@@ -5,8 +5,7 @@ description: >-
   performance, broken behaviour, editing experience, preview experience), every
   finding refuted once before it is reported, then the approved fixes landed.
   Use for the periodic check or a whole-app review. Not for one reported bug
-  (/hunt), a diff review (/check), or a release's incident review (AGENTS.md
-  Release Notes).
+  (/hunt), a diff review (/check), or a release's incident review (`.claude/rules/release.md`).
 when_to_use: "全面检查, 最终检查所有代码, 看看还有冗余的不, 过时的沉淀, 过时的代码, 性能差的地方, 影响功能, 编辑体验, 预览体验, 体检, weekly audit"
 metadata:
   version: "1.0.0"

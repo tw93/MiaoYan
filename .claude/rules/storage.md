@@ -1,5 +1,10 @@
 ---
 paths:
+  - "Controllers/ViewController+Action*"
+  - "Views/SidebarProjectView*"
+  - "Views/Toast*"
+  - "Shell/ShellModel*"
+  - "MiaoYanMobile/Services/FileReader*"
   - "Business/Storage*"
   - "Business/Note*"
   - "Business/Project*"

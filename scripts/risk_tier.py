@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # Highest first. A path takes every tier it matches. `*` in fnmatch also crosses `/`.
 TIERS = [
     ("release", "the maintainer's review of the diff; version alignment and the release scripts read through "
-                "(AGENTS.md Release Notes); verify_sparkle_signature.sh against the published ZIP before an "
+                "(.claude/rules/release.md); verify_sparkle_signature.sh against the published ZIP before an "
                 "appcast push; packaging changes land in the maintainer's own build script too", [
         ".github/workflows/*", "scripts/build.sh", "scripts/release-ci/*", "Info.plist", "MiaoYan.entitlements",
     ]),

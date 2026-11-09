@@ -3,7 +3,7 @@
 Defects that reached users in a published release or the maintainer's daily build (the installed
 `/Applications/MiaoYan.app`, which AGENTS.md makes the test copy), kept as the eval set for every review layer
 ("incidents are the eval", from the Claude Code team's code review write-up). Every release is reviewed against this
-table first (AGENTS.md, Release Notes). A row is added in the same change that fixes the defect:
+table first (`.claude/rules/release.md`). A row is added in the same change that fixes the defect:
 the fix commit, the commit that introduced it when known, the earliest layer that should have caught it, and the
 test or gate that catches it now. `scripts/check_incidents.py` (run by CI's Review gates job) fails a row whose
 commit does not resolve, whose layer is not one of the names below, or whose catcher is not defined in the code.

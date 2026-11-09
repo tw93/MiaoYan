@@ -6,7 +6,7 @@
 > Claude-specific assets:
 > - 全局规则: `~/.claude/CLAUDE.md`
 > - Swift 通用规则: `~/.claude/rules/swift.md` (项目级补充 `.claude/rules/swift.md`)
-> - 项目 skill: `.claude/skills/weekly-audit` (全面体检: 过时沉淀与代码、性能、功能、编辑与预览体验, 运行记录在 `docs/weekly-audit.md`); release、review、lint 的项目事实都在本文件
+> - 项目 skill: `.claude/skills/weekly-audit` (全面体检: 过时沉淀与代码、性能、功能、编辑与预览体验, 运行记录在 `docs/weekly-audit.md`); release 的事实在 `.claude/rules/release.md`，review、lint 的在本文件
 
 ## Project
 
