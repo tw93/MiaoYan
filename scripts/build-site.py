@@ -1090,13 +1090,17 @@ def chrome_pages():
             lambda m: HEAD_ASSETS, text, count=1, flags=re.S,
         )
         text = re.sub(r'<header class="nav">.*?</header>', lambda m: header_html("en", home="/"), text, count=1, flags=re.S)
-        text = re.sub(r'\n<script>\n\(function \(\) \{\n.*?\}\)\(\);\n</script>', "", text, flags=re.S)
+        # Every bare <script> here is page_script's. It starts with a comment since
+        # the footer chrome, so matching on its first line left a copy per build.
+        text = re.sub(r'\n<script>\n.*?\n</script>', "", text, flags=re.S)
         footer = footer_html("en", faq_href="/#faq")
         if "<footer>" in text:
             text = re.sub(r"<footer>.*?</footer>", lambda m: footer, text, count=1, flags=re.S)
         else:
             text = text.replace("</main>\n</div>\n", "</main>\n</div>\n" + footer + "\n", 1)
         text = text.replace("</footer>\n", "</footer>\n" + script + "\n", 1)
+        if text.count("<script>\n") != 1:
+            sys.exit(f"{name}: expected one page script, found {text.count('<script>' + chr(10))}")
         path.write_text(text)
     print("wrote privacy.html, 404.html chrome")
 
