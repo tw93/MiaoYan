@@ -327,4 +327,39 @@ final class PrintExportScriptTests: XCTestCase {
         XCTAssertEqual(channels.count, 3)
         XCTAssertLessThan(channels.reduce(0, +), 3 * 128, "diagram text must be dark on the light panel")
     }
+
+    /// A face with one weight printed headings in the system's fattened bold,
+    /// blurred and heavy. It takes a light stroke instead; a real bold stays.
+    @MainActor
+    func testHeadingsPrintWithALightStrokeOnlyWhenTheFaceHasNoBold() async throws {
+        let webView = try await loadPage("<h1>Title</h1>")
+        webView.mediaType = "print"
+        for (hasBold, weight, stroke) in [(false, "400", "0.25px"), (true, "700", "0px")] {
+            let state =
+                try await webView.evaluateJavaScript(
+                    """
+                    (function() {
+                        var old = document.getElementById('sheet');
+                        if (old) old.remove();
+                        var s = document.createElement('style');
+                        s.id = 'sheet';
+                        s.textContent = \(HtmlManager.jsStringLiteral(HtmlManager.paginatedPrintCSS(faceHasBold: hasBold)));
+                        document.head.appendChild(s);
+                        var style = getComputedStyle(document.querySelector('h1'));
+                        return { weight: style.fontWeight, stroke: style.webkitTextStrokeWidth, color: style.color };
+                    })();
+                    """) as? [String: String]
+            XCTAssertEqual(state?["weight"], weight, "has bold: \(hasBold)")
+            XCTAssertEqual(state?["stroke"], stroke, "has bold: \(hasBold)")
+            XCTAssertEqual(state?["color"], "rgb(54, 52, 51)", "has bold: \(hasBold)")
+        }
+    }
+
+    @MainActor
+    func testBoldFaceDetection() throws {
+        XCTAssertTrue(FontCatalog.hasBoldFace(forStored: FontConfiguration.fallbackFont))
+        XCTAssertTrue(FontCatalog.hasBoldFace(forStored: "Helvetica Neue"))
+        guard FontCatalog.isInstalled(family: "Zapfino") else { throw XCTSkip("Zapfino is not installed") }
+        XCTAssertFalse(FontCatalog.hasBoldFace(forStored: "Zapfino"))
+    }
 }

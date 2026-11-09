@@ -68,7 +68,19 @@ class HtmlManager {
         return literal
     }
 
+    /// Headings use a real bold when the face has one. Without one the system
+    /// fattens the strokes until they clot (TsangerJinKai W04 printed blurred
+    /// and heavy), so a light stroke on the regular weight gives the weight.
+    @MainActor
     static func paginatedPrintCSS() -> String {
+        paginatedPrintCSS(faceHasBold: FontCatalog.hasBoldFace(forStored: UserDefaultsManagement.previewFontName))
+    }
+
+    static func paginatedPrintCSS(faceHasBold: Bool) -> String {
+        let headingWeight =
+            faceHasBold
+            ? "font-weight: bold !important;"
+            : "font-weight: 400 !important; -webkit-text-stroke: 0.25px var(--pdf-heading);"
         return """
             @media print {
                 :root {
@@ -76,6 +88,7 @@ class HtmlManager {
                     --pdf-muted: #6a6256;
                     --pdf-hairline: rgba(38, 35, 29, 0.13);
                     --pdf-code-bg: #f6f2ea;
+                    --pdf-heading: #363433;
                 }
                 /* The PDF path captures the live preview's DOM as-is, so a
                    dark-theme export still carries `.darkmode * { color:
@@ -130,10 +143,10 @@ class HtmlManager {
                 /* Headings inherit the user's preview font. */
                 #export-generated-title,
                 h1, h2, h3, h4, h5, h6 {
-                    color: var(--pdf-ink) !important;
+                    color: var(--pdf-heading) !important;
                     page-break-after: avoid;
                     line-height: 1.4 !important;
-                    font-weight: bold !important;
+                    \(headingWeight)
                 }
                 #export-generated-title {
                     font-size: 2em !important;

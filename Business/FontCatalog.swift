@@ -142,6 +142,19 @@ enum FontCatalog {
     /// from the popup is a family name (`PingFang SC`), because the popup is
     /// built from families. Without this the default never matches a row and
     /// gets appended as a 271st orphan entry below the alphabetical list.
+    /// Whether the stored face's family has a bold of its own. The default
+    /// pairing does, through the system face that stands in for it.
+    @MainActor
+    static func hasBoldFace(forStored stored: String) -> Bool {
+        let family = familyName(forStored: stored)
+        if family == familyName(forStored: FontConfiguration.fallbackFont) { return true }
+        guard let members = NSFontManager.shared.availableMembers(ofFontFamily: family) else { return true }
+        return members.contains { member in
+            guard member.count > 3, let weight = member[2] as? Int, let traits = member[3] as? UInt else { return false }
+            return weight >= 8 || NSFontTraitMask(rawValue: traits).contains(.boldFontMask)
+        }
+    }
+
     static func familyName(forStored stored: String) -> String {
         guard !stored.isEmpty else { return stored }
         if isInstalled(family: stored) { return stored }
