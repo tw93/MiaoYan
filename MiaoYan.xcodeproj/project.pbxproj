@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D0C1A9E5F00000000000B001 /* Markdown.icns in Resources */ = {isa = PBXBuildFile; fileRef = D0C1A9E5F00000000000B002 /* Markdown.icns */; };
 		A9F1C0DE5E0000000000A001 /* appfiles.json in Resources */ = {isa = PBXBuildFile; fileRef = A9F1C0DE5E0000000000A002 /* appfiles.json */; };
 		FA075E976CACD6C8641C8A64 /* MiaoYanMark.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0EB90555B60CDCEE883EA6A9 /* MiaoYanMark.otf */; };
 		5E1100000000000000000015 /* ShellPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000005 /* ShellPalette.swift */; };
@@ -210,6 +211,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D0C1A9E5F00000000000B002 /* Markdown.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Markdown.icns; sourceTree = "<group>"; };
 		A9F1C0DE5E0000000000A002 /* appfiles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = appfiles.json; sourceTree = "<group>"; };
 		0EB90555B60CDCEE883EA6A9 /* MiaoYanMark.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MiaoYanMark.otf; sourceTree = "<group>"; };
 		5E1100000000000000000005 /* ShellPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellPalette.swift; sourceTree = "<group>"; };
@@ -623,6 +625,7 @@
 			isa = PBXGroup;
 			children = (
 				A9F1C0DE5E0000000000A002 /* appfiles.json */,
+				D0C1A9E5F00000000000B002 /* Markdown.icns */,
 				27EAA5992EA8C76500D13871 /* app.icon */,
 				276312812E75813D007BB5E9 /* Localization */,
 				D7465F27207F2CD600E46A52 /* Images.xcassets */,
@@ -844,6 +847,7 @@
 				276312872E75813D007BB5E9 /* Main.storyboard in Resources */,
 				FA075E976CACD6C8641C8A64 /* MiaoYanMark.otf in Resources */,
 				A9F1C0DE5E0000000000A001 /* appfiles.json in Resources */,
+				D0C1A9E5F00000000000B001 /* Markdown.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -194,4 +194,16 @@ final class VisualRulesGateTests: XCTestCase {
             for grey in cool { XCTAssertFalse(text.contains(grey), "\(file): \(grey)") }
         }
     }
+
+    /// Every document icon Info.plist names ships in the app. `Markdown.icns` was deleted in 2020 while
+    /// the plist kept naming it, so Finder drew `.md` files as a blank page for years.
+    func testEveryDeclaredDocumentIconShipsInTheBundle() throws {
+        let types = try XCTUnwrap(Bundle.main.infoDictionary?["CFBundleDocumentTypes"] as? [[String: Any]])
+        XCTAssertFalse(types.isEmpty)
+        for type in types {
+            guard let icon = type["CFBundleTypeIconFile"] as? String else { continue }
+            let name = (icon as NSString).deletingPathExtension
+            XCTAssertNotNil(Bundle.main.url(forResource: name, withExtension: "icns"), "\(icon).icns is declared but not bundled")
+        }
+    }
 }
