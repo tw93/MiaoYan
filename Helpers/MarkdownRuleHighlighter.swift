@@ -54,6 +54,28 @@ enum MarkdownRuleHighlighter {
         attributedString.fixAttributes(in: range)
     }
 
+    /// `range` of `string` with inline code filled with backticks, so a `*`,
+    /// `_` or `~` in code cannot pair up as markup; `offset` is where the
+    /// text starts in `string`. Without inline code it is `string` itself.
+    private static func textWithCodeSpansMasked(_ string: String, range: NSRange) -> (text: String, offset: Int) {
+        var spans: [NSRange] = []
+        NotesTextProcessor.codeSpanRegex.regularExpression.enumerateMatches(in: string, options: [], range: range) { result, _, _ in
+            if let result { spans.append(result.range) }
+        }
+        guard !spans.isEmpty else { return (string, 0) }
+
+        var units = [unichar](repeating: 0, count: range.length)
+        (string as NSString).getCharacters(&units, range: range)
+        let backtick: unichar = 0x60
+        for span in spans {
+            for index in (span.location - range.location)..<(span.upperBound - range.location)
+            where units[index] != 0x0A && units[index] != 0x0D {
+                units[index] = backtick
+            }
+        }
+        return (String(utf16CodeUnits: units, count: units.count), range.location)
+    }
+
     // swiftlint:disable:next cyclomatic_complexity
     static func highlightMarkdown(attributedString: NSMutableAttributedString, paragraphRange: NSRange? = nil, note: Note) {
         let paragraphRange = paragraphRange ?? NSRange(0..<attributedString.length)
@@ -122,37 +144,33 @@ enum MarkdownRuleHighlighter {
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.fontColor, range: range)
         }
 
-        NotesTextProcessor.italicRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range,
-                range.upperBound <= attributedString.length
-            else {
-                return
+        let emphasis = textWithCodeSpansMasked(string, range: paragraphRange)
+        let emphasisRange = NSRange(location: paragraphRange.location - emphasis.offset, length: paragraphRange.length)
+        func emphasisMatches(_ regex: MarklightRegex, _ body: @escaping (_ range: NSRange, _ delimiterLength: Int) -> Void) {
+            regex.matches(emphasis.text, range: emphasisRange) { result in
+                guard let result else { return }
+                let range = NSRange(location: result.range.location + emphasis.offset, length: result.range.length)
+                guard range.upperBound <= attributedString.length else { return }
+                body(range, result.range(at: 1).length)
             }
+        }
+
+        emphasisMatches(NotesTextProcessor.italicRegex) { range, delimiterLength in
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.titleColor, range: range)
-            markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
+            markDelimiters(of: range, length: delimiterLength)
         }
 
-        NotesTextProcessor.boldRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range,
-                range.upperBound <= attributedString.length
-            else {
-                return
-            }
+        emphasisMatches(NotesTextProcessor.boldRegex) { range, delimiterLength in
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
-            markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
+            markDelimiters(of: range, length: delimiterLength)
         }
 
-        NotesTextProcessor.strikeRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range,
-                range.upperBound <= attributedString.length
-            else {
-                return
-            }
+        emphasisMatches(NotesTextProcessor.strikeRegex) { range, delimiterLength in
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
-            markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
+            markDelimiters(of: range, length: delimiterLength)
         }
 
         NotesTextProcessor.codeLineRegex.matches(string, range: paragraphRange) { result in

@@ -87,6 +87,59 @@ final class EditorStorageOwnershipTests: XCTestCase {
         XCTAssertFalse(linkColour.map { abs($0.redComponent - markup.redComponent) < 0.01 && abs($0.greenComponent - markup.greenComponent) < 0.01 } ?? false)
     }
 
+    /// Whether each probe took a colour other than the body text's.
+    @MainActor
+    private func emphasised(_ probes: [String], in body: String) throws -> [String: Bool] {
+        let note = makeNote("emphasis-\(UUID().uuidString).md", body: body)
+        let storage = NSMutableAttributedString(string: body)
+        MarkdownRuleHighlighter.highlightMarkdown(attributedString: storage, note: note)
+
+        let light = try XCTUnwrap(NSAppearance(named: .aqua))
+        let plain = try XCTUnwrap(NotesTextProcessor.fontColor.resolvedColor(for: light).usingColorSpace(.sRGB))
+        var result: [String: Bool] = [:]
+        for probe in probes {
+            let at = (body as NSString).range(of: probe).location
+            XCTAssertNotEqual(at, NSNotFound, probe)
+            let colour = try XCTUnwrap(
+                (storage.attribute(.foregroundColor, at: at, effectiveRange: nil) as? NSColor)?
+                    .resolvedColor(for: light).usingColorSpace(.sRGB), probe)
+            result[probe] =
+                abs(colour.redComponent - plain.redComponent) > 0.01
+                || abs(colour.greenComponent - plain.greenComponent) > 0.01
+                || abs(colour.blueComponent - plain.blueComponent) > 0.01
+        }
+        return result
+    }
+
+    /// A `_`, `*` or `~~` in one code span paired with one in the next, and
+    /// the prose between the two took the markup colour (#101).
+    @MainActor
+    func testEmphasisMarksInsideInlineCodeDoNotStyleTheProseBetween() throws {
+        for body in [
+            "Set `sleeping_tabs` between and `vm_stat` after",
+            "Read `_id` between and `_name` after",
+            "Match `*.md` between and `*.txt` after",
+            "Pass `**kwargs` between and `**options` after",
+            "Open `~~/a` between and `~~/b` after",
+        ] {
+            XCTAssertEqual(try emphasised(["between"], in: body)["between"], false, body)
+        }
+    }
+
+    /// Real emphasis still highlights, next to code and around it.
+    @MainActor
+    func testEmphasisOutsideInlineCodeStillHighlights() throws {
+        let result = try emphasised(
+            ["star", "under", "strong", "struck", "tail", "plain"],
+            in: "plain *star* and _under_ and **strong** and ~~struck~~ with `a_b` then *around `x*y` tail*")
+        XCTAssertEqual(result["star"], true)
+        XCTAssertEqual(result["under"], true)
+        XCTAssertEqual(result["strong"], true)
+        XCTAssertEqual(result["struck"], true)
+        XCTAssertEqual(result["tail"], true)
+        XCTAssertEqual(result["plain"], false)
+    }
+
     /// V4.6.0 drew every code-block run outside keywords and comments in the
     /// HTML tags' softened gold, and the blocks read yellow; code went back to
     /// Highlightr's own colours. No code-block run may take that gold, in
