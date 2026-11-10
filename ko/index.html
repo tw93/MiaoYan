@@ -215,8 +215,13 @@ img { display: block; max-width: 100%; height: auto; }
   display: flex; align-items: center; gap: 20px; min-height: 55px;
   padding: 10px 14px; border-radius: 999px;
   background: var(--ivory);
-  border: 1px solid var(--line);
+  /* No drawn edge: mole.fit's soft shadow lifts the bar and the transparent
+     border keeps its height (maintainer 2026-11-10: the shadow pill read better
+     than the hairline one, on every product site). */
+  border: 1px solid transparent;
+  box-shadow: 0 2px 20px 8px rgba(0, 0, 0, 0.04);
 }
+@media (prefers-contrast: more) { .nav-bar { border-color: var(--line); box-shadow: none; } }
 .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--near-black); flex: none; }
 .brand img { width: 24px; height: 24px; }
 /* Cap height centred on the bar, measured at 6x. */
