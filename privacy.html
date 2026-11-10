@@ -741,12 +741,13 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 }
 
 /* Chinese pass of 2026-11-08, from mole.fit (maintainer's picks there): tracking
-   is two tokens, wider on PC and tighter on phones, titles nearly closed. An em
+   is two tokens, 0.03em at every width since 2026-11-10 (0.04em read a little
+   wide on PC), titles nearly closed and solid on phones. An em
    on body inherits as pixels. The nav, footer, buttons, code and Latin names stay
    at 0, since a trailing track pushes a centered label off center by half of it.
    Japanese and Korean keep their zero. */
 html:is([lang="zh-CN"], [lang="zh-Hant"]) {
-  --cjk-track: 0.04em;
+  --cjk-track: 0.03em;
   --cjk-track-title: 0.01em;
 }
 @media (max-width: 640px) {
