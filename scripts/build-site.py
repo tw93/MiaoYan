@@ -986,7 +986,7 @@ def page(key):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f5f4ed">
+<meta name="theme-color" content="#fbfaf6">
 <script>document.documentElement.classList.add('js')</script>
 {redirect}
 <title>{esc(c['title'])}</title>

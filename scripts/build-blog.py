@@ -273,7 +273,7 @@ def head(lang, *, title, desc, canonical, en_url, zh_url, og_type, image, jsonld
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f5f4ed">
+<meta name="theme-color" content="#fbfaf6">
 <script>document.documentElement.classList.add('js')</script>
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
