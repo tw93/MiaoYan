@@ -713,7 +713,9 @@ public class NotesTextProcessor {
     // MARK: Italic
     fileprivate static let strictItalicPattern = "(^|[\\s_])(?:(?!\\1)|(?=^))(\\*|_)(?=\\S)((?:(?!\\2).)*?\\S)\\2(?!\\2)(?=[\\s]|(?:[.,!?]\\s)|$)"
 
-    fileprivate static let italicPattern = "(?<!\\*|_)(?<!\\*\\*)(\\*|_)(?!\\s)(.+?)(?<!\\s)\\1(?!\\*|_)(?!\\*\\*)"
+    /// A `_` inside a word (`snake_case`) is not a delimiter, as in the preview.
+    fileprivate static let italicPattern =
+        "(?<!\\*|_)(?<!\\*\\*)(\\*|(?<![\\p{L}\\p{N}])_)(?!\\s)(.+?)(?<!\\s)\\1(?!\\*|_)(?!\\*\\*)(?!(?<=_)[\\p{L}\\p{N}])"
     @MainActor public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
