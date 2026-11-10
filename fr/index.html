@@ -31,7 +31,7 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="image" href="/assets/shots/en-edit-1400.webp" imagesrcset="/assets/shots/en-edit-1400.webp 1400w, /assets/shots/en-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
+<link rel="preload" as="image" href="/assets/shots/en-edit-1400.webp" imagesrcset="/assets/shots/en-edit-1400.webp 1400w, /assets/shots/en-edit-2400.webp 2400w" imagesizes="(max-width: 1128px) 100vw, 1000px">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -57,7 +57,9 @@
   /* One serif face for everything, as on mole.fit; CJK locales override
      --serif below and --sans follows it. */
   --sans: var(--serif);
-  --page: 1120px;
+  /* 1000 as on the other product sites since 2026-11-10: 1120, kept on
+     2026-11-08 for the screenshots, read wide to the maintainer. */
+  --page: 1000px;
   --inset: 64px;
   --gap: 90px;
   /* Desktop type ladder shared by the product sites (2026-11-01): five rungs, nothing between. */
@@ -821,7 +823,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <section id="features" aria-labelledby="gallery-title">
     <h2 class="section-title" id="gallery-title">Écrire, lire, présenter</h2>
     <p class="section-lede">Écrivez en Markdown pur, passez à un aperçu mis en page, travaillez côte à côte ou transformez une note en diaporama.</p>
-    <div class="gallery-frame"><img src="/assets/shots/en-edit-1400.webp" srcset="/assets/shots/en-edit-1400.webp 1400w, /assets/shots/en-edit-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="MiaoYan éditant une note Markdown avec dossiers, liste de notes et coloration syntaxique" data-shot="edit" fetchpriority="high"><img src="/assets/shots/en-preview-1400.webp" srcset="/assets/shots/en-preview-1400.webp 1400w, /assets/shots/en-preview-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="MiaoYan affichant l&#x27;aperçu d&#x27;une note avec un tableau et une liste de tâches" data-shot="preview" loading="lazy" hidden><img src="/assets/shots/en-split-1400.webp" srcset="/assets/shots/en-split-1400.webp 1400w, /assets/shots/en-split-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="MiaoYan en vue partagée, le Markdown à gauche et un diagramme Mermaid rendu à droite" data-shot="split" loading="lazy" hidden><img src="/assets/shots/en-dark-1400.webp" srcset="/assets/shots/en-dark-1400.webp 1400w, /assets/shots/en-dark-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="MiaoYan en mode sombre éditant du code Swift" data-shot="dark" loading="lazy" hidden></div>
+    <div class="gallery-frame"><img src="/assets/shots/en-edit-1400.webp" srcset="/assets/shots/en-edit-1400.webp 1400w, /assets/shots/en-edit-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="MiaoYan éditant une note Markdown avec dossiers, liste de notes et coloration syntaxique" data-shot="edit" fetchpriority="high"><img src="/assets/shots/en-preview-1400.webp" srcset="/assets/shots/en-preview-1400.webp 1400w, /assets/shots/en-preview-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="MiaoYan affichant l&#x27;aperçu d&#x27;une note avec un tableau et une liste de tâches" data-shot="preview" loading="lazy" hidden><img src="/assets/shots/en-split-1400.webp" srcset="/assets/shots/en-split-1400.webp 1400w, /assets/shots/en-split-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="MiaoYan en vue partagée, le Markdown à gauche et un diagramme Mermaid rendu à droite" data-shot="split" loading="lazy" hidden><img src="/assets/shots/en-dark-1400.webp" srcset="/assets/shots/en-dark-1400.webp 1400w, /assets/shots/en-dark-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="MiaoYan en mode sombre éditant du code Swift" data-shot="dark" loading="lazy" hidden></div>
     <div class="gallery-bar">
       <p class="gallery-caption" aria-live="polite">Du Markdown pur avec coloration syntaxique, pour distinguer titres, liens et code</p>
       <div class="tabs"><button type="button" data-shot="edit" aria-pressed="true">Édition</button><button type="button" data-shot="preview" aria-pressed="false">Aperçu</button><button type="button" data-shot="split" aria-pressed="false">Côte à côte</button><button type="button" data-shot="dark" aria-pressed="false">Sombre</button></div>

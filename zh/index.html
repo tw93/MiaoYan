@@ -33,7 +33,7 @@
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
 <link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5abbac6d660f" crossorigin fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=ec1bc4500d12" crossorigin fetchpriority="high">
-<link rel="preload" as="image" href="/assets/shots/zh-edit-1400.webp" imagesrcset="/assets/shots/zh-edit-1400.webp 1400w, /assets/shots/zh-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
+<link rel="preload" as="image" href="/assets/shots/zh-edit-1400.webp" imagesrcset="/assets/shots/zh-edit-1400.webp 1400w, /assets/shots/zh-edit-2400.webp 2400w" imagesizes="(max-width: 1128px) 100vw, 1000px">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -59,7 +59,9 @@
   /* One serif face for everything, as on mole.fit; CJK locales override
      --serif below and --sans follows it. */
   --sans: var(--serif);
-  --page: 1120px;
+  /* 1000 as on the other product sites since 2026-11-10: 1120, kept on
+     2026-11-08 for the screenshots, read wide to the maintainer. */
+  --page: 1000px;
   --inset: 64px;
   --gap: 90px;
   /* Desktop type ladder shared by the product sites (2026-11-01): five rungs, nothing between. */
@@ -823,7 +825,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <section id="features" aria-labelledby="gallery-title">
     <h2 class="section-title" id="gallery-title">书写、排版与演示</h2>
     <p class="section-lede">纯 Markdown 专注书写，切到预览看排版，分栏一边写一边看，一篇笔记还能直接变成幻灯片。</p>
-    <div class="gallery-frame"><img src="/assets/shots/zh-edit-1400.webp" srcset="/assets/shots/zh-edit-1400.webp 1400w, /assets/shots/zh-edit-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="妙言编辑一篇 Markdown 笔记，左侧是文件夹和笔记列表" data-shot="edit" fetchpriority="high"><img src="/assets/shots/zh-preview-1400.webp" srcset="/assets/shots/zh-preview-1400.webp 1400w, /assets/shots/zh-preview-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="妙言预览一期周刊，带封面图和链接" data-shot="preview" loading="lazy" hidden><img src="/assets/shots/zh-split-1400.webp" srcset="/assets/shots/zh-split-1400.webp 1400w, /assets/shots/zh-split-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="妙言分栏模式，左边是 Markdown，右边是渲染好的流程图" data-shot="split" loading="lazy" hidden><img src="/assets/shots/zh-dark-1400.webp" srcset="/assets/shots/zh-dark-1400.webp 1400w, /assets/shots/zh-dark-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="妙言深色模式下编辑 Swift 代码" data-shot="dark" loading="lazy" hidden></div>
+    <div class="gallery-frame"><img src="/assets/shots/zh-edit-1400.webp" srcset="/assets/shots/zh-edit-1400.webp 1400w, /assets/shots/zh-edit-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="妙言编辑一篇 Markdown 笔记，左侧是文件夹和笔记列表" data-shot="edit" fetchpriority="high"><img src="/assets/shots/zh-preview-1400.webp" srcset="/assets/shots/zh-preview-1400.webp 1400w, /assets/shots/zh-preview-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="妙言预览一期周刊，带封面图和链接" data-shot="preview" loading="lazy" hidden><img src="/assets/shots/zh-split-1400.webp" srcset="/assets/shots/zh-split-1400.webp 1400w, /assets/shots/zh-split-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="妙言分栏模式，左边是 Markdown，右边是渲染好的流程图" data-shot="split" loading="lazy" hidden><img src="/assets/shots/zh-dark-1400.webp" srcset="/assets/shots/zh-dark-1400.webp 1400w, /assets/shots/zh-dark-2400.webp 2400w" sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="妙言深色模式下编辑 Swift 代码" data-shot="dark" loading="lazy" hidden></div>
     <div class="gallery-bar">
       <p class="gallery-caption" aria-live="polite">纯 Markdown 编辑，标题、链接和代码一眼分得清</p>
       <div class="tabs"><button type="button" data-shot="edit" aria-pressed="true">编辑</button><button type="button" data-shot="preview" aria-pressed="false">预览</button><button type="button" data-shot="split" aria-pressed="false">分栏</button><button type="button" data-shot="dark" aria-pressed="false">深色</button></div>

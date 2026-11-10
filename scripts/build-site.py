@@ -924,7 +924,7 @@ def page(key):
     )
     shots = "".join(
         f'<img src="/assets/shots/{shot}-{s}-1400.webp" srcset="/assets/shots/{shot}-{s}-1400.webp 1400w, /assets/shots/{shot}-{s}-2400.webp 2400w" '
-        f'sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1560" alt="{esc(c["alts"][s])}" data-shot="{s}"'
+        f'sizes="(max-width: 1128px) 100vw, 1000px" width="2400" height="1560" alt="{esc(c["alts"][s])}" data-shot="{s}"'
         f'{" fetchpriority=\"high\"" if i == 0 else " loading=\"lazy\" hidden"}>'
         for i, s in enumerate(SHOTS)
     )
@@ -1004,7 +1004,7 @@ def page(key):
 <meta name="twitter:creator" content="@HiTw93">
 <meta name="twitter:image" content="{SITE}/assets/shots/og-{og}.jpg">
 {ICONS}
-{font_preload(key)}<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
+{font_preload(key)}<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1128px) 100vw, 1000px">
 {HEAD_ASSETS}
 <script type="application/ld+json">{ld}</script>
 </head>
