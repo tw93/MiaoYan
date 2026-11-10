@@ -114,14 +114,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=fb708155e7fb") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=23173236986e") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=406f51850d58") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=d023038b0b85") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -418,10 +418,10 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 
 /* Author contact under the FAQ, the same block as mole.fit's (2026-10-20).
    The X and GitHub counts are static: update them together with mole.fit's. */
-.contact { margin-top: 48px; text-align: left; }
+.contact { margin-top: var(--gap); text-align: left; }
 .contact-heading { display: flex; align-items: center; gap: 12px; }
-.contact-author { display: block; flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.contact .contact-title { margin: 0; padding: 0; font-family: var(--serif); font-size: var(--text-title); font-weight: 500; line-height: 1.2; color: var(--dark-warm); transform: translateY(1.5px); }
+.contact-author { display: block; flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.contact .contact-title { margin: 0; transform: translateY(1.5px); }
 .contact .contact-sub { margin: 8px 0 0; padding: 0; font-family: var(--serif); font-size: var(--text-body); line-height: 1.55; color: var(--olive); }
 .contact-sub a { color: var(--brand); text-decoration: none; }
 .contact-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
@@ -644,6 +644,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
      (maintainer 2026-11-04: one lockup size across the product sites). */
   .hero h1 { font-size: 84px; margin-bottom: calc(40px - 0.115em); }
   .section-title { font-size: 26px; }
+  .contact-author { width: 30px; height: 30px; }
   .devices { gap: 32px; }
   .device.pad { width: min(460px, 62%); }
   .device.phone { width: min(230px, 32%); }
@@ -668,7 +669,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   /* Phone sizes the desktop ladder moved off stay as they were (2026-11-01). */
   .section-title { font-size: 26px; }
   .blog-card-title, .blog-body h3 { font-size: 17px; }
-  .contact .contact-title, .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
+  .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
   .blog-title, .legal h1 { font-size: 26px; }
   .blog-body code { font-size: 0.85em; }
   .faq p code { font-size: 15px; }

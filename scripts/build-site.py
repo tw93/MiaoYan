@@ -508,7 +508,7 @@ CONTACT = {
         "title": 'Get in touch',
         "sub": 'Questions and suggestions are welcome in <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
         "x_stat": '163K followers',
-        "x_desc": 'I design, build and maintain MiaoYan, Mole, Hina, Kaku, Pake, Yado and Kami. Messages are welcome.',
+        "x_desc": 'Author of the open-source projects Mole, Pake, Kami, MiaoYan, Waza and Kaku. Messages are welcome.',
         "gh_stat": '182.6K stars',
         "gh_desc": 'My open-source projects, with 19.4K forks and 13.5K followers. Questions and contributions are welcome.',
         "a11y_x": 'Contact Tw93 on X',
@@ -518,7 +518,7 @@ CONTACT = {
         "title": '欢迎联系与交流',
         "sub": '使用问题和建议，可以在 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> 里反馈',
         "x_stat": '163K 粉丝',
-        "x_desc": 'MiaoYan、Mole、Hina、Kaku、Pake、Yado 和 Kami 的主理人，负责设计、开发和维护，欢迎私信。',
+        "x_desc": '开源项目 Mole、Pake、Kami、MiaoYan、Waza 和 Kaku 的作者，欢迎私信。',
         "gh_stat": '182.6K Star',
         "gh_desc": '我的开源项目都在这里，累计 19.4K 次 Fork、13.5K 位关注者，欢迎交流和贡献。',
         "a11y_x": '在 X 上联系 Tw93',
@@ -528,7 +528,7 @@ CONTACT = {
         "title": '歡迎聯絡與交流',
         "sub": '使用問題和建議，可以在 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> 回報',
         "x_stat": '163K 粉絲',
-        "x_desc": 'MiaoYan、Mole、Hina、Kaku、Pake、Yado 和 Kami 的主理人，負責設計、開發和維護，歡迎私訊。',
+        "x_desc": '開源專案 Mole、Pake、Kami、MiaoYan、Waza 和 Kaku 的作者，歡迎私訊。',
         "gh_stat": '182.6K Star',
         "gh_desc": '我的開源專案都在這裡，累計 19.4K 次 Fork、13.5K 位追蹤者，歡迎交流與貢獻。',
         "a11y_x": '在 X 上聯絡 Tw93',
@@ -538,7 +538,7 @@ CONTACT = {
         "title": 'お問い合わせ・交流',
         "sub": '使い方の質問や提案は <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> へどうぞ。',
         "x_stat": 'フォロワー163K',
-        "x_desc": 'MiaoYan、Mole、Hina、Kaku、Pake、Yado、Kamiの設計、開発、保守を担当しています。DMもお気軽にどうぞ。',
+        "x_desc": 'オープンソースプロジェクト Mole、Pake、Kami、MiaoYan、Waza、Kaku の作者です。DMもお気軽にどうぞ。',
         "gh_stat": 'スター 182.6K',
         "gh_desc": 'オープンソースのプロジェクトを公開しています。19.4Kフォーク、13.5Kフォロワー。質問や開発への参加も歓迎です。',
         "a11y_x": 'XでTw93に連絡する',
@@ -548,7 +548,7 @@ CONTACT = {
         "title": '편하게 연락해 주세요',
         "sub": '사용 중 궁금한 점이나 제안은 <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>에 남겨 주세요.',
         "x_stat": '팔로워 163K',
-        "x_desc": 'MiaoYan, Mole, Hina, Kaku, Pake, Yado, Kami를 설계하고 개발하고 유지보수합니다. DM으로 편하게 이야기해 주세요.',
+        "x_desc": '오픈 소스 프로젝트 Mole, Pake, Kami, MiaoYan, Waza, Kaku를 만들었습니다. DM으로 편하게 이야기해 주세요.',
         "gh_stat": '스타 182.6K',
         "gh_desc": '제 오픈 소스 프로젝트를 모아 둔 곳으로, 포크 19.4K개와 팔로워 13.5K명이 있습니다. 질문과 기여 모두 환영합니다.',
         "a11y_x": 'X에서 Tw93에게 연락하기',
@@ -558,7 +558,7 @@ CONTACT = {
         "title": 'Kontakt und Austausch',
         "sub": 'Fragen und Vorschläge sind in den <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a> willkommen.',
         "x_stat": '163K Follower',
-        "x_desc": 'Ich entwerfe, entwickle und pflege MiaoYan, Mole, Hina, Kaku, Pake, Yado und Kami. Schreib mir gern.',
+        "x_desc": 'Autor der Open-Source-Projekte Mole, Pake, Kami, MiaoYan, Waza und Kaku. Schreiben Sie mir gern.',
         "gh_stat": '182,6K Sterne',
         "gh_desc": 'Hier findest du meine Open-Source-Projekte: 19,4K Forks und 13,5K Follower. Fragen und Beiträge sind willkommen.',
         "a11y_x": 'Tw93 auf X kontaktieren',
@@ -568,7 +568,7 @@ CONTACT = {
         "title": 'Restons en contact',
         "sub": 'Questions et suggestions sont les bienvenues dans les <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
         "x_stat": '163K abonnés',
-        "x_desc": 'Je conçois, développe et maintiens MiaoYan, Mole, Hina, Kaku, Pake, Yado et Kami. Vous pouvez m’écrire en privé.',
+        "x_desc": 'Auteur des projets open source Mole, Pake, Kami, MiaoYan, Waza et Kaku. Vous pouvez m’écrire en privé.',
         "gh_stat": '182,6K étoiles',
         "gh_desc": 'Mes projets open source, avec 19,4K forks et 13,5K abonnés. Vos questions et contributions sont les bienvenues.',
         "a11y_x": 'Contacter Tw93 sur X',
@@ -578,7 +578,7 @@ CONTACT = {
         "title": 'Hablemos',
         "sub": 'Puedes dejar preguntas y sugerencias en <a href="https://github.com/tw93/MiaoYan/issues">GitHub Issues</a>.',
         "x_stat": '163K seguidores',
-        "x_desc": 'Diseño, desarrollo y mantengo MiaoYan, Mole, Hina, Kaku, Pake, Yado y Kami. Puedes escribirme por privado.',
+        "x_desc": 'Autor de los proyectos de código abierto Mole, Pake, Kami, MiaoYan, Waza y Kaku. Escríbeme cuando quieras.',
         "gh_stat": '182,6K estrellas',
         "gh_desc": 'Aquí están mis proyectos de código abierto, con 19,4K forks y 13,5K seguidores. Puedes preguntar o contribuir.',
         "a11y_x": 'Contactar con Tw93 en X',
@@ -651,8 +651,8 @@ def contact_html(key):
                 f'<span class="contact-stat" data-community-stat="{key}">{esc(stat)}</span></span><p class="contact-desc">{desc}</p></a>')
 
     return ('<div class="contact"><div class="contact-heading">'
-            '<img class="contact-author" src="/assets/tw93.png" width="28" height="28" alt="Tw93" loading="lazy" decoding="async">'
-            f'<p class="contact-title">{esc(c["title"])}</p></div><div class="contact-cards">'
+            '<img class="contact-author" src="/assets/tw93.png" width="36" height="36" alt="Tw93" loading="lazy" decoding="async">'
+            f'<h2 class="section-title contact-title">{esc(c["title"])}</h2></div><div class="contact-cards">'
             + card("https://x.com/HiTw93", c["a11y_x"], x_glyph, "X", "@HiTw93", "x-followers", c["x_stat"], esc(t(c["x_desc"])))
             + card("https://github.com/tw93", c["a11y_gh"], gh_glyph, "GitHub", "@tw93", "github-profile-stars", c["gh_stat"], gh_desc)
             + "</div></div>")

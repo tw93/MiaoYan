@@ -31,8 +31,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-tc-regular.woff2?v=fb708155e7fb" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-tc-semibold.woff2?v=406f51850d58" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-tc-regular.woff2?v=23173236986e" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-tc-semibold.woff2?v=d023038b0b85" crossorigin fetchpriority="high">
 <link rel="preload" as="image" href="/assets/shots/zh-edit-1400.webp" imagesrcset="/assets/shots/zh-edit-1400.webp 1400w, /assets/shots/zh-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
@@ -122,14 +122,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=fb708155e7fb") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=23173236986e") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=406f51850d58") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=d023038b0b85") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -426,10 +426,10 @@ section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
 
 /* Author contact under the FAQ, the same block as mole.fit's (2026-10-20).
    The X and GitHub counts are static: update them together with mole.fit's. */
-.contact { margin-top: 48px; text-align: left; }
+.contact { margin-top: var(--gap); text-align: left; }
 .contact-heading { display: flex; align-items: center; gap: 12px; }
-.contact-author { display: block; flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.contact .contact-title { margin: 0; padding: 0; font-family: var(--serif); font-size: var(--text-title); font-weight: 500; line-height: 1.2; color: var(--dark-warm); transform: translateY(1.5px); }
+.contact-author { display: block; flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.contact .contact-title { margin: 0; transform: translateY(1.5px); }
 .contact .contact-sub { margin: 8px 0 0; padding: 0; font-family: var(--serif); font-size: var(--text-body); line-height: 1.55; color: var(--olive); }
 .contact-sub a { color: var(--brand); text-decoration: none; }
 .contact-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
@@ -652,6 +652,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
      (maintainer 2026-11-04: one lockup size across the product sites). */
   .hero h1 { font-size: 84px; margin-bottom: calc(40px - 0.115em); }
   .section-title { font-size: 26px; }
+  .contact-author { width: 30px; height: 30px; }
   .devices { gap: 32px; }
   .device.pad { width: min(460px, 62%); }
   .device.phone { width: min(230px, 32%); }
@@ -676,7 +677,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   /* Phone sizes the desktop ladder moved off stay as they were (2026-11-01). */
   .section-title { font-size: 26px; }
   .blog-card-title, .blog-body h3 { font-size: 17px; }
-  .contact .contact-title, .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
+  .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
   .blog-title, .legal h1 { font-size: 26px; }
   .blog-body code { font-size: 0.85em; }
   .faq p code { font-size: 15px; }
@@ -846,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <section id="faq" class="faq" aria-labelledby="faq-title">
     <h2 class="section-title" id="faq-title">常見問題</h2>
     <details><summary>是買斷制還是訂閱制？</summary><p>一次性買斷，終身使用，沒有訂閱或內購。同一次購買可在登入同一 Apple 帳號的 Mac、iPhone 和 iPad 上完整使用。</p></details><details><summary>開源版和 App Store 版有什麼區別？</summary><p>Mac 版免費開源，用 <code>brew install --cask miaoyan</code> 安裝或從 GitHub Releases 下載就能用。iPhone 和 iPad 版沒有開源，所以和 Mac 版一起放在 App Store，一次購買三端通用，打開的是同一個 iCloud 雲碟筆記檔案夾，也會自動更新。Mac 上兩個版本的寫作功能相同，只在 Mac 上寫的話開源版就夠了，想在手機和平板上接著寫，就選 App Store 版。</p></details><details><summary>筆記存在哪裡？</summary><p>就在你選定的檔案夾裡，每篇都是普通的 .md 檔案，妙言不收集筆記資料，以後換工具時整個檔案夾帶走就行。</p></details><details><summary>Mac、iPhone 和 iPad 之間怎麼同步？</summary><p>把筆記檔案夾放在 iCloud 雲碟裡，Mac、iPhone 和 iPad 打開的就是同一份筆記，Mac 上也可以用堅果雲等檔案同步工具。</p></details><details><summary>支援哪些 Markdown 語法？</summary><p>GitHub 風格的 Markdown，加上 LaTeX 公式、Mermaid、PlantUML 和 Markmap 圖表、雙向連結，以及用 --- 分頁的簡報模式。</p></details><details><summary>需要什麼系統？</summary><p>Mac 需要 macOS 12 以上，iPhone 和 iPad 分別需要 iOS 18 與 iPadOS 18 以上。</p></details>
-    <div class="contact"><div class="contact-heading"><img class="contact-author" src="/assets/tw93.png" width="28" height="28" alt="Tw93" loading="lazy" decoding="async"><p class="contact-title">歡迎聯絡與交流</p></div><div class="contact-cards"><a class="contact-card" href="https://x.com/HiTw93" target="_blank" rel="noopener" aria-label="在 X 上聯絡 Tw93"><span class="contact-head"><span class="contact-channel" aria-hidden="true"><svg class="contact-glyph" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><img class="contact-avatar" src="/assets/tw93.png" width="44" height="44" alt="" loading="lazy" decoding="async"></span><span class="contact-meta"><b>X</b><span class="contact-handle">@HiTw93</span></span><span class="contact-stat" data-community-stat="x-followers">163K 粉絲</span></span><p class="contact-desc">MiaoYan、Mole、Hina、Kaku、Pake、Yado 和 Kami 的主理人，負責設計、開發和維護，歡迎私訊。</p></a><a class="contact-card" href="https://github.com/tw93" target="_blank" rel="noopener" aria-label="在 GitHub 查看 Tw93 的個人頁面"><span class="contact-head"><span class="contact-channel" aria-hidden="true"><svg class="contact-glyph" width="22" height="22" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><img class="contact-avatar" src="/assets/tw93.png" width="44" height="44" alt="" loading="lazy" decoding="async"></span><span class="contact-meta"><b>GitHub</b><span class="contact-handle">@tw93</span></span><span class="contact-stat" data-community-stat="github-profile-stars">182.6K Star</span></span><p class="contact-desc">我的開源專案都在這裡，累計 <span data-community-stat="github-profile-forks">19.4K</span> 次 Fork、<span data-community-stat="github-profile-followers">13.5K</span> 位追蹤者，歡迎交流與貢獻。</p></a></div></div>
+    <div class="contact"><div class="contact-heading"><img class="contact-author" src="/assets/tw93.png" width="36" height="36" alt="Tw93" loading="lazy" decoding="async"><h2 class="section-title contact-title">歡迎聯絡與交流</h2></div><div class="contact-cards"><a class="contact-card" href="https://x.com/HiTw93" target="_blank" rel="noopener" aria-label="在 X 上聯絡 Tw93"><span class="contact-head"><span class="contact-channel" aria-hidden="true"><svg class="contact-glyph" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><img class="contact-avatar" src="/assets/tw93.png" width="44" height="44" alt="" loading="lazy" decoding="async"></span><span class="contact-meta"><b>X</b><span class="contact-handle">@HiTw93</span></span><span class="contact-stat" data-community-stat="x-followers">163K 粉絲</span></span><p class="contact-desc">開源專案 Mole、Pake、Kami、MiaoYan、Waza 和 Kaku 的作者，歡迎私訊。</p></a><a class="contact-card" href="https://github.com/tw93" target="_blank" rel="noopener" aria-label="在 GitHub 查看 Tw93 的個人頁面"><span class="contact-head"><span class="contact-channel" aria-hidden="true"><svg class="contact-glyph" width="22" height="22" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><img class="contact-avatar" src="/assets/tw93.png" width="44" height="44" alt="" loading="lazy" decoding="async"></span><span class="contact-meta"><b>GitHub</b><span class="contact-handle">@tw93</span></span><span class="contact-stat" data-community-stat="github-profile-stars">182.6K Star</span></span><p class="contact-desc">我的開源專案都在這裡，累計 <span data-community-stat="github-profile-forks">19.4K</span> 次 Fork、<span data-community-stat="github-profile-followers">13.5K</span> 位追蹤者，歡迎交流與貢獻。</p></a></div></div>
   </section>
 </main>
 </div>
