@@ -414,6 +414,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             vc.search.window?.makeFirstResponder(vc.search)
         }
     }
+    /// The iPhone and iPad app's App Store page: a menu item and a line in
+    /// About, nothing that appears on its own.
+    static let mobileAppURL = URL(string: "https://apps.apple.com/app/miaoyan/id6759252269")
+
+    @IBAction func openMobileApp(_ sender: Any?) {
+        guard let url = AppDelegate.mobileAppURL else { return }
+        NSWorkspace.shared.open(url)
+    }
+
     @IBAction func showAboutWindow(_ sender: AnyObject) {
         if aboutWindowController == nil {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)

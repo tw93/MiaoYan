@@ -419,8 +419,8 @@
 /* Class = "NSTextFieldCell"; title = "Button Display"; ObjectID = "ZkY-LA-CH2"; */
 "ZkY-LA-CH2.title" = "ボタン表示";
 
-/* Class = "NSTextFieldCell"; title = "Copyright © 2024 Tw93"; ObjectID = "ad2-SL-Pni"; */
-"ad2-SL-Pni.title" = "著作権 © 2024 Tw93";
+/* Class = "NSTextFieldCell"; title = "Copyright © 2026 Tw93"; ObjectID = "ad2-SL-Pni"; */
+"ad2-SL-Pni.title" = "著作権 © 2026 Tw93";
 
 /* Class = "NSMenuItem"; title = "Consolas"; ObjectID = "b5S-Qt-NKY"; */
 "b5S-Qt-NKY.title" = "Consolas";
@@ -668,3 +668,6 @@
 
 /* Class = "NSMenuItem"; title = "Move to…"; ObjectID = "MvF-01-iTm"; */
 "MvF-01-iTm.title" = "移動先…";
+
+/* Class = "NSMenuItem"; title = "MiaoYan for iPhone and iPad"; ObjectID = "mYi-Ph-iPd"; */
+"mYi-Ph-iPd.title" = "iPhone・iPad 版";

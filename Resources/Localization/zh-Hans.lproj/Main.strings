@@ -582,3 +582,6 @@
 
 /* Class = "NSMenuItem"; title = "Move to…"; ObjectID = "MvF-01-iTm"; */
 "MvF-01-iTm.title" = "移动到…";
+
+/* Class = "NSMenuItem"; title = "MiaoYan for iPhone and iPad"; ObjectID = "mYi-Ph-iPd"; */
+"mYi-Ph-iPd.title" = "iPhone 和 iPad 版";

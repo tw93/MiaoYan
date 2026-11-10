@@ -17,6 +17,7 @@
 1. Every note is a plain Markdown file; see or change where they are kept in Settings
 2. Press `⇧⌘N` to create a folder and sort your notes
 3. Customize the default font in Settings if needed
+4. To keep writing away from the Mac, the [iPhone and iPad apps](https://apps.apple.com/app/miaoyan/id6759252269) open the same iCloud Drive folder
 
 ## Keyboard Shortcuts
 

@@ -29,6 +29,12 @@
                                                 <action selector="checkForUpdates:" target="Voe-Tx-rLC" id="J1Q-7s-jET"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="MiaoYan for iPhone and iPad" id="mYi-Ph-iPd">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openMobileApp:" target="Voe-Tx-rLC" id="mYi-Ph-aCt"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="PnU-U6-FH9"/>
                                         <menuItem title="Settings…" keyEquivalent="," id="BOF-NM-1cW">
                                             <connections>
