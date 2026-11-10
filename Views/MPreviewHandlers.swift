@@ -73,41 +73,10 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     }
 
     /// The range of the space or x inside `[ ]` on the task item at
-    /// `bodyLine` (1-based, counted after the frontmatter the preview drops).
+    /// `bodyLine`; the iPhone reader ticks through the same `TaskMarker`.
     nonisolated static func taskMarkerRange(in text: String, bodyLine: Int) -> NSRange? {
-        let target = Frontmatter.lineCount(of: text) + bodyLine - 1
-        let ns = text as NSString
-        // cmark's source lines end only at \n, \r\n or \r. NSString.lineRange
-        // also breaks at U+2028, U+2029 and U+0085, which text pasted from the
-        // web carries, and then counted to the wrong task.
-        func lineEnd(from start: Int) -> (end: Int, next: Int) {
-            var index = start
-            while index < ns.length {
-                let unit = ns.character(at: index)
-                if unit == 0x0A { return (index, index + 1) }
-                if unit == 0x0D {
-                    let crlf = index + 1 < ns.length && ns.character(at: index + 1) == 0x0A
-                    return (index, index + (crlf ? 2 : 1))
-                }
-                index += 1
-            }
-            return (ns.length, ns.length)
-        }
-        var lineStart = 0
-        for _ in 0..<max(target, 0) {
-            let next = lineEnd(from: lineStart).next
-            guard next < ns.length else { return nil }
-            lineStart = next
-        }
-        let line = NSRange(location: lineStart, length: lineEnd(from: lineStart).end - lineStart)
-        guard
-            let match = taskItemRegex.firstMatch(in: text, range: line),
-            match.range(at: 1).location != NSNotFound
-        else { return nil }
-        return match.range(at: 1)
+        TaskMarker.range(in: text, bodyLine: bodyLine)
     }
-
-    nonisolated private static let taskItemRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]"#, options: [.anchorsMatchLines])
 
     private static func editor(in window: NSWindow) -> EditTextView? {
         var stack: [NSView] = window.contentView.map { [$0] } ?? []
