@@ -84,4 +84,46 @@ final class MarkdownEditingTests: XCTestCase {
     func testReturnWorksOnCRLFNotes() {
         XCTAssertEqual(pressReturn("- one\r\n- two", at: 5)?.0, "- one\n- \r\n- two")
     }
+
+    // MARK: Line edits
+
+    private func apply(_ edit: LineEdits.Edit?, to text: String) -> (String, NSRange)? {
+        guard let edit else { return nil }
+        return ((text as NSString).replacingCharacters(in: edit.range, with: edit.replacement), edit.selection)
+    }
+
+    func testIndentAndOutdentCoverEveryLineOfTheSelection() {
+        let text = "- a\n- b\n\n- c"
+        let all = NSRange(location: 0, length: (text as NSString).length)
+        let indented = apply(LineEdits.indent(in: text as NSString, selection: all), to: text)
+        XCTAssertEqual(indented?.0, "  - a\n  - b\n\n  - c")
+        XCTAssertEqual(indented?.1, NSRange(location: 0, length: 18))
+        let back = apply(LineEdits.outdent(in: indented!.0 as NSString, selection: indented!.1), to: indented!.0)
+        XCTAssertEqual(back?.0, text)
+        XCTAssertNil(LineEdits.outdent(in: text as NSString, selection: all))
+        XCTAssertEqual(apply(LineEdits.outdent(in: "\tx" as NSString, selection: NSRange(location: 1, length: 0)), to: "\tx")?.0, "x")
+        XCTAssertEqual(apply(LineEdits.outdent(in: " x" as NSString, selection: NSRange(location: 1, length: 0)), to: " x")?.0, "x")
+    }
+
+    func testACaretKeepsItsPlaceInTheLine() {
+        let text = "one\n- two\nthree"
+        let caret = NSRange(location: 7, length: 0)  // "- t|wo"
+        let edit = apply(LineEdits.indent(in: text as NSString, selection: caret), to: text)
+        XCTAssertEqual(edit?.0, "one\n  - two\nthree")
+        XCTAssertEqual(edit?.1, NSRange(location: 9, length: 0))
+    }
+
+    func testToggleTaskTicksClearsAndCreates() {
+        func toggle(_ text: String) -> String? {
+            apply(LineEdits.toggleTask(in: text as NSString, selection: NSRange(location: 0, length: 0)), to: text)?.0
+        }
+        XCTAssertEqual(toggle("- [ ] a"), "- [x] a")
+        XCTAssertEqual(toggle("  - [x] a"), "  - [ ] a")
+        XCTAssertEqual(toggle("- a"), "- [ ] a")
+        XCTAssertEqual(toggle("2. a"), "2. [ ] a")
+        XCTAssertEqual(toggle("plain"), "- [ ] plain")
+        XCTAssertEqual(toggle("  plain"), "  - [ ] plain")
+        XCTAssertNil(toggle(""))
+        XCTAssertEqual(toggle("- [ ] a\r\nnext"), "- [x] a\r\nnext")
+    }
 }

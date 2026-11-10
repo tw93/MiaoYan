@@ -117,3 +117,75 @@ public enum ListContinuation {
         pattern: #"^([ \t]*(?:>[ \t]*)*)([-*+]|\d{1,9}[.)])[ \t]+(\[[ xX]\][ \t]+|\[[ xX]\]$)?(.*)$"#,
         options: [.anchorsMatchLines])
 }
+
+/// Line commands the iPhone and iPad editor runs from a hardware keyboard,
+/// the Mac Format menu's Shift Right, Shift Left and Todo: each returns the
+/// one replacement to make and the selection to leave.
+public enum LineEdits {
+    public struct Edit: Equatable {
+        public let range: NSRange
+        public let replacement: String
+        public let selection: NSRange
+    }
+
+    /// Two more spaces before every line the selection touches; an empty
+    /// line stays empty.
+    public static func indent(in text: NSString, selection: NSRange) -> Edit? {
+        rewrite(in: text, selection: selection) { $0.isEmpty ? $0 : "  " + $0 }
+    }
+
+    /// A leading tab, or up to two leading spaces, off every line the
+    /// selection touches.
+    public static func outdent(in text: NSString, selection: NSRange) -> Edit? {
+        rewrite(in: text, selection: selection) { line in
+            if line.hasPrefix("\t") { return String(line.dropFirst()) }
+            return String(line.dropFirst(line.prefix(2).prefix(while: { $0 == " " }).count))
+        }
+    }
+
+    /// Ticks or clears the task on each line the selection touches; a list
+    /// item without a box gains an empty one, and plain text becomes a task.
+    public static func toggleTask(in text: NSString, selection: NSRange) -> Edit? {
+        rewrite(in: text, selection: selection) { line in
+            guard !line.trimmingCharacters(in: .whitespaces).isEmpty else { return line }
+            let ns = line as NSString
+            let whole = NSRange(location: 0, length: ns.length)
+            if let match = taskRegex.firstMatch(in: line, range: whole) {
+                let mark = match.range(at: 1)
+                return ns.replacingCharacters(in: mark, with: ns.substring(with: mark) == " " ? "x" : " ")
+            }
+            if let match = itemRegex.firstMatch(in: line, range: whole) {
+                return ns.replacingCharacters(in: NSRange(location: NSMaxRange(match.range), length: 0), with: "[ ] ")
+            }
+            let indent = line.prefix(while: { $0 == " " || $0 == "\t" })
+            return indent + "- [ ] " + line.dropFirst(indent.count)
+        }
+    }
+
+    /// Applies `change` to each line of the selection's lines. A caret keeps
+    /// its distance from the end of its line; a selection becomes the lines.
+    private static func rewrite(in text: NSString, selection: NSRange, _ change: (String) -> String) -> Edit? {
+        guard selection.location >= 0, NSMaxRange(selection) <= text.length else { return nil }
+        var start = 0
+        var contentsEnd = 0
+        var end = 0
+        text.getLineStart(&start, end: &end, contentsEnd: &contentsEnd, for: selection)
+        // The lines without the last one's ending, so that ending stays put.
+        let block = NSRange(location: start, length: contentsEnd - start)
+        let old = text.substring(with: block)
+        let new = old.components(separatedBy: "\n").map { line -> String in
+            line.hasSuffix("\r") ? change(String(line.dropLast())) + "\r" : change(line)
+        }.joined(separator: "\n")
+        guard new != old else { return nil }
+        let newLength = (new as NSString).length
+        if selection.length == 0 {
+            let fromEnd = NSMaxRange(block) - selection.location
+            let caret = block.location + max(0, newLength - fromEnd)
+            return Edit(range: block, replacement: new, selection: NSRange(location: caret, length: 0))
+        }
+        return Edit(range: block, replacement: new, selection: NSRange(location: block.location, length: newLength))
+    }
+
+    private static let taskRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]"#)
+    private static let itemRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+"#)
+}
