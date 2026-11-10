@@ -126,6 +126,18 @@ final class EditorStorageOwnershipTests: XCTestCase {
         }
     }
 
+    /// The `_sign_` of `code_sign_clone` took the italic colour, which the
+    /// preview never did (#301); `*` inside a word still marks italic.
+    @MainActor
+    func testUnderscoresInsideWordsAreNotItalic() throws {
+        XCTAssertEqual(try emphasised(["sign"], in: "Edge left code_sign_clone behind")["sign"], false)
+        XCTAssertEqual(try emphasised(["and"], in: "Rename foo_bar and baz_qux today")["and"], false)
+        XCTAssertEqual(try emphasised(["紧贴"], in: "中文_紧贴_中文")["紧贴"], false)
+
+        XCTAssertEqual(try emphasised(["紧贴"], in: "中文*紧贴*中文")["紧贴"], true)
+        XCTAssertEqual(try emphasised(["name"], in: "an _name_with_parts_ here")["name"], true)
+    }
+
     /// Real emphasis still highlights, next to code and around it.
     @MainActor
     func testEmphasisOutsideInlineCodeStillHighlights() throws {

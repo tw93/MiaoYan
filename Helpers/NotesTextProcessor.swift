@@ -697,7 +697,9 @@ public class NotesTextProcessor {
     @MainActor public static let blankRegex = MarklightRegex(pattern: "\\s+", options: [.allowCommentsAndWhitespace])
 
     // MARK: Italic
-    fileprivate static let italicPattern = "(?<!\\*|_)(?<!\\*\\*)(\\*|_)(?!\\s)(.+?)(?<!\\s)\\1(?!\\*|_)(?!\\*\\*)"
+    /// A `_` inside a word (`snake_case`) is not a delimiter, as in the preview.
+    fileprivate static let italicPattern =
+        "(?<!\\*|_)(?<!\\*\\*)(\\*|(?<![\\p{L}\\p{N}])_)(?!\\s)(.+?)(?<!\\s)\\1(?!\\*|_)(?!\\*\\*)(?!(?<=_)[\\p{L}\\p{N}])"
     @MainActor public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     /// `<https://…>`: only its angle brackets are markup.
