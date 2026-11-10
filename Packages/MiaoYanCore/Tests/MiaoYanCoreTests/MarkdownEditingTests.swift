@@ -82,7 +82,15 @@ final class MarkdownEditingTests: XCTestCase {
     }
 
     func testReturnWorksOnCRLFNotes() {
-        XCTAssertEqual(pressReturn("- one\r\n- two", at: 5)?.0, "- one\n- \r\n- two")
+        XCTAssertEqual(pressReturn("- one\r\n- two", at: 5)?.0, "- one\r\n- \r\n- two")
+        XCTAssertEqual(pressReturn("intro\r\n- last")?.0, "intro\r\n- last\r\n- ")
+    }
+
+    func testAThematicBreakIsNotAListItem() {
+        XCTAssertNil(pressReturn("* * *"))
+        XCTAssertNil(pressReturn("- - -"))
+        XCTAssertNil(pressReturn("  * * * *"))
+        XCTAssertEqual(pressReturn("- - nested dash")?.0, "- - nested dash\n- ")
     }
 
     // MARK: Line edits

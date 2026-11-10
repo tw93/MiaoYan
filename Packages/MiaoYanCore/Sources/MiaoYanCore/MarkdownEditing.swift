@@ -88,6 +88,8 @@ public enum ListContinuation {
         guard caret >= 0, caret <= text.length else { return nil }
         let lineIndex = SourceLines.line(atOffset: caret, in: text)
         guard let line = SourceLines.range(ofLine: lineIndex, in: text), caret == NSMaxRange(line),
+            // `* * *` and `- - -` are rules, not items.
+            ruleRegex.firstMatch(in: text as String, range: line) == nil,
             let match = itemRegex.firstMatch(in: text as String, range: line)
         else { return nil }
         let indent = text.substring(with: match.range(at: 1))
@@ -99,7 +101,9 @@ public enum ListContinuation {
             // An item with nothing in it: Return hands the line back.
             return Edit(range: line, replacement: "", caret: line.location)
         }
-        let insertion = "\n" + indent + next(bullet) + " " + (isTask ? "[ ] " : "")
+        // A note written with CRLF keeps one kind of line ending.
+        let lineBreak = text.range(of: "\r\n").location == NSNotFound ? "\n" : "\r\n"
+        let insertion = lineBreak + indent + next(bullet) + " " + (isTask ? "[ ] " : "")
         return Edit(
             range: NSRange(location: caret, length: 0), replacement: insertion,
             caret: caret + (insertion as NSString).length)
@@ -116,6 +120,8 @@ public enum ListContinuation {
     private static let itemRegex = try! NSRegularExpression(
         pattern: #"^([ \t]*(?:>[ \t]*)*)([-*+]|\d{1,9}[.)])[ \t]+(\[[ xX]\][ \t]+|\[[ xX]\]$)?(.*)$"#,
         options: [.anchorsMatchLines])
+    private static let ruleRegex = try! NSRegularExpression(
+        pattern: #"^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$"#, options: [.anchorsMatchLines])
 }
 
 /// Line commands the iPhone and iPad editor runs from a hardware keyboard,
