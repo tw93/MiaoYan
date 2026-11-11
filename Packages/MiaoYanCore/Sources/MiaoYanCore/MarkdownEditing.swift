@@ -216,7 +216,8 @@ public enum LineEdits {
             if let match = itemRegex.firstMatch(in: line, range: whole) {
                 return ns.replacingCharacters(in: NSRange(location: NSMaxRange(match.range), length: 0), with: "[ ] ")
             }
-            let indent = line.prefix(while: { $0 == " " || $0 == "\t" })
+            // The indent and any `>` quote markers stay in front of the box.
+            let indent = line.prefix(while: { $0 == " " || $0 == "\t" || $0 == ">" })
             return indent + "- [ ] " + line.dropFirst(indent.count)
         }
     }

@@ -170,4 +170,18 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertNil(toggle(""))
         XCTAssertEqual(toggle("- [ ] a\r\nnext"), "- [x] a\r\nnext")
     }
+
+    func testToggleTaskKeepsTheQuote() {
+        func toggle(_ text: String) -> String? {
+            apply(LineEdits.toggleTask(in: text as NSString, selection: NSRange(location: 0, length: 0)), to: text)?.0
+        }
+        XCTAssertEqual(toggle("> quote"), "> - [ ] quote")
+        XCTAssertEqual(toggle("> - [ ] quote"), "> - [x] quote")
+        XCTAssertEqual(toggle("> - [x] a"), "> - [ ] a")
+        XCTAssertEqual(toggle("> > quote"), "> > - [ ] quote")
+        XCTAssertEqual(toggle(">quote"), ">- [ ] quote")
+        XCTAssertEqual(toggle("  > quote"), "  > - [ ] quote")
+        XCTAssertEqual(toggle("> - a"), "> - [ ] a")
+        XCTAssertEqual(toggle("> 1. a"), "> 1. [ ] a")
+    }
 }
