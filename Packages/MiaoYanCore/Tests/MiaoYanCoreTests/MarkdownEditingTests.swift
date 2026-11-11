@@ -86,6 +86,17 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(pressReturn("intro\r\n- last")?.0, "intro\r\n- last\r\n- ")
     }
 
+    /// U+2028 and U+2029 do not end a line for cmark, so `- ` after one is
+    /// text inside the line, not an empty item to delete.
+    func testReturnTreatsUnicodeSeparatorsAsTextInTheLine() {
+        for separator in ["\u{2028}", "\u{2029}"] {
+            XCTAssertNil(pressReturn("pasted\(separator)- "), separator.debugDescription)
+            XCTAssertNil(pressReturn("pasted\(separator)- [ ] "), separator.debugDescription)
+            XCTAssertEqual(pressReturn("- a\(separator)b")?.0, "- a\(separator)b\n- ", separator.debugDescription)
+            XCTAssertEqual(pressReturn("- a\(separator)")?.0, "- a\(separator)\n- ", separator.debugDescription)
+        }
+    }
+
     func testAThematicBreakIsNotAListItem() {
         XCTAssertNil(pressReturn("* * *"))
         XCTAssertNil(pressReturn("- - -"))

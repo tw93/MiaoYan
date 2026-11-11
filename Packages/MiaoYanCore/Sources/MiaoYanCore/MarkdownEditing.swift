@@ -117,11 +117,15 @@ public enum ListContinuation {
         return "\(number + 1)\(closer)"
     }
 
+    // Both run on one cmark line only, so `^` and `$` are its ends: with
+    // `.anchorsMatchLines` they also matched at U+2028 and U+2029 inside it,
+    // and `text<U+2028>- ` read as an empty item whose Return deleted the
+    // whole line. `.` crosses those separators for the same reason.
     private static let itemRegex = try! NSRegularExpression(
         pattern: #"^([ \t]*(?:>[ \t]*)*)([-*+]|\d{1,9}[.)])[ \t]+(\[[ xX]\][ \t]+|\[[ xX]\]$)?(.*)$"#,
-        options: [.anchorsMatchLines])
+        options: [.dotMatchesLineSeparators])
     private static let ruleRegex = try! NSRegularExpression(
-        pattern: #"^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$"#, options: [.anchorsMatchLines])
+        pattern: #"^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$"#)
 }
 
 /// Line commands the iPhone and iPad editor runs from a hardware keyboard,
