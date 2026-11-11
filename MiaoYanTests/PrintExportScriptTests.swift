@@ -445,6 +445,18 @@ final class PrintExportScriptTests: XCTestCase {
         XCTAssertEqual(dark, false)
     }
 
+    /// Exporting while a Mermaid diagram was still drawing copied the live
+    /// page's loading line, which printed as "Rendering Mermaid diagram...".
+    @MainActor
+    func testADiagramLoadingLineDoesNotPrint() async throws {
+        let webView = try await loadPrintedPreview(
+            "<div class=\"diagram-loading\" style=\"padding: 10px;\"><span>Rendering Mermaid diagram...</span></div><p>Body</p>")
+        let height =
+            try await webView.evaluateJavaScript(
+                "document.querySelector('.diagram-loading').getBoundingClientRect().height") as? Double
+        XCTAssertEqual(height, 0)
+    }
+
     /// A face with one weight printed headings in the system's fattened bold,
     /// blurred and heavy. It takes a light stroke instead; a real bold stays.
     @MainActor

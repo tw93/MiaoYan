@@ -274,7 +274,10 @@ class HtmlManager {
                     margin-block-end: 0.2em !important;
                 }
 
-                .toc-nav, .toc-hover-trigger, .toc-pin-btn, .heading-anchor {
+                /* A diagram still drawing when the export starts is copied
+                   with its "Rendering ..." line, which nothing removes in the
+                   copy; the diagram itself is what the export waits for. */
+                .toc-nav, .toc-hover-trigger, .toc-pin-btn, .heading-anchor, .diagram-loading {
                     display: none !important;
                 }
             }
