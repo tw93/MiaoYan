@@ -2,12 +2,6 @@ import Foundation
 import ImageIO
 import WebKit
 
-private struct ImageLocation {
-    let source: URL
-    let dest: URL
-    let displayPath: String
-}
-
 class HtmlManager {
     private static let codeFontStack = "SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
 

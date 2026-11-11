@@ -135,13 +135,6 @@ enum FontCatalog {
         families.sorted { displayName(for: $0).localizedStandardCompare(displayName(for: $1)) == .orderedAscending }
     }
 
-    /// The family name for a stored preference.
-    ///
-    /// Stored values are not all family names. The shipped defaults are
-    /// PostScript names (`PingFangSC-Regular`), while anything the user picks
-    /// from the popup is a family name (`PingFang SC`), because the popup is
-    /// built from families. Without this the default never matches a row and
-    /// gets appended as a 271st orphan entry below the alphabetical list.
     /// Whether the stored face's family has a bold of its own. The default
     /// pairing does, through the system face that stands in for it.
     @MainActor
@@ -155,6 +148,13 @@ enum FontCatalog {
         }
     }
 
+    /// The family name for a stored preference.
+    ///
+    /// Stored values are not all family names. The shipped defaults are
+    /// PostScript names (`PingFangSC-Regular`), while anything the user picks
+    /// from the popup is a family name (`PingFang SC`), because the popup is
+    /// built from families. Without this the default never matches a row and
+    /// gets appended as a 271st orphan entry below the alphabetical list.
     static func familyName(forStored stored: String) -> String {
         guard !stored.isEmpty else { return stored }
         if isInstalled(family: stored) { return stored }
