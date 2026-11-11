@@ -162,6 +162,17 @@ final class PdfExportController: NSObject {
             // diagrams, which read dark on dark, until it switches and redraws.
             if (document.documentElement.classList.contains('darkmode') && window.ThemeConfig) {
                 window.ThemeConfig.applyTheme(false);
+                // The switch keeps a drawn PlantUML image until its light one
+                // has loaded, which the wait below does not see, so the dark
+                // image could print on white paper. Drawing it again puts the
+                // light image on the page, which the image check waits for;
+                // offline it fails and the block prints as source, as a light
+                // preview's does.
+                if (window.DiagramHandler && window.plantumlEncoder) {
+                    document.querySelectorAll('code.language-plantuml[data-processed="true"]').forEach(function(code) {
+                        window.DiagramHandler.processPlantumlElement(code);
+                    });
+                }
             }
 
             var container = document.getElementById('write') || document.body;
@@ -203,6 +214,16 @@ final class PdfExportController: NSObject {
         """
     }
 
+    /// True once every image, video and diagram the print copy holds is ready.
+    static let mediaReadyScript = """
+        (function() {
+            var imgs = Array.prototype.slice.call(document.images || []);
+            var imgsReady = imgs.every(function(i) { return i.complete && i.naturalWidth > 0; });
+            var videosReady = \(videosSettledExpression);
+            return imgsReady && videosReady && (\(HtmlManager.pendingDiagramsExpression)) === 0;
+        })();
+        """
+
     private func waitForMedia() {
         guard let web = webView else {
             fail()
@@ -219,19 +240,11 @@ final class PdfExportController: NSObject {
         // the SVG was rendered.
         // - Mermaid: data-processed is set when the SVG is mounted
         // - PlantUML: data-processed is set synchronously *before* the
-        //   <img>.src request resolves; the imgs.complete check below is
+        //   <img>.src request resolves; the image check in mediaReadyScript is
         //   what actually proves the diagram is rendered
         // - Markmap: data-markmap-shown is set once the map is visible and
         //   its fit has settled, data-markmap-failed when it could not be drawn
-        let probe = """
-            (function() {
-                var imgs = Array.prototype.slice.call(document.images || []);
-                var imgsReady = imgs.every(function(i) { return i.complete && i.naturalWidth > 0; });
-                var videosReady = \(Self.videosSettledExpression);
-                return imgsReady && videosReady && (\(HtmlManager.pendingDiagramsExpression)) === 0;
-            })();
-            """
-        web.evaluateJavaScript(probe) { [weak self] result, _ in
+        web.evaluateJavaScript(Self.mediaReadyScript) { [weak self] result, _ in
             guard let self else { return }
             let ready = (result as? Bool) ?? false
             if ready || self.mediaWaitAttempts >= Self.mediaWaitMaxAttempts {

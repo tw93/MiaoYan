@@ -146,7 +146,7 @@ final class PrintExportScriptTests: XCTestCase {
     /// Loads a body in the real preview page with the print sheet applied and
     /// print media on, so computed styles and layout are what the PDF gets.
     @MainActor
-    private func loadPrintedPreview(_ body: String) async throws -> WKWebView {
+    private func loadPrintedPreview(_ body: String, beforeSetup: String = "", untilBeforeSetup: String = "true") async throws -> WKWebView {
         let page = try HtmlManager.htmlFromTemplate(body, css: HtmlManager.previewStyle(), currentName: "print")
         let index = try XCTUnwrap(HtmlManager.createTemporaryBundle(pageHTMLString: page))
         let url = index.deletingLastPathComponent().appendingPathComponent("print-\(UUID().uuidString).html")
@@ -156,9 +156,13 @@ final class PrintExportScriptTests: XCTestCase {
         webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
         let deadline = Date().addingTimeInterval(10)
         while Date() < deadline,
-            (try? await webView.evaluateJavaScript("document.readyState === 'complete' && !!document.getElementById('write')") as? Bool) != true
+            (try? await webView.evaluateJavaScript(
+                "document.readyState === 'complete' && !!document.getElementById('write') && (\(untilBeforeSetup))") as? Bool) != true
         {
             try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        if !beforeSetup.isEmpty {
+            _ = try await webView.evaluateJavaScript(beforeSetup + "; true")
         }
         _ = try await webView.evaluateJavaScript(
             PdfExportController.printSetupScript(css: HtmlManager.paginatedPrintCSS(), title: "Print"))
@@ -326,6 +330,97 @@ final class PrintExportScriptTests: XCTestCase {
         let channels = try XCTUnwrap(state?["label"] as? String).split { !$0.isNumber }.compactMap { Int($0) }
         XCTAssertEqual(channels.count, 3)
         XCTAssertLessThan(channels.reduce(0, +), 3 * 128, "diagram text must be dark on the light panel")
+    }
+
+    /// The print copy of a dark preview holding a drawn PlantUML diagram, with
+    /// the server stood in for by local files: `light` is what the light theme
+    /// asks for, missing when `lightLoads` is false, as offline.
+    @MainActor
+    private func loadDarkPlantUMLCopy(lightLoads: Bool) async throws -> WKWebView {
+        let rep = try XCTUnwrap(
+            NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: 8, pixelsHigh: 8, bitsPerSample: 8, samplesPerPixel: 4,
+                hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+        let data = try XCTUnwrap(rep.representation(using: .png, properties: [:]))
+        let dark = darkPlantUML
+        let light = lightPlantUML
+        try data.write(to: dark)
+        if lightLoads { try data.write(to: light) }
+        let wasDark = UserDataService.instance.isDark
+        UserDataService.instance.isDark = true
+        defer { UserDataService.instance.isDark = wasDark }
+        // The live preview's copy: the image drawn in dark, the source hidden.
+        let body = """
+            <pre><img class="plantuml-image" src="\(dark.absoluteString)" style="display: block"><code class="language-plantuml" \
+            data-processed="true" data-original-content="A -> B" style="display: none">A -> B</code></pre>
+            """
+        let stub = """
+            window.DiagramHandler.plantumlImageURL = function(code, isDark) {
+                return isDark ? \(HtmlManager.jsStringLiteral(dark.absoluteString)) : \(HtmlManager.jsStringLiteral(light.absoluteString));
+            };
+            """
+        let webView = try await loadPrintedPreview(
+            body, beforeSetup: stub, untilBeforeSetup: "document.querySelector('.plantuml-image').naturalWidth > 0")
+        return webView
+    }
+
+    private var darkPlantUML: URL { directory.appendingPathComponent("plantuml-dark.png") }
+    private var lightPlantUML: URL { directory.appendingPathComponent("plantuml-light.png") }
+
+    /// The export's readiness and the PlantUML images a reader would see.
+    @MainActor
+    private static var plantUMLPrintState: String {
+        """
+        (function() {
+            var ready = \(PdfExportController.mediaReadyScript)
+            var shown = Array.prototype.filter.call(document.querySelectorAll('.plantuml-image'), function(img) {
+                return img.style.display !== 'none';
+            });
+            var code = document.querySelector('code.language-plantuml');
+            return { ready: ready, shown: shown.map(function(img) { return img.src; }), source: code.style.display !== 'none' };
+        })();
+        """
+    }
+
+    /// The copy of a dark preview kept its drawn PlantUML image while the light
+    /// one loaded, and the wait passed at once, so the dark image printed on
+    /// white paper. Whenever the export would go ahead, the page shows the
+    /// light image.
+    @MainActor
+    func testADarkPlantUMLDiagramPrintsInTheLightTheme() async throws {
+        let webView = try await loadDarkPlantUMLCopy(lightLoads: true)
+        let light = lightPlantUML.absoluteString
+        var ready = false
+        let deadline = Date().addingTimeInterval(5)
+        while Date() < deadline, !ready {
+            let state = try await webView.evaluateJavaScript(Self.plantUMLPrintState) as? [String: Any]
+            ready = state?["ready"] as? Bool == true
+            if ready {
+                XCTAssertEqual(state?["shown"] as? [String], [light], "the export goes ahead with the light image only")
+            } else {
+                try await Task.sleep(nanoseconds: 25_000_000)
+            }
+        }
+        XCTAssertTrue(ready)
+    }
+
+    /// Offline the light image never comes. The dark one does not stay on
+    /// white paper: the block shows its source, and the export prints that
+    /// once its wait runs out, as it does for a light preview offline.
+    @MainActor
+    func testADarkPlantUMLDiagramPrintsAsSourceWhenTheLightImageCannotLoad() async throws {
+        let webView = try await loadDarkPlantUMLCopy(lightLoads: false)
+        let dark = darkPlantUML.absoluteString
+        var state: [String: Any]?
+        let deadline = Date().addingTimeInterval(5)
+        repeat {
+            state = try await webView.evaluateJavaScript(Self.plantUMLPrintState) as? [String: Any]
+            if state?["source"] as? Bool == true || state?["ready"] as? Bool == true { break }
+            try await Task.sleep(nanoseconds: 25_000_000)
+        } while Date() < deadline
+        XCTAssertFalse((state?["shown"] as? [String] ?? []).contains(dark), "the dark image is off the page")
+        XCTAssertEqual(state?["source"] as? Bool, true)
+        XCTAssertEqual(state?["ready"] as? Bool, false, "the wait holds until its timeout")
     }
 
     /// A face with one weight printed headings in the system's fattened bold,
