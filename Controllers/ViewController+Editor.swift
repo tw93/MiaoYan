@@ -1029,6 +1029,10 @@ extension ViewController {
         markdownView.frame = previewScroll.bounds
         markdownView.autoresizingMask = [.width, .height]
         markdownView.isHidden = hidden
+        // A new note rebuilds the preview, and the new one needs the delegate too.
+        if splitScrollObserver != nil {
+            markdownView.scrollDelegate = self
+        }
         // Alpha is managed by enablePreview/fill to support Soft Reveal
         // if !hidden { markdownView.alphaValue = 1.0 }
         previewScroll.isHidden = hidden
