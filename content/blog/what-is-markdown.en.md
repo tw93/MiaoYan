@@ -66,7 +66,7 @@ MiaoYan is a Mac Markdown editor that stores each note as a plain `.md` file. Th
 2. Choose View > Toggle Preview, or press `⌘3`, to switch the editor to the rendered view. Press it again to go back to the source. View > Toggle Split View (`⌘\`) shows source and preview side by side.
 3. Look for leftover marks such as stray `**` or `#` on the preview page. They show where the parser did not understand the syntax.
 
-MiaoYan 4.5.0 renders CommonMark plus tables, task lists, strikethrough and footnotes through the cmark-gfm parser, and adds math, callouts and diagrams in the preview. When the library is empty on first launch it also creates sample notes, including a MiaoYan Markdown Syntax Guide, that you can read as examples. To pick an editor, compare options in [Choosing a Markdown editor for Mac](/blog/markdown-editor-for-mac/).
+MiaoYan renders CommonMark plus tables, task lists, strikethrough and footnotes through the cmark-gfm parser, and adds math, callouts and diagrams in the preview. When the library is empty on first launch it also creates sample notes, including a MiaoYan Markdown Syntax Guide, that you can read as examples. To pick an editor, compare options in [Choosing a Markdown editor for Mac](/blog/markdown-editor-for-mac/).
 
 ## FAQ
 

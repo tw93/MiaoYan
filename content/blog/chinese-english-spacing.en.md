@@ -20,7 +20,7 @@ Two more cases come from Markdown itself rather than from the guide. Inside code
 
 ## What MiaoYan does
 
-MiaoYan 4.5.0 has two commands in the Edit menu that both change spacing, and they do different amounts of work.
+MiaoYan has two commands in the Edit menu that both change spacing, and they do different amounts of work.
 
 **Format** (`⌘⇧L`, Chinese UI: 文档排版) runs a bundled Prettier Markdown formatter over the note and tidies Markdown structure such as list markers and table alignment. The Prettier it bundles is from the 2.x line, which still inserts a space between Chinese and Latin letters or digits, so `使用Swift开发` comes out as `使用 Swift 开发` here too; Prettier 3.0 dropped that behavior. Format does nothing else for Chinese text: `你好,世界` keeps its half-width comma, a space before a full-width comma stays, and inline code gets no space around it.
 
@@ -52,7 +52,7 @@ This is why a note without spaces can look fine in the preview and wrong in GitH
 
 ## Applying it to many notes
 
-At 4.5.0 both commands work on the open note only. There is no batch command in the menu. For a folder of existing notes you can run it note by note, or use a script outside the app. The guide links [pangu.js](https://github.com/vinta/pangu.js), the library behind the same idea, so test whichever tool you pick on a copy first and check how it treats code blocks. Because notes are plain `.md` files, a copy of the folder is an easy backup.
+Both commands work on the open note only. There is no batch command in the menu. For a folder of existing notes you can run it note by note, or use a script outside the app. The guide links [pangu.js](https://github.com/vinta/pangu.js), the library behind the same idea, so test whichever tool you pick on a copy first and check how it treats code blocks. Because notes are plain `.md` files, a copy of the folder is an easy backup.
 
 After any bulk pass, diff the result and look at code fences, URLs and product names first.
 

@@ -213,7 +213,7 @@
     {
       "slug": "chinese-english-spacing",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-11",
       "category": "writing",
       "en": {
         "title": "Chinese-English spacing in Markdown notes",
@@ -353,7 +353,7 @@
     {
       "slug": "markdown-on-ipad",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-11",
       "category": "notes",
       "en": {
         "title": "Markdown on iPad: files, sync and editors",
@@ -423,7 +423,7 @@
     {
       "slug": "what-is-markdown",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-11",
       "category": "writing",
       "en": {
         "title": "What is Markdown? A plain-text way to format",

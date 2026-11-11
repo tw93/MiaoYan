@@ -15,15 +15,17 @@ The first and last are the ones that bite later. A note stuck in an app's privat
 
 MiaoYan's site says the same App Store purchase runs on iPhone and iPad and opens the same iCloud Drive folder as your Mac. It is a one-time payment with no subscription or in-app purchases, and the iPhone and iPad apps require iOS or iPadOS 18 or later.
 
-What the iPad app does in version 4.5.0:
+What the iPad app does in version 4.8.0:
 
 - On a wide screen it uses a three-column layout: a sidebar with Notes (recent ones), All Notes, your folders and Trash, a note list, and the note itself.
 - A note opens in a reading view. Tap the edit button to type in a Markdown editor and tap "Done" to finish. The editor shows a save state, "Saving" then "Saved".
 - The app handles notes, folders, renaming, moving, pinning, sharing and Trash. Search looks through titles and note bodies locally.
-- Settings has an Appearance section for font and size, and a Library section with "Choose Folder…". Its text says MiaoYan reads and writes Markdown files in the folder and that iCloud Drive or your cloud drive app keeps it in sync with Mac.
-- The reader renders tables, footnotes, strikethrough and task lists, highlights code with highlight.js, and draws Mermaid diagrams. `[[Title]]` wikilinks open the target note.
+- Settings has an Appearance section for font and size, and a Library section with "Choose Folder". Its text says MiaoYan reads and writes Markdown files in the folder and that iCloud Drive or your cloud drive app keeps it in sync with Mac.
+- The reader renders tables, footnotes, strikethrough and task lists, highlights code with highlight.js, draws Mermaid diagrams, and typesets LaTeX math with a bundled KaTeX, so formulas render without a network. `[[Title]]` wikilinks open the target note.
 
-What it does not do in 4.5.0: the iPad app has no keyboard shortcuts of its own, and it has no step that renders LaTeX math, PlantUML or Markmap, so those show as source text in the iPad reader even though the Mac app renders them. If you write formulas on the iPad, check a sample note first. The syntax is covered in the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) and [LaTeX math in Markdown](/blog/latex-math-in-markdown/).
+With a hardware keyboard the editor takes the Mac's format keys: `⌘B`, `⌘I` and `⌘U` for bold, italic and underline, `⌘K` for a link, `⌘E` for inline code and `⇧⌘X` for strikethrough. `⌘N` starts a note and `⌘3` switches between reading and editing.
+
+What it does not do in 4.8.0: the reader has no step that draws PlantUML or Markmap, so those blocks show as source text on the iPad even though the Mac app renders them, and there are no keys for lists or indenting, so type those markers yourself. The syntax is covered in the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) and [LaTeX math in Markdown](/blog/latex-math-in-markdown/).
 
 ## How the iPad finds your notes
 
@@ -64,7 +66,7 @@ Yes, as long as both open the same iCloud Drive folder. Let the sync finish befo
 
 ### Does MiaoYan on iPad have a keyboard shortcut for bold?
 
-Version 4.5.0 of the iPad app has no shortcuts of its own, so type the Markdown markers yourself.
+Yes, with a hardware keyboard: `⌘B` wraps the selection in `**`, `⌘I` in `*`, and `⌘U` in `<u>` tags. `⌘K` writes a link, `⌘E` inline code and `⇧⌘X` strikethrough. Lists and headings have no key in 4.8.0, so type those markers yourself.
 
 ### Does the iPad app need a subscription?
 
