@@ -135,18 +135,71 @@ public enum LineEdits {
     }
 
     /// Two more spaces before every line the selection touches; an empty
-    /// line stays empty.
+    /// line stays empty. Under an ordered item CommonMark nests only at the
+    /// item's content column (three spaces for `1. `, four for `10. `), so
+    /// when the line above the selection is one, the lines move that far.
     public static func indent(in text: NSString, selection: NSRange) -> Edit? {
-        rewrite(in: text, selection: selection) { $0.isEmpty ? $0 : "  " + $0 }
+        var padding = 2
+        if let parent = orderedParent(in: text, selection: selection), parent.firstIndent < parent.contentColumn {
+            padding = parent.contentColumn - parent.firstIndent
+        }
+        let spaces = String(repeating: " ", count: padding)
+        return rewrite(in: text, selection: selection) { $0.isEmpty ? $0 : spaces + $0 }
     }
 
     /// A leading tab, or up to two leading spaces, off every line the
-    /// selection touches.
+    /// selection touches; lines that `indent` nested under an ordered item
+    /// go back to that item's own indent.
     public static func outdent(in text: NSString, selection: NSRange) -> Edit? {
-        rewrite(in: text, selection: selection) { line in
-            if line.hasPrefix("\t") { return String(line.dropFirst()) }
-            return String(line.dropFirst(line.prefix(2).prefix(while: { $0 == " " }).count))
+        var width = 2
+        if let parent = orderedParent(in: text, selection: selection),
+            parent.firstIndent > parent.indent, parent.firstIndent <= parent.contentColumn
+        {
+            width = parent.firstIndent - parent.indent
         }
+        return rewrite(in: text, selection: selection) { line in
+            if line.hasPrefix("\t") { return String(line.dropFirst()) }
+            return String(line.dropFirst(line.prefix(width).prefix(while: { $0 == " " }).count))
+        }
+    }
+
+    /// An ordered item's indent and content column, and the indent of the
+    /// selection's first line below it, in columns with tabs every four.
+    private struct OrderedParent {
+        let indent: Int
+        let contentColumn: Int
+        let firstIndent: Int
+    }
+
+    /// The ordered item on the line just above the selection's first line.
+    private static func orderedParent(in text: NSString, selection: NSRange) -> OrderedParent? {
+        guard selection.location >= 0, NSMaxRange(selection) <= text.length else { return nil }
+        var start = 0
+        var end = 0
+        var contentsEnd = 0
+        text.getLineStart(&start, end: &end, contentsEnd: &contentsEnd, for: NSRange(location: selection.location, length: 0))
+        guard start > 0 else { return nil }
+        let first = text.substring(with: NSRange(location: start, length: contentsEnd - start))
+        var aboveStart = 0
+        var aboveContentsEnd = 0
+        text.getLineStart(&aboveStart, end: &end, contentsEnd: &aboveContentsEnd, for: NSRange(location: start - 1, length: 0))
+        let above = text.substring(with: NSRange(location: aboveStart, length: aboveContentsEnd - aboveStart))
+        guard let match = orderedRegex.firstMatch(in: above, range: NSRange(location: 0, length: (above as NSString).length))
+        else { return nil }
+        let ns = above as NSString
+        let indent = columns(of: ns.substring(with: match.range(at: 1)))
+        let afterMarker = indent + match.range(at: 2).length
+        // One to four spaces after the marker set the content column; more
+        // than four, or none before the line ends, count as one.
+        let gap = columns(of: ns.substring(with: match.range(at: 3)), from: afterMarker) - afterMarker
+        let contentColumn = afterMarker + (gap >= 1 && gap <= 4 && match.range(at: 4).length > 0 ? gap : 1)
+        let leading = String(first.prefix(while: { $0 == " " || $0 == "\t" }))
+        return OrderedParent(indent: indent, contentColumn: contentColumn, firstIndent: columns(of: leading))
+    }
+
+    /// The column after `whitespace` written from column `from`.
+    private static func columns(of whitespace: String, from: Int = 0) -> Int {
+        whitespace.reduce(from) { column, character in character == "\t" ? column + 4 - column % 4 : column + 1 }
     }
 
     /// Ticks or clears the task on each line the selection touches; a list
@@ -194,4 +247,5 @@ public enum LineEdits {
 
     private static let taskRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]"#)
     private static let itemRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+"#)
+    private static let orderedRegex = try! NSRegularExpression(pattern: #"^([ \t]*)(\d{1,9}[.)])([ \t]+|$)(.?)"#)
 }

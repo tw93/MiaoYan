@@ -113,6 +113,42 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(apply(LineEdits.outdent(in: " x" as NSString, selection: NSRange(location: 1, length: 0)), to: " x")?.0, "x")
     }
 
+    /// Indent then outdent on the last line, or on `selection` when given.
+    private func indentRoundTrip(_ text: String, selection: NSRange? = nil) -> (String?, String?) {
+        let ns = text as NSString
+        let range = selection ?? NSRange(location: ns.length, length: 0)
+        guard let indented = apply(LineEdits.indent(in: ns, selection: range), to: text) else { return (nil, nil) }
+        let back = apply(LineEdits.outdent(in: indented.0 as NSString, selection: indented.1), to: indented.0)
+        return (indented.0, back?.0)
+    }
+
+    func testIndentUnderAnOrderedItemNestsAtItsContentColumn() {
+        XCTAssertEqual(indentRoundTrip("1. a\n- b").0, "1. a\n   - b")
+        XCTAssertEqual(indentRoundTrip("1. a\n- b").1, "1. a\n- b")
+        XCTAssertEqual(indentRoundTrip("10. a\n- b").0, "10. a\n    - b")
+        XCTAssertEqual(indentRoundTrip("10. a\n- b").1, "10. a\n- b")
+        XCTAssertEqual(indentRoundTrip("1) a\n- b").0, "1) a\n   - b")
+        XCTAssertEqual(indentRoundTrip("1.  a\n- b").0, "1.  a\n    - b")
+        // An ordered item that is itself nested.
+        XCTAssertEqual(indentRoundTrip("- x\n  1. a\n  - b").0, "- x\n  1. a\n     - b")
+        XCTAssertEqual(indentRoundTrip("- x\n  1. a\n  - b").1, "- x\n  1. a\n  - b")
+        // Every selected line moves by the same amount.
+        let text = "1. a\n- b\n- c"
+        let lines = NSRange(location: 5, length: 7)
+        XCTAssertEqual(indentRoundTrip(text, selection: lines).0, "1. a\n   - b\n   - c")
+        XCTAssertEqual(indentRoundTrip(text, selection: lines).1, text)
+    }
+
+    func testIndentOutsideOrderedItemsStaysTwoSpaces() {
+        XCTAssertEqual(indentRoundTrip("- a\n- b").0, "- a\n  - b")
+        XCTAssertEqual(indentRoundTrip("- a\n- b").1, "- a\n- b")
+        XCTAssertEqual(indentRoundTrip("plain\n- b").0, "plain\n  - b")
+        XCTAssertEqual(indentRoundTrip("1.5 kg\n- b").0, "1.5 kg\n  - b")
+        // Already at or past the item's content: plain two spaces.
+        XCTAssertEqual(indentRoundTrip("1. a\n   - b").0, "1. a\n     - b")
+        XCTAssertEqual(indentRoundTrip("1. a\n   - b").1, "1. a\n   - b")
+    }
+
     func testACaretKeepsItsPlaceInTheLine() {
         let text = "one\n- two\nthree"
         let caret = NSRange(location: 7, length: 0)  // "- t|wo"
