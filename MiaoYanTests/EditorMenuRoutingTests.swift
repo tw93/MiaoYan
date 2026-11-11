@@ -204,6 +204,25 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertEqual(editor.selectedRange(), NSRange(location: 0, length: (text as NSString).length))
     }
 
+    /// Tab renumbers an item to "1.", which is shorter from 10 up, but the
+    /// caret moved by the whole indent, so at the end of "10. item" it landed
+    /// at the start of the next line.
+    @MainActor
+    func testTabOnATwoDigitItemKeepsTheCaretOnItsLine() {
+        for (text, caret, expected, expectedCaret) in [
+            ("10. item\nnext", 8, "  1. item\nnext", 9),
+            ("10. item", 8, "  1. item", 9),
+            ("10. item", 0, "  1. item", 2),
+            ("5. a", 4, "  1. a", 6),
+        ] {
+            let (editor, note) = makeEditor(text)
+            editor.setSelectedRange(NSRange(location: caret, length: 0))
+            TextFormatter(textView: editor, note: note).tab()
+            XCTAssertEqual(editor.string, expected, text)
+            XCTAssertEqual(editor.selectedRange(), NSRange(location: expectedCaret, length: 0), "\(text) at \(caret)")
+        }
+    }
+
     // MARK: - Find and replace
 
     /// A shell-hosted editor in a scroll view, so the find bar has a container.

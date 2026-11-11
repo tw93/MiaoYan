@@ -88,13 +88,17 @@ public class TextFormatter {
             if beforeText.isNumberList() { padding = "   " }
         }
         guard range.length > 0 else {
-            var text = storage.attributedSubstring(from: pRange).string
+            let original = storage.attributedSubstring(from: pRange).string
+            var text = original
             if text.isNumberList() {
                 text = ViewController.replace(validateString: text, regex: "^[0-9-]+[.]", content: "1.")
             }
-            let location = textView.selectedRange().location
+            // Renumbering "10." to "1." shortens the line: past the number the caret
+            // moves by the change in length, not the whole indent, or it left the line.
+            let shrink = (original as NSString).length - (text as NSString).length
+            let offset = textView.selectedRange().location - pRange.location
             textView.insertText(padding + text, replacementRange: pRange)
-            setSelectedRange(NSRange(location: location + padding.count, length: 0))
+            setSelectedRange(NSRange(location: pRange.location + padding.count + max(min(offset, 2), offset - shrink), length: 0))
             return
         }
 
