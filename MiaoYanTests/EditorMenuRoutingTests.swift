@@ -203,4 +203,42 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertEqual(editor.string, text)
         XCTAssertEqual(editor.selectedRange(), NSRange(location: 0, length: (text as NSString).length))
     }
+
+    // MARK: - Find and replace
+
+    /// A shell-hosted editor in a scroll view, so the find bar has a container.
+    @MainActor
+    private func makeSearchEditor(_ text: String) -> (EditTextView, NSView) {
+        let container = NSView(frame: NSRect(x: 0, y: 0, width: 480, height: 320))
+        let scrollView = NSScrollView(frame: container.bounds)
+        let editor = EditTextView(frame: scrollView.bounds)
+        editor.isShellHosted = true
+        scrollView.documentView = editor
+        container.addSubview(scrollView)
+        editor.publishStorage(NSAttributedString(string: text), owner: nil)
+        return (editor, container)
+    }
+
+    /// Replace when the replacement still matches the search: the new text was
+    /// found again at the same place, so every Replace rewrote the same word
+    /// (cat to cats grew "catss") and the later matches were never reached.
+    @MainActor
+    func testReplaceMovesPastAReplacementThatStillMatches() {
+        let (editor, container) = makeSearchEditor("cat cat cat")
+        editor.showSearchBar(prefilledText: "cat", mode: .replace)
+        XCTAssertTrue(editor.isSearchBarVisible)
+        editor.replaceNext(with: "cats")
+        XCTAssertEqual(editor.string, "cats cat cat")
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 5, length: 3))
+        editor.replaceNext(with: "cats")
+        editor.replaceNext(with: "cats")
+        XCTAssertEqual(editor.string, "cats cats cats")
+
+        let (caseEditor, caseContainer) = makeSearchEditor("iphone and iphone")
+        caseEditor.showSearchBar(prefilledText: "iphone", mode: .replace)
+        caseEditor.replaceNext(with: "iPhone")
+        caseEditor.replaceNext(with: "iPhone")
+        XCTAssertEqual(caseEditor.string, "iPhone and iPhone")
+        withExtendedLifetime((container, caseContainer)) {}
+    }
 }

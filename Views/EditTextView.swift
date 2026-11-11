@@ -1645,9 +1645,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
 
         if !editorSearchRanges.isEmpty {
-            if editorCurrentMatchIndex >= editorSearchRanges.count {
-                editorCurrentMatchIndex = 0
-            }
+            // The replacement can match the search (iphone to iPhone, cat to cats):
+            // go on after it, wrapping, or every Replace rewrites the same word.
+            let insertedEnd = currentRange.location + (replaceText as NSString).length
+            editorCurrentMatchIndex = editorSearchRanges.firstIndex { $0.location >= insertedEnd } ?? 0
             focusSearchResult(at: editorCurrentMatchIndex)
             editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
         }
