@@ -183,3 +183,68 @@ and matches off the main thread; partial highlighting and the size tiers; KaTeX 
 throttled; PDF export fits tables, loads lazy images and waits for diagrams; IME composition skips
 Return, Tab and split updates; Clean Typography is undoable; AGENTS.md's 452 quoted symbols checked,
 none stale.
+
+## 2026-11-11 (before V4.9.0, whole tree)
+
+- Audited: MiaoYan `9446d4f2` (window `49da1f67..9446d4f2`, 72 commits), MiaoYan-Pro `e1e40cf3`. Five Opus
+  agents, read-only; five fix agents in separate worktrees; one independent review of each merged stack.
+- Mechanical: `check_incidents.py` 35 rows, 0 problems; SwiftLint and swift-format `--strict` clean.
+- Verified by the main session before reporting: the iPhone's Empty Trash deleting every entry (read both sides).
+- Next window from: the last commit of this run.
+
+### Fixed (MiaoYan)
+
+- Replace kept rewriting a word whose replacement still matched (`63ae724c`, I-36); Tab on an item from 10 up
+  left the caret on the next line (`2d2ff0ca`, I-37); an edit inside a match left part of it highlighted
+  (`797c7fba`).
+- PDF from a dark preview: PlantUML in dark colours (`3cd69888`, I-38), dark rules and checkboxes when the app
+  is dark (`8ff196e9`, I-39), the `Rendering ...` loader printed (`b8d62732`, I-40).
+- MiaoYanCore, for the iPhone and iPad keyboard: indent under an ordered item nests at its content column
+  (`012c8a0b`), Toggle Task keeps a quote prefix (`7fe4484a`), Return on a line holding U+2028 no longer deletes
+  it (`c8befc23`).
+- Stale: ARCHITECTURE.md's Trash line, five dangling section pointers, DEPENDENCIES.md (`4895543d`); 19 dead
+  symbols and `PreviewTextField.swift` (`dad4341e`, `99ee2f68`).
+- From the review: the 0.15s find-bar debounce added in `797c7fba` let Find Next and Replace act on positions
+  from before the edit, so it was removed again (`5b276c9b`).
+
+Fixed (iPhone and iPad, MiaoYan-Pro): Empty Trash deletes only the notes its page lists, so a folder the Mac
+put in the library Trash keeps its notes; a note renamed, moved or trashed elsewhere while being typed in is
+kept as a copy instead of written back or dropped, Keep Mine included; one formatter for Yesterday; an undrawn
+Mermaid block keeps its lines.
+
+### Refuted
+
+- "Open in MiaoYan on a library note imports a copy": `standardizedFileURL` already drops `/private` for an
+  existing path, measured on macOS and in an iOS simulator.
+
+### Open
+
+- Whether the sandboxed App Store Mac build finds the system Trash in `Storage.systemTrashDestination` or
+  always falls back to the library Trash: delete a folder in that build and look in both places.
+- Real-app checks: a PDF from a dark preview with PlantUML, `---`, a footnote and a task, online and offline
+  (offline now waits the full 9.6s, as a light preview already did); PNG and HTML export once each.
+- Mac Tab pads three spaces under any numbered item; under `10.` CommonMark needs four (MiaoYanCore now does).
+- Replace wraps to the first match after the last one, so a lone `cat` to `cats` still grows on a second press.
+- Return differs between the Mac and the iPhone for CRLF notes, fenced code blocks, `> ` and `1) ` (needs the
+  maintainer); `TaskMarker.itemRegex` still anchors inside a line holding U+2028.
+- Pasting code copied from a web page inside a fenced block may add a second fence (clipboard not measured).
+- Performance, low: the shell window does not coalesce disk events; `NoteCellView.draw` rebuilds row text;
+  a find-bar search per keystroke on a long note (a delayed refresh needs the four find commands to flush first).
+- iPhone, device checks: every typing pause reloads the mounted lists after the app's own save; the reader
+  keeps its place by pixel offset after an outside edit; whether a non-system body face re-highlights the note
+  per key on iPad; a brief absence during an iCloud download raising a false conflict; an undownloaded note in
+  the Trash is deleted through its placeholder; the reader never notices its note was renamed elsewhere until
+  the user types; whether the Mermaid palette follows the Mac's warm one (needs the maintainer).
+
+### Decided, do not re-report
+
+- Everything in the 2026-11-05 list.
+- Empty Trash on the iPhone leaves folders, images and other files in the library Trash, by design.
+
+### Checked and fine
+
+The library Trash wiring on the Mac (sidebar, backlinks, attachments, the row rebuilt after an outside empty);
+deletes flush the pending save first and undo checks the file's identity; a failed save is reported once; the
+14 new strings in all four languages and the new menu item in both windows; the print-only CSS cannot reach
+PNG, HTML or PPT export; every `renderPage` step also runs in `renderBlocks`; 911 quoted tokens in the guides
+checked, 8 stale; no uncalled function in the six non-vendored preview scripts.
