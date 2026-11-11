@@ -97,6 +97,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private var editorSearchRanges: [NSRange] = []
     private var editorCurrentMatchIndex: Int = 0
     private var editorLastSearchText: String = ""
+    private var editorSearchRefreshTimer: Timer?
     private var runtimeState: EditorSessionState? {
         viewDelegate?.sessionState ?? AppContext.shared.sessionState
     }
@@ -830,7 +831,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     override func didChangeText() {
         super.didChangeText()
         if editorSearchBar != nil, !editorLastSearchText.isEmpty {
-            handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
+            // Rerunning the whole-note search on every keystroke made typing lag; refresh once typing pauses, as the preview does.
+            editorSearchRefreshTimer?.invalidate()
+            editorSearchRefreshTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: false) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    guard let self, self.editorSearchBar != nil else { return }
+                    self.handleSearchInput(self.editorLastSearchText, jumpToFirstMatch: false)
+                }
+            }
         }
 
         // Update preview in split mode with adaptive debounce.
@@ -1631,10 +1639,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     func replaceNext(with replaceText: String) {
-        guard !editorSearchRanges.isEmpty,
-            editorSearchRanges.indices.contains(editorCurrentMatchIndex),
-            let storage = textStorage
-        else { return }
+        guard editorSearchRanges.indices.contains(editorCurrentMatchIndex), let storage = textStorage else { return }
 
         let currentRange = editorSearchRanges[editorCurrentMatchIndex]
 
@@ -1670,6 +1675,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func handleSearchInput(_ text: String, jumpToFirstMatch: Bool) {
+        editorSearchRefreshTimer?.invalidate()
         editorLastSearchText = text
         clearEditorSearchHighlights()
         guard let storage = textStorage, !text.isEmpty else {
@@ -1685,14 +1691,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         while searchRange.length > 0 {
             let found = nsString.range(of: text, options: [.caseInsensitive, .diacriticInsensitive], range: searchRange)
-            if found.location == NSNotFound {
-                break
-            }
+            guard found.location != NSNotFound else { break }
             ranges.append(found)
             let nextLocation = found.location + max(found.length, 1)
-            if nextLocation >= nsString.length {
-                break
-            }
             searchRange = NSRange(location: nextLocation, length: nsString.length - nextLocation)
         }
 
@@ -1726,10 +1727,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func clearEditorSearchHighlights() {
-        guard let layoutManager = layoutManager else { return }
-        for range in editorSearchRanges {
-            layoutManager.removeTemporaryAttribute(.backgroundColor, forCharacterRange: range)
-        }
+        // Highlights move with edits but editorSearchRanges do not, so clear the whole text.
+        guard let layoutManager, let length = textStorage?.length else { return }
+        layoutManager.removeTemporaryAttribute(.backgroundColor, forCharacterRange: NSRange(location: 0, length: length))
     }
 
     private func focusSearchResult(at index: Int) {

@@ -241,4 +241,40 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertEqual(caseEditor.string, "iPhone and iPhone")
         withExtendedLifetime((container, caseContainer)) {}
     }
+
+    @MainActor
+    private func isHighlighted(_ editor: EditTextView, at index: Int) -> Bool {
+        editor.layoutManager?.temporaryAttribute(.backgroundColor, atCharacterIndex: index, effectiveRange: nil) != nil
+    }
+
+    /// With the find bar open, every keystroke in the editor reran the
+    /// whole-note search on the spot. Edits now refresh it 0.15s later, while
+    /// typing in the search field itself still searches at once.
+    @MainActor
+    func testEditsRefreshTheFindBarAfterADelay() {
+        let (editor, container) = makeSearchEditor("iphone x")
+        editor.showSearchBar(prefilledText: "iphone")
+        XCTAssertTrue(isHighlighted(editor, at: 0))
+        editor.insertText(" iphone", replacementRange: NSRange(location: 8, length: 0))
+        XCTAssertFalse(isHighlighted(editor, at: 9), "searched again on the keystroke")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.4))
+        XCTAssertTrue(isHighlighted(editor, at: 9), "the edit refreshes the search")
+        withExtendedLifetime(container) {}
+    }
+
+    /// The highlights follow the text through an edit while the stored match
+    /// ranges do not, so clearing only those ranges left part of a broken
+    /// match highlighted.
+    @MainActor
+    func testAnEditInsideAMatchLeavesNoHighlightBehind() {
+        let (editor, container) = makeSearchEditor("aa iphone bb")
+        editor.showSearchBar(prefilledText: "iphone")
+        editor.insertText("x", replacementRange: NSRange(location: 6, length: 0))
+        RunLoop.current.run(until: Date().addingTimeInterval(0.4))
+        XCTAssertEqual(editor.string, "aa iphxone bb")
+        for index in 0..<(editor.string as NSString).length {
+            XCTAssertFalse(isHighlighted(editor, at: index), "highlight left at \(index)")
+        }
+        withExtendedLifetime(container) {}
+    }
 }
