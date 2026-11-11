@@ -105,17 +105,19 @@ function country(code) {
   try { return countryNames.of(code) || code; } catch { return code; }
 }
 
+// Keyed in lower case: the real reports say `App Store search`, the docs
+// `App Store Search`, and both must read the same.
 const SOURCE_LABELS = {
-  'App Store Search': 'App Store 搜索',
-  'App Store Browse': 'App Store 浏览',
-  'App Referrer': '其他 App 跳转',
-  'Web Referrer': '网页跳转',
-  'App Clip': 'App Clip',
-  'Institutional Purchase': '机构购买',
-  Unavailable: '未知',
-  'Other': '其他',
+  'app store search': 'App Store 搜索',
+  'app store browse': 'App Store 浏览',
+  'app referrer': '其他 App 跳转',
+  'web referrer': '网页跳转',
+  'app clip': 'App Clip',
+  'institutional purchase': '机构购买',
+  unavailable: '未知',
+  other: '其他',
 };
-const sourceLabel = (t) => SOURCE_LABELS[t] || t;
+const sourceLabel = (t) => SOURCE_LABELS[String(t).toLowerCase()] || t;
 
 const STATE_LABELS = {
   READY_FOR_DISTRIBUTION: '已上架',
@@ -147,14 +149,23 @@ const updatedAt = (iso) => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Sh
 
 const cell = (n, cls = '') => (n ? `<td${cls ? ` class="${cls}"` : ''}>${int(n)}</td>` : '<td></td>');
 
+// Where a day's units went, as one phrase per country and device.
+const dayMix = (mix) => mix.map((m) => `${country(m.country)} ${m.device} ${int(m.units)}`).join('、');
+
 function recentSection(view) {
+  if (!view.recent.length) return '';
   const rows = view.recent.map((d) => {
-    const income = d.known
-      ? `${cell(d.sold)}${cell(d.refunded, 'refund')}<td>${money(d.proceeds, view.currency)}</td>`
-      : '<td colspan="3"><small>等 Apple 报表</small></td>';
-    return `<tr><td>${esc(d.date.slice(5))}</td>${income}</tr>`;
+    const date = view.from.slice(0, 4) !== view.to.slice(0, 4) ? d.date.slice(2) : d.date.slice(5);
+    if (d.known) {
+      const mix = d.mix.length ? ` <small>${esc(dayMix(d.mix))}</small>` : '';
+      return `<tr><td>${esc(date)}${mix}</td>${cell(d.sold)}${cell(d.refunded, 'refund')}<td>${money(d.proceeds, view.currency)}</td></tr>`;
+    }
+    if (d.estimate) {
+      return `<tr><td>${esc(date)} <small>按渠道报告估算</small></td><td>约 ${int(d.estimate.purchases)}</td><td></td><td>约 ${money(d.estimate.proceeds, view.currency)}</td></tr>`;
+    }
+    return `<tr><td>${esc(date)} <small>等 Apple 报表</small></td><td></td><td></td><td></td></tr>`;
   }).join('');
-  return `<section class="panel"><h2>每天入账</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+  return `<section class="panel"><h2>每天销量</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 
 const sourceName = (s) => (s === '(direct)' ? '直接打开' : s === '(not set)' ? '未知' : s);
@@ -205,14 +216,12 @@ function channels(view) {
   const table = rows
     ? `<div class="scroll"><table><thead><tr><th scope="col">渠道</th><th scope="col">购买</th><th scope="col">首次下载</th><th scope="col">产品页浏览</th>${hasPurchases ? '<th scope="col">到手</th>' : ''}</tr></thead><tbody>${rows}</tbody></table></div>`
     : '<p class="empty">这段时间 Apple 的渠道报告里没有记录</p>';
-  const details = a.details.filter((d) => d.purchases || d.downloads).map((d) => `<tr><td>${esc(d.info)} <small>${esc(sourceLabel(d.type))}</small></td><td>${int(d.purchases)}</td><td>${int(d.downloads)}</td></tr>`).join('');
-  const detailTable = details ? `<h2>来源明细</h2><div class="scroll"><table><thead><tr><th scope="col">来源</th><th scope="col">购买</th><th scope="col">首次下载</th></tr></thead><tbody>${details}</tbody></table></div>` : '';
   const f = a.funnel;
   const u = a.usage;
   const funnel = (f.impressions || f.pageViews) ? `<p class="line">曝光 ${int(f.impressions)}，产品页浏览 ${int(f.pageViews)}，首次下载 ${int(f.firstDownloads)}，购买 ${int(f.purchases)}</p>` : '';
   const usage = (u.installs || u.deletions || u.sessions) ? `<p class="line">安装 ${int(u.installs)}，卸载 ${int(u.deletions)}，打开 ${int(u.sessions)} 次</p>` : '';
   const coverage = a.coverage ? `<p class="line">渠道报告覆盖 ${esc(a.coverage.from)} 到 ${esc(a.coverage.to)}${a.pending ? `，还有 ${int(a.pending)} 份待下次同步` : ''}</p>` : '';
-  return `<section class="panel wide"><h2>购买渠道</h2>${table}${funnel}${usage}${coverage}${detailTable}</section>`;
+  return `<section class="panel wide"><h2>购买渠道</h2>${table}${funnel}${usage}${coverage}</section>`;
 }
 
 function refundsSection(view) {
@@ -272,7 +281,7 @@ function renderDashboard(view) {
   const stamp = view.syncedAt ? `更新于 ${updatedAt(view.syncedAt)}` : '';
   const sync = [stamp, view.latestSalesDate ? `销售数据到 ${view.latestSalesDate.slice(5)}` : '', view.usdCny ? `汇率 ${view.usdCny.toFixed(2)}` : ''].filter(Boolean).map((t) => `<em class="window-note">${esc(t)}</em>`).join(' ');
   const warnings = [...view.errors];
-  if (view.syncStale) warnings.push('超过 12 小时没有同步成功，下面的数字可能不是最新的');
+  if (view.syncStale) warnings.push('超过 3 小时没有同步成功，下面的数字可能不是最新的');
   if (t.unconverted) warnings.push(`有 ${t.unconverted} 份的货币没有汇率，金额里没算`);
   const warn = warnings.length ? `<div class="note">${warnings.map((w) => `<div>${esc(w)}</div>`).join('')}</div>` : '';
   const metric = (label, value, note = '') => `<article class="metric"><span>${esc(label)}</span><strong>${value}</strong><em>${note}</em></article>`;

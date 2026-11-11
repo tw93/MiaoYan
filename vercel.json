@@ -10,7 +10,7 @@
   "crons": [
     {
       "path": "/api/payroom-sync",
-      "schedule": "17 */3 * * *"
+      "schedule": "17 * * * *"
     }
   ],
   "rewrites": [

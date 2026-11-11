@@ -14,7 +14,23 @@ const FIRST_SALES_LOOKBACK_DAYS = 365;
 const RECHECK_EMPTY_DAYS = 7;
 const TRAFFIC_START = '2022-06-01';
 const RECENT_DAYS = 14;
-const SYNC_STALE_MS = 12 * 3600 * 1000;
+const HOUR = 3600 * 1000;
+const SYNC_STALE_MS = 3 * HOUR;
+// The cron runs hourly. `every` spaces out parts whose source changes slowly;
+// `stale` is how old a part's last success may get before its failure reaches
+// the page, so one slow answer that the next run repairs stays quiet.
+const PARTS = {
+  sales: { label: '销售报表', every: 0, stale: 3 * HOUR },
+  finance: { label: '财务报表', every: 24 * HOUR, stale: 72 * HOUR },
+  store: { label: '上架状态和评论', every: 0, stale: 6 * HOUR },
+  fx: { label: '汇率', every: 6 * HOUR, stale: 48 * HOUR },
+  traffic: { label: '官网流量', every: 0, stale: 6 * HOUR },
+  analytics: { label: '渠道报告', every: 0, stale: 24 * HOUR },
+};
+// GA restates its last few days, so each run replaces those; the whole history
+// is pulled once a day, since that query is the one that timed out.
+const TRAFFIC_RECENT_DAYS = 4;
+const TRAFFIC_FULL_EVERY = 20 * HOUR;
 
 // Standard rather than Detailed: Apple applies fewer privacy cuts to it.
 const ANALYTICS_REPORTS = {
@@ -248,8 +264,9 @@ function compactAnalyticsRows(spec, parsed) {
 
 // ---- sync ----------------------------------------------------------------
 
-async function syncSales(state, vendor, today, errors) {
+async function syncSales(state, vendor, today, errors, now = new Date()) {
   const dates = state.sales.dates;
+  const seenAt = (state.sales.seenAt ||= {});
   const yesterday = addDays(today, -1);
   const wanted = [];
   for (let i = 0; i < FIRST_SALES_LOOKBACK_DAYS; i += 1) {
@@ -275,6 +292,8 @@ async function syncSales(state, vendor, today, errors) {
       try {
         fresh[d] = salesRowsFromReport(r.text);
         dates[d] = 'ok';
+        // When Apple's report for a day first answered, to learn its hour.
+        seenAt[d] ||= now.toISOString();
       } catch (error) {
         failed += 1;
         badShape = error.message;
@@ -287,7 +306,7 @@ async function syncSales(state, vendor, today, errors) {
   });
   const keep = state.sales.rows.filter((row) => !fresh[row[0]]);
   state.sales.rows = keep.concat(...Object.values(fresh)).sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
-  if (failed) errors.push(`销售报表有 ${failed} 天没取到，下次同步重试${badShape ? `：${badShape}` : ''}`);
+  if (failed) errors.push(`有 ${failed} 天没取到${badShape ? `，${badShape}` : ''}`);
 }
 
 // Apple's finance periods are fiscal: FY27 starts in October 2026, and
@@ -313,7 +332,7 @@ async function syncFinance(state, vendor, today, errors) {
       const rows = financeRowsFromReport(r.text);
       if (rows.length) months[p] = rows;
     }
-    else if (r.status !== 404 && r.status !== 410) errors.push(`财务报表 ${p} 返回 ${r.status}`);
+    else if (r.status !== 404 && r.status !== 410) errors.push(`${p} 返回 ${r.status}`);
   });
 }
 
@@ -458,7 +477,20 @@ const SITE_ONLY = {
   },
 };
 
-async function syncTraffic(state, today) {
+const DAILY_QUERY = {
+  dimensions: [{ name: 'date' }],
+  metrics: [{ name: 'sessions' }, { name: 'activeUsers' }, { name: 'screenPageViews' }],
+};
+const SOURCE_QUERY = {
+  dimensions: [{ name: 'date' }, { name: 'sessionSource' }],
+  metrics: [{ name: 'sessions' }],
+};
+const dayRows = (rows) => rows.map((r) => [gaDate(r.dimensionValues[0].value), r.metricValues.map((m) => Number(m.value) || 0)]);
+const sourceRows = (rows) => rows.map((r) => [gaDate(r.dimensionValues[0].value), r.dimensionValues[1].value, Number(r.metricValues[0].value) || 0]);
+
+// endDate 'today' is GA's own today in the property's time zone, which runs
+// ahead of Pacific, so the newest visits are not cut off.
+async function syncTraffic(state, today, problems, now = new Date()) {
   const property = process.env.MIAOYAN_GA_PROPERTY_ID;
   const token = await googleToken();
   const run = async (startDate, endDate, body) => {
@@ -471,29 +503,43 @@ async function syncTraffic(state, today) {
     if (!res.ok) throw new Error(`ga ${res.status}`);
     return (await res.json()).rows || [];
   };
-  // Sources stay daily for a year, which every preset and month needs; older
-  // ones fold into one row dated at the start, so "all" still counts them.
-  const yearAgo = addDays(today, -365);
-  const [daily, recentSources, olderSources] = await Promise.all([
-    run(TRAFFIC_START, today, {
-      dimensions: [{ name: 'date' }],
-      metrics: [{ name: 'sessions' }, { name: 'activeUsers' }, { name: 'screenPageViews' }],
-    }),
-    run(yearAgo, today, {
-      dimensions: [{ name: 'date' }, { name: 'sessionSource' }],
-      metrics: [{ name: 'sessions' }],
-    }),
-    run(TRAFFIC_START, addDays(yearAgo, -1), {
-      dimensions: [{ name: 'sessionSource' }],
-      metrics: [{ name: 'sessions' }],
-    }),
-  ]);
+  const old = state.traffic || {};
+  const fullAt = old.fullAt ? Date.parse(old.fullAt) : 0;
+  if (now.getTime() - fullAt >= TRAFFIC_FULL_EVERY) {
+    try {
+      // Sources stay daily for a year, which every preset and month needs;
+      // older ones fold into one row dated at the start, so "all" counts them.
+      const yearAgo = addDays(today, -365);
+      const [daily, recentSources, olderSources] = await Promise.all([
+        run(TRAFFIC_START, 'today', DAILY_QUERY),
+        run(yearAgo, 'today', SOURCE_QUERY),
+        run(TRAFFIC_START, addDays(yearAgo, -1), { dimensions: [{ name: 'sessionSource' }], metrics: [{ name: 'sessions' }] }),
+      ]);
+      state.traffic = {
+        fullAt: now.toISOString(),
+        days: Object.fromEntries(dayRows(daily)),
+        sources: [
+          ...olderSources.map((r) => [TRAFFIC_START, r.dimensionValues[0].value, Number(r.metricValues[0].value) || 0]),
+          ...sourceRows(recentSources),
+        ],
+      };
+      return;
+    } catch (error) {
+      // Without any history there is nothing to patch; otherwise the recent
+      // days below keep the page current and the full pull retries next hour.
+      if (!old.days || !Object.keys(old.days).length) throw error;
+      if (now.getTime() - fullAt > 3 * 24 * HOUR) problems.push(`整段历史三天没刷新成功，${error.message}`);
+    }
+  }
+  const from = addDays(today, -(TRAFFIC_RECENT_DAYS - 1));
+  const [daily, sources] = await Promise.all([run(from, 'today', DAILY_QUERY), run(from, 'today', SOURCE_QUERY)]);
+  // A day inside the window that GA no longer lists had no visits.
+  const days = Object.fromEntries(Object.entries(old.days || {}).filter(([d]) => d < from));
+  for (const [d, v] of dayRows(daily)) days[d] = v;
   state.traffic = {
-    days: Object.fromEntries(daily.map((r) => [gaDate(r.dimensionValues[0].value), r.metricValues.map((m) => Number(m.value) || 0)])),
-    sources: [
-      ...olderSources.map((r) => [TRAFFIC_START, r.dimensionValues[0].value, Number(r.metricValues[0].value) || 0]),
-      ...recentSources.map((r) => [gaDate(r.dimensionValues[0].value), r.dimensionValues[1].value, Number(r.metricValues[0].value) || 0]),
-    ],
+    fullAt: old.fullAt || null,
+    days,
+    sources: [...(old.sources || []).filter(([d]) => d < from), ...sourceRows(sources)],
   };
 }
 
@@ -507,18 +553,33 @@ async function runSync({ budgetMs = 200000, now = new Date() } = {}) {
   const state = stored || emptyState();
   const today = pacificToday(now);
   const errors = [];
-  const part = async (label, work) => {
+  const health = (state.health ||= {});
+  // Each part keeps when it last succeeded. A part not due yet is skipped; a
+  // failure reaches the page only once that success is older than `stale`.
+  const part = async (key, work) => {
+    const { label, every, stale } = PARTS[key];
+    const h = (health[key] ||= {});
+    const last = h.ok ? Date.parse(h.ok) : 0;
+    if (every && now.getTime() - last < every) return;
+    const problems = [];
     try {
-      await work();
+      await work(problems);
     } catch (error) {
-      errors.push(`${label}没同步成功：${error.message}`);
+      problems.push(error.message);
     }
+    if (!problems.length) {
+      h.ok = now.toISOString();
+      delete h.error;
+      return;
+    }
+    h.error = problems.join('；');
+    if (!last || now.getTime() - last > stale) errors.push(`${label}没同步成功：${h.error}`);
   };
-  await part('销售报表', () => syncSales(state, vendor, today, errors));
-  await part('财务报表', () => syncFinance(state, vendor, today, errors));
-  await part('上架状态和评论', () => syncStore(state));
-  await part('汇率', () => syncFx(state));
-  await part('官网流量', () => syncTraffic(state, today));
+  await part('sales', (p) => syncSales(state, vendor, today, p, now));
+  await part('finance', (p) => syncFinance(state, vendor, today, p));
+  await part('store', () => syncStore(state));
+  await part('fx', () => syncFx(state));
+  await part('traffic', (p) => syncTraffic(state, today, p, now));
   // A first run that got nothing must not create the store: a read that wrongly
   // answered "absent" would otherwise replace the history with an empty one.
   if (!stored && !state.sales.rows.length) {
@@ -529,7 +590,7 @@ async function runSync({ budgetMs = 200000, now = new Date() } = {}) {
   // Saved before the channel reports, whose downloads are the slow part: a run
   // killed there keeps the sales it already has.
   await writeState(state);
-  await part('渠道报告', () => syncAnalytics(state, deadline));
+  await part('analytics', () => syncAnalytics(state, deadline));
   state.errors = errors;
   await writeState(state);
   return {
@@ -599,17 +660,16 @@ function analyticsCoverage(report) {
 function buildAnalytics(state, from, to, convertUsd) {
   const reports = (state.analytics && state.analytics.reports) || {};
   const sources = new Map();
-  const details = new Map();
-  for (const [type, info, , , purchases, proceedsUsd, salesUsd] of analyticsIn(reports.purchases, from, to)) {
+  // Standard reports carry no Source Info column (checked on the first real
+  // instances, 2026-11-11), so its slot stays empty and only types are summed.
+  for (const [type, , , , purchases, proceedsUsd, salesUsd] of analyticsIn(reports.purchases, from, to)) {
     sumByKey(sources, type || 'Unavailable', { purchases, proceeds: convertUsd(proceedsUsd) || 0, sales: convertUsd(salesUsd) || 0 });
-    if (info) sumByKey(details, `${type}\u0000${info}`, { purchases });
   }
   let firstDownloads = 0;
-  for (const [kind, type, info, , , counts] of analyticsIn(reports.downloads, from, to)) {
+  for (const [kind, type, , , , counts] of analyticsIn(reports.downloads, from, to)) {
     if (!/first/i.test(kind)) continue;
     firstDownloads += counts;
     sumByKey(sources, type || 'Unavailable', { downloads: counts });
-    if (info) sumByKey(details, `${type}\u0000${info}`, { downloads: counts });
   }
   let impressions = 0;
   let pageViews = 0;
@@ -639,13 +699,6 @@ function buildAnalytics(state, from, to, convertUsd) {
     sources: [...sources.entries()]
       .map(([type, v]) => ({ type, purchases: 0, downloads: 0, impressions: 0, pageViews: 0, proceeds: 0, ...v }))
       .sort((a, b) => b.purchases - a.purchases || b.downloads - a.downloads || b.pageViews - a.pageViews),
-    details: [...details.entries()]
-      .map(([key, v]) => {
-        const [type, info] = key.split('\u0000');
-        return { type, info, purchases: 0, downloads: 0, ...v };
-      })
-      .sort((a, b) => b.purchases - a.purchases || b.downloads - a.downloads)
-      .slice(0, 12),
     funnel: { impressions, pageViews, firstDownloads, purchases },
     usage: { installs, deletions, sessions },
   };
@@ -674,17 +727,42 @@ function buildTraffic(state, from, to) {
   };
 }
 
-// The newest days regardless of the chosen range: "did money come in today".
-// A day past Apple's newest report is unknown, not zero.
-function buildRecent(state, convert, today, latestSalesDate) {
+// One row per day inside the chosen range: what sold, where and on which
+// device. A day past Apple's newest sales report is unknown, not zero; when
+// the channel report already has that day, its count stands in as an estimate.
+// That report cuts days differently (on 25 of 58 days through 2026-11-10 its
+// count sat a day off the sales report while the totals agreed), so it fills
+// unknown days only and is never added to a known one.
+function buildRecent(state, convert, { from, to, today, latestSalesDate }) {
   const byDay = new Map();
-  for (const [date, type, units, proceeds, proceedsCur, price] of state.sales.rows) {
-    if (kindOf(type, price) !== 'sale') continue;
+  const mix = new Map();
+  for (const [date, type, units, proceeds, proceedsCur, price, , country, device] of state.sales.rows) {
+    if (date < from || date > to || kindOf(type, price) !== 'sale') continue;
     const net = convert(proceeds, proceedsCur);
     const patch = { proceeds: (net || 0) * units };
-    if (units > 0) patch.sold = units; else patch.refunded = -units;
+    if (units > 0) {
+      patch.sold = units;
+      sumByKey(mix, `${date}\u0000${country}\u0000${deviceLabel(device)}`, { units });
+    } else {
+      patch.refunded = -units;
+    }
     sumByKey(byDay, date, patch);
   }
+  const mixOf = (date) => [...mix.entries()]
+    .filter(([k]) => k.startsWith(`${date}\u0000`))
+    .map(([k, v]) => { const [, country, device] = k.split('\u0000'); return { country, device, units: v.units }; })
+    .sort((a, b) => b.units - a.units);
+  const channel = (state.analytics && state.analytics.reports && state.analytics.reports.purchases) || {};
+  const estimate = (date) => {
+    if (!channel[date]) return null;
+    let purchases = 0;
+    let proceeds = 0;
+    for (const [, , , , n, usd] of channel[date]) {
+      purchases += n;
+      proceeds += convert(usd, 'USD') || 0;
+    }
+    return purchases ? { purchases, proceeds } : null;
+  };
   const days = (state.traffic && state.traffic.days) || {};
   const latestVisit = Object.keys(days).sort().pop() || '';
   const row = (date) => {
@@ -693,6 +771,8 @@ function buildRecent(state, convert, today, latestSalesDate) {
     return {
       date, known,
       sold: v.sold || 0, refunded: v.refunded || 0, proceeds: v.proceeds || 0,
+      mix: mixOf(date),
+      estimate: known ? null : estimate(date),
       sessions: date > latestVisit ? null : (days[date] ? days[date][0] : 0),
     };
   };
@@ -701,7 +781,7 @@ function buildRecent(state, convert, today, latestSalesDate) {
   const wanted = new Set([...byDay.keys()].filter((d) => d < today));
   for (let i = 0; i < RECENT_DAYS; i += 1) {
     const date = addDays(today, -1 - i);
-    if (!row(date).known) wanted.add(date);
+    if (date >= from && date <= to && !row(date).known) wanted.add(date);
   }
   return [...wanted].sort().reverse().map(row);
 }
@@ -807,7 +887,7 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
     refunds: refunds.sort((a, b) => (a.date < b.date ? 1 : -1)),
     analytics: buildAnalytics(state, from, to, convertUsd),
     traffic: buildTraffic(state, range === 'all' ? TRAFFIC_START : from, to),
-    recent: buildRecent(state, convert, today, latestSalesDate),
+    recent: buildRecent(state, convert, { from, to, today, latestSalesDate }),
     latest: latestIncome(state, convert),
     months: monthOptions(allRows, today),
     finance: buildFinance(state, convert),

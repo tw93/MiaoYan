@@ -75,7 +75,14 @@ eq(a.funnel.firstDownloads, 5, 'redownloads are not first downloads');
 eq(a.sources[0].type, 'Web Referrer', 'the source that sold ranks first');
 eq(a.sources[0].purchases, 2, 'purchases by source');
 near(a.sources[0].proceeds, 140, 'source proceeds convert from USD');
-eq(a.details[0].info, 'miaoyan.app', 'referrer detail');
+{
+  // The real reports write source types in sentence case, the docs in title case.
+  const named = lib.emptyState();
+  named.analytics.reports.purchases = { '2026-11-01': [['App Store search', '', 'iPhone', 'CN', 1, 10, 13]] };
+  const channelHtml = page.renderDashboard(lib.buildView(named, { range: '7d', today }));
+  assert.ok(channelHtml.includes('App Store 搜索') && !channelHtml.includes('App Store search'), 'a sentence-case source type still gets its Chinese name');
+  checks += 1;
+}
 
 state.sales.dates = { '2026-11-05': 'ok', '2026-11-06': 'ok', '2026-11-07': 'none' };
 state.traffic = {
@@ -101,6 +108,41 @@ eq(week.latest.date, '2026-11-05', 'the newest income ignores a later refund-onl
 near(week.latest.proceeds, 3 * 76.89, 'the newest income counts every unit that day');
 eq(lib.buildView(state, { today }).range, 'all', 'the default view is everything');
 eq(lib.buildView(state, { today }).traffic.sessions, 114, 'all counts traffic from before the first sale');
+
+// ---- the daily sales table -------------------------------------------------
+{
+  const daily = lib.emptyState();
+  daily.fx = { rates: { USD: 1, CNY: 7 } };
+  daily.sales.rows = [
+    ['2026-10-20', '1F', 1, 76.89, 'CNY', 88, 'CNY', 'CN', 'iPhone', '', ''],
+    ['2026-11-05', '1F', 2, 76.89, 'CNY', 88, 'CNY', 'CN', 'iPhone', '', ''],
+    ['2026-11-05', 'F1', 1, 11.04, 'USD', 12.99, 'USD', 'US', 'Desktop', '', ''],
+  ];
+  daily.sales.dates = { '2026-10-20': 'ok', '2026-11-05': 'ok', '2026-11-06': 'ok' };
+  // 11-05 is known, so the channel report's count for it is never shown; 11-07
+  // is past the newest sales report, so its channel count stands in.
+  daily.analytics.reports.purchases = {
+    '2026-11-05': [['App Store search', '', 'iPhone', 'CN', 9, 90, 99]],
+    '2026-11-07': [['App Store search', '', 'iPhone', 'CN', 2, 22, 26], ['Web referrer', '', 'Desktop', 'US', -1, -11, -13]],
+  };
+  const wk = lib.buildView(daily, { range: '7d', currency: 'CNY', today });
+  const byDate = Object.fromEntries(wk.recent.map((d) => [d.date, d]));
+  eq(byDate['2026-10-20'], undefined, 'the daily table follows the chosen range');
+  eq(byDate['2026-11-05'].sold, 3, 'a known day keeps the sales report count');
+  eq(byDate['2026-11-05'].estimate, null, 'a known day never takes the channel count');
+  eq(byDate['2026-11-05'].mix, [{ country: 'CN', device: 'iPhone', units: 2 }, { country: 'US', device: 'Mac', units: 1 }], 'a day lists where its units went');
+  eq(byDate['2026-11-07'].known, false, 'a day past the newest report stays unknown');
+  eq(byDate['2026-11-07'].estimate.purchases, 1, 'the estimate nets a refund in the channel report');
+  near(byDate['2026-11-07'].estimate.proceeds, 11 * 7, 'the estimate converts from USD');
+  eq(byDate['2026-11-04'].estimate, null, 'an unknown day the channel report lacks has no estimate');
+  eq(byDate['2026-11-06'], undefined, 'a reported day with no sales stays out');
+  eq(lib.buildView(daily, { range: 'all', today }).recent.some((d) => d.date === '2026-10-20'), true, 'all keeps the whole history');
+  eq(lib.buildView(daily, { range: 'm:2026-10', today }).recent.every((d) => d.date.startsWith('2026-10')), true, 'a month lists only its own days');
+  const dailyHtml = page.renderDashboard(wk);
+  assert.ok(dailyHtml.includes('中国 iPhone 2、美国 Mac 1'), 'the mix is rendered');
+  assert.ok(dailyHtml.includes('按渠道报告估算') && dailyHtml.includes('约 1'), 'the estimate is marked as one');
+  checks += 2;
+}
 
 state.reviews = [{ rating: 5, title: '<img src=x onerror=alert(1)>', body: '<script>alert(1)</script>', nickname: 'a"b', territory: 'CHN', created: '2026-11-01T00:00:00Z' }];
 const html = page.renderDashboard(lib.buildView(state, { range: 'all', currency: 'CNY', today }));
@@ -189,6 +231,59 @@ eq(Object.fromEntries(dropView.recent.map((d) => [d.date, d.known]))['2026-11-05
     assert.ok(filter.includes('"miaoyan.app"') && filter.includes('/cats'), 'each query is limited to the site');
     checks += 1;
   }
+  process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = '{bad';
+}
+
+// ---- a part fails quietly while its last success is recent ---------------
+{
+  const gaBodies = [];
+  const { privateKey: gaKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = JSON.stringify({ client_email: 'a@b.c', private_key: gaKey.export({ type: 'pkcs8', format: 'pem' }) });
+  const warm = JSON.parse(JSON.stringify(seeded));
+  warm.traffic = {
+    fullAt: new Date(SYNC_NOW.getTime() - 3600e3).toISOString(),
+    days: { '2026-10-01': [50, 40, 60], '2026-11-07': [1, 1, 1] },
+    sources: [['2022-06-01', 'old.com', 9], ['2026-10-01', 'github.com', 50], ['2026-11-07', 'stale.com', 1]],
+  };
+  warm.health = { traffic: { ok: new Date(SYNC_NOW.getTime() - 3600e3).toISOString() }, fx: { ok: new Date(SYNC_NOW.getTime() - 3600e3).toISOString() } };
+  let gaDown = false;
+  let fxCalls = 0;
+  const ga = (u, init) => {
+    if (u.includes('oauth2')) return answer(200, JSON.stringify({ access_token: 't' }));
+    if (u.includes('er-api')) { fxCalls += 1; return answer(500); }
+    if (u.includes('analyticsdata')) {
+      if (gaDown) throw new DOMException('The operation was aborted due to timeout', 'TimeoutError');
+      const body = JSON.parse(init.body);
+      gaBodies.push(body);
+      const two = body.dimensions.length === 2;
+      return answer(200, JSON.stringify({ rows: [{ dimensionValues: two ? [{ value: '20261108' }, { value: 'github.com' }] : [{ value: '20261108' }], metricValues: two ? [{ value: '4' }] : [{ value: '4' }, { value: '3' }, { value: '5' }] }] }));
+    }
+    return answer(500);
+  };
+  writes = stub({ blob: stored(warm), sales: () => answer(404), json: ga });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+  const merged = writes[writes.length - 1];
+  eq(gaBodies.length, 2, 'a run after a fresh full pull asks GA only for the recent days');
+  eq(gaBodies[0].dateRanges[0], { startDate: '2026-11-05', endDate: 'today' }, 'the recent window ends at GA\'s own today');
+  eq(merged.traffic.days['2026-10-01'], [50, 40, 60], 'older days survive the patch');
+  eq(merged.traffic.days['2026-11-07'], undefined, 'a recent day GA no longer lists reads as no visits');
+  eq(merged.traffic.days['2026-11-08'], [4, 3, 5], 'the newest day lands');
+  eq(merged.traffic.sources.map((r) => r[1]), ['old.com', 'github.com', 'github.com'], 'older sources survive and recent ones are replaced');
+  eq(fxCalls, 0, 'a part not due yet is skipped');
+
+  gaDown = true;
+  writes = stub({ blob: stored(merged), sales: () => answer(404), json: ga });
+  await lib.runSync({ now: new Date(SYNC_NOW.getTime() + 3600e3), budgetMs: 1000 });
+  const quiet = writes[writes.length - 1];
+  assert.ok(!quiet.errors.some((e) => e.includes('官网流量')), 'one timeout right after a success stays off the page');
+  assert.ok(quiet.health.traffic.error.includes('timeout'), 'but is kept for later');
+  eq(quiet.traffic.days['2026-11-08'], [4, 3, 5], 'and the data it had stays');
+  checks += 2;
+
+  writes = stub({ blob: stored(quiet), sales: () => answer(404), json: ga });
+  await lib.runSync({ now: new Date(SYNC_NOW.getTime() + 8 * 3600e3), budgetMs: 1000 });
+  assert.ok(writes[writes.length - 1].errors.some((e) => e.includes('官网流量没同步成功')), 'a failure past its stale window reaches the page');
+  checks += 1;
   process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = '{bad';
 }
 
