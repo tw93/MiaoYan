@@ -1,27 +1,25 @@
-# V4.8.0 Brachydios 💥
+# V4.9.0 Barioth 🐯
 
-1. 删除的笔记放进笔记库自己的废纸篓，iPhone、iPad 和 Mac 看到的是同一个废纸篓，在 iPhone 上清空后 Mac 侧栏的废纸篓也会跟着消失
-2. Mac：磁盘满了或文件夹不能写入时，保存失败只提示一次，打字时不再反复弹窗，按 Command-S 还是存不下会直接告诉你
-3. Mac：删除笔记后会提示已移到废纸篓并带一个撤销按钮，空文件夹和搜不到结果时编辑区显示一行提示，提示条按文字长短停留，鼠标放上去时不会消失
-4. Mac：没有网络时公式也能正常排版，思维导图的分支换成和妙言一致的配色，导出 PDF 和图片时也不再是空白
-5. Mac：繁体中文、日文和西班牙文的菜单与提示改成当地习惯的说法，英文的笔记数按单复数显示，英文和西班牙文的字数按单词统计，版本历史的日期跟着 App 语言走
-6. Mac：第一次打开时示例文件夹按系统语言命名，示例笔记里的快捷键和菜单写法一致
-7. Mac：侧栏的文件夹名和图标对齐，顶部的妙言标志离窗口按钮远一些，界面上的灰字换成暖灰，笔记列表的日期字号调大，查找时其余匹配用浅绿底标出来，查找栏的阴影能看到了
-8. iPhone 和 iPad：没有 iCloud 账号也能直接用，妙言会在这台设备上建好笔记库，在文件 App 里能看到
-9. iPhone 和 iPad：打不开的笔记用一句话说明原因，并带一个重试按钮
-10. iPhone 和 iPad：文件夹卡片上的数字和点进去看到的笔记数一致，没开 iCloud 时显示未开启，不再显示已同步
-11. iPhone 和 iPad：笔记页的编辑按钮换成铅笔图标，启动画面和 App 用同一种纸色
+1. Mac：导出的 PDF 和预览保持一致，图片说明、引用和视频封面排版正常，深色模式下导出也是浅色页面，仓耳今楷的标题不再发糊，图表还没画完时不会把加载提示印进去
+2. Mac：查找替换在新内容仍然匹配搜索词时会接着替换下一处，在 10 以上的有序列表项按 Tab，光标留在原来那一行
+3. Mac：访达里的 .md 文件显示妙言的文档图标，预览里的引用排得更紧凑
+4. Mac：妙言菜单和关于窗口里可以找到 iPhone 和 iPad 版，同一个 iCloud 云盘文件夹，在手机和平板上接着写
+5. iPhone 和 iPad：阅读时可以直接勾选任务，从阅读进入编辑、写完回到阅读都停在原来的位置，标题多的笔记可以在菜单里打开目录，表格按笔记里写的方式对齐
+6. iPhone 和 iPad：编辑时菜单里可以插入照片、在笔记里查找、撤销和重做，回车会接着列表往下写，在空的列表项上再按一次回车结束列表
+7. iPhone 和 iPad：接上键盘后 Command-T 切换任务，Command-] 和 Command-[ 缩进整行，Tab 缩进列表项，有序列表下面也能正确嵌套
+8. iPhone 和 iPad：笔记可以复制一份，文件夹可以重命名，空文件夹可以删除，在文件 App 或分享菜单里选妙言就能打开 Markdown 文件
+9. iPhone 和 iPad：搜索按词匹配，标题里有的排在前面，新建笔记写到一半离开，下次新建时草稿还在，笔记库读不出来时列表保留原来的内容并可以重试
+10. iPhone 和 iPad：清空废纸篓只删除列表里看得到的笔记，正在写的笔记在别的设备上被改名、移走或删除时，刚写的内容会另存成一篇
 
 ---
 
-1. Deleted notes go to the library's own Trash, so iPhone, iPad and Mac share one Trash, and emptying it on iPhone removes the Mac's Trash row too
-2. Mac: When the disk is full or a folder cannot be written, a failed save is reported once instead of over and over while you type, and Command-S tells you when it still cannot save
-3. Mac: Deleting a note shows Moved to Trash with an Undo button, an empty folder or a search with no match shows a short hint instead of a blank editor, and toasts stay long enough to read and while the pointer is over them
-4. Mac: Formulas typeset correctly offline, and mind maps draw their branches in MiaoYan's own colours and no longer come out blank in PDF and image exports
-5. Mac: Traditional Chinese, Japanese and Spanish menus and messages use native wording, English note counts read 1 note and 2 notes, English and Spanish word counts count words, and version history dates follow the app language
-6. Mac: On first launch the sample folders are named in the system language, and the sample notes write shortcuts as the menus show them
-7. Mac: Folder names in the sidebar line up with their icons, the MiaoYan logo sits further below the window buttons, interface greys are warmer, note list dates are larger, other find matches sit on a light green tint, and the find bar's shadow now shows
-8. iPhone and iPad: No iCloud account needed to start: MiaoYan makes a library on this device, and you can see it in the Files app
-9. iPhone and iPad: A note that can't be opened says why in one line, with a Try again button
-10. iPhone and iPad: A folder's card counts the same notes its page lists, and without iCloud the header reads iCloud Off instead of Synced
-11. iPhone and iPad: The Edit button is a plain pencil, and the launch screen uses the same paper as the app
+1. Mac: Exported PDFs match the preview: captions, quotes and video posters are laid out properly, an export from dark mode comes out on a light page, headings in TsangerJinKai are no longer blurred, and a diagram still drawing doesn't print its loading line
+2. Mac: Replace moves on to the next match when the new text still matches the search, and Tab on a numbered item from 10 up keeps the caret on its line
+3. Mac: .md files show MiaoYan's document icon in Finder, and quotes in the preview sit tighter
+4. Mac: The MiaoYan menu and the About window link to the iPhone and iPad apps, which open the same iCloud Drive folder so you can keep writing on your phone and tablet
+5. iPhone and iPad: Tick tasks while reading, keep your place going into the editor and back, open Contents from the menu in a note with several headings, and see table columns aligned as the note wrote them
+6. iPhone and iPad: The editor's menu inserts photos, finds in the note, and offers Undo and Redo, Return continues a list, and Return on an empty item ends it
+7. iPhone and iPad: With a keyboard, Command-T toggles a task, Command-] and Command-[ shift lines, Tab indents a list item, and items nest correctly under a numbered list
+8. iPhone and iPad: Duplicate a note, rename a folder, delete an empty folder, and open a Markdown file from the Files app or a share sheet by choosing MiaoYan
+9. iPhone and iPad: Search matches every word and puts title matches first, a new note you left half written is still there next time, and when the library can't be read the list keeps what it showed and offers Try Again
+10. iPhone and iPad: Empty Trash deletes only the notes its list shows, and when the note you are typing in is renamed, moved or deleted on another device, what you typed is saved as a note of its own
