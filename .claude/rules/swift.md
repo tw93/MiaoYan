@@ -9,7 +9,7 @@ paths:
 
 ## AppKit vs SwiftUI
 
-- macOS 主 app 的编辑器核心(`EditTextView`)和预览管线(`MPreviewView`)保持 AppKit,不要重写。app 外壳(窗口、侧栏、列表、设置、菜单命令)在 `Shell/` 里迁往 SwiftUI,以 `-MiaoYanShell YES` 打开,storyboard 窗口在外壳达到对等前保持可发布,具体约束见 `AGENTS.md` 的 Working Rules。
+- macOS 主 app 的编辑器核心(`EditTextView`)和预览管线(`MPreviewView`)保持 AppKit,不要重写。app 外壳(窗口、侧栏、列表、设置、菜单命令)在 `Shell/` 里迁往 SwiftUI,以 `-MiaoYanShell YES` 打开,storyboard 窗口在外壳达到对等前保持可发布,具体约束见 `.claude/rules/shell.md`。
 - **新增的独立面板**(版本 diff 视图、quick-open、大纲侧栏这类自包含 UI)允许用 `NSHostingView` 挂 SwiftUI,这是维护者 2026-07 定下的下一代方向边界;不要以此为由把 SwiftUI 渗进 EditTextView / MPreviewView / ViewController 热路径。
 
 ## Threading

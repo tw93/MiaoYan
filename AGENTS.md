@@ -20,7 +20,7 @@ MiaoYan is a lightweight Markdown editor built with Swift. This open-source repo
 - `Helpers/` - utilities and services.
 - `Extensions/` - Swift extensions.
 - `Resources/` - bundled resources.
-- `Shell/` - the SwiftUI main window in progress (`-MiaoYanShell YES`), see the SwiftUI shell rules below.
+- `Shell/` - the SwiftUI main window in progress (`-MiaoYanShell YES`), see `.claude/rules/shell.md`.
 - `MiaoYan.xcodeproj/` - Xcode project and version settings.
 - `Package.swift` - a reference list of the Swift package dependencies; no Xcode project reads it, the real package references live in `project.pbxproj`.
 - `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.

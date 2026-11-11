@@ -780,7 +780,7 @@ public class NotesTextProcessor {
         }
     }
 
-    // We transform the user provided `quoteFontName` `String` to a `NSFont`
+    // The quote font is the user's note font (`UserDefaultsManagement.noteFont`), or the system font
 
     static func quoteFont(_ size: CGFloat) -> Font {
         if let font = UserDefaultsManagement.noteFont {

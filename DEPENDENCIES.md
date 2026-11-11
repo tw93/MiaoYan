@@ -1,23 +1,24 @@
 # MiaoYan Dependencies
 
 This document is the source of truth for runtime dependencies. Nothing
-enforces it, so keep the table below aligned with `Package.swift` by hand, in
-the same commit. Removals matter as much as additions.
+enforces it, so keep the table below aligned with the package references in
+`MiaoYan.xcodeproj/project.pbxproj` by hand, in the same commit. Removals matter as much as additions.
 
 ## Swift Package Manager
 
-All Swift dependencies are managed through `Package.swift`. The Xcode project
-consumes them via the standard SPM integration, not the `Package.swift` build
-itself (the `targets:` array is intentionally empty; the file is a manifest
-of declared versions only).
+The Xcode project declares its Swift dependencies as package references in
+`MiaoYan.xcodeproj/project.pbxproj` (`XCRemoteSwiftPackageReference`), and the
+table follows those. No Xcode project reads `Package.swift`; it is only a
+reference list (the `targets:` array is intentionally empty) and its versions
+may differ.
 
 | Package                                                            | Constraint | Purpose                                                |
 | ------------------------------------------------------------------ | ---------- | ------------------------------------------------------ |
-| [Sparkle](https://github.com/sparkle-project/Sparkle)              | 2.8.0+     | macOS auto-update (non-AppStore builds only)           |
+| [Sparkle](https://github.com/sparkle-project/Sparkle)              | 2.7.3+     | macOS auto-update (non-AppStore builds only)           |
 | [Highlightr](https://github.com/raspu/Highlightr)                  | 2.3.0+     | Native syntax highlighting in `Helpers/NotesTextProcessor.swift` |
-| [swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm)   | 1.0.2+     | GitHub Flavored Markdown parsing (preview + export)    |
-| [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts) | 2.4.0+ | Global keyboard shortcut registration (window activation) |
-| [Prettier](https://github.com/simonbs/Prettier.git)                | 0.2.1+     | Markdown auto-format on save                           |
+| [swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm)   | 1.0.0+     | GitHub Flavored Markdown parsing (preview + export)    |
+| [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts) | 2.3.0+ | Global keyboard shortcut registration (window activation) |
+| [Prettier](https://github.com/simonbs/Prettier.git)                | 0.2.1+     | Markdown formatting from the Format command                            |
 
 ## Conditional Compilation
 
@@ -45,8 +46,8 @@ they are documented in a separate manifest:
 ## Working with Dependencies
 
 Add a new SPM dependency via Xcode (File > Add Package Dependencies...) and
-**also** add a line to `Package.swift` and a row to the table above in the
-same commit.
+add a row to the table above in the same commit (and a line to `Package.swift`
+if you keep that reference list current).
 
 Updating versions:
 
@@ -58,8 +59,8 @@ xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -resolvePackageDependencie
 swift package show-dependencies
 ```
 
-Remove a dependency by deleting it from both `Package.swift` and the Xcode
-project's package references, then delete `Package.resolved` and re-resolve.
+Remove a dependency by deleting it from the Xcode project's package references
+(and from `Package.swift`), then delete `Package.resolved` and re-resolve.
 
 ## History
 

@@ -138,8 +138,10 @@ Bundled JS used by the preview is vendored under
   `UserDefaultsManagement.storageBookmark`).
 - Note attachments: `i/` (inline images) and `files/` (other attachments)
   subdirectories at the note's level.
-- Trash: the volume's system Trash (`Storage.getTrash`), or a `Trash` folder
-  in the default storage root when the volume has none.
+- Trash: notes go to the library's own `Trash` folder
+  (`Storage.checkLibraryTrash`, `Storage.trashItem`); folders and images go to
+  `Storage.systemTrashDestination` (the volume's system Trash, falling back to
+  the library Trash).
 - Symlinked directories: supported but indexed in a way that avoids recursion
   loops (`Business/Storage.swift::checkSub`).
 - Version history: `Library/Application Support/com.tw93.miaoyan/Versions/<path-hash>/`
@@ -171,6 +173,6 @@ Bundled JS used by the preview is vendored under
 
 ## See Also
 
-- `AGENTS.md` - agent-facing repo guide (commands, hot files, current risk areas)
+- `AGENTS.md` - agent-facing repo guide (commands, and the risk areas in `.claude/rules/`: storage, preview, editor, shell)
 - `.claude/rules/swift.md` - project-level Swift conventions
 - `~/.claude/CLAUDE.md` - global rules (writing style, commit policy, git safety)
