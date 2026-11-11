@@ -97,7 +97,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private var editorSearchRanges: [NSRange] = []
     private var editorCurrentMatchIndex: Int = 0
     private var editorLastSearchText: String = ""
-    private var editorSearchRefreshTimer: Timer?
     private var runtimeState: EditorSessionState? {
         viewDelegate?.sessionState ?? AppContext.shared.sessionState
     }
@@ -831,14 +830,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     override func didChangeText() {
         super.didChangeText()
         if editorSearchBar != nil, !editorLastSearchText.isEmpty {
-            // Rerunning the whole-note search on every keystroke made typing lag; refresh once typing pauses, as the preview does.
-            editorSearchRefreshTimer?.invalidate()
-            editorSearchRefreshTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: false) { [weak self] _ in
-                Task { @MainActor [weak self] in
-                    guard let self, self.editorSearchBar != nil else { return }
-                    self.handleSearchInput(self.editorLastSearchText, jumpToFirstMatch: false)
-                }
-            }
+            handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
         }
 
         // Update preview in split mode with adaptive debounce.
@@ -1675,7 +1667,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func handleSearchInput(_ text: String, jumpToFirstMatch: Bool) {
-        editorSearchRefreshTimer?.invalidate()
         editorLastSearchText = text
         clearEditorSearchHighlights()
         guard let storage = textStorage, !text.isEmpty else {

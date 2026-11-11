@@ -266,18 +266,19 @@ final class EditorMenuRoutingTests: XCTestCase {
         editor.layoutManager?.temporaryAttribute(.backgroundColor, atCharacterIndex: index, effectiveRange: nil) != nil
     }
 
-    /// With the find bar open, every keystroke in the editor reran the
-    /// whole-note search on the spot. Edits now refresh it 0.15s later, while
-    /// typing in the search field itself still searches at once.
+    /// The matches are searched again on the edit itself. A delayed refresh
+    /// (tried 2026-11-11) left Find Next and Replace working on positions from
+    /// before the edit, past the end of the text after a deletion.
     @MainActor
-    func testEditsRefreshTheFindBarAfterADelay() {
+    func testAnEditRefreshesTheMatchesAtOnce() {
         let (editor, container) = makeSearchEditor("iphone x")
         editor.showSearchBar(prefilledText: "iphone")
         XCTAssertTrue(isHighlighted(editor, at: 0))
         editor.insertText(" iphone", replacementRange: NSRange(location: 8, length: 0))
-        XCTAssertFalse(isHighlighted(editor, at: 9), "searched again on the keystroke")
-        RunLoop.current.run(until: Date().addingTimeInterval(0.4))
         XCTAssertTrue(isHighlighted(editor, at: 9), "the edit refreshes the search")
+        editor.insertText("", replacementRange: NSRange(location: 8, length: 7))
+        editor.findNext()
+        XCTAssertEqual(editor.selectedRange(), NSRange(location: 0, length: 6), "the only match left")
         withExtendedLifetime(container) {}
     }
 
@@ -289,7 +290,6 @@ final class EditorMenuRoutingTests: XCTestCase {
         let (editor, container) = makeSearchEditor("aa iphone bb")
         editor.showSearchBar(prefilledText: "iphone")
         editor.insertText("x", replacementRange: NSRange(location: 6, length: 0))
-        RunLoop.current.run(until: Date().addingTimeInterval(0.4))
         XCTAssertEqual(editor.string, "aa iphxone bb")
         for index in 0..<(editor.string as NSString).length {
             XCTAssertFalse(isHighlighted(editor, at: index), "highlight left at \(index)")
