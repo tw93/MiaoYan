@@ -97,17 +97,6 @@ enum LanguageType: Int {
         default: return "zh-Hans"
         }
     }
-
-    @MainActor
-    static func withName(rawValue: String) -> LanguageType {
-        switch rawValue {
-        case "English": return LanguageType.English
-        case "简体中文", "Chinese (Simplified)": return LanguageType.Chinese
-        case "日本語", "日语", "Japanese": return LanguageType.Japanese
-        case "繁體中文", "繁体中文", "Chinese (Traditional)": return LanguageType.ChineseTC
-        default: return LanguageType.Chinese
-        }
-    }
 }
 
 @MainActor

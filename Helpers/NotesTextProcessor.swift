@@ -620,8 +620,6 @@ public class NotesTextProcessor {
 
     @MainActor public static let imageInlineRegex = MarklightRegex(pattern: imageInlinePattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
-    fileprivate static let todoInlinePattern = "(^(-\\ \\[(?:\\ |x)\\])\\ )"
-
     fileprivate static let allTodoInlinePattern = "((-\\ \\[(?:\\ |x)\\])\\ )"
 
     @MainActor public static let allTodoInlineRegex = MarklightRegex(pattern: allTodoInlinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -650,16 +648,6 @@ public class NotesTextProcessor {
     ].joined(separator: "\n")
 
     @MainActor public static let codeSpanRegex = MarklightRegex(pattern: codeSpanPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
-
-    fileprivate static let codeSpanOpeningPattern = [
-        "(?<![\\\\`])   # Character before opening ` can't be a backslash or backtick",
-        "(`+)           # $1 = Opening run of `",
-    ].joined(separator: "\n")
-
-    fileprivate static let codeSpanClosingPattern = [
-        "(?<![\\\\`])   # Character before opening ` can't be a backslash or backtick",
-        "(`+)           # $1 = Opening run of `",
-    ].joined(separator: "\n")
 
     // MARK: Block quotes
     /*
@@ -690,8 +678,6 @@ public class NotesTextProcessor {
     @MainActor public static let appUrlRegex = MarklightRegex(pattern: appUrlPattern, options: [.anchorsMatchLines])
 
     // MARK: Bold
-    fileprivate static let strictBoldPattern = "(^|[\\W_])(?:(?!\\1)|(?=^))(\\*|_)\\2(?=\\S)(.*?\\S)\\2\\2(?!\\2)(?=[\\W_]|$)"
-
     fileprivate static let boldPattern = "(\\*\\*|__)(?=\\S)(.+?)(?<=\\S)\\1"
     @MainActor public static let boldRegex = MarklightRegex(pattern: boldPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
@@ -711,12 +697,8 @@ public class NotesTextProcessor {
     @MainActor public static let blankRegex = MarklightRegex(pattern: "\\s+", options: [.allowCommentsAndWhitespace])
 
     // MARK: Italic
-    fileprivate static let strictItalicPattern = "(^|[\\s_])(?:(?!\\1)|(?=^))(\\*|_)(?=\\S)((?:(?!\\2).)*?\\S)\\2(?!\\2)(?=[\\s]|(?:[.,!?]\\s)|$)"
-
     fileprivate static let italicPattern = "(?<!\\*|_)(?<!\\*\\*)(\\*|_)(?!\\s)(.+?)(?<!\\s)\\1(?!\\*|_)(?!\\*\\*)"
     @MainActor public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
-
-    fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
 
     /// `<https://…>`: only its angle brackets are markup.
     @MainActor public static let autolinkBracketRegex = MarklightRegex(

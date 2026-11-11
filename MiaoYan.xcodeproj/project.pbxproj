@@ -165,7 +165,6 @@
 		D7B6E59A207912E300FE0E20 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B6E599207912E300FE0E20 /* Project.swift */; };
 		D7C302C521F320FD0041627F /* ImageAttachment+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C302C421F320FD0041627F /* ImageAttachment+.swift */; };
 		D7CD5F6C1F51185F006AA35D /* NSFont+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CD5F6B1F51185F006AA35D /* NSFont+.swift */; };
-		D7CE196C1FA4BA5E004BF8EE /* PreviewTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CE196B1FA4BA5E004BF8EE /* PreviewTextField.swift */; };
 		D7D1DE68216D05A800AC1845 /* NameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D1DE67216D05A800AC1845 /* NameTextField.swift */; };
 		D7D372F4207B5B0F00AFBD9F /* SidebarNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D372F3207B5B0F00AFBD9F /* SidebarNotesView.swift */; };
 		D7DA9E1E21031901001CF0BE /* OutlineHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA9E1D21031901001CF0BE /* OutlineHeaderView.swift */; };
@@ -380,7 +379,6 @@
 		D7B6E599207912E300FE0E20 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		D7C302C421F320FD0041627F /* ImageAttachment+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAttachment+.swift"; sourceTree = "<group>"; };
 		D7CD5F6B1F51185F006AA35D /* NSFont+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFont+.swift"; sourceTree = "<group>"; };
-		D7CE196B1FA4BA5E004BF8EE /* PreviewTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewTextField.swift; sourceTree = "<group>"; };
 		D7D1DE67216D05A800AC1845 /* NameTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTextField.swift; sourceTree = "<group>"; };
 		D7D372F3207B5B0F00AFBD9F /* SidebarNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarNotesView.swift; sourceTree = "<group>"; };
 		D7DA9E1D21031901001CF0BE /* OutlineHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineHeaderView.swift; sourceTree = "<group>"; };
@@ -646,7 +644,6 @@
 				D735E5BC1F2EF66000173215 /* NoteCellView.swift */,
 				D735E5BE1F2F001500173215 /* NoteRowView.swift */,
 				D7A415131F2FBDA00099B82C /* NotesTableView.swift */,
-				D7CE196B1FA4BA5E004BF8EE /* PreviewTextField.swift */,
 				D7508FC71F337E850047AB76 /* SearchTextField.swift */,
 				D7D372F3207B5B0F00AFBD9F /* SidebarNotesView.swift */,
 				D75EE7FC2078C5460055F159 /* SidebarCellView.swift */,
@@ -975,7 +972,6 @@
 				D7DD5A8A1F88D50000CE947E /* FileWatcherEvent.swift in Sources */,
 				277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */,
 				27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */,
-				D7CE196C1FA4BA5E004BF8EE /* PreviewTextField.swift in Sources */,
 				6ebaaf6024d941179530c9dc966d60c6 /* FontConfiguration.swift in Sources */,
 				3b5e801ceb5d752d31b64f0f18d8ff60 /* FontCatalog.swift in Sources */,
 				278160922E75551F00F3D54B /* PrefsModel.swift in Sources */,

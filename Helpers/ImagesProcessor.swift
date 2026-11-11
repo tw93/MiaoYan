@@ -13,7 +13,6 @@ public class ImagesProcessor {
     var textView: TView?
 
     var offset = 0
-    var newLineOffset = 0
 
     init(styleApplier: NSMutableAttributedString, range: NSRange? = nil, note: Note, textView: TView? = nil) {
         self.styleApplier = styleApplier

@@ -32,7 +32,6 @@ class ViewController:
     var refilled: Bool = false
     var timer = Timer()
     var sidebarTimer = Timer()
-    var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
     nonisolated(unsafe) private var previewUpdateTimer: Timer?
     var isFocusedTitle: Bool = false
@@ -53,7 +52,6 @@ class ViewController:
     var swipeLeftExecuted = false
     var swipeRightExecuted = false
     var scrollDeltaX: CGFloat = 0
-    var updateViews = [Note]()
     var lastEnablePreviewTime: TimeInterval = 0
     var lastPreviewReloadTime: TimeInterval = 0
     var savedEditorSelection: NSRange?

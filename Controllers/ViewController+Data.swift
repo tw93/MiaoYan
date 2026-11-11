@@ -592,26 +592,6 @@ extension ViewController {
         notesTableView.scrollRowToVisible(0)
     }
 
-    @objc private func updateTableViews() {
-        notesTableView.beginUpdates()
-        for note in updateViews {
-            notesTableView.reloadRow(note: note)
-
-            if search.stringValue.isEmpty {
-                if UserDefaultsManagement.sort == .modificationDate, UserDefaultsManagement.sortDirection == true {
-                    if let index = notesTableView.noteList.firstIndex(of: note) {
-                        moveNoteToTop(note: index)
-                    }
-                } else {
-                    sortAndMove(note: note)
-                }
-            }
-        }
-
-        updateViews.removeAll()
-        notesTableView.endUpdates()
-    }
-
     // MARK: - Selection Management
     @objc func selectNullTableRow(timer: Bool = false) {
         if timer {

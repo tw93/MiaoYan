@@ -430,34 +430,6 @@ public class Note: NSObject {
         return nil
     }
 
-    public func getPreviewLabel(with text: String? = nil) -> String {
-        var preview = ""
-        let content = text ?? content.string
-        let length = text?.count ?? self.content.string.count
-
-        if length > 250 {
-            if text == nil {
-                let startIndex = content.index(content.startIndex, offsetBy: 0)
-                let endIndex = content.index(content.startIndex, offsetBy: 250)
-                preview = String(content[startIndex...endIndex])
-            } else {
-                preview = String(content.prefix(250))
-            }
-        } else {
-            preview = content
-        }
-
-        preview = preview.replacingOccurrences(of: "\n", with: " ")
-
-        preview = preview.condenseWhitespace()
-
-        if preview.starts(with: "![") {
-            return ""
-        }
-
-        return preview
-    }
-
     @objc func getDateForLabel() -> String {
         guard
             let date = (project.sortBy == .creationDate || UserDefaultsManagement.sort == .creationDate)
@@ -503,10 +475,6 @@ public class Note: NSObject {
         }
         guard let text = NoteText.decode(data) else { return nil }
         return (NSAttributedString(string: text), NoteText.mayBeDamagedUTF8(data))
-    }
-
-    func getContentAsync() async -> NSAttributedString? {
-        await readContentAsync()?.text
     }
 
     private func readContentAsync() async -> (text: NSAttributedString, damaged: Bool)? {

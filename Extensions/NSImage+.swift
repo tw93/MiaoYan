@@ -4,24 +4,6 @@ extension NSImage {
     public var height: CGFloat { size.height }
     public var width: CGFloat { size.width }
 
-    public var PNGRepresentation: Data? {
-        guard let tiff = tiffRepresentation,
-            let tiffData = NSBitmapImageRep(data: tiff)
-        else {
-            return nil
-        }
-        return tiffData.representation(using: .png, properties: [:])
-    }
-
-    public var JPEGRepresentation: Data? {
-        guard let tiff = tiffRepresentation,
-            let tiffData = NSBitmapImageRep(data: tiff)
-        else {
-            return nil
-        }
-        return tiffData.representation(using: .jpeg, properties: [:])
-    }
-
     public func copy(size: NSSize) -> NSImage? {
         let frame = NSRect(origin: .zero, size: size)
         guard let rep = bestRepresentation(for: frame, context: nil, hints: nil) else {

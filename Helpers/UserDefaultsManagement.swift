@@ -2,7 +2,6 @@ import Cocoa
 import Foundation
 
 extension Notification.Name {
-    static let editorModeChanged = Notification.Name("editorModeChanged")
     /// Editor and preview fonts changed while no ViewController exists (the
     /// SwiftUI shell), which re-renders on it.
     static let editorSettingsChanged = Notification.Name("EditorSettingsChanged")
@@ -851,20 +850,10 @@ public enum UserDefaultsManagement {
         var currentMode: EditorMode {
             get { return _currentMode }
             set {
-                let oldMode = _currentMode
                 _currentMode = newValue
 
                 // Save to UserDefaults
                 UserDefaults.standard.set(newValue.rawValue, forKey: Constants.EditorModeKey)
-
-                // Send mode change notification
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(
-                        name: .editorModeChanged,
-                        object: newValue,
-                        userInfo: ["previousMode": oldMode]
-                    )
-                }
             }
         }
         var isPreviewMode: Bool { return _currentMode == .preview || _currentMode == .ppt }
@@ -955,19 +944,6 @@ public enum UserDefaultsManagement {
     static var canUseMenu: Bool {
         return EditorStateManager.shared.canUseMenu
     }
-    static var lastSync: Date? {
-        get {
-            if let sync = UserDefaults.standard.object(forKey: "lastSync") {
-                return sync as? Date
-            } else {
-                return nil
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "lastSync")
-        }
-    }
-
     static var sort: SortBy {
         get {
             guard let raw = UserDefaults.standard.object(forKey: "sortBy") as? String,
