@@ -1,6 +1,7 @@
 import Carbon.HIToolbox
 import Cocoa
 import Foundation
+import MiaoYanCore
 
 typealias Font = NSFont
 typealias TextView = EditTextView
@@ -203,63 +204,6 @@ public class TextFormatter {
         }
     }
 
-    public static func getAutocompleteCharsMatch(string: String) -> NSTextCheckingResult? {
-        guard
-            let regex = try? NSRegularExpression(
-                pattern: "^(( |\\t)*\\- \\[[ xX]\\] )|^(( |\\t)*[-|–|—|*|•|>|\\+]{1} )"),
-            let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
-        else { return nil }
-        return result
-    }
-
-    public static func getAutocompleteDigitsMatch(string: String) -> NSTextCheckingResult? {
-        guard let regex = try? NSRegularExpression(pattern: "^(( |\\t)*[0-9]+\\. )"),
-            let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
-        else { return nil }
-        return result
-    }
-
-    /// The marker the next line starts with: a task continues unticked,
-    /// whatever the line it follows says.
-    static func continuedListMarker(_ found: String) -> String {
-        found.replacingOccurrences(of: "[x]", with: "[ ]").replacingOccurrences(of: "[X]", with: "[ ]")
-    }
-
-    /// The paragraph's length without its line terminator, in UTF-16 units,
-    /// so a CRLF line ("\r\n" is one Character) measures like an LF one.
-    private static func contentsLength(of paragraph: NSAttributedString) -> Int {
-        var contentsEnd = 0
-        (paragraph.string as NSString).getParagraphStart(nil, end: nil, contentsEnd: &contentsEnd, for: NSRange(location: 0, length: 0))
-        return contentsEnd
-    }
-
-    private func matchChars(string: NSAttributedString, match: NSTextCheckingResult, prefix: String? = nil) {
-        guard string.length >= match.range.upperBound else { return }
-        let found = string.attributedSubstring(from: match.range).string
-        if (found as NSString).length == Self.contentsLength(of: string) {
-            let range = storage.mutableString.paragraphRange(for: textView.selectedRange)
-            let selectRange = NSRange(location: range.location, length: 0)
-            insertText("\n", replacementRange: range, selectRange: selectRange)
-            return
-        }
-        insertText("\n" + Self.continuedListMarker(found))
-    }
-
-    private func matchDigits(string: NSAttributedString, match: NSTextCheckingResult) {
-        guard string.length >= match.range.upperBound else { return }
-        let found = string.attributedSubstring(from: match.range).string
-        if (found as NSString).length == Self.contentsLength(of: string) {
-            let range = storage.mutableString.paragraphRange(for: textView.selectedRange)
-            let selectRange = NSRange(location: range.location, length: 0)
-            insertText("\n", replacementRange: range, selectRange: selectRange)
-            return
-        }
-        if let position = Int(found.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)) {
-            let newDigit = found.replacingOccurrences(of: String(position), with: String(position + 1))
-            insertText("\n" + newDigit)
-        }
-    }
-
     /// The box of a task line ("  - [x] a", "1. [ ] b"), as a range inside
     /// the line: the one character between the brackets.
     static func taskBoxRange(in line: String) -> NSRange? {
@@ -284,22 +228,44 @@ public class TextFormatter {
         setSelectedRange(selection)
     }
 
+    /// Markers only the Mac continues, on top of `ListContinuation`'s: the
+    /// en dash, em dash and bullet a writer types by hand, and `| ` table rows.
+    private static let macOnlyMarkerRegex = try? NSRegularExpression(pattern: "^[ \\t]*[\u{2013}\u{2014}\u{2022}|] ")
+
+    /// Return at the end of a line starting with a Mac-only marker: the
+    /// marker again, or on a line holding only the marker, the line emptied,
+    /// with the same line ending and fenced-code rule as `ListContinuation`.
+    /// The caret goes to the end of the replacement.
+    static func macOnlyMarkerEdit(in text: NSString, caret: Int) -> (range: NSRange, replacement: String)? {
+        guard caret >= 0, caret <= text.length, let regex = macOnlyMarkerRegex else { return nil }
+        var start = 0
+        var contentsEnd = 0
+        text.getParagraphStart(&start, end: nil, contentsEnd: &contentsEnd, for: NSRange(location: caret, length: 0))
+        let line = NSRange(location: start, length: contentsEnd - start)
+        guard caret == contentsEnd, caret > start, !ListContinuation.isInFencedCode(at: caret, in: text),
+            let match = regex.firstMatch(in: text as String, range: line)
+        else { return nil }
+        if match.range.length == line.length { return (line, "") }
+        return (NSRange(location: caret, length: 0), ListContinuation.lineBreak(in: text) + text.substring(with: match.range))
+    }
+
     public func newLine() {
         guard let currentParagraphRange = getParagraphRange() else { return }
         let currentParagraph = storage.attributedSubstring(from: currentParagraphRange)
         let selectedRange = textView.selectedRange
-        // Where the line's text ends, before "\n" or "\r\n".
-        var contentsEnd = 0
-        storage.mutableString.getParagraphStart(nil, end: nil, contentsEnd: &contentsEnd, for: currentParagraphRange)
-        let atLineEnd = selectedRange.location >= contentsEnd
 
-        if selectedRange.location != currentParagraphRange.location, atLineEnd {
-            if let charsMatch = TextFormatter.getAutocompleteCharsMatch(string: currentParagraph.string) {
-                matchChars(string: currentParagraph, match: charsMatch)
+        // Return with the caret at the end of a list or quote line runs the
+        // rule the iPhone and iPad editor run (MiaoYanCore), so both write
+        // the same marker, end a list the same way and skip fenced code.
+        if selectedRange.length == 0 {
+            let text = storage.string as NSString
+            if let edit = ListContinuation.edit(in: text, caret: selectedRange.location) {
+                insertText(edit.replacement, replacementRange: edit.range, selectRange: NSRange(location: edit.caret, length: 0))
                 return
             }
-            if let digitsMatch = TextFormatter.getAutocompleteDigitsMatch(string: currentParagraph.string) {
-                matchDigits(string: currentParagraph, match: digitsMatch)
+            if let edit = Self.macOnlyMarkerEdit(in: text, caret: selectedRange.location) {
+                let caret = edit.range.location + (edit.replacement as NSString).length
+                insertText(edit.replacement, replacementRange: edit.range, selectRange: NSRange(location: caret, length: 0))
                 return
             }
         }

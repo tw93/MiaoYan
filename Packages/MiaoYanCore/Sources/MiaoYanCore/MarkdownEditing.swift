@@ -30,6 +30,19 @@ public enum SourceLines {
         }
     }
 
+    /// Calls `body` with each line's index and range, without its line
+    /// ending, until it returns false; one pass over the text.
+    static func forEach(in text: NSString, _ body: (Int, NSRange) -> Bool) {
+        var start = 0
+        var index = 0
+        while true {
+            let (end, next) = end(from: start, in: text)
+            guard body(index, NSRange(location: start, length: end - start)), next < text.length else { return }
+            start = next
+            index += 1
+        }
+    }
+
     private static func end(from start: Int, in text: NSString) -> (end: Int, next: Int) {
         var index = start
         while index < text.length {
@@ -70,8 +83,10 @@ public enum TaskMarker {
         pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]"#, options: [.anchorsMatchLines])
 }
 
-/// What Return does at the end of a list line: the next item's marker is
-/// written for the writer, and Return on an item left empty ends the list.
+/// What Return does at the end of a list or quote line: the next item's
+/// marker, or the quote's `>`, is written for the writer, and Return on an
+/// item or quote line left empty ends the list or quote. The Mac editor and
+/// the iPhone and iPad editor both take their Return from here.
 public enum ListContinuation {
     public struct Edit: Equatable {
         /// The range of the old text to replace.
@@ -82,31 +97,78 @@ public enum ListContinuation {
     }
 
     /// The edit for Return with the caret at `caret`, or nil when a plain
-    /// newline is right: the caret is not at the end of a list line, or the
-    /// line is no list item.
+    /// newline is right: the caret is not at the end of a list or quote
+    /// line, the line is neither, or it sits inside a fenced code block,
+    /// where `- name:` is code.
     public static func edit(in text: NSString, caret: Int) -> Edit? {
         guard caret >= 0, caret <= text.length else { return nil }
         let lineIndex = SourceLines.line(atOffset: caret, in: text)
         guard let line = SourceLines.range(ofLine: lineIndex, in: text), caret == NSMaxRange(line),
-            // `* * *` and `- - -` are rules, not items.
-            ruleRegex.firstMatch(in: text as String, range: line) == nil,
-            let match = itemRegex.firstMatch(in: text as String, range: line)
+            !isInFencedCode(line: lineIndex, in: text)
         else { return nil }
-        let indent = text.substring(with: match.range(at: 1))
-        let bullet = text.substring(with: match.range(at: 2))
-        let isTask = match.range(at: 3).location != NSNotFound
-        let content = text.substring(with: match.range(at: 4))
 
-        if content.trimmingCharacters(in: .whitespaces).isEmpty {
-            // An item with nothing in it: Return hands the line back.
-            return Edit(range: line, replacement: "", caret: line.location)
+        let prefix: String
+        if ruleRegex.firstMatch(in: text as String, range: line) == nil,  // `* * *` and `- - -` are rules, not items.
+            let match = itemRegex.firstMatch(in: text as String, range: line)
+        {
+            let indent = text.substring(with: match.range(at: 1))
+            let bullet = text.substring(with: match.range(at: 2))
+            let isTask = match.range(at: 3).location != NSNotFound
+            guard !text.substring(with: match.range(at: 4)).trimmingCharacters(in: .whitespaces).isEmpty else {
+                // An item with nothing in it: Return hands the line back.
+                return Edit(range: line, replacement: "", caret: line.location)
+            }
+            prefix = indent + next(bullet) + " " + (isTask ? "[ ] " : "")
+        } else if let match = quoteRegex.firstMatch(in: text as String, range: line) {
+            guard !text.substring(with: match.range(at: 2)).trimmingCharacters(in: .whitespaces).isEmpty else {
+                // An empty quote line ends the quote, however deep it was.
+                return Edit(range: line, replacement: "", caret: line.location)
+            }
+            // `> > ` keeps its depth.
+            prefix = text.substring(with: match.range(at: 1))
+        } else {
+            return nil
         }
-        // A note written with CRLF keeps one kind of line ending.
-        let lineBreak = text.range(of: "\r\n").location == NSNotFound ? "\n" : "\r\n"
-        let insertion = lineBreak + indent + next(bullet) + " " + (isTask ? "[ ] " : "")
+        let insertion = lineBreak(in: text) + prefix
         return Edit(
             range: NSRange(location: caret, length: 0), replacement: insertion,
             caret: caret + (insertion as NSString).length)
+    }
+
+    /// The line ending Return writes: a note written with CRLF keeps one
+    /// kind of line ending.
+    public static func lineBreak(in text: NSString) -> String {
+        text.range(of: "\r\n").location == NSNotFound ? "\n" : "\r\n"
+    }
+
+    /// Whether `offset` lies on a line inside a fenced code block. A block
+    /// opens at a line starting with three backticks and closes at the next
+    /// line of three backticks and nothing else but spaces; a fence never
+    /// closed is no block, as the editors' highlighting draws it.
+    public static func isInFencedCode(at offset: Int, in text: NSString) -> Bool {
+        guard offset >= 0, offset <= text.length else { return false }
+        return isInFencedCode(line: SourceLines.line(atOffset: offset, in: text), in: text)
+    }
+
+    private static func isInFencedCode(line target: Int, in text: NSString) -> Bool {
+        // A quick out for the common note with no fence at all.
+        guard text.range(of: "```").location != NSNotFound else { return false }
+        var openedAt: Int?
+        var inside = false
+        SourceLines.forEach(in: text) { index, range in
+            let line = text.substring(with: range)
+            if let opened = openedAt {
+                if line.hasPrefix("```"), line.dropFirst(3).allSatisfy({ $0 == " " || $0 == "\t" }) {
+                    inside = opened < target && target <= index
+                    openedAt = nil
+                    return !inside && index < target
+                }
+                return true
+            }
+            if line.hasPrefix("```") { openedAt = index }
+            return index < target
+        }
+        return inside
     }
 
     /// `3.` becomes `4.`; a bullet stays as it is.
@@ -117,13 +179,16 @@ public enum ListContinuation {
         return "\(number + 1)\(closer)"
     }
 
-    // Both run on one cmark line only, so `^` and `$` are its ends: with
+    // These run on one cmark line only, so `^` and `$` are its ends: with
     // `.anchorsMatchLines` they also matched at U+2028 and U+2029 inside it,
     // and `text<U+2028>- ` read as an empty item whose Return deleted the
     // whole line. `.` crosses those separators for the same reason.
     private static let itemRegex = try! NSRegularExpression(
         pattern: #"^([ \t]*(?:>[ \t]*)*)([-*+]|\d{1,9}[.)])[ \t]+(\[[ xX]\][ \t]+|\[[ xX]\]$)?(.*)$"#,
         options: [.dotMatchesLineSeparators])
+    /// A quote line: one or more `>`, the last followed by a space or tab.
+    private static let quoteRegex = try! NSRegularExpression(
+        pattern: #"^([ \t]*(?:>[ \t]*)*>[ \t]+)(.*)$"#, options: [.dotMatchesLineSeparators])
     private static let ruleRegex = try! NSRegularExpression(
         pattern: #"^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$"#)
 }

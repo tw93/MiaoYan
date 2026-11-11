@@ -104,6 +104,57 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(pressReturn("- - nested dash")?.0, "- - nested dash\n- ")
     }
 
+    /// The Mac editor continued `> ` quote lines and the iPhone did not;
+    /// both run this rule now, so a quote continues at its depth and an
+    /// empty quote line ends it, as an empty item ends its list.
+    func testReturnContinuesQuotesAtTheirDepth() {
+        XCTAssertEqual(pressReturn("> quoted")?.0, "> quoted\n> ")
+        XCTAssertEqual(pressReturn("> quoted")?.1, ("> quoted\n> " as NSString).length)
+        XCTAssertEqual(pressReturn("> > deeper")?.0, "> > deeper\n> > ")
+        XCTAssertEqual(pressReturn("  > indented")?.0, "  > indented\n  > ")
+        XCTAssertEqual(pressReturn(">  two spaces")?.0, ">  two spaces\n>  ")
+        XCTAssertEqual(pressReturn("> > - quoted item")?.0, "> > - quoted item\n> > - ")
+        XCTAssertEqual(pressReturn("> 1) quoted")?.0, "> 1) quoted\n> 2) ")
+        XCTAssertEqual(pressReturn("> a\r\nend", at: 3)?.0, "> a\r\n> \r\nend")
+    }
+
+    func testReturnOnAnEmptyQuoteLineEndsTheQuote() {
+        XCTAssertEqual(pressReturn("> a\n> ")?.0, "> a\n")
+        XCTAssertEqual(pressReturn("> a\n> ")?.1, 4)
+        XCTAssertEqual(pressReturn("> > ")?.0, "")
+        XCTAssertEqual(pressReturn("> a\n>  \nend", at: 7)?.0, "> a\n\nend")
+        XCTAssertNil(pressReturn(">"))
+        XCTAssertNil(pressReturn(">no space"))
+    }
+
+    /// `- name:` in a YAML block is code: the Mac editor wrote a `- ` after
+    /// it, the iPhone checked fences itself; the rule skips fences now.
+    func testReturnInsideAFencedCodeBlockIsAPlainNewline() {
+        let yaml = "```yaml\n- name: a\n> not a quote\n1) step\n```\n- after"
+        let ns = yaml as NSString
+        for line in ["- name: a", "> not a quote", "1) step"] {
+            let caret = NSMaxRange(ns.range(of: line))
+            XCTAssertNil(pressReturn(yaml, at: caret), line)
+            XCTAssertTrue(ListContinuation.isInFencedCode(at: caret, in: ns), line)
+        }
+        XCTAssertEqual(pressReturn(yaml)?.0, yaml + "\n- ")
+        XCTAssertFalse(ListContinuation.isInFencedCode(at: ns.length, in: ns))
+        XCTAssertNil(pressReturn("intro\r\n```\r\n- a\r\n```\r\n", at: 15))
+        XCTAssertNotNil(pressReturn("intro\r\n```\r\n- a\r\n", at: 15))
+        XCTAssertNil(pressReturn("```\n- a\n```  \n", at: 7))
+        // A fence never closed is drawn as text and stays a list.
+        XCTAssertEqual(pressReturn("```\n- a")?.0, "```\n- a\n- ")
+        XCTAssertEqual(pressReturn("```\nx\n```\n- a")?.0, "```\nx\n```\n- a\n- ")
+        // An indented fence is no fence for the editors' highlighting.
+        XCTAssertEqual(pressReturn("  ```\n- a\n  ```", at: 9)?.0, "  ```\n- a\n- \n  ```")
+    }
+
+    func testLineBreakFollowsTheNote() {
+        XCTAssertEqual(ListContinuation.lineBreak(in: "a\nb"), "\n")
+        XCTAssertEqual(ListContinuation.lineBreak(in: "a\r\nb"), "\r\n")
+        XCTAssertEqual(ListContinuation.lineBreak(in: ""), "\n")
+    }
+
     // MARK: Line edits
 
     private func apply(_ edit: LineEdits.Edit?, to text: String) -> (String, NSRange)? {

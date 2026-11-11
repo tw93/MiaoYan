@@ -1,3 +1,4 @@
+import MiaoYanCore
 import XCTest
 
 @testable import MiaoYan
@@ -172,19 +173,110 @@ final class EditorMenuRoutingTests: XCTestCase {
 
     /// "\r\n" ends a CRLF line: the caret at the end of its text sat two
     /// before the paragraph's end, which the list continuation took for the
-    /// middle of the line, and an empty item measured one short.
+    /// middle of the line, and an empty item measured one short. The new
+    /// line was a bare "\n" until 2026-11-11; it keeps the note's CRLF now,
+    /// as the iPhone editor always did, so one note has one line ending.
     @MainActor
     func testListContinuesOnCRLFLines() {
         for (text, caret, expected) in [
-            ("- a\r\n- b", 3, "- a\n- \r\n- b"),
-            ("1. a\r\nx", 4, "1. a\n2. \r\nx"),
-            ("- [x] a\r\nx", 7, "- [x] a\n- [ ] \r\nx"),
-            ("- a\r\n- \r\nend", 7, "- a\r\n\nend"),
+            ("- a\r\n- b", 3, "- a\r\n- \r\n- b"),
+            ("1. a\r\nx", 4, "1. a\r\n2. \r\nx"),
+            ("- [x] a\r\nx", 7, "- [x] a\r\n- [ ] \r\nx"),
+            ("- a\r\n- \r\nend", 7, "- a\r\n\r\nend"),
+            ("> a\r\nx", 3, "> a\r\n> \r\nx"),
+            ("\u{2022} a\r\nx", 3, "\u{2022} a\r\n\u{2022} \r\nx"),
         ] {
             let (editor, note) = makeEditor(text)
             editor.setSelectedRange(NSRange(location: caret, length: 0))
             TextFormatter(textView: editor, note: note, shouldScanMarkdown: false).newLine()
             XCTAssertEqual(editor.string, expected, text.debugDescription)
+        }
+    }
+
+    /// Return at the end of `text`, or at `caret`, through the editor.
+    @MainActor
+    private func pressReturn(_ text: String, at caret: Int? = nil) -> (String, NSRange) {
+        let (editor, note) = makeEditor(text)
+        editor.setSelectedRange(NSRange(location: caret ?? (text as NSString).length, length: 0))
+        TextFormatter(textView: editor, note: note, shouldScanMarkdown: false).newLine()
+        return (editor.string, editor.selectedRange())
+    }
+
+    /// `- name:` in a YAML block got a `- ` on the next line; inside a
+    /// fenced block Return is a plain newline, keeping the line's indent.
+    @MainActor
+    func testReturnInAFencedCodeBlockContinuesNoList() {
+        let yaml = "```yaml\n- name: a\n  - b\n> c\n```\n"
+        let ns = yaml as NSString
+        for (line, insertion) in [("- name: a", "\n"), ("  - b", "\n  "), ("> c", "\n")] {
+            let caret = NSMaxRange(ns.range(of: line))
+            let (text, selection) = pressReturn(yaml, at: caret)
+            XCTAssertEqual(text, ns.replacingCharacters(in: NSRange(location: caret, length: 0), with: insertion), line)
+            XCTAssertEqual(selection, NSRange(location: caret + (insertion as NSString).length, length: 0), line)
+        }
+        XCTAssertEqual(pressReturn(yaml + "- after").0, yaml + "- after\n- ")
+    }
+
+    /// The Mac continued `> ` but not `1) `, the iPhone the other way round;
+    /// both continue both now, a quote at its depth, and an empty quote line
+    /// ends the quote as an empty item ends its list.
+    @MainActor
+    func testReturnContinuesQuotesAndParenthesisNumbers() {
+        for (text, expected) in [
+            ("1) one", "1) one\n2) "),
+            ("  9) nine", "  9) nine\n  10) "),
+            ("> quoted", "> quoted\n> "),
+            ("> > deeper", "> > deeper\n> > "),
+            ("> - quoted item", "> - quoted item\n> - "),
+            ("> - [x] quoted task", "> - [x] quoted task\n> - [ ] "),
+        ] {
+            let (result, selection) = pressReturn(text)
+            XCTAssertEqual(result, expected, text)
+            XCTAssertEqual(selection, NSRange(location: (expected as NSString).length, length: 0), text)
+        }
+        XCTAssertEqual(pressReturn("> a\n> > ").0, "> a\n")
+        XCTAssertEqual(pressReturn("> a\n> \nend", at: 6).0, "> a\n\nend")
+        XCTAssertEqual(pressReturn("> a\n> \nend", at: 6).1, NSRange(location: 4, length: 0))
+    }
+
+    /// The same Return through MiaoYanCore, which the iPhone editor runs,
+    /// and through the Mac editor gives the same text and caret.
+    @MainActor
+    func testReturnMatchesTheCoreRuleTheIPhoneRuns() {
+        let cases: [(String, Int?)] = [
+            ("- one", nil), ("* one", nil), ("+ one", nil), ("9. nine", nil), ("1) one", nil),
+            ("- [x] done", nil), ("1. [ ] box", nil), ("\t- tab", nil), ("  - nested", nil),
+            ("> quoted", nil), ("> > deeper", nil), ("> - item", nil),
+            ("- one\n- ", nil), ("> a\n> ", nil), ("2. ", nil), ("- [ ] ", nil),
+            ("- one\n- two\nend", 5), ("- a\r\n- b", 3), ("- a\r\n- \r\nend", 7),
+            ("```\n- a\n```", 7), ("```\n- a", nil), ("plain", nil), ("- one", 3),
+        ]
+        for (text, caret) in cases {
+            let ns = text as NSString
+            let at = caret ?? ns.length
+            let core: (String, NSRange)
+            if let edit = ListContinuation.edit(in: ns, caret: at) {
+                core = (ns.replacingCharacters(in: edit.range, with: edit.replacement), NSRange(location: edit.caret, length: 0))
+            } else {
+                // No marker: the iPhone's text view types a plain "\n".
+                core = (ns.replacingCharacters(in: NSRange(location: at, length: 0), with: "\n"), NSRange(location: at + 1, length: 0))
+            }
+            let mac = pressReturn(text, at: caret)
+            XCTAssertEqual(mac.0, core.0, text.debugDescription)
+            XCTAssertEqual(mac.1, core.1, text.debugDescription)
+        }
+    }
+
+    /// The en dash, em dash, bullet and `| ` lines the Mac continued before
+    /// MiaoYanCore took Return over still continue, and still end when empty.
+    @MainActor
+    func testReturnKeepsTheMacOnlyMarkers() {
+        for marker in ["\u{2013}", "\u{2014}", "\u{2022}", "|"] {
+            XCTAssertEqual(pressReturn("\(marker) a").0, "\(marker) a\n\(marker) ", marker)
+            XCTAssertEqual(pressReturn("x\n\(marker) ").0, "x\n", marker)
+            XCTAssertEqual(
+                pressReturn("```\n\(marker) a\n```", at: 4 + ("\(marker) a" as NSString).length).0,
+                "```\n\(marker) a\n\n```", marker)
         }
     }
 
