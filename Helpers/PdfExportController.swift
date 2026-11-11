@@ -67,22 +67,32 @@ final class PdfExportController: NSObject {
         self.navigationDelegate = delegate
         self.webView = web
 
-        // On-screen origin, fully transparent. WebKit needs the window to be composited to
-        // render images; an alpha-zero window satisfies that without flashing the screen the
-        // way makeKeyAndOrderFront + setIsVisible(false) briefly would.
+        let win = Self.makeOffscreenWindow(contentRect: frame)
+        win.contentView = web
+        win.orderFrontRegardless()
+        self.window = win
+    }
+
+    /// On-screen origin, fully transparent. WebKit needs the window to be composited to
+    /// render images; an alpha-zero window satisfies that without flashing the screen the
+    /// way makeKeyAndOrderFront + setIsVisible(false) briefly would.
+    ///
+    /// Always light: with the app on System in dark mode, or set to Dark, the window
+    /// inherited dark, so the page matched `prefers-color-scheme: dark` and printed dark
+    /// rules, borders and checkboxes on white paper.
+    static func makeOffscreenWindow(contentRect: NSRect) -> NSWindow {
         let win = NSWindow(
-            contentRect: frame,
+            contentRect: contentRect,
             styleMask: [.borderless],
             backing: .buffered,
             defer: false
         )
+        win.appearance = NSAppearance(named: .aqua)
         win.isReleasedWhenClosed = false
         win.alphaValue = 0
         win.isOpaque = false
         win.backgroundColor = .clear
-        win.contentView = web
-        win.orderFrontRegardless()
-        self.window = win
+        return win
     }
 
     private func loadHTML() {

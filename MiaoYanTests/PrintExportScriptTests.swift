@@ -423,6 +423,28 @@ final class PrintExportScriptTests: XCTestCase {
         XCTAssertEqual(state?["ready"] as? Bool, false, "the wait holds until its timeout")
     }
 
+    /// With the app dark (System in dark mode, or Dark), the offscreen print
+    /// window inherited dark, so the page matched `prefers-color-scheme: dark`:
+    /// dark `--border-color` rules and dark form controls on white paper.
+    @MainActor
+    func testThePrintWindowIsLightWhenTheAppIsDark() async throws {
+        let previous = NSApp.appearance
+        NSApp.appearance = NSAppearance(named: .darkAqua)
+        defer { NSApp.appearance = previous }
+        let window = PdfExportController.makeOffscreenWindow(contentRect: NSRect(x: 0, y: 0, width: 400, height: 400))
+        let webView = try await loadPage("<hr>")
+        window.contentView = webView
+        defer { window.contentView = nil }
+        var dark: Bool?
+        let deadline = Date().addingTimeInterval(3)
+        repeat {
+            dark = try await webView.evaluateJavaScript("matchMedia('(prefers-color-scheme: dark)').matches") as? Bool
+            if dark == false { break }
+            try await Task.sleep(nanoseconds: 25_000_000)
+        } while Date() < deadline
+        XCTAssertEqual(dark, false)
+    }
+
     /// A face with one weight printed headings in the system's fattened bold,
     /// blurred and heavy. It takes a light stroke instead; a real bold stays.
     @MainActor
