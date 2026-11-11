@@ -212,6 +212,11 @@ put in the library Trash keeps its notes; a note renamed, moved or trashed elsew
 kept as a copy instead of written back or dropped, Keep Mine included; one formatter for Yesterday; an undrawn
 Mermaid block keeps its lines.
 
+Follow-up the same day, after the maintainer decided both open questions: Return on the Mac runs
+MiaoYanCore's `ListContinuation`, the iPhone's rule, extended so both continue `> ` quotes and `1) `, skip
+fenced code and keep CRLF (`5cf1323e`); the iPhone reader draws Mermaid with the Mac's warm palette, held to
+`theme-config.js` by a source gate; a pinned note on the iPhone keeps its pin through a save (MiaoYan #575).
+
 ### Refuted
 
 - "Open in MiaoYan on a library note imports a copy": `standardizedFileURL` already drops `/private` for an
@@ -225,8 +230,7 @@ Mermaid block keeps its lines.
   (offline now waits the full 9.6s, as a light preview already did); PNG and HTML export once each.
 - Mac Tab pads three spaces under any numbered item; under `10.` CommonMark needs four (MiaoYanCore now does).
 - Replace wraps to the first match after the last one, so a lone `cat` to `cats` still grows on a second press.
-- Return differs between the Mac and the iPhone for CRLF notes, fenced code blocks, `> ` and `1) ` (needs the
-  maintainer); `TaskMarker.itemRegex` still anchors inside a line holding U+2028.
+- `TaskMarker.itemRegex` still anchors inside a line holding U+2028.
 - Pasting code copied from a web page inside a fenced block may add a second fence (clipboard not measured).
 - Performance, low: the shell window does not coalesce disk events; `NoteCellView.draw` rebuilds row text;
   a find-bar search per keystroke on a long note (a delayed refresh needs the four find commands to flush first).
@@ -234,7 +238,11 @@ Mermaid block keeps its lines.
   keeps its place by pixel offset after an outside edit; whether a non-system body face re-highlights the note
   per key on iPad; a brief absence during an iCloud download raising a false conflict; an undownloaded note in
   the Trash is deleted through its placeholder; the reader never notices its note was renamed elsewhere until
-  the user types; whether the Mermaid palette follows the Mac's warm one (needs the maintainer).
+  the user types.
+- Diagrams on a phone: a gantt chart's date labels overlap at phone width, and a dark pie chart takes Mermaid's
+  own near-black and maroon slices, as the Mac's does.
+- The Mac still continues an en dash, an em dash, `•` and `| ` on Return and the iPhone does not; the Mac
+  highlighter does not see a CRLF fence that Return now does.
 
 ### Decided, do not re-report
 
