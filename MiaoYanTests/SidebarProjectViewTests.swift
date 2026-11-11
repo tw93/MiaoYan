@@ -320,4 +320,58 @@ final class SidebarProjectViewTests: XCTestCase {
         XCTAssertFalse(storage.hitTest(NSPoint(x: 40, y: 268)) === button, "the rest of the overlap stays with the list")
         XCTAssertTrue(storage.hitTest(NSPoint(x: 153, y: 280)) === button, "above the list the button takes it as before")
     }
+
+    /// Rows of the label that carry ink when it is drawn in a frame `extra`
+    /// taller than its own size, at 4x.
+    @MainActor
+    private func inkRows(font: NSFont, nudge: CGFloat, extra: CGFloat) -> Int {
+        let field = NSTextField(labelWithString: "Thoughts Projects gjpqy")
+        let cell = SidebarLabelCell(textCell: field.stringValue)
+        cell.font = font
+        cell.textColor = .black
+        cell.usesSingleLineMode = true
+        cell.wraps = false
+        cell.verticalNudge = nudge
+        field.cell = cell
+        field.font = font
+        var frame = NSRect(origin: .zero, size: field.intrinsicContentSize)
+        frame.size.height += extra
+        field.frame = frame
+        let scale: CGFloat = 4
+        guard
+            let rep = NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: Int(frame.width * scale), pixelsHigh: Int(frame.height * scale), bitsPerSample: 8,
+                samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+        else { return -1 }
+        rep.size = frame.size
+        field.cacheDisplay(in: field.bounds, to: rep)
+        return (0..<rep.pixelsHigh).filter { y in
+            (0..<rep.pixelsWide).contains { x in (rep.colorAt(x: x, y: y)?.alphaComponent ?? 0) > 0.3 }
+        }.count
+    }
+
+    /// A folder name is drawn 1.5pt low in its label, whose frame was the
+    /// face's own line box: a serif face lost the bottom of g, j and p
+    /// (Georgia 1.5pt, Athelas 3pt). The label's own frame now shows the whole
+    /// line, as a frame with room to spare does.
+    @MainActor
+    func testAFolderNameIsNotCutInASerifFace() throws {
+        let names = ["Georgia", "Athelas-Regular", "TimesNewRomanPSMT", "Baskerville", "Charter-Roman"]
+        let fonts = names.compactMap { NSFont(name: $0, size: 14) }
+        try XCTSkipIf(fonts.isEmpty, "none of the serif faces is installed")
+        for font in fonts {
+            let nudge = Theme.Metrics.sidebarLabelVerticalNudge(for: font)
+            let whole = inkRows(font: font, nudge: nudge, extra: 40)
+            XCTAssertGreaterThan(whole, 0)
+            XCTAssertEqual(inkRows(font: font, nudge: nudge, extra: 0), whole, "\(font.fontName) is cut by its label")
+        }
+    }
+
+    /// The default face keeps the place the maintainer approved: its nudge
+    /// is none, which is what the old frame made of the -0.5 written there.
+    @MainActor
+    func testTheSystemFaceTakesNoNudge() {
+        XCTAssertEqual(Theme.Metrics.sidebarLabelVerticalNudge(for: NSFont.systemFont(ofSize: 14)), 0)
+        XCTAssertEqual(Theme.Metrics.sidebarLabelVerticalNudge(for: NSFont(name: "Georgia", size: 14)), 1.5)
+    }
 }

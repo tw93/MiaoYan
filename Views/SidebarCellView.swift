@@ -3,6 +3,20 @@ import Cocoa
 final class SidebarLabelCell: NSTextFieldCell {
     var verticalNudge: CGFloat = 0
 
+    /// Room above and below the line. The label's frame was the face's own
+    /// line box, and the text is drawn `verticalNudge` lower inside it, so a
+    /// face with deep descenders lost the bottom of g, j and p to the frame:
+    /// 1.5pt in Georgia, 3pt in Athelas, measured. The frame grows by this on
+    /// both sides and the text starts this much lower, so it stays where it
+    /// was and nothing is cut.
+    static let verticalRoom: CGFloat = 4
+
+    override func cellSize(forBounds rect: NSRect) -> NSSize {
+        var size = super.cellSize(forBounds: rect)
+        size.height += Self.verticalRoom * 2
+        return size
+    }
+
     override func drawingRect(forBounds rect: NSRect) -> NSRect {
         nudgedRect(forBounds: rect)
     }
@@ -49,7 +63,7 @@ final class SidebarLabelCell: NSTextFieldCell {
 
     private func nudgedRect(forBounds rect: NSRect) -> NSRect {
         var textRect = super.drawingRect(forBounds: rect)
-        textRect.origin.y += verticalNudge
+        textRect.origin.y += verticalNudge + Self.verticalRoom
         return textRect
     }
 }

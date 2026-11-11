@@ -73,9 +73,11 @@ enum Theme {
         /// Measured on 2x captures of the selected row (2026-11-06): 1.5 put
         /// a chosen face's CJK ink level with the folder icon (TsangerJinKai02
         /// 0.25pt low), but the system face, the default since 2026-10-11,
-        /// sat 2pt low with it, so the system face takes -0.5.
+        /// sat 2pt low with it, so the system face takes none. It was written
+        /// as -0.5, which the label's frame held at 0 until the frame gained
+        /// room on 2026-11-11; 0 is what the approved captures show.
         static let sidebarStandardLabelVerticalNudge: CGFloat = 1.5
-        static let sidebarSystemFaceLabelVerticalNudge: CGFloat = -0.5
+        static let sidebarSystemFaceLabelVerticalNudge: CGFloat = 0
 
         static func sidebarLabelVerticalNudge(for font: NSFont?) -> CGFloat {
             let systemName = NSFont.systemFont(ofSize: font?.pointSize ?? 14).fontName
