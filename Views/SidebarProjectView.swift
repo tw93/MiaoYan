@@ -399,6 +399,11 @@ class SidebarProjectView: NSOutlineView,
             }
 
             if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), !data.isEmpty {
+                // Files opened from outside the library cannot be moved in,
+                // so the drop is refused rather than ignored.
+                if AppContext.shared.viewController?.notesTableView.getSelectedNotes()?.contains(where: { $0.project.isExternal }) == true {
+                    return NSDragOperation()
+                }
                 return .move
             }
 
@@ -605,6 +610,11 @@ class SidebarProjectView: NSOutlineView,
 
         case .Trash:
             cell.icon.image = NSImage(imageLiteralResourceName: "deleteNote")
+            cell.icon.image?.isTemplate = true
+            cell.icon.contentTintColor = Theme.sidebarActionColor
+
+        case .Opened:
+            cell.icon.image = NSImage(imageLiteralResourceName: "openedFile")
             cell.icon.image?.isTemplate = true
             cell.icon.contentTintColor = Theme.sidebarActionColor
 
@@ -877,9 +887,13 @@ class SidebarProjectView: NSOutlineView,
                         return
                     }
 
-                    // Save user's manual selection for restoration on next launch
-                    UserDefaultsManagement.lastProject = i
-                    UserDefaultsManagement.lastProjectPath = item.type == .Category ? item.project?.url.path : nil
+                    // Save user's manual selection for restoration on next
+                    // launch; the Opened row is gone by then, and its row
+                    // number would land on the Trash.
+                    if item.type != .Opened {
+                        UserDefaultsManagement.lastProject = rowIgnoringOpened(i)
+                        UserDefaultsManagement.lastProjectPath = item.type == .Category ? item.project?.url.path : nil
+                    }
                 }
 
                 UserDataService.instance.lastType = item.type.rawValue
@@ -1181,7 +1195,9 @@ class SidebarProjectView: NSOutlineView,
     public func selectNext() {
         let i = selectedRow + 1
         if i < numberOfRows, let next = item(atRow: i) as? SidebarItem {
-            if next.project == nil {
+            // Only the brand lockup is stepped over; All Notes and Opened
+            // have no folder but are places like any other row.
+            if !next.isSelectable() {
                 let j = i + 1
                 if j < numberOfRows, item(atRow: j) is SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
@@ -1196,7 +1212,7 @@ class SidebarProjectView: NSOutlineView,
     public func selectPrev() {
         let i = selectedRow - 1
         if i >= 0, let prev = item(atRow: i) as? SidebarItem {
-            if prev.project == nil {
+            if !prev.isSelectable() {
                 let j = i - 1
                 if j >= 0, item(atRow: j) is SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
@@ -1224,7 +1240,14 @@ class SidebarProjectView: NSOutlineView,
         return target.item(atRow: row) as? SidebarItem
     }
 
-    private func rowForSidebarSelection(type: SidebarItemType, projectURL: URL?, name: String?) -> Int? {
+    /// The row number a selection has once the Opened row, which does not
+    /// outlive this run, is gone: the Trash below it moves up one.
+    func rowIgnoringOpened(_ row: Int) -> Int {
+        let openedAbove = (0..<min(row, numberOfRows)).contains { (item(atRow: $0) as? SidebarItem)?.type == .Opened }
+        return openedAbove ? row - 1 : row
+    }
+
+    func rowForSidebarSelection(type: SidebarItemType, projectURL: URL?, name: String?) -> Int? {
         for row in 0..<numberOfRows {
             guard let item = item(atRow: row) as? SidebarItem else {
                 continue
@@ -1237,7 +1260,7 @@ class SidebarProjectView: NSOutlineView,
             switch type {
             case .Brand:
                 return nil
-            case .All:
+            case .All, .Opened:
                 return row
             case .Category, .Trash:
                 if item.project?.url == projectURL {

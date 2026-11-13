@@ -18,6 +18,17 @@ class Storage {
     var noteList = [Note]()
     private var projects = [Project]()
 
+    /// Files opened from Finder outside the library (sidebar `Opened`). Each
+    /// sits in an `isExternal` project for its own folder, kept out of
+    /// `projects` so it never shows as a folder, a Move target or in All
+    /// Notes, and its images still resolve beside it. Held for this run
+    /// only; `noteList` is rebuilt on reload, so they are added back there.
+    private(set) var openedNotes = [Note]()
+    /// Folder access for the opened files, held while the app runs: a save
+    /// writes a sibling temp file and images go to `i/` beside the note, and
+    /// the sandbox grants the folder only during application:open:.
+    private var openedFolderScopes = [URL]()
+
     public var tags = [String]()
 
     private struct LoadedProjectInfo {
@@ -526,6 +537,7 @@ class Storage {
         if !skipRoot {
             noteList.removeAll()
             loadedProjectInfo.removeAll()
+            noteList.append(contentsOf: openedNotes)
         }
 
         let singleModeRootProject: Project? = {
@@ -679,6 +691,12 @@ class Storage {
 
         for project in projects {
             pathList.append(NSString(string: project.url.path).expandingTildeInPath)
+        }
+        // Opened files' folders are watched too, so an edit made in another
+        // app reaches the editor instead of being saved over. A new file
+        // there finds no folder in `projects` and is not listed.
+        for path in Set(openedNotes.map(\.project.url.path)) where !pathList.contains(path) {
+            pathList.append(path)
         }
 
         return pathList
@@ -1217,6 +1235,14 @@ class Storage {
                 continue
             }
 
+            // A file opened from Finder belongs to its own folder, not the
+            // library: deleting it only closes it here, and the file stays
+            // where it is rather than moving into the library's Trash.
+            if note.project.isExternal {
+                succeeded.append(note)
+                continue
+            }
+
             let originalPath = note.url.path
             if let removal = note.removeFile(completely: completely) {
                 if case .moved(let destination, let original) = removal {
@@ -1235,6 +1261,7 @@ class Storage {
         for note in succeeded {
             note.retireAfterRemoval()
             removeBy(note: note)
+            openedNotes.removeAll { $0 === note }
         }
         didRemove?(succeeded)
 
@@ -1515,6 +1542,75 @@ class Storage {
         }
 
         return false
+    }
+
+    /// The note for a file opened from Finder: the library's own note when
+    /// the file is in the library, otherwise one listed under Opened. Nil
+    /// for a folder or a file that is gone.
+    func openFromFinder(_ url: URL) -> Note? {
+        let resolved = url.resolvingSymlinksInPath()
+        if let note = getBy(url: resolved) ?? getBy(url: url) { return note }
+        guard FileManager.default.fileExists(atPath: resolved.path),
+            !FileManager.default.directoryExists(atUrl: resolved)
+        else { return nil }
+        let folder = resolved.deletingLastPathComponent()
+        if let root = getDefault()?.url.resolvingSymlinksInPath().path,
+            resolved.path.hasPrefix(root.hasSuffix("/") ? root : root + "/"),
+            let project = registeredFolder(atPath: folder.path)
+        {
+            let note = Note(url: resolved, with: project)
+            note.load()
+            note.loadModifiedLocalAt()
+            add(note)
+            return note
+        }
+        let project: Project
+        if let existing = openedNotes.first(where: { $0.project.url.path == folder.path })?.project {
+            project = existing
+        } else {
+            project = Project(url: folder, isExternal: true)
+            project.showInCommon = false
+            project.showInSidebar = false
+            startAccessingOpenedFolder(folder)
+        }
+        let note = Note(url: resolved, with: project)
+        note.load()
+        note.loadModifiedLocalAt()
+        openedNotes.append(note)
+        noteList.append(note)
+        return note
+    }
+
+    /// The library folder at `path`, registering the folders down to it the
+    /// way the sidebar does when they are expanded. Nil when the path is one
+    /// the sidebar never lists (attachments, hidden folders); such a file is
+    /// opened as an outside file rather than given an ancestor's folder.
+    private func registeredFolder(atPath path: String) -> Project? {
+        guard var project = getProjectBy(url: URL(fileURLWithPath: path).appendingPathComponent("x.md")) else { return nil }
+        while project.url.path != path {
+            guard
+                let next = subfolders(of: project).first(where: {
+                    path == $0.url.path || path.hasPrefix($0.url.path + "/")
+                })
+            else { return nil }
+            project = next
+        }
+        return project
+    }
+
+    private func startAccessingOpenedFolder(_ folder: URL) {
+        guard
+            let bookmark = try? folder.bookmarkData(
+                options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+        else { return }
+        var isStale = false
+        guard
+            let scoped = try? URL(
+                resolvingBookmarkData: bookmark, options: .withSecurityScope, relativeTo: nil,
+                bookmarkDataIsStale: &isStale),
+            scoped.startAccessingSecurityScopedResource()
+        else { return }
+        openedFolderScopes.append(scoped)
     }
 
     public func initNote(url: URL) -> Note? {

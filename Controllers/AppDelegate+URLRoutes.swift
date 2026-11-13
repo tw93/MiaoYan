@@ -50,11 +50,16 @@ extension AppDelegate {
         }
     }
 
+    /// A folder opens in single-file mode; files open beside the library,
+    /// under Opened when they are outside it, so the library stays put.
     @MainActor
     func openNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
         let fileURL = urls[0]
-        UserDefaultsManagement.beginSingleMode(for: fileURL)
+        let files = urls.filter { !FileManager.default.directoryExists(atUrl: $0) }
+        if files.isEmpty {
+            UserDefaultsManagement.beginSingleMode(for: fileURL)
+        }
 
         if let mwc = mainWindowController,
             mwc.window?.isVisible != true
@@ -62,6 +67,10 @@ extension AppDelegate {
             mwc.makeNew()
         }
 
+        guard files.isEmpty else {
+            vc.openFromFinder(files)
+            return
+        }
         vc.reloadForSingleMode(originalFileURL: fileURL, siblingFiles: Self.siblingNoteFiles(of: fileURL))
     }
 
@@ -144,7 +153,7 @@ extension AppDelegate {
             pendingGoto = url
             return
         }
-        let notes = vc.storage.noteList.filter { $0.title == query }
+        let notes = vc.storage.noteList.filter { $0.title == query && !$0.project.isExternal }
         if notes.count > 1 {
             vc.updateTable {
                 DispatchQueue.main.async {

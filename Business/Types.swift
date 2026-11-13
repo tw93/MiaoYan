@@ -26,6 +26,10 @@ enum SidebarItemType: Int {
     /// The MiaoYan lockup at the top of the sidebar, a mark rather than a
     /// place: it cannot be selected, and All Notes sits under it.
     case Brand = 0x04
+    /// Files opened from Finder that live outside the library, listed while
+    /// the app runs so opening one no longer swaps the library away. The row
+    /// shows only when such a file is open, just above the Trash.
+    case Opened = 0x05
 }
 
 public enum AppearanceType: Int {

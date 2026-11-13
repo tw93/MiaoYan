@@ -182,7 +182,9 @@ public class Note: NSObject {
         isContentLoaded = true
         readFailed = false
         hasDamagedText = damaged
-        if !isTrash() {
+        // The index is keyed by title; a file opened from outside the
+        // library would stand in for a library note of the same name.
+        if !isTrash(), !project.isExternal {
             WikilinkIndex.shared.updateNote(title: title, content: content.string)
         }
     }
@@ -710,7 +712,9 @@ public class Note: NSObject {
 
             modifiedLocalAt = Date()
             NoteVersionManager.shared.saveVersionIfNeeded(for: self)
-            WikilinkIndex.shared.updateNote(title: title, content: attributedString.string)
+            if !project.isExternal {
+                WikilinkIndex.shared.updateNote(title: title, content: attributedString.string)
+            }
         } catch {
             AppDelegate.trackError(error, context: "Note.writeError")
             AppDelegate.trackError(error, context: "Note.write")
@@ -791,7 +795,11 @@ public class Note: NSObject {
     func retireAfterRemoval() {
         guard !isRetired else { return }
         isRetired = true
-        WikilinkIndex.shared.removeNote(title: title)
+        // A closed outside file was never indexed, and its title may be a
+        // library note's.
+        if !project.isExternal {
+            WikilinkIndex.shared.removeNote(title: title)
+        }
         hasUnpersistedChanges = false
         saveWorkItem?.cancel()
         saveWorkItem = nil

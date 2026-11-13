@@ -668,8 +668,9 @@ class ViewController:
     func persistCurrentViewState() {
         if let sidebar = storageOutlineView {
             let selectedRow = sidebar.selectedRow
-            if selectedRow >= 0 {
-                UserDefaultsManagement.lastProject = selectedRow
+            // The Opened row is gone at the next launch, so it is not kept.
+            if selectedRow >= 0, (sidebar.item(atRow: selectedRow) as? SidebarItem)?.type != .Opened {
+                UserDefaultsManagement.lastProject = sidebar.rowIgnoringOpened(selectedRow)
 
                 if let item = sidebar.item(atRow: selectedRow) as? SidebarItem {
                     UserDefaultsManagement.lastProjectPath = item.type == .Category ? item.project?.url.path : nil
@@ -1344,6 +1345,46 @@ class ViewController:
         search.delegate = search
         sidebarSplitView.delegate = self
         storageOutlineView.viewDelegate = self
+    }
+
+    /// Files opened from Finder show beside the library instead of
+    /// replacing it: one outside the library goes under Opened, one inside it
+    /// opens in All Notes. The last of them is selected.
+    func openFromFinder(_ urls: [URL]) {
+        guard storageOutlineView != nil, notesTableView != nil else { return }
+        var target: Note?
+        for url in urls {
+            if let note = storage.openFromFinder(url) { target = note }
+        }
+        guard let note = target else { return }
+        storageOutlineView.reloadSidebar()
+
+        let type: SidebarItemType = note.project.isExternal ? .Opened : .All
+        guard let row = storageOutlineView.rowForSidebarSelection(type: type, projectURL: nil, name: nil),
+            let item = storageOutlineView.item(atRow: row) as? SidebarItem
+        else { return }
+        if storageOutlineView.selectedRow != row {
+            UserDataService.instance.skipSidebarSelection = true
+            storageOutlineView.selectRowIndexes([row], byExtendingSelection: false)
+        }
+        search.stringValue = ""
+        updateTable(sidebarItem: item) { [weak self] in
+            // The sidebar's handler resets the flag; when its redundant-
+            // selection check returns first, nothing else would.
+            UserDataService.instance.skipSidebarSelection = false
+            guard let self else { return }
+            // A launch by a double-clicked file skips configureNotesList,
+            // which otherwise ends the launch state and shows the window.
+            if self.storageOutlineView.isLaunch {
+                self.storageOutlineView.isLaunch = false
+                (self.view.window?.windowController as? MainWindowController)?.revealWindowWhenReady()
+            }
+            guard let index = self.notesTableView.getIndex(note) else { return }
+            self.notesTableView.selectRow(index)
+            self.notesTableView.scrollRowToVisible(row: index, animated: false)
+            self.editArea.fill(note: note, options: .silent)
+            self.revealEditor()
+        }
     }
 
     private func selectSingleModeNote(for url: URL) {

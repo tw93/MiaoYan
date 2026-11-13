@@ -39,6 +39,10 @@ class Sidebar {
 
         list.append(contentsOf: categoryItems)
 
+        if !storage.openedNotes.isEmpty {
+            list.append(SidebarItem(name: I18n.str("Opened Files"), type: .Opened, icon: getImage(named: "openedFile")))
+        }
+
         if storage.trashHasNotes() {
             let trashProject = Storage.sharedInstance().getDefaultTrash()
             let trash = SidebarItem(name: I18n.str("Trash"), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))

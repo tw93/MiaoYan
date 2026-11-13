@@ -409,6 +409,10 @@ final class ShellModel {
                 rows.append(SidebarRow(id: .all, title: item.getName(), kind: .All))
             case .Trash:
                 rows.append(SidebarRow(id: .trash, title: item.getName(), kind: .Trash))
+            case .Opened:
+                // The shell still opens Finder files in single-file mode, so
+                // storage never lists any here.
+                continue
             case .Category:
                 // The storyboard sidebar lists every folder; the legacy
                 // showInSidebar flag is not honoured there either.

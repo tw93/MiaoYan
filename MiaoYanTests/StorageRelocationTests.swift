@@ -607,4 +607,63 @@ final class StorageRelocationTests: XCTestCase {
         XCTAssertEqual(ShellModel.reorderedFolders(paths, moving: source, onto: target), [paths[1], paths[0]])
         XCTAssertNil(ShellModel.listedPath(of: real.appendingPathComponent("Elsewhere"), in: paths))
     }
+
+    /// A file opened from Finder outside the library is listed under Opened
+    /// instead of swapping the library away; it never joins the folders or
+    /// All Notes, survives a reload, and deleting it there only closes it:
+    /// the file stays where it is and stays out of the library's Trash.
+    @MainActor
+    func testFinderFileOutsideLibraryOpensUnderOpenedAndDeleteOnlyCloses() throws {
+        let base = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanOpened-\(UUID().uuidString)")
+        let rootURL = base.appendingPathComponent("Library", isDirectory: true)
+        let outsideURL = base.appendingPathComponent("Elsewhere", isDirectory: true)
+        try FileManager.default.createDirectory(at: rootURL, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: outsideURL, withIntermediateDirectories: true)
+        let insideFile = rootURL.appendingPathComponent("Inside.md")
+        let outsideFile = outsideURL.appendingPathComponent("Outside.md")
+        try "# Inside".write(to: insideFile, atomically: true, encoding: .utf8)
+        try "# Outside".write(to: outsideFile, atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: rootURL, isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        defer {
+            for project in storage.getProjects().filter({ $0.url.path.hasPrefix(rootURL.path) }) {
+                UserDefaults.standard.removeObject(forKey: project.url.path)
+                storage.removeBy(project: project)
+            }
+            try? FileManager.default.removeItem(at: base)
+        }
+
+        let inside = try XCTUnwrap(storage.openFromFinder(insideFile))
+        XCTAssertFalse(inside.project.isExternal)
+        XCTAssertTrue(storage.openedNotes.isEmpty)
+
+        // A file deep in a folder nobody has expanded gets its own folder,
+        // not the library root.
+        let deepFolder = rootURL.appendingPathComponent("A/B", isDirectory: true)
+        try FileManager.default.createDirectory(at: deepFolder, withIntermediateDirectories: true)
+        let deepFile = deepFolder.appendingPathComponent("Deep.md")
+        try "# Deep".write(to: deepFile, atomically: true, encoding: .utf8)
+        let deep = try XCTUnwrap(storage.openFromFinder(deepFile))
+        XCTAssertEqual(deep.project.url.path, deepFolder.resolvingSymlinksInPath().path)
+        XCTAssertFalse(deep.project.isExternal)
+
+        let outside = try XCTUnwrap(storage.openFromFinder(outsideFile))
+        XCTAssertTrue(outside.project.isExternal)
+        XCTAssertFalse(outside.project.showInCommon)
+        XCTAssertTrue(storage.openFromFinder(outsideFile) === outside)
+        XCTAssertEqual(storage.openedNotes.count, 1)
+        XCTAssertFalse(storage.getProjects().contains { $0.url.path == outside.project.url.path })
+        // Its folder is watched, so another app's edit reaches the editor.
+        XCTAssertTrue(storage.getProjectPaths().contains(outside.project.url.path))
+
+        storage.loadProjects()
+        XCTAssertTrue(storage.noteList.contains { $0 === outside })
+
+        storage.removeNotes(notes: [outside]) { _ in }
+        XCTAssertTrue(FileManager.default.fileExists(atPath: outsideFile.path))
+        XCTAssertTrue(storage.openedNotes.isEmpty)
+        XCTAssertFalse(storage.noteList.contains { $0 === outside })
+        XCTAssertFalse(FileManager.default.fileExists(atPath: rootURL.appendingPathComponent("Trash").path))
+    }
 }

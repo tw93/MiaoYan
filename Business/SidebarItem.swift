@@ -46,7 +46,7 @@ class SidebarItem {
         if type == .Category || type == .Trash {
             return project?.url == other.project?.url
         }
-        if type == .All || type == .Brand {
+        if type == .All || type == .Brand || type == .Opened {
             return true
         }
         return name == other.name

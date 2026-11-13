@@ -69,7 +69,9 @@ extension ViewController {
 
     @IBAction func makeNote(_ sender: SearchTextField) {
         guard let vc = ViewController.shared() else { return }
-        if let type = vc.getSidebarType(), type == .Trash {
+        // A new note goes to the library, so the Trash and the opened files
+        // (which list only outside files) let go of the list first.
+        if let type = vc.getSidebarType(), type == .Trash || type == .Opened {
             vc.storageOutlineView.deselectAll(nil)
         }
 
@@ -91,7 +93,9 @@ extension ViewController {
         if vc.sessionMagicPPTMode {
             return
         }
-        if let type = vc.getSidebarType(), type == .Trash {
+        // A new note goes to the library, so the Trash and the opened files
+        // (which list only outside files) let go of the list first.
+        if let type = vc.getSidebarType(), type == .Trash || type == .Opened {
             vc.storageOutlineView.deselectAll(nil)
         }
         vc.createNote(name: "", content: "")
@@ -478,6 +482,16 @@ extension ViewController {
             if vc.notesTableView.noteList.isEmpty {
                 vc.editArea.clear()
             }
+
+            // Closing the last opened file takes the Opened row away.
+            // Closing the last opened file takes the Opened row away; its row
+            // number would now be the Trash's, so All Notes is chosen.
+            if vc.storage.openedNotes.isEmpty, vc.getSidebarItem()?.type == .Opened {
+                vc.storageOutlineView.reloadSidebar()
+                if let row = vc.storageOutlineView.rowForSidebarSelection(type: .All, projectURL: nil, name: nil) {
+                    vc.storageOutlineView.selectRowIndexes([row], byExtendingSelection: false)
+                }
+            }
         }
 
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
@@ -773,7 +787,9 @@ extension ViewController {
         let selectedRow = notesTableView.selectedRowIndexes.min()
         var movedAny = false
         for note in notes {
-            if note.project == project {
+            // A file opened from Finder stays in its own folder; moving it
+            // would take it out of there without the user meaning to.
+            if note.project == project || note.project.isExternal {
                 continue
             }
 
@@ -1162,6 +1178,8 @@ extension ViewController {
             noteMenu.addItem(historyItem)
         }
 
+        // A file opened from outside the library stays in its own folder.
+        guard !note.project.isExternal else { return }
         noteMenu.addItem(moveMenuItem)
         let moveMenu = NSMenu()
 

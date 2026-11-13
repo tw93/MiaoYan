@@ -489,6 +489,7 @@ extension ViewController {
         guard !note.name.isEmpty else { return false }
         guard type == .Trash ? note.isTrash() : !note.isTrash() else { return false }
         if type == .Trash { return true }
+        if type == .Opened { return note.project.isExternal }
         if projects?.contains(where: { note.project.isDescendant(of: $0) }) ?? false { return true }
         return type == .All && note.project.showInCommon
     }

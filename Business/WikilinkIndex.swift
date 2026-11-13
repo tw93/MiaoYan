@@ -20,7 +20,7 @@ final class WikilinkIndex: ObservableObject {
     /// updateNote afterwards.
     func rebuildFromAllNotes(in storage: Storage) {
         rebuildTask?.cancel()
-        let notes = storage.noteList.filter { !$0.isTrash() }
+        let notes = storage.noteList.filter { !$0.isTrash() && !$0.project.isExternal }
         let listed = notes.map { ListedNote(title: $0.title, url: $0.url, text: $0.isContentLoaded ? $0.content.string : nil) }
         // A single opened file's folder can be anything (Downloads, home),
         // so only a library is walked.

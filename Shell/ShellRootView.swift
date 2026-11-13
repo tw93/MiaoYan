@@ -371,6 +371,7 @@ private struct ShellSidebarRow: View {
         case .Brand: name = "home"
         case .All: name = "allNotes"
         case .Trash: name = "deleteNote"
+        case .Opened: name = "openedFile"
         case .Category: name = "project"
         }
         return NSImage(named: name) ?? NSImage()
