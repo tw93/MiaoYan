@@ -134,7 +134,7 @@ final class HtmlManagerTests: XCTestCase {
         let markdown = "![](/i/CleanShot image.png)"
         let processed = HtmlManager.processImagesInMarkdown(markdown, imagesStorage: tempDirectory)
 
-        XCTAssertEqual(processed, "![](\(imageURL.absoluteString))")
+        XCTAssertEqual(processed, "![](\(HtmlManager.localMediaURL(forPath: imageURL.path)))")
     }
 
     func testNestedUnderbraceMathSurvivesPreviewMarkdownParsing() throws {
@@ -421,7 +421,8 @@ final class HtmlManagerTests: XCTestCase {
         ].joined(separator: "\n")
         let lines = HtmlManager.processImages(in: html, imagesStorage: tempDirectory).components(separatedBy: "\n")
 
-        XCTAssertEqual(lines[0], "<video preload=\"none\" data-preload=\"metadata\" src=\"file://\(clip.path)\" controls></video>")
+        XCTAssertEqual(
+            lines[0], "<video preload=\"none\" data-preload=\"metadata\" src=\"\(HtmlManager.localMediaURL(forPath: clip.path))\" controls></video>")
         XCTAssertEqual(lines[1], "<video preload=\"none\" data-preload=\"metadata\" controls src=\"https://example.com/a.mp4\"></video>")
         XCTAssertEqual(lines[2], "<video preload=\"none\" data-preload=\"metadata\" controls><source src=\"https://example.com/b.mp4\"></video>")
         XCTAssertEqual(lines[3], "<VIDEO preload=\"none\" data-preload=\"metadata\" src=\"https://example.com/c.mp4\"></VIDEO>")

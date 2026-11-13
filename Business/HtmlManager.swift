@@ -380,6 +380,21 @@ class HtmlManager {
             .replacingOccurrences(of: "&amp;", with: "&")
     }
 
+    /// The scheme `LocalMediaSchemeHandler` answers: the preview loads every
+    /// local image and video through the app's process (#578).
+    static let localMediaScheme = "miaoyan-file"
+
+    /// The address the preview loads the local file at `path` from, with the
+    /// path percent-encoded: a raw `file://` path broke on a `#` or `?` in a
+    /// file name, and could not be read at all in the sandboxed build.
+    static func localMediaURL(forPath path: String) -> String {
+        var components = URLComponents()
+        components.scheme = localMediaScheme
+        components.host = ""
+        components.path = path
+        return components.string ?? "\(localMediaScheme)://\(path)"
+    }
+
     private static func cleanImagePath(_ path: String) -> String {
         let path = decodeAttributeEntities(path)
         var cleaned = path.removingPercentEncoding ?? path
@@ -475,7 +490,7 @@ class HtmlManager {
     /// started out a fraction of its height, too many images counted as in view
     /// and loaded together, and the text below jumped down as each arrived.
     private static func localImageTag(_ tag: String, oldSrc: String, path: String, eager: Bool) -> String {
-        let url = "file://\(path)"
+        let url = localMediaURL(forPath: path)
         var result =
             eager
             ? tag.replacingOccurrences(of: "src=\"\(oldSrc)\"", with: "src=\"\(url)\"")
@@ -565,7 +580,7 @@ class HtmlManager {
                 continue
             }
 
-            // Process relative paths - convert to absolute file:// URLs with lazy loading
+            // Process relative paths - convert to absolute media URLs with lazy loading
             let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
             let exists = pathCache[absolutePath] ?? fileManager.fileExists(atPath: absolutePath)
             pathCache[absolutePath] = exists
@@ -578,8 +593,8 @@ class HtmlManager {
             }
         }
 
-        // Process <video src> and <source src>, rewriting local paths to
-        // file://. Preload is settled afterwards for every video at once.
+        // Process <video src> and <source src>, rewriting local paths to the
+        // app's media address. Preload is settled afterwards for every video.
         if let videoRegex = videoSrcRegex {
             let videoResults = videoRegex.matches(in: htmlString, range: NSRange(htmlString.startIndex..., in: htmlString))
             let videoMatches = videoResults.compactMap { match -> (fullMatch: String, srcPath: String)? in
@@ -601,7 +616,7 @@ class HtmlManager {
 
                     if exists {
                         let updatedTag = videoInfo.fullMatch
-                            .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"file://\(cleanPath)\"")
+                            .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"\(localMediaURL(forPath: cleanPath))\"")
                         htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: updatedTag)
                     }
                 } else {
@@ -611,7 +626,7 @@ class HtmlManager {
 
                     if exists {
                         let updatedTag = videoInfo.fullMatch
-                            .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"file://\(absolutePath)\"")
+                            .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"\(localMediaURL(forPath: absolutePath))\"")
                         htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: updatedTag)
                     }
                 }
@@ -687,8 +702,7 @@ class HtmlManager {
 
             if isAbsolutePath(cleanPath) {
                 if FileManager.default.fileExists(atPath: cleanPath) {
-                    let imageURL = URL(fileURLWithPath: cleanPath)
-                    replacements.append((match.range, "![\(alt)](\(imageURL.absoluteString))"))
+                    replacements.append((match.range, "![\(alt)](\(localMediaURL(forPath: cleanPath)))"))
                 }
                 continue
             }
@@ -696,7 +710,7 @@ class HtmlManager {
             let relativePath = cleanPath.hasPrefix("/") ? String(cleanPath.dropFirst()) : cleanPath
             let imageURL = imagesStorage.appendingPathComponent(relativePath)
             if FileManager.default.fileExists(atPath: imageURL.path) {
-                replacements.append((match.range, "![\(alt)](\(imageURL.absoluteString))"))
+                replacements.append((match.range, "![\(alt)](\(localMediaURL(forPath: imageURL.path)))"))
             }
         }
 

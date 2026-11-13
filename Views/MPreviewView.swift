@@ -117,6 +117,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = true
         configuration.defaultWebpagePreferences = preferences
+        LocalMediaSchemeHandler.install(on: configuration)
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = navigationProxy
 
@@ -877,7 +878,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 guard let indexURL = HtmlManager.createTemporaryBundle(pageHTMLString: pageHTMLString) else {
                     throw PreviewError.temporaryBundleCreationFailed
                 }
-                self.loadFileURL(indexURL, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+                // The page reads only its own folder: local images and
+                // videos come through LocalMediaSchemeHandler. With read
+                // access to `/`, a sandboxed build's network process was
+                // refused the page itself and every note came out blank (#578).
+                self.loadFileURL(indexURL, allowingReadAccessTo: indexURL.deletingLastPathComponent())
                 self.hasLoadedTemplate = true
                 self.pageIsDark = UserDataService.instance.isDark
                 self.note = note

@@ -172,7 +172,7 @@ final class MediaPlaceholderTests: XCTestCase {
         let html = try XCTUnwrap(
             MPreviewView.previewHTML(
                 markdown: "Text.\n\n<video src=\"clip.mp4\" controls></video>\n", useGithubLineBreak: false, imagesStorage: directory))
-        XCTAssertTrue(html.contains("src=\"file://\(directory.appendingPathComponent("clip.mp4").path)\""), html)
+        XCTAssertTrue(html.contains("src=\"\(HtmlManager.localMediaURL(forPath: directory.appendingPathComponent("clip.mp4").path))\""), html)
         XCTAssertTrue(html.contains("data-preload=\"metadata\""), html)
 
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()

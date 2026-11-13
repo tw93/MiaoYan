@@ -58,6 +58,9 @@ final class PdfExportController: NSObject {
         let prefs = WKWebpagePreferences()
         prefs.allowsContentJavaScript = true
         config.defaultWebpagePreferences = prefs
+        // The page is the preview's own HTML, whose local images and videos
+        // load through the app (#578).
+        LocalMediaSchemeHandler.install(on: config)
 
         let frame = NSRect(origin: .zero, size: Self.pageSize)
         let web = WKWebView(frame: frame, configuration: config)
@@ -106,11 +109,10 @@ final class PdfExportController: NSObject {
             return
         }
         indexURL = url
-        // Root access mirrors the live preview (MPreviewView at the loadFileURL call site):
-        // notes can reference absolute image paths anywhere on disk, so narrowing here would
-        // break exports that the live preview can render. The HTML body is generated locally
-        // from trusted markdown, no untrusted JS runs in this offscreen view.
-        webView?.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        // Read access to its own folder, as the live preview has (MPreviewView at the
+        // loadFileURL call site): local images come through LocalMediaSchemeHandler, and with
+        // `/` a sandboxed build's network process was refused the page itself (#578).
+        webView?.loadFileURL(url, allowingReadAccessTo: baseURL)
     }
 
     // MARK: - Post-load pipeline
