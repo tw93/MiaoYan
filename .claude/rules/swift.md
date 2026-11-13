@@ -15,6 +15,7 @@ paths:
 ## Threading
 
 - 文件 IO、版本历史、Mermaid 渲染、PDF 导出走后台队列。大笔记 / 大预览**不允许**主线程同步读。
+- AppKit 在指定队列上调用的闭包（`NSFilePromiseReceiver.receivePromisedFiles` 的 reader 这类）不要内联写在 `@MainActor` 类型里，Swift 6 下它会继承主 actor 隔离，后台队列一调用就在隔离检查上 trap：拖照片进编辑器的第一版即如此，发布前在沙盒测试包上崩出来（#578）。在 `nonisolated static` 函数里构造并返回 `@Sendable` 闭包，只捕获主 actor 上的对象，再 `Task { @MainActor in }` 回主线程，参照 `PromiseArrivals.reader`，测试从后台 `OperationQueue` 调用它。
 
 ## CJK 文本处理
 
