@@ -300,7 +300,8 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     }
 
     /// File ▸ Move: the storyboard's Move submenu at the open note's row, the
-    /// Trash first and then every folder but the open note's own.
+    /// Trash first and then the library and every folder, indented as the
+    /// sidebar nests them.
     @IBAction func moveMenu(_ sender: Any?) {
         guard let note = model.selectedNote else { return }
         let menu = NSMenu()
@@ -311,11 +312,11 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             menu.addItem(trash)
             menu.addItem(.separator())
         }
-        for folder in model.moveTargets(for: note) {
-            let item = NSMenuItem(title: folder.label, action: #selector(moveToFolder(_:)), keyEquivalent: "")
-            item.representedObject = folder
-            item.target = self
-            item.image = NSImage(systemSymbolName: "folder", accessibilityDescription: nil)
+        menu.autoenablesItems = false
+        let destinations = Sidebar().moveDestinations()
+        for item in MoveMenuFiller.items(
+            for: model.selectedNotes, destinations: destinations, target: self, action: #selector(moveToFolder(_:)))
+        {
             menu.addItem(item)
         }
         popUpAtSelectedRow(menu)

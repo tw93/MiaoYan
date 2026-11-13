@@ -990,6 +990,31 @@ private struct ShellNoteMenu: View {
         }
     }
 
+    /// A folder that every note being moved is already in stays listed, so
+    /// the tree keeps its shape, but cannot be picked.
+    private func moveButton(_ folder: Project, moving group: [Note]) -> some View {
+        Button {
+            model.move(group, to: folder)
+        } label: {
+            Label(folder.label, systemImage: "folder")
+        }
+        .disabled(group.allSatisfy { $0.project == folder })
+    }
+
+    /// SwiftUI menus cannot indent an item, so a folder with subfolders is a
+    /// submenu that lists the folder itself first, as Mail's Move To does.
+    private func moveItem(_ folder: ShellModel.MoveFolder, moving group: [Note]) -> AnyView {
+        guard !folder.children.isEmpty else { return AnyView(moveButton(folder.project, moving: group)) }
+        return AnyView(
+            Menu {
+                moveButton(folder.project, moving: group)
+                Divider()
+                ForEach(folder.children) { moveItem($0, moving: group) }
+            } label: {
+                Label(folder.project.label, systemImage: "folder")
+            })
+    }
+
     var body: some View {
         let group = model.notesForMenu(on: note)
         Group {
@@ -1045,13 +1070,12 @@ private struct ShellNoteMenu: View {
                     item("Trash", "trash") { delete() }
                     Divider()
                 }
-                ForEach(model.moveTargets(for: note), id: \.url) { folder in
-                    Button {
-                        model.move(group, to: folder)
-                    } label: {
-                        Label(folder.label, systemImage: "folder")
-                    }
+                let destinations = model.moveDestinations()
+                ForEach(destinations.libraries, id: \.url) { moveButton($0, moving: group) }
+                if !destinations.libraries.isEmpty, !destinations.folders.isEmpty {
+                    Divider()
                 }
+                ForEach(destinations.folders) { moveItem($0, moving: group) }
             } label: {
                 Label(I18n.str("Move"), systemImage: "arrow.up.right.circle")
             }

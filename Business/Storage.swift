@@ -135,6 +135,37 @@ class Storage {
         return found.sorted { $0.label.localizedCaseInsensitiveCompare($1.label) == .orderedAscending }
     }
 
+    /// A folder in `folderTree(under:)`, with how many levels it sits below
+    /// the top-level folder it was reached from.
+    public struct FolderTreeEntry {
+        public let project: Project
+        public let depth: Int
+    }
+
+    /// Every folder under `topLevel`, depth first: each top-level folder,
+    /// then its subfolders in the order `subfolders(of:)` gives them, as the
+    /// sidebar lists them when everything is expanded. The sidebar reads a
+    /// folder's subfolders only once it is opened, so a menu offering every
+    /// folder walks the disk itself. A folder reached a second time, through
+    /// a symlink back up the tree, is listed once, and the walk goes no
+    /// deeper than `maxDepth`, the most `NSMenuItem.indentationLevel` shows.
+    public func folderTree(under topLevel: [Project], maxDepth: Int = 15) -> [FolderTreeEntry] {
+        var entries: [FolderTreeEntry] = []
+        var seen = Set<String>()
+        func walk(_ project: Project, depth: Int) {
+            guard seen.insert(project.url.resolvingSymlinksInPath().path).inserted else { return }
+            entries.append(FolderTreeEntry(project: project, depth: depth))
+            guard depth < maxDepth else { return }
+            for child in subfolders(of: project) {
+                walk(child, depth: depth + 1)
+            }
+        }
+        for project in topLevel {
+            walk(project, depth: 0)
+        }
+        return entries
+    }
+
     public func getRootProject() -> Project? {
         projects.first(where: { $0.isRoot })
     }

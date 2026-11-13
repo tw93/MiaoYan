@@ -3,27 +3,11 @@ import XCTest
 @testable import MiaoYan
 
 /// The SwiftUI shell's list and sidebar rules that must match the storyboard
-/// window: where Move can send a note, which note opens after notes leave
-/// the list, how a remembered subfolder is found at launch, and how a
-/// dragged folder reorders the sidebar.
+/// window: which note opens after notes leave the list, how a remembered
+/// subfolder is found at launch, and how a dragged folder reorders the
+/// sidebar. Move's folders are in `MoveMenuTests`.
 @available(macOS 14, *)
 final class ShellModelTests: XCTestCase {
-
-    // MARK: - Move targets
-
-    @MainActor
-    func testMoveTargetsListEveryFolderButTheNotesOwnAndTheTrash() {
-        let base = URL(fileURLWithPath: "/tmp/MiaoYanShellMove-\(UUID().uuidString)")
-        let root = Project(url: base, isRoot: true, isDefault: true)
-        let work = Project(url: base.appendingPathComponent("Work"), parent: root)
-        let nested = Project(url: work.url.appendingPathComponent("Nested"), parent: work)
-        let archive = Project(url: base.appendingPathComponent("Archive"), parent: root)
-        let trash = Project(url: base.appendingPathComponent(".Trash"), isTrash: true)
-
-        let targets = ShellModel.moveTargets(excluding: work, in: [root, work, nested, archive, trash])
-
-        XCTAssertEqual(targets.map(\.url.path), [root, nested, archive].map(\.url.path))
-    }
 
     // MARK: - Selection after notes leave the list
 

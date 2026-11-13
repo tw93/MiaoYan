@@ -185,14 +185,35 @@ extension ShellModel {
         refreshNotes(keepSelection: true)
     }
 
-    /// The storyboard's Move submenu: every folder storage knows, root and
-    /// unexpanded subfolders included, except the note's own and the Trash.
-    static func moveTargets(excluding current: Project, in projects: [Project]) -> [Project] {
-        projects.filter { $0 != current && !$0.isTrash }
+    /// A folder in the Move menu, with its subfolders nested under it.
+    struct MoveFolder: Identifiable {
+        let project: Project
+        let children: [MoveFolder]
+        var id: URL { project.url }
     }
 
-    func moveTargets(for note: Note) -> [Project] {
-        Self.moveTargets(excluding: note.project, in: storage.getProjects())
+    /// The storyboard's Move submenu (`MoveMenuFiller`): the library, then
+    /// every folder in the sidebar's order, nested as the sidebar nests
+    /// them, the Trash left out (#579).
+    func moveDestinations() -> (libraries: [Project], folders: [MoveFolder]) {
+        let destinations = Sidebar().moveDestinations()
+        return (destinations.libraries, Self.nest(destinations.folders))
+    }
+
+    /// Turns the depth-first list `Storage.folderTree(under:)` gives back
+    /// into a tree: each entry takes the deeper entries after it as children.
+    static func nest(_ entries: [Storage.FolderTreeEntry]) -> [MoveFolder] {
+        var index = 0
+        func level(_ depth: Int) -> [MoveFolder] {
+            var folders: [MoveFolder] = []
+            while index < entries.count, entries[index].depth >= depth {
+                let entry = entries[index]
+                index += 1
+                folders.append(MoveFolder(project: entry.project, children: level(entry.depth + 1)))
+            }
+            return folders
+        }
+        return level(0)
     }
 
     // MARK: - Folder order

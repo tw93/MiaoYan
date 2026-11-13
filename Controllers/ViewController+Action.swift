@@ -1195,21 +1195,10 @@ extension ViewController {
             moveMenu.addItem(NSMenuItem.separator())
         }
 
-        let projects = storage.getProjects()
-        for item in projects {
-            if note.project == item || item.isTrash {
-                continue
-            }
-
-            let menuItem = NSMenuItem()
-            menuItem.title = item.label
-            menuItem.representedObject = item
-            menuItem.action = #selector(vc.moveNote(_:))
-            if #available(macOS 11.0, *) {
-                menuItem.image = NSImage(systemSymbolName: "folder", accessibilityDescription: "Folder")
-            }
-            moveMenu.addItem(menuItem)
-        }
+        // The folders are filled in when the submenu opens: listing every
+        // folder reads the disk, and this runs on every sidebar reload.
+        moveMenu.autoenablesItems = false
+        moveMenu.delegate = MoveMenuFiller.shared
 
         let personalSelection = [
             "noteMove.rename"
@@ -1613,5 +1602,52 @@ extension ViewController {
 
     func toastInSingleMode() {
         toast(message: I18n.str("Press ⌘⇧W to leave single-file mode"))
+    }
+}
+
+/// Fills the note menu's Move submenu each time it opens, with the library
+/// and then every folder in the sidebar's order, each subfolder indented
+/// under its parent (#579). A folder every selected note is already in is
+/// shown but cannot be picked, so the tree keeps its shape.
+@MainActor
+final class MoveMenuFiller: NSObject, NSMenuDelegate {
+    static let shared = MoveMenuFiller()
+    /// Marks the items this filler adds, so the next fill replaces them and
+    /// leaves the Trash item above them.
+    static let itemTag = 556
+
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        for item in menu.items where item.tag == Self.itemTag {
+            menu.removeItem(item)
+        }
+        guard let vc = ViewController.shared(), let notes = vc.notesTableView.getSelectedNotes(), !notes.isEmpty else { return }
+        for item in Self.items(for: notes, destinations: Sidebar().moveDestinations(), target: vc) {
+            menu.addItem(item)
+        }
+    }
+
+    static func items(
+        for notes: [Note], destinations: (libraries: [Project], folders: [Storage.FolderTreeEntry]), target: AnyObject?,
+        action: Selector = #selector(ViewController.moveNote(_:))
+    ) -> [NSMenuItem] {
+        let current = Set(notes.map { ObjectIdentifier($0.project) })
+        func item(_ project: Project, depth: Int) -> NSMenuItem {
+            let item = NSMenuItem(title: project.label, action: action, keyEquivalent: "")
+            item.target = target
+            item.tag = itemTag
+            item.representedObject = project
+            item.indentationLevel = min(depth, 15)
+            item.isEnabled = !current.contains(ObjectIdentifier(project)) || current.count > 1
+            item.image = NSImage(systemSymbolName: "folder", accessibilityDescription: nil)
+            return item
+        }
+        var items = destinations.libraries.map { item($0, depth: 0) }
+        if !items.isEmpty, !destinations.folders.isEmpty {
+            let separator = NSMenuItem.separator()
+            separator.tag = itemTag
+            items.append(separator)
+        }
+        items += destinations.folders.map { item($0.project, depth: $0.depth) }
+        return items
     }
 }

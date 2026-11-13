@@ -52,6 +52,20 @@ class Sidebar {
 
     public func getList() -> [Any] { list }
 
+    /// Where Move can send a note, in the sidebar's order and nesting: the
+    /// library itself, for notes kept outside any folder, then every folder
+    /// at its depth, top-level folders in the order the user dragged them
+    /// into. The Trash is not among them; it has its own item (#579, where
+    /// one flat list made same-named subfolders impossible to tell apart).
+    public func moveDestinations() -> (libraries: [Project], folders: [Storage.FolderTreeEntry]) {
+        let topLevel = list.compactMap { item -> Project? in
+            guard let item = item as? SidebarItem, item.type == .Category else { return nil }
+            return item.project
+        }
+        let libraries = storage.getRootProjects().filter { !$0.isTrash && !$0.isExternal }
+        return (libraries, storage.folderTree(under: topLevel))
+    }
+
     public func getProjects() -> [SidebarItem] {
         list.compactMap { $0 as? SidebarItem }
             .filter { item in
