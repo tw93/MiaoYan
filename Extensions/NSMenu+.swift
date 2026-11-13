@@ -44,6 +44,7 @@ enum MenuIconRegistry {
 
     private static let iconMappings: [IconMapping] = [
         IconMapping(symbol: "info.circle", selectors: ["showInfo:", "showAboutWindow:"], identifiers: []),
+        IconMapping(symbol: "doc.text", selectors: ["showOpenSourceLicenses:"], identifiers: []),
         IconMapping(symbol: "gearshape", selectors: ["openPreferences:"], identifiers: []),
         IconMapping(symbol: "rectangle.stack", selectors: ["activeWindow:", "openMainWindow:", "arrangeInFront:"], identifiers: []),
         IconMapping(symbol: "eye.slash", selectors: ["hide:", "hideOtherApplications:"], identifiers: []),

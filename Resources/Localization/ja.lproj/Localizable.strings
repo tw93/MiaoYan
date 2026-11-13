@@ -350,3 +350,6 @@
 "%@: %@" = "%@：%@";
 "MiaoYan for iPhone and iPad" = "iPhone・iPad 版";
 "Opened Files" = "開いたファイル";
+
+/* Window title of MiaoYan > Open Source Licenses */
+"Open Source Licenses" = "オープンソースライセンス";

@@ -12,6 +12,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     var shellWindowController: NSWindowController?
     var prefsWindowController: PrefsWindowController?
     var aboutWindowController: AboutWindowController?
+    var openSourceLicensesWindowController: OpenSourceLicensesWindowController?
     public var urls: [URL]?
     public var searchQuery: String?
     public var newName: String?
@@ -431,6 +432,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         guard let aboutWindowController = aboutWindowController else { return }
         aboutWindowController.showWindow(nil)
         aboutWindowController.window?.makeKeyAndOrderFront(aboutWindowController)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @IBAction func showOpenSourceLicenses(_ sender: Any?) {
+        let controller = openSourceLicensesWindowController ?? OpenSourceLicensesWindowController()
+        openSourceLicensesWindowController = controller
+        controller.showWindow(nil)
+        controller.window?.makeKeyAndOrderFront(controller)
         NSApp.activate(ignoringOtherApps: true)
     }
 

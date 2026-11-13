@@ -37,6 +37,15 @@ they are documented in a separate manifest:
 - Update flow: replace the file, regenerate the manifest hash via
   `shasum -a 256 path/to/file.min.js`, bump the manifest entry, and commit.
 
+## Open Source Licenses
+
+`THIRD-PARTY-NOTICES.md` is bundled into the app and shown at MiaoYan > Open
+Source Licenses. Adding, removing or bumping a Swift package or a vendored
+preview file updates its entry there in the same commit, including copyright
+lines and any library the file bundles (Mermaid carries DOMPurify and, in its
+ELK layout, elkjs under EPL-2.0); `scripts/test_notices.py` fails when a
+`MANIFEST.json` file or a `Package.resolved` version has no entry.
+
 ## Platform Requirements
 
 - macOS host target: 12.0+ (Monterey)

@@ -344,3 +344,6 @@
 "No results" = "Sin resultados";
 "MiaoYan for iPhone and iPad" = "MiaoYan para iPhone y iPad";
 "Opened Files" = "Archivos abiertos";
+
+/* Window title of MiaoYan > Open Source Licenses */
+"Open Source Licenses" = "Licencias de código abierto";

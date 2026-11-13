@@ -23,6 +23,12 @@
                                                 <action selector="showAboutWindow:" target="Voe-Tx-rLC" id="PR0-oC-n1f"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Open Source Licenses" id="oSL-mN-iTm">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="showOpenSourceLicenses:" target="Voe-Tx-rLC" id="oSL-aC-tIn"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Check for Updates" id="BWp-m7-ySj">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>

@@ -16,7 +16,7 @@
       "name": "d3.min.js",
       "version": "6.7.0",
       "source_url": "https://d3js.org/d3.v6.min.js",
-      "license": "ISC",
+      "license": "BSD-3-Clause",
       "sha256": "fbb8da602a76f4ed49bac3561da62d8149fa121b8fd15685bacc21355d3a3322",
       "purpose": "Charting primitives used by Mermaid and markmap.",
       "version_source": "banner comment line 1"

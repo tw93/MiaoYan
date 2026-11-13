@@ -125,6 +125,8 @@
 		8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7136ED23490CBF004DFA6E /* Markdown.swift */; };
 		AA001001AA001001AA001001 /* NoteVersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA001000AA001000AA001000 /* NoteVersionManager.swift */; };
 		AA002001AA002001AA002001 /* VersionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA002000AA002000AA002000 /* VersionHistoryViewController.swift */; };
+		FFE37775B48103F8062AEBF8 /* OpenSourceLicensesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30662441B3A931465168C185 /* OpenSourceLicensesWindowController.swift */; };
+		3FB6D80F8E4940D07129B87C /* THIRD-PARTY-NOTICES.md in Resources */ = {isa = PBXBuildFile; fileRef = CF7D0D83BF5CCFBC61EE1A58 /* THIRD-PARTY-NOTICES.md */; };
 		BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */; };
 		C75DC26EE3FF48E896528611 /* MiaoYanTests/ClipboardManagerUTF16Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B975C5A10CFD43A88A5126AC /* MiaoYanTests/ClipboardManagerUTF16Tests.swift */; };
 		D66760150F65F7A76FB578AD /* MiaoYanTests/WikilinkIndexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95948F99423D28CB53271964 /* MiaoYanTests/WikilinkIndexTests.swift */; };
@@ -337,6 +339,8 @@
 		95948F99423D28CB53271964 /* MiaoYanTests/WikilinkIndexTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/WikilinkIndexTests.swift; sourceTree = SOURCE_ROOT; };
 		AA001000AA001000AA001000 /* NoteVersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteVersionManager.swift; sourceTree = "<group>"; };
 		AA002000AA002000AA002000 /* VersionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionHistoryViewController.swift; sourceTree = "<group>"; };
+		30662441B3A931465168C185 /* OpenSourceLicensesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSourceLicensesWindowController.swift; sourceTree = "<group>"; };
+		CF7D0D83BF5CCFBC61EE1A58 /* THIRD-PARTY-NOTICES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "THIRD-PARTY-NOTICES.md"; sourceTree = "<group>"; };
 		B711EF5A3FFA7FB00A8FC27C /* MiaoYanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MiaoYanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/StorageInitContentDecisionTests.swift; sourceTree = SOURCE_ROOT; };
 		B975C5A10CFD43A88A5126AC /* MiaoYanTests/ClipboardManagerUTF16Tests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ClipboardManagerUTF16Tests.swift; sourceTree = SOURCE_ROOT; };
@@ -527,6 +531,7 @@
 				D7793C711F211C6000CA39B7 /* MiaoYan */,
 				D7D61FCC1F32EEA1004357C2 /* Resources */,
 				2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */,
+				CF7D0D83BF5CCFBC61EE1A58 /* THIRD-PARTY-NOTICES.md */,
 				2795956327B12CDC000B754C /* MiaoYan.app */,
 				57582879F18B6D05C8F0E5DE /* Frameworks */,
 				B711EF5A3FFA7FB00A8FC27C /* MiaoYanTests.xctest */,
@@ -607,6 +612,7 @@
 				275592961F3AE9B5006B8988 /* MainWindowController.swift */,
 				D7153DFC2285A93300A2C20F /* AboutWindowController.swift */,
 				D7153E042285C09C00A2C20F /* AboutViewController.swift */,
+				30662441B3A931465168C185 /* OpenSourceLicensesWindowController.swift */,
 				272CAC2528758C6A0026EF50 /* ContentViewController.swift */,
 				D7793C741F211C6000CA39B7 /* ViewController.swift */,
 				275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */,
@@ -843,6 +849,7 @@
 				276312862E75813D007BB5E9 /* ContentViewController.xib in Resources */,
 				276312872E75813D007BB5E9 /* Main.storyboard in Resources */,
 				FA075E976CACD6C8641C8A64 /* MiaoYanMark.otf in Resources */,
+				3FB6D80F8E4940D07129B87C /* THIRD-PARTY-NOTICES.md in Resources */,
 				A9F1C0DE5E0000000000A001 /* appfiles.json in Resources */,
 				D0C1A9E5F00000000000B001 /* Markdown.icns in Resources */,
 			);
@@ -987,6 +994,7 @@
 				27B4A5AB2E6924CC00C89EFF /* ViewController+Data.swift in Sources */,
 				AA001001AA001001AA001001 /* NoteVersionManager.swift in Sources */,
 				AA002001AA002001AA002001 /* VersionHistoryViewController.swift in Sources */,
+				FFE37775B48103F8062AEBF8 /* OpenSourceLicensesWindowController.swift in Sources */,
 				D7CD5F6C1F51185F006AA35D /* NSFont+.swift in Sources */,
 				D7508FC81F337E850047AB76 /* SearchTextField.swift in Sources */,
 				275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */,

@@ -313,6 +313,9 @@
 /* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
 "gXN-Ca-moU.title" = "關於妙言";
 
+/* Class = "NSMenuItem"; title = "Open Source Licenses"; ObjectID = "oSL-mN-iTm"; */
+"oSL-mN-iTm.title" = "開源授權";
+
 /* Class = "NSMenuItem"; title = "Always"; ObjectID = "h0Q-Zx-pSP"; */
 "h0Q-Zx-pSP.title" = "Always";
 

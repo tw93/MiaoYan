@@ -79,6 +79,9 @@
 /* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
 "gXN-Ca-moU.title" = "关于妙言";
 
+/* Class = "NSMenuItem"; title = "Open Source Licenses"; ObjectID = "oSL-mN-iTm"; */
+"oSL-mN-iTm.title" = "开源许可";
+
 /* Class = "NSMenuItem"; title = "Feeding 2 cats"; ObjectID = "zeb-Y9-O9j"; */
 "zeb-Y9-O9j.title" = "喂 2 只🐱";
 

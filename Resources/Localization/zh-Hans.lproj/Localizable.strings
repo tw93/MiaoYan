@@ -352,3 +352,6 @@
 "%@: %@" = "%@：%@";
 "MiaoYan for iPhone and iPad" = "iPhone 和 iPad 版";
 "Opened Files" = "临时打开";
+
+/* Window title of MiaoYan > Open Source Licenses */
+"Open Source Licenses" = "开源许可";
