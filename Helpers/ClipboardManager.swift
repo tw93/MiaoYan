@@ -1,5 +1,6 @@
 import Cocoa
 import Darwin
+import UniformTypeIdentifiers
 
 private let uploadServerURL = "http://127.0.0.1:36677/upload"
 
@@ -115,7 +116,7 @@ class ClipboardManager {
         from pasteboard: NSPasteboard, at location: Int, storage library: Storage = AppEnvironment.current.storage
     ) -> Bool? {
         let dropped = Self.fileURLs(on: pasteboard)
-        guard !dropped.isEmpty else { return nil }
+        guard !dropped.isEmpty else { return dropPromisesOrImage(from: pasteboard, at: location) }
         let urls = dropped.filter { library.getBy(url: $0) == nil }
         guard !urls.isEmpty, let textView, textView.isEditable, let note = EditTextView.note, textView.storageNote === note,
             let storage = textView.textStorage
@@ -131,6 +132,92 @@ class ClipboardManager {
             }
         }
         return inserted > 0
+    }
+
+    /// A drag that carries no readable file: the files its source promises
+    /// to write, as Photos, Mail and browsers offer a picture, or else bare
+    /// picture data with no text beside it (#578). Left to NSTextView, a
+    /// promise was not accepted at all, so dragging a photo in did nothing,
+    /// and picture data became an inline attachment that was never written
+    /// anywhere. Promised files arrive later and go in where the drop was,
+    /// through `saveFile` like a Finder file. Nil when the drag has neither,
+    /// leaving it to NSTextView; false when the editor cannot take it.
+    private func dropPromisesOrImage(from pasteboard: NSPasteboard, at location: Int) -> Bool? {
+        let promises = pasteboard.readObjects(forClasses: [NSFilePromiseReceiver.self]) as? [NSFilePromiseReceiver] ?? []
+        let image = promises.isEmpty ? Self.imageData(on: pasteboard) : nil
+        guard !promises.isEmpty || image != nil else { return nil }
+        guard let textView, textView.isEditable, let note = EditTextView.note, textView.storageNote === note,
+            let storage = textView.textStorage
+        else { return false }
+        let caret = min(max(location, 0), storage.length)
+        guard let image else {
+            receive(promises, into: note, at: caret)
+            return true
+        }
+        textView.setSelectedRange(NSRange(location: caret, length: 0))
+        EditTextView.shouldForceRescan = true
+        saveClipboard(data: image.data, note: note, ext: image.ext)
+        textView.saveTextStorageContent(to: note)
+        note.save()
+        return true
+    }
+
+    /// Picture data on a pasteboard that holds no text, PNG kept as PNG and
+    /// anything else NSImage reads saved as JPEG, as a pasted picture is. A
+    /// text selection dragged from a page can carry its pictures too; it
+    /// stays text.
+    static func imageData(on pasteboard: NSPasteboard) -> (data: Data, ext: String)? {
+        let types = pasteboard.types ?? []
+        guard !types.contains(where: { [.string, .html, .rtf, .rtfd].contains($0) }) else { return nil }
+        if let png = pasteboard.data(forType: .png), NSImage(data: png) != nil { return (png, "png") }
+        for type in [NSPasteboard.PasteboardType(UTType.jpeg.identifier), .tiff] {
+            if let data = pasteboard.data(forType: type), let jpg = NSImage(data: data)?.jpgData { return (jpg, "jpg") }
+        }
+        return nil
+    }
+
+    /// Asks each source to write its file into a folder of its own, then
+    /// inserts the files in the order they were dragged, once all have
+    /// arrived, if the editor still shows the note they were dropped on.
+    private func receive(_ promises: [NSFilePromiseReceiver], into note: Note, at caret: Int) {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDrop-\(UUID().uuidString)", isDirectory: true)
+        do {
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        } catch {
+            AppDelegate.trackError(error, context: "ClipboardManager.receivePromises")
+            return
+        }
+        let arrivals = PromiseArrivals(count: promises.count) { [weak self] files in
+            self?.insertReceived(files, into: note, at: caret)
+            try? FileManager.default.removeItem(at: folder)
+        }
+        for (index, promise) in promises.enumerated() {
+            promise.receivePromisedFiles(
+                atDestination: folder, options: [:], operationQueue: Self.promiseQueue,
+                reader: PromiseArrivals.reader(for: arrivals, at: index))
+        }
+    }
+
+    private static let promiseQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.qualityOfService = .userInitiated
+        return queue
+    }()
+
+    private func insertReceived(_ files: [URL], into note: Note, at caret: Int) {
+        guard !files.isEmpty, let textView, textView.isEditable, EditTextView.note === note, textView.storageNote === note,
+            let storage = textView.textStorage
+        else { return }
+        textView.setSelectedRange(NSRange(location: min(caret, storage.length), length: 0))
+        var inserted = 0
+        for url in files {
+            if inserted > 0 {
+                textView.insertText("\n\n", replacementRange: textView.selectedRange())
+            }
+            if saveFile(url: url, in: note) {
+                inserted += 1
+            }
+        }
     }
 
     /// The regular files on a pasteboard, as Finder puts them there when
@@ -502,5 +589,39 @@ class ClipboardManager {
             return true
         }
         return false
+    }
+}
+
+/// Promised files of one drop, kept in drag order until the last arrives.
+@MainActor
+final class PromiseArrivals {
+    private var files: [URL?]
+    private var remaining: Int
+    private let completion: ([URL]) -> Void
+
+    /// `completion` gets every file that arrived, once the last promise has answered.
+    init(count: Int, completion: @escaping ([URL]) -> Void) {
+        files = Array(repeating: nil, count: count)
+        remaining = count
+        self.completion = completion
+    }
+
+    func arrive(_ url: URL?, at index: Int) {
+        files[index] = url
+        remaining -= 1
+        if remaining == 0 { completion(files.compactMap { $0 }) }
+    }
+
+    /// The reader one promise calls with its file. AppKit calls it on the
+    /// operation queue the receiver was given, so it must not belong to the
+    /// main actor: a closure written inline in ClipboardManager did, and the
+    /// first photo dropped on the editor crashed the app on its isolation check.
+    nonisolated static func reader(for arrivals: PromiseArrivals, at index: Int) -> @Sendable (URL, Error?) -> Void {
+        { url, error in
+            Task { @MainActor in
+                if let error { AppDelegate.trackError(error, context: "ClipboardManager.receivePromises") }
+                arrivals.arrive(error == nil ? url : nil, at: index)
+            }
+        }
     }
 }

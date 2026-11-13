@@ -294,6 +294,84 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(note.content.string, text)
     }
 
+    /// Picture data dragged with no file beside it, as from a browser, was
+    /// left to NSTextView and became an inline attachment never written to
+    /// the note's folder (#578). It is saved and linked like a paste; a text
+    /// selection that carries a picture stays text.
+    @available(macOS 14, *)
+    @MainActor
+    func testDroppedPictureDataIsSavedAndLinkedAtTheDropPoint() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let note = makeLoadedNote("drop-data.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        let image = NSImage(size: NSSize(width: 4, height: 4))
+        image.lockFocus()
+        NSColor.red.drawSwatch(in: NSRect(x: 0, y: 0, width: 4, height: 4))
+        image.unlockFocus()
+        let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(image.tiffRepresentation))?.representation(using: .png, properties: [:]))
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-data-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+
+        board.clearContents()
+        board.setData(png, forType: .png)
+        board.setString("a picture in a sentence", forType: .string)
+        XCTAssertNil(drop.dropFiles(from: board, at: 7), "a text selection with a picture stays NSTextView's")
+
+        board.clearContents()
+        board.setData(png, forType: .png)
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+
+        XCTAssertFalse(controller.textView.textStorage?.containsAttachments ?? true)
+        let text = controller.textView.string
+        let match = try XCTUnwrap(text.range(of: "^before !\\[\\]\\((/i/[^)]+\\.png)\\)after$", options: .regularExpression), text)
+        let link = String(text[match].dropFirst("before ![](".count).dropLast(")after".count))
+        XCTAssertEqual(try Data(contentsOf: URL(fileURLWithPath: tempDir.path + link)), png, "written to \(link) as it was dragged")
+        XCTAssertEqual(note.content.string, text)
+    }
+
+    /// A photo dragged from Photos or Mail is a promise of a file; the editor
+    /// refused it, so nothing happened (#578).
+    @MainActor
+    func testTheEditorAcceptsPromisedFiles() {
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 200, height: 100))
+        let accepted = Set(editor.acceptableDragTypes.map(\.rawValue))
+        XCTAssertTrue(Set(NSFilePromiseReceiver.readableDraggedTypes).isSubset(of: accepted))
+        let plain = NSTextView(frame: editor.frame)
+        plain.isRichText = editor.isRichText
+        plain.importsGraphics = editor.importsGraphics
+        XCTAssertTrue(Set(plain.acceptableDragTypes.map(\.rawValue)).isSubset(of: accepted), "Finder files and text still")
+    }
+
+    /// AppKit hands each promised file over on the receiver's operation queue.
+    /// The reader once belonged to the main actor and the app crashed there on
+    /// the first photo dropped; the files still come back in drag order.
+    @MainActor
+    func testPromisedFilesArriveFromABackgroundQueueInDragOrder() async {
+        let done = expectation(description: "all promises answered")
+        var received: [URL] = []
+        let arrivals = PromiseArrivals(count: 3) { files in
+            XCTAssertTrue(Thread.isMainThread)
+            received = files
+            done.fulfill()
+        }
+        let first = URL(fileURLWithPath: "/tmp/first.png"), third = URL(fileURLWithPath: "/tmp/third.png")
+        let queue = OperationQueue()
+        queue.addOperation { PromiseArrivals.reader(for: arrivals, at: 2)(third, nil) }
+        queue.addOperation { PromiseArrivals.reader(for: arrivals, at: 1)(URL(fileURLWithPath: "/tmp/failed.png"), CocoaError(.fileWriteUnknown)) }
+        queue.addOperation { PromiseArrivals.reader(for: arrivals, at: 0)(first, nil) }
+
+        await fulfillment(of: [done], timeout: 5)
+        XCTAssertEqual(received, [first, third], "the failed one is left out")
+    }
+
     /// The storyboard window's Format ends in the same `replaceWholeBuffer`
     /// (`ViewController+Editor`), so its one-undo-step guarantee is checked on a
     /// bare storyboard-style editor (not shell hosted). Not covered: Prettier

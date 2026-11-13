@@ -360,8 +360,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.paste(sender)
     }
 
-    /// A file dragged in from Finder goes through the paste path
-    /// (ClipboardManager.dropFiles); a text drag stays NSTextView's.
+    /// NSTextView refused promised files, so a photo dragged from Photos or Mail did nothing (#578).
+    override var acceptableDragTypes: [NSPasteboard.PasteboardType] {
+        super.acceptableDragTypes + NSFilePromiseReceiver.readableDraggedTypes.map { NSPasteboard.PasteboardType($0) }
+    }
+
+    override func dragOperation(for dragInfo: NSDraggingInfo, type: NSPasteboard.PasteboardType) -> NSDragOperation {
+        guard NSFilePromiseReceiver.readableDraggedTypes.contains(type.rawValue) else { return super.dragOperation(for: dragInfo, type: type) }
+        return isEditable ? .copy : []
+    }
+
+    /// Files, promised files and picture data take the paste path (ClipboardManager.dropFiles).
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         let caret = characterIndexForInsertion(at: convert(sender.draggingLocation, from: nil))
         if let handled = clipboardManager?.dropFiles(from: sender.draggingPasteboard, at: caret) {
