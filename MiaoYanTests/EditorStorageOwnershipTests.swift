@@ -138,6 +138,15 @@ final class EditorStorageOwnershipTests: XCTestCase {
         XCTAssertEqual(try emphasised(["name"], in: "an _name_with_parts_ here")["name"], true)
     }
 
+    /// `__` inside a word took the bold colour, which the preview never
+    /// shows as bold; `**` inside a word and `__` around one still do.
+    @MainActor
+    func testDoubleUnderscoresInsideWordsAreNotBold() throws {
+        XCTAssertEqual(try emphasised(["case"], in: "Call snake__case__name here")["case"], false)
+        XCTAssertEqual(try emphasised(["case"], in: "Call snake**case**name here")["case"], true)
+        XCTAssertEqual(try emphasised(["strong"], in: "A __strong__ word")["strong"], true)
+    }
+
     /// Real emphasis still highlights, next to code and around it.
     @MainActor
     func testEmphasisOutsideInlineCodeStillHighlights() throws {

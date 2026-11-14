@@ -1103,4 +1103,25 @@ final class MathRenderingRuntimeTests: XCTestCase {
         }
         XCTFail("Timed out waiting for KaTeX in \(page.lastPathComponent): \(String(describing: lastState))")
     }
+
+    /// CommonMark allows up to three spaces before `#` and `1)` as an
+    /// ordered-list marker; the preview renders both, the editor coloured
+    /// neither.
+    @MainActor
+    func testEditorHighlightsIndentedHeadingsAndParenthesisLists() {
+        func matches(_ regex: MarklightRegex, _ line: String) -> Bool {
+            var found = false
+            regex.matches(line, range: NSRange(location: 0, length: (line as NSString).length)) { if $0 != nil { found = true } }
+            return found
+        }
+        for line in [" # Title", "   ### Title"] {
+            XCTAssertTrue(matches(NotesTextProcessor.headersAtxRegex, line), line)
+            XCTAssertTrue(matches(NotesTextProcessor.headersAtxOpeningRegex, line), line)
+        }
+        XCTAssertFalse(matches(NotesTextProcessor.headersAtxRegex, "    # code"))
+        XCTAssertTrue(matches(NotesTextProcessor.listRegex, "1) first"))
+        XCTAssertTrue(matches(NotesTextProcessor.listRegex, "  12) twelfth"))
+        XCTAssertTrue(matches(NotesTextProcessor.listOpeningRegex, "1) first"))
+        XCTAssertFalse(matches(NotesTextProcessor.listRegex, "1)glued"))
+    }
 }

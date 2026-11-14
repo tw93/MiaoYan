@@ -419,7 +419,8 @@ public class NotesTextProcessor {
      */
 
     fileprivate static let headerAtxPattern = [
-        "^(\\#{1,6}[\\x20\\t])  # $1 = string of #'s and the space or tab after them",
+        "^\\p{Z}{0,3}  # up to three spaces of indent, as CommonMark allows",
+        "(\\#{1,6}[\\x20\\t])  # $1 = string of #'s and the space or tab after them",
         "[\\p{Z}\\t]*",
         "(.+?)        # $2 = Header text",
         "[\\p{Z}\\t]*",
@@ -430,7 +431,7 @@ public class NotesTextProcessor {
     @MainActor public static let headersAtxRegex = MarklightRegex(pattern: headerAtxPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     fileprivate static let headersAtxOpeningPattern = [
-        "^(\\#{1,6}[\\x20\\t])"
+        "^\\p{Z}{0,3}(\\#{1,6}[\\x20\\t])"
     ].joined(separator: "\n")
 
     @MainActor public static let headersAtxOpeningRegex = MarklightRegex(pattern: headersAtxOpeningPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -474,10 +475,10 @@ public class NotesTextProcessor {
      */
 
     fileprivate static let _markerUL = "[*+-]"
-    fileprivate static let _markerOL = "[0-9-]+[.]"
+    fileprivate static let _markerOL = "[0-9-]+[.)]"
 
     fileprivate static let _listMarker = "(?:\\p{Z}|\\t)*(?:\(_markerUL)|\(_markerOL))"
-    fileprivate static let _listSingleLinePattern = "^(?:\\p{Z}|\\t)*((?:[*+-]|\\d+[.]))\\p{Z}+"
+    fileprivate static let _listSingleLinePattern = "^(?:\\p{Z}|\\t)*((?:[*+-]|\\d+[.)]))\\p{Z}+"
 
     @MainActor public static let listRegex = MarklightRegex(pattern: _listSingleLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     @MainActor public static let listOpeningRegex = MarklightRegex(pattern: _listMarker, options: [.allowCommentsAndWhitespace])
@@ -682,7 +683,8 @@ public class NotesTextProcessor {
     @MainActor public static let appUrlRegex = MarklightRegex(pattern: appUrlPattern, options: [.anchorsMatchLines])
 
     // MARK: Bold
-    fileprivate static let boldPattern = "(\\*\\*|__)(?=\\S)(.+?)(?<=\\S)\\1"
+    // `__` inside a word (`snake__case__name`) is not bold, as for italic.
+    fileprivate static let boldPattern = "(\\*\\*|(?<![\\p{L}\\p{N}])__)(?=\\S)(.+?)(?<=\\S)\\1(?!(?<=_)[\\p{L}\\p{N}])"
     @MainActor public static let boldRegex = MarklightRegex(pattern: boldPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Strike
