@@ -117,6 +117,7 @@ eq([week.pulse.month.month, week.pulse.month.cur.sold], ['2026-11', 3], 'this mo
   eq(v.pulse.month.prev.sold, 2, 'last month to the same day');
   const html = page.renderDashboard(v);
   assert.ok(html.includes('上期 1 份') && html.includes('上月同期'), 'the cards show the previous figures');
+  assert.ok(html.includes('href="/assets/icon-64.png"') && html.includes('rel="apple-touch-icon" href="/assets/icon-180.png"'), 'the tab and home-screen icons are the site\'s own');
   checks += 1;
 }
 const recent = Object.fromEntries(week.recent.map((d) => [d.date, d]));

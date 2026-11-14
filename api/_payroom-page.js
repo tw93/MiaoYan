@@ -83,7 +83,7 @@ td small{color:var(--subtle);font-size:12px}
 `;
 
 function shell(title, body) {
-  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="theme-color" content="#f5f4ed"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>${esc(title)}</title><link rel="icon" href="/favicon.ico"><style>${CSS}</style></head><body>${body}</body></html>`;
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="theme-color" content="#f5f4ed"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><title>${esc(title)}</title><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64"><link rel="apple-touch-icon" href="/assets/icon-180.png"><style>${CSS}</style></head><body>${body}</body></html>`;
 }
 
 function renderLogin({ failed = false, unconfigured = false } = {}) {
