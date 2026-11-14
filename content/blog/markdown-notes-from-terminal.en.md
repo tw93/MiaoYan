@@ -1,4 +1,4 @@
-MiaoYan ships a small command-line tool called `miao` that lists, searches, prints, opens and creates notes from the terminal. It has six commands (`open`, `new`, `search`, `list`, `cat`, `update`), and it does not edit existing notes. That is deliberate. Because your notes are plain Markdown files, a script or an AI coding agent can edit them directly, and MiaoYan picks the change up from disk.
+MiaoYan ships a small command-line tool called `miao` that lists, searches, prints, opens and creates notes from the terminal. It has six commands (`open`, `new`, `search`, `list`, `cat`, `update`), and it does not edit existing notes. Your notes are plain Markdown files, so a script or an AI coding agent can edit them directly, and MiaoYan picks the change up from disk.
 
 ## Install and check
 
