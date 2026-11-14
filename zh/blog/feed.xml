@@ -7,6 +7,62 @@
     <description>在 Mac、iPhone 和 iPad 上用 Markdown 写作，把笔记存成本地文件的指南。</description>
     <language>zh-CN</language>
     <item>
+      <title>Mermaid ER 图写法：实体、鸭脚符号和主外键</title>
+      <link>https://miaoyan.app/zh/blog/mermaid-er-diagram/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/mermaid-er-diagram/</guid>
+      <pubDate>Wed, 04 Nov 2026 01:00:00 +0000</pubDate>
+      <description>在 Markdown 里写 Mermaid erDiagram，读懂鸭脚基数标记，区分实线虚线，给属性加 PK、FK、UK，并排查常见错误。</description>
+    </item>
+    <item>
+      <title>README 怎么写：章节顺序、链接与预览</title>
+      <link>https://miaoyan.app/zh/blog/how-to-write-a-readme/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/how-to-write-a-readme/</guid>
+      <pubDate>Tue, 03 Nov 2026 01:00:00 +0000</pubDate>
+      <description>写出在 GitHub 上渲染良好的 README.md，包括放哪里、章节顺序、相对链接、徽章，以及推送前的预览。</description>
+    </item>
+    <item>
+      <title>Markdown 定义列表怎么写，哪里能用，不能用怎么办</title>
+      <link>https://miaoyan.app/zh/blog/markdown-definition-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-definition-lists/</guid>
+      <pubDate>Mon, 02 Nov 2026 01:00:00 +0000</pubDate>
+      <description>CommonMark 和 GFM 都没有定义列表，学会冒号写法、支持它的工具，以及 HTML 和表格这些通用替代写法。</description>
+    </item>
+    <item>
+      <title>用 Markdown 写每日笔记：一天一个文件加一个脚本</title>
+      <link>https://miaoyan.app/zh/blog/daily-notes-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/daily-notes-markdown/</guid>
+      <pubDate>Sun, 01 Nov 2026 01:00:00 +0000</pubDate>
+      <description>用 YYYY-MM-DD.md 一天一个文件做日记，配简短模板、创建今天文件的脚本、日期间的 wikilink 和搜索。</description>
+    </item>
+    <item>
+      <title>Markdown 里的 Mermaid 时间线：语法、分组和示例</title>
+      <link>https://miaoyan.app/zh/blog/mermaid-timeline/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/mermaid-timeline/</guid>
+      <pubDate>Sat, 31 Oct 2026 01:00:00 +0000</pubDate>
+      <description>学会在 Markdown 里写 Mermaid 时间线，包括多个事件、分组、换行、方向和颜色，以及什么时候该换甘特图。</description>
+    </item>
+    <item>
+      <title>Excel 转 Markdown 表格，粘贴转换和检查</title>
+      <link>https://miaoyan.app/zh/blog/excel-to-markdown-table/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/excel-to-markdown-table/</guid>
+      <pubDate>Fri, 30 Oct 2026 01:00:00 +0000</pubDate>
+      <description>把 Excel、Numbers 或 Google Sheets 复制的单元格转成 Markdown 表格，并检查合并单元格、竖线和换行。</description>
+    </item>
+    <item>
+      <title>把 Notion 和 Evernote 笔记导出为 Markdown</title>
+      <link>https://miaoyan.app/zh/blog/migrate-notes-to-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/migrate-notes-to-markdown/</guid>
+      <pubDate>Thu, 29 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Notion 导出 Markdown，Evernote 导出 ENEX 再转换，清理文件名、图片和 front matter，最后在妙言里打开。</description>
+    </item>
+    <item>
+      <title>Markdown 目录怎么生成：手写、[TOC] 与工具</title>
+      <link>https://miaoyan.app/zh/blog/markdown-table-of-contents/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-table-of-contents/</guid>
+      <pubDate>Wed, 28 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Markdown 没有目录语法，可以手写锚点列表、用 [TOC] 标记，或用 doctoc、VS Code、Pandoc 生成，也讲了链接不跳转怎么查。</description>
+    </item>
+    <item>
       <title>Markdown 标题怎么写：# 语法、层级和锚点</title>
       <link>https://miaoyan.app/zh/blog/markdown-headings/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-headings/</guid>

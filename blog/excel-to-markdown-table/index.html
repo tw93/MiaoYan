@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbfaf6">
+<script>document.documentElement.classList.add('js')</script>
+<title>Excel to Markdown table: paste, convert and check · MiaoYan Blog</title>
+<meta name="description" content="Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.">
+<link rel="canonical" href="https://miaoyan.app/blog/excel-to-markdown-table/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/excel-to-markdown-table/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/excel-to-markdown-table/">
+<link rel="alternate" hreflang="zh-Hans" href="https://miaoyan.app/zh/blog/excel-to-markdown-table/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/excel-to-markdown-table/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/excel-to-markdown-table/">
+<meta property="og:title" content="Excel to Markdown table: paste, convert and check · MiaoYan Blog">
+<meta property="og:description" content="Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp">
+<meta property="article:published_time" content="2026-10-30">
+<meta property="article:modified_time" content="2026-10-30">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<style id="site-css">
+/* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
+   the accent is MiaoYan's own green and the footer its dark paper. */
+:root {
+  --parchment: #fbfaf6;
+  --ivory: #fefdfb;
+  --warm-sand: #ebe9e1;
+  --brand: #1a6840;
+  --brand-light: #317b52;
+  --brand-tint: #ecf4ee;
+  --near-black: #363433;
+  --dark-warm: #3d3d3a;
+  --olive: #504e49;
+  --stone: #6b6a64;
+  --line: #e4e1d6;
+  --line-faint: #efede5;
+  --night: #1e1d1b;
+  --night-ink: #f2f0ea;
+  --night-dim: #b5b1a7;
+  /* One serif face for headings; modern sans for UI and body text so CJK
+     renders crisp and never splits between serif Latin and sans CJK on iOS. */
+  --serif: Charter, Georgia, "Songti SC", serif;
+  /* One serif face for everything, as on mole.fit; CJK locales override
+     --serif below and --sans follows it. */
+  --sans: var(--serif);
+  /* 1000 as on the other product sites since 2026-11-10: 1120, kept on
+     2026-11-08 for the screenshots, read wide to the maintainer. */
+  --page: 1000px;
+  --inset: 64px;
+  --gap: 90px;
+  /* Desktop type ladder shared by the product sites (2026-11-01): five rungs, nothing between. */
+  --text-meta: 14px;
+  /* Reading text moved to 16, the size of the ledes above it, as on mole.fit;
+     buttons, inline code, tables and captions keep 15 (maintainer 2026-11-09). */
+  --text-body: 16px;
+  --text-button: 15px;
+  --text-lede: 16px;
+  --text-title: 21px;
+  --text-section: 32px;
+}
+/* The Chinese pages use one family, a serif: Clear Han Serif for Simplified reading
+   text and Source Han Serif for titles and for Traditional, cut
+   to the characters on the page (scripts/build-fonts.py) and served from
+   /fonts/, ahead of Songti, so Android and Windows, which have no Chinese
+   serif, render the same text as a Mac or an iPhone. Latin stays with Charter,
+   or Georgia where Charter is missing. */
+/* The hero wordmark and the nav's name are STIX Two Text Regular (OFL, Reserved
+   Font Name "TM Math"), cut to this name's letters by Kata
+   scripts/wordmark-font.py (maintainer 2026-11-07, over Charter Roman, whose M
+   read wide and stiff). Copyright and licence stay in the font's name table. */
+@font-face {
+  font-family: "MiaoYan Wordmark";
+  src: url("data:font/woff2;base64,d09GMgABAAAAAAZMAA8AAAAADEAAAAX0AAIhSAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbgT4cNgZgP1NUQVRIAFQRCAqHIIV8ATYCJAMcCxAABCAFiUUHIBuEClFUcspQfFXAk6HRDeGlNtsWKiLxb2ld/BhqqR0V70eC9xNhAQ/+/3+/ts99NuppHBGtmiiJ1kjFKqt7qJAy/3/X9Lcs3EBlRCUCmV7Taw6SvlwKM27Ozs0q5Pl/b/f9ja0A4yQICusEHnIkGe0IL5ttvSmcQy4FyPw7V/IBsv8BamknoADA1Zra+4RdXsYR2ggfG+cINkDunmSAqChUhK6skLEFUp0IXw0sFMoKKdD0322uNOV4azrD/Jtw5QiUAIARiESgYFOOc651JnC5vQsDLndBdLg8sWRwyQm4gwwcRDDwgpLzTGkKxlAyIKUB0vrUbjyzzgmOtTgEVUu2wREIu2HrSExgEZGk52K2BPttEf4t/1Z8G6M63NeaPgTYWwsAbnr70QqhvGLbyjd3vzQX8MUdXv8a/j2pTyCAfnsfGLITyTHQYgdT9kfdShvAw4UNmwvxWhzAIj3CPuCIJQIgAAYcaHEQaHG6BJTkGO/OEkbxISjEXmZWWmTCSGJfa9FQFUgCUAFlaALQDQCAB+CJiDHWS362/rarq5qMgCMnWyonKd/ArkLMekK4FqwokpCVTMGI2Xz48HXEXMLsDjA2BlZgFjHXCeHVq9Bx5UB1WZDFSLh9MRJl5m3DiEgkkglgt0zCHVNbCZAB0PwMTsFpmEYLBbJnRXGbDu1ahpEssEuAYWwsET8ygRhrLQKWbNljEgMda7cSsewlxBw+f/26PmIOYXbNFIKrUleOoGOMEC4nVdfsySvX0Wpoy5UzDtpbe9pYgFfsODE56fKJjmWYHUQonnC5saVE2g6+mabXyGMcYjbt8lt27FDRIvYP79g+mjGIcFUqhhvKMtlrcB2u7LhyJUx4/noSuOb+369Ax9WoFYG7ApWyuYJzXM4jineZ5NzHT6MeRd2zNuDpJytLqPqYOddZmMwjFfoWKZNLlKz9XFNDQiyjaWtPGxONwPe/CE2QfE0btl20nql3rcyAPnPpm9jFb/to7bRrugt1rqXq0JjWT92ms17shS7ntY7YgPXFMj24Y0CbrDlt0td25tFOk+tKtCxtJCRUpBN7jEMlpj/wzybkJvXoW/TBHv85A9+GTfBZI5iUcDpvYeB31I/rrThi4nnM1LjalMxTlV/GpRaGqdtFeQeHPVa/qCBXOv5++gE9bX+f5LWnwgXq+rrNGry5y6tlstdDekhpnSmnSI00NfwQBK18Xqug/bVmuTL3I0k+4PEekORDMH5O6bwpp7a6rO4nBdfC/2bITw8wN/fxTI47R/X80dTlPx3KgMuPUJG9eA/bKBKSb2Wo9j86gKQL66Y1BtqX5Lh459e1l8c4VGY7HjespZIjU7wqvR190zPq/YoAgH8CwDQD+sy+VqbLu3yVEhF9AQC//48lA8DficjR/7+zeEeUqCIAEUQAAAFc+4nWjqDfs66vSkgiqYBtDiiR2eHX0QPQQwKmoCoAKjtjNpCccQKQim75ZlmpgUWT1Gyt03a23dvaoGz16KgmyUE9D7y6IrQy9Kc1lfS1znIetntbGwwy1EbD6NrkR0JtOWObair229FCUGpPrIRiQoEVvq2MFNp7l2K+xOwP9q6HmveXel7P5zWlQ75gOPBN7d7kxaJv/ppQxu28EyjVloSEBAQEvfWJEIdMAAQJjm2yaXHRGo6RLMiAwGkIRWZl0Z60xQkQPMofJO1YUvz8VDS/2N6Kj4Iz+Vkkasf5KPZko3eRJ10Uxi1hDDJXusiaCRN0I4RqzyCnTWYHB6WF+ASFBcyQCQNV3Ib4WUK7v4Xz94vbYOd6rzl6+IjzIPYnJwkEWvvk3M4yt9nndBPbFyD3a4xgdJXhcgLVYzFDewaCOYaBxQLb/zRDFh151cIKn/YSZS3HtQi3KisdJ+/BwBAGMkkgyrCfgEuaReQ54wiIDu7bGUzJ7+zIoNfZR4IfjPj2ylx135QOwg4wyoCtGHzkeJ5hBLu4aEjsLaWgszJvUYgzUCFZfG7J18KHE1R+fTUdU3aOXGPFJgkv5ZONcCaMcQAg29SOCg==") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+@font-face {
+  font-family: "MiaoYan Mark";
+  src: url("/fonts/miaoyan-mark.woff2?v=fc8636647bcd") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+8A9E;
+}
+/* The hero's Han glyph is SemiBold: its stems measure 7.4px beside STIX Two's
+   8.0 at 100px, with no stroke on either side. Cut by Kata scripts/mark-font.py. */
+@font-face {
+  font-family: "MiaoYan Mark";
+  src: url("data:font/woff2;base64,d09GMk9UVE8AAAXMAA8AAAAACmgAAAV6AAIAxAAAAAAAAAAAAAAAAAAAAAAAAAAAGYFeDYh0GyAcgRwGYA4IADQBNgIkAwgEBgWECAcgFyQYCBtlCVGUUE4XxBcFtjFt8IaWQ8TMGuuxUYQDjYfG5o1jDRRFIBTwY4uhfO7POvyXdUHykziJJzM7TeH76fSHOwGOfdpKyKPik1MZTgEepqk8+FzsbysbpHBU4ElQvU7j49I801Dy2ce9RrtpdS2EofTx1kESLo0C2sBO6BTf/Ns5g87RAjiPt1Ye8VctSmfyP38s9f27pgqLtjvQw+MDO7Cjilpk6mwT20CisYPGG0XxdMhm9+AeM54IEABBOSePX0IfPrBw6dUTHF3rEuPoxr6CBR8UHsBnXrnpcYQDAEBh6DJkanVLRG8kTZ6yUWj2WaSKkZtxDFXevSgsr7+mOrG6pV5R9ZagTmYEN54BANIewCSgQOoxyvbL/l3qGn6cL75LqieUmTq/JVdRS9Se17qiDhJ1KVGPFvWZfW5/lcnzva4l/FpPBzA314ait5zonzeZ+tzGYnAFQgLCkXXQQz9gNIncz/Ozncg1QcCmmZBrcYXEjInSzBLQNMK7uKV5BPLOrnLYdtCYdlyZXw/K8g+LIkv0M+vdfEzIdL6HhfnS6sfqNbF3y1a/OZJVKm5ye9MHa4f9njGbjGaMszkzEa938d5mM0LUbp3Y3fZfpgGgzx0EgALoBISOUGq9/hNk7yVrtGzP4r1cs1w4hsq9yafmFVkxIMFe1hEOmIPylqJmT9oJUm68NvFWSbXESoYaRWjAtjuV5dEB3/gI6+s/0gQixWV1UMxxsNyG/RnnL1MQih4czI0Ldy31ck89NxtG3GasATxkKK8UjqJsf+zZptQwEMyiARuyjSDey3lSoxW/IbqYh5TjeYhYyBXui4qUw26RP6tTR44+Bhejr/Xl9535FPC21KZFm1aqfaKekwFSR6ujIClNFedaPnJTLrtEPr6zQ4dvg8tYfrSa33PipkQTKPDn++r52VSKDs8hizWTxxp8/uvBpGU5Gm/jn4WPu34EXGNemTEgWygVEGAFUOq+5JNblBMtbZNBsih//DFuzZ7MI4fE3f/SOhgjwzX8ntOXIsAbUpsWxVyluydbZIC00voYplV0Bu8APBJHRRpdt2pjinRHBWvuqmXMNC8+suJ1ZeQoavdmnBqQG4N+HMSNUVlJPUu7A6G4HWu5jPlcTas4EA/ppGllqH1ldmwiWiAyXF7L/uduYdfBfZImEpw/kdTsyjs4r8APQlGh6Dh7ctXFPYaY+8/0IREusoIj4XxMNzG3WMPvPn7rLD2Q2tALsHQsyIEp53Q4uoH8K3Xo0K0hC4mQpJJokDdd2GBqFUXD+hM1KE590FR3XXYgAJK06UIzuOIARsGcm2OBLM/XnwFit7Bb2C3sFnZr8RabvaljwBNB/vT8RlBfg7PWDkeotS5IMOhlxkFni9cNh8O3cAst3VDr44g3RderTIcCoN4mExD1J3SGtXAGoJKDgiIYCAHL2TMw+XX3qPq5ccBsSFd5FSqp5wD0ARkgFm1sC4AGoIyGamkMfcS4ELPITBJ/Ok0guNj1153fv5sh739Cjv4IAF7/pr7b3fVnfz2pEPY+irATs82+BgQJfYqAFSCFE3W8WzFiAOKBBsDLlIN2EgCwGjRKEEerJRRZdyW0eP8LGZiElR7mJ+HYRj/soc+RPQdubJKrOnKmL4BjygQxV66pqWqPXQnbll9SYH2GJUVMapkFa/raqKY/JJFoEHVtwiGhjNdEYrGUIGaSmJa6gJhmK4Zi5hfzSBKb0SpEkp23RGn3MybhFHNWLMUEq1v7P3v2nHgJcOHMs33Gds/sqV+0EDuf/fSlL3i6QTWwmJToXs40BR2dbR8cLBWj2b0Giwmod0h0CQOXK5O57KlwTqFz7gRH3dEB0H+2Ry79rRjXdQDIUKRsWAE=") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+@font-face {
+  font-family: "MiaoYan Serif SC";
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=72cfcccbbb3c") format("woff2");
+  font-weight: 400;
+  font-display: block;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif SC";
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=6d066c3f7f07") format("woff2");
+  font-weight: 500 700;
+  font-display: block;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif TC";
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=009bddb1ccb2") format("woff2");
+  font-weight: 400;
+  font-display: block;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif TC";
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=293442ed588c") format("woff2");
+  font-weight: 500 700;
+  font-display: block;
+  unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+/* The sibling-app marks in the footer's More Apps group: 宿殼書 cut from Source Han
+   Serif TC Regular and 鼹 from Source Han Serif SC Regular (OFL, renamed "Mole
+   Serif TC" / "Mole Serif SC") by Kata scripts/mark-font.py, so Latin and iPhone
+   pages draw them in a serif instead of the system Songti or PingFang. */
+@font-face {
+  font-family: "Sibling Mark";
+  src: url("data:font/woff2;base64,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") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+5BBF, U+6BBC, U+66F8, U+8A9E;
+}
+@font-face {
+  font-family: "Sibling Mark";
+  src: url("data:font/woff2;base64,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") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+9F39;
+}
+/* The Chinese face leads so the curly quotes and the ellipsis in its range are
+   Chinese marks (Charter drew them narrow against the Han); Latin still falls
+   to Charter, as on mole.fit (2026-10-25). */
+html[lang="zh-CN"] {
+  --serif: "MiaoYan Serif SC", Charter, Georgia, "Songti SC", serif;
+  --sans: var(--serif);
+}
+html[lang="zh-Hant"] {
+  --serif: "MiaoYan Serif TC", Charter, Georgia, "Songti TC", serif;
+  --sans: var(--serif);
+}
+html[lang="ja"] {
+  --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+}
+/* Korean is set in the system sans, as on mole.fit: iOS has no Myeongjo, so an
+   iPhone drew Georgia Latin beside sans Hangul. The wordmarks keep their serif. */
+html[lang="ko"] {
+  --serif: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --sans: var(--serif);
+}
+html[lang="ko"] .hero h1 { font-family: "MiaoYan Wordmark", Charter, Georgia, serif; }
+html[lang="ko"] .foot-name { font-family: Charter, Georgia, serif; }
+/* Korean breaks between words, never inside one. */
+html[lang="ko"] body { word-break: keep-all; overflow-wrap: break-word; }
+
+* { box-sizing: border-box; }
+/* Below a short page's footer the canvas shows the footer's night, not parchment. */
+html { min-height: 100%; background: linear-gradient(var(--parchment) 50%, var(--night) 50%); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--parchment);
+  color: var(--dark-warm);
+  font-family: var(--sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  /* Short pages (404, privacy) end on parchment above the footer instead of a
+     stretch of night under it. */
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+/* Every line fills the column, as on mole.fit (maintainer 2026-10-25): no
+   pretty, balance, strict breaking, CJK keep-all or glued tails, which all
+   wrapped phone lines early. A comma or full stop that does not fit hangs at
+   the edge (WebKit). */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"]) body { hanging-punctuation: allow-end; }
+body > :is(.wrap, footer) { width: 100%; }
+body > footer { margin-top: auto; }
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) body { line-height: 1.75; }
+/* Leads 1.6, prose 1.75, articles 1.8 (below), as on mole.fit. */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .section-lede { line-height: 1.6; }
+html[lang="de"] :is(.section-lede, .card p, .faq p) { hyphens: auto; -webkit-hyphens: auto; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; height: auto; }
+
+.wrap { max-width: calc(var(--page) + var(--inset) * 2); margin: 0 auto; padding: 0 var(--inset); }
+
+/* Nav: a solid ivory pill, as on mole.fit. */
+.nav { position: sticky; top: 16px; z-index: 10; margin: 16px -14px 60px; }
+/* Inner pages keep mole.fit's 47px of ink from the pill to the page title, 32
+   on phones; the home hero takes 64 / 40, about 74 / 46 of ink above the wordmark
+   like the rest of the family (maintainer 2026-11-02: a little more air on top). */
+.nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 48px; }
+.nav:has(+ main:not([class])) { margin-bottom: 64px; }
+/* Nav links jump straight to their section, with no glide, as on mole.fit
+   (maintainer 2026-11-02: the glide looked worse than the instant jump). */
+/* A jump lands the section or heading 47px under the pill, 34 on phones, the
+   distance the pill keeps above a page title (100 left 27 / 29). */
+:root { --anchor-clear: 119px; }
+/* Covers content scrolling under the sticky pill, as mole.fit does. */
+.nav::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 100vw; height: calc(100% + 40px); z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment) 70%, transparent 100%);
+}
+.nav-bar {
+  display: flex; align-items: center; gap: 20px; min-height: 55px;
+  padding: 10px 14px; border-radius: 999px;
+  background: var(--ivory);
+  /* No drawn edge: mole.fit's soft shadow lifts the bar and the transparent
+     border keeps its height (maintainer 2026-11-10: the shadow pill read better
+     than the hairline one, on every product site). */
+  border: 1px solid transparent;
+  box-shadow: 0 1px 8px 1px rgba(0, 0, 0, 0.02);
+}
+@media (prefers-contrast: more) { .nav-bar { border-color: var(--line); box-shadow: none; } }
+.brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--near-black); flex: none; }
+.brand img { width: 24px; height: 24px; }
+/* Cap height centred on the bar, measured at 6x. */
+.brand b { font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; font-size: 18px; line-height: 1; position: relative; top: 0.9px; }
+.nav-links { display: flex; gap: 2px; margin-left: 8px; }
+.nav-links a {
+  font-size: var(--text-meta); font-weight: 500; line-height: 1; color: var(--olive); text-decoration: none;
+  padding: 8px 11px; border-radius: 999px; white-space: nowrap;
+}
+.nav-links a:hover { background: var(--warm-sand); color: var(--near-black); }
+.nav-links a[aria-current="page"] { color: var(--near-black); }
+.nav-end { margin-left: auto; display: flex; align-items: center; gap: 14px; flex: none; }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: var(--text-meta); font-weight: 600; line-height: 1; color: #fff; background: var(--brand);
+  text-decoration: none; padding: 9px 15px; border-radius: 999px; white-space: nowrap;
+  border: 1px solid var(--brand); transition: background 0.15s, border-color 0.15s;
+}
+.nav-cta svg { width: 13px; height: 13px; flex: none; margin-top: -1px; }
+.nav-cta:hover { background: var(--brand-light); border-color: var(--brand-light); }
+/* While the hero's buttons are on screen the nav keeps only its links. */
+html.js .nav-bar.hide-cta .nav-cta { display: none; }
+
+/* Language menu: a globe and the current name, opening on hover or click. */
+.lang-switch { position: relative; }
+.lang-trigger {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 4px;
+  border: 0; background: transparent; color: var(--stone); cursor: pointer;
+  font: inherit; font-size: var(--text-meta); font-weight: 500; line-height: 1;
+  transition: color 0.15s;
+}
+.lang-trigger::after {
+  content: ""; width: 4px; height: 4px; margin-top: -2px;
+  border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
+  opacity: 0.55; transform: rotate(45deg); transition: transform 0.18s ease, margin 0.18s ease;
+}
+.lang-trigger:hover, .lang-switch.is-open .lang-trigger { color: var(--brand); }
+.lang-switch.is-open .lang-trigger::after { margin-top: 2px; transform: rotate(225deg); }
+.lang-code { display: none; }
+.lang-menu {
+  position: absolute; top: calc(100% + 8px); right: 0; width: 150px;
+  display: grid; gap: 1px; padding: 6px;
+  border: 1px solid var(--line); border-radius: 8px;
+  background: var(--ivory);
+  box-shadow: 0 8px 24px rgba(20, 19, 19, 0.08);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.16s ease, visibility 0.16s ease;
+}
+/* A bridge across the gap so the pointer can travel into the menu. */
+.lang-menu::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
+.lang-switch.is-open .lang-menu, .lang-switch:focus-within .lang-menu {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}
+@media (hover: hover) {
+  .lang-switch:hover .lang-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+}
+.lang-menu a {
+  display: flex; align-items: center; min-height: 32px; padding: 6px 10px; border-radius: 6px;
+  font-size: var(--text-meta); line-height: 1.35; color: var(--olive); text-decoration: none;
+}
+.lang-menu a:hover { color: var(--near-black); background: color-mix(in srgb, var(--brand-tint) 50%, transparent); }
+.lang-menu a.active { color: var(--near-black); font-weight: 600; background: color-mix(in srgb, var(--brand-tint) 70%, transparent); }
+.lang-trigger:focus-visible, .lang-menu a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+
+/* Hero */
+.hero { margin-bottom: var(--gap); }
+.hero h1 {
+  font-family: "MiaoYan Wordmark", var(--serif); font-weight: 400; color: var(--dark-warm);
+  font-size: 97px; line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 calc(40px - 0.115em);
+}
+.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: calc(18px + 0.016em); }
+/* Tracking and the Han glyph's 0.84em follow mole.fit's wordmark
+   (maintainer 2026-11-06; reasons in its styles.css). The glyph size sits on the
+   orbit wrapper so the dot's em-based path shrinks with it, and the margin adds
+   back what the last letter's tracking takes from the gap. */
+.hero h1 .cn-orbit { font-size: 0.84em; }
+.hero h1 .cn {
+  display: inline-block;
+  font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+/* One small dot circles 語, as mole.fit's does around 鼴; each family site
+   gets its own orbit (tilt, direction, pace) so the motion stays theirs. */
+@property --mark-orbit {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.hero h1 .cn-orbit::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--brand);
+  /* A figure eight, one continuous pen stroke across the character. */
+  transform: translate(calc(cos(var(--mark-orbit)) * 0.9em), calc(sin(var(--mark-orbit)) * cos(var(--mark-orbit)) * 0.9em));
+  animation: mark-orbit 16s linear infinite reverse;
+  pointer-events: none;
+}
+@keyframes mark-orbit {
+  to { --mark-orbit: 360deg; }
+}
+.tagline { font-family: var(--serif); font-size: var(--text-title); line-height: 1.45; color: var(--olive); margin: 0 0 10px; }
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; }
+.tagline + .trust { margin-top: 16px; }
+/* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
+/* Every item carries its dot in a left gutter the list clips, so the item
+   that starts a wrapped row loses its dot: German, French, Spanish and
+   Japanese wrap on every iPad portrait and used to open the second row with
+   a stray middot. */
+.trust { --trust-gap: 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0 0 32px calc(-1 * var(--trust-gap)); padding: 0; list-style: none; clip-path: inset(0 0 0 var(--trust-gap)); }
+.trust li { position: relative; margin-left: var(--trust-gap); font-size: var(--text-meta); line-height: 1.5; color: var(--stone); white-space: nowrap; }
+.trust-link { color: inherit; text-decoration: none; transition: color 0.12s ease-out; }
+.trust-link:hover { color: var(--near-black); }
+.trust li::before { content: "\00B7"; position: absolute; left: calc(-1 * var(--trust-gap)); width: var(--trust-gap); text-align: center; color: var(--stone); opacity: 0.6; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px 16px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 158px;
+  font-size: var(--text-button); letter-spacing: 0.2px; text-decoration: none;
+  line-height: 1.55; padding: 13px 28px; border-radius: 999px; border: 1px solid var(--brand);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.btn svg { width: 16px; height: 16px; flex: none; margin-top: -1px; }
+.btn-primary { background: var(--brand); color: #fff; font-weight: 500; }
+.btn-primary:hover { background: var(--brand-light); border-color: var(--brand-light); transform: translateY(-1px); }
+/* The family's secondary button (2026-10-20): an ivory pill with a hairline. It
+   replaced the plain text link, which itself replaced a brand outline that read
+   as heavy; the hairline pill is quiet without dropping the button shape. */
+.btn-ghost svg { margin-top: 0; } /* The -1px is for the Apple mark, whose leaf lifts its box; the GitHub mark is round. */
+.btn-ghost { color: var(--near-black); background: var(--ivory); font-weight: 500; border-color: var(--line); }
+.btn-ghost:hover { background: var(--warm-sand); }
+
+/* Sections */
+section { margin-bottom: var(--gap); scroll-margin-top: var(--anchor-clear); }
+/* The family's section head: 32px dark-warm title (26px under 880px), 16px olive lede 12px below. */
+.section-title { font-family: var(--serif); font-weight: 500; color: var(--dark-warm); font-size: var(--text-section); line-height: 1.2; margin: 0 0 12px; }
+.section-lede { font-size: var(--text-lede); color: var(--olive); margin: 0 0 24px; }
+.section-title + .cards, .section-title + details { margin-top: 24px; }
+
+/* Gallery: tabs under a framed screenshot. */
+.gallery-frame { border-radius: 12px; overflow: hidden; background: #d9d4c7; aspect-ratio: 2400 / 1560; cursor: pointer; }
+.gallery-frame img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-frame img[hidden] { display: none; }
+.gallery-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.gallery-caption { font-size: var(--text-button); color: var(--olive); margin: 0; min-height: 1.6em; }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tabs button {
+  font: inherit; font-size: var(--text-meta); line-height: 1.35; color: var(--olive); background: transparent;
+  border: 0; padding: 6px 13px; border-radius: 999px; cursor: pointer;
+}
+.tabs button:hover { background: var(--warm-sand); color: var(--near-black); }
+.tabs button[aria-pressed="true"] { background: var(--brand); color: #fff; }
+/* Android's Chromium can round a font's ascent up and descent down, which lifted the
+   words in these pills 2.5px on a real tablet while a Mac stayed centred (2026-11-08).
+   Trimming the text box to the glyphs takes those metrics out of the sum. Same height
+   as before; an older browser keeps the padding above. */
+@supports (text-box: trim-both cap alphabetic) {
+  html .tabs button { height: calc(1lh + 12px); padding-block: 0; text-box: trim-both cap alphabetic; }
+}
+
+/* iPhone and iPad */
+/* Apple's product bezels, shown as is. The iPhone is drawn larger than its
+   real size next to the iPad so its text stays readable. The phone starts on
+   the text column's left edge and the iPad ends on its right: centred as a
+   pair, the larger iPad pulled the group right of the left-aligned title and
+   lede, and both grow so the column holds no hole between them (maintainer's
+   pick, C of three, 2026-11-04; 260 and 520 left 340px empty at 1280). */
+.devices { display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; }
+.device { margin: 0; }
+.device.phone { width: 300px; }
+.device.pad { width: 660px; }
+.devices-cta { justify-content: center; align-items: center; gap: 12px 40px; margin-top: 32px; }
+.store-qr { display: flex; align-items: center; gap: 14px; font-size: var(--text-meta); color: var(--stone); }
+.store-qr img { display: block; width: 74px; height: 74px; }
+/* A phone or tablet opens the store from the button; the code is for a desktop visitor. */
+@media (hover: none), (max-width: 560px) { .store-qr { display: none; } }
+
+/* Feature cards */
+.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 48px; }
+.card { padding: 0; }
+.card h3 { font-weight: 500; font-size: var(--text-title); color: var(--near-black); margin: 0 0 8px; }
+.card p { margin: 0; font-size: var(--text-body); color: var(--dark-warm); }
+
+/* FAQ */
+.faq details { border-top: 1px solid var(--line); padding: 16px 0; }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; font-size: var(--text-lede); color: var(--near-black); display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--stone); }
+.faq details[open] summary::after { content: "−"; }
+.faq p { margin: 0; padding-top: 10px; color: var(--dark-warm); }
+.faq p code { font-family: "SF Mono", Menlo, monospace; font-size: var(--text-meta); background: var(--warm-sand); padding: 1px 5px; border-radius: 5px; letter-spacing: 0; overflow-wrap: anywhere; }
+/* Open and close like the sibling sites' FAQ: the answer's height and opacity
+   ease in, where it used to snap open. The answer's gap is padding, not margin,
+   because margins sit outside the animated height and would jump. Browsers
+   without ::details-content (before Safari 18.4, Chrome 129) still open instantly. */
+.faq { interpolate-size: allow-keywords; }
+.faq details::details-content { height: 0; overflow: clip; opacity: 0; transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.26s ease, content-visibility 0.3s allow-discrete; }
+.faq details[open]::details-content { height: auto; opacity: 1; }
+
+/* Author contact under the FAQ, the same block as mole.fit's (2026-10-20).
+   The X and GitHub counts are static: update them together with mole.fit's. */
+.contact { margin-top: var(--gap); text-align: left; }
+.contact-heading { display: flex; align-items: center; gap: 12px; }
+.contact-author { display: block; flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.contact .contact-title { margin: 0; transform: translateY(1.5px); }
+.contact .contact-sub { margin: 8px 0 0; padding: 0; font-family: var(--serif); font-size: var(--text-body); line-height: 1.55; color: var(--olive); }
+.contact-sub a { color: var(--brand); text-decoration: none; }
+.contact-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.contact-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--border-card, var(--line));
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--ivory) 100%);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.contact-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.contact-channel {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  color: var(--near-black);
+}
+.contact-glyph { width: 22px; height: 22px; transition: opacity 0.18s ease; }
+.contact-avatar { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.18s ease; }
+.contact-meta { display: flex; flex-direction: column; min-width: 0; }
+.contact-head b { font-family: var(--ui, var(--serif)); font-size: var(--text-button); font-weight: 600; line-height: 1.3; color: var(--near-black); }
+.contact-handle { font-family: var(--ui, var(--serif)); font-size: var(--text-meta); line-height: 1.3; color: var(--stone); }
+.contact-stat {
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  color: var(--brand);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-meta);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.contact .contact-desc { margin: 4px 0 0; padding: 0; font-family: var(--serif); font-size: var(--text-body); line-height: 1.55; color: var(--olive); }
+@media (hover: hover) {
+  .contact-card:hover { border-color: var(--line); box-shadow: 0 2px 8px rgba(20, 19, 19, 0.05); }
+  .contact-card:hover .contact-glyph { opacity: 0; }
+  .contact-card:hover .contact-avatar { opacity: 1; }
+  .contact-sub a:hover { color: var(--brand-light); }
+}
+.contact-card:active { border-color: var(--line); background: linear-gradient(180deg, var(--ivory) 0%, var(--parchment) 100%); }
+@media (prefers-reduced-motion: reduce) { .contact-glyph, .contact-avatar { transition: none; } }
+@media (max-width: 560px) { .contact-cards { grid-template-columns: 1fr; } }
+@media (max-width: 340px) {
+  .contact-head { display: grid; grid-template-columns: 44px minmax(0, 1fr); }
+  .contact-channel { grid-column: 1; grid-row: 1 / span 2; }
+  .contact-meta { grid-column: 2; grid-row: 1; }
+  .contact-stat { grid-column: 2; grid-row: 2; margin-left: 0; justify-self: start; }
+}
+
+/* Blog (scripts/build-blog.py): mole.fit's blog in this site's tokens. The
+   index groups cards by category; an article is one centered reading column. */
+.blog-index, .blog-post { padding-bottom: var(--gap); }
+.blog-index > .section-lede { margin-bottom: 40px; }
+/* Release notes on mole.fit's geometry: a hairline between versions, numbered items
+   down one release, 1.65 leading; a device heads its group instead of prefixing each item. */
+.releases > .section-lede { margin-bottom: 36px; }
+.release { margin-bottom: 0; }
+.release + .release { margin-top: 40px; padding-top: 40px; border-top: 1px solid rgba(109, 108, 102, 0.12); }
+.release-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--dark-warm); margin: 0 0 24px; scroll-margin-top: 96px; }
+.release-name { margin-left: 4px; font-size: var(--text-lede); font-weight: 400; color: var(--olive); }
+.release-date { position: relative; top: -1px; margin-left: 4px; font-family: var(--sans); font-size: var(--text-meta); font-weight: 400; color: var(--stone); white-space: nowrap; }
+.release-notes { counter-reset: release-item; font-size: var(--text-lede); line-height: 1.65; color: var(--dark-warm); overflow-wrap: break-word; }
+.release-device { margin: 28px 0 12px; font-size: var(--text-lede); font-weight: 600; line-height: 1.65; color: var(--near-black); }
+.release-device:first-child { margin-top: 0; }
+.release-notes ol { list-style: none; margin: 0; padding: 0; }
+.release-notes li { position: relative; padding-left: 28px; counter-increment: release-item; }
+.release-notes li + li { margin-top: 16px; }
+.release-notes li::before { content: counter(release-item) "."; position: absolute; left: 0; top: 0; color: var(--stone); font-variant-numeric: tabular-nums; letter-spacing: 0; white-space: nowrap; }
+@media (max-width: 640px) {
+  .releases > .section-lede { margin-bottom: 32px; }
+  .release-title { font-size: 18px; }
+  .release-date { font-size: 14px; }
+}
+.blog-group { margin: 0; }
+.blog-group + .blog-group { margin-top: 56px; }
+.blog-group-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 6px; }
+.blog-group-description { font-size: var(--text-lede); color: var(--olive); margin: 0 0 20px; }
+.blog-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.blog-card, .blog-related-list a {
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.blog-card { overflow: hidden; }
+.blog-card a { display: flex; flex-direction: column; height: 100%; text-decoration: none; }
+.blog-card-media { display: block; aspect-ratio: 16 / 9; background: var(--warm-sand); border-bottom: 1px solid var(--line-faint); overflow: hidden; }
+.blog-card-media img { width: 100%; height: 100%; object-fit: cover; }
+.blog-card-body { display: flex; flex-direction: column; flex: 1; padding: 18px 20px 20px; }
+.blog-card-title { font-weight: 600; font-size: var(--text-lede); line-height: 1.35; color: var(--near-black); margin: 0 0 6px; }
+.blog-card-desc { font-size: var(--text-body); line-height: 1.6; color: var(--dark-warm); margin: 0 0 14px; }
+.blog-card-meta, .blog-related-meta, .blog-related-cat { font-size: var(--text-meta); color: var(--stone); }
+.blog-card-meta { margin-top: auto; }
+@media (hover: hover) {
+  .blog-card:hover, .blog-related-list a:hover { border-color: var(--warm-sand); box-shadow: 0 2px 8px rgba(20, 19, 19, 0.05); }
+}
+.blog-card:active, .blog-related-list a:active { background: var(--parchment); }
+
+.blog-crumb { font-size: var(--text-meta); margin: 0 0 14px; }
+.blog-crumb a { color: var(--stone); text-decoration: none; }
+.blog-title { font-family: var(--serif); font-weight: 500; color: var(--near-black); font-size: var(--text-section); line-height: 1.25; letter-spacing: -0.3px; margin: 0 0 14px; }
+.blog-meta { display: flex; flex-wrap: wrap; gap: 2px 0; font-size: var(--text-meta); letter-spacing: 0.2px; color: var(--stone); margin: 0 0 24px; }
+.blog-meta > span { white-space: nowrap; }
+.blog-meta > span + span::before { content: "\00B7"; margin: 0 10px; opacity: 0.6; }
+.blog-meta a { color: inherit; text-decoration: none; }
+@media (hover: hover) {
+  :is(.blog-crumb, .blog-meta) a:hover { color: var(--brand); }
+}
+.blog-cover { margin: 0 0 36px; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--warm-sand); }
+.blog-cover img { width: 100%; height: 100%; object-fit: cover; }
+
+.blog-body { font-size: var(--text-lede); line-height: 1.75; color: var(--dark-warm); overflow-wrap: break-word; }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-body { line-height: 1.8; }
+/* CJK titles take no Latin -0.3px, which pressed full-em glyphs together. */
+html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title { letter-spacing: 0; }
+/* Phones step Chinese body and articles to 1.7. */
+@media (max-width: 640px) {
+  html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(body, .blog-body) { line-height: 1.7; }
+}
+.blog-body > :first-child { margin-top: 0; }
+.blog-body :is(p, ul, ol, table, pre, blockquote) { margin: 0 0 20px; }
+.blog-body :is(ul, ol) { padding-left: 22px; }
+.blog-body li { margin-bottom: 6px; }
+/* A native marker has no box and sits about 1.5px low beside this type, so it is
+   hidden, which keeps the list a list to VoiceOver, and the dot is drawn on the first
+   line. It rides the baseline, not the line box: line-height differs by locale and the
+   baseline snaps to whole pixels, so a dot placed from the top drifts per language.
+   .36em lies between Chinese ink (.38) and Latin caps (.335). */
+:is(.blog-body, .legal) ul:not([class]) > li::marker { color: transparent; }
+:is(.blog-body, .legal) ul:not([class]) > li::before, :is(.blog-body, .legal) ul:not([class]) > li > p:first-child::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin: 0 .5em 0 calc(-.5em - 5px);
+  border-radius: 50%;
+  background: currentColor;
+  print-color-adjust: exact;
+  vertical-align: calc(.36em - 2.5px);
+}
+:is(.blog-body, .legal) ul:not([class]) > li:has(> p:first-child)::before { content: none; }
+.blog-body h2 { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 48px 0 14px; scroll-margin-top: var(--anchor-clear); }
+.blog-body h3 { font-weight: 600; font-size: var(--text-lede); line-height: 1.4; color: var(--near-black); margin: 32px 0 10px; scroll-margin-top: var(--anchor-clear); }
+/* Links read by colour alone, no underline, as on every family site (maintainer 2026-10-20). */
+:is(.blog-body, .legal) a { color: var(--brand); }
+:is(.blog-body, .legal) a:hover { color: var(--brand-light); }
+.blog-body strong { color: var(--near-black); }
+.blog-body code { font-family: "SF Mono", Menlo, monospace; font-size: var(--text-button); background: var(--warm-sand); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
+.blog-body pre { background: var(--ivory); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; overflow-x: auto; line-height: 1.6; }
+.blog-body pre code { background: none; padding: 0; font-size: var(--text-meta); overflow-wrap: normal; }
+.blog-body blockquote { padding-left: 20px; color: var(--olive); }
+.blog-body blockquote p { margin-bottom: 10px; }
+.blog-body table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: var(--text-button); }
+.blog-body :is(th, td) { text-align: left; padding: 8px 16px 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.blog-body th { font-weight: 600; color: var(--near-black); }
+.blog-body img { border-radius: 10px; }
+.blog-figure { margin: 32px 0; }
+.blog-figure figcaption { font-size: var(--text-meta); line-height: 1.5; color: var(--stone); margin-top: 10px; }
+
+.blog-related { margin-top: 64px; }
+.blog-related-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 20px; }
+.blog-related-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.blog-related-list a { display: flex; flex-direction: column; gap: 8px; height: 100%; padding: 16px 18px 18px; text-decoration: none; }
+.blog-related-name { font-weight: 600; font-size: var(--text-button); line-height: 1.4; color: var(--near-black); flex: 1 1 auto; }
+
+/* Footer: mole.fit's dark band in MiaoYan's night, the name and one product
+   line on the left, small titled link columns on the right, Mole's text steps. */
+.blog-latest { margin-top: var(--gap); }
+.blog-latest .section-title a { color: inherit; text-decoration: none; }
+.blog-latest-list { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.blog-latest-list a { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; color: var(--dark-warm); text-decoration: none; }
+.blog-latest-title { font-size: var(--text-lede); line-height: 1.5; }
+.blog-latest-date { flex: none; font-size: var(--text-meta); color: var(--stone); font-variant-numeric: tabular-nums; }
+@media (hover: hover) { .blog-latest .section-title a:hover, .blog-latest-list a:hover .blog-latest-title { color: var(--brand); } }
+footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62%, transparent); padding: 60px 0 48px; font-size: var(--text-meta); }
+.foot { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.foot-mark { max-width: 26em; }
+.foot-name { margin: 0 0 8px; color: #fff; font-family: var(--serif); font-size: var(--text-title); font-weight: 500; line-height: 1.1; }
+.foot-name .cn { font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif; font-weight: 400; }
+.foot-mark p.foot-about { margin: 10px 0 0; font-size: var(--text-meta); line-height: 1.5; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
+.foot-cols { display: flex; gap: 44px; }
+.foot-col { display: grid; gap: 12px; align-content: start; }
+.foot-col-title { margin: 0 0 2px; color: color-mix(in srgb, #fff 92%, transparent); font-size: var(--text-meta); font-weight: 600; letter-spacing: 0.2px; }
+.foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
+@media (hover: hover) { .foot-col a:hover { color: #fff; } }
+.foot-col a .foot-cn { font-family: "Sibling Mark", var(--sans); }
+
+/* Tablets keep the links that fit in every language with Android's Noto Serif
+   (no Charter there) and the App Store pill showing: all five from 820, then
+   Features, FAQ and Blog down to 621 (Chinese in Georgia needs 611), so OPPO Pad mini portrait (640) and every
+   iPad keep a menu. GitHub stays in the footer. Phones drop the links. */
+@media (max-width: 819px) {
+  .nav-links a:is([href*="github.com"], [href$="#devices"]) { display: none; }
+}
+@media (max-width: 620px) {
+  .nav-links { display: none; }
+}
+@media (max-width: 999px) {
+  .blog-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 880px) {
+  :root { --inset: 24px; --gap: 72px; --anchor-clear: 105px; }
+  .nav { margin: 16px -6px 40px; }
+  .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
+  .nav:has(+ main:not([class])) { margin-bottom: 44px; }
+  /* 64px with -1px tracking under 880, as on pake.run, hina.day and yado.house
+     (maintainer 2026-11-04: one lockup size across the product sites). */
+  .hero h1 { font-size: 84px; margin-bottom: calc(40px - 0.115em); }
+  .section-title { font-size: 26px; }
+  .contact-author { width: 30px; height: 30px; }
+  .devices { gap: 32px; }
+  .device.pad { width: min(460px, 62%); }
+  .device.phone { width: min(230px, 32%); }
+  .foot { flex-direction: column; }
+  /* Stacked under the brand, the columns share the full width as on mole.fit;
+     at their natural widths they huddled left of an empty half (OPPO Pad mini). */
+  .foot-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 16px; align-self: stretch; }
+}
+@media (max-width: 640px) {
+  .nav:has(+ main:not([class])) { margin-bottom: 40px; }
+  /* Four groups read as two rows of two on phones; three across left More Apps
+     alone on a second row (2026-11-14). */
+  .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero h1 { font-size: 66px; margin-bottom: calc(24px - 0.115em); }
+  /* The bar lands on a half pixel here, which rounds the name up by one. */
+  .brand b { top: 1.9px; }
+}
+/* Phone type ladder shared by the product sites (2026-10-26): body 16 for
+   articles, ledes and FAQ answers, secondary 15 for card copy, contact cards
+   and the footer, meta 13 left as is. Home text sits on the same 16 as the
+   articles it links to; desktop keeps its sizes. */
+@media (max-width: 640px) {
+  .tagline, .section-lede, .blog-group-description, .faq p, .blog-body { font-size: 16px; }
+  footer, .foot-mark p.foot-about, .contact .contact-desc, .contact-head b, .blog-card-desc { font-size: 15px; }
+  /* Phone sizes the desktop ladder moved off stay as they were (2026-11-01). */
+  .section-title { font-size: 26px; }
+  .blog-card-title, .blog-body h3 { font-size: 17px; }
+  .blog-group-title, .blog-body h2, .blog-related-title, .foot-name { font-size: 22px; }
+  .blog-title, .legal h1 { font-size: 26px; }
+  .blog-body code { font-size: 0.85em; }
+  .faq p code { font-size: 15px; }
+  .blog-body pre code { font-size: 14px; }
+}
+/* Phone-only stacking starts at 560 so OPPO Pad mini portrait (640) and every
+   iPad keep two columns and the side-by-side devices (site.md). */
+@media (max-width: 560px) {
+  .lang-name { display: none; }
+  .lang-code { display: inline; }
+  :root { --inset: 18px; }
+  .devices { flex-direction: column; align-items: center; gap: 24px; }
+  .device.pad { width: min(480px, 100%); }
+  .device.phone { width: min(260px, 70%); }
+  .cards, .blog-cards, .blog-related-list { grid-template-columns: 1fr; }
+  .trust { --trust-gap: 16px; gap: 2px 0; }
+  .gallery-caption { display: none; }
+  .trust li { font-size: 13px; }
+  .trust li::before { content: none; }
+}
+@media (max-width: 640px) {
+  .blog-latest-list { gap: 20px; }
+  .blog-latest-list a { flex-direction: column; gap: 4px; }
+}
+@media (max-width: 480px) {
+  /* The 48px bar lands on a whole pixel again. */
+  .brand b { top: .9px; }
+  .nav-bar { min-height: 48px; padding-block: 6px; padding-left: 14px; gap: 10px; }
+  .nav-end { gap: 10px; }
+  /* MiaoYan is the longest name: the lockup is about 4.2em plus the 18px gap,
+     with the orbiting dot, so it stays at 64px down to about 350px and only then
+     shrinks to fit. */
+  .hero h1 { font-size: min(66px, calc((100vw - 54px) / 4.6)); }
+  .btn { width: 100%; }
+  /* Phone hero buttons keep their label's width and share one row (maintainer
+     2026-10-27: 不要两行，控制一行就好了) with a 6px icon gap, labels short
+     enough for every language to fit from 360px (French from 375); a label
+     that does not fit is shortened, never truncated. 42px tall with 22px sides,
+     at least 128px wide and 12px apart (maintainer 2026-10-30, from rendered candidates:
+     44 read tall and label-width pills read narrow), 14px sides under 375px.
+     The hairline stays: this site's --line is already the lighter #e4e1d6. */
+  .hero-cta { gap: 12px; }
+  .hero-cta .btn { width: auto; flex: 0 0 auto; min-width: 128px; height: 42px; padding: 0 22px; gap: 6px; white-space: nowrap; }
+  /* French carries the two longest labels beside their icons and keeps 14px
+     sides, so it still shares one row at 393 (from 375, as before). */
+  html[lang="fr"] .hero-cta .btn { padding: 0 14px; }
+  /* The family drops to 14px sides with no minimum under 375px. MiaoYan's
+     store labels ran up to 17px over at 375 and 2px at 390 (en, tw, ja, de,
+     es; measured 2026-11-06), so here the step reaches up to 392px and the
+     393px iPhones keep the 22px sides. */
+  @media (max-width: 392px) {
+    .hero-cta .btn { min-width: 0; padding: 0 14px; }
+  }
+}
+
+/* The name needs 5px more than a 320px bar has. */
+@media (max-width: 340px) {
+  .nav-bar { padding-left: 10px; gap: 6px; }
+  .nav-end { gap: 6px; }
+  .brand { gap: 7px; }
+}
+
+/* Readers who ask the system for less motion get state changes without the
+   slide, fade and lift. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .hero h1 .cn-orbit::after { animation: none; }
+  .faq details::details-content { transition: none; }
+}
+
+/* Meta is 14px on desktop (maintainer 2026-11-01: 13 read small beside the
+   hero's tagline); phones keep the 13px meta of their own ladder. */
+@media (max-width: 640px) {
+  :root { --text-meta: 13px; --text-body: 15px; }
+}
+/* CJK hero tagline on desktop: 18px, the ladder's one exception (maintainer
+   2026-11-08: 20 read big once Clear Han's firmer strokes arrived). */
+@media (min-width: 641px) {
+  html:is([lang^="zh"], [lang="ja"], [lang="ko"]) .tagline { font-size: 18px; }
+}
+
+/* Chinese pass of 2026-11-08, from mole.fit (maintainer's picks there): tracking
+   is two tokens, 0.03em at every width since 2026-11-10 (0.04em read a little
+   wide on PC), titles nearly closed and solid on phones. An em
+   on body inherits as pixels. The nav, footer, buttons, code and Latin names stay
+   at 0, since a trailing track pushes a centered label off center by half of it.
+   Japanese and Korean keep their zero. */
+html:is([lang="zh-CN"], [lang="zh-Hant"]) {
+  --cjk-track: 0.03em;
+  --cjk-track-title: 0.01em;
+}
+@media (max-width: 640px) {
+  html:is([lang="zh-CN"], [lang="zh-Hant"]) {
+    --cjk-track: 0.03em;
+    --cjk-track-title: 0;
+  }
+}
+html:is([lang="zh-CN"], [lang="zh-Hant"]) body { letter-spacing: var(--cjk-track); }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(h2, h3, h4, .blog-title, .blog-card-title) { letter-spacing: var(--cjk-track-title); }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.nav, footer, .btn, .foot-col-title, pre, code, kbd, samp) { letter-spacing: 0; }
+html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive); }
+</style>
+<script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
+<script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Excel to Markdown table: paste, convert and check", "item": "https://miaoyan.app/blog/excel-to-markdown-table/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/excel-to-markdown-table/#article", "headline": "Excel to Markdown table: paste, convert and check", "description": "Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.", "url": "https://miaoyan.app/blog/excel-to-markdown-table/", "mainEntityOfPage": "https://miaoyan.app/blog/excel-to-markdown-table/", "datePublished": "2026-10-30", "dateModified": "2026-10-30", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does pasting from Excel give me tabs?", "acceptedAnswer": {"@type": "Answer", "text": "Spreadsheet apps copy a range as tab-separated plain text. Markdown tables use pipes, so the text needs converting first."}}, {"@type": "Question", "name": "Can a Markdown table have merged cells?", "acceptedAnswer": {"@type": "Answer", "text": "No. Pipe tables are a plain grid. Use an HTML table with colspan or rowspan, or split the data."}}, {"@type": "Question", "name": "How do I convert a CSV file to a Markdown table?", "acceptedAnswer": {"@type": "Answer", "text": "Run pandoc -f csv -t gfm file.csv, or import the file into a generator such as tablesgenerator.com. Remove line breaks inside cells first if you want Pandoc to write a pipe table."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/excel-to-markdown-table/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/excel-to-markdown-table/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Excel to Markdown table: paste, convert and check</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-30">Oct 30, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/excel-to-markdown-table.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Copy cells in Excel, Numbers or Google Sheets and the clipboard holds tab-separated text, one row per line, so pasting into a Markdown file gives you tabs, not a table. To get a pipe table, convert the text. An online generator such as tablesgenerator.com is the fastest for a one-off, Pandoc (<code>pandoc -f csv -t gfm</code>) suits files you convert repeatedly, and a short <code>awk</code> filter handles a range you just copied. Afterwards check three things: merged cells, line breaks inside cells, and any <code>|</code> in the data.</p>
+<h2 id="why-the-paste-is-not-a-table">Why the paste is not a table</h2>
+<p>A spreadsheet is a grid, and a plain-text clipboard has no grid. A copied range becomes text with a tab between cells and a line break between rows, the same layout as a <code>.tsv</code> file. A <a href="/blog/markdown-tables/">Markdown table</a> needs pipes between cells and a divider row of hyphens under the header, so the tabs stay in the file as invisible whitespace and the preview shows the numbers as a paragraph.</p>
+<p>Some apps also put an HTML version of the range on the clipboard next to the plain text, and some editors read it. MiaoYan does, as described near the end. The practical test is to paste once and look: pipes mean the HTML path worked, tabs mean you need a converter.</p>
+<h2 id="option-1-an-online-generator">Option 1: an online generator</h2>
+<p>The Markdown table page on tablesgenerator.com says you can copy cells from Excel, Google Sheets or LibreOffice Calc, click the top-left cell of its grid and press Ctrl+V, and the grid grows to fit. It also imports a file through <strong>File / Import CSV or Excel file</strong>, which accepts <code>.csv</code> and <code>.xlsx</code> and lets you choose a sheet. The Markdown appears under the editor, and <strong>Copy to clipboard</strong> copies it.</p>
+<p>The same page describes the options that change the result:</p>
+<ul>
+<li>Alignment is set per column in the <strong>Column</strong> menu's <strong>Text align</strong> submenu, and in the output each column takes the alignment of its cell in the first row. That becomes the colons in the divider row.</li>
+<li>A line break inside a cell becomes a space by default. Ticking <strong>Line breaks as <code>&lt;br&gt;</code></strong> writes <code>&lt;br&gt;</code> instead.</li>
+<li>Markdown cannot merge cells. When the page imports HTML or Markdown, merged cells are split, and it points to its HTML table generator for the merged case.</li>
+<li><strong>Compact mode</strong> leaves out the spaces that line up the columns.</li>
+</ul>
+<p>For a confidential sheet, a local tool is the safer default.</p>
+<h2 id="option-2-pandoc">Option 2: Pandoc</h2>
+<p>Pandoc lists <code>csv</code> and <code>tsv</code> among its input formats and <code>gfm</code> among its output formats. The runs below used Pandoc 3.13.</p>
+<pre><code class="language-bash">pandoc -f csv -t gfm data.csv
+pandoc -f tsv -t gfm data.tsv
+</code></pre>
+<p>For a TSV with a header and two data rows the output was:</p>
+<pre><code class="language-markdown">| Name  | Qty |
+|-------|-----|
+| Apple | 3   |
+| Pear  | 12  |
+</code></pre>
+<p>Export the sheet as CSV in UTF-8 so Chinese and accented text survives. To convert what is on the clipboard instead of a file, <code>pbpaste | pandoc -f tsv -t gfm | pbcopy</code> works on a Mac, because <code>pbpaste</code> and <code>pbcopy</code> read and write the clipboard.</p>
+<p>Three behaviours showed up.</p>
+<p><strong>Pipes are escaped.</strong> A cell containing <code>a|b</code> came out as <code>a\|b</code>, so the table keeps its shape. Escaping in general is covered in <a href="/blog/markdown-escape-characters/">Markdown escape characters</a>.</p>
+<p><strong>A multi-line cell stops Pandoc writing a pipe table.</strong> With one cell containing a line break, the <code>gfm</code> writer produced a full HTML <code>&lt;table&gt;</code> with <code>&lt;br /&gt;</code> instead of pipes. That fits the manual's statement that pipe table cells cannot contain block elements or span multiple lines. Remove the line breaks from the cells first if you want pipes.</p>
+<p><strong>CJK text is padded by display width.</strong> Pandoc counts a Chinese character as two columns, so a cell holding <code>中文</code> got two fewer padding spaces than a cell holding <code>ab</code>, and the columns line up in a monospaced font. This only affects the raw file.</p>
+<p>Pandoc takes the first row as the header, and the divider it writes has no alignment colons. Add <code>:---:</code> or <code>---:</code> by hand where you want centred or right-aligned numbers.</p>
+<h2 id="option-3-a-command-line-filter">Option 3: a command-line filter</h2>
+<p>For small tab-separated data, such as a range you just copied, this <code>awk</code> command escapes pipes, builds each row and adds the divider after the first line.</p>
+<pre><code class="language-bash">pbpaste | awk -F'\t' '{
+  gsub(/\|/, &quot;\\|&quot;)
+  out = &quot;|&quot;
+  for (i = 1; i &lt;= NF; i++) out = out &quot; &quot; $i &quot; |&quot;
+  print out
+  if (NR == 1) { s = &quot;|&quot;; for (i = 1; i &lt;= NF; i++) s = s &quot; --- |&quot;; print s }
+}' | pbcopy
+</code></pre>
+<p>On a two-line sample with <code>A|x</code> in a cell it printed <code>| A\|x | 3 |</code> for the data row and <code>| --- | --- |</code> for the divider. It does not understand quoted CSV, so use it only on tab-separated text, and it does not pad columns, which the renderer ignores anyway.</p>
+<h2 id="the-tricky-cells">The tricky cells</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Merged cells</td>
+<td>Split or lost, because pipe tables have no spans</td>
+</tr>
+<tr>
+<td>Line break in a cell</td>
+<td>A space, <code>&lt;br&gt;</code>, or an HTML table, depending on the tool</td>
+</tr>
+<tr>
+<td>Pipe in a cell</td>
+<td>Escaped as <code>\|</code> by Pandoc, the awk filter and MiaoYan</td>
+</tr>
+<tr>
+<td>Alignment</td>
+<td>Usually lost, except in tablesgenerator.com</td>
+</tr>
+<tr>
+<td>Header row</td>
+<td>The first row, always</td>
+</tr>
+</tbody>
+</table>
+<p>The limits come from the GFM spec. The header row and divider row must have the same number of cells or the block is not a table. A body row with fewer cells gets empty cells added, extra cells are ignored, and block-level elements cannot go inside a cell.</p>
+<p>If the sheet depends on merged cells or lists inside cells, write an HTML <code>&lt;table&gt;</code> with <code>colspan</code> or <code>rowspan</code>, or split it into two simpler tables.</p>
+<h2 id="pasting-a-table-in-miaoyan">Pasting a table in MiaoYan</h2>
+<p>MiaoYan has no CSV or TSV import and does not turn tab-separated text into pipes on paste. It does convert HTML. When the clipboard holds an HTML version containing a <code>&lt;table&gt;</code>, a heading, a list, a quote or a code block, the editor inserts Markdown instead of the plain text. For tables the V4.9.0 source shows this:</p>
+<ul>
+<li>The first row always becomes the header, with <code>th</code> cells or without.</li>
+<li>A pipe in a cell is escaped as <code>\|</code>.</li>
+<li>A line break inside a cell becomes a space.</li>
+<li>Rows shorter than the widest row are padded with empty cells on the right. The code ignores <code>colspan</code>, so a merged cell becomes one cell and the gap lands at the end of the row, not where the merge was.</li>
+<li>The divider is plain <code>---</code>, so alignment is not kept.</li>
+</ul>
+<p>It is aimed at rich text copied from browsers, so whether a spreadsheet paste takes this path depends on whether the app puts HTML on the clipboard. When a paste gives you tabs, convert with Pandoc or a generator and paste the result. <a href="/blog/markdown-to-html/">Markdown to HTML</a> explains why a table sometimes shows as raw pipes in other tools.</p>
+<h2 id="checking-the-result">Checking the result</h2>
+<p>Look at the rendered table, not only the source. A table that renders as a paragraph of pipes almost always has a divider row whose cell count differs from the header. A shifted column usually means an unescaped pipe in the data, and a literal <code>&lt;br&gt;</code> in a cell means the viewer escapes HTML. On a long table, check the last row and the widest row, where a stray tab or a missing cell usually shows up.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="why-does-pasting-from-excel-give-me-tabs">Why does pasting from Excel give me tabs?</h3>
+<p>Spreadsheet apps copy a range as tab-separated plain text. Markdown tables use pipes, so the text needs converting first.</p>
+<h3 id="can-a-markdown-table-have-merged-cells">Can a Markdown table have merged cells?</h3>
+<p>No. Pipe tables are a plain grid. Use an HTML table with <code>colspan</code> or <code>rowspan</code>, or split the data.</p>
+<h3 id="how-do-i-convert-a-csv-file-to-a-markdown-table">How do I convert a CSV file to a Markdown table?</h3>
+<p>Run <code>pandoc -f csv -t gfm file.csv</code>, or import the file into a generator such as tablesgenerator.com. Remove line breaks inside cells first if you want Pandoc to write a pipe table.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-table-of-contents/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown table of contents: manual, [TOC] and generators</span><span class="blog-related-meta">8 min read</span></a></li><li><a href="/blog/mermaid-timeline/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Mermaid timeline in Markdown: syntax, sections and examples</span><span class="blog-related-meta">7 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">A light, native Markdown notebook for Mac</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+// A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
+// body's colour, not only theme-color and the root, so body takes the footer's colour and a
+// gradient of the page's own ground covers everything above the footer.
+(function () {
+  var foot = document.querySelector("footer");
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!foot || !meta || !window.IntersectionObserver) return;
+  var page = meta.getAttribute("content");
+  var dark = getComputedStyle(foot).backgroundColor;
+  var root = document.documentElement;
+  var body = document.body;
+  var ground = getComputedStyle(body).backgroundColor;
+  var seen = false;
+  function paint() {
+    meta.setAttribute("content", seen ? dark : page);
+    root.style.backgroundColor = seen ? dark : "";
+    if (!seen) {
+      body.style.background = "";
+      return;
+    }
+    var below = Math.ceil(body.getBoundingClientRect().bottom - foot.getBoundingClientRect().top);
+    body.style.background = "linear-gradient(" + ground + ", " + ground + ") top / 100% calc(100% - " + below + "px) no-repeat " + dark;
+  }
+  new IntersectionObserver(function (entries) {
+    seen = entries[entries.length - 1].isIntersecting;
+    paint();
+  }).observe(foot);
+  window.addEventListener("resize", paint);
+})();
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}(function(){if(/^(1366x1366|1280x1200)$/.test(screen.width+'x'+screen.height))return;document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-store]'))gtag('event','store_click')});function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true});var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>
+</body>
+</html>

@@ -89,6 +89,14 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown superscript and subscript: what works](https://miaoyan.app/blog/markdown-superscript-subscript/): Markdown has no superscript or subscript syntax. Learn when to use sup and sub tags, ^ and ~, Unicode characters or LaTeX math, and what renders in MiaoYan.
 - [Mermaid gantt chart: dateFormat, sections and tasks](https://miaoyan.app/blog/mermaid-gantt-chart/): Write a Mermaid gantt chart in Markdown: dateFormat vs axisFormat, task ids and after, excludes weekends, todayMarker, tickInterval and a full release plan.
 - [Markdown headings: ATX, setext, levels and anchors](https://miaoyan.app/blog/markdown-headings/): Write Markdown headings correctly: the # syntax and its required space, setext underlines and the --- trap, heading levels, anchors, and how MiaoYan's outline works.
+- [Markdown table of contents: manual, [TOC] and generators](https://miaoyan.app/blog/markdown-table-of-contents/): Markdown has no TOC syntax. Write anchor links by hand, use [TOC] where it works, or generate one with doctoc, VS Code or Pandoc, and fix links that do not jump.
+- [Export Notion and Evernote to Markdown files](https://miaoyan.app/blog/migrate-notes-to-markdown/): Export Notion as Markdown & CSV and Evernote as ENEX, convert with evernote2md or Yarle, clean file names, images and front matter, then open the folder in MiaoYan.
+- [Excel to Markdown table: paste, convert and check](https://miaoyan.app/blog/excel-to-markdown-table/): Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.
+- [Mermaid timeline in Markdown: syntax, sections and examples](https://miaoyan.app/blog/mermaid-timeline/): Write a Mermaid timeline in Markdown with periods, several events, sections, line breaks, TD direction and colours, plus when to pick a Gantt chart instead.
+- [Daily notes in Markdown: one file per day, plus a script](https://miaoyan.app/blog/daily-notes-markdown/): Set up a Markdown journal as one YYYY-MM-DD.md file per day, with a small template, a shell script for today's note, wikilinks between days and search.
+- [Markdown definition list: syntax, support and fallbacks](https://miaoyan.app/blog/markdown-definition-lists/): Standard Markdown has no definition list. Learn the colon syntax, which tools render it, and the HTML and table fallbacks that work in MiaoYan.
+- [How to write a README: sections, links and previews](https://miaoyan.app/blog/how-to-write-a-readme/): Write a README.md that GitHub renders well: where it is found, a section order that works, relative links, badges, the outline, and what to preview first.
+- [Mermaid ER diagram syntax: entities, crow's foot and keys](https://miaoyan.app/blog/mermaid-er-diagram/): Write a Mermaid erDiagram in Markdown: read crow's foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema.
 
 - [Mac 上怎么选 Markdown 编辑器](https://miaoyan.app/zh/blog/markdown-editor-for-mac/): 从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、iA Writer、Bear、Zettlr、VS Code 与妙言。
 - [Markdown 语法速查与 GFM 差异](https://miaoyan.app/zh/blog/markdown-cheat-sheet/): 常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。
@@ -138,4 +146,12 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown 上标和下标怎么写](https://miaoyan.app/zh/blog/markdown-superscript-subscript/): Markdown 没有上标下标语法，看 HTML 标签、^ 与 ~、Unicode 字符和 LaTeX 公式各自适合什么，以及妙言里的渲染结果。
 - [Mermaid 甘特图写法：dateFormat、任务与排除周末](https://miaoyan.app/zh/blog/mermaid-gantt-chart/): 讲清 dateFormat 和 axisFormat 的区别、任务 id 与 after、排除周末、今日标记，并给出一份完整发布计划。
 - [Markdown 标题怎么写：# 语法、层级和锚点](https://miaoyan.app/zh/blog/markdown-headings/): 讲清 Markdown 标题的 # 写法、下划线写法和 --- 陷阱，以及层级、锚点和妙言的大纲面板。
+- [Markdown 目录怎么生成：手写、[TOC] 与工具](https://miaoyan.app/zh/blog/markdown-table-of-contents/): Markdown 没有目录语法，可以手写锚点列表、用 [TOC] 标记，或用 doctoc、VS Code、Pandoc 生成，也讲了链接不跳转怎么查。
+- [把 Notion 和 Evernote 笔记导出为 Markdown](https://miaoyan.app/zh/blog/migrate-notes-to-markdown/): Notion 导出 Markdown，Evernote 导出 ENEX 再转换，清理文件名、图片和 front matter，最后在妙言里打开。
+- [Excel 转 Markdown 表格，粘贴转换和检查](https://miaoyan.app/zh/blog/excel-to-markdown-table/): 把 Excel、Numbers 或 Google Sheets 复制的单元格转成 Markdown 表格，并检查合并单元格、竖线和换行。
+- [Markdown 里的 Mermaid 时间线：语法、分组和示例](https://miaoyan.app/zh/blog/mermaid-timeline/): 学会在 Markdown 里写 Mermaid 时间线，包括多个事件、分组、换行、方向和颜色，以及什么时候该换甘特图。
+- [用 Markdown 写每日笔记：一天一个文件加一个脚本](https://miaoyan.app/zh/blog/daily-notes-markdown/): 用 YYYY-MM-DD.md 一天一个文件做日记，配简短模板、创建今天文件的脚本、日期间的 wikilink 和搜索。
+- [Markdown 定义列表怎么写，哪里能用，不能用怎么办](https://miaoyan.app/zh/blog/markdown-definition-lists/): CommonMark 和 GFM 都没有定义列表，学会冒号写法、支持它的工具，以及 HTML 和表格这些通用替代写法。
+- [README 怎么写：章节顺序、链接与预览](https://miaoyan.app/zh/blog/how-to-write-a-readme/): 写出在 GitHub 上渲染良好的 README.md，包括放哪里、章节顺序、相对链接、徽章，以及推送前的预览。
+- [Mermaid ER 图写法：实体、鸭脚符号和主外键](https://miaoyan.app/zh/blog/mermaid-er-diagram/): 在 Markdown 里写 Mermaid erDiagram，读懂鸭脚基数标记，区分实线虚线，给属性加 PK、FK、UK，并排查常见错误。
 <!-- blog:end -->

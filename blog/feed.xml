@@ -7,6 +7,62 @@
     <description>Guides to writing in Markdown and keeping Markdown notes as local files on Mac, iPhone and iPad.</description>
     <language>en</language>
     <item>
+      <title>Mermaid ER diagram syntax: entities, crow&#x27;s foot and keys</title>
+      <link>https://miaoyan.app/blog/mermaid-er-diagram/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-er-diagram/</guid>
+      <pubDate>Wed, 04 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Write a Mermaid erDiagram in Markdown: read crow&#x27;s foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema.</description>
+    </item>
+    <item>
+      <title>How to write a README: sections, links and previews</title>
+      <link>https://miaoyan.app/blog/how-to-write-a-readme/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/how-to-write-a-readme/</guid>
+      <pubDate>Tue, 03 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Write a README.md that GitHub renders well: where it is found, a section order that works, relative links, badges, the outline, and what to preview first.</description>
+    </item>
+    <item>
+      <title>Markdown definition list: syntax, support and fallbacks</title>
+      <link>https://miaoyan.app/blog/markdown-definition-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-definition-lists/</guid>
+      <pubDate>Mon, 02 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Standard Markdown has no definition list. Learn the colon syntax, which tools render it, and the HTML and table fallbacks that work in MiaoYan.</description>
+    </item>
+    <item>
+      <title>Daily notes in Markdown: one file per day, plus a script</title>
+      <link>https://miaoyan.app/blog/daily-notes-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/daily-notes-markdown/</guid>
+      <pubDate>Sun, 01 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Set up a Markdown journal as one YYYY-MM-DD.md file per day, with a small template, a shell script for today&#x27;s note, wikilinks between days and search.</description>
+    </item>
+    <item>
+      <title>Mermaid timeline in Markdown: syntax, sections and examples</title>
+      <link>https://miaoyan.app/blog/mermaid-timeline/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-timeline/</guid>
+      <pubDate>Sat, 31 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write a Mermaid timeline in Markdown with periods, several events, sections, line breaks, TD direction and colours, plus when to pick a Gantt chart instead.</description>
+    </item>
+    <item>
+      <title>Excel to Markdown table: paste, convert and check</title>
+      <link>https://miaoyan.app/blog/excel-to-markdown-table/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/excel-to-markdown-table/</guid>
+      <pubDate>Fri, 30 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.</description>
+    </item>
+    <item>
+      <title>Export Notion and Evernote to Markdown files</title>
+      <link>https://miaoyan.app/blog/migrate-notes-to-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/migrate-notes-to-markdown/</guid>
+      <pubDate>Thu, 29 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Export Notion as Markdown &amp; CSV and Evernote as ENEX, convert with evernote2md or Yarle, clean file names, images and front matter, then open the folder in MiaoYan.</description>
+    </item>
+    <item>
+      <title>Markdown table of contents: manual, [TOC] and generators</title>
+      <link>https://miaoyan.app/blog/markdown-table-of-contents/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-table-of-contents/</guid>
+      <pubDate>Wed, 28 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Markdown has no TOC syntax. Write anchor links by hand, use [TOC] where it works, or generate one with doctoc, VS Code or Pandoc, and fix links that do not jump.</description>
+    </item>
+    <item>
       <title>Markdown headings: ATX, setext, levels and anchors</title>
       <link>https://miaoyan.app/blog/markdown-headings/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-headings/</guid>

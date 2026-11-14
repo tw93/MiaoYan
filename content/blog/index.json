@@ -671,6 +671,118 @@
         "title": "Markdown 标题怎么写：# 语法、层级和锚点",
         "description": "讲清 Markdown 标题的 # 写法、下划线写法和 --- 陷阱，以及层级、锚点和妙言的大纲面板。"
       }
+    },
+    {
+      "slug": "markdown-table-of-contents",
+      "date": "2026-10-28",
+      "modified": "2026-10-28",
+      "category": "writing",
+      "en": {
+        "title": "Markdown table of contents: manual, [TOC] and generators",
+        "description": "Markdown has no TOC syntax. Write anchor links by hand, use [TOC] where it works, or generate one with doctoc, VS Code or Pandoc, and fix links that do not jump."
+      },
+      "zh": {
+        "title": "Markdown 目录怎么生成：手写、[TOC] 与工具",
+        "description": "Markdown 没有目录语法，可以手写锚点列表、用 [TOC] 标记，或用 doctoc、VS Code、Pandoc 生成，也讲了链接不跳转怎么查。"
+      }
+    },
+    {
+      "slug": "migrate-notes-to-markdown",
+      "date": "2026-10-29",
+      "modified": "2026-10-29",
+      "category": "notes",
+      "en": {
+        "title": "Export Notion and Evernote to Markdown files",
+        "description": "Export Notion as Markdown & CSV and Evernote as ENEX, convert with evernote2md or Yarle, clean file names, images and front matter, then open the folder in MiaoYan."
+      },
+      "zh": {
+        "title": "把 Notion 和 Evernote 笔记导出为 Markdown",
+        "description": "Notion 导出 Markdown，Evernote 导出 ENEX 再转换，清理文件名、图片和 front matter，最后在妙言里打开。"
+      }
+    },
+    {
+      "slug": "excel-to-markdown-table",
+      "date": "2026-10-30",
+      "modified": "2026-10-30",
+      "category": "writing",
+      "en": {
+        "title": "Excel to Markdown table: paste, convert and check",
+        "description": "Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks."
+      },
+      "zh": {
+        "title": "Excel 转 Markdown 表格，粘贴转换和检查",
+        "description": "把 Excel、Numbers 或 Google Sheets 复制的单元格转成 Markdown 表格，并检查合并单元格、竖线和换行。"
+      }
+    },
+    {
+      "slug": "mermaid-timeline",
+      "date": "2026-10-31",
+      "modified": "2026-10-31",
+      "category": "writing",
+      "en": {
+        "title": "Mermaid timeline in Markdown: syntax, sections and examples",
+        "description": "Write a Mermaid timeline in Markdown with periods, several events, sections, line breaks, TD direction and colours, plus when to pick a Gantt chart instead."
+      },
+      "zh": {
+        "title": "Markdown 里的 Mermaid 时间线：语法、分组和示例",
+        "description": "学会在 Markdown 里写 Mermaid 时间线，包括多个事件、分组、换行、方向和颜色，以及什么时候该换甘特图。"
+      }
+    },
+    {
+      "slug": "daily-notes-markdown",
+      "date": "2026-11-01",
+      "modified": "2026-11-01",
+      "category": "notes",
+      "en": {
+        "title": "Daily notes in Markdown: one file per day, plus a script",
+        "description": "Set up a Markdown journal as one YYYY-MM-DD.md file per day, with a small template, a shell script for today's note, wikilinks between days and search."
+      },
+      "zh": {
+        "title": "用 Markdown 写每日笔记：一天一个文件加一个脚本",
+        "description": "用 YYYY-MM-DD.md 一天一个文件做日记，配简短模板、创建今天文件的脚本、日期间的 wikilink 和搜索。"
+      }
+    },
+    {
+      "slug": "markdown-definition-lists",
+      "date": "2026-11-02",
+      "modified": "2026-11-02",
+      "category": "writing",
+      "en": {
+        "title": "Markdown definition list: syntax, support and fallbacks",
+        "description": "Standard Markdown has no definition list. Learn the colon syntax, which tools render it, and the HTML and table fallbacks that work in MiaoYan."
+      },
+      "zh": {
+        "title": "Markdown 定义列表怎么写，哪里能用，不能用怎么办",
+        "description": "CommonMark 和 GFM 都没有定义列表，学会冒号写法、支持它的工具，以及 HTML 和表格这些通用替代写法。"
+      }
+    },
+    {
+      "slug": "how-to-write-a-readme",
+      "date": "2026-11-03",
+      "modified": "2026-11-03",
+      "category": "writing",
+      "en": {
+        "title": "How to write a README: sections, links and previews",
+        "description": "Write a README.md that GitHub renders well: where it is found, a section order that works, relative links, badges, the outline, and what to preview first."
+      },
+      "zh": {
+        "title": "README 怎么写：章节顺序、链接与预览",
+        "description": "写出在 GitHub 上渲染良好的 README.md，包括放哪里、章节顺序、相对链接、徽章，以及推送前的预览。"
+      }
+    },
+    {
+      "slug": "mermaid-er-diagram",
+      "date": "2026-11-04",
+      "modified": "2026-11-04",
+      "category": "writing",
+      "en": {
+        "title": "Mermaid ER diagram syntax: entities, crow's foot and keys",
+        "description": "Write a Mermaid erDiagram in Markdown: read crow's foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema."
+      },
+      "zh": {
+        "title": "Mermaid ER 图写法：实体、鸭脚符号和主外键",
+        "description": "在 Markdown 里写 Mermaid erDiagram，读懂鸭脚基数标记，区分实线虚线，给属性加 PK、FK、UK，并排查常见错误。"
+      }
     }
   ]
 }
