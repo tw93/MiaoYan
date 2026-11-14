@@ -838,6 +838,20 @@ def header_html(key, *, home="", menu=None, hide_cta=False, blog_current=False):
 </header>"""
 
 
+# The footer's last group links the maintainer's sibling apps: English names and
+# one Han character each, the same in every language (only the title is copy).
+MORE_APPS_TITLE = {
+    "en": "More Apps", "zh": "更多产品", "tw": "更多產品", "ja": "その他のアプリ",
+    "ko": "다른 앱", "de": "Weitere Apps", "fr": "Autres apps", "es": "Más apps",
+}
+MORE_APPS = (
+    ("Mole", "鼹", "zh-Hans", "https://mole.fit"),
+    ("Yado", "宿", "zh-Hant", "https://yado.house"),
+    ("Pake", "殼", "zh-Hant", "https://pake.run"),
+    ("Kaku", "書", "zh-Hant", "https://kaku.fun"),
+)
+
+
 def footer_html(key, *, faq_href="#faq"):
     c = COPY[key]
     store = store_url(key)
@@ -852,6 +866,12 @@ def footer_html(key, *, faq_href="#faq"):
         f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
         f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(MORE_APPS_TITLE[key])}</p>'
+        + "".join(
+            f'<a href="{url}"{ext}>{name} <span class="foot-cn" lang="{han_lang}">{han}</span></a>'
+            for name, han, han_lang, url in MORE_APPS
+        )
+        + "</div>"
     )
     return f"""<footer>
   <div class="wrap">
