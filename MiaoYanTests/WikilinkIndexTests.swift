@@ -151,4 +151,30 @@ final class WikilinkIndexTests: XCTestCase {
 
         XCTAssertEqual(converted, "See [Welcome](miaoyan://goto/Welcome).")
     }
+
+    /// `[[Note|shown text]]` links to `Note`; the label was read as part of
+    /// the title, so the backlink went to a note called `B|label`.
+    func testAliasedWikilinkLinksToItsTarget() {
+        resetIndex()
+        index.updateNote(title: "A", content: "see [[B|the other note]] and [[C | sea]]")
+
+        XCTAssertEqual(Set(index.getOutlinks(for: "A")), Set(["B", "C"]))
+        XCTAssertEqual(index.getBacklinks(for: "B"), ["A"])
+    }
+
+    func testWikilinkPartsSplitsAtTheFirstBar() {
+        XCTAssertEqual(wikilinkParts("B").target, "B")
+        XCTAssertEqual(wikilinkParts("B").label, "B")
+        XCTAssertEqual(wikilinkParts("B | shown").target, "B")
+        XCTAssertEqual(wikilinkParts("B | shown").label, "shown")
+        XCTAssertEqual(wikilinkParts("B|a|b").label, "a|b")
+        XCTAssertEqual(wikilinkParts("B|").label, "B")
+    }
+
+    /// The preview shows the label and links to the target.
+    func testPreviewShowsTheWikilinkLabel() {
+        let converted = NotesTextProcessor.convertAppLinks(in: NSMutableAttributedString(string: "See [[My Note|this one]].")).string
+
+        XCTAssertEqual(converted, "See [this one](miaoyan://goto/My%20Note).")
+    }
 }

@@ -147,8 +147,8 @@ final class WikilinkIndex: ObservableObject {
 
         for match in matches {
             if let range = Range(match.range(at: 1), in: text) {
-                let link = String(text[range]).trimmingCharacters(in: .whitespaces)
-                links.insert(link)
+                let link = wikilinkParts(String(text[range])).target
+                if !link.isEmpty { links.insert(link) }
             }
         }
 
@@ -192,4 +192,14 @@ final class WikilinkIndex: ObservableObject {
         }
         outlinks[new] = links
     }
+}
+
+/// `[[Title|shown text]]` links to `Title` and reads `shown text`, as on
+/// iPhone (MobileHtmlRenderer) and in Obsidian; without a bar both are the
+/// title.
+nonisolated func wikilinkParts(_ inner: String) -> (target: String, label: String) {
+    let parts = inner.split(separator: "|", maxSplits: 1, omittingEmptySubsequences: false)
+    let target = parts[0].trimmingCharacters(in: .whitespaces)
+    let label = parts.count > 1 ? parts[1].trimmingCharacters(in: .whitespaces) : ""
+    return (target, label.isEmpty ? target : label)
 }

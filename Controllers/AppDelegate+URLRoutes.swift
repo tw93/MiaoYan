@@ -144,7 +144,8 @@ extension AppDelegate {
 
     @MainActor
     func RouteMiaoYanGoto(_ url: URL) {
-        let query = url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent
+        // An editor wikilink carries its label too (`Title|shown text`).
+        let query = wikilinkParts(url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent).target
         if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
             shell.model.openNote(titled: query)
             return

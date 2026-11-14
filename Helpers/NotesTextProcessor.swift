@@ -218,6 +218,8 @@ public class NotesTextProcessor {
 
             guard let tag = substring.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
             attributedString.addAttribute(.link, value: "\(tagQuery)\(tag)", range: innerRange)
+            // The bar and label stay in the link value, so the conversion below
+            // can show the label; a click goes to the target (wikilinkParts).
         }
 
         var replacements: [(range: NSRange, text: String)] = []
@@ -242,7 +244,9 @@ public class NotesTextProcessor {
                 if getSpanCodeBlockRange(content: attributedString, range: effectiveRange) == nil,
                     !codeRanges.contains(where: { $0.intersection(effectiveRange) != nil })
                 {
-                    let markdownLink = "[\(tag)](\(linkValue))"
+                    let parts = wikilinkParts(tag)
+                    let target = parts.target.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? parts.target
+                    let markdownLink = "[\(parts.label)](\(tagQuery)\(target))"
                     replacements.append((effectiveRange, markdownLink))
                 }
             }
