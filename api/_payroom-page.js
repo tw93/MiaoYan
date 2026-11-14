@@ -27,7 +27,7 @@ h2{font-size:20px;line-height:28px;letter-spacing:0}
 .month{margin:0}
 .month select:focus,.month select:focus-visible{outline:none}
 .month select{width:62px;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 26px 0 10px;background-color:var(--panel);background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;color:var(--muted);font:inherit;font-size:11px;font-weight:650;cursor:pointer}
-.month select[data-active=true]{width:86px;background-color:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent);font-weight:750}
+.month select[data-active=true]{width:70px;background-color:var(--accent-soft);border-color:var(--accent-soft);color:var(--accent);font-weight:750}
 main{padding:12px clamp(18px,4vw,54px) 42px;display:grid;gap:12px}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .metric,.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px}
@@ -273,7 +273,9 @@ function controls(view) {
   const presets = [['all', '全部'], ['90d', '近90天'], ['30d', '近30天'], ['7d', '近7天']];
   const ranges = presets.map(([r, t]) => link(r, view.currency, t, view.range === r)).join('');
   const inMonth = view.range.startsWith('m:');
-  const options = view.months.map((m) => `<option value="m:${esc(m)}"${view.range === `m:${m}` ? ' selected' : ''}>${esc(m)}</option>`).join('');
+  // A month reads 2611: 2026-11 did not fit the desktop select and cost the
+  // phone header its one row.
+  const options = view.months.map((m) => `<option value="m:${esc(m)}"${view.range === `m:${m}` ? ' selected' : ''}>${esc(m.slice(2).replace('-', ''))}</option>`).join('');
   const month = options ? `<form class="month" method="get" action="/payroom"><input type="hidden" name="c" value="${esc(view.currency)}"><select name="r" aria-label="按月"${inMonth ? ' data-active="true"' : ''} onchange="this.form.submit()"><option value="">按月</option>${options}</select></form>` : '';
   const pick = presets.map(([r, t]) => `<option value="${r}"${view.range === r ? ' selected' : ''}>${esc(t)}</option>`).join('');
   const phone = `<form method="get" action="/payroom"><input type="hidden" name="c" value="${esc(view.currency)}"><select class="range-select" name="r" aria-label="日期" onchange="this.form.submit()">${pick}${options ? `<optgroup label="按月">${options}</optgroup>` : ''}</select></form>`;
