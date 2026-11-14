@@ -343,4 +343,14 @@ eq((await call('POST', { host: 'miaoyan.app', origin: 'null' }, { password: 'yes
 eq((await call('POST', { host: 'miaoyan.app', origin: 'https://miaoyan.app' }, { password: 'yes@!' })).status, 303, 'the right password logs in with the real Origin');
 eq((await call('POST', { host: 'miaoyan.app', origin: 'null' }, { password: 'no' })).status, 401, 'a wrong password is refused');
 
+// ---- the view comes back as it was left, USD otherwise -------------------
+const q = (url, cookie) => handler.query({ url, headers: cookie ? { cookie } : {} });
+eq(JSON.stringify(q('/payroom').view), JSON.stringify({ range: 'all', currency: 'USD' }), 'nothing picked: everything, in USD');
+eq(q('/payroom').cookie, '', 'a bare visit writes nothing');
+const picked = q('/payroom?r=m:2026-10&c=CNY').cookie.split(';')[0];
+eq(picked, 'miaoyan_payroom_view=m%3A2026-10%7CCNY', 'a pick is remembered');
+eq(JSON.stringify(q('/payroom', picked).view), JSON.stringify({ range: 'm:2026-10', currency: 'CNY' }), 'a bare visit opens the saved view');
+eq(JSON.stringify(q('/payroom?c=USD', picked).view), JSON.stringify({ range: 'm:2026-10', currency: 'USD' }), 'a currency pick keeps the saved range');
+eq(JSON.stringify(q('/payroom', 'miaoyan_payroom_view=bogus%7CEUR').view), JSON.stringify({ range: 'all', currency: 'USD' }), 'a bad saved value falls back');
+
 console.log(`payroom: ${checks} checks passed`);

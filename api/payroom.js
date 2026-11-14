@@ -62,14 +62,23 @@ async function formPassword(req) {
   return new URLSearchParams(Buffer.concat(chunks).toString('utf8')).get('password') || '';
 }
 
+// The last range and currency picked come back from a cookie on a bare visit
+// (maintainer 2026-11-14), else everything in USD.
+const VIEW_COOKIE = 'miaoyan_payroom_view';
+const VIEW_SECONDS = 365 * 24 * 60 * 60;
+
 function query(req) {
   const url = new URL(req.url, 'https://miaoyan.app');
-  const r = url.searchParams.get('r') || '';
-  const c = url.searchParams.get('c') || '';
-  return {
+  const saved = String(req.headers.cookie || '').split(';').map((c) => c.trim()).find((c) => c.startsWith(`${VIEW_COOKIE}=`));
+  const [savedRange, savedCurrency] = saved ? decodeURIComponent(saved.slice(VIEW_COOKIE.length + 1)).split('|') : [];
+  const r = url.searchParams.get('r') || savedRange || '';
+  const c = url.searchParams.get('c') || savedCurrency || '';
+  const view = {
     range: /^(7d|30d|90d|all|m:\d{4}-\d{2})$/.test(r) ? r : 'all',
-    currency: c === 'USD' ? 'USD' : 'CNY',
+    currency: c === 'CNY' ? 'CNY' : 'USD',
   };
+  const cookie = url.searchParams.has('r') || url.searchParams.has('c') ? `${VIEW_COOKIE}=${encodeURIComponent(`${view.range}|${view.currency}`)}; HttpOnly; Secure; SameSite=Lax; Path=/payroom; Max-Age=${VIEW_SECONDS}` : '';
+  return { view, cookie };
 }
 
 module.exports = async function handler(req, res) {
@@ -101,5 +110,8 @@ module.exports = async function handler(req, res) {
     return send(res, 503, renderMessage('数据暂时读不到，稍后刷新。'));
   }
   if (!state) return send(res, 200, renderMessage('还没有同步过数据。'));
-  return send(res, 200, renderDashboard(buildView(state, { ...query(req), today: pacificToday() })));
+  const { view, cookie } = query(req);
+  if (cookie) res.setHeader('Set-Cookie', cookie);
+  return send(res, 200, renderDashboard(buildView(state, { ...view, today: pacificToday() })));
 };
+module.exports.query = query;
