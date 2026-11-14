@@ -48,23 +48,92 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertNil(standIn.storageOutlineView)
     }
 
-    /// The storyboard stores Control-Option-Command-Delete for Clean Unused
-    /// Attachments and only the storyboard window rewrote it, so the shell
-    /// showed and took the old keys. The app now rewrites it once.
-    @MainActor
-    func testCleanUnusedAttachmentsIsShiftOptionCommandDelete() {
-        let main = NSMenu()
-        let app = NSMenuItem(title: "MiaoYan", action: nil, keyEquivalent: "")
-        app.submenu = NSMenu()
-        let clean = NSMenuItem(title: "Clean Unused Attachments", action: nil, keyEquivalent: "\u{8}")
-        clean.identifier = NSUserInterfaceItemIdentifier("cleanAttachmentsMenu")
-        clean.keyEquivalentModifierMask = [.control, .option, .command]
-        app.submenu?.addItem(clean)
-        main.addItem(app)
+    /// Clean Unused Attachments is Shift-Option-Command-Delete. The storyboard
+    /// stored Control-Option-Command and two windows rewrote it at runtime,
+    /// one of them only while validating; the storyboard now holds the keys.
+    func testCleanUnusedAttachmentsIsShiftOptionCommandDeleteInTheStoryboard() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let xml = try String(contentsOf: root.appendingPathComponent("Resources/Localization/Base.lproj/Main.storyboard"), encoding: .utf8)
+        let item = try XCTUnwrap(xml.range(of: "identifier=\"cleanAttachmentsMenu\""))
+        let end = try XCTUnwrap(xml.range(of: "</menuItem>", range: item.upperBound..<xml.endIndex))
+        let entry = String(xml[item.upperBound..<end.lowerBound])
+        XCTAssertTrue(entry.contains("<modifierMask key=\"keyEquivalentModifierMask\" shift=\"YES\" option=\"YES\" command=\"YES\"/>"), entry)
+    }
 
-        AppDelegate.applyMenuShortcuts(to: main)
+    /// A context menu's key equivalents never fire on their own; a shortcut
+    /// it shows works only through a main-menu item with the same keys or a
+    /// key handler. Copy Path showed Option-Command-C and did nothing in
+    /// either window. Each shown shortcut without a main-menu twin needs a
+    /// handler in the SwiftUI shell and one in the storyboard window (or the
+    /// app-wide monitor in AppDelegate, which serves both).
+    func testEveryContextMenuShortcutHasAKeyHandler() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        func read(_ path: String) throws -> String { try String(contentsOf: root.appendingPathComponent(path), encoding: .utf8) }
+        let xml = try read("Resources/Localization/Base.lproj/Main.storyboard")
+        let shell = try read("Shell/ShellWindowController.swift")
+        let storyboardWindow = try read("Controllers/ViewController+Action.swift") + (try read("Views/NotesTableView.swift"))
+        let appWide = try read("Controllers/AppDelegate.swift")
 
-        XCTAssertEqual(clean.keyEquivalentModifierMask, [.command, .option, .shift])
+        struct Shortcut {
+            let key: String
+            let mods: Set<String>
+            let title: String
+        }
+        func shortcuts(in text: String) throws -> [Shortcut] {
+            let item = try NSRegularExpression(pattern: #"<menuItem title="([^"]+)"[^>]*keyEquivalent="([A-Za-z])"[^>]*>(.*?)</menuItem>"#, options: [.dotMatchesLineSeparators])
+            return item.matches(in: text, range: NSRange(text.startIndex..., in: text)).compactMap { match in
+                guard let title = Range(match.range(at: 1), in: text), let key = Range(match.range(at: 2), in: text),
+                    let body = Range(match.range(at: 3), in: text)
+                else { return nil }
+                let character = String(text[key])
+                let entry = String(text[body])
+                var mods: Set<String> = character == character.uppercased() ? ["shift"] : []
+                if let mask = entry.range(of: #"keyEquivalentModifierMask"[^/]*"#, options: .regularExpression) {
+                    for mod in ["command", "option", "control", "shift"] where entry[mask].contains("\(mod)=\"YES\"") { mods.insert(mod) }
+                } else {
+                    mods.insert("command")
+                }
+                return Shortcut(key: character.lowercased(), mods: mods, title: String(text[title]))
+            }
+        }
+
+        let mainStart = try XCTUnwrap(xml.range(of: "key=\"mainMenu\""))
+        let mainEnd = try XCTUnwrap(xml.range(of: "</scene>", range: mainStart.upperBound..<xml.endIndex))
+        let mainKeys = Set(try shortcuts(in: String(xml[mainStart.lowerBound..<mainEnd.lowerBound])).map { "\($0.key)|\($0.mods.sorted())" })
+        let contextStart = try XCTUnwrap(xml.range(of: "<menu id=\"AaK-Xd-i52\">"))
+        let contextEnd = try XCTUnwrap(xml.range(of: "</menu>", range: contextStart.upperBound..<xml.endIndex))
+
+        func flags(_ list: String) -> Set<String> {
+            Set(list.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces).replacingOccurrences(of: ".", with: "") })
+        }
+        let shellCase = try NSRegularExpression(pattern: #"case kVK_ANSI_([A-Z]) where flags == \[([^\]]+)\]"#)
+        let appWideCase = try NSRegularExpression(pattern: #"key == "([a-z])",[^\n]*\n\s*flags == \[([^\]]+)\]"#)
+        func handled(_ key: String, _ mods: Set<String>, by regex: NSRegularExpression, in text: String) -> Bool {
+            regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).contains { match in
+                guard let k = Range(match.range(at: 1), in: text), let f = Range(match.range(at: 2), in: text) else { return false }
+                return text[k].lowercased() == key && flags(String(text[f])) == mods
+            }
+        }
+        let storyboardLines = storyboardWindow.components(separatedBy: "\n")
+        func handledInStoryboardWindow(_ key: String, _ mods: Set<String>) -> Bool {
+            storyboardLines.indices.contains { index in
+                // An `if` may wrap onto the next line.
+                let text = storyboardLines[index..<min(index + 2, storyboardLines.count)].joined(separator: " ")
+                guard text.contains("keyCode == kVK_ANSI_\(key.uppercased())") else { return false }
+                return ["command", "option", "control", "shift"].allSatisfy { mod in
+                    let required = text.range(of: #"(?<!!)event\.modifierFlags\.contains\(\.\#(mod)\)"#, options: .regularExpression) != nil
+                    return required == mods.contains(mod)
+                }
+            }
+        }
+
+        let context = try shortcuts(in: String(xml[contextStart.lowerBound..<contextEnd.lowerBound]))
+        XCTAssertFalse(context.isEmpty)
+        for shortcut in context where !mainKeys.contains("\(shortcut.key)|\(shortcut.mods.sorted())") {
+            let global = handled(shortcut.key, shortcut.mods, by: appWideCase, in: appWide)
+            XCTAssertTrue(global || handled(shortcut.key, shortcut.mods, by: shellCase, in: shell), "\(shortcut.title) in the SwiftUI shell")
+            XCTAssertTrue(global || handledInStoryboardWindow(shortcut.key, shortcut.mods), "\(shortcut.title) in the storyboard window")
+        }
     }
 
     /// The note list's context menu lives in the Editor scene, and an action

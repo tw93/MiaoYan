@@ -96,7 +96,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             userDriverDelegate: nil)
 
         NSApp.mainMenu?.applyMenuIcons()
-        Self.applyMenuShortcuts(to: NSApp.mainMenu)
 
         NSApp.mainMenu?.update()
 
@@ -447,19 +446,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         guard let event = NSApp.currentEvent else { return }
         if event.type == NSEvent.EventType.leftMouseDown {
             mainWindowController?.makeNew()
-        }
-    }
-
-    /// Clean Unused Attachments is Shift-Option-Command-Delete. The storyboard
-    /// stores Control-Option-Command, which only the storyboard window
-    /// rewrote, while validating its menu; set once here, both windows show
-    /// and take the same keys.
-    static func applyMenuShortcuts(to menu: NSMenu?) {
-        for item in menu?.items ?? [] {
-            if item.identifier?.rawValue == "cleanAttachmentsMenu" {
-                item.keyEquivalentModifierMask = [.command, .option, .shift]
-            }
-            applyMenuShortcuts(to: item.submenu)
         }
     }
 

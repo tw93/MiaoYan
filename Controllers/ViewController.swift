@@ -775,13 +775,9 @@ class ViewController:
             switch title {
             case "miaoyanMenu":
                 if menuItem.identifier?.rawValue == "cleanAttachmentsMenu" {
-                    menuItem.keyEquivalentModifierMask = [.command, .option, .shift]
                     return canUseMenu
                 }
             case "fileMenu":
-                if menuItem.identifier?.rawValue == "fileMenu.delete" {
-                    menuItem.keyEquivalentModifierMask = [.command]
-                }
                 if ["fileMenu.new", "fileMenu.searchAndCreate", "fileMenu.open", "fileMenu.import"].contains(menuItem.identifier?.rawValue) {
                     return canUseMenu
                 }

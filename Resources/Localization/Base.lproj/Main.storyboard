@@ -76,7 +76,7 @@
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="cleanUnusedAttachments:" target="L4m-js-agn" id="d27-Z5-1ap"/>
                                             </connections>

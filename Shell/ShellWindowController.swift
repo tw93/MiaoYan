@@ -735,6 +735,10 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             guard hasNote else { return event }
             model.copyNoteURL()
             return nil
+        case kVK_ANSI_C where flags == [.command, .option]:
+            guard hasNote else { return event }
+            model.copyNotePaths(model.selectedNotes)
+            return nil
         case kVK_ANSI_Equal where flags == [.command]:
             // The View menu's Zoom In carries "+" (Command-Shift-=); this
             // adds the bare Command-=.

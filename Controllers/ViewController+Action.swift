@@ -1382,6 +1382,13 @@ extension ViewController {
             return false
         }
 
+        // The note list's context menu shows Option-Command-C for Copy Path,
+        // and a context menu's key equivalents never fire on their own.
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_C {
+            copyPath(self)
+            return false
+        }
+
         // ⌘= zoom-in alias (no Shift). The View-menu item carries "+" so ⌘+
         // (⌘⇧=) routes through the menu; this branch adds the bare ⌘= without
         // double-firing, since no menu item binds the "=" key.
