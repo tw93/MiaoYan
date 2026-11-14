@@ -2,6 +2,7 @@ import Cocoa
 import MiaoYanCore
 import WebKit
 
+/// The TOC badge reached the screen, so it is not offered again.
 class HandlerTOCTip: NSObject, WKScriptMessageHandler {
     func userContentController(
         _ userContentController: WKUserContentController,

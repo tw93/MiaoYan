@@ -43,7 +43,12 @@ private let mathLineBreakMarker: Unicode.Scalar = "\u{E000}"
 /// positions remain stable; with `marksLineBreaks` each line inside math that
 /// is not blank ends in `mathLineBreakMarker`, and a blank line still ends
 /// the paragraph as before.
-func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false) -> String {
+///
+/// With `literalEscapedDollars`, a `\$` outside code and math becomes a dollar
+/// sign the math pass skips. cmark drops the backslash of a Markdown escape,
+/// so without this `\$x and \$y` reached KaTeX as the formula `$x and $y`; KaTeX's
+/// auto-render has no escape option of its own (`processEscapes` is MathJax's).
+func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false, literalEscapedDollars: Bool = false) -> String {
     guard markdown.contains("$") || markdown.contains("\\(") || markdown.contains("\\[") else {
         return markdown
     }
@@ -55,6 +60,11 @@ func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false) -> S
 
     var index = 0
     while index < scalars.count {
+        if literalEscapedDollars, isEscapedDollar(in: scalars, at: index, codeMask: codeMask) {
+            protected.append(literalDollarHTML)
+            index += 2
+            continue
+        }
         guard !codeMask[index],
             let delimiter = markdownMathDelimiters.first(where: {
                 matches($0.left, in: scalars, at: index, codeMask: codeMask)
@@ -139,6 +149,17 @@ private func matches(
         }
     }
     return true
+}
+
+/// The same class the preview's currency guard uses, so KaTeX skips it.
+let literalDollarHTML = "<span class=\"skip-math-dollar\">&#36;</span>"
+
+/// A backslash that is not itself escaped, followed by `$`, neither in code.
+private func isEscapedDollar(in scalars: [Unicode.Scalar], at index: Int, codeMask: [Bool]) -> Bool {
+    index + 1 < scalars.count
+        && scalars[index].value == 92 && scalars[index + 1].value == 36
+        && !codeMask[index] && !codeMask[index + 1]
+        && !isEscaped(in: scalars, at: index)
 }
 
 private func isEscaped(in scalars: [Unicode.Scalar], at index: Int) -> Bool {
@@ -375,7 +396,7 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
     }
 
     let marksMathLineBreaks = !markdown.unicodeScalars.contains(mathLineBreakMarker)
-    let protectedMarkdown = protectMarkdownMath(markdown, marksLineBreaks: marksMathLineBreaks)
+    let protectedMarkdown = protectMarkdownMath(markdown, marksLineBreaks: marksMathLineBreaks, literalEscapedDollars: true)
     cmark_parser_feed(parser, protectedMarkdown, protectedMarkdown.utf8.count)
     guard let node = cmark_parser_finish(parser) else { return nil }
     defer { cmark_node_free(node) }
@@ -504,8 +525,10 @@ func transformGitHubAlerts(in html: String) -> String {
         let marker = result.substring(with: match.range(at: 3)).uppercased()
         guard let kind = githubAlertKinds[marker] else { continue }
 
-        // The marker must be alone on its line: after `[!X]` cmark emits `<br />`
-        // (hardbreaks), a space (nobreaks), a newline, or `</p>` when the quote is marker-only.
+        // The marker must be followed by a separator, not glued to text (`[!X]:`).
+        // After `[!X]` cmark emits `<br />` (hardbreaks), a space (nobreaks, where
+        // a line end and a same-line space look alike), a newline, or `</p>`
+        // when the quote is marker-only.
         var bodyStart = match.range.location + match.range.length
         var bodyOpensParagraph = true
         if let skipped = skipAlertMarkerTail(in: result, from: bodyStart) {

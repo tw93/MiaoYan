@@ -701,6 +701,43 @@ final class HtmlManagerTests: XCTestCase {
             XCTAssertTrue(FileManager.default.fileExists(atPath: file.path), "\(path) is bundled")
         }
     }
+
+    /// cmark drops the backslash of `\$`, and KaTeX's auto-render has no
+    /// escape option, so `\$x and \$y` reached it as the formula `$x and $y`.
+    func testEscapedDollarsRenderAsLiteralDollarsTheMathPassSkips() throws {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: #"Costs \$5 and \$10, `\$code` stays"#, useGithubLineBreak: false))
+        XCTAssertEqual(html.components(separatedBy: "<span class=\"skip-math-dollar\">$</span>").count - 1, 2, html)
+        XCTAssertTrue(html.contains("<code>\\$code</code>"), html)
+
+        XCTAssertEqual(protectMarkdownMath(#"\\$x$"#, literalEscapedDollars: true), #"\\&#36;&#120;&#36;"#, "an escaped backslash leaves the dollar a delimiter")
+        XCTAssertEqual(protectMarkdownMath(#"$a \$ b$"#, literalEscapedDollars: true).contains("skip-math-dollar"), false, "inside math the escape is KaTeX's")
+    }
+
+    /// cmark renders with sourcepos, so a note opening with `# Title` starts
+    /// with `<h1 data-sourcepos=…>`; HTML export printed the title twice.
+    func testExportTitleIsSkippedWhenTheBodyOpensWithAHeading() throws {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "# Plan\n\nBody", useGithubLineBreak: false))
+        XCTAssertTrue(HtmlManager.opensWithTitleHeading(html), html)
+        XCTAssertFalse(HtmlManager.opensWithTitleHeading("<h2>Plan</h2>"))
+        XCTAssertFalse(HtmlManager.opensWithTitleHeading("<header>x</header>"))
+        XCTAssertEqual(HtmlManager.escapeHTMLText("R&D <draft>"), "R&amp;D &lt;draft&gt;")
+    }
+
+    /// CommonMark takes a space or a tab after the `#`s, and the preview
+    /// renders `#\tTitle` as a heading; the editor coloured only the space.
+    @MainActor
+    func testEditorHeadingAcceptsATabAfterTheMarker() {
+        for line in ["# Title", "#\tTitle", "###\tTitle"] {
+            var found = false
+            NotesTextProcessor.headersAtxRegex.matches(line, range: NSRange(location: 0, length: (line as NSString).length)) { result in
+                if result != nil { found = true }
+            }
+            XCTAssertTrue(found, line)
+        }
+        var glued = false
+        NotesTextProcessor.headersAtxRegex.matches("#Title", range: NSRange(location: 0, length: 6)) { if $0 != nil { glued = true } }
+        XCTAssertFalse(glued)
+    }
 }
 
 @available(macOS 12.0, *)

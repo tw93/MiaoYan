@@ -415,10 +415,10 @@ public class NotesTextProcessor {
      */
 
     fileprivate static let headerAtxPattern = [
-        "^(\\#{1,6}\\  )  # $1 = string of #'s",
-        "\\p{Z}*",
+        "^(\\#{1,6}[\\x20\\t])  # $1 = string of #'s and the space or tab after them",
+        "[\\p{Z}\\t]*",
         "(.+?)        # $2 = Header text",
-        "\\p{Z}*",
+        "[\\p{Z}\\t]*",
         "\\#*         # optional closing #'s (not counted)",
         "(?:\\n|\\Z)",
     ].joined(separator: "\n")
@@ -426,7 +426,7 @@ public class NotesTextProcessor {
     @MainActor public static let headersAtxRegex = MarklightRegex(pattern: headerAtxPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     fileprivate static let headersAtxOpeningPattern = [
-        "^(\\#{1,6}\\ )"
+        "^(\\#{1,6}[\\x20\\t])"
     ].joined(separator: "\n")
 
     @MainActor public static let headersAtxOpeningRegex = MarklightRegex(pattern: headersAtxOpeningPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])

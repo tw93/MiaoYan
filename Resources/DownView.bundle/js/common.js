@@ -458,11 +458,24 @@ const MiaoYanCommon = {
     this.convertEmoji(write);
   },
 
+  // Native characters everywhere. Left to itself the convertor sniffs the
+  // user agent on first use: outside Apple's browsers it draws from an image
+  // sheet this bundle does not ship, and it reads iOS 17 as iOS 1 and writes
+  // SoftBank private-use codes, so an exported page showed blank emoji.
+  // init_env runs once, so the mode set after it holds.
+  nativeEmojiConvertor() {
+    const emoji = new EmojiConvertor();
+    emoji.init_env();
+    emoji.replace_mode = 'unified';
+    emoji.allow_native = true;
+    return emoji;
+  },
+
   // Emoji shortcodes such as :smile: in the text under `root`, not in code.
   convertEmoji(root) {
     if (!window.EmojiConvertor || !root) return;
     const writeElement = document.getElementById('write');
-    const emoji = this._emoji || (this._emoji = new EmojiConvertor());
+    const emoji = this._emoji || (this._emoji = this.nativeEmojiConvertor());
 
     // Use TreeWalker to replace emoji only in text nodes, avoiding code blocks
     const walker = document.createTreeWalker(
@@ -693,7 +706,6 @@ const MiaoYanCommon = {
           { left: "\\(", right: "\\)", display: false },
           { left: "\\[", right: "\\]", display: true }
         ],
-        processEscapes: true,
         ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
       });
     };
@@ -847,7 +859,7 @@ const TOC_CONFIG = {
 (function() {
   // Default no-op so a menu/shortcut trigger never hits an undefined call
   // before initTOC runs (or when there are too few headings to build a TOC).
-  window.MiaoYanTOC = { toggle: function() {}, refresh: function() {} };
+  window.MiaoYanTOC = { toggle: function() {}, refresh: function() {}, available: function() { return false; } };
 
   // Wired once per page. A note opened in place (MiaoYanCommon.showNote)
   // calls refresh, which recounts the headings and rebuilds the list.
@@ -911,7 +923,10 @@ const TOC_CONFIG = {
         show();
       }
     };
-    window.MiaoYanTOC = { toggle: menuToggle, refresh: (options) => refreshTOC(options) };
+    // The first-run hint (MPreviewView.showTOCTipIfNeeded) asks whether the
+    // trigger is on screen: enough headings and a wide enough window.
+    const available = () => hasTOC && window.innerWidth >= TOC_CONFIG.MIN_SCREEN_WIDTH;
+    window.MiaoYanTOC = { toggle: menuToggle, refresh: (options) => refreshTOC(options), available };
 
     // Auto-scroll active link into view within TOC panel
     const scrollToActive = () => {

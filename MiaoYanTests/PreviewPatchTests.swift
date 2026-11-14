@@ -152,7 +152,7 @@ final class PreviewPatchTests: XCTestCase {
     /// A page with the bundle's renderers, as index.html loads them, showing
     /// `markdown` the way a load does (renderPage).
     @MainActor
-    private func loadRenderedPage(_ markdown: String) async throws -> WKWebView {
+    private func loadRenderedPage(_ markdown: String, userAgent: String? = nil) async throws -> WKWebView {
         let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: markdown, useGithubLineBreak: false, imagesStorage: tempDirectory))
         let bundle = commonScript.deletingLastPathComponent().deletingLastPathComponent()
         let scripts = ["highlight.min.js", "katex.min.js", "auto-render.min.js", "emoji.min.js", "lightense.min.js", "tocbot.min.js", "common.js"]
@@ -170,6 +170,7 @@ final class PreviewPatchTests: XCTestCase {
         let url = tempDirectory.appendingPathComponent("page-\(UUID().uuidString).html")
         try page.write(to: url, atomically: true, encoding: .utf8)
         let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 800, height: 600))
+        webView.customUserAgent = userAgent
         webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
         let deadline = Date().addingTimeInterval(10)
         while Date() < deadline {
@@ -178,6 +179,74 @@ final class PreviewPatchTests: XCTestCase {
         }
         XCTFail("page did not load")
         return webView
+    }
+
+    /// An exported page runs the same script in whatever browser opens it.
+    /// emoji-js chose by user agent: Chrome on Windows got spans pointing at an
+    /// image sheet the bundle does not ship, iOS 17 got SoftBank private-use
+    /// codes, both blank.
+    @MainActor
+    func testEmojiShortcodesBecomeNativeCharactersInAnyBrowser() async throws {
+        let agents = [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1",
+        ]
+        for agent in agents {
+            let webView = try await loadRenderedPage("Done :smile:", userAgent: agent)
+            let text = try await webView.evaluateJavaScript("document.querySelector('#write p').innerHTML") as? String
+            XCTAssertTrue(text?.contains("\u{1F604}") == true, "\(agent): \(text ?? "nil")")
+            XCTAssertFalse(text?.contains("emoji-sizer") == true, agent)
+        }
+    }
+
+    /// The first-run TOC badge was a child of the trigger, so it showed at
+    /// the trigger's 0.12 rest opacity, faded with it, and was marked shown
+    /// even on a note without a TOC. It now appears only beside a TOC.
+    @MainActor
+    func testTOCBadgeAppearsOnlyBesideATableOfContents() async throws {
+        let probe = """
+            return new Promise(function(resolve) {
+                \(MPreviewView.tocTipScript)
+                setTimeout(function() {
+                    var dot = document.getElementById('toc-red-dot-hint');
+                    resolve(dot ? getComputedStyle(dot).opacity + '|' + (dot.parentElement === document.body) : 'none');
+                }, 1800);
+            })
+            """
+        let withTOC = try await loadRenderedPage("# One\n\nText.\n\n## Two\n\nText.\n\n## Three")
+        let shown = try await withTOC.callAsyncJavaScript(probe, contentWorld: .page) as? String
+        XCTAssertEqual(shown, "1|true")
+
+        let withoutTOC = try await loadRenderedPage("# Only\n\nText.")
+        let hidden = try await withoutTOC.callAsyncJavaScript(probe, contentWorld: .page) as? String
+        XCTAssertEqual(hidden, "none")
+    }
+
+    /// PNG and snapshot PDF exports put the title above every note, so one
+    /// opening with `# Title` printed it twice; HTML export and the paginated
+    /// PDF already kept the note's own heading.
+    @MainActor
+    func testSnapshotExportTitleKeepsTheNotesOwnHeading() async throws {
+        let probe = "\(MPreviewView.exportTitleScript(title: "Plan")); document.querySelectorAll('#write h1').length + '|' + document.querySelector('#write h1').textContent"
+        let titled = try await loadRenderedPage("# Plan\n\nBody.")
+        let kept = try await titled.evaluateJavaScript(probe) as? String
+        XCTAssertEqual(kept, "1|Plan")
+        let untitled = try await loadRenderedPage("Body only.")
+        let added = try await untitled.evaluateJavaScript(probe) as? String
+        XCTAssertEqual(added, "1|Plan")
+        let quote = try await loadRenderedPage("Body.")
+        let tricky = try await quote.evaluateJavaScript("\(MPreviewView.exportTitleScript(title: "It's \"R&D\" </script>")); document.querySelector('#write h1').textContent") as? String
+        XCTAssertEqual(tricky, "It's \"R&D\" </script>")
+    }
+
+    /// `\$x and \$y` is two dollar signs, not a formula.
+    @MainActor
+    func testEscapedDollarsStayTextUnderKaTeX() async throws {
+        let webView = try await loadRenderedPage(#"Pay \$x and \$y today."#)
+        try await Task.sleep(nanoseconds: 400_000_000)
+        let probe = "[document.querySelectorAll('#write .katex').length, document.querySelector('#write p').textContent].join('|')"
+        let result = try await webView.evaluateJavaScript(probe) as? String
+        XCTAssertEqual(result, "0|Pay $x and $y today.")
     }
 
     /// A live update did only some of what a load does to the blocks it

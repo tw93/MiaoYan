@@ -206,6 +206,8 @@ final class PdfExportController: NSObject {
             var tocTrigger = document.querySelector('.toc-hover-trigger');
             if (toc) toc.style.display = 'none';
             if (tocTrigger) tocTrigger.style.display = 'none';
+            var tocHint = document.getElementById('toc-red-dot-hint');
+            if (tocHint) tocHint.remove();
 
             // Paper cannot play a video, and the player's controls would print
             // over its picture. One with no poster moves to its first frame.

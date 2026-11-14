@@ -175,15 +175,6 @@ public class TextFormatter {
         return (nil, 0)
     }
 
-    public func header(_ string: String) {
-        guard let pRange = getParagraphRange() else { return }
-        let selected = textView.selectedRange
-        let paragraph = storage.mutableString.substring(with: pRange)
-        let prefix = string + " "
-        let selectRange = NSRange(location: selected.location + selected.length + prefix.count, length: 0)
-        insertText(prefix + paragraph, replacementRange: pRange, selectRange: selectRange)
-    }
-
     public func link() {
         let text = "[" + attributedString.string + "]()"
         replaceWith(string: text, range: range)

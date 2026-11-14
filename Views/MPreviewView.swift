@@ -652,7 +652,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                                     {left: "\\\\(", right: "\\\\)", display: false},
                                     {left: "\\\\[", right: "\\\\]", display: true}
                                 ],
-                                processEscapes: true,
                                 ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
                             });
                         });
@@ -1165,57 +1164,56 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     // MARK: - TOC Hint
+    /// A one-time badge beside the TOC trigger. It counts as shown only once
+    /// it is on screen: the trigger is hidden in a note with fewer than two
+    /// headings or a narrow window, so the badge waits for a note that has a
+    /// TOC. It sits on the page rather than inside the trigger, whose rest
+    /// opacity (0.12) and auto-hide made a badge inside it unreadable.
     func showTOCTipIfNeeded() {
         guard !UserDefaultsManagement.hasShownTOCTip else { return }
-        UserDefaultsManagement.hasShownTOCTip = true
+        executeJavaScriptWhenReady(Self.tocTipScript)
+    }
 
-        // Inject Red Dot script
-        let script = """
-                (function() {
+    static let tocTipScript = """
+            (function() {
+                var tries = 0;
+                function place() {
+                    var toc = window.MiaoYanTOC;
                     var trigger = document.querySelector('.toc-hover-trigger');
-                    if (!trigger) return;
-
-                    // Avoid duplicate dots
+                    if (!trigger || !toc || !toc.available || !toc.available()) {
+                        // initTOC runs a moment after the page loads.
+                        if (++tries < 10) setTimeout(place, 150);
+                        return;
+                    }
                     if (document.getElementById('toc-red-dot-hint')) return;
 
+                    var dark = document.body.classList.contains('darkmode');
                     var dot = document.createElement('div');
                     dot.id = 'toc-red-dot-hint';
                     dot.innerText = 'TOC';
-                    dot.style.position = 'absolute';
-                    dot.style.backgroundColor = '#FF3B30'; // System Red
-                    dot.style.color = 'white';
-                    dot.style.fontSize = '8px';
-                    dot.style.fontWeight = 'bold';
-                    dot.style.padding = '2px 5px';
-                    dot.style.borderRadius = '8px';
-                    dot.style.top = '12px'; // Adjust based on visual testing
-                    dot.style.right = '12px';
-                    dot.style.zIndex = '9999';
-                    dot.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
-                    dot.style.cursor = 'pointer';
-                    dot.style.pointerEvents = 'auto'; // Make badge clickable directly
+                    dot.style.cssText = [
+                        'position: fixed', 'top: 86px', 'right: 32px', 'z-index: 1000',
+                        'padding: 2px 6px', 'border-radius: 8px', 'cursor: pointer',
+                        'font-size: 9px', 'font-weight: 600', 'letter-spacing: 0.02em',
+                        'background: ' + (dark ? '#54C59F' : '#1C5D33'),
+                        'color: ' + (dark ? '#1E1D1B' : '#FDFCF9')
+                    ].join(';');
+                    document.body.appendChild(dot);
+                    var handlers = window.webkit && window.webkit.messageHandlers;
+                    if (handlers && handlers.tocTipClicked) handlers.tocTipClicked.postMessage('shown');
 
-                    trigger.appendChild(dot);
-
-                    // Function to dismiss
                     function dismiss() {
-                        if (dot) dot.remove();
-                        window.webkit.messageHandlers.tocTipClicked.postMessage("clicked");
+                        dot.remove();
+                        trigger.removeEventListener('mouseenter', dismiss);
                     }
-
-                    // Click on badge: dismiss AND click trigger (to open TOC)
                     dot.addEventListener('click', function(e) {
-                        e.stopPropagation(); // Stop bubbling to avoid double triggering if logic is complex
+                        e.stopPropagation();
                         dismiss();
-                        trigger.click(); // Manually trigger the TOC opening
+                        toc.toggle();
                     }, { once: true });
-
-                    // Click on trigger (e.g. user missed the badge but hit the area): dismiss
-                    trigger.addEventListener('click', function() {
-                        dismiss();
-                    }, { once: true });
-                })();
-            """
-        executeJavaScriptWhenReady(script)
-    }
+                    trigger.addEventListener('mouseenter', dismiss);
+                }
+                place();
+            })();
+        """
 }

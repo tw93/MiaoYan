@@ -271,7 +271,7 @@ class HtmlManager {
                 /* A diagram still drawing when the export starts is copied
                    with its "Rendering ..." line, which nothing removes in the
                    copy; the diagram itself is what the export waits for. */
-                .toc-nav, .toc-hover-trigger, .toc-pin-btn, .heading-anchor, .diagram-loading {
+                .toc-nav, .toc-hover-trigger, .toc-pin-btn, #toc-red-dot-hint, .heading-anchor, .diagram-loading {
                     display: none !important;
                 }
             }
@@ -887,12 +887,29 @@ class HtmlManager {
         return "<link rel=\"stylesheet\" href=\"ppt/dist/theme/\(themeFile)\" id=\"theme\" />"
     }
 
+    /// HTML export puts the note's title above the body unless the body opens
+    /// with a level-one heading. cmark renders with `CMARK_OPT_SOURCEPOS`, so
+    /// that heading is `<h1 data-sourcepos=…>`, never a bare `<h1>`.
     @MainActor
     static func getHtmlContent(_ htmlString: String, currentName: String) -> String {
-        if UserDefaultsManagement.isOnExportHtml, !htmlString.hasPrefix("<h1>") {
-            return "<h1>\(currentName)</h1>\(htmlString)"
+        if UserDefaultsManagement.isOnExportHtml, !opensWithTitleHeading(htmlString) {
+            return "<h1>\(escapeHTMLText(currentName))</h1>\(htmlString)"
         }
         return htmlString
+    }
+
+    static func opensWithTitleHeading(_ html: String) -> Bool {
+        let body = html.drop(while: \.isWhitespace)
+        guard body.hasPrefix("<h1") else { return false }
+        let next = body.dropFirst(3).first
+        return next == ">" || next?.isWhitespace == true
+    }
+
+    /// A title like `R&D <draft>` as text, not markup.
+    static func escapeHTMLText(_ text: String) -> String {
+        text.replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
     }
 
     // MARK: - Template Processing

@@ -212,6 +212,7 @@ extension MPreviewView {
                \(layoutCSS)
                .toc-hover-trigger,
                .toc-pin-btn,
+               #toc-red-dot-hint,
                .toc-nav {
                    display: none !important;
                    pointer-events: none !important;
@@ -253,20 +254,29 @@ extension MPreviewView {
         evaluateJavaScript(removeScript, completionHandler: nil)
     }
 
-    private func escapeForJavaScriptString(_ value: String) -> String {
-        return
-            value
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\n", with: "\\n")
-            .replacingOccurrences(of: "\r", with: "\\r")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-            .replacingOccurrences(of: "'", with: "\\'")
+    /// Puts the note's title above the page for a snapshot export, unless
+    /// the note opens with its own level-one heading, which then is the
+    /// title, as in HTML export and the paginated PDF (PdfExportController).
+    static func exportTitleScript(title: String) -> String {
+        """
+        (function() {
+            var container = document.getElementById('write') || document.body;
+            var first = container && container.firstElementChild;
+            if (!container || (first && first.tagName === 'H1')) return;
+            if (document.getElementById('export-generated-title')) return;
+            var h1 = document.createElement('h1');
+            h1.innerText = \(HtmlManager.jsStringLiteral(title));
+            h1.id = 'export-generated-title';
+            h1.style.cssText = 'font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;';
+            container.insertBefore(h1, container.firstChild);
+        })();
+        """
     }
 
     private func hideTOCTriggersForExport() {
         let script = """
                 (function() {
-                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '.toc-nav'];
+                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '#toc-red-dot-hint', '.toc-nav'];
                     selectors.forEach(function(sel) {
                         document.querySelectorAll(sel).forEach(function(el) {
                             el.dataset.exportOriginalDisplay = el.style.display || '';
@@ -282,7 +292,7 @@ extension MPreviewView {
     private func restoreTOCTriggers() {
         let script = """
                 (function() {
-                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '.toc-nav'];
+                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '#toc-red-dot-hint', '.toc-nav'];
                     selectors.forEach(function(sel) {
                         document.querySelectorAll(sel).forEach(function(el) {
                             if (typeof el.dataset.exportOriginalDisplay !== 'undefined') {
@@ -426,19 +436,7 @@ extension MPreviewView {
 
                     vc.toastUpdate(message: "\(I18n.str("Exporting...")) 90%")
 
-                    let safeTitle = self.escapeForJavaScriptString(note.getExportTitle())
-                    let titleScript = """
-                            (function() {
-                                var container = document.getElementById('write') || document.body;
-                                if (container && !document.getElementById('export-generated-title')) {
-                                    var h1 = document.createElement('h1');
-                                    h1.innerText = '\(safeTitle)';
-                                    h1.id = 'export-generated-title';
-                                    h1.style.cssText = 'font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;';
-                                    container.insertBefore(h1, container.firstChild);
-                                }
-                            })();
-                        """
+                    let titleScript = Self.exportTitleScript(title: note.getExportTitle())
                     self.evaluateJavaScript(titleScript) { _, _ in
                         self.evaluateJavaScript(
                             """
@@ -503,21 +501,8 @@ extension MPreviewView {
                 return
             }
 
-            // Inject title at top of content
-            let exportTitle = note.getExportTitle()
-            let safeTitle = escapeForJavaScriptString(exportTitle)
-            let titleScript = """
-                (function() {
-                    var container = document.getElementById('write') || document.body;
-                        if (container && !document.getElementById('export-generated-title')) {
-                            var h1 = document.createElement('h1');
-                            h1.innerText = '\(safeTitle)';
-                            h1.id = 'export-generated-title';
-                            h1.style.cssText = 'font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;';
-                            container.insertBefore(h1, container.firstChild);
-                        }
-                    })();
-                """
+            // Title at the top of the content, unless the note has its own.
+            let titleScript = Self.exportTitleScript(title: note.getExportTitle())
 
             self.evaluateJavaScript(titleScript) { _, _ in
                 // Recalculate dimensions after title injection
