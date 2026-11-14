@@ -129,10 +129,10 @@
     {
       "slug": "wikilinks-and-backlinks",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "notes",
       "en": {
-        "title": "Wikilinks and backlinks in Markdown notes",
+        "title": "Wikilinks: [[note]] links and backlinks in Markdown",
         "description": "How [[wikilinks]] differ from normal Markdown links, what MiaoYan supports, how backlinks are built, and the portability trade-offs."
       },
       "zh": {
@@ -255,10 +255,10 @@
     {
       "slug": "markdown-collapsible-sections",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
-        "title": "Markdown collapsible sections with details and summary",
+        "title": "Collapsible sections in Markdown and GitHub with details",
         "description": "Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it."
       },
       "zh": {
@@ -311,10 +311,10 @@
     {
       "slug": "markdown-images",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
-        "title": "Markdown images: syntax, size and broken paths",
+        "title": "Markdown image syntax: insert, resize and fix paths",
         "description": "Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan stores, previews and exports images."
       },
       "zh": {
@@ -325,10 +325,10 @@
     {
       "slug": "markdown-line-breaks",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
-        "title": "Markdown line breaks: soft, hard and MiaoYan's setting",
+        "title": "Markdown line break and new line: soft, hard and <br>",
         "description": "Why a single newline vanishes in Markdown, how backslash, two spaces and <br> differ, and what MiaoYan's Line Break setting changes in preview and export."
       },
       "zh": {
@@ -381,10 +381,10 @@
     {
       "slug": "markdown-task-lists",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
-        "title": "Markdown checkboxes: task lists with - [ ] and - [x]",
+        "title": "Markdown checkbox and checklist: - [ ] and - [x]",
         "description": "Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep."
       },
       "zh": {
@@ -395,10 +395,10 @@
     {
       "slug": "markmap-mind-maps",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
-        "title": "Markmap mind maps from a Markdown outline",
+        "title": "Markmap: turn a Markdown outline into a mind map",
         "description": "Turn headings and lists into a mind map with a markmap fence, what MiaoYan renders offline, which options apply, and how it differs from Mermaid."
       },
       "zh": {
@@ -437,10 +437,10 @@
     {
       "slug": "markdown-horizontal-line",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
-        "title": "Markdown horizontal line: ---, *** and ___",
+        "title": "Markdown horizontal line and divider: ---, *** and ___",
         "description": "Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan."
       },
       "zh": {
@@ -465,10 +465,10 @@
     {
       "slug": "markdown-bold-italic-strikethrough",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
-        "title": "Bold, italic and strikethrough in Markdown, and why they break",
+        "title": "Markdown bold, italic and strikethrough, GitHub included",
         "description": "Write **bold**, *italic* and ~~strikethrough~~ in Markdown, see why emphasis fails next to punctuation or Chinese text, and where GitHub's strikethrough differs from CommonMark."
       },
       "zh": {
@@ -558,6 +558,118 @@
       "zh": {
         "title": "用 Markdown 文件做卡片笔记法",
         "description": "卢曼卡片盒的做法、原子笔记、文件命名、妙言里的双向链接与反向链接，以及什么时候 Obsidian 更合适。"
+      }
+    },
+    {
+      "slug": "mermaid-flowchart",
+      "date": "2026-10-20",
+      "modified": "2026-10-20",
+      "category": "writing",
+      "en": {
+        "title": "Mermaid flowchart syntax: TD, LR, shapes, edges and subgraphs",
+        "description": "Write a Mermaid flowchart in Markdown: pick TD or LR, choose node shapes, label edges, group with subgraphs, and fix the end keyword and quoting errors."
+      },
+      "zh": {
+        "title": "Mermaid 流程图写法：TD、LR、节点形状、连线和子图",
+        "description": "在 Markdown 里写 Mermaid 流程图，选方向、定节点形状、给连线加标签、用子图分组，并排查 end 关键字和引号错误。"
+      }
+    },
+    {
+      "slug": "markdown-lists",
+      "date": "2026-10-21",
+      "modified": "2026-10-21",
+      "category": "writing",
+      "en": {
+        "title": "Markdown numbered list and bullet points: syntax and rules",
+        "description": "Write a Markdown numbered list or bullet points that render right: start numbers, all-1 lists, marker changes, loose lists, and code inside items."
+      },
+      "zh": {
+        "title": "Markdown 有序列表和无序列表的写法与规则",
+        "description": "写对 Markdown 有序列表和无序列表，弄清起始数字、标记切换、松散列表，以及条目里放段落和代码块的缩进。"
+      }
+    },
+    {
+      "slug": "obsidian-vs-notion",
+      "date": "2026-10-22",
+      "modified": "2026-10-22",
+      "category": "notes",
+      "en": {
+        "title": "Obsidian vs Notion: local files or cloud workspace",
+        "description": "Compare Obsidian and Notion on where data lives, offline use, sync and prices, collaboration, databases, export and lock-in, then decide which fits."
+      },
+      "zh": {
+        "title": "Obsidian 和 Notion 怎么选：本地文件还是云端工作区",
+        "description": "从数据存放、离线、同步和价格、协作、数据库和导出几方面比较 Obsidian 与 Notion，看清各自擅长什么，判断笔记该放在本地文件还是云端工作区。"
+      }
+    },
+    {
+      "slug": "markdown-indent",
+      "date": "2026-10-23",
+      "modified": "2026-10-23",
+      "category": "writing",
+      "en": {
+        "title": "Markdown indent: why spaces vanish and what works instead",
+        "description": "Why leading spaces disappear in Markdown, and how to indent with &nbsp;, a full-width space, text-indent, blockquotes, list content columns, tabs or fences."
+      },
+      "zh": {
+        "title": "Markdown 缩进：空格为什么会消失，以及能用的写法",
+        "description": "讲清 Markdown 开头空格消失和变成代码块的原因，以及首行缩进、整块缩进、列表项缩进和制表符各自怎么写。"
+      }
+    },
+    {
+      "slug": "mermaid-sequence-diagram",
+      "date": "2026-10-24",
+      "modified": "2026-10-24",
+      "category": "writing",
+      "en": {
+        "title": "Mermaid sequence diagram: syntax, arrows and a login example",
+        "description": "Write a Mermaid sequence diagram in Markdown: participants, arrow types, activation, notes, loop and alt blocks, autonumber, plus a login flow and fixes."
+      },
+      "zh": {
+        "title": "Mermaid 时序图写法：箭头、激活、分支块和登录示例",
+        "description": "在 Markdown 里写 Mermaid 时序图，覆盖参与者、箭头类型、激活条、注释、分支块、自动编号和登录流程示例。"
+      }
+    },
+    {
+      "slug": "markdown-superscript-subscript",
+      "date": "2026-10-25",
+      "modified": "2026-10-25",
+      "category": "writing",
+      "en": {
+        "title": "Markdown superscript and subscript: what works",
+        "description": "Markdown has no superscript or subscript syntax. Learn when to use sup and sub tags, ^ and ~, Unicode characters or LaTeX math, and what renders in MiaoYan."
+      },
+      "zh": {
+        "title": "Markdown 上标和下标怎么写",
+        "description": "Markdown 没有上标下标语法，看 HTML 标签、^ 与 ~、Unicode 字符和 LaTeX 公式各自适合什么，以及妙言里的渲染结果。"
+      }
+    },
+    {
+      "slug": "mermaid-gantt-chart",
+      "date": "2026-10-26",
+      "modified": "2026-10-26",
+      "category": "writing",
+      "en": {
+        "title": "Mermaid gantt chart: dateFormat, sections and tasks",
+        "description": "Write a Mermaid gantt chart in Markdown: dateFormat vs axisFormat, task ids and after, excludes weekends, todayMarker, tickInterval and a full release plan."
+      },
+      "zh": {
+        "title": "Mermaid 甘特图写法：dateFormat、任务与排除周末",
+        "description": "讲清 dateFormat 和 axisFormat 的区别、任务 id 与 after、排除周末、今日标记，并给出一份完整发布计划。"
+      }
+    },
+    {
+      "slug": "markdown-headings",
+      "date": "2026-10-27",
+      "modified": "2026-10-27",
+      "category": "writing",
+      "en": {
+        "title": "Markdown headings: ATX, setext, levels and anchors",
+        "description": "Write Markdown headings correctly: the # syntax and its required space, setext underlines and the --- trap, heading levels, anchors, and how MiaoYan's outline works."
+      },
+      "zh": {
+        "title": "Markdown 标题怎么写：# 语法、层级和锚点",
+        "description": "讲清 Markdown 标题的 # 写法、下划线写法和 --- 陷阱，以及层级、锚点和妙言的大纲面板。"
       }
     }
   ]

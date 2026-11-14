@@ -7,6 +7,62 @@
     <description>在 Mac、iPhone 和 iPad 上用 Markdown 写作，把笔记存成本地文件的指南。</description>
     <language>zh-CN</language>
     <item>
+      <title>Markdown 标题怎么写：# 语法、层级和锚点</title>
+      <link>https://miaoyan.app/zh/blog/markdown-headings/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-headings/</guid>
+      <pubDate>Tue, 27 Oct 2026 01:00:00 +0000</pubDate>
+      <description>讲清 Markdown 标题的 # 写法、下划线写法和 --- 陷阱，以及层级、锚点和妙言的大纲面板。</description>
+    </item>
+    <item>
+      <title>Mermaid 甘特图写法：dateFormat、任务与排除周末</title>
+      <link>https://miaoyan.app/zh/blog/mermaid-gantt-chart/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/mermaid-gantt-chart/</guid>
+      <pubDate>Mon, 26 Oct 2026 01:00:00 +0000</pubDate>
+      <description>讲清 dateFormat 和 axisFormat 的区别、任务 id 与 after、排除周末、今日标记，并给出一份完整发布计划。</description>
+    </item>
+    <item>
+      <title>Markdown 上标和下标怎么写</title>
+      <link>https://miaoyan.app/zh/blog/markdown-superscript-subscript/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-superscript-subscript/</guid>
+      <pubDate>Sun, 25 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Markdown 没有上标下标语法，看 HTML 标签、^ 与 ~、Unicode 字符和 LaTeX 公式各自适合什么，以及妙言里的渲染结果。</description>
+    </item>
+    <item>
+      <title>Mermaid 时序图写法：箭头、激活、分支块和登录示例</title>
+      <link>https://miaoyan.app/zh/blog/mermaid-sequence-diagram/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/mermaid-sequence-diagram/</guid>
+      <pubDate>Sat, 24 Oct 2026 01:00:00 +0000</pubDate>
+      <description>在 Markdown 里写 Mermaid 时序图，覆盖参与者、箭头类型、激活条、注释、分支块、自动编号和登录流程示例。</description>
+    </item>
+    <item>
+      <title>Markdown 缩进：空格为什么会消失，以及能用的写法</title>
+      <link>https://miaoyan.app/zh/blog/markdown-indent/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-indent/</guid>
+      <pubDate>Fri, 23 Oct 2026 01:00:00 +0000</pubDate>
+      <description>讲清 Markdown 开头空格消失和变成代码块的原因，以及首行缩进、整块缩进、列表项缩进和制表符各自怎么写。</description>
+    </item>
+    <item>
+      <title>Obsidian 和 Notion 怎么选：本地文件还是云端工作区</title>
+      <link>https://miaoyan.app/zh/blog/obsidian-vs-notion/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/obsidian-vs-notion/</guid>
+      <pubDate>Thu, 22 Oct 2026 01:00:00 +0000</pubDate>
+      <description>从数据存放、离线、同步和价格、协作、数据库和导出几方面比较 Obsidian 与 Notion，看清各自擅长什么，判断笔记该放在本地文件还是云端工作区。</description>
+    </item>
+    <item>
+      <title>Markdown 有序列表和无序列表的写法与规则</title>
+      <link>https://miaoyan.app/zh/blog/markdown-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-lists/</guid>
+      <pubDate>Wed, 21 Oct 2026 01:00:00 +0000</pubDate>
+      <description>写对 Markdown 有序列表和无序列表，弄清起始数字、标记切换、松散列表，以及条目里放段落和代码块的缩进。</description>
+    </item>
+    <item>
+      <title>Mermaid 流程图写法：TD、LR、节点形状、连线和子图</title>
+      <link>https://miaoyan.app/zh/blog/mermaid-flowchart/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/mermaid-flowchart/</guid>
+      <pubDate>Tue, 20 Oct 2026 01:00:00 +0000</pubDate>
+      <description>在 Markdown 里写 Mermaid 流程图，选方向、定节点形状、给连线加标签、用子图分组，并排查 end 关键字和引号错误。</description>
+    </item>
+    <item>
       <title>Mac 上怎么选 Markdown 编辑器</title>
       <link>https://miaoyan.app/zh/blog/markdown-editor-for-mac/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-editor-for-mac/</guid>

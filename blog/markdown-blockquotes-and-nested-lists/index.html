@@ -103,14 +103,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -871,7 +871,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 &gt; [!WARNING]
 &gt; Check this before you delete anything.
 </code></pre>
-<p>The others are <code>TIP</code>, <code>IMPORTANT</code> and <code>CAUTION</code>. The preview draws a coloured box with an icon and a title row reading Note, Tip, Important, Warning or Caution. The marker must be alone on its line: <code>&gt; [!NOTE]: text</code> and unknown words such as <code>[!DANGER]</code> stay ordinary quotes, a marker inside a fenced code block is left alone, and a plain quote nested inside a callout stays a quote. GitHub documents the same five types and adds two cautions that matter for notes headed there: limit them to one or two per article, and alerts cannot be nested inside other elements. Apps without callout support show a normal quote with <code>[!NOTE]</code> in it; the <a href="/blog/markdown-cheat-sheet/">cheat sheet</a> files callouts under extensions. MiaoYan converts callouts after rendering, by finding any quote whose first paragraph starts with a marker, so it does not apply that nesting rule: a <code>&gt; [!WARNING]</code> quote indented under a list item becomes a warning box in MiaoYan, while GitHub renders the same lines as a plain quote beginning with <code>[!WARNING]</code>. Keep callouts at the top level of a note that will also be read on GitHub.</p>
+<p>The others are <code>TIP</code>, <code>IMPORTANT</code> and <code>CAUTION</code>. The preview draws a coloured box with an icon and a title row reading Note, Tip, Important, Warning or Caution. Nothing may follow the marker directly except a space or a line break: <code>&gt; [!NOTE]: text</code> and unknown words such as <code>[!DANGER]</code> stay ordinary quotes, a marker inside a fenced code block is left alone, and a plain quote nested inside a callout stays a quote. GitHub documents the same five types and adds two cautions that matter for notes headed there: limit them to one or two per article, and alerts cannot be nested inside other elements. Apps without callout support show a normal quote with <code>[!NOTE]</code> in it; the <a href="/blog/markdown-cheat-sheet/">cheat sheet</a> files callouts under extensions. MiaoYan converts callouts after rendering, by finding any quote whose first paragraph starts with a marker, so it does not apply that nesting rule: a <code>&gt; [!WARNING]</code> quote indented under a list item becomes a warning box in MiaoYan, while GitHub renders the same lines as a plain quote beginning with <code>[!WARNING]</code>. Keep callouts at the top level of a note that will also be read on GitHub.</p>
 <h2 id="how-nested-list-indentation-works">How nested list indentation works</h2>
 <p>A list item owns the following lines that are indented to its content column, the column where the text after the marker starts. A child list is nested when its marker begins at or after that column, so the indent you need depends on the parent's marker:</p>
 <table>

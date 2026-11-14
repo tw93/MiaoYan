@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbfaf6">
 <script>document.documentElement.classList.add('js')</script>
-<title>Markdown collapsible sections with details and summary · MiaoYan Blog</title>
+<title>Collapsible sections in Markdown and GitHub with details · MiaoYan Blog</title>
 <meta name="description" content="Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.">
 <link rel="canonical" href="https://miaoyan.app/blog/markdown-collapsible-sections/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-collapsible-sections/">
@@ -15,11 +15,11 @@
 <link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/blog/markdown-collapsible-sections/">
-<meta property="og:title" content="Markdown collapsible sections with details and summary · MiaoYan Blog">
+<meta property="og:title" content="Collapsible sections in Markdown and GitHub with details · MiaoYan Blog">
 <meta property="og:description" content="Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-14">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -103,14 +103,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -811,7 +811,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown collapsible sections with details and summary", "item": "https://miaoyan.app/blog/markdown-collapsible-sections/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-collapsible-sections/#article", "headline": "Markdown collapsible sections with details and summary", "description": "Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.", "url": "https://miaoyan.app/blog/markdown-collapsible-sections/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-collapsible-sections/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does GitHub support collapsible sections?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. GitHub's documentation describes the <details> and <summary> pattern, using an issue comment as the example, with open to start expanded."}}, {"@type": "Question", "name": "Can I put a heading in the summary?", "acceptedAnswer": {"@type": "Answer", "text": "Markdown heading syntax in the label will not convert, because the label line belongs to an HTML block. Use plain text or an HTML tag. Headings in the body are fine."}}, {"@type": "Question", "name": "Is there a Markdown-only way to fold text?", "acceptedAnswer": {"@type": "Answer", "text": "Not in CommonMark or GFM, which is why every renderer relies on the HTML element."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Collapsible sections in Markdown and GitHub with details", "item": "https://miaoyan.app/blog/markdown-collapsible-sections/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-collapsible-sections/#article", "headline": "Collapsible sections in Markdown and GitHub with details", "description": "Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.", "url": "https://miaoyan.app/blog/markdown-collapsible-sections/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-collapsible-sections/", "datePublished": "2026-10-19", "dateModified": "2026-11-14", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does GitHub support collapsible sections?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. GitHub's documentation describes the <details> and <summary> pattern, using an issue comment as the example, with open to start expanded."}}, {"@type": "Question", "name": "Can I put a heading in the summary?", "acceptedAnswer": {"@type": "Answer", "text": "Markdown heading syntax in the label will not convert, because the label line belongs to an HTML block. Use plain text or an HTML tag. Headings in the body are fine."}}, {"@type": "Question", "name": "Is there a Markdown-only way to fold text?", "acceptedAnswer": {"@type": "Answer", "text": "Not in CommonMark or GFM, which is why every renderer relies on the HTML element."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -831,7 +831,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <main class="blog-post">
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
-    <h1 class="blog-title">Markdown collapsible sections with details and summary</h1>
+    <h1 class="blog-title">Collapsible sections in Markdown and GitHub with details</h1>
     <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-collapsible-sections.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">

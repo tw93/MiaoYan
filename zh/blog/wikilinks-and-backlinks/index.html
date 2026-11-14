@@ -19,7 +19,7 @@
 <meta property="og:description" content="[[wikilink]] 和普通 Markdown 链接有什么不同，妙言支持什么，反向链接怎么生成，可移植性上要付出什么。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-14">
 <meta property="article:section" content="笔记管理">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -27,8 +27,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -813,7 +813,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 笔记里的 Wikilink 与反向链接", "item": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/#article", "headline": "Markdown 笔记里的 Wikilink 与反向链接", "description": "[[wikilink]] 和普通 Markdown 链接有什么不同，妙言支持什么，反向链接怎么生成，可移植性上要付出什么。", "url": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp", "timeRequired": "PT6M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的 wikilink 需要写 .md 扩展名吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要，只写标题，比如 [[项目计划]]。"}}, {"@type": "Question", "name": "支持 [[笔记|别名]] 或 [[笔记#标题]] 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不支持，括号之间的全部文字都会被当作标题，这些写法无法解析。"}}, {"@type": "Question", "name": "代码块里的 wikilink 会生效吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会生效，在行内代码和围栏代码块里它们保持为纯文本。"}}, {"@type": "Question", "name": "有关系图谱吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，Mac 版不带关系图谱，反向链接以列表的形式显示在文档属性面板里。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 笔记里的 Wikilink 与反向链接", "item": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/#article", "headline": "Markdown 笔记里的 Wikilink 与反向链接", "description": "[[wikilink]] 和普通 Markdown 链接有什么不同，妙言支持什么，反向链接怎么生成，可移植性上要付出什么。", "url": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/wikilinks-and-backlinks/", "datePublished": "2026-10-19", "dateModified": "2026-11-14", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp", "timeRequired": "PT6M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的 wikilink 需要写 .md 扩展名吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要，只写标题，比如 [[项目计划]]。"}}, {"@type": "Question", "name": "支持 [[笔记|别名]] 或 [[笔记#标题]] 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不支持，括号之间的全部文字都会被当作标题，这些写法无法解析。"}}, {"@type": "Question", "name": "代码块里的 wikilink 会生效吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会生效，在行内代码和围栏代码块里它们保持为纯文本。"}}, {"@type": "Question", "name": "有关系图谱吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，Mac 版不带关系图谱，反向链接以列表的形式显示在文档属性面板里。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">

@@ -103,14 +103,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -888,7 +888,7 @@ timeline
         April : Copy edit
 ```
 </code></pre>
-<p>Each line is a time period, a colon and an event. More events for the same period take more colons, or go on the next lines starting with a colon. Periods are plain text rather than dates, so <code>Q1</code>, <code>Week 3</code> or <code>Draft</code> work as well as years. <code>section</code> groups periods so they share one colour, and <code>title</code> sits above the chart. Periods run left to right in the order you write them; <code>timeline TD</code> stacks them top to bottom instead, which reads better on a phone or with a long list. <code>TD</code> arrived in Mermaid 11.14.0, the version MiaoYan V4.7.0 bundles, and older Mermaid versions do not accept it. Reach for a timeline when only the order of events matters, and for the Gantt chart above when dates and durations do.</p>
+<p>Each line is a time period, a colon and an event. More events for the same period take more colons, or go on the next lines starting with a colon. Periods are plain text rather than dates, so <code>Q1</code>, <code>Week 3</code> or <code>Draft</code> work as well as years. <code>section</code> groups periods so they share one colour, and <code>title</code> sits above the chart. Periods run left to right in the order you write them; <code>timeline TD</code> stacks them top to bottom instead, which reads better on a phone or with a long list. <code>TD</code> arrived in Mermaid 11.14.0, the version MiaoYan V4.9.0 bundles, and older Mermaid versions do not accept it. Reach for a timeline when only the order of events matters, and for the Gantt chart above when dates and durations do.</p>
 <h2 id="plantuml-and-markmap-as-alternatives">PlantUML and Markmap as alternatives</h2>
 <p>Mermaid covers flowcharts, sequence diagrams, Gantt charts, class diagrams and more, with concise syntax. PlantUML has a longer history with UML, and its syntax is more verbose. Choose it when you already have PlantUML sources or need a UML construct Mermaid draws poorly.</p>
 <pre><code class="language-markdown">```plantuml
@@ -925,7 +925,7 @@ A -&gt; B: message
 </ul>
 <p>A quick test is to insert <code>/mermaid</code> plus <code>Tab</code>, switch to preview with <code>⌘3</code> or split mode with <code>⌘\</code>, and confirm that three connected boxes appear. Then disconnect Wi-Fi, reload, and confirm Mermaid still renders while PlantUML does not.</p>
 <h2 id="limits">Limits</h2>
-<p>Mermaid's rendering depends on the version bundled in the app, Mermaid 11.14.0 as of MiaoYan V4.7.0, so a diagram type added after it is missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter; <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a> covers page breaks in a PDF. For deck use, all three diagram types are initialized in presentation mode, covered in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
+<p>Mermaid's rendering depends on the version bundled in the app, Mermaid 11.14.0 as of MiaoYan V4.9.0, so a diagram type added after it is missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter; <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a> covers page breaks in a PDF. For deck use, all three diagram types are initialized in presentation mode, covered in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
 <p>Related reading: the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> for the fence syntax and <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a> for formulas. MiaoYan is on the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a>, and its source is at <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>.</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="can-i-draw-a-diagram-without-a-network-connection">Can I draw a diagram without a network connection?</h3>

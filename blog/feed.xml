@@ -7,6 +7,62 @@
     <description>Guides to writing in Markdown and keeping Markdown notes as local files on Mac, iPhone and iPad.</description>
     <language>en</language>
     <item>
+      <title>Markdown headings: ATX, setext, levels and anchors</title>
+      <link>https://miaoyan.app/blog/markdown-headings/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-headings/</guid>
+      <pubDate>Tue, 27 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write Markdown headings correctly: the # syntax and its required space, setext underlines and the --- trap, heading levels, anchors, and how MiaoYan&#x27;s outline works.</description>
+    </item>
+    <item>
+      <title>Mermaid gantt chart: dateFormat, sections and tasks</title>
+      <link>https://miaoyan.app/blog/mermaid-gantt-chart/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-gantt-chart/</guid>
+      <pubDate>Mon, 26 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write a Mermaid gantt chart in Markdown: dateFormat vs axisFormat, task ids and after, excludes weekends, todayMarker, tickInterval and a full release plan.</description>
+    </item>
+    <item>
+      <title>Markdown superscript and subscript: what works</title>
+      <link>https://miaoyan.app/blog/markdown-superscript-subscript/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-superscript-subscript/</guid>
+      <pubDate>Sun, 25 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Markdown has no superscript or subscript syntax. Learn when to use sup and sub tags, ^ and ~, Unicode characters or LaTeX math, and what renders in MiaoYan.</description>
+    </item>
+    <item>
+      <title>Mermaid sequence diagram: syntax, arrows and a login example</title>
+      <link>https://miaoyan.app/blog/mermaid-sequence-diagram/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-sequence-diagram/</guid>
+      <pubDate>Sat, 24 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write a Mermaid sequence diagram in Markdown: participants, arrow types, activation, notes, loop and alt blocks, autonumber, plus a login flow and fixes.</description>
+    </item>
+    <item>
+      <title>Markdown indent: why spaces vanish and what works instead</title>
+      <link>https://miaoyan.app/blog/markdown-indent/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-indent/</guid>
+      <pubDate>Fri, 23 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Why leading spaces disappear in Markdown, and how to indent with &amp;nbsp;, a full-width space, text-indent, blockquotes, list content columns, tabs or fences.</description>
+    </item>
+    <item>
+      <title>Obsidian vs Notion: local files or cloud workspace</title>
+      <link>https://miaoyan.app/blog/obsidian-vs-notion/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/obsidian-vs-notion/</guid>
+      <pubDate>Thu, 22 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Compare Obsidian and Notion on where data lives, offline use, sync and prices, collaboration, databases, export and lock-in, then decide which fits.</description>
+    </item>
+    <item>
+      <title>Markdown numbered list and bullet points: syntax and rules</title>
+      <link>https://miaoyan.app/blog/markdown-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-lists/</guid>
+      <pubDate>Wed, 21 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write a Markdown numbered list or bullet points that render right: start numbers, all-1 lists, marker changes, loose lists, and code inside items.</description>
+    </item>
+    <item>
+      <title>Mermaid flowchart syntax: TD, LR, shapes, edges and subgraphs</title>
+      <link>https://miaoyan.app/blog/mermaid-flowchart/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-flowchart/</guid>
+      <pubDate>Tue, 20 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write a Mermaid flowchart in Markdown: pick TD or LR, choose node shapes, label edges, group with subgraphs, and fix the end keyword and quoting errors.</description>
+    </item>
+    <item>
       <title>Choosing a Markdown editor for Mac</title>
       <link>https://miaoyan.app/blog/markdown-editor-for-mac/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-editor-for-mac/</guid>
@@ -70,7 +126,7 @@
       <description>Use iCloud Drive, Nutstore, Dropbox or git to sync a Markdown notes folder, set MiaoYan&#x27;s Note Location, and avoid conflict copies.</description>
     </item>
     <item>
-      <title>Wikilinks and backlinks in Markdown notes</title>
+      <title>Wikilinks: [[note]] links and backlinks in Markdown</title>
       <link>https://miaoyan.app/blog/wikilinks-and-backlinks/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/wikilinks-and-backlinks/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
@@ -133,7 +189,7 @@
       <description>Write fenced and inline code in Markdown, nest a fence inside a fence, tag languages and diff blocks, and see what MiaoYan&#x27;s preview highlights.</description>
     </item>
     <item>
-      <title>Markdown collapsible sections with details and summary</title>
+      <title>Collapsible sections in Markdown and GitHub with details</title>
       <link>https://miaoyan.app/blog/markdown-collapsible-sections/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-collapsible-sections/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
@@ -161,14 +217,14 @@
       <description>Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan hides in preview and export.</description>
     </item>
     <item>
-      <title>Markdown images: syntax, size and broken paths</title>
+      <title>Markdown image syntax: insert, resize and fix paths</title>
       <link>https://miaoyan.app/blog/markdown-images/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-images/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
       <description>Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan stores, previews and exports images.</description>
     </item>
     <item>
-      <title>Markdown line breaks: soft, hard and MiaoYan&#x27;s setting</title>
+      <title>Markdown line break and new line: soft, hard and &lt;br&gt;</title>
       <link>https://miaoyan.app/blog/markdown-line-breaks/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-line-breaks/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
@@ -196,14 +252,14 @@
       <description>Write a Markdown table, align columns, escape pipes, break lines in cells, handle wide tables in MiaoYan, and fall back to HTML for merged cells.</description>
     </item>
     <item>
-      <title>Markdown checkboxes: task lists with - [ ] and - [x]</title>
+      <title>Markdown checkbox and checklist: - [ ] and - [x]</title>
       <link>https://miaoyan.app/blog/markdown-task-lists/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-task-lists/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
       <description>Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep.</description>
     </item>
     <item>
-      <title>Markmap mind maps from a Markdown outline</title>
+      <title>Markmap: turn a Markdown outline into a mind map</title>
       <link>https://miaoyan.app/blog/markmap-mind-maps/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markmap-mind-maps/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
@@ -224,7 +280,7 @@
       <description>What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.</description>
     </item>
     <item>
-      <title>Markdown horizontal line: ---, *** and ___</title>
+      <title>Markdown horizontal line and divider: ---, *** and ___</title>
       <link>https://miaoyan.app/blog/markdown-horizontal-line/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-horizontal-line/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
@@ -238,7 +294,7 @@
       <description>Write comments in Markdown with &lt;!-- --&gt; or [//]: #, see where they stay hidden or leak, and how MiaoYan handles them in preview and export.</description>
     </item>
     <item>
-      <title>Bold, italic and strikethrough in Markdown, and why they break</title>
+      <title>Markdown bold, italic and strikethrough, GitHub included</title>
       <link>https://miaoyan.app/blog/markdown-bold-italic-strikethrough/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/markdown-bold-italic-strikethrough/</guid>
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>

@@ -71,7 +71,7 @@ timeline
 ```
 ````
 
-Each line is a time period, a colon and an event. More events for the same period take more colons, or go on the next lines starting with a colon. Periods are plain text rather than dates, so `Q1`, `Week 3` or `Draft` work as well as years. `section` groups periods so they share one colour, and `title` sits above the chart. Periods run left to right in the order you write them; `timeline TD` stacks them top to bottom instead, which reads better on a phone or with a long list. `TD` arrived in Mermaid 11.14.0, the version MiaoYan V4.7.0 bundles, and older Mermaid versions do not accept it. Reach for a timeline when only the order of events matters, and for the Gantt chart above when dates and durations do.
+Each line is a time period, a colon and an event. More events for the same period take more colons, or go on the next lines starting with a colon. Periods are plain text rather than dates, so `Q1`, `Week 3` or `Draft` work as well as years. `section` groups periods so they share one colour, and `title` sits above the chart. Periods run left to right in the order you write them; `timeline TD` stacks them top to bottom instead, which reads better on a phone or with a long list. `TD` arrived in Mermaid 11.14.0, the version MiaoYan V4.9.0 bundles, and older Mermaid versions do not accept it. Reach for a timeline when only the order of events matters, and for the Gantt chart above when dates and durations do.
 
 ## PlantUML and Markmap as alternatives
 
@@ -124,7 +124,7 @@ A quick test is to insert `/mermaid` plus `Tab`, switch to preview with `⌘3` o
 
 ## Limits
 
-Mermaid's rendering depends on the version bundled in the app, Mermaid 11.14.0 as of MiaoYan V4.7.0, so a diagram type added after it is missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter; [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers page breaks in a PDF. For deck use, all three diagram types are initialized in presentation mode, covered in [Markdown to slides](/blog/markdown-to-slides/).
+Mermaid's rendering depends on the version bundled in the app, Mermaid 11.14.0 as of MiaoYan V4.9.0, so a diagram type added after it is missing. Check a new type with a small example before building on it. PlantUML needs a network connection. Exports to HTML, PDF and image come from the preview, so verify an exported file once if diagrams matter; [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers page breaks in a PDF. For deck use, all three diagram types are initialized in presentation mode, covered in [Markdown to slides](/blog/markdown-to-slides/).
 
 Related reading: the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) for the fence syntax and [LaTeX math in Markdown](/blog/latex-math-in-markdown/) for formulas. MiaoYan is on the [App Store](https://apps.apple.com/app/id6759252269), and its source is at [github.com/tw93/MiaoYan](https://github.com/tw93/MiaoYan).
 

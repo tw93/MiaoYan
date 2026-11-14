@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbfaf6">
 <script>document.documentElement.classList.add('js')</script>
-<title>Markdown checkboxes: task lists with - [ ] and - [x] · MiaoYan Blog</title>
+<title>Markdown checkbox and checklist: - [ ] and - [x] · MiaoYan Blog</title>
 <meta name="description" content="Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep.">
 <link rel="canonical" href="https://miaoyan.app/blog/markdown-task-lists/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-task-lists/">
@@ -15,11 +15,11 @@
 <link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/blog/markdown-task-lists/">
-<meta property="og:title" content="Markdown checkboxes: task lists with - [ ] and - [x] · MiaoYan Blog">
+<meta property="og:title" content="Markdown checkbox and checklist: - [ ] and - [x] · MiaoYan Blog">
 <meta property="og:description" content="Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-task-lists.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-14">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -103,14 +103,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -811,7 +811,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown checkboxes: task lists with - [ ] and - [x]", "item": "https://miaoyan.app/blog/markdown-task-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-task-lists/#article", "headline": "Markdown checkboxes: task lists with - [ ] and - [x]", "description": "Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep.", "url": "https://miaoyan.app/blog/markdown-task-lists/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-task-lists/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-task-lists.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does my checkbox show as [ ] text?", "acceptedAnswer": {"@type": "Answer", "text": "The renderer does not have the GFM tasklist extension, or the syntax is slightly off. Check for a space after the hyphen and after the closing bracket, and for exactly one character between the brackets."}}, {"@type": "Question", "name": "Can I check a box in the file without clicking?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Change the space between the brackets to x. That is all a click does in any editor."}}, {"@type": "Question", "name": "Is [X] with a capital letter valid?", "acceptedAnswer": {"@type": "Answer", "text": "The GFM spec accepts both cases, and MiaoYan's preview draws a checked box for it. MiaoYan's click toggle handles both too, though lowercase is what most tools write."}}, {"@type": "Question", "name": "Do task lists work in exported PDF or HTML?", "acceptedAnswer": {"@type": "Answer", "text": "Exports are made from the preview, so check one exported file if it matters. A checkbox in an exported file is a snapshot of the note, not a way to change it."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown checkbox and checklist: - [ ] and - [x]", "item": "https://miaoyan.app/blog/markdown-task-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-task-lists/#article", "headline": "Markdown checkbox and checklist: - [ ] and - [x]", "description": "Make checkboxes in Markdown with - [ ] and - [x], nest them, see where they render and can be clicked, and find open tasks with ripgrep.", "url": "https://miaoyan.app/blog/markdown-task-lists/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-task-lists/", "datePublished": "2026-10-19", "dateModified": "2026-11-14", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-task-lists.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does my checkbox show as [ ] text?", "acceptedAnswer": {"@type": "Answer", "text": "The renderer does not have the GFM tasklist extension, or the syntax is slightly off. Check for a space after the hyphen and after the closing bracket, and for exactly one character between the brackets."}}, {"@type": "Question", "name": "Can I check a box in the file without clicking?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Change the space between the brackets to x. That is all a click does in any editor."}}, {"@type": "Question", "name": "Is [X] with a capital letter valid?", "acceptedAnswer": {"@type": "Answer", "text": "The GFM spec accepts both cases, and MiaoYan's preview draws a checked box for it. MiaoYan's click toggle handles both too, though lowercase is what most tools write."}}, {"@type": "Question", "name": "Do task lists work in exported PDF or HTML?", "acceptedAnswer": {"@type": "Answer", "text": "Exports are made from the preview, so check one exported file if it matters. A checkbox in an exported file is a snapshot of the note, not a way to change it."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -831,7 +831,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <main class="blog-post">
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
-    <h1 class="blog-title">Markdown checkboxes: task lists with - [ ] and - [x]</h1>
+    <h1 class="blog-title">Markdown checkbox and checklist: - [ ] and - [x]</h1>
     <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-task-lists.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
@@ -888,7 +888,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
-    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-tables/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown tables: alignment, pipes and line breaks</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/markmap-mind-maps/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markmap mind maps from a Markdown outline</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-tables/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown tables: alignment, pipes and line breaks</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/markmap-mind-maps/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markmap: turn a Markdown outline into a mind map</span><span class="blog-related-meta">6 min read</span></a></li></ul>
   </nav>
 </main>
 </div>

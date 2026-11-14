@@ -27,8 +27,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -873,7 +873,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 &gt; [!WARNING]
 &gt; 删除之前先确认这一点。
 </code></pre>
-<p>其余三种是 <code>TIP</code>、<code>IMPORTANT</code> 和 <code>CAUTION</code>，预览里会画出带图标的彩色框，标题行写的是英文的 Note、Tip、Important、Warning 或 Caution。标记必须独占一行，<code>&gt; [!NOTE]: 文字</code> 和 <code>[!DANGER]</code> 这类不认识的词仍然是普通引用，围栏代码块里的标记不会被动，提示框里再嵌一个普通引用也还是引用。GitHub 文档列的是同样五种，并提醒每篇最多用一两个，另外提示框不能嵌在别的元素里面。不支持提示框的应用会显示成一个以 <code>[!NOTE]</code> 开头的普通引用，<a href="/zh/blog/markdown-cheat-sheet/">速查表</a> 把它归在扩展语法里。妙言是在渲染完以后再转提示框的，只要某个引用的第一段以标记开头就会转换，不管这条不能嵌套的规定，所以缩进在列表项下面的 <code>&gt; [!WARNING]</code> 在妙言里是一个警告框，同样几行放到 GitHub 上只是一段以 <code>[!WARNING]</code> 开头的普通引用，笔记也要在 GitHub 上看的话，提示框就放在最外层。</p>
+<p>其余三种是 <code>TIP</code>、<code>IMPORTANT</code> 和 <code>CAUTION</code>，预览里会画出带图标的彩色框，标题行写的是英文的 Note、Tip、Important、Warning 或 Caution。标记后面只能紧跟空格或换行，<code>&gt; [!NOTE]: 文字</code> 和 <code>[!DANGER]</code> 这类不认识的词仍然是普通引用，围栏代码块里的标记不会被动，提示框里再嵌一个普通引用也还是引用。GitHub 文档列的是同样五种，并提醒每篇最多用一两个，另外提示框不能嵌在别的元素里面。不支持提示框的应用会显示成一个以 <code>[!NOTE]</code> 开头的普通引用，<a href="/zh/blog/markdown-cheat-sheet/">速查表</a> 把它归在扩展语法里。妙言是在渲染完以后再转提示框的，只要某个引用的第一段以标记开头就会转换，不管这条不能嵌套的规定，所以缩进在列表项下面的 <code>&gt; [!WARNING]</code> 在妙言里是一个警告框，同样几行放到 GitHub 上只是一段以 <code>[!WARNING]</code> 开头的普通引用，笔记也要在 GitHub 上看的话，提示框就放在最外层。</p>
 <h2 id="嵌套列表的缩进怎么算">嵌套列表的缩进怎么算</h2>
 <p>一个列表项会收下后面缩进到它内容列的行，内容列就是标记后面文字开始的那一列，子列表的标记从这一列或更靠后开始就算嵌套，所以要缩进多少取决于父项的标记：</p>
 <table>

@@ -27,8 +27,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -890,7 +890,7 @@ timeline
         April : Copy edit
 ```
 </code></pre>
-<p>每行是一个时间段、一个冒号和一个事件，同一时间段有多个事件就继续加冒号，或者换行后以冒号开头接着写，时间段只是普通文字，不一定是日期，写 <code>Q1</code>、<code>第三周</code>、<code>草稿</code> 和写年份一样可以。<code>section</code> 把几个时间段归成一组，同组共用一种颜色，<code>title</code> 是图上方的标题。时间段按书写顺序从左往右排，写成 <code>timeline TD</code> 就改成从上往下排，在手机上或条目很多时更好读，这个写法是 Mermaid 11.14.0 才加的，妙言 V4.7.0 自带的就是这个版本，更旧的 Mermaid 不认。只在乎事情的先后时用时间线，要日期和时长就用上面的甘特图。</p>
+<p>每行是一个时间段、一个冒号和一个事件，同一时间段有多个事件就继续加冒号，或者换行后以冒号开头接着写，时间段只是普通文字，不一定是日期，写 <code>Q1</code>、<code>第三周</code>、<code>草稿</code> 和写年份一样可以。<code>section</code> 把几个时间段归成一组，同组共用一种颜色，<code>title</code> 是图上方的标题。时间段按书写顺序从左往右排，写成 <code>timeline TD</code> 就改成从上往下排，在手机上或条目很多时更好读，这个写法是 Mermaid 11.14.0 才加的，妙言 V4.9.0 自带的就是这个版本，更旧的 Mermaid 不认。只在乎事情的先后时用时间线，要日期和时长就用上面的甘特图。</p>
 <h2 id="plantuml-和-markmap-作为补充">PlantUML 和 Markmap 作为补充</h2>
 <p>Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时选它。</p>
 <pre><code class="language-markdown">```plantuml
@@ -927,7 +927,7 @@ A -&gt; B: message
 </ul>
 <p>快速测试一下，输入 <code>/mermaid</code> 再按 <code>Tab</code>，按 <code>⌘3</code> 切到预览或按 <code>⌘\</code> 打开分栏，确认出现三个相连的方框，再断开 Wi-Fi 重新加载，确认 Mermaid 还在渲染而 PlantUML 不再渲染。</p>
 <h2 id="限制">限制</h2>
-<p>Mermaid 的效果取决于应用打包的版本，妙言 V4.7.0 带的是 Mermaid 11.14.0，比它新的图类型会缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次，PDF 怎么分页见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。做演示文稿时三种图表在演示模式里都会初始化，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p>Mermaid 的效果取决于应用打包的版本，妙言 V4.9.0 带的是 Mermaid 11.14.0，比它新的图类型会缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次，PDF 怎么分页见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。做演示文稿时三种图表在演示模式里都会初始化，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
 <p>相关阅读有讲围栏语法的 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 和讲公式的 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。妙言在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 上，源码在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="没有网络能画图吗">没有网络能画图吗</h3>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbfaf6">
 <script>document.documentElement.classList.add('js')</script>
-<title>Markdown horizontal line: ---, *** and ___ · MiaoYan Blog</title>
+<title>Markdown horizontal line and divider: ---, *** and ___ · MiaoYan Blog</title>
 <meta name="description" content="Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan.">
 <link rel="canonical" href="https://miaoyan.app/blog/markdown-horizontal-line/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-horizontal-line/">
@@ -15,11 +15,11 @@
 <link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://miaoyan.app/blog/markdown-horizontal-line/">
-<meta property="og:title" content="Markdown horizontal line: ---, *** and ___ · MiaoYan Blog">
+<meta property="og:title" content="Markdown horizontal line and divider: ---, *** and ___ · MiaoYan Blog">
 <meta property="og:description" content="Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-14">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -103,14 +103,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=621db548d7af") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=410e65face43") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=4de60a7a80d7") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8eba21b3c691") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -811,7 +811,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown horizontal line: ---, *** and ___", "item": "https://miaoyan.app/blog/markdown-horizontal-line/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-horizontal-line/#article", "headline": "Markdown horizontal line: ---, *** and ___", "description": "Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan.", "url": "https://miaoyan.app/blog/markdown-horizontal-line/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-horizontal-line/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which of the three should I use?", "acceptedAnswer": {"@type": "Answer", "text": "--- is the most common and reads best in plain text. Use *** when the line might sit under a paragraph, since it cannot become a heading."}}, {"@type": "Question", "name": "Can I make a rule thicker or colored in Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. Markdown has no syntax for it. Style hr in the CSS of the page that shows the HTML."}}, {"@type": "Question", "name": "Why does my --- become a big heading?", "acceptedAnswer": {"@type": "Answer", "text": "It sits directly under a line of text, which CommonMark reads as a setext heading underline. Add a blank line between them."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown horizontal line and divider: ---, *** and ___", "item": "https://miaoyan.app/blog/markdown-horizontal-line/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-horizontal-line/#article", "headline": "Markdown horizontal line and divider: ---, *** and ___", "description": "Three ways to write a horizontal rule, the setext heading trap under a text line, raw HTML, and what --- also does in MiaoYan.", "url": "https://miaoyan.app/blog/markdown-horizontal-line/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-horizontal-line/", "datePublished": "2026-10-19", "dateModified": "2026-11-14", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-horizontal-line.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Which of the three should I use?", "acceptedAnswer": {"@type": "Answer", "text": "--- is the most common and reads best in plain text. Use *** when the line might sit under a paragraph, since it cannot become a heading."}}, {"@type": "Question", "name": "Can I make a rule thicker or colored in Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. Markdown has no syntax for it. Style hr in the CSS of the page that shows the HTML."}}, {"@type": "Question", "name": "Why does my --- become a big heading?", "acceptedAnswer": {"@type": "Answer", "text": "It sits directly under a line of text, which CommonMark reads as a setext heading underline. Add a blank line between them."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -831,7 +831,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <main class="blog-post">
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
-    <h1 class="blog-title">Markdown horizontal line: ---, *** and ___</h1>
+    <h1 class="blog-title">Markdown horizontal line and divider: ---, *** and ___</h1>
     <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>7 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-horizontal-line.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
