@@ -311,6 +311,39 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertTrue(html.contains("$100$"))
     }
 
+    /// Inline `$` pairs as on GitHub. The pairing ran to the next `$`
+    /// anywhere in the note, so two shell variables paragraphs apart became
+    /// one formula and the heading and list between them were shown as raw
+    /// text, and `$ 5 ... $ 6` hid the bold between two prices.
+    func testInlineDollarPairsWithinAParagraphLikeGitHub() throws {
+        let variables = "Set $PATH first.\n\n## Next\n\n- item\n\nThen $HOME."
+        let variablesHTML = try XCTUnwrap(renderMarkdownHTML(markdown: variables, useGithubLineBreak: false))
+        XCTAssertTrue(variablesHTML.contains("<h2"), variablesHTML)
+        XCTAssertTrue(variablesHTML.contains("<ul"), variablesHTML)
+
+        let prices = "US$ 5 for **a** and $ 6 for **b**"
+        let pricesHTML = try XCTUnwrap(renderMarkdownHTML(markdown: prices, useGithubLineBreak: false))
+        XCTAssertEqual(pricesHTML.components(separatedBy: "<strong>").count - 1, 2, pricesHTML)
+
+        let spaced = "from $a **b** $ to x"
+        XCTAssertEqual(protectMarkdownMath(spaced), spaced)
+        let digitAfter = "cost $a_b$5 and *c*"
+        XCTAssertEqual(protectMarkdownMath(digitAfter), digitAfter)
+
+        let math = "Inline $a_b*c_d$ over\ntwo $x_1\ny_2$ lines."
+        let mathHTML = try XCTUnwrap(renderMarkdownHTML(markdown: math, useGithubLineBreak: false))
+        XCTAssertTrue(mathHTML.contains("$a_b*c_d$"), mathHTML)
+        XCTAssertFalse(mathHTML.contains("<em>"), mathHTML)
+    }
+
+    /// Bare URLs become links, as in GitHub Flavored Markdown.
+    func testBareURLsAreLinked() throws {
+        let html = try XCTUnwrap(
+            renderMarkdownHTML(markdown: "See https://miaoyan.app and www.example.com.", useGithubLineBreak: false))
+        XCTAssertTrue(html.contains(#"<a href="https://miaoyan.app">"#), html)
+        XCTAssertTrue(html.contains(#"<a href="http://www.example.com">"#), html)
+    }
+
     func testCoefficientParenthesisMathDoesNotConsumeFollowingTable() throws {
         let markdown = #"""
             $2(k-2)$

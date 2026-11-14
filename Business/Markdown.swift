@@ -19,7 +19,7 @@ private let markdownMathDelimiters = [
     MarkdownMathDelimiter(left: Array("\\(".unicodeScalars), right: Array("\\)".unicodeScalars)),
     MarkdownMathDelimiter(left: Array("\\[".unicodeScalars), right: Array("\\]".unicodeScalars)),
 ]
-private let markdownExtensionNames = ["table", "footnotes", "strikethrough", "tasklist"]
+private let markdownExtensionNames = ["table", "footnotes", "strikethrough", "tasklist", "autolink"]
 private let katexIgnoredHTMLRegex: NSRegularExpression = {
     let pattern = #"<(script|noscript|style|textarea|pre|code|option)\b[^>]*>[\s\S]*?</\1\s*>"#
     guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
@@ -70,6 +70,7 @@ func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false, lite
                 matches($0.left, in: scalars, at: index, codeMask: codeMask)
                     && !isEscaped(in: scalars, at: index)
                     && !isCurrencyDollar($0.left, in: scalars, at: index)
+                    && canOpenInlineDollar($0.left, in: scalars, at: index)
             }),
             let end = findMathEnd(
                 delimiter.right,
@@ -112,9 +113,13 @@ private func findMathEnd(
         if codeMask[index] {
             return nil
         }
+        if isInlineDollar(delimiter), startsBlankLine(in: scalars, at: index) {
+            return nil
+        }
         if braceLevel <= 0,
             matches(delimiter, in: scalars, at: index, codeMask: codeMask),
-            !isCurrencyDollar(delimiter, in: scalars, at: index)
+            !isCurrencyDollar(delimiter, in: scalars, at: index),
+            canCloseInlineDollar(delimiter, in: scalars, at: index, from: start)
         {
             return index
         }
@@ -149,6 +154,49 @@ private func matches(
         }
     }
     return true
+}
+
+// Inline `$` pairs the way GitHub pairs it, so prose with shell variables
+// or prices (`Set $PATH first.` then, paragraphs later, `$HOME`) is not one
+// formula that hides the headings and lists between them: the range stays in
+// its paragraph, the opening `$` is not followed by whitespace, and the
+// closing one is not preceded by whitespace or followed by a digit.
+
+private func isInlineDollar(_ delimiter: [Unicode.Scalar]) -> Bool {
+    delimiter.count == 1 && delimiter[0].value == 36
+}
+
+private func isWhitespace(_ scalar: Unicode.Scalar) -> Bool {
+    scalar.properties.isWhitespace
+}
+
+private func canOpenInlineDollar(_ delimiter: [Unicode.Scalar], in scalars: [Unicode.Scalar], at index: Int) -> Bool {
+    guard isInlineDollar(delimiter) else { return true }
+    return index + 1 < scalars.count && !isWhitespace(scalars[index + 1])
+}
+
+private func canCloseInlineDollar(
+    _ delimiter: [Unicode.Scalar],
+    in scalars: [Unicode.Scalar],
+    at index: Int,
+    from start: Int
+) -> Bool {
+    guard isInlineDollar(delimiter) else { return true }
+    guard index > start, !isWhitespace(scalars[index - 1]) else { return false }
+    return index + 1 >= scalars.count || !(48...57).contains(scalars[index + 1].value)
+}
+
+/// A line break followed by a line holding only spaces or tabs.
+private func startsBlankLine(in scalars: [Unicode.Scalar], at index: Int) -> Bool {
+    guard isLineBreak(scalars[index]) else { return false }
+    var cursor = index + 1
+    if scalars[index].value == 13, cursor < scalars.count, scalars[cursor].value == 10 {
+        cursor += 1
+    }
+    while cursor < scalars.count, scalars[cursor].value == 32 || scalars[cursor].value == 9 {
+        cursor += 1
+    }
+    return cursor < scalars.count && isLineBreak(scalars[cursor])
 }
 
 /// The same class the preview's currency guard uses, so KaTeX skips it.
