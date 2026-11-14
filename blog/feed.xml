@@ -7,6 +7,76 @@
     <description>Guides to writing in Markdown and keeping Markdown notes as local files on Mac, iPhone and iPad.</description>
     <language>en</language>
     <item>
+      <title>LaTeX math symbols: Greek letters, arrows, operators and more</title>
+      <link>https://miaoyan.app/blog/latex-math-symbols/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/latex-math-symbols/</guid>
+      <pubDate>Sat, 14 Nov 2026 01:00:00 +0000</pubDate>
+      <description>A KaTeX-checked list of LaTeX math symbols: Greek letters, operators, relations, arrows, big operators, accents, delimiters and spacing, plus common gotchas.</description>
+    </item>
+    <item>
+      <title>Mermaid class diagram syntax: classes, relationships, generics</title>
+      <link>https://miaoyan.app/blog/mermaid-class-diagram/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-class-diagram/</guid>
+      <pubDate>Fri, 13 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Write a Mermaid classDiagram in Markdown: declare classes and members, set visibility, add generics, pick relationship arrows and cardinality, and preview it.</description>
+    </item>
+    <item>
+      <title>Markdown to image: export a note as a long PNG</title>
+      <link>https://miaoyan.app/blog/markdown-to-image/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-to-image/</guid>
+      <pubDate>Thu, 12 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Turn a Markdown note into one long PNG for chat or social posts with MiaoYan, a Chrome full-page screenshot, or Pandoc plus DevTools, with width tips.</description>
+    </item>
+    <item>
+      <title>Markdown emoji: Unicode characters vs :shortcodes:</title>
+      <link>https://miaoyan.app/blog/markdown-emoji/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-emoji/</guid>
+      <pubDate>Wed, 11 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Type emoji as Unicode or as GitHub-style shortcodes, see where each renders, and avoid broken heading anchors when an emoji sits in a heading.</description>
+    </item>
+    <item>
+      <title>HTML in Markdown: which tags work and where</title>
+      <link>https://miaoyan.app/blog/markdown-html-tags/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-html-tags/</guid>
+      <pubDate>Tue, 10 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Use HTML in Markdown on purpose: CommonMark&#x27;s HTML block rules, the nine tags GFM filters, what GitHub strips, and which tags work in MiaoYan&#x27;s preview.</description>
+    </item>
+    <item>
+      <title>Markdown resume: write a CV in .md and export a PDF</title>
+      <link>https://miaoyan.app/blog/markdown-resume/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-resume/</guid>
+      <pubDate>Mon, 09 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Write your resume as one Markdown file, keep it in git, and export a clean A4 PDF with Pandoc and CSS or MiaoYan, with a full sample and page-break tips.</description>
+    </item>
+    <item>
+      <title>Markdown callouts: GitHub alerts, Obsidian and more</title>
+      <link>https://miaoyan.app/blog/markdown-callouts/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-callouts/</guid>
+      <pubDate>Sun, 08 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Write a Markdown callout in GitHub alerts, Obsidian and MkDocs Material or Docusaurus syntax, and see how each looks where the renderer does not know it.</description>
+    </item>
+    <item>
+      <title>AI agent Markdown notes: let Claude Code read them safely</title>
+      <link>https://miaoyan.app/blog/ai-agents-markdown-notes/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/ai-agents-markdown-notes/</guid>
+      <pubDate>Sat, 07 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Why plain Markdown files suit Claude Code and Codex, how to give an agent your notes folder with git and read-only tasks, and what MiaoYan&#x27;s skill covers.</description>
+    </item>
+    <item>
+      <title>Markdown highlight text: ==mark== syntax and the mark tag</title>
+      <link>https://miaoyan.app/blog/markdown-highlight-text/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-highlight-text/</guid>
+      <pubDate>Fri, 06 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Highlight text in Markdown with the HTML mark tag, find out where ==text== works, change the colour with CSS, and mark added lines in code with diff.</description>
+    </item>
+    <item>
+      <title>Markdown keyboard shortcuts on Mac: macOS and MiaoYan</title>
+      <link>https://miaoyan.app/blog/markdown-keyboard-shortcuts-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-keyboard-shortcuts-mac/</guid>
+      <pubDate>Thu, 05 Nov 2026 01:00:00 +0000</pubDate>
+      <description>Look up the macOS text-editing keys and the MiaoYan V4.9.0 shortcuts for views, formatting, notes, search and export, and remap any of them in System Settings.</description>
+    </item>
+    <item>
       <title>Mermaid ER diagram syntax: entities, crow&#x27;s foot and keys</title>
       <link>https://miaoyan.app/blog/mermaid-er-diagram/</link>
       <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-er-diagram/</guid>

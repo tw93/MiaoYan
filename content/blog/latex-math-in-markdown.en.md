@@ -60,13 +60,13 @@ Engines also differ in speed and LaTeX coverage. KaTeX is fast and renders synch
 
 ## Dollar signs and prices
 
-A single `$` is also a currency symbol, which is the most common pitfall. MiaoYan has a guard for it: a dollar sign followed by digits and then something that is not a math continuation is treated as currency. So `It costs $5 today` stays text, while `$2+2$` is still math, because a `+` after the digits counts as math. Other editors may not have this guard, so escape the dollar sign if the note has to look right everywhere:
+A single `$` is also a currency symbol, which is the most common pitfall. MiaoYan has a guard for it: a dollar sign followed by digits and then something that is not a math continuation is treated as currency. So `It costs $5 today` stays text, while `$2+2$` is still math, because a `+` after the digits counts as math. The guard stops at letters: `$5M and $10M` is read as one formula between the two dollars. A backslash does not help in MiaoYan, because `\$` is an ordinary Markdown escape and the parser turns it into a bare `$` before the math pass scans the text. When an amount must stay text, put it in a code span or reword it:
 
 ```markdown
-The ticket costs \$5, and the upgrade costs \$10.
+The budget grew from `$5M` to 10 million dollars.
 ```
 
-A backslash before the dollar sign tells the renderer to leave it alone. MiaoYan enables escape processing for this, and its pre-pass skips escaped delimiters.
+Code spans and fenced blocks are skipped by the math pass, so this looks the same in every editor.
 
 ## What goes wrong and how to check
 
@@ -85,10 +85,10 @@ $$
 \sum_{i=1}^{n} i = \frac{n(n+1)}{2}
 $$
 
-Price: \$5
+Price: $5 today
 ```
 
-If you see a root sign, a sum with limits, and a literal `$5`, the engine and the escape both work. Math also works inside MiaoYan's presentation mode, covered in [Markdown to slides](/blog/markdown-to-slides/). For the rest of the syntax, see the [Markdown cheat sheet](/blog/markdown-cheat-sheet/).
+If you see a root sign, a sum with limits, and a literal `$5`, the engine and the currency guard both work. Math also works inside MiaoYan's presentation mode, covered in [Markdown to slides](/blog/markdown-to-slides/). For the rest of the syntax, see the [Markdown cheat sheet](/blog/markdown-cheat-sheet/).
 
 ## Limits to know
 
@@ -108,7 +108,7 @@ If you need a specific MathJax-only extension, use an editor that offers it. For
 
 ### How do I write a literal dollar sign?
 
-Put a backslash before it, as in `\$5`, or put it in inline code.
+In MiaoYan a price such as `$5` followed by a space or punctuation already stays text. For anything else, such as `$5M`, put it in inline code; a backslash is removed by the Markdown parser before the math pass sees it.
 
 ### Can I number equations?
 

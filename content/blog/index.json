@@ -31,7 +31,7 @@
     {
       "slug": "latex-math-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
         "title": "LaTeX math in Markdown: syntax, KaTeX and pitfalls",
@@ -45,7 +45,7 @@
     {
       "slug": "mermaid-diagrams-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
         "title": "Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples",
@@ -493,7 +493,7 @@
     {
       "slug": "markdown-blockquotes-and-nested-lists",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-14",
       "category": "writing",
       "en": {
         "title": "Markdown blockquotes and nested lists: indent rules",
@@ -782,6 +782,146 @@
       "zh": {
         "title": "Mermaid ER 图写法：实体、鸭脚符号和主外键",
         "description": "在 Markdown 里写 Mermaid erDiagram，读懂鸭脚基数标记，区分实线虚线，给属性加 PK、FK、UK，并排查常见错误。"
+      }
+    },
+    {
+      "slug": "markdown-keyboard-shortcuts-mac",
+      "date": "2026-11-05",
+      "modified": "2026-11-05",
+      "category": "notes",
+      "en": {
+        "title": "Markdown keyboard shortcuts on Mac: macOS and MiaoYan",
+        "description": "Look up the macOS text-editing keys and the MiaoYan V4.9.0 shortcuts for views, formatting, notes, search and export, and remap any of them in System Settings."
+      },
+      "zh": {
+        "title": "Mac 上的 Markdown 键盘快捷键：macOS 与妙言",
+        "description": "查 macOS 文本编辑按键和妙言 V4.9.0 的快捷键，按视图、格式、笔记、搜索和导出分组，并在系统设置里改键。"
+      }
+    },
+    {
+      "slug": "markdown-highlight-text",
+      "date": "2026-11-06",
+      "modified": "2026-11-06",
+      "category": "writing",
+      "en": {
+        "title": "Markdown highlight text: ==mark== syntax and the mark tag",
+        "description": "Highlight text in Markdown with the HTML mark tag, find out where ==text== works, change the colour with CSS, and mark added lines in code with diff."
+      },
+      "zh": {
+        "title": "Markdown 高亮文字怎么写：==语法和 mark 标签",
+        "description": "说明 Markdown 里 mark 标签和 ==文字== 各在哪里有效，怎么用 CSS 改颜色，以及代码块里用 diff 标出新增行。"
+      }
+    },
+    {
+      "slug": "ai-agents-markdown-notes",
+      "date": "2026-11-07",
+      "modified": "2026-11-07",
+      "category": "notes",
+      "en": {
+        "title": "AI agent Markdown notes: let Claude Code read them safely",
+        "description": "Why plain Markdown files suit Claude Code and Codex, how to give an agent your notes folder with git and read-only tasks, and what MiaoYan's skill covers."
+      },
+      "zh": {
+        "title": "让 AI Agent 读写 Markdown 笔记，怎么安全做",
+        "description": "纯 Markdown 文件为什么适合 Claude Code 和 Codex，怎样配合 git 和只读任务开放笔记，妙言 Skill 与 miao 命令管什么。"
+      }
+    },
+    {
+      "slug": "markdown-callouts",
+      "date": "2026-11-08",
+      "modified": "2026-11-08",
+      "category": "writing",
+      "en": {
+        "title": "Markdown callouts: GitHub alerts, Obsidian and more",
+        "description": "Write a Markdown callout in GitHub alerts, Obsidian and MkDocs Material or Docusaurus syntax, and see how each looks where the renderer does not know it."
+      },
+      "zh": {
+        "title": "Markdown 提示框：GitHub、Obsidian 等写法",
+        "description": "写出 GitHub alerts、Obsidian、MkDocs Material 和 Docusaurus 的提示框，并看清它们在不支持的应用里会变成什么样。"
+      }
+    },
+    {
+      "slug": "markdown-resume",
+      "date": "2026-11-09",
+      "modified": "2026-11-09",
+      "category": "writing",
+      "en": {
+        "title": "Markdown resume: write a CV in .md and export a PDF",
+        "description": "Write your resume as one Markdown file, keep it in git, and export a clean A4 PDF with Pandoc and CSS or MiaoYan, with a full sample and page-break tips."
+      },
+      "zh": {
+        "title": "用 Markdown 写简历并导出 PDF",
+        "description": "把简历写成一个 .md 文件放进 git，用 Pandoc 或妙言导出 A4 PDF，附完整示例、分页和多岗位版本管理。"
+      }
+    },
+    {
+      "slug": "markdown-html-tags",
+      "date": "2026-11-10",
+      "modified": "2026-11-10",
+      "category": "writing",
+      "en": {
+        "title": "HTML in Markdown: which tags work and where",
+        "description": "Use HTML in Markdown on purpose: CommonMark's HTML block rules, the nine tags GFM filters, what GitHub strips, and which tags work in MiaoYan's preview."
+      },
+      "zh": {
+        "title": "Markdown 里能用 HTML 标签吗",
+        "description": "弄清 CommonMark 的 HTML 块规则、GFM 过滤的九个标签、GitHub 额外去掉的内容，以及妙言预览里哪些标签能用。"
+      }
+    },
+    {
+      "slug": "markdown-emoji",
+      "date": "2026-11-11",
+      "modified": "2026-11-11",
+      "category": "writing",
+      "en": {
+        "title": "Markdown emoji: Unicode characters vs :shortcodes:",
+        "description": "Type emoji as Unicode or as GitHub-style shortcodes, see where each renders, and avoid broken heading anchors when an emoji sits in a heading."
+      },
+      "zh": {
+        "title": "Markdown 里怎么写 emoji，字符和短代码的区别",
+        "description": "了解直接输入字符和 :shortcode: 短代码的区别、各自在哪里渲染，以及标题里放 emoji 时锚点怎么变。"
+      }
+    },
+    {
+      "slug": "markdown-to-image",
+      "date": "2026-11-12",
+      "modified": "2026-11-12",
+      "category": "writing",
+      "en": {
+        "title": "Markdown to image: export a note as a long PNG",
+        "description": "Turn a Markdown note into one long PNG for chat or social posts with MiaoYan, a Chrome full-page screenshot, or Pandoc plus DevTools, with width tips."
+      },
+      "zh": {
+        "title": "Markdown 转图片：把笔记导出成一张长图",
+        "description": "用妙言、Chrome 整页截图或 Pandoc 加开发者工具，把 Markdown 笔记做成一张长 PNG，发到聊天或社交平台。"
+      }
+    },
+    {
+      "slug": "mermaid-class-diagram",
+      "date": "2026-11-13",
+      "modified": "2026-11-13",
+      "category": "writing",
+      "en": {
+        "title": "Mermaid class diagram syntax: classes, relationships, generics",
+        "description": "Write a Mermaid classDiagram in Markdown: declare classes and members, set visibility, add generics, pick relationship arrows and cardinality, and preview it."
+      },
+      "zh": {
+        "title": "Mermaid 类图语法：类、成员、关系和泛型怎么写",
+        "description": "在 Markdown 里写 Mermaid classDiagram，成员可见性、泛型、八种关系箭头、数量关系、注解和命名空间，附一个笔记应用例子。"
+      }
+    },
+    {
+      "slug": "latex-math-symbols",
+      "date": "2026-11-14",
+      "modified": "2026-11-14",
+      "category": "writing",
+      "en": {
+        "title": "LaTeX math symbols: Greek letters, arrows, operators and more",
+        "description": "A KaTeX-checked list of LaTeX math symbols: Greek letters, operators, relations, arrows, big operators, accents, delimiters and spacing, plus common gotchas."
+      },
+      "zh": {
+        "title": "LaTeX 数学符号速查：希腊字母、箭头、运算符",
+        "description": "按类别列出 KaTeX 支持的 LaTeX 数学符号命令，包括上下限、括号和间距，并说明妙言里公式的常见问题，复制命令就能直接用。"
       }
     }
   ]

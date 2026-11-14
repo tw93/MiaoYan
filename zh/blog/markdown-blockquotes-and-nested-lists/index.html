@@ -19,7 +19,7 @@
 <meta property="og:description" content="引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-14">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -27,8 +27,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=72cfcccbbb3c" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=6d066c3f7f07" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=72cfcccbbb3c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=6d066c3f7f07") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -813,7 +813,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 引用与嵌套列表的缩进规则", "item": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/#article", "headline": "Markdown 引用与嵌套列表的缩进规则", "description": "引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。", "url": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "引用可以放在列表项里面吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以。把 > 行缩进到该项的内容列，- 下面就是两个空格，每一行都带同样的缩进。"}}, {"@type": "Question", "name": "为什么我的引用丢了第二行？", "acceptedAnswer": {"@type": "Answer", "text": "那一行不算段落延续，比如它开启了列表，或者前面有空行。每行行首都写 >。"}}, {"@type": "Question", "name": "所有 Markdown 应用都支持提示框吗？", "acceptedAnswer": {"@type": "Answer", "text": "不是。GitHub 和妙言会渲染，别的应用会显示成以 [!NOTE] 开头的普通引用。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 引用与嵌套列表的缩进规则", "item": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/#article", "headline": "Markdown 引用与嵌套列表的缩进规则", "description": "引用、嵌套引用和提示框怎么写，嵌套列表为什么要缩进 2、3 或 4 个空格，四个空格何时变成代码块。", "url": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-blockquotes-and-nested-lists/", "datePublished": "2026-10-19", "dateModified": "2026-11-14", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-blockquotes-and-nested-lists.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "引用可以放在列表项里面吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以。把 > 行缩进到该项的内容列，- 下面就是两个空格，每一行都带同样的缩进。"}}, {"@type": "Question", "name": "为什么我的引用丢了第二行？", "acceptedAnswer": {"@type": "Answer", "text": "那一行不算段落延续，比如它开启了列表，或者前面有空行。每行行首都写 >。"}}, {"@type": "Question", "name": "所有 Markdown 应用都支持提示框吗？", "acceptedAnswer": {"@type": "Answer", "text": "不是。GitHub 和妙言会渲染，别的应用会显示成以 [!NOTE] 开头的普通引用。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">

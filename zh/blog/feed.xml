@@ -7,6 +7,76 @@
     <description>在 Mac、iPhone 和 iPad 上用 Markdown 写作，把笔记存成本地文件的指南。</description>
     <language>zh-CN</language>
     <item>
+      <title>LaTeX 数学符号速查：希腊字母、箭头、运算符</title>
+      <link>https://miaoyan.app/zh/blog/latex-math-symbols/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/latex-math-symbols/</guid>
+      <pubDate>Sat, 14 Nov 2026 01:00:00 +0000</pubDate>
+      <description>按类别列出 KaTeX 支持的 LaTeX 数学符号命令，包括上下限、括号和间距，并说明妙言里公式的常见问题，复制命令就能直接用。</description>
+    </item>
+    <item>
+      <title>Mermaid 类图语法：类、成员、关系和泛型怎么写</title>
+      <link>https://miaoyan.app/zh/blog/mermaid-class-diagram/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/mermaid-class-diagram/</guid>
+      <pubDate>Fri, 13 Nov 2026 01:00:00 +0000</pubDate>
+      <description>在 Markdown 里写 Mermaid classDiagram，成员可见性、泛型、八种关系箭头、数量关系、注解和命名空间，附一个笔记应用例子。</description>
+    </item>
+    <item>
+      <title>Markdown 转图片：把笔记导出成一张长图</title>
+      <link>https://miaoyan.app/zh/blog/markdown-to-image/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-to-image/</guid>
+      <pubDate>Thu, 12 Nov 2026 01:00:00 +0000</pubDate>
+      <description>用妙言、Chrome 整页截图或 Pandoc 加开发者工具，把 Markdown 笔记做成一张长 PNG，发到聊天或社交平台。</description>
+    </item>
+    <item>
+      <title>Markdown 里怎么写 emoji，字符和短代码的区别</title>
+      <link>https://miaoyan.app/zh/blog/markdown-emoji/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-emoji/</guid>
+      <pubDate>Wed, 11 Nov 2026 01:00:00 +0000</pubDate>
+      <description>了解直接输入字符和 :shortcode: 短代码的区别、各自在哪里渲染，以及标题里放 emoji 时锚点怎么变。</description>
+    </item>
+    <item>
+      <title>Markdown 里能用 HTML 标签吗</title>
+      <link>https://miaoyan.app/zh/blog/markdown-html-tags/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-html-tags/</guid>
+      <pubDate>Tue, 10 Nov 2026 01:00:00 +0000</pubDate>
+      <description>弄清 CommonMark 的 HTML 块规则、GFM 过滤的九个标签、GitHub 额外去掉的内容，以及妙言预览里哪些标签能用。</description>
+    </item>
+    <item>
+      <title>用 Markdown 写简历并导出 PDF</title>
+      <link>https://miaoyan.app/zh/blog/markdown-resume/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-resume/</guid>
+      <pubDate>Mon, 09 Nov 2026 01:00:00 +0000</pubDate>
+      <description>把简历写成一个 .md 文件放进 git，用 Pandoc 或妙言导出 A4 PDF，附完整示例、分页和多岗位版本管理。</description>
+    </item>
+    <item>
+      <title>Markdown 提示框：GitHub、Obsidian 等写法</title>
+      <link>https://miaoyan.app/zh/blog/markdown-callouts/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-callouts/</guid>
+      <pubDate>Sun, 08 Nov 2026 01:00:00 +0000</pubDate>
+      <description>写出 GitHub alerts、Obsidian、MkDocs Material 和 Docusaurus 的提示框，并看清它们在不支持的应用里会变成什么样。</description>
+    </item>
+    <item>
+      <title>让 AI Agent 读写 Markdown 笔记，怎么安全做</title>
+      <link>https://miaoyan.app/zh/blog/ai-agents-markdown-notes/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/ai-agents-markdown-notes/</guid>
+      <pubDate>Sat, 07 Nov 2026 01:00:00 +0000</pubDate>
+      <description>纯 Markdown 文件为什么适合 Claude Code 和 Codex，怎样配合 git 和只读任务开放笔记，妙言 Skill 与 miao 命令管什么。</description>
+    </item>
+    <item>
+      <title>Markdown 高亮文字怎么写：==语法和 mark 标签</title>
+      <link>https://miaoyan.app/zh/blog/markdown-highlight-text/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-highlight-text/</guid>
+      <pubDate>Fri, 06 Nov 2026 01:00:00 +0000</pubDate>
+      <description>说明 Markdown 里 mark 标签和 ==文字== 各在哪里有效，怎么用 CSS 改颜色，以及代码块里用 diff 标出新增行。</description>
+    </item>
+    <item>
+      <title>Mac 上的 Markdown 键盘快捷键：macOS 与妙言</title>
+      <link>https://miaoyan.app/zh/blog/markdown-keyboard-shortcuts-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-keyboard-shortcuts-mac/</guid>
+      <pubDate>Thu, 05 Nov 2026 01:00:00 +0000</pubDate>
+      <description>查 macOS 文本编辑按键和妙言 V4.9.0 的快捷键，按视图、格式、笔记、搜索和导出分组，并在系统设置里改键。</description>
+    </item>
+    <item>
       <title>Mermaid ER 图写法：实体、鸭脚符号和主外键</title>
       <link>https://miaoyan.app/zh/blog/mermaid-er-diagram/</link>
       <guid isPermaLink="true">https://miaoyan.app/zh/blog/mermaid-er-diagram/</guid>

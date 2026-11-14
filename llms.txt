@@ -97,6 +97,16 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown definition list: syntax, support and fallbacks](https://miaoyan.app/blog/markdown-definition-lists/): Standard Markdown has no definition list. Learn the colon syntax, which tools render it, and the HTML and table fallbacks that work in MiaoYan.
 - [How to write a README: sections, links and previews](https://miaoyan.app/blog/how-to-write-a-readme/): Write a README.md that GitHub renders well: where it is found, a section order that works, relative links, badges, the outline, and what to preview first.
 - [Mermaid ER diagram syntax: entities, crow's foot and keys](https://miaoyan.app/blog/mermaid-er-diagram/): Write a Mermaid erDiagram in Markdown: read crow's foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema.
+- [Markdown keyboard shortcuts on Mac: macOS and MiaoYan](https://miaoyan.app/blog/markdown-keyboard-shortcuts-mac/): Look up the macOS text-editing keys and the MiaoYan V4.9.0 shortcuts for views, formatting, notes, search and export, and remap any of them in System Settings.
+- [Markdown highlight text: ==mark== syntax and the mark tag](https://miaoyan.app/blog/markdown-highlight-text/): Highlight text in Markdown with the HTML mark tag, find out where ==text== works, change the colour with CSS, and mark added lines in code with diff.
+- [AI agent Markdown notes: let Claude Code read them safely](https://miaoyan.app/blog/ai-agents-markdown-notes/): Why plain Markdown files suit Claude Code and Codex, how to give an agent your notes folder with git and read-only tasks, and what MiaoYan's skill covers.
+- [Markdown callouts: GitHub alerts, Obsidian and more](https://miaoyan.app/blog/markdown-callouts/): Write a Markdown callout in GitHub alerts, Obsidian and MkDocs Material or Docusaurus syntax, and see how each looks where the renderer does not know it.
+- [Markdown resume: write a CV in .md and export a PDF](https://miaoyan.app/blog/markdown-resume/): Write your resume as one Markdown file, keep it in git, and export a clean A4 PDF with Pandoc and CSS or MiaoYan, with a full sample and page-break tips.
+- [HTML in Markdown: which tags work and where](https://miaoyan.app/blog/markdown-html-tags/): Use HTML in Markdown on purpose: CommonMark's HTML block rules, the nine tags GFM filters, what GitHub strips, and which tags work in MiaoYan's preview.
+- [Markdown emoji: Unicode characters vs :shortcodes:](https://miaoyan.app/blog/markdown-emoji/): Type emoji as Unicode or as GitHub-style shortcodes, see where each renders, and avoid broken heading anchors when an emoji sits in a heading.
+- [Markdown to image: export a note as a long PNG](https://miaoyan.app/blog/markdown-to-image/): Turn a Markdown note into one long PNG for chat or social posts with MiaoYan, a Chrome full-page screenshot, or Pandoc plus DevTools, with width tips.
+- [Mermaid class diagram syntax: classes, relationships, generics](https://miaoyan.app/blog/mermaid-class-diagram/): Write a Mermaid classDiagram in Markdown: declare classes and members, set visibility, add generics, pick relationship arrows and cardinality, and preview it.
+- [LaTeX math symbols: Greek letters, arrows, operators and more](https://miaoyan.app/blog/latex-math-symbols/): A KaTeX-checked list of LaTeX math symbols: Greek letters, operators, relations, arrows, big operators, accents, delimiters and spacing, plus common gotchas.
 
 - [Mac 上怎么选 Markdown 编辑器](https://miaoyan.app/zh/blog/markdown-editor-for-mac/): 从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、iA Writer、Bear、Zettlr、VS Code 与妙言。
 - [Markdown 语法速查与 GFM 差异](https://miaoyan.app/zh/blog/markdown-cheat-sheet/): 常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。
@@ -154,4 +164,14 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown 定义列表怎么写，哪里能用，不能用怎么办](https://miaoyan.app/zh/blog/markdown-definition-lists/): CommonMark 和 GFM 都没有定义列表，学会冒号写法、支持它的工具，以及 HTML 和表格这些通用替代写法。
 - [README 怎么写：章节顺序、链接与预览](https://miaoyan.app/zh/blog/how-to-write-a-readme/): 写出在 GitHub 上渲染良好的 README.md，包括放哪里、章节顺序、相对链接、徽章，以及推送前的预览。
 - [Mermaid ER 图写法：实体、鸭脚符号和主外键](https://miaoyan.app/zh/blog/mermaid-er-diagram/): 在 Markdown 里写 Mermaid erDiagram，读懂鸭脚基数标记，区分实线虚线，给属性加 PK、FK、UK，并排查常见错误。
+- [Mac 上的 Markdown 键盘快捷键：macOS 与妙言](https://miaoyan.app/zh/blog/markdown-keyboard-shortcuts-mac/): 查 macOS 文本编辑按键和妙言 V4.9.0 的快捷键，按视图、格式、笔记、搜索和导出分组，并在系统设置里改键。
+- [Markdown 高亮文字怎么写：==语法和 mark 标签](https://miaoyan.app/zh/blog/markdown-highlight-text/): 说明 Markdown 里 mark 标签和 ==文字== 各在哪里有效，怎么用 CSS 改颜色，以及代码块里用 diff 标出新增行。
+- [让 AI Agent 读写 Markdown 笔记，怎么安全做](https://miaoyan.app/zh/blog/ai-agents-markdown-notes/): 纯 Markdown 文件为什么适合 Claude Code 和 Codex，怎样配合 git 和只读任务开放笔记，妙言 Skill 与 miao 命令管什么。
+- [Markdown 提示框：GitHub、Obsidian 等写法](https://miaoyan.app/zh/blog/markdown-callouts/): 写出 GitHub alerts、Obsidian、MkDocs Material 和 Docusaurus 的提示框，并看清它们在不支持的应用里会变成什么样。
+- [用 Markdown 写简历并导出 PDF](https://miaoyan.app/zh/blog/markdown-resume/): 把简历写成一个 .md 文件放进 git，用 Pandoc 或妙言导出 A4 PDF，附完整示例、分页和多岗位版本管理。
+- [Markdown 里能用 HTML 标签吗](https://miaoyan.app/zh/blog/markdown-html-tags/): 弄清 CommonMark 的 HTML 块规则、GFM 过滤的九个标签、GitHub 额外去掉的内容，以及妙言预览里哪些标签能用。
+- [Markdown 里怎么写 emoji，字符和短代码的区别](https://miaoyan.app/zh/blog/markdown-emoji/): 了解直接输入字符和 :shortcode: 短代码的区别、各自在哪里渲染，以及标题里放 emoji 时锚点怎么变。
+- [Markdown 转图片：把笔记导出成一张长图](https://miaoyan.app/zh/blog/markdown-to-image/): 用妙言、Chrome 整页截图或 Pandoc 加开发者工具，把 Markdown 笔记做成一张长 PNG，发到聊天或社交平台。
+- [Mermaid 类图语法：类、成员、关系和泛型怎么写](https://miaoyan.app/zh/blog/mermaid-class-diagram/): 在 Markdown 里写 Mermaid classDiagram，成员可见性、泛型、八种关系箭头、数量关系、注解和命名空间，附一个笔记应用例子。
+- [LaTeX 数学符号速查：希腊字母、箭头、运算符](https://miaoyan.app/zh/blog/latex-math-symbols/): 按类别列出 KaTeX 支持的 LaTeX 数学符号命令，包括上下限、括号和间距，并说明妙言里公式的常见问题，复制命令就能直接用。
 <!-- blog:end -->
