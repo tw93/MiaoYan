@@ -324,6 +324,8 @@ const lateRefund = lib.emptyState();
 lateRefund.fx = { rates: { USD: 1, CNY: 7 } };
 lateRefund.sales.rows = [['2026-11-05', '1F', 3, 10, 'CNY', 20, 'CNY', 'CN', 'iPhone', '', ''], ['2026-11-05', '1F', -1, 10, 'CNY', 20, 'CNY', 'CN', 'iPhone', '', '']];
 near(lib.buildView(lateRefund, { today }).latest.proceeds, 20, 'the newest income nets a same-day refund');
+assert.ok(page.renderDashboard(lib.buildView(lateRefund, { today })).includes('<div class="metrics"><article class="metric"><span>最新入账</span>'), 'the newest day leads the metrics');
+checks += 1;
 
 // ---- the login form, as a browser posts it ------------------------------
 process.env.MIAOYAN_PAYROOM_PASSWORD = 'yes@!';

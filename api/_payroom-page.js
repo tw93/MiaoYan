@@ -303,7 +303,10 @@ function renderDashboard(view) {
   const f = view.analytics.funnel;
   const m = p.month;
   const monthName = m ? (m.month === view.today.slice(0, 7) ? '本月' : `${Number(m.month.slice(5))} 月`) : '';
+  // Apple's sales report reaches the previous Pacific day at best, so the newest
+  // day leads (maintainer 2026-11-14 asked for today's sales on top).
   const metrics = [
+    metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date.slice(5))} 售出 ${int(latest.units)} 份` : ''),
     metric(isAll ? '累计到手' : '到手', money(t.proceeds, view.currency), p.prev ? lead(`销售额 ${money(t.net, view.currency)}`, delta(money(p.prev.proceeds, view.currency))) : `销售额 ${money(t.net, view.currency)}${isAll ? `<span class="wide-only"> · 自 ${esc(view.from.slice(2))}</span>` : ''}`),
     metric(isAll ? '累计售出' : '售出', `${int(t.sold)} 份`, p.prev ? lead(`退款 ${int(t.refunded)}`, delta(`${int(p.prev.sold)} 份`)) : (t.refunded ? `退款 ${int(t.refunded)} 份 · ${percent(t.refundRate)}` : '没有退款')),
     metric(`${monthName}到手`, m ? money(m.cur.proceeds, view.currency) : '没有', m ? lead(`${int(m.cur.sold)} 份`, m.prev ? delta(money(m.prev.proceeds, view.currency), '上月同期') : '') : ''),
@@ -311,7 +314,6 @@ function renderDashboard(view) {
     metric('产品页转化', f.pageViews ? percent(f.purchases / f.pageViews) : '没有', f.pageViews ? `浏览 ${int(f.pageViews)} · 购买 ${int(f.purchases)}` : ''),
     metric('App Store 曝光', f.impressions ? int(f.impressions) : '没有', f.impressions ? `点进产品页 ${percent(f.pageViews / f.impressions)}` : ''),
     metric(isAll ? '官网累计访问' : '官网访问', view.traffic.available ? int(view.traffic.sessions) : '没有', view.traffic.available ? (p.trafficPrev ? lead(`页面浏览 ${int(view.traffic.views)}`, delta(int(p.trafficPrev))) : `页面浏览 ${int(view.traffic.views)}`) : ''),
-    metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date.slice(5))} 售出 ${int(latest.units)} 份` : ''),
   ].join('');
   // Pairs share a row on wide screens; a pair missing one half lets the other
   // take the row.
