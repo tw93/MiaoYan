@@ -92,6 +92,33 @@ state.traffic = {
 const week = lib.buildView(state, { range: '7d', currency: 'CNY', today });
 eq([week.traffic.sessions, week.traffic.views], [15, 26], 'traffic sums inside the window only');
 eq(week.traffic.sources[0], { source: 'github.com', count: 12 }, 'sources sum across days');
+// The comparison and the daily average count only days Apple has reported:
+// 11-07 is not in yet, so this week is 11-01 to 11-06 against 10-25 to 10-30.
+eq(week.pulse.daily.days, 6, 'the daily average divides by reported days');
+near(week.pulse.daily.proceeds, (2 * 76.89) / 6, 'daily proceeds net of the refund');
+eq(week.pulse.prev, null, 'no comparison when history does not reach the previous window');
+eq(week.pulse.month.prev, null, 'no month comparison before the first sale');
+eq([week.pulse.month.month, week.pulse.month.cur.sold], ['2026-11', 3], 'this month runs to the newest report');
+{
+  const p = lib.emptyState();
+  p.sales.rows = lib.salesRowsFromReport([
+    HEAD,
+    row({ type: '1F', units: 2, proceeds: '76.89', date: '10/02/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
+    row({ type: '1F', units: 1, proceeds: '76.89', date: '10/26/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
+    row({ type: '1F', units: 1, proceeds: '76.89', date: '10/31/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
+    row({ type: '1F', units: 4, proceeds: '76.89', date: '11/03/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
+  ].join('\n')).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+  p.sales.dates = { '2026-11-06': 'ok' };
+  p.fx = { rates: { USD: 1, CNY: 7 } };
+  p.traffic = { days: { '2026-10-20': [1, 0, 1], '2026-10-25': [4, 0, 4], '2026-10-28': [50, 0, 50], '2026-11-02': [9, 0, 9] }, sources: [] };
+  const v = lib.buildView(p, { range: '7d', currency: 'CNY', today });
+  eq(v.pulse.prev.sold, 1, 'the previous window stops as many days early as this one: 10-31 is left out');
+  eq(v.pulse.trafficPrev, 4, 'traffic compares the same days a week earlier, cut where GA stops (11-02)');
+  eq(v.pulse.month.prev.sold, 2, 'last month to the same day');
+  const html = page.renderDashboard(v);
+  assert.ok(html.includes('上期 1 份') && html.includes('上月同期'), 'the cards show the previous figures');
+  checks += 1;
+}
 const recent = Object.fromEntries(week.recent.map((d) => [d.date, d]));
 assert.ok(week.recent.length > 0, 'the daily table has rows');
 assert.ok(week.recent.every((d) => !d.known || d.sold || d.refunded), 'a known day with no income or refund is left out');

@@ -807,6 +807,62 @@ function latestIncome(state, convert) {
   return { date, units, proceeds };
 }
 
+function salesSum(rows, convert, from, to) {
+  const out = { sold: 0, refunded: 0, proceeds: 0 };
+  for (const [date, type, units, proceeds, proceedsCur, price] of rows) {
+    if (date < from || date > to || kindOf(type, price) !== 'sale') continue;
+    out.proceeds += (convert(proceeds, proceedsCur) || 0) * units;
+    if (units > 0) out.sold += units;
+    else out.refunded -= units;
+  }
+  return out;
+}
+
+const dayCount = (from, to) => Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 864e5) + 1;
+
+// The headline numbers people compare. Apple's sales report trails by a day or
+// two, so a window's last days are unknown, not zero: the comparison takes only
+// the days already reported and sets them against the same days one window
+// earlier, and the daily average divides by reported days.
+function buildPulse(state, convert, { range, from, to, latestSalesDate }) {
+  const rows = state.sales.rows;
+  const reportedTo = latestSalesDate && latestSalesDate < to ? latestSalesDate : to;
+  const out = { prev: null, trafficPrev: null, daily: null, month: null };
+  if (latestSalesDate && reportedTo >= from) {
+    const days = dayCount(from, reportedTo);
+    const cur = salesSum(rows, convert, from, reportedTo);
+    out.daily = { days, proceeds: cur.proceeds / days, sold: cur.sold / days };
+    if (range !== 'all') {
+      const span = dayCount(from, to);
+      const pFrom = addDays(from, -span);
+      if (rows.length && rows[0][0] <= pFrom) out.prev = salesSum(rows, convert, pFrom, addDays(reportedTo, -span));
+    }
+  }
+  const tDays = (state.traffic && state.traffic.days) || {};
+  const tLatest = Object.keys(tDays).sort().pop();
+  if (range !== 'all' && tLatest && tLatest >= from) {
+    const tTo = tLatest < to ? tLatest : to;
+    const span = dayCount(from, to);
+    const pFrom = addDays(from, -span);
+    const sum = (a, b) => Object.entries(tDays).reduce((n, [d, v]) => (d >= a && d <= b ? n + v[0] : n), 0);
+    if (Object.keys(tDays).sort()[0] <= pFrom) out.trafficPrev = sum(pFrom, addDays(tTo, -span));
+  }
+  if (latestSalesDate) {
+    const month = latestSalesDate.slice(0, 7);
+    const day = Number(latestSalesDate.slice(8));
+    const [y, m] = month.split('-').map(Number);
+    const prevMonth = new Date(Date.UTC(y, m - 2, 1)).toISOString().slice(0, 7);
+    const prevLast = Number(new Date(Date.UTC(y, m - 1, 0)).toISOString().slice(8, 10));
+    const prevTo = `${prevMonth}-${String(Math.min(day, prevLast)).padStart(2, '0')}`;
+    out.month = {
+      month, day,
+      cur: salesSum(rows, convert, `${month}-01`, latestSalesDate),
+      prev: rows.length && rows[0][0] <= prevTo ? salesSum(rows, convert, `${prevMonth}-01`, prevTo) : null,
+    };
+  }
+  return out;
+}
+
 function buildView(state, { range = 'all', currency = 'CNY', today = pacificToday() } = {}) {
   const allRows = state.sales.rows;
   const firstDate = allRows[0] && allRows[0][0];
@@ -873,7 +929,7 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
   const convertUsd = (v) => convert(v, 'USD');
   const latestSalesDate = Object.keys(state.sales.dates).filter((d) => state.sales.dates[d] === 'ok').sort().pop() || null;
   return {
-    range, currency, from, to,
+    range, currency, from, to, today,
     totals: {
       ...totals,
       net: totals.gross - totals.refundAmount,
@@ -888,6 +944,7 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
     analytics: buildAnalytics(state, from, to, convertUsd),
     traffic: buildTraffic(state, range === 'all' ? TRAFFIC_START : from, to),
     recent: buildRecent(state, convert, { from, to, today, latestSalesDate }),
+    pulse: buildPulse(state, convert, { range, from, to, latestSalesDate }),
     latest: latestIncome(state, convert),
     months: monthOptions(allRows, today),
     finance: buildFinance(state, convert),
