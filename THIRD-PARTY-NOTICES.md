@@ -201,19 +201,21 @@ The complete Sparkle license appears below.
 
 ## Fonts
 
-### Source Han Serif
+### LXGW WenKai
 
-The sidebar sets 妙言 in Source Han Serif SC, designed by Ryoko Nishizuka and
-published by Adobe.
+The sidebar sets 妙言 in LXGW WenKai Medium, designed by LXGW and derived from
+Fontworks' Klee One.
 
-- **Source:** <https://github.com/adobe-fonts/source-han-serif>
-- **Copyright:** © 2017-2024 Adobe (http://www.adobe.com/), with Reserved
-  Font Name 'Source'.
+- **Source:** <https://github.com/lxgw/LxgwWenKai>
+- **Copyright:** Copyright 2021-2026 LXGW (https://github.com/lxgw/LxgwWenKai),
+  with Reserved Font Name '霞鹜', '霞鶩', '落霞孤鹜', '落霞孤鶩' and 'LXGW'.
+  Copyright 2020 The Klee Project Authors (https://github.com/fontworks-fonts/Klee)
 - **License:** SIL Open Font License, Version 1.1
 - **Changes made for MiaoYan:** the bundled file holds only the two glyphs of
-  妙言 and, because 'Source' is a Reserved Font Name, it is renamed MiaoYan
-  Mark. The copyright and license records inside the font are unchanged.
-- **Bundled file:** `MiaoYanMark.otf`
+  妙言, without hinting or layout tables, and, because 'LXGW' and '霞鹜' are
+  Reserved Font Names, it is renamed MiaoYan Mark. The copyright and license
+  records inside the font are unchanged.
+- **Bundled file:** `MiaoYanMark.ttf`
 
 ## Complete license texts
 

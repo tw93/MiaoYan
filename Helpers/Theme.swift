@@ -18,11 +18,13 @@ enum Theme {
         static var curve: CAMediaTimingFunction { CAMediaTimingFunction(name: .easeOut) }
     }
 
-    /// The sidebar wordmark, as miaoyan.app sets the name: upright Charter for
-    /// MiaoYan, and Source Han Serif SC for 妙言 (maintainer, 2026-10-26).
-    /// Charter has no Han, so 妙言 used to fall back to whatever serif the
-    /// system picked. `MiaoYanMark.otf` is a two-glyph cut of Source Han Serif
-    /// SC, renamed as the OFL asks of a modified copy, loaded without
+    /// The sidebar wordmark: upright Charter for MiaoYan, and LXGW WenKai
+    /// Medium for 妙言 (maintainer, 2026-11-15, from four rendered beside the
+    /// system, Kaiti and TsangerJinKai folder labels). Source Han Serif, used
+    /// from 2026-10-26, read stiff beside a kaiti interface font; WenKai's
+    /// brush strokes match the bird and sit with serif, kaiti and sans labels
+    /// alike. `MiaoYanMark.ttf` is a two-glyph cut (2.4 KB of the 25.8 MB
+    /// face), renamed as the OFL asks of a modified copy, loaded without
     /// registering so it never shows up in the font menus.
     static func brandWordmarkFont(for title: String, size: CGFloat) -> NSFont? {
         if title.unicodeScalars.contains(where: { !$0.isASCII }), let mark = brandMarkDescriptor {
@@ -32,7 +34,7 @@ enum Theme {
     }
 
     private static let brandMarkDescriptor: CTFontDescriptor? = {
-        guard let url = Bundle.main.url(forResource: "MiaoYanMark", withExtension: "otf"),
+        guard let url = Bundle.main.url(forResource: "MiaoYanMark", withExtension: "ttf"),
             let data = try? Data(contentsOf: url)
         else { return nil }
         return CTFontManagerCreateFontDescriptorFromData(data as CFData)
@@ -85,11 +87,14 @@ enum Theme {
         }
         static let sidebarBrandLabelVerticalNudge: CGFloat = 1.5
         static let sidebarBrandIconOffsetY: CGFloat = -3.5
-        /// 妙言 in Source Han Serif sits higher in its line than Charter's
-        /// MiaoYan, so the Chinese lockup has its own pair: the bird level with
-        /// the folder rows' rhythm and the wordmark's ink centre a point below
-        /// the bird's (maintainer, 2026-10-26).
-        static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 5
+        /// 妙言 sits differently in its line than Charter's MiaoYan, so the
+        /// Chinese lockup has its own pair: the bird level with the folder
+        /// rows' rhythm and the wordmark's ink centre a point and a half below
+        /// the bird's (maintainer, 2026-10-26). Moving the mark from Source Han
+        /// Serif to LXGW WenKai dropped its ink 2.5pt, measured on a 2x
+        /// capture (centre 3.5px under the bird before, 8.5px after), so the
+        /// nudge went from 5 to 2.5 (2026-11-15).
+        static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 2.5
         static let sidebarBrandMarkIconOffsetY: CGFloat = -0.5
         /// How far the lockup sits below its old 52pt row. With it the gap
         /// over the lockup (28.5pt from the traffic lights) matches the 27pt
