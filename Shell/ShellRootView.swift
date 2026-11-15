@@ -387,12 +387,11 @@ private struct ShellSidebarBrand: View {
 
     var body: some View {
         let size = CGFloat(UserDefaultsManagement.nameFontSize) + 2
-        // 妙言 sits 3pt from the bird, as the storyboard sidebar's 3pt label
-        // spacing does: 5pt of ink, 0.31 of the glyph width, on both 2x
-        // captures (2026-11-15). At this view's old 5pt the ink gap was 7pt
-        // and the two read apart. The Latin name keeps its 5pt.
-        let isMark = Theme.brandWordmarkTrackingEm(for: title) != nil
-        HStack(spacing: isMark ? 3 : 5) {
+        // The name sits 3pt from the bird, as the storyboard sidebar's 3pt
+        // label spacing does: 5pt of ink, 0.31 of the type size, for 妙言 and
+        // MiaoYan alike on 2x captures (2026-11-15). This view's old 5pt left
+        // 7pt and the two read apart.
+        HStack(spacing: 3) {
             SwiftUI.Image(nsImage: NSImage(named: "home") ?? NSImage())
                 .renderingMode(.template)
                 .resizable()
