@@ -344,6 +344,38 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertTrue(html.contains(#"<a href="http://www.example.com">"#), html)
     }
 
+    /// The page takes the language set in MiaoYan, so WebKit draws kanji in
+    /// Japanese forms for a Japanese reader instead of the system's Chinese
+    /// ones; English sets none, since `hyphens: auto` would start breaking
+    /// words. Emphasis in Han alone follows the page.
+    @MainActor
+    func testPreviewPageTakesTheLanguageSetInMiaoYan() throws {
+        let previous = UserDefaults.standard.object(forKey: "defaultLanguage")
+        defer {
+            if let previous {
+                UserDefaults.standard.set(previous, forKey: "defaultLanguage")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "defaultLanguage")
+            }
+        }
+        let expected: [(LanguageType, String?)] = [(.Japanese, "ja"), (.ChineseTC, "zh-Hant"), (.Chinese, "zh-Hans"), (.English, nil)]
+        for (language, lang) in expected {
+            UserDefaultsManagement.defaultLanguage = language.rawValue
+            let page = try HtmlManager.htmlFromTemplate("<p>x</p>", css: "", currentName: "t")
+            if let lang {
+                XCTAssertTrue(page.contains("<html lang=\"\(lang)\">"), "\(language)")
+            } else {
+                XCTAssertTrue(page.contains("<html>"), "\(language)")
+                XCTAssertFalse(page.contains("<html lang"), "\(language)")
+            }
+        }
+
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "これは*漢字*です", useGithubLineBreak: false, documentLanguage: "ja"))
+        XCTAssertTrue(html.contains("<em lang=\"ja\">漢字</em>"), html)
+        let plain = try XCTUnwrap(renderMarkdownHTML(markdown: "这是*汉字*", useGithubLineBreak: false))
+        XCTAssertTrue(plain.contains("<em lang=\"zh\">汉字</em>"), plain)
+    }
+
     func testCoefficientParenthesisMathDoesNotConsumeFollowingTable() throws {
         let markdown = #"""
             $2(k-2)$

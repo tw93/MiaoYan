@@ -232,11 +232,7 @@ public enum UserDefaultsManagement {
             if let dl = UserDefaults.standard.object(forKey: Constants.DefaultLanguageKey) as? Int {
                 return dl
             }
-            guard let lang = Locale.preferredLanguages.first else { return 1 }
-            if lang.hasPrefix("zh-Hans") { return 0 }
-            if lang.hasPrefix("zh-Hant") { return 3 }
-            if lang.hasPrefix("ja") { return 2 }
-            return 1
+            return LanguageType.systemDefault.rawValue
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)

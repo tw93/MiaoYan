@@ -431,7 +431,9 @@ private func scalarRunLength(
     return end - start
 }
 
-func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
+/// `documentLanguage` is the page's `<html lang>`, when it has one; emphasis
+/// in Han alone takes it when it is Chinese, Japanese or Korean.
+func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool, documentLanguage: String? = nil) -> String? {
     cmark_gfm_core_extensions_ensure_registered()
 
     guard let parser = cmark_parser_new(CMARK_OPT_FOOTNOTES) else { return nil }
@@ -476,7 +478,8 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
     }
 
-    return Emphasis.markCJK(in: renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes)))
+    let hanLanguage = documentLanguage.flatMap { lang in ["zh", "ja", "ko"].contains(where: lang.hasPrefix) ? lang : nil } ?? "zh"
+    return Emphasis.markCJK(in: renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes)), hanLanguage: hanLanguage)
 }
 
 private let emptyTaskItemRegex = try? NSRegularExpression(

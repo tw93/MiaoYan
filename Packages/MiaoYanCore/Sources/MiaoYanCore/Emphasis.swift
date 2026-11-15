@@ -14,8 +14,10 @@ public enum Emphasis {
     private static let tagRegex = try? NSRegularExpression(pattern: #"<[^>]*>"#)
 
     /// The rendered HTML with every CJK `<em>` given its `lang`; other markup,
-    /// including tags inside the emphasis, is left as it was.
-    public static func markCJK(in html: String) -> String {
+    /// including tags inside the emphasis, is left as it was. Han alone is
+    /// `hanLanguage`: the document's language when it is Chinese, Japanese or
+    /// Korean, so emphasised kanji in a Japanese page keep Japanese forms.
+    public static func markCJK(in html: String, hanLanguage: String = "zh") -> String {
         guard html.contains("<em>"), let emRegex else { return html }
         let ns = html as NSString
         var result = ""
@@ -23,7 +25,8 @@ public enum Emphasis {
         for match in emRegex.matches(in: html, range: NSRange(location: 0, length: ns.length)) {
             result += ns.substring(with: NSRange(location: last, length: match.range.location - last))
             let inner = ns.substring(with: match.range(at: 1))
-            if let lang = language(of: plainText(inner)) {
+            if let detected = language(of: plainText(inner)) {
+                let lang = detected == "zh" ? hanLanguage : detected
                 result += "<em lang=\"\(lang)\">\(inner)</em>"
             } else {
                 result += ns.substring(with: match.range)

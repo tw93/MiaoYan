@@ -92,6 +92,38 @@ enum LanguageType: Int {
         }
     }
 
+    /// The language chosen in MiaoYan's settings, else the system's. Read
+    /// from UserDefaults directly so the preview's background render can ask.
+    nonisolated static var current: LanguageType {
+        if let stored = UserDefaults.standard.object(forKey: "defaultLanguage") as? Int,
+            let language = LanguageType(rawValue: stored)
+        {
+            return language
+        }
+        return systemDefault
+    }
+
+    nonisolated static var systemDefault: LanguageType {
+        guard let lang = Locale.preferredLanguages.first else { return .English }
+        if lang.hasPrefix("zh-Hans") { return .Chinese }
+        if lang.hasPrefix("zh-Hant") { return .ChineseTC }
+        if lang.hasPrefix("ja") { return .Japanese }
+        return .English
+    }
+
+    /// The preview's `<html lang>`. WebKit picks CJK glyph forms by it, so
+    /// a Japanese reader's kanji were drawn in Chinese forms without it. Only
+    /// the CJK languages set one: a page in English would start hyphenating
+    /// (`hyphens: auto` in the typography stylesheet), which it never did.
+    nonisolated var documentLanguage: String? {
+        switch self {
+        case .Chinese: return "zh-Hans"
+        case .ChineseTC: return "zh-Hant"
+        case .Japanese: return "ja"
+        case .English: return nil
+        }
+    }
+
     var code: String {
         switch self.rawValue {
         case 0x00: return "zh-Hans"

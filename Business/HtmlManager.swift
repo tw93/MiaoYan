@@ -950,6 +950,9 @@ class HtmlManager {
             "DOWN_META": downMeta,
             "CUSTOM_CSS": customCSS,
         ]
+        if let language = LanguageType.current.documentLanguage {
+            replacements["<html>"] = "<html lang=\"\(language)\">"
+        }
 
         if UserDefaultsManagement.isOnExportPPT {
             replacements["DOWN_EXPORT_TYPE"] = "ppt"

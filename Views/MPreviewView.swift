@@ -1081,7 +1081,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// a note with a local video and no image lost its player on the first
     /// edit: the patch swapped in the raw tag, relative to the cache page.
     nonisolated static func previewHTML(markdown: String, useGithubLineBreak: Bool, imagesStorage: URL) -> String? {
-        renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak).map {
+        renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak, documentLanguage: LanguageType.current.documentLanguage).map {
             HtmlManager.processImages(in: $0, imagesStorage: imagesStorage)
         }
     }

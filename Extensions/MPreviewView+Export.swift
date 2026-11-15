@@ -638,7 +638,9 @@ extension MPreviewView {
         let markdown = note.getPrettifiedContent()
         let css = HtmlManager.previewStyle()
         let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
-        let rendered = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak) ?? markdown
+        let rendered =
+            renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak, documentLanguage: LanguageType.current.documentLanguage)
+            ?? markdown
         let page = (try? HtmlManager.htmlFromTemplate(rendered, css: css, currentName: vc.exportTitle)) ?? rendered
         let imagesStorage = note.project.url
         let filename = note.getExportTitle()
