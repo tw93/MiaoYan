@@ -23,9 +23,12 @@ enum Theme {
     /// system, Kaiti and TsangerJinKai folder labels). Source Han Serif, used
     /// from 2026-10-26, read stiff beside a kaiti interface font; WenKai's
     /// brush strokes match the bird and sit with serif, kaiti and sans labels
-    /// alike. `MiaoYanMark.ttf` is a two-glyph cut (2.4 KB of the 25.8 MB
-    /// face), renamed as the OFL asks of a modified copy, loaded without
-    /// registering so it never shows up in the font menus.
+    /// alike. Medium is the face's heaviest weight (its Screen cut draws the
+    /// same ink), so the outlines are thickened 6 units a side, 18% more ink,
+    /// the maintainer's pick of three (2026-11-15). `MiaoYanMark.ttf` is a
+    /// two-glyph cut (2.7 KB of the 25.8 MB face), renamed as the OFL asks of
+    /// a modified copy, loaded without registering so it never shows up in
+    /// the font menus.
     static func brandWordmarkFont(for title: String, size: CGFloat) -> NSFont? {
         if title.unicodeScalars.contains(where: { !$0.isASCII }), let mark = brandMarkDescriptor {
             return CTFontCreateWithFontDescriptor(mark, size, nil) as NSFont

@@ -212,7 +212,8 @@ Fontworks' Klee One.
   Copyright 2020 The Klee Project Authors (https://github.com/fontworks-fonts/Klee)
 - **License:** SIL Open Font License, Version 1.1
 - **Changes made for MiaoYan:** the bundled file holds only the two glyphs of
-  妙言, without hinting or layout tables, and, because 'LXGW' and '霞鹜' are
+  妙言, their strokes thickened by 6 of 1000 units on each side, without
+  hinting or layout tables, and, because 'LXGW' and '霞鹜' are
   Reserved Font Names, it is renamed MiaoYan Mark. The copyright and license
   records inside the font are unchanged.
 - **Bundled file:** `MiaoYanMark.ttf`
