@@ -999,7 +999,7 @@ version(s), and exceptions or additional permissions here}."
 
 ### SIL Open Font License 1.1
 
-This text applies to the KaTeX fonts and to Source Han Serif.
+This text applies to the KaTeX fonts and to LXGW WenKai.
 
 ```text
 PREAMBLE
