@@ -636,7 +636,8 @@ class SidebarProjectView: NSOutlineView,
     }
 
     private func applyFinalStyling(_ cell: SidebarCellView, sidebarItem: SidebarItem, accentColor: NSColor) {
-        cell.label.addCharacterSpacing()
+        let brandTracking = sidebarItem.type == .Brand ? Theme.brandWordmarkTrackingEm(for: sidebarItem.name) : nil
+        cell.label.addCharacterSpacing(em: brandTracking)
 
         let color = sidebarItem.type == .Brand ? accentColor : Theme.textColor
         applyLabelColor(cell, color: color)

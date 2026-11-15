@@ -395,6 +395,7 @@ private struct ShellSidebarBrand: View {
                 .frame(width: 22, height: 22)
             Text(title)
                 .font(ShellStyle.brandWordmark(title, size: size))
+                .kerning(Theme.brandWordmarkTrackingEm(for: title).map { $0 * size } ?? 0)
                 .lineLimit(1)
                 .truncationMode(.tail)
             Spacer(minLength: 0)

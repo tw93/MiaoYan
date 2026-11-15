@@ -36,6 +36,15 @@ enum Theme {
         return NSFont(name: "Charter-Roman", size: size)
     }
 
+    /// Tracking for 妙言 in the mark face. WenKai's 妙 runs to the edge of
+    /// its em and 言 opens on the left, so set solid (the phone) or at the
+    /// labels' 0.02em (the Mac) the two read jammed; 0.08em, the maintainer's
+    /// pick of 0.02, 0.08 and 0.14 rendered (2026-11-15), leaves about the
+    /// gap inside 妙. Nil for the Latin name, which keeps its own tracking.
+    static func brandWordmarkTrackingEm(for title: String) -> CGFloat? {
+        title.unicodeScalars.contains(where: { !$0.isASCII }) && brandMarkDescriptor != nil ? 0.08 : nil
+    }
+
     private static let brandMarkDescriptor: CTFontDescriptor? = {
         guard let url = Bundle.main.url(forResource: "MiaoYanMark", withExtension: "ttf"),
             let data = try? Data(contentsOf: url)
