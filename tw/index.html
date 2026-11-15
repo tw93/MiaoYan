@@ -167,9 +167,29 @@ html[lang="zh-Hant"] {
   --serif: "MiaoYan Serif TC", Charter, Georgia, "Songti TC", serif;
   --sans: var(--serif);
 }
+/* Japanese is one Mincho body, as on mole.fit: Latin and digits fall to
+   Charter first, so MiaoYan, Markdown and version numbers match the other
+   pages instead of the Mincho's own Latin, and --sans follows it rather than
+   setting the buttons and nav in a gothic beside Mincho prose. The curly
+   quotes and the ellipsis come back from the Mincho, full width and on the
+   centre line as a Japanese reader expects. */
+@font-face {
+  font-family: "MiaoYan Mincho Marks";
+  src: local("HiraMinProN-W3"), local("Hiragino Mincho ProN W3"), local("YuMincho-Regular"), local("Yu Mincho Regular");
+  font-weight: 100 500;
+  font-style: normal;
+  unicode-range: U+201C-201D, U+2026;
+}
+@font-face {
+  font-family: "MiaoYan Mincho Marks";
+  src: local("HiraMinProN-W6"), local("Hiragino Mincho ProN W6"), local("YuMincho-Demibold"), local("Yu Mincho Demibold");
+  font-weight: 600 900;
+  font-style: normal;
+  unicode-range: U+201C-201D, U+2026;
+}
 html[lang="ja"] {
-  --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", Georgia, serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --serif: "MiaoYan Mincho Marks", Charter, Georgia, "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", serif;
+  --sans: var(--serif);
 }
 /* Korean is set in the system sans, as on mole.fit: iOS has no Myeongjo, so an
    iPhone drew Georgia Latin beside sans Hangul. The wordmarks keep their serif. */
@@ -211,7 +231,9 @@ body > footer { margin-top: auto; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) body { line-height: 1.75; }
 /* Leads 1.6, prose 1.75, articles 1.8 (below), as on mole.fit. */
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .section-lede { line-height: 1.6; }
-html[lang="de"] :is(.section-lede, .card p, .faq p) { hyphens: auto; -webkit-hyphens: auto; }
+/* German breaks long compounds across the whole page, as on mole.fit, not
+   only in ledes, cards and the FAQ. */
+html[lang="de"] { hyphens: auto; -webkit-hyphens: auto; }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; height: auto; }
 
