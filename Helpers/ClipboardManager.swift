@@ -32,6 +32,17 @@ class ClipboardManager {
             return true
         }
 
+        // A heading copied on its own is wanted as its words, without the
+        // `#` marks (maintainer, 2026-11-16); a copy that runs past the line
+        // keeps the Markdown as written. Cut is untouched, so a heading
+        // moved by cut and paste stays a heading.
+        if let title = loneHeadingTitle(in: textView) {
+            let pasteboard = NSPasteboard.general
+            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+            pasteboard.setString(title, forType: NSPasteboard.PasteboardType.string)
+            return true
+        }
+
         if textView.selectedRange.length == 0,
             let paragraphRange = textView.getParagraphRange(),
             let paragraph = textView.attributedSubstring(forProposedRange: paragraphRange, actualRange: nil)
@@ -43,6 +54,37 @@ class ClipboardManager {
         }
 
         return false
+    }
+
+    /// The heading's words when the copy is exactly one heading line: the
+    /// caret resting on it, or a selection from the line's start that stays
+    /// on it. A `#` line inside a fenced code block is a comment, not a
+    /// heading, and copies as written.
+    private func loneHeadingTitle(in textView: EditTextView) -> String? {
+        guard let storage = textView.textStorage else { return nil }
+        let selection = textView.selectedRange()
+        let text = storage.string as NSString
+        guard NSMaxRange(selection) <= text.length else { return nil }
+        let paragraph = text.paragraphRange(for: NSRange(location: selection.location, length: 0))
+        let copied = selection.length == 0 ? paragraph : selection
+        guard copied.location == paragraph.location, NSMaxRange(copied) <= NSMaxRange(paragraph),
+            let title = Self.headingTitle(ofLine: text.substring(with: copied)),
+            !NotesTextProcessor.fencedCodeBlockRanges(in: storage).contains(where: { NSIntersectionRange($0, paragraph).length > 0 })
+        else { return nil }
+        return title
+    }
+
+    /// `Title` for `## Title`, with or without the line's own line break and
+    /// a closing run of `#`; nil for anything that is not one ATX heading.
+    nonisolated static func headingTitle(ofLine line: String) -> String? {
+        var line = line
+        if line.last?.isNewline == true { line.removeLast() }
+        guard !line.contains(where: \.isNewline),
+            let regex = try? NSRegularExpression(pattern: "^ {0,3}#{1,6}[ \\t]+(.*?)(?:[ \\t]+#+)?[ \\t]*$"),
+            let match = regex.firstMatch(in: line, range: NSRange(location: 0, length: (line as NSString).length))
+        else { return nil }
+        let title = (line as NSString).substring(with: match.range(at: 1))
+        return title.isEmpty ? nil : title
     }
 
     func handlePaste(in note: Note) -> Bool {

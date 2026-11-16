@@ -13,6 +13,43 @@ import XCTest
 /// `String.count` would fail here before users see lost uploads again.
 final class ClipboardManagerUTF16Tests: XCTestCase {
 
+    /// A heading copied on its own gives its words; anything else copies as written.
+    func testLoneHeadingCopiesWithoutItsMarks() {
+        XCTAssertEqual(ClipboardManager.headingTitle(ofLine: "# 潮流周刊\n"), "潮流周刊")
+        XCTAssertEqual(ClipboardManager.headingTitle(ofLine: "### Notes on C# 12"), "Notes on C# 12")
+        XCTAssertEqual(ClipboardManager.headingTitle(ofLine: "## Closed ##"), "Closed")
+        XCTAssertNil(ClipboardManager.headingTitle(ofLine: "# Title\nBody\n"), "past the line, the Markdown stays")
+        XCTAssertNil(ClipboardManager.headingTitle(ofLine: "#tag is not a heading"))
+        XCTAssertNil(ClipboardManager.headingTitle(ofLine: "Plain line\n"))
+        XCTAssertNil(ClipboardManager.headingTitle(ofLine: "####### seven marks"))
+        XCTAssertNil(ClipboardManager.headingTitle(ofLine: "# "))
+    }
+
+    @MainActor
+    func testCopyStripsMarksOnlyForOneHeadingLineOutsideCode() {
+        let textView = EditTextView(frame: NSRect(x: 0, y: 0, width: 400, height: 300))
+        let text = "# Title\nBody\n```\n# comment\n```\n"
+        textView.textStorage?.setAttributedString(NSAttributedString(string: text))
+        let clipboard = ClipboardManager(textView: textView)
+        let pasteboard = NSPasteboard.general
+        let saved = pasteboard.string(forType: .string)
+        defer {
+            pasteboard.clearContents()
+            if let saved { pasteboard.setString(saved, forType: .string) }
+        }
+        func copied(_ range: NSRange) -> String? {
+            pasteboard.clearContents()
+            textView.setSelectedRange(range)
+            return clipboard.handleCopy() ? pasteboard.string(forType: .string) : nil
+        }
+        XCTAssertEqual(copied(NSRange(location: 3, length: 0)), "Title", "caret on the heading")
+        XCTAssertEqual(copied(NSRange(location: 0, length: 8)), "Title", "the whole line, as a triple click selects it")
+        XCTAssertNil(copied(NSRange(location: 0, length: 12)), "heading and body: the editor's own copy keeps the Markdown")
+        XCTAssertNil(copied(NSRange(location: 2, length: 5)), "the words alone are already what is selected")
+        let comment = (text as NSString).range(of: "# comment")
+        XCTAssertEqual(copied(NSRange(location: comment.location + 2, length: 0)), "# comment", "a comment in a code block")
+    }
+
     func testEmojiPrefixedPlaceholderMatchedWithNSStringLength() throws {
         // Reproduce the failure mode exactly: the placeholder is the last thing
         // in the buffer. With a surrogate-pair emoji ahead of it, String.count
