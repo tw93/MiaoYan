@@ -1007,6 +1007,7 @@ def page(key):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#fbfaf6">
+<meta name="apple-itunes-app" content="app-id=6759252269">
 <script>document.documentElement.classList.add('js')</script>
 {redirect}
 <title>{esc(c['title'])}</title>
