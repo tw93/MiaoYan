@@ -26,6 +26,7 @@ enum ShellStyle {
     static var icon: SwiftUI.Color { SwiftUI.Color(nsColor: ShellPalette.icon) }
     static var selection: SwiftUI.Color { SwiftUI.Color(nsColor: ShellPalette.listSelection) }
     static var hairline: SwiftUI.Color { SwiftUI.Color(nsColor: ShellPalette.hairline) }
+    static var noteRowHairline: SwiftUI.Color { SwiftUI.Color(nsColor: ShellPalette.noteRowHairline) }
     static var field: SwiftUI.Color { SwiftUI.Color(nsColor: ShellPalette.field) }
     static var sidebarSelection: SwiftUI.Color { SwiftUI.Color(nsColor: ShellPalette.sidebarSelection) }
 
@@ -738,7 +739,7 @@ private struct ShellNoteRow: View {
         }
         .overlay(alignment: .bottom) {
             if showsDivider {
-                ShellStyle.hairline
+                ShellStyle.noteRowHairline
                     .frame(height: 1 / displayScale)
                     .padding(.horizontal, 20)
             }

@@ -39,7 +39,7 @@ class NoteRowView: ThemedTableRowView {
             width: max(0, rowBounds.width - 2 * inset),
             height: height
         )
-        Theme.fillDivider(line, color: Theme.columnHairline, appearance: effectiveAppearance)
+        Theme.fillDivider(line, color: Theme.noteRowHairline, appearance: effectiveAppearance)
     }
 
     private func visibleRowBounds() -> NSRect {

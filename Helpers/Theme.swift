@@ -210,9 +210,14 @@ enum Theme {
     /// columns, between the editor and preview in split mode, and across
     /// panels such as version history. Warm ink at 7% on the paper tone,
     /// white at 7% in dark (maintainer, 2026-09-28). The system separator grey
-    /// it replaced read cool on paper and too bright in dark, and the note
-    /// list no longer draws lines between rows (2026-10-19).
+    /// it replaced read cool on paper and too bright in dark.
     nonisolated static let columnHairline = dynamic(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.07, darkAlpha: 0.07)
+
+    /// The line between two notes in the list. It is half the thickness of
+    /// a column line (one device pixel) and inset at both ends, and at the
+    /// column line's 7% it could hardly be seen, so it is the same ink at
+    /// 13% (maintainer's pick of 10, 13 and 16, 2026-11-16).
+    nonisolated static let noteRowHairline = dynamic(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.13, darkAlpha: 0.13)
 
     /// Fills a divider: the paper first, then the hairline over it, so its
     /// alpha reads the same over any backing. A clear colour (a hidden
