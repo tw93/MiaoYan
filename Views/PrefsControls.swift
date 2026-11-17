@@ -149,7 +149,9 @@ final class PrefsHairline: NSView {
     override func draw(_ dirtyRect: NSRect) {
         let scale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
         color.setFill()
-        NSRect(x: 0, y: (bounds.height - 1 / scale) / 2, width: bounds.width, height: 1 / scale).fill()
+        // On a device pixel: centred in a 1pt view the half-point line sat
+        // across two pixels and drew as two rows at half strength.
+        NSRect(x: 0, y: 0, width: bounds.width, height: 1 / scale).fill()
     }
 }
 

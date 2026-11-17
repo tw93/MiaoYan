@@ -15,7 +15,9 @@ extension ViewController {
         static let searchTop: CGFloat = 12.0
         static let searchLeadingNormal: CGFloat = 13.0
         static let titlebarHeight: CGFloat = 52.0
-        static let titleTop: CGFloat = 14.0
+        /// The title's capitals centred on the traffic lights and the
+        /// title bar buttons; at 14 they sat 1.25pt low (2026-11-17).
+        static let titleTop: CGFloat = 13.0
         /// The title's first stroke on the editor text's left edge (29pt from
         /// the column line at the default margin); 25 stood 4pt left of it.
         static let titleLeadingNormal: CGFloat = 29.0

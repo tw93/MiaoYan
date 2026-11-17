@@ -289,8 +289,12 @@ enum Theme {
         static let controlHoverFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.09, darkAlpha: 0.10)
         static let switchOffFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.14, darkAlpha: 0.16)
         /// Between sections, and the fainter one between rows of a section.
-        static let sectionHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.12, darkAlpha: 0.12)
-        static let rowHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.065, darkAlpha: 0.065)
+        /// The row line at 6.5% could hardly be seen, the note list's old
+        /// trouble (`noteRowHairline`), so it takes the same 13% and the
+        /// section line moves from 12% to 16% to stay the stronger one
+        /// (2026-11-17).
+        static let sectionHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.16, darkAlpha: 0.16)
+        static let rowHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.13, darkAlpha: 0.13)
         static let accent = brand
     }
 
