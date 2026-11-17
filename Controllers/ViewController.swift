@@ -958,9 +958,10 @@ class ViewController:
 
             // Align from Right (Trailing) to match Text Content Alignment
             // Margin = 24 (Matches default textContainerInset width)
-            // Gap = 8 (Increased from 6 as requested)
+            // Gap = 12 (6, then 8, then 12: the maintainer's pick of 10, 12 and
+            // 14 rendered in the window, 2026-11-17)
 
-            let gap: CGFloat = 8
+            let gap: CGFloat = 12
             // 5. Presentation (Rightmost)
             NSLayoutConstraint.activate([
                 presentationButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
