@@ -54,6 +54,13 @@ const MiaoYanCommon = {
         grandParent?.classList.add('cb');
       }
     });
+    // A task list drops its bullets, so an ordinary item among the tasks
+    // had no mark at all and read as a stray paragraph; it gets its own.
+    document.querySelectorAll('ul.cb > li').forEach(item => {
+      const first = item.firstElementChild;
+      const box = first?.tagName === 'P' ? first.firstElementChild : first;
+      if (box?.tagName !== 'INPUT') item.classList.add('cb-plain');
+    });
   },
 
   // Give every rendered table a scroll container. Doing it here rather than in

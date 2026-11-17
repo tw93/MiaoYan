@@ -228,6 +228,13 @@ a {
   padding-inline-start: 24px;
 }
 
+/* An ordinary item inside a task list keeps a bullet, its text on the
+   tasks' text line. */
+.heti ul.cb > li.cb-plain {
+  list-style-type: disc;
+  margin-inline-start: 1.5em;
+}
+
 .heti ul.cb input[type='checkbox'] {
   position: relative;
   font-size: 1rem;
