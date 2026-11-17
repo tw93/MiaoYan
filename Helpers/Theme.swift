@@ -222,8 +222,11 @@ enum Theme {
     /// The line between two notes in the list. It is half the thickness of
     /// a column line (one device pixel) and inset at both ends, and at the
     /// column line's 7% it could hardly be seen, so it is the same ink at
-    /// 13% (maintainer's pick of 10, 13 and 16, 2026-11-16).
-    nonisolated static let noteRowHairline = dynamic(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.13, darkAlpha: 0.13)
+    /// 13% (maintainer's pick of 10, 13 and 16, 2026-11-16). That is the
+    /// light value only: a white line at 13% on the dark paper glares, so
+    /// dark stays near the column line at 6.5% (maintainer's pick of 13, 9
+    /// and 6.5, 2026-11-17).
+    nonisolated static let noteRowHairline = dynamic(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.13, darkAlpha: 0.065)
 
     /// Fills a divider: the paper first, then the hairline over it, so its
     /// alpha reads the same over any backing. A clear colour (a hidden
@@ -292,9 +295,10 @@ enum Theme {
         /// The row line at 6.5% could hardly be seen, the note list's old
         /// trouble (`noteRowHairline`), so it takes the same 13% and the
         /// section line moves from 12% to 16% to stay the stronger one
-        /// (2026-11-17).
-        static let sectionHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.16, darkAlpha: 0.16)
-        static let rowHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.13, darkAlpha: 0.13)
+        /// (2026-11-17). Light only, as in the note list: dark keeps the
+        /// values it had, where a light line needs far less to show.
+        static let sectionHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.16, darkAlpha: 0.12)
+        static let rowHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.13, darkAlpha: 0.065)
         static let accent = brand
     }
 
