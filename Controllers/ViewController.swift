@@ -352,6 +352,9 @@ class ViewController:
     public func applyInterfacePreferences() {
         search.font = UserDefaultsManagement.searchFont
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
+        // The note's title in the ink every other title uses; the field's
+        // default was pure black, and pure white in dark (2026-11-17).
+        titleLabel.textColor = Theme.Ink.primary
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
         titleLabel.placeholderString = I18n.str("Enter title")
 
@@ -957,6 +960,7 @@ class ViewController:
             // Margin = 24 (Matches default textContainerInset width)
             // Gap = 8 (Increased from 6 as requested)
 
+            let gap: CGFloat = 8
             // 5. Presentation (Rightmost)
             NSLayoutConstraint.activate([
                 presentationButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
@@ -966,7 +970,7 @@ class ViewController:
             // 4. Preview
             NSLayoutConstraint.activate([
                 previewButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                previewButton.trailingAnchor.constraint(equalTo: presentationButton.leadingAnchor, constant: -8),
+                previewButton.trailingAnchor.constraint(equalTo: presentationButton.leadingAnchor, constant: -gap),
                 previewButton.widthAnchor.constraint(equalToConstant: 20),
                 previewButton.heightAnchor.constraint(equalToConstant: 20),
             ])
@@ -974,19 +978,19 @@ class ViewController:
             // 3. Split
             NSLayoutConstraint.activate([
                 splitButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                splitButton.trailingAnchor.constraint(equalTo: previewButton.leadingAnchor, constant: -8),
+                splitButton.trailingAnchor.constraint(equalTo: previewButton.leadingAnchor, constant: -gap),
                 splitButton.widthAnchor.constraint(equalToConstant: 20),
                 splitButton.heightAnchor.constraint(equalToConstant: 20),
             ])
 
             // 2. Format
             NSLayoutConstraint.activate([
-                formatButton.trailingAnchor.constraint(equalTo: splitButton.leadingAnchor, constant: -8)
+                formatButton.trailingAnchor.constraint(equalTo: splitButton.leadingAnchor, constant: -gap)
             ])
 
             // 1. List (Leftmost)
             NSLayoutConstraint.activate([
-                listButton.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -8),
+                listButton.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -gap),
                 listButton.widthAnchor.constraint(equalToConstant: 20),
                 listButton.heightAnchor.constraint(equalToConstant: 20),
             ])
@@ -1032,6 +1036,9 @@ class ViewController:
         }
         editArea.typingAttributes = typingAttrs
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
+        // The note's title in the ink every other title uses; the field's
+        // default was pure black, and pure white in dark (2026-11-17).
+        titleLabel.textColor = Theme.Ink.primary
         setTableRowHeight()
         // Set up delegate and data source before loading data
         storageOutlineView.delegate = storageOutlineView

@@ -132,10 +132,31 @@ class SidebarCellView: NSTableCellView, NSTextFieldDelegate {
         updatePreferredLabelWidth()
     }
 
+    private var labelTrailing: NSLayoutConstraint?
+
+    /// The room the name really has. AppKit lays the outline column's cell
+    /// out past the row's right edge (16pt at the top level), so the
+    /// storyboard's 6pt trailing constraint sat outside the sidebar and a
+    /// long folder name ran under the column line with no ellipsis
+    /// (2026-11-17). The constraint is measured from the selection plate's
+    /// right edge instead.
     private func updatePreferredLabelWidth() {
         guard let label else { return }
 
-        let availableWidth = max(0, bounds.width - label.frame.minX - LayoutConstants.trailingPadding)
+        let rowWidth = superview?.bounds.width ?? frame.maxX
+        let overflow = max(0, frame.maxX - (rowWidth - Theme.Metrics.selectionInsetH))
+        let trailing = LayoutConstants.trailingPadding + overflow
+        if labelTrailing == nil {
+            labelTrailing = constraints.first {
+                $0.firstAttribute == .trailing && $0.secondAttribute == .trailing
+                    && (($0.firstItem as? NSView) === self && ($0.secondItem as? NSView) === label)
+            }
+        }
+        if let labelTrailing, abs(labelTrailing.constant - trailing) > 0.5 {
+            labelTrailing.constant = trailing
+        }
+
+        let availableWidth = max(0, bounds.width - label.frame.minX - trailing)
         guard abs(label.preferredMaxLayoutWidth - availableWidth) > 0.5 else { return }
 
         label.preferredMaxLayoutWidth = availableWidth

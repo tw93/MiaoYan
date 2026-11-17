@@ -16,7 +16,9 @@ extension ViewController {
         static let searchLeadingNormal: CGFloat = 13.0
         static let titlebarHeight: CGFloat = 52.0
         static let titleTop: CGFloat = 14.0
-        static let titleLeadingNormal: CGFloat = 25.0
+        /// The title's first stroke on the editor text's left edge (29pt from
+        /// the column line at the default margin); 25 stood 4pt left of it.
+        static let titleLeadingNormal: CGFloat = 29.0
         static let titleBarActionsTop: CGFloat = 16.0
         /// Where a leftmost column's first control starts: the traffic
         /// lights end 79pt in, plus the gap the sidebar leaves beside them.

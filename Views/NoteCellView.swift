@@ -78,9 +78,9 @@ class NoteCellView: NSTableCellView {
     }
 
     private func configureTitleTruncation() {
-        name.lineBreakMode = .byTruncatingMiddle
+        name.lineBreakMode = .byTruncatingTail
         name.maximumNumberOfLines = 1
-        name.cell?.lineBreakMode = .byTruncatingMiddle
+        name.cell?.lineBreakMode = .byTruncatingTail
         name.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
 
