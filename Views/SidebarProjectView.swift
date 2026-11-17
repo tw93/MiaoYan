@@ -587,7 +587,7 @@ class SidebarProjectView: NSOutlineView,
             // The row grows by `sidebarBrandDrop` and both views sit half of
             // it below the row's centre, so the lockup moves down the whole
             // drop while the gap under it stays as it was.
-            let drop = Theme.Metrics.sidebarBrandDrop / 2
+            let drop = Theme.Metrics.sidebarBrandDrop / 2 + (isMark ? 0 : Theme.Metrics.sidebarBrandLatinDrop)
             for constraint in cell.constraints
             where constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY {
                 let first = constraint.firstItem as? NSView

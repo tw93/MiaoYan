@@ -114,6 +114,12 @@ enum Theme {
         /// the list column; before, 23.5pt over it read cramped (maintainer,
         /// 2026-11-06). The folders below move down by the same amount.
         static let sidebarBrandDrop: CGFloat = 5
+        /// MiaoYan in Charter with its bird sits 3pt higher in the row than
+        /// 妙言 does, so with the same drop it stood 23.5pt under the traffic
+        /// lights and 29pt over All Notes, and read cramped at the top
+        /// (maintainer, 2026-11-17; the 2026-11-06 drop was measured on 妙言
+        /// only). These 3pt bring it to 26.5 over and 26 under, 妙言's gaps.
+        static let sidebarBrandLatinDrop: CGFloat = 3
         /// Right-side gutter so long note titles truncate before the pane edge.
         /// The visible gutter inside the selection pill varies by title because
         /// truncation snaps to whole glyphs (CJK chars are ~14pt), so this is
@@ -221,14 +227,16 @@ enum Theme {
 
     /// Fills a divider: the paper first, then the hairline over it, so its
     /// alpha reads the same over any backing. A clear colour (a hidden
-    /// divider) draws nothing.
+    /// divider) is the paper alone: a split view keeps a collapsed pane's
+    /// divider strip, and left undrawn it showed the window's white backing
+    /// as a 1pt line down the window's left edge (2026-11-17).
     static func fillDivider(_ rect: NSRect, color: NSColor, appearance: NSAppearance?) {
         let line = color.resolvedColor(for: appearance)
-        guard line.alphaComponent > 0 else { return }
         if line.alphaComponent < 1 {
             backgroundColor.resolvedColor(for: appearance).setFill()
             rect.fill()
         }
+        guard line.alphaComponent > 0 else { return }
         line.setFill()
         rect.fill(using: .sourceOver)
     }

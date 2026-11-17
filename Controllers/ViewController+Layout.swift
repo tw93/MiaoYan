@@ -149,6 +149,10 @@ extension ViewController {
             let targetWidth = max(savedWidth > 0 ? savedWidth : fallbackWidth, Int(Theme.Metrics.noteListMinimumWidth))
             splitView.shouldHideDivider = false
             splitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
+            // Opening passes through widths under the minimum, where the
+            // resize callback collapses the list and hides the divider again;
+            // the list ended open with no line beside it (2026-11-17).
+            splitView.shouldHideDivider = false
 
             // Sync selection: If editor has a note, select it in the list (suppressing side effects like reloading)
             if let currentNote = EditTextView.note {

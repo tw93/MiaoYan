@@ -261,6 +261,49 @@ final class SidebarProjectViewTests: XCTestCase {
         XCTAssertEqual(height - cell.label.frame.midY, height / 2 + drop / 2, accuracy: snap, "the wordmark moves with the bird")
     }
 
+    /// A collapsed pane keeps its 1pt divider strip. Left undrawn it showed
+    /// the window's white backing down the window's left edge (2026-11-17);
+    /// a hidden divider is filled with the paper.
+    @MainActor
+    func testAHiddenDividerIsFilledWithThePaper() throws {
+        let rep = try XCTUnwrap(
+            NSBitmapImageRep(
+                bitmapDataPlanes: nil, pixelsWide: 2, pixelsHigh: 2, bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
+                colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0))
+        let light = try XCTUnwrap(NSAppearance(named: .aqua))
+        NSGraphicsContext.saveGraphicsState()
+        NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
+        NSColor.white.setFill()
+        NSRect(x: 0, y: 0, width: 2, height: 2).fill()
+        Theme.fillDivider(NSRect(x: 0, y: 0, width: 2, height: 2), color: .clear, appearance: light)
+        NSGraphicsContext.restoreGraphicsState()
+        let drawn = try XCTUnwrap(rep.colorAt(x: 0, y: 0)?.usingColorSpace(.deviceRGB))
+        let paper = try XCTUnwrap(Theme.backgroundColor.resolvedColor(for: light).usingColorSpace(.deviceRGB))
+        XCTAssertEqual(drawn.blueComponent, paper.blueComponent, accuracy: 0.02)
+        XCTAssertLessThan(drawn.blueComponent, 0.99, "the white backing no longer shows")
+    }
+
+    /// MiaoYan's bird sits 3pt higher than 妙言's, so the same drop left the
+    /// English lockup 23.5pt under the traffic lights and 29pt over All
+    /// Notes (maintainer, 2026-11-17); it takes `sidebarBrandLatinDrop` more.
+    @MainActor
+    func testTheLatinBrandLockupSitsAsLowAsTheChineseOne() throws {
+        let cell = makeFolderCell()
+        let outlineView = ReusingSidebar(frame: NSRect(x: 0, y: 0, width: 200, height: 300))
+        outlineView.reusedCell = cell
+        let brand = SidebarItem(name: "MiaoYan", type: .Brand)
+        let height = outlineView.outlineView(outlineView, heightOfRowByItem: brand)
+        _ = try XCTUnwrap(outlineView.outlineView(outlineView, viewFor: nil, item: brand) as? SidebarCellView)
+        cell.frame = NSRect(x: 0, y: 0, width: 200, height: height)
+        cell.layoutSubtreeIfNeeded()
+        let snap = 0.5 / (NSScreen.main?.backingScaleFactor ?? 1) + 0.01
+        let latin = Theme.Metrics.sidebarBrandLatinDrop
+        let markCentre = 26 + Theme.Metrics.sidebarBrandMarkIconOffsetY + Theme.Metrics.sidebarBrandDrop
+        let latinCentre = 26 + Theme.Metrics.sidebarBrandIconOffsetY + Theme.Metrics.sidebarBrandDrop + latin
+        XCTAssertEqual(height - cell.icon.frame.midY, latinCentre, accuracy: snap)
+        XCTAssertEqual(latinCentre, markCentre, accuracy: 0.01, "the two birds share a centre line")
+    }
+
     @MainActor
     func testAV450SidebarRowMovesDownOnceForTheBrandRow() throws {
         // Fixed names: a removed domain still leaves its empty plist in
