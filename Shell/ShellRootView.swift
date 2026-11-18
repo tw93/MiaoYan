@@ -159,8 +159,12 @@ struct ShellSidebar: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(spacing: 1) {
+                        // 30pt of room above the lockup's ink and 30 under it to
+                        // All Notes, the storyboard sidebar's gaps (2x captures:
+                        // 26 and 25.5 before the 3.5pt drop and the 11pt gap).
                         ShellSidebarBrand(title: model.brandTitle)
-                        SwiftUI.Color.clear.frame(height: 6)
+                            .padding(.top, 3.5)
+                        SwiftUI.Color.clear.frame(height: 11)
                         ForEach(model.sidebarRows) { row in
                             ShellSidebarRow(model: model, row: row, isSelected: model.scope == row.id)
                                 .id(row.id)
