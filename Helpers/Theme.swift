@@ -482,6 +482,12 @@ extension NSView {
 
 @MainActor
 enum MiaoYanAlert {
+    /// A note title quoted in an alert, cut short so a long one cannot grow
+    /// the alert past the screen and hide its buttons.
+    nonisolated static func shortTitle(_ title: String, limit: Int = 80) -> String {
+        title.count > limit ? String(title.prefix(limit)) + "\u{2026}" : title
+    }
+
     static func make(
         message: String,
         informativeText: String? = nil,

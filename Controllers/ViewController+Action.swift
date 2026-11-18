@@ -245,7 +245,7 @@ extension ViewController {
         if note.project.fileExist(fileName: value, ext: note.url.pathExtension), !isSoftRename {
             MiaoYanAlert.show(
                 message: I18n.str("Duplicate note name"),
-                informativeText: String(format: I18n.str("Note \"%@\" already exists"), value),
+                informativeText: String(format: I18n.str("Note \"%@\" already exists"), MiaoYanAlert.shortTitle(value)),
                 for: view.window
             )
 
@@ -255,6 +255,12 @@ extension ViewController {
         }
 
         guard !value.isEmpty else {
+            sender.stringValue = note.getTitleWithoutLabel()
+            return
+        }
+
+        guard Note.fileNameFits(value, ext: note.url.pathExtension) else {
+            rejectLongTitle(for: note)
             sender.stringValue = note.getTitleWithoutLabel()
             return
         }

@@ -1195,6 +1195,17 @@ public class Note: NSObject {
         }
     }
 
+    /// APFS caps a file name at 255 UTF-8 bytes. A longer title can never be
+    /// renamed to, so callers check this first and say so instead of trying.
+    /// The title is counted as given, spaces included, since not every rename
+    /// path trims it.
+    nonisolated static let maxFileNameBytes = 255
+
+    nonisolated static func fileNameFits(_ title: String, ext: String) -> Bool {
+        let extBytes = ext.isEmpty ? 0 : ext.utf8.count + 1
+        return title.utf8.count + extBytes <= maxFileNameBytes
+    }
+
     /// Renames the file after `title`, as the title bar does: `:` becomes
     /// `-` and `/` becomes Finder's `:`, a case-only change is allowed, and a
     /// name another file already has is refused, and so is a title of spaces,

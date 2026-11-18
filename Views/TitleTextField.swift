@@ -6,21 +6,17 @@ class TitleTextField: NSTextField, NSTextFieldDelegate {
     public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
 
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        handleClipboard(with: event)
-        return super.performKeyEquivalent(with: event)
+    override class var cellClass: AnyClass? {
+        get { TitleTextFieldCell.self }
+        set { super.cellClass = newValue }
     }
 
-    private func handleClipboard(with event: NSEvent) {
-        let pb = NSPasteboard.general
-
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_C {
-            handleCopy(pb: pb)
+            handleCopy(pb: NSPasteboard.general)
         }
 
-        if event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_V {
-            handlePaste(pb: pb)
-        }
+        return super.performKeyEquivalent(with: event)
     }
 
     private func handleCopy(pb: NSPasteboard) {
@@ -33,22 +29,17 @@ class TitleTextField: NSTextField, NSTextFieldDelegate {
         pb.setString(text, forType: NSPasteboard.PasteboardType.string)
     }
 
-    private func handlePaste(pb: NSPasteboard) {
-        guard window?.firstResponder == currentEditor(),
-            let items = pb.pasteboardItems
-        else { return }
-
-        for item in items {
-            if let text = item.string(forType: .string) {
-                let cleanText = text.replacingOccurrences(of: "\n", with: " ")
-                pb.clearContents()
-                pb.setString(cleanText, forType: .string)
-            }
-        }
+    /// The first non-empty line of multi-line text, without its outer spaces.
+    nonisolated static func titleLine(from text: String) -> String {
+        let line = text.components(separatedBy: .newlines).first { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+        return line?.trimmingCharacters(in: .whitespaces) ?? ""
     }
 
+    /// The title has its own field editor (`TitleFieldEditor`), so focus is
+    /// any text view editing on its behalf, not only the window's shared one.
     public func hasFocus() -> Bool {
-        return (window?.firstResponder is NSTextView) && window?.fieldEditor(false, for: nil) != nil && isEqual(to: (window?.firstResponder as? NSTextView)?.delegate)
+        guard let editor = window?.firstResponder as? NSTextView else { return false }
+        return isEqual(to: editor.delegate)
     }
 
     public func editModeOn() {
@@ -80,6 +71,40 @@ class TitleTextField: NSTextField, NSTextFieldDelegate {
 
     func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
         // TAB handling is done in ViewController's keyDown method
+        return false
+    }
+}
+
+/// Gives the title its own field editor, so every way text gets in (Cmd+V,
+/// Edit > Paste, the context menu, a drop) passes through one filter.
+final class TitleTextFieldCell: NSTextFieldCell {
+    private var titleEditor: TitleFieldEditor?
+
+    override func fieldEditor(for controlView: NSView) -> NSTextView? {
+        if let titleEditor { return titleEditor }
+        let editor = TitleFieldEditor()
+        editor.isFieldEditor = true
+        titleEditor = editor
+        return editor
+    }
+}
+
+/// Text with line breaks going into the title keeps only its first non-empty
+/// line. A whole note pasted here used to become one huge title whose rename
+/// failed and whose alert grew taller than the screen, hiding its only button.
+/// Single-line text goes in as it is, and the clipboard is never touched.
+final class TitleFieldEditor: NSTextView {
+    override func shouldChangeText(in range: NSRange, replacementString: String?) -> Bool {
+        guard let text = replacementString, text.contains(where: \.isNewline) else {
+            return super.shouldChangeText(in: range, replacementString: replacementString)
+        }
+
+        let line = TitleTextField.titleLine(from: text)
+        if !line.isEmpty, super.shouldChangeText(in: range, replacementString: line) {
+            replaceCharacters(in: range, with: line)
+            didChangeText()
+            setSelectedRange(NSRange(location: range.location + line.utf16.count, length: 0))
+        }
         return false
     }
 }

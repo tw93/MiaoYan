@@ -831,8 +831,10 @@ final class ShellModel {
         rename(note, to: renameDraft)
     }
 
-    /// A title is one line: pasted line breaks become spaces, as in the
-    /// storyboard window's title field.
+    /// A title is one line: pasted line breaks become spaces. The storyboard
+    /// window's field editor keeps only the pasted text's first line instead,
+    /// but here the change arrives as the whole draft, where that would drop
+    /// what was typed after the caret.
     nonisolated static func singleLineTitle(_ title: String) -> String {
         guard title.contains(where: \.isNewline) else { return title }
         return title.split(omittingEmptySubsequences: false, whereSeparator: \.isNewline).joined(separator: " ")
@@ -1100,9 +1102,13 @@ final class ShellModel {
         // A rename committed because another note was clicked keeps that
         // note selected.
         let wasSelected = selectedNoteURL == note.url
+        guard Note.fileNameFits(title, ext: note.url.pathExtension) else {
+            host?.toast(message: I18n.str("Title is too long to save"), style: .failure)
+            return false
+        }
         guard note.renameFile(to: title) else {
             MiaoYanAlert.show(
-                message: String(format: I18n.str("\u{201C}%@\u{201D} already exists in this folder"), title),
+                message: String(format: I18n.str("\u{201C}%@\u{201D} already exists in this folder"), MiaoYanAlert.shortTitle(title)),
                 for: host?.view.window)
             return false
         }

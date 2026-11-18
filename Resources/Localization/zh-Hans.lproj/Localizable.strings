@@ -338,6 +338,7 @@
 "Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移到废纸篓？";
 "No unused attachments" = "没有未使用的附件";
 "Title not saved. Click it again to rename" = "标题未保存，再点一次标题即可重命名";
+"Title is too long to save" = "标题太长，没法保存";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在 Finder 中可见。";
 "Keep this window above other apps" = "窗口始终显示在其他应用上方";
 "Where the preview starts when you open it" = "打开预览时从哪里开始显示";

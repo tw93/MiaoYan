@@ -1563,8 +1563,27 @@ extension ViewController {
         let currentName = note.getFileName()
         guard currentName != newTitle else { return }
 
+        guard Note.fileNameFits(newTitle, ext: note.url.pathExtension) else {
+            rejectLongTitle(for: note)
+            return
+        }
+
         let result = attemptSave(note: note, title: newTitle, current: currentName)
         handleResult(result, title: newTitle, note: note)
+    }
+
+    /// A title longer than a file name can hold is never tried: the toast
+    /// says why, the pending title is dropped so a later mode switch or note
+    /// click does not try it again, and the field goes back to the note's own
+    /// title when it is the open note.
+    func rejectLongTitle(for note: Note) {
+        if UserDataService.instance.pendingTitleChange?.note === note {
+            UserDataService.instance.pendingTitleChange = nil
+        }
+        toast(message: I18n.str("Title is too long to save"), style: .failure)
+        if note === EditTextView.note {
+            updateTitle(newTitle: note.getTitleWithoutLabel())
+        }
     }
 
     public func saveTitle(_ title: String, to note: Note) {
@@ -1573,6 +1592,11 @@ extension ViewController {
 
         let currentName = note.getFileName()
         guard currentName != newTitle else { return }
+
+        guard Note.fileNameFits(newTitle, ext: note.url.pathExtension) else {
+            rejectLongTitle(for: note)
+            return
+        }
 
         let result = attemptSave(note: note, title: newTitle, current: currentName)
         if case .success = result {
@@ -1604,7 +1628,7 @@ extension ViewController {
 
     private func showAlert(for title: String) {
         MiaoYanAlert.show(
-            message: String(format: I18n.str("\u{201C}%@\u{201D} already exists in this folder"), title),
+            message: String(format: I18n.str("\u{201C}%@\u{201D} already exists in this folder"), MiaoYanAlert.shortTitle(title)),
             for: view.window
         )
     }

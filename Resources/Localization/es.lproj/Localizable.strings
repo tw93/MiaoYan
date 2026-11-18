@@ -331,6 +331,7 @@
 "Move the folder “%@” and everything in it to the Trash?" = "¿Mover la carpeta “%@” y todo su contenido a la papelera?";
 "No unused attachments" = "No hay archivos adjuntos sin usar";
 "Title not saved. Click it again to rename" = "Título no guardado. Haz clic de nuevo para renombrarlo";
+"Title is too long to save" = "El título es demasiado largo para guardarlo";
 "MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "MiaoYan no puede leer esta carpeta. Si está en una unidad en la nube, abre su app y confirma que la carpeta aparece en Finder.";
 "Keep this window above other apps" = "La ventana queda por encima de otras apps";
 "Where the preview starts when you open it" = "Dónde empieza la vista previa al abrirla";
