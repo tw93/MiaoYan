@@ -438,8 +438,11 @@ public class Note: NSObject {
                 ? creationDate
                 : modifiedLocalAt
         else { return String() }
-        return Self.dateFormatter.formatTimeForDisplay(date)
+        return NoteListDate.short(date, locale: Self.listDateLocale)
     }
+
+    /// The app's own language, which can differ from the system's.
+    static let listDateLocale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? "en")
 
     @objc func getCreationDateForLabel() -> String? {
         guard let creationDate = creationDate else { return nil }

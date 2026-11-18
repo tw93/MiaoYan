@@ -540,46 +540,14 @@ final class ShellModel {
         return sidebarRows.first { $0.id == scope }?.title ?? ""
     }
 
-    /// Bear-style dates: today and yesterday by name with the time, this
-    /// year's by month and day, older ones with the year.
+    /// The list row date, `NoteListDate` as the storyboard list and the
+    /// iPhone show it, in the app's own language.
     static func rowDate(for note: Note) -> String {
         let date =
             (UserDefaultsManagement.sort == .creationDate || note.project.sortBy == .creationDate
                 ? note.creationDate : nil) ?? note.modifiedLocalAt
-        let calendar = Calendar.current
-        if calendar.isDateInToday(date) || calendar.isDateInYesterday(date) {
-            return relativeFormatter.string(from: date)
-        }
-        if calendar.isDate(date, equalTo: Date(), toGranularity: .year) {
-            return monthDayFormatter.string(from: date)
-        }
-        return fullDateFormatter.string(from: date)
+        return NoteListDate.short(date, locale: Note.listDateLocale)
     }
-
-    private static let displayLocale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? "en")
-
-    private static let relativeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = displayLocale
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        formatter.doesRelativeDateFormatting = true
-        return formatter
-    }()
-
-    private static let monthDayFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = displayLocale
-        formatter.setLocalizedDateFormatFromTemplate("MMMd")
-        return formatter
-    }()
-
-    private static let fullDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = displayLocale
-        formatter.setLocalizedDateFormatFromTemplate("yMMMd")
-        return formatter
-    }()
 
     /// Leaving preview returns to split when split was on.
     private var modeAfterPreview: EditorMode {
