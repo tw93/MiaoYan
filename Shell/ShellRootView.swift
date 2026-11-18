@@ -402,8 +402,9 @@ private struct ShellSidebarBrand: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
         }
-        // Centred in the column, as the storyboard sidebar's lockup is.
-        .frame(maxWidth: .infinity)
+        // MiaoYan is centred in the column and 妙言 sits at the leading edge,
+        // as in the storyboard sidebar.
+        .frame(maxWidth: .infinity, alignment: title.unicodeScalars.allSatisfy(\.isASCII) ? .center : .leading)
         .foregroundStyle(ShellStyle.accent)
         .padding(.leading, 8)
         .padding(.trailing, 8)

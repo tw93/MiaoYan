@@ -127,10 +127,11 @@ class SidebarCellView: NSTableCellView, NSTextFieldDelegate {
         label.cell = labelCell
     }
 
-    /// The brand row centres the bird and wordmark together in the sidebar,
-    /// in both languages (maintainer, 2026-11-18): aligned to the folder icons
-    /// 妙言 left 41pt to its right and 27 to its left, and MiaoYan sat right
-    /// of centre. Other rows reset it when the cell is reused.
+    /// The English brand row centres the bird and MiaoYan together in the
+    /// sidebar: aligned to the folder icons the long name sat right of
+    /// centre (27pt left, 13 right). 妙言 stays aligned to the icons, the
+    /// maintainer's choice of the two after both were centred (2026-11-18).
+    /// Other rows reset it when the cell is reused.
     var centersContent = false {
         didSet { if centersContent != oldValue { needsLayout = true } }
     }
