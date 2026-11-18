@@ -127,9 +127,52 @@ class SidebarCellView: NSTableCellView, NSTextFieldDelegate {
         label.cell = labelCell
     }
 
+    /// The brand row centres the bird and wordmark together in the sidebar,
+    /// in both languages (maintainer, 2026-11-18): aligned to the folder icons
+    /// 妙言 left 41pt to its right and 27 to its left, and MiaoYan sat right
+    /// of centre. Other rows reset it when the cell is reused.
+    var centersContent = false {
+        didSet { if centersContent != oldValue { needsLayout = true } }
+    }
+
     override func layout() {
         super.layout()
+        if centersContent { centerIconAndLabel() }
         updatePreferredLabelWidth()
+    }
+
+    private func leadingConstraint(of view: NSView) -> NSLayoutConstraint? {
+        constraints.first {
+            ($0.firstItem as? NSView) === view && $0.firstAttribute == .leading
+                && ($0.secondItem as? NSView) === self && $0.secondAttribute == .leading
+        }
+    }
+
+    /// Centres the icon and the name's text, as one group, on the row. The
+    /// cell starts 25pt into the row (the outline's indent), so a group as
+    /// wide as MiaoYan's starts left of the cell. The text field pads its
+    /// text 2pt a side and the tracking adds a gap after the last letter;
+    /// neither is ink, so neither counts.
+    private func centerIconAndLabel() {
+        guard let icon, let label,
+            let iconLeading = leadingConstraint(of: icon),
+            let labelLeading = leadingConstraint(of: label)
+        else { return }
+        let spacing = labelLeading.constant - iconLeading.constant - icon.frame.width
+        let text = label.attributedStringValue
+        let textWidth = text.size().width
+        let padding = max(0, ((label.cell?.cellSize.width ?? textWidth) - textWidth) / 2)
+        let lastKern = text.length > 0 ? (text.attribute(.kern, at: text.length - 1, effectiveRange: nil) as? CGFloat ?? 0) : 0
+        let groupWidth = icon.frame.width + spacing + padding + textWidth - lastKern
+        let rowWidth = superview?.bounds.width ?? bounds.width
+        // The ink sat 1pt left of centre in both languages (2x captures): the
+        // bird and the glyphs carry more side bearing on the right.
+        let inkCorrection: CGFloat = 1
+        let leading = max(-frame.minX, (rowWidth - groupWidth) / 2 - frame.minX + inkCorrection)
+        guard abs(iconLeading.constant - leading) > 0.25 else { return }
+        iconLeading.constant = leading
+        labelLeading.constant = leading + icon.frame.width + spacing
+        super.layout()
     }
 
     private var labelTrailing: NSLayoutConstraint?

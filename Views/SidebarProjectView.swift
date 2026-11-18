@@ -424,6 +424,7 @@ class SidebarProjectView: NSOutlineView,
         let defaultSpacing: CGFloat = 6
         let defaultIconLeading: CGFloat = 1
 
+        cell.centersContent = false
         updateIconLeading(cell, leading: defaultIconLeading)
         adjustIconSize(cell, size: defaultIconSize)
         setupBasicCellAppearance(cell, baseFont: baseFont)
@@ -562,9 +563,8 @@ class SidebarProjectView: NSOutlineView,
         // a 22pt bird with the wordmark at +2 read small. The italic wordmark
         // with a slanted 26pt bird leaned against the upright folder names and
         // read too large; a lockup of icon 20 and font +1 was rejected as too small.
-        // The bird's left edge and the wordmark's first stroke line up with the
-        // folder icons and names below (measured 2026-10-26; the bird had
-        // stood 4pt left of the icons and the wordmark 2pt left of the names).
+        // The lockup is centred in the sidebar (`SidebarCellView.centersContent`,
+        // 2026-11-18); from 2026-10-26 the bird lined up with the folder icons.
         let accentIconSize: CGFloat = 26
         let accentSpacing: CGFloat = 6
         let accentIconLeading: CGFloat = 2
@@ -586,6 +586,7 @@ class SidebarProjectView: NSOutlineView,
             cell.label.textColor = accentColor
             updateLabelVerticalNudge(cell, nudge: labelNudge)
             updateLabelSpacing(cell, spacing: accentSpacing)
+            cell.centersContent = true
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
             // The bird icon has a different visual center from folder icons.

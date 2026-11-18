@@ -401,8 +401,9 @@ private struct ShellSidebarBrand: View {
                 .kerning(Theme.brandWordmarkTrackingEm(for: title).map { $0 * size } ?? 0)
                 .lineLimit(1)
                 .truncationMode(.tail)
-            Spacer(minLength: 0)
         }
+        // Centred in the column, as the storyboard sidebar's lockup is.
+        .frame(maxWidth: .infinity)
         .foregroundStyle(ShellStyle.accent)
         .padding(.leading, 8)
         .padding(.trailing, 8)
