@@ -203,17 +203,18 @@ The complete Sparkle license appears below.
 
 ### LXGW WenKai
 
-The sidebar sets 妙言 in LXGW WenKai Medium, designed by LXGW and derived from
-Fontworks' Klee One.
+The sidebar sets 妙言 and MiaoYan in LXGW WenKai Medium, designed by LXGW and
+derived from Fontworks' Klee One.
 
 - **Source:** <https://github.com/lxgw/LxgwWenKai>
 - **Copyright:** Copyright 2021-2026 LXGW (https://github.com/lxgw/LxgwWenKai),
   with Reserved Font Name '霞鹜', '霞鶩', '落霞孤鹜', '落霞孤鶩' and 'LXGW'.
   Copyright 2020 The Klee Project Authors (https://github.com/fontworks-fonts/Klee)
 - **License:** SIL Open Font License, Version 1.1
-- **Changes made for MiaoYan:** the bundled file holds only the two glyphs of
-  妙言, their strokes thickened by 6 of 1000 units on each side, without
-  hinting or layout tables, and, because 'LXGW' and '霞鹜' are
+- **Changes made for MiaoYan:** the bundled file holds only the glyphs of
+  妙言 and of the letters M, i, a, o, Y and n, their strokes thickened by 6
+  (妙言) and 14 (the letters) of 1000 units on each side, without hinting and
+  with only the kerning layout kept, and, because 'LXGW' and '霞鹜' are
   Reserved Font Names, it is renamed MiaoYan Mark. The copyright and license
   records inside the font are unchanged.
 - **Bundled file:** `MiaoYanMark.ttf`

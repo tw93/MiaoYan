@@ -1,4 +1,4 @@
-"""The sidebar wordmark font must stay a two-glyph cut. A full LXGW WenKai is 25.8 MB, and an unrenamed copy breaks
+"""The sidebar wordmark font must stay a cut of the brand's own letters, 妙言 and MiaoYan. A full LXGW WenKai is 25.8 MB, and an unrenamed copy breaks
 the OFL's Reserved Font Names. Parsed by hand so CI needs no fontTools.
 
     python3 -m unittest discover -s scripts -p 'test_*.py'
@@ -59,10 +59,10 @@ class MarkFontGateTests(unittest.TestCase):
         self.data = MARK.read_bytes()
         self.tables = tables(self.data)
 
-    def test_it_stays_a_two_glyph_cut(self):
-        self.assertLess(len(self.data), 8 * 1024, "MiaoYanMark.ttf grew past 8 KB; cut it to 妙言 again")
-        self.assertEqual(struct.unpack(">H", self.tables["maxp"][4:6])[0], 3, ".notdef, 妙 and 言 only")
-        self.assertEqual(mapped_code_points(self.tables["cmap"]), {ord("妙"), ord("言")})
+    def test_it_stays_a_cut_of_the_brand_letters(self):
+        self.assertLess(len(self.data), 8 * 1024, "MiaoYanMark.ttf grew past 8 KB; cut it to 妙言 and MiaoYan again")
+        self.assertEqual(struct.unpack(">H", self.tables["maxp"][4:6])[0], 9, ".notdef, 妙言 and M i a o Y n only")
+        self.assertEqual(mapped_code_points(self.tables["cmap"]), set(map(ord, "妙言MiaoYan")))
 
     def test_it_is_renamed_and_keeps_its_licence(self):
         records = names(self.tables["name"])

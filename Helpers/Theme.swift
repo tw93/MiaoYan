@@ -18,8 +18,12 @@ enum Theme {
         static var curve: CAMediaTimingFunction { CAMediaTimingFunction(name: .easeOut) }
     }
 
-    /// The sidebar wordmark: upright Charter for MiaoYan, and LXGW WenKai
-    /// Medium for 妙言 (maintainer, 2026-11-15, from four rendered beside the
+    /// The sidebar wordmark in LXGW WenKai Medium, 妙言 and MiaoYan alike: the
+    /// Latin name was upright Charter until the maintainer picked WenKai's own
+    /// letters from Charter Bold and two WenKai sizes rendered on the phone
+    /// head (2026-11-18), so the two names read as one lockup. Charter stays
+    /// for a Latin title the cut has no letters for. 妙言 came first
+    /// (maintainer, 2026-11-15, from four rendered beside the
     /// system, Kaiti and TsangerJinKai folder labels). Source Han Serif, used
     /// from 2026-10-26, read stiff beside a kaiti interface font; WenKai's
     /// brush strokes match the bird and sit with serif, kaiti and sans labels
@@ -28,10 +32,14 @@ enum Theme {
     /// the maintainer's pick of three (2026-11-15). `MiaoYanMark.ttf` is a
     /// two-glyph cut (2.7 KB of the 25.8 MB face), renamed as the OFL asks of
     /// a modified copy, loaded without registering so it never shows up in
-    /// the font menus.
+    /// the font menus. Its Latin letters (M, i, a, o, Y, n) are thickened
+    /// 14 units a side, where WenKai's thin Latin strokes match 妙言's weight
+    /// (the maintainer's pick of 6, 14 and 22 rendered); the cut is 4 KB.
     static func brandWordmarkFont(for title: String, size: CGFloat) -> NSFont? {
-        if title.unicodeScalars.contains(where: { !$0.isASCII }), let mark = brandMarkDescriptor {
-            return CTFontCreateWithFontDescriptor(mark, size, nil) as NSFont
+        if let mark = brandMarkDescriptor {
+            let font = CTFontCreateWithFontDescriptor(mark, size, nil)
+            let isMark = title.unicodeScalars.contains { !$0.isASCII }
+            if isMark || font.covers(title) { return font as NSFont }
         }
         return NSFont(name: "Charter-Roman", size: size)
     }
@@ -98,10 +106,12 @@ enum Theme {
             let systemName = NSFont.systemFont(ofSize: font?.pointSize ?? 14).fontName
             return font?.fontName == systemName ? sidebarSystemFaceLabelVerticalNudge : sidebarStandardLabelVerticalNudge
         }
-        /// MiaoYan's M centres 0.8pt under the bird's ink. With the 26pt bird
-        /// and the name at +2 (2026-11-18), 1.5 left it 2.2pt under and the
-        /// maintainer asked for it a little higher.
-        static let sidebarBrandLabelVerticalNudge: CGFloat = -1
+        /// MiaoYan's ink centres 1.75pt under the bird's, next to 妙言's 1.5:
+        /// the maintainer's pick of 0.75, 1.75 and 2.75 rendered in Charter
+        /// (2026-11-18). WenKai's letters sit 0.5pt lower in the line than
+        /// Charter's, so the nudge is -0.5 (2x capture: 0.25pt under at -2,
+        /// 2.25 at 0).
+        static let sidebarBrandLabelVerticalNudge: CGFloat = -0.5
         static let sidebarBrandIconOffsetY: CGFloat = -3.5
         /// 妙言 sits differently in its line than Charter's MiaoYan, so the
         /// Chinese lockup has its own pair: the bird level with the folder
@@ -665,5 +675,14 @@ struct ThemeSnapshot {
                 previewDarkBackgroundColor: Theme.previewDarkBackgroundColor
             )
         }
+    }
+}
+
+extension CTFont {
+    /// Whether this face draws every character of `text` itself.
+    fileprivate func covers(_ text: String) -> Bool {
+        let units = Array(text.utf16)
+        var glyphs = [CGGlyph](repeating: 0, count: units.count)
+        return CTFontGetGlyphsForCharacters(self, units, &glyphs, units.count)
     }
 }
