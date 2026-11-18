@@ -36,7 +36,7 @@ $$\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618$$
 2. Type `/mermaid` in the body and press `Tab` for a diagram template; `/table`, `/task` and `/fold` work the same way
 3. Open "MiaoYan PPT" in this folder and press `⌥⌘P` to see a deck written in Markdown
 
-For more patterns, "MiaoYan Markdown Syntax Guide" has headings, code, diagrams and footnotes.
+New to Markdown? Open "MiaoYan Markdown Syntax Guide" in this folder and press `⌘\`: the way each thing is written sits on the left and how it looks on the right, from headings and code to diagrams and footnotes.
 
 ## Keep writing on iPhone and iPad
 
