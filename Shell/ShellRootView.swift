@@ -387,9 +387,13 @@ private struct ShellSidebarBrand: View {
     let title: String
 
     var body: some View {
-        let size = CGFloat(UserDefaultsManagement.nameFontSize) + 4
+        let isLatin = title.unicodeScalars.allSatisfy(\.isASCII)
+        let size = CGFloat(UserDefaultsManagement.nameFontSize) + (isLatin ? 2 : 4)
         // The bird, wordmark size and 6pt spacing follow the storyboard
         // sidebar's lockup, made larger on 2026-11-18 (`configureForSidebarItemType`).
+        // Centred on the bird, the name's ink sat 0.5pt above the bird's in
+        // both languages; the offsets put it where the storyboard's sits,
+        // 1.5pt under for 妙言 and 1.75 for MiaoYan (2x captures).
         HStack(spacing: 6) {
             SwiftUI.Image(nsImage: NSImage(named: "home") ?? NSImage())
                 .renderingMode(.template)
@@ -401,10 +405,11 @@ private struct ShellSidebarBrand: View {
                 .kerning(Theme.brandWordmarkTrackingEm(for: title).map { $0 * size } ?? 0)
                 .lineLimit(1)
                 .truncationMode(.tail)
+                .offset(y: isLatin ? 1.75 : 2)
         }
         // MiaoYan is centred in the column and 妙言 sits at the leading edge,
         // as in the storyboard sidebar.
-        .frame(maxWidth: .infinity, alignment: title.unicodeScalars.allSatisfy(\.isASCII) ? .center : .leading)
+        .frame(maxWidth: .infinity, alignment: isLatin ? .center : .leading)
         .foregroundStyle(ShellStyle.accent)
         .padding(.leading, 8)
         .padding(.trailing, 8)
