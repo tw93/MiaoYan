@@ -1,5 +1,6 @@
 import Cocoa
 import Foundation
+import MiaoYanCore
 
 extension AppDelegate {
     enum HandledSchemes: String {
@@ -12,6 +13,7 @@ extension AppDelegate {
         case find
         case new
         case goto
+        case guide
     }
     enum NvALTRoutes: String {
         case find
@@ -123,6 +125,8 @@ extension AppDelegate {
             RouteMiaoYanNew(url)
         case MiaoYanRoutes.goto.rawValue:
             RouteMiaoYanGoto(url)
+        case MiaoYanRoutes.guide.rawValue:
+            RouteMiaoYanGuide(url)
         default:
             break
         }
@@ -140,6 +144,29 @@ extension AppDelegate {
             return
         }
         search(query: lastPath)
+    }
+
+    /// Runs the guide's own link in this app. Handed to LaunchServices it
+    /// could reach another installed copy of MiaoYan, which would offer to
+    /// trash its own library's guide or, not running, do nothing.
+    @MainActor
+    static func openGuideLinkInProcess(_ url: URL) -> Bool {
+        guard GuideSeed.isHideLink(url), let delegate = NSApp.delegate as? AppDelegate else { return false }
+        delegate.RouteMiaoYanGuide(url)
+        return true
+    }
+
+    /// `miaoyan://guide/hide`, the link closing the introduction: the guide
+    /// folder goes to the Trash after the usual folder confirmation.
+    @MainActor
+    func RouteMiaoYanGuide(_ url: URL) {
+        guard GuideSeed.isHideLink(url) else { return }
+        if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            if let guide = shell.model.storage.guideProject() { shell.model.confirmDeleteFolder(guide) }
+            return
+        }
+        guard let vc = ViewController.shared(), let guide = vc.storage.guideProject() else { return }
+        vc.storageOutlineView.confirmDeleteFolder(guide)
     }
 
     @MainActor

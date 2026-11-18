@@ -1089,16 +1089,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 saveCursorPosition()
                 return
             }
-            if let link = link as? String, let url = URL(string: link) {
+            if let url = (link as? URL) ?? (link as? String).flatMap({ URL(string: $0) }) {
+                if AppDelegate.openGuideLinkInProcess(url) { return }
                 let config = NSWorkspace.OpenConfiguration()
                 config.activates = false
                 NSWorkspace.shared.open(url, configuration: config)
-                return
-            }
-            if let link = link as? URL {
-                let config = NSWorkspace.OpenConfiguration()
-                config.activates = false
-                NSWorkspace.shared.open(link, configuration: config)
                 return
             }
             super.clicked(onLink: link, at: charIndex)

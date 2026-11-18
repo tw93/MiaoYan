@@ -1085,16 +1085,6 @@ class Storage {
         return .createInitFolders
     }
 
-    /// Whether a preferred language tag gets the Traditional folder names. A
-    /// script subtag decides (zh-Hans-HK is Simplified); a region implies
-    /// Traditional only when the tag names no script.
-    nonisolated static func seedsTraditionalChinese(_ language: String) -> Bool {
-        guard language.hasPrefix("zh") else { return false }
-        if language.contains("Hant") { return true }
-        if language.contains("Hans") { return false }
-        return ["TW", "HK", "MO"].contains { language.contains($0) }
-    }
-
     func checkFirstRun() -> Bool {
         switch Storage.decideInitContent(
             noteListIsEmpty: noteList.isEmpty,
@@ -1117,48 +1107,34 @@ class Storage {
             return false
         }
 
-        let initialPath = resourceURL.appendingPathComponent("Initial").path
-
         // Skip directory structure in single mode
         if UserDefaultsManagement.isSingleMode {
             return true
         }
 
-        // Detect system language
-        let language = Locale.preferredLanguages.first ?? ""
-        let isChinese = language.hasPrefix("zh")
-        let isTraditional = Self.seedsTraditionalChinese(language)
+        // The note list read so far stops two folders down and skips iCloud
+        // notes not downloaded yet, and the iPhone may have written the guide
+        // before any of its notes were read here, so the disk decides.
+        guard
+            GuideSeed.shouldSeed(
+                libraryHasNotes: GuideSeed.libraryHasNotes(at: destination, extensions: allowedExtensions),
+                guideFolderExists: GuideSeed.guideFolderExists(in: destination),
+                seededOnThisDevice: false)
+        else {
+            UserDefaultsManagement.hasCreatedInitContent = true
+            return false
+        }
 
-        // Folder names follow the notes' language, so a Chinese library
-        // does not open on four English folders.
-        let seed: [(folder: String, notes: [String])] =
-            isChinese
-            ? [
-                ("指南", ["介绍妙言.md"]),
-                ("示例", ["妙言 PPT.md", "妙言 Markdown 语法指南.md"]),
-                (isTraditional ? "筆記" : "笔记", ["欢迎使用.md"]),
-                (isTraditional ? "靈感" : "灵感", ["头脑风暴.md"]),
-            ]
-            : [
-                ("Guide", ["Introduction to MiaoYan.md"]),
-                ("Examples", ["MiaoYan PPT.md", "MiaoYan Markdown Syntax Guide.md"]),
-                ("Notes", ["Welcome.md"]),
-                ("Ideas", ["Brainstorming.md"]),
-            ]
+        let plan = GuideSeed.plan(forLanguage: Locale.preferredLanguages.first ?? "")
+        let initialURL = resourceURL.appendingPathComponent("Initial")
+        let folderURL = destination.appendingPathComponent(plan.folder)
 
         do {
-            // Create folders and copy files
-            for entry in seed {
-                let folderURL = destination.appendingPathComponent(entry.folder)
-                try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true, attributes: nil)
-
-                for file in entry.notes {
-                    let sourcePath = "\(initialPath)/\(file)"
-                    let destPath = folderURL.appendingPathComponent(file).path
-
-                    if FileManager.default.fileExists(atPath: sourcePath) {
-                        try? FileManager.default.copyItem(atPath: sourcePath, toPath: destPath)
-                    }
+            try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true, attributes: nil)
+            for file in plan.notes {
+                let source = initialURL.appendingPathComponent(file)
+                if FileManager.default.fileExists(atPath: source.path) {
+                    try? FileManager.default.copyItem(at: source, to: folderURL.appendingPathComponent(file))
                 }
             }
 
@@ -1172,8 +1148,20 @@ class Storage {
             return false
         }
 
+        // A new library opens on the introduction.
+        if let first = plan.notes.first {
+            // Resolved as every loaded note's URL is, or a library reached
+            // through a symlink opens on nothing in the shell window.
+            UserDefaultsManagement.lastSelectedURL = folderURL.appendingPathComponent(first).resolvingSymlinksInPath()
+        }
         UserDefaultsManagement.hasCreatedInitContent = true
         return true
+    }
+
+    /// The guide folder the library started with, when it is still there.
+    func guideProject() -> Project? {
+        guard let root = getRootProject() else { return nil }
+        return projects.first { !$0.isTrash && GuideSeed.isGuideFolder($0.url, root: root.url) }
     }
 
     func getBy(url: URL) -> Note? {

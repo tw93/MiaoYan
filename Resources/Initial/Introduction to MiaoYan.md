@@ -1,25 +1,49 @@
-<p align="center">
-    <div align="center"><img src="https://miaoyan.app/assets/notes/miaoyan.png" width="138" /></div>
-    <h2 align="center">MiaoYan</h2>
-    <div align="center">Lightweight Markdown note-taking app for macOS</div>
+# Introduction to MiaoYan
 
-</p>
+MiaoYan is a lightweight Markdown notebook, and every note is a plain `.md` file. On the Mac, `⌘3` switches between the source and the typeset page, and `⌘\` puts the source on the left and the page on the right.
 
-## Features
+## See what it does
 
-- **Fantastic**: Local-first, privacy-focused, syntax highlighting, PPT mode, LaTeX, Mermaid diagrams
-- **Beautiful**: Minimalist design, three-column layout, dark mode, distraction-free
-- **Fast**: Native, quick to launch and to switch between notes
-- **Simple**: Lightweight, keyboard shortcuts, auto-formatting
+A small table:
 
-## Getting Started
+| To do this | On the Mac, press |
+| --- | --- |
+| New note | `⌘N` |
+| Switch between editing and preview | `⌘3` |
+| Open MiaoYan PPT | `⌥⌘P` |
 
-1. Every note is a plain Markdown file; see or change where they are kept in Settings
-2. Press `⇧⌘N` to create a folder and sort your notes
-3. Customize the default font in Settings if needed
-4. To keep writing away from the Mac, the [iPhone and iPad apps](https://apps.apple.com/app/miaoyan/id6759252269) open the same iCloud Drive folder
+A to-do list, ticked by clicking its boxes in the preview:
 
-## Keyboard Shortcuts
+- [x] Open MiaoYan
+- [ ] Write a first note
+- [ ] Put this guide away when done
+
+A diagram:
+
+```mermaid
+graph LR
+A[Write an idea] --> B[Preview the layout]
+B --> C[Share or present]
+```
+
+A formula, the golden ratio:
+
+$$\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618$$
+
+## Three things to try on the Mac
+
+1. Press `⌘N` for a new note, type its title, then press Return to write the body
+2. Type `/mermaid` in the body and press `Tab` for a diagram template; `/table`, `/task` and `/fold` work the same way
+3. Open "MiaoYan PPT" in this folder and press `⌥⌘P` to see a deck written in Markdown
+
+For more patterns, "MiaoYan Markdown Syntax Guide" has headings, code, diagrams and footnotes.
+
+## Keep writing on iPhone and iPad
+
+The [iPhone and iPad apps](https://apps.apple.com/app/miaoyan/id6759252269) open the same iCloud Drive folder, so notes written on the Mac carry on there. Every note lives in your own folder; see or change where in Settings.
+
+<details>
+<summary>Keyboard shortcuts on the Mac</summary>
 
 #### Window Operations
 
@@ -45,45 +69,25 @@
 - `⌥⌘I` - Show document properties
 - `⌥⌘P` - Launch PPT preview
 
-Explore more shortcuts in the app.
+</details>
 
-## Helpful Tools
+<details>
+<summary>More to know</summary>
 
-### Preview Table of Contents
+- Press `⌘5`, or hover the slim handle near the top right in preview, for the table of contents; any note with two or more headings gets one
+- `Format > Tab Quick Input` lists every template; built in are `/time`, `/table`, `/img`, `/video`, `/markmap`, `/mermaid`, `/plantuml`, `/fold`, `/task`
+- After pasting plain text, `⇧⌘L` tidies headings, lists and blank lines
+- Return inside a list or to-do item continues it; Return twice goes back to a plain paragraph
+- MiaoYan PPT works on notes with `---` separators; Return shows the outline and `Esc` leaves. See the [Reveal](https://revealjs.com/markdown/) docs for more
 
-- Press `⌘5`, or switch to preview mode (`⌘3`) and hover over the slim handle near the top-right edge, to reveal the table of contents panel.
-- Notes with at least two headings generate the outline automatically. Click any heading to jump to that section in the preview.
-- Press `Esc` or click outside the panel to close it; the handle fades out again when you stop using it.
-
-### Tab Quick Input Templates
-
-- Type a slash shortcut followed by `Tab` (for example `/table` + `Tab`) while editing to expand rich snippets instantly.
-- The menu bar path `Format > Tab Quick Input` shows every template and can insert them for you.
-- Built-in shortcuts: `/time`, `/table`, `/img`, `/video`, `/markmap`, `/mermaid`, `/plantuml`, `/fold`, `/task`.
-
-## Markdown Workflow Tips
-
-- Use `⇧⌘L` after pasting plain text to clean up headings, lists, and spacing automatically.
-- Press `return` inside a list or todo item to continue it; press `return` twice to break out and keep writing normally.
-- Toggle todos from the keyboard via `Format > Todo` or click the checkbox directly in preview mode.
-- For ready-made Markdown patterns, open **MiaoYan Markdown Syntax Guide** from the Examples folder in the sidebar.
-
-## Rich Content Templates
-
-- Drop in a collapsible section with `/fold` + `Tab` to keep long notes tidy, or use `/task` for a ready-made project checklist.
-- Diagram lovers can expand `/mermaid` or `/plantuml` to insert fenced code blocks that render automatically in preview.
-- `/markmap` generates an interactive mind map, perfect for brainstorming before switching back to prose.
-- Detailed syntax samples, including collapsible sections and diagram templates, live in **MiaoYan Markdown Syntax Guide**.
-
-## MiaoYan PPT
-
-1. "MiaoYan PPT" in the Examples folder is a ready-made deck, open it to try
-2. Press `⌥⌘P` to launch PPT preview, or right-click a document and select "MiaoYan PPT"
-3. PPT mode works with documents containing `---` separators. Press Return to preview the outline, `Esc` to exit
-4. Use HTML for custom effects. See [Reveal](https://revealjs.com/markdown/) docs for advanced usage
+</details>
 
 ## Why MiaoYan
 
 After trying many note apps (WizNote, Evernote, Ulysses, Quiver, MWeb, Bear, Typora), I couldn't find a Markdown tool that felt right, so I built MiaoYan.
 
 As a front-end developer with some iOS experience, I wanted to explore Swift and macOS development while creating a tool I'd actually use.
+
+## Done reading
+
+You can [put this guide away](miaoyan://guide/hide): the whole "MiaoYan Guide" folder moves to the Trash, and you can bring it back from there any time.

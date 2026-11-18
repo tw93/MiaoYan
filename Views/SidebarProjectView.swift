@@ -1045,40 +1045,46 @@ class SidebarProjectView: NSOutlineView,
         }
 
         if !project.isRoot, sidebarItem.type == .Category {
-            guard let w = v.superview?.window else {
-                return
-            }
-
-            MiaoYanAlert.confirm(
-                message: String(format: I18n.str("Move the folder \u{201C}%@\u{201D} and everything in it to the Trash?"), project.label),
-                confirmTitle: I18n.str("Move to Trash"),
-                for: w
-            ) { [weak vc, weak v] confirmed in
-                guard let vc = vc, let v = v else { return }
-                if confirmed {
-                    guard let resultingItemUrl = self.storage.systemTrashDestination(for: project.url) else {
-                        return
-                    }
-
-                    self.storage.flushPendingSaves(inside: project)
-                    do {
-                        try FileManager.default.moveItem(at: project.url, to: resultingItemUrl)
-
-                        v.removeProject(project: project)
-
-                        vc.updateTable {
-                            DispatchQueue.main.async {
-                                vc.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
-                            }
-                        }
-                    } catch {
-                        AppDelegate.trackError(error, context: "SidebarProjectView.removeProject.moveItem")
-                    }
-                }
-            }
+            confirmDeleteFolder(project)
             return
         }
         v.removeProject(project: project)
+    }
+
+    /// Asks, then moves `project` and everything in it to the Trash: the
+    /// sidebar's Move to Trash and the guide's own link to put it away.
+    func confirmDeleteFolder(_ project: Project) {
+        guard let vc = AppContext.shared.viewController, let v = vc.storageOutlineView,
+            !project.isDefault, !project.isRoot, let w = v.superview?.window
+        else { return }
+
+        MiaoYanAlert.confirm(
+            message: String(format: I18n.str("Move the folder \u{201C}%@\u{201D} and everything in it to the Trash?"), project.label),
+            confirmTitle: I18n.str("Move to Trash"),
+            for: w
+        ) { [weak vc, weak v] confirmed in
+            guard let vc = vc, let v = v else { return }
+            if confirmed {
+                guard let resultingItemUrl = self.storage.systemTrashDestination(for: project.url) else {
+                    return
+                }
+
+                self.storage.flushPendingSaves(inside: project)
+                do {
+                    try FileManager.default.moveItem(at: project.url, to: resultingItemUrl)
+
+                    v.removeProject(project: project)
+
+                    vc.updateTable {
+                        DispatchQueue.main.async {
+                            vc.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
+                        }
+                    }
+                } catch {
+                    AppDelegate.trackError(error, context: "SidebarProjectView.removeProject.moveItem")
+                }
+            }
+        }
     }
 
     @IBAction func addProject(_ sender: Any) {

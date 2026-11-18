@@ -800,6 +800,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
             if isFootNotes(url: url) {
                 return .cancel
             }
+            if AppDelegate.openGuideLinkInProcess(url) {
+                return .cancel
+            }
             NSWorkspace.shared.open(url)
             return .cancel
         default:

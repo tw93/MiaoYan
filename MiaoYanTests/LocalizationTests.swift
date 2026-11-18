@@ -43,17 +43,6 @@ final class LocalizationTests: XCTestCase {
         }
     }
 
-    /// A Simplified Chinese user in Hong Kong got the Traditional folder names.
-    func testSeedFolderScriptFollowsTheScriptSubtag() {
-        XCTAssertFalse(Storage.seedsTraditionalChinese("zh-Hans-HK"))
-        XCTAssertFalse(Storage.seedsTraditionalChinese("zh-Hans-MO"))
-        XCTAssertFalse(Storage.seedsTraditionalChinese("zh-Hans-CN"))
-        XCTAssertTrue(Storage.seedsTraditionalChinese("zh-Hant-HK"))
-        XCTAssertTrue(Storage.seedsTraditionalChinese("zh-Hant-CN"))
-        XCTAssertTrue(Storage.seedsTraditionalChinese("zh-TW"))
-        XCTAssertFalse(Storage.seedsTraditionalChinese("en-HK"))
-    }
-
     @MainActor
     func testRestoreFailureCountsInEnglish() throws {
         let key = "Couldn't restore %d note(s) from the Trash"
