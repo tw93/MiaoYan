@@ -945,8 +945,8 @@ private struct ShellTitleField: View {
                     .onChange(of: focused) { _, isFocused in
                         if !isFocused { model.commitPendingRename() }
                     }
-                    .onChange(of: model.renameDraft) { _, draft in
-                        let line = ShellModel.singleLineTitle(draft)
+                    .onChange(of: model.renameDraft) { old, draft in
+                        let line = ShellModel.singleLineTitle(draft, was: old)
                         if line != draft { model.renameDraft = line }
                     }
             } else {

@@ -74,9 +74,9 @@ final class TitleInputTests: XCTestCase {
             // readSelection(from:) is what Cmd+V, Edit > Paste and the context menu all run.
             XCTAssertTrue(fieldEditor.readSelection(from: pb))
 
-            XCTAssertEqual(fieldEditor.string, "# Weekly plan")
+            XCTAssertEqual(fieldEditor.string, "Weekly plan", "the heading's # marks must not name the file")
             XCTAssertEqual(pb.string(forType: .string), note, "the clipboard still pastes intact into the body")
-            XCTAssertEqual(UserDataService.instance.pendingTitleChange?.title, "# Weekly plan")
+            XCTAssertEqual(UserDataService.instance.pendingTitleChange?.title, "Weekly plan")
         }
     }
 

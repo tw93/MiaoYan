@@ -12,7 +12,7 @@ class TitleTextField: NSTextField, NSTextFieldDelegate {
     }
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        if event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_C {
+        if event.modifierFlags.intersection(.deviceIndependentFlagsMask) == .command && event.keyCode == kVK_ANSI_C {
             handleCopy(pb: NSPasteboard.general)
         }
 
@@ -29,10 +29,14 @@ class TitleTextField: NSTextField, NSTextFieldDelegate {
         pb.setString(text, forType: NSPasteboard.PasteboardType.string)
     }
 
-    /// The first non-empty line of multi-line text, without its outer spaces.
+    /// The first non-empty line of multi-line text, without its outer spaces,
+    /// and without the `#` marks when that line is a heading: a pasted note
+    /// usually opens with `# Title`, which would otherwise name the file
+    /// `# Title.md`.
     nonisolated static func titleLine(from text: String) -> String {
         let line = text.components(separatedBy: .newlines).first { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
-        return line?.trimmingCharacters(in: .whitespaces) ?? ""
+        guard let line = line?.trimmingCharacters(in: .whitespaces) else { return "" }
+        return ClipboardManager.headingTitle(ofLine: line)?.trimmingCharacters(in: .whitespaces) ?? line
     }
 
     /// The title has its own field editor (`TitleFieldEditor`), so focus is

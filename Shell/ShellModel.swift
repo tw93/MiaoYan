@@ -831,13 +831,28 @@ final class ShellModel {
         rename(note, to: renameDraft)
     }
 
-    /// A title is one line: pasted line breaks become spaces. The storyboard
-    /// window's field editor keeps only the pasted text's first line instead,
-    /// but here the change arrives as the whole draft, where that would drop
-    /// what was typed after the caret.
-    nonisolated static func singleLineTitle(_ title: String) -> String {
-        guard title.contains(where: \.isNewline) else { return title }
-        return title.split(omittingEmptySubsequences: false, whereSeparator: \.isNewline).joined(separator: " ")
+    /// A title is one line. Text with line breaks going in keeps only its
+    /// first non-empty line, as the storyboard window's field editor does.
+    /// The change arrives here as the whole draft, so the inserted text is
+    /// what lies between the part before and after it that did not change,
+    /// and what was typed around it stays. A paste of blank lines changes
+    /// nothing.
+    nonisolated static func singleLineTitle(_ draft: String, was old: String) -> String {
+        guard draft.contains(where: \.isNewline) else { return draft }
+        let new = Array(draft)
+        let before = Array(old)
+        var head = 0
+        while head < new.count, head < before.count, new[head] == before[head] { head += 1 }
+        var tail = 0
+        while tail < new.count - head, tail < before.count - head,
+            new[new.count - 1 - tail] == before[before.count - 1 - tail]
+        {
+            tail += 1
+        }
+        let inserted = String(new[head..<(new.count - tail)])
+        let line = TitleTextField.titleLine(from: inserted)
+        guard !line.isEmpty else { return old }
+        return String(before[..<head]) + line + String(before[(before.count - tail)...])
     }
 
     /// The preview currently on screen, for commands that act on it (TOC).

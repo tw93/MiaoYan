@@ -610,10 +610,14 @@ final class ShellEditorParityTests: XCTestCase {
     }
 
     @available(macOS 14, *)
-    func testPastedTitleLineBreaksBecomeSpaces() {
-        XCTAssertEqual(ShellModel.singleLineTitle("plain"), "plain")
-        XCTAssertEqual(ShellModel.singleLineTitle("one\ntwo"), "one two")
-        XCTAssertEqual(ShellModel.singleLineTitle("one\r\ntwo\rthree"), "one two three")
+    func testAPastedNoteKeepsItsFirstLineAndWhatWasTypedAroundIt() {
+        XCTAssertEqual(ShellModel.singleLineTitle("plain", was: "plai"), "plain")
+        // A whole note pasted at the caret between the two spaces of "Week  draft".
+        XCTAssertEqual(ShellModel.singleLineTitle("Week \n# Plan #\r\nbody\n\nmore draft", was: "Week  draft"), "Week Plan draft")
+        XCTAssertEqual(ShellModel.singleLineTitle("one\ntwo", was: ""), "one")
+        // Replacing a selection: "old" selected, a note pasted over it.
+        XCTAssertEqual(ShellModel.singleLineTitle("a new\nbody b", was: "a old b"), "a new b")
+        XCTAssertEqual(ShellModel.singleLineTitle("ab\n  \nc", was: "abc"), "abc", "a paste of blank lines changes nothing")
     }
 
     func testRelaunchFromTheShellReopensTheShell() {
