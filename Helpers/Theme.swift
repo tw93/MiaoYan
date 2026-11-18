@@ -38,11 +38,12 @@ enum Theme {
 
     /// Tracking for 妙言 in the mark face. WenKai's 妙 runs to the edge of
     /// its em and 言 opens on the left, so set solid (the phone) or at the
-    /// labels' 0.02em (the Mac) the two read jammed; 0.08em, the maintainer's
-    /// pick of 0.02, 0.08 and 0.14 rendered (2026-11-15), leaves about the
-    /// gap inside 妙. Nil for the Latin name, which keeps its own tracking.
+    /// labels' 0.02em (the Mac) the two read jammed; 0.08em was the
+    /// maintainer's pick of 0.02, 0.08 and 0.14 (2026-11-15), and 0.12em came
+    /// with the larger lockup, where 0.08 read tight (2026-11-18). Nil for the
+    /// Latin name, which keeps its own tracking.
     static func brandWordmarkTrackingEm(for title: String) -> CGFloat? {
-        title.unicodeScalars.contains(where: { !$0.isASCII }) && brandMarkDescriptor != nil ? 0.08 : nil
+        title.unicodeScalars.contains(where: { !$0.isASCII }) && brandMarkDescriptor != nil ? 0.12 : nil
     }
 
     private static let brandMarkDescriptor: CTFontDescriptor? = {
@@ -97,7 +98,10 @@ enum Theme {
             let systemName = NSFont.systemFont(ofSize: font?.pointSize ?? 14).fontName
             return font?.fontName == systemName ? sidebarSystemFaceLabelVerticalNudge : sidebarStandardLabelVerticalNudge
         }
-        static let sidebarBrandLabelVerticalNudge: CGFloat = 1.5
+        /// MiaoYan's M centres 0.8pt under the bird's ink. With the 26pt bird
+        /// and the name at +2 (2026-11-18), 1.5 left it 2.2pt under and the
+        /// maintainer asked for it a little higher.
+        static let sidebarBrandLabelVerticalNudge: CGFloat = -1
         static let sidebarBrandIconOffsetY: CGFloat = -3.5
         /// 妙言 sits differently in its line than Charter's MiaoYan, so the
         /// Chinese lockup has its own pair: the bird level with the folder
@@ -105,15 +109,20 @@ enum Theme {
         /// the bird's (maintainer, 2026-10-26). Moving the mark from Source Han
         /// Serif to LXGW WenKai dropped its ink 2.5pt, measured on a 2x
         /// capture (centre 3.5px under the bird before, 8.5px after), so the
-        /// nudge went from 5 to 2.5 (2026-11-15).
-        static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 2.5
+        /// nudge went from 5 to 2.5 (2026-11-15). The wordmark two points
+        /// larger (2026-11-18) rose by 2pt, so the nudge is 4.5.
+        static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 4.5
         static let sidebarBrandMarkIconOffsetY: CGFloat = -0.5
-        /// How far the lockup sits below its old 52pt row. With it the gap
-        /// over the lockup (28.5pt from the traffic lights) matches the 27pt
-        /// under it, and its ink centre lines up with the first note title in
-        /// the list column; before, 23.5pt over it read cramped (maintainer,
-        /// 2026-11-06). The folders below move down by the same amount.
-        static let sidebarBrandDrop: CGFloat = 5
+        /// How far the lockup sits below its old 52pt row, and how much more
+        /// room the row keeps under it. The larger lockup of 2026-11-18 (a
+        /// 26pt bird, the wordmark four points over the labels) sits 30pt
+        /// under the traffic lights and 30pt over All Notes' ink, the
+        /// maintainer's pick of 30 and 32 rendered; 32 pushed the folders a
+        /// further 4pt down and the lockup 4.7pt under the first note title.
+        /// Before, a 5pt drop with no extra room gave 27 over and 28.5 under,
+        /// and 23.5pt over it read cramped (2026-11-06).
+        static let sidebarBrandDrop: CGFloat = 10
+        static let sidebarBrandRoomBelow: CGFloat = 3.5
         /// MiaoYan in Charter with its bird sits 3pt higher in the row than
         /// 妙言 does, so with the same drop it stood 23.5pt under the traffic
         /// lights and 29pt over All Notes, and read cramped at the top

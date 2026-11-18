@@ -387,17 +387,15 @@ private struct ShellSidebarBrand: View {
     let title: String
 
     var body: some View {
-        let size = CGFloat(UserDefaultsManagement.nameFontSize) + 2
-        // The name sits 3pt from the bird, as the storyboard sidebar's 3pt
-        // label spacing does: 5pt of ink, 0.31 of the type size, for 妙言 and
-        // MiaoYan alike on 2x captures (2026-11-15). This view's old 5pt left
-        // 7pt and the two read apart.
-        HStack(spacing: 3) {
+        let size = CGFloat(UserDefaultsManagement.nameFontSize) + 4
+        // The bird, wordmark size and 6pt spacing follow the storyboard
+        // sidebar's lockup, made larger on 2026-11-18 (`configureForSidebarItemType`).
+        HStack(spacing: 6) {
             SwiftUI.Image(nsImage: NSImage(named: "home") ?? NSImage())
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 22, height: 22)
+                .frame(width: 26, height: 26)
             Text(title)
                 .font(ShellStyle.brandWordmark(title, size: size))
                 .kerning(Theme.brandWordmarkTrackingEm(for: title).map { $0 * size } ?? 0)

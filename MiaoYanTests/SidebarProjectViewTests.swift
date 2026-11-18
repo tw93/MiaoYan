@@ -235,7 +235,8 @@ final class SidebarProjectViewTests: XCTestCase {
     /// brand row took row 0 that number reopened the folder above.
     /// The lockup sat 23.5pt under the traffic lights and 27pt over All
     /// Notes, which read cramped at the top (maintainer, 2026-11-06). It now
-    /// sits `sidebarBrandDrop` lower while the gap under it stays as it was.
+    /// sits `sidebarBrandDrop` lower, and the row keeps `sidebarBrandRoomBelow`
+    /// more under it, so the larger lockup has 30pt above and below (2026-11-18).
     @MainActor
     func testTheBrandLockupDropsWithoutClosingTheGapUnderIt() throws {
         let cell = makeFolderCell()
@@ -244,7 +245,8 @@ final class SidebarProjectViewTests: XCTestCase {
         let brand = SidebarItem(name: "妙言", type: .Brand)
         let height = outlineView.outlineView(outlineView, heightOfRowByItem: brand)
         let drop = Theme.Metrics.sidebarBrandDrop
-        XCTAssertEqual(height, 52 + drop)
+        let room = Theme.Metrics.sidebarBrandRoomBelow
+        XCTAssertEqual(height, 52 + drop + room)
 
         _ = try XCTUnwrap(outlineView.outlineView(outlineView, viewFor: nil, item: brand) as? SidebarCellView)
         cell.frame = NSRect(x: 0, y: 0, width: 200, height: height)
@@ -257,8 +259,8 @@ final class SidebarProjectViewTests: XCTestCase {
         // lands half a point off on a 1x screen (CI) and exact on 2x.
         let snap = 0.5 / (NSScreen.main?.backingScaleFactor ?? 1) + 0.01
         XCTAssertEqual(iconFromTop, 26 + iconOffset + drop, accuracy: snap, "the lockup moves down by the drop")
-        XCTAssertEqual(iconToBottom, 26 - iconOffset, accuracy: snap, "the gap under the lockup stays")
-        XCTAssertEqual(height - cell.label.frame.midY, height / 2 + drop / 2, accuracy: snap, "the wordmark moves with the bird")
+        XCTAssertEqual(iconToBottom, 26 - iconOffset + room, accuracy: snap, "the gap under the lockup grows by the room")
+        XCTAssertEqual(height - cell.label.frame.midY, height / 2 + (drop - room) / 2, accuracy: snap, "the wordmark moves with the bird")
     }
 
     /// A collapsed pane keeps its 1pt divider strip. Left undrawn it showed

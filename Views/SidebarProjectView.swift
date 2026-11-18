@@ -4,7 +4,7 @@ import Foundation
 
 @MainActor
 private enum UIConstants {
-    static let brandRowHeight: CGFloat = 52 + Theme.Metrics.sidebarBrandDrop
+    static let brandRowHeight: CGFloat = 52 + Theme.Metrics.sidebarBrandDrop + Theme.Metrics.sidebarBrandRoomBelow
     static let defaultRowHeight: CGFloat = 32
 }
 
@@ -554,16 +554,19 @@ class SidebarProjectView: NSOutlineView,
 
     private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
         // The brand lockup (maintainer, 2026-10-11): an upright wordmark at
-        // regular weight, two points above the folder labels with a 22pt bird, in a
-        // row taller than the folders' so the space above and below it is even
-        // and wider than the gap between folders. The italic wordmark with a slanted 26pt bird
-        // leaned against the upright folder names and read too large; a
-        // lockup of icon 20 and font +1 was rejected earlier as too small.
+        // regular weight beside the bird, in a row taller than the folders'
+        // so the space above and below it is even and wider than the gap
+        // between folders. Since 2026-11-18 the bird is 26pt (24pt of ink, the
+        // asset scaled up) in both languages, and the wordmark four points
+        // over the labels (two for MiaoYan, see `createAccentFont`), 6pt from the bird: the maintainer's pick of three larger lockups, after
+        // a 22pt bird with the wordmark at +2 read small. The italic wordmark
+        // with a slanted 26pt bird leaned against the upright folder names and
+        // read too large; a lockup of icon 20 and font +1 was rejected as too small.
         // The bird's left edge and the wordmark's first stroke line up with the
         // folder icons and names below (measured 2026-10-26; the bird had
         // stood 4pt left of the icons and the wordmark 2pt left of the names).
-        let accentIconSize: CGFloat = 22
-        let accentSpacing: CGFloat = 3
+        let accentIconSize: CGFloat = 26
+        let accentSpacing: CGFloat = 6
         let accentIconLeading: CGFloat = 2
         let accentFont = createAccentFont(for: sidebarItem.name, from: baseFont)
 
@@ -576,6 +579,8 @@ class SidebarProjectView: NSOutlineView,
             cell.icon.image?.isTemplate = true
             cell.icon.contentTintColor = accentColor
             updateIconLeading(cell, leading: accentIconLeading)
+            // The bird asset is drawn at 24pt; this row alone scales it up.
+            cell.icon.imageScaling = .scaleProportionallyUpOrDown
             adjustIconSize(cell, size: accentIconSize)
             cell.label.font = accentFont
             cell.label.textColor = accentColor
@@ -584,10 +589,10 @@ class SidebarProjectView: NSOutlineView,
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
             // The bird icon has a different visual center from folder icons.
-            // The row grows by `sidebarBrandDrop` and both views sit half of
-            // it below the row's centre, so the lockup moves down the whole
-            // drop while the gap under it stays as it was.
-            let drop = Theme.Metrics.sidebarBrandDrop / 2 + (isMark ? 0 : Theme.Metrics.sidebarBrandLatinDrop)
+            // The row grows by the drop plus the room below, and both views
+            // sit half their difference below the row's centre, so the lockup
+            // moves down the whole drop and the gap under it grows by the room.
+            let drop = (Theme.Metrics.sidebarBrandDrop - Theme.Metrics.sidebarBrandRoomBelow) / 2 + (isMark ? 0 : Theme.Metrics.sidebarBrandLatinDrop)
             for constraint in cell.constraints
             where constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY {
                 let first = constraint.firstItem as? NSView
@@ -625,14 +630,18 @@ class SidebarProjectView: NSOutlineView,
         }
     }
 
-    /// The wordmark face (`Theme.brandWordmarkFont`) at regular weight, two
-    /// points above the folder labels; the bold cut read heavy beside the
+    /// The wordmark face (`Theme.brandWordmarkFont`) at regular weight, four
+    /// points above the folder labels for 妙言 and two for MiaoYan: at four the
+    /// Latin name ran past the 138pt minimum sidebar and truncated to "Miao…",
+    /// and at three it read large beside the same bird (maintainer,
+    /// 2026-11-18); the bold cut read heavy beside the
     /// folder names. The label face stands in if the face is ever missing.
     private func createAccentFont(for title: String, from baseFont: NSFont) -> NSFont {
-        if let font = Theme.brandWordmarkFont(for: title, size: baseFont.pointSize + 2) {
+        let step: CGFloat = title.unicodeScalars.contains { !$0.isASCII } ? 4 : 2
+        if let font = Theme.brandWordmarkFont(for: title, size: baseFont.pointSize + step) {
             return font
         }
-        return NSFont(descriptor: baseFont.fontDescriptor, size: baseFont.pointSize + 2) ?? baseFont
+        return NSFont(descriptor: baseFont.fontDescriptor, size: baseFont.pointSize + step) ?? baseFont
     }
 
     private func applyFinalStyling(_ cell: SidebarCellView, sidebarItem: SidebarItem, accentColor: NSColor) {
