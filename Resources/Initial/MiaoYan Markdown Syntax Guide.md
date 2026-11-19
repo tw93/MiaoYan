@@ -184,6 +184,8 @@ graph TD
 
 ### Wonderland Class Diagram
 
+PlantUML diagrams need a connection: their text is sent to plantuml.com to be drawn.
+
 ```plantuml
 @startuml
 class Alice {

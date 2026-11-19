@@ -186,6 +186,8 @@ graph TD
 
 ### 《聊斋志异》人物关系图
 
+PlantUML 图要联网才能显示，图里的内容会发到 plantuml.com 去渲染。
+
 ```plantuml
 @startuml
 class 王子服 {
