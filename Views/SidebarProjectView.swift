@@ -566,9 +566,10 @@ class SidebarProjectView: NSOutlineView,
         // The italic wordmark
         // with a slanted 26pt bird leaned against the upright folder names and
         // read too large; a lockup of icon 20 and font +1 was rejected as too small.
-        // 妙言's bird lines up with the folder icons below (measured
-        // 2026-10-26); MiaoYan, near the sidebar's width, is centred instead
-        // (`SidebarCellView.centersContent`, maintainer 2026-11-18).
+        // The bird lines up with the folder icons below (measured 2026-10-26)
+        // in both languages. MiaoYan was centred while it ran near the
+        // sidebar's width (2026-11-18); level with the labels it fits, and
+        // sits at the leading edge again (maintainer 2026-11-19).
         let accentIconSize: CGFloat = 24
         let accentSpacing: CGFloat = 6
         let accentIconLeading: CGFloat = 2
@@ -590,7 +591,7 @@ class SidebarProjectView: NSOutlineView,
             cell.label.textColor = accentColor
             updateLabelVerticalNudge(cell, nudge: labelNudge)
             updateLabelSpacing(cell, spacing: accentSpacing)
-            cell.centersContent = !isMark
+            cell.centersContent = false
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
             // The bird icon has a different visual center from folder icons.

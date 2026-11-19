@@ -413,9 +413,8 @@ private struct ShellSidebarBrand: View {
                 .truncationMode(.tail)
                 .offset(y: 2)
         }
-        // MiaoYan is centred in the column and 妙言 sits at the leading edge,
-        // as in the storyboard sidebar.
-        .frame(maxWidth: .infinity, alignment: isLatin ? .center : .leading)
+        // Both names sit at the leading edge, as in the storyboard sidebar.
+        .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundStyle(ShellStyle.accent)
         .padding(.leading, 8)
         .padding(.trailing, 8)
