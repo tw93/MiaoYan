@@ -161,10 +161,11 @@ struct ShellSidebar: View {
                     LazyVStack(spacing: 1) {
                         // 30pt of room above the lockup's ink and 30 under it to
                         // All Notes, the storyboard sidebar's gaps (2x captures:
-                        // 26 and 25.5 before the 3.5pt drop and the 11pt gap).
+                        // 26 and 25.5 before the drop and the gap; 3 and 9.5 since
+                        // the lockup went two points smaller, 2026-11-19).
                         ShellSidebarBrand(title: model.brandTitle)
-                            .padding(.top, 3.5)
-                        SwiftUI.Color.clear.frame(height: 11)
+                            .padding(.top, 3)
+                        SwiftUI.Color.clear.frame(height: 9.5)
                         ForEach(model.sidebarRows) { row in
                             ShellSidebarRow(model: model, row: row, isSelected: model.scope == row.id)
                                 .id(row.id)
@@ -392,9 +393,10 @@ private struct ShellSidebarBrand: View {
 
     var body: some View {
         let isLatin = title.unicodeScalars.allSatisfy(\.isASCII)
-        let size = CGFloat(UserDefaultsManagement.nameFontSize) + (isLatin ? 2 : 4)
+        let size = CGFloat(UserDefaultsManagement.nameFontSize) + (isLatin ? 0 : 2)
         // The bird, wordmark size and 6pt spacing follow the storyboard
-        // sidebar's lockup, made larger on 2026-11-18 (`configureForSidebarItemType`).
+        // sidebar's lockup, made larger on 2026-11-18 and two points smaller
+        // again on 2026-11-19 (`configureForSidebarItemType`).
         // Centred on the bird, the name's ink sat 0.5pt above the bird's in
         // both languages; the offsets put it where the storyboard's sits,
         // 1.5pt under for 妙言 and 1.75 for MiaoYan (2x captures).
@@ -403,13 +405,13 @@ private struct ShellSidebarBrand: View {
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 26, height: 26)
+                .frame(width: 24, height: 24)
             Text(title)
                 .font(ShellStyle.brandWordmark(title, size: size))
                 .kerning(Theme.brandWordmarkTrackingEm(for: title).map { $0 * size } ?? 0)
                 .lineLimit(1)
                 .truncationMode(.tail)
-                .offset(y: isLatin ? 1.75 : 2)
+                .offset(y: 2)
         }
         // MiaoYan is centred in the column and 妙言 sits at the leading edge,
         // as in the storyboard sidebar.

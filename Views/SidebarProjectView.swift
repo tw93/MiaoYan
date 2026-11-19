@@ -560,13 +560,16 @@ class SidebarProjectView: NSOutlineView,
         // between folders. Since 2026-11-18 the bird is 26pt (24pt of ink, the
         // asset scaled up) in both languages, and the wordmark four points
         // over the labels (two for MiaoYan, see `createAccentFont`), 6pt from the bird: the maintainer's pick of three larger lockups, after
-        // a 22pt bird with the wordmark at +2 read small. The italic wordmark
+        // a 22pt bird with the wordmark at +2 read small. On 2026-11-19 the
+        // maintainer took both two points down: a 24pt bird (the asset's own
+        // size) and the wordmark two over the labels, MiaoYan level with them.
+        // The italic wordmark
         // with a slanted 26pt bird leaned against the upright folder names and
         // read too large; a lockup of icon 20 and font +1 was rejected as too small.
         // 妙言's bird lines up with the folder icons below (measured
         // 2026-10-26); MiaoYan, near the sidebar's width, is centred instead
         // (`SidebarCellView.centersContent`, maintainer 2026-11-18).
-        let accentIconSize: CGFloat = 26
+        let accentIconSize: CGFloat = 24
         let accentSpacing: CGFloat = 6
         let accentIconLeading: CGFloat = 2
         let accentFont = createAccentFont(for: sidebarItem.name, from: baseFont)
@@ -632,14 +635,15 @@ class SidebarProjectView: NSOutlineView,
         }
     }
 
-    /// The wordmark face (`Theme.brandWordmarkFont`) at regular weight, four
-    /// points above the folder labels for 妙言 and two for MiaoYan: at four the
+    /// The wordmark face (`Theme.brandWordmarkFont`) at regular weight, two
+    /// points above the folder labels for 妙言 and level for MiaoYan since
+    /// 2026-11-19 (four and two before). At four the
     /// Latin name ran past the 138pt minimum sidebar and truncated to "Miao…",
     /// and at three it read large beside the same bird (maintainer,
     /// 2026-11-18); the bold cut read heavy beside the
     /// folder names. The label face stands in if the face is ever missing.
     private func createAccentFont(for title: String, from baseFont: NSFont) -> NSFont {
-        let step: CGFloat = title.unicodeScalars.contains { !$0.isASCII } ? 4 : 2
+        let step: CGFloat = title.unicodeScalars.contains { !$0.isASCII } ? 2 : 0
         if let font = Theme.brandWordmarkFont(for: title, size: baseFont.pointSize + step) {
             return font
         }

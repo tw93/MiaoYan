@@ -110,8 +110,9 @@ enum Theme {
         /// the maintainer's pick of 0.75, 1.75 and 2.75 rendered in Charter
         /// (2026-11-18). WenKai's letters sit 0.5pt lower in the line than
         /// Charter's, so the nudge is -0.5 (2x capture: 0.25pt under at -2,
-        /// 2.25 at 0).
-        static let sidebarBrandLabelVerticalNudge: CGFloat = -0.5
+        /// 2.25 at 0). Two points smaller with the 24pt bird (2026-11-19) it
+        /// sat at 3.5, and 2 at -2.25, so -2.5.
+        static let sidebarBrandLabelVerticalNudge: CGFloat = -2.5
         static let sidebarBrandIconOffsetY: CGFloat = -3.5
         /// 妙言 sits differently in its line than Charter's MiaoYan, so the
         /// Chinese lockup has its own pair: the bird level with the folder
@@ -120,8 +121,9 @@ enum Theme {
         /// Serif to LXGW WenKai dropped its ink 2.5pt, measured on a 2x
         /// capture (centre 3.5px under the bird before, 8.5px after), so the
         /// nudge went from 5 to 2.5 (2026-11-15). The wordmark two points
-        /// larger (2026-11-18) rose by 2pt, so the nudge is 4.5.
-        static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 4.5
+        /// larger (2026-11-18) rose by 2pt, so the nudge went to 4.5, and two
+        /// points smaller again (2026-11-19) back to 2.5.
+        static let sidebarBrandMarkLabelVerticalNudge: CGFloat = 2.5
         static let sidebarBrandMarkIconOffsetY: CGFloat = -0.5
         /// How far the lockup sits below its old 52pt row, and how much more
         /// room the row keeps under it. The larger lockup of 2026-11-18 (a
@@ -130,9 +132,11 @@ enum Theme {
         /// maintainer's pick of 30 and 32 rendered; 32 pushed the folders a
         /// further 4pt down and the lockup 4.7pt under the first note title.
         /// Before, a 5pt drop with no extra room gave 27 over and 28.5 under,
-        /// and 23.5pt over it read cramped (2026-11-06).
-        static let sidebarBrandDrop: CGFloat = 10
-        static let sidebarBrandRoomBelow: CGFloat = 3.5
+        /// and 23.5pt over it read cramped (2026-11-06). Two points smaller
+        /// (a 24pt bird, 2026-11-19) the lockup left a point more each side,
+        /// so the row is 2pt shorter and the gaps read 30 again.
+        static let sidebarBrandDrop: CGFloat = 9
+        static let sidebarBrandRoomBelow: CGFloat = 2.5
         /// MiaoYan in Charter with its bird sits 3pt higher in the row than
         /// 妙言 does, so with the same drop it stood 23.5pt under the traffic
         /// lights and 29pt over All Notes, and read cramped at the top
