@@ -318,7 +318,10 @@ class HtmlManager {
     private static let cdnBaseURL = "https://cdn.miaoyan.app/Resources"
     private static let imgTagMinLength = 26
     private static let imageNotFoundPlaceholder =
-        "<img src=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='80'%3E%3Crect width='120' height='80' fill='%23f5f5f5' stroke='%23ddd' stroke-width='1'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='12' font-family='sans-serif'%3EImage Not Found%3C/text%3E%3C/svg%3E\" alt=\"Image not found\" style=\"max-width: 120px; opacity: 0.6;\" />"
+        // Two literals: SwiftLint's ignores_urls drops the URL from the line
+        // length on macOS only, so as one line it failed the Linux lint job.
+        "<img src=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='80'%3E%3Crect width='120' height='80' fill='%23f5f5f5' stroke='%23ddd' stroke-width='1'/%3E"
+        + "%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='12' font-family='sans-serif'%3EImage Not Found%3C/text%3E%3C/svg%3E\" alt=\"Image not found\" style=\"max-width: 120px; opacity: 0.6;\" />"
 
     // Cached instances
     private static let downViewBundle: Bundle? = {
