@@ -147,8 +147,8 @@ def grouped(items):
 
 
 COPY = {
-    "en": ("Release Notes", "MiaoYan iterates fast with long-term maintenance. The feature set stays focused on writing and reading Markdown notes while each part gets finer, smoother to write in and better set to read.", "MiaoYan"),
-    "zh": ("更新日志", "妙言一直在快速迭代，功能聚焦 Markdown 笔记的写和读，每一项都在往细里做，写起来更顺手，排版更耐看，也会一直维护下去", "妙言"),
+    "en": ("Release Notes", "MiaoYan has been open source since 2020 and maintained ever since, with issues and pull requests handled promptly, and the iPhone and iPad versions have lately had concentrated work on writing and reading.", "MiaoYan"),
+    "zh": ("更新日志", "妙言 2020 年开源，持续维护至今，issue 和 PR 及时处理，iPhone 和 iPad 版最近在密集打磨书写和阅读体验", "妙言"),
 }
 
 
