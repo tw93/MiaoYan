@@ -105,5 +105,15 @@ class SingleModeGateTests(unittest.TestCase):
         self.assertIn(clear, code_lines(function_body(text, "func applicationWillTerminate(")))
 
 
+
+class MarkupFontGateTests(unittest.TestCase):
+    def test_markup_brackets_use_the_english_system_face(self):
+        # #580: under a Simplified Chinese interface the plain system face hands `[` and `]` to
+        # .CJKSymbolsFallbackSC and the editor drew a link's brackets as nothing. A test process runs in
+        # English and cannot switch the face's language, so the shape is gated here.
+        body = code_lines(function_body(source("Helpers/NotesTextProcessor.swift"), "public static var markupFont: NSFont"))
+        self.assertTrue(any('CTFontCreateUIFontForLanguage(.system, size, "en" as CFString)' in line for line in body), body)
+        self.assertFalse(any(line.startswith("NSFont.systemFont(") for line in body), body)
+
 if __name__ == "__main__":
     unittest.main()

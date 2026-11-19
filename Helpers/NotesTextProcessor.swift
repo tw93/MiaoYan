@@ -36,8 +36,13 @@ public class NotesTextProcessor {
     /// Markdown punctuation is set in the system face, which draws `*` and
     /// `#` light and small where TsangerJinKai draws them wide and heavy.
     /// HTML tags take the text face instead (`highlightInlineHTML`).
+    /// The system face asked for in English, since it only draws ASCII
+    /// markup: when the interface is Simplified Chinese, the plain system
+    /// face hands `[` and `]` to `.CJKSymbolsFallbackSC`, and the editor drew
+    /// a link's brackets as nothing (#580).
     public static var markupFont: NSFont {
-        NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize) - 1)
+        let size = CGFloat(UserDefaultsManagement.fontSize) - 1
+        return CTFontCreateUIFontForLanguage(.system, size, "en" as CFString) ?? NSFont.systemFont(ofSize: size)
     }
 
     public static var font: NSFont {
