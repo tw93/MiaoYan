@@ -477,6 +477,9 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool, documentLang
         let replaced = "\(openTag)\(cleaned)</p>"
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
     }
+    // In a loose list cmark-gfm writes a task's box before the item's <p>,
+    // a line above the text; GitHub puts it inside.
+    newRes = newRes.replacingOccurrences(of: #"(<li\b[^>]*>)(<input type="checkbox"[^>]*/>)\s*(<p\b[^>]*>)"#, with: "$1$3$2 ", options: .regularExpression)
 
     let hanLanguage = documentLanguage.flatMap { lang in ["zh", "ja", "ko"].contains(where: lang.hasPrefix) ? lang : nil } ?? "zh"
     return Emphasis.markCJK(in: renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes)), hanLanguage: hanLanguage)

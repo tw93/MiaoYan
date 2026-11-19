@@ -58,4 +58,11 @@ final class CheckboxToggleTests: XCTestCase {
         XCTAssertFalse(html.contains("[ ]"), html)
         XCTAssertFalse(html.contains("[x]"), html)
     }
+
+    /// A blank line makes the list loose; each box goes inside its item's <p>.
+    func testATaskBoxInALooseListGoesInsideItsParagraph() throws {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "- [x] done\n  - [ ] child\n\n- [ ] todo", useGithubLineBreak: false))
+        XCTAssertTrue(html.contains(#"<li data-sourcepos="1:1-3:0"><p data-sourcepos="1:7-1:10"><input type="checkbox" checked="" disabled="" /> done</p>"#), html)
+        XCTAssertTrue(html.contains(#"<li data-sourcepos="2:3-3:0"><input type="checkbox" disabled="" /> child</li>"#), "a tight sublist is left as it was")
+    }
 }
