@@ -53,7 +53,7 @@
 "Notes" = "妙言";
 
 /* No comment provided by engineer. */
-"OK" = "好的";
+"OK" = "好";
 
 /* Edit area */
 "Please enter image title:" = "请输入图片标题：";
@@ -149,7 +149,7 @@
 "File path copied" = "已拷贝文件路径";
 "Separate slides with --- to present" = "用 --- 分隔幻灯片后才能演示";
 "Formatting failed" = "排版失败";
-"“%@” already exists in this folder" = "这个文件夹里已有「%@」";
+"“%@” already exists in this folder" = "这个文件夹里已有“%@”";
 "Formatting cancelled" = "已取消排版";
 
 
@@ -242,20 +242,20 @@
 
 /* File Operations */
 "Duplicate note name" = "笔记名称重复";
-"Note \"%@\" already exists" = "笔记「%@」已存在";
+"Note \"%@\" already exists" = "笔记“%@”已存在";
 "Please select default storage directory" = "请选择默认存储目录";
 "Select Markdown files or folders to import" = "选择要导入的 Markdown 文件或文件夹";
 "No Markdown files to import" = "没有可导入的 Markdown 文件";
 "Could not use this folder" = "无法使用这个文件夹";
 "Selected storage folder is not a folder." = "所选存储位置不是文件夹。";
-"MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "妙言无法写入这个文件夹。请选择可写文件夹，或在云盘应用中开启离线访问。";
+"MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "妙言无法写入这个文件夹，换一个可写的文件夹，或在云盘应用中开启离线访问。";
 
 /* Reload Note */
 "Reload Note" = "重新加载";
-"You have unsaved changes. Reload will discard them." = "你有未保存的更改，重新加载会丢弃这些更改。";
+"You have unsaved changes. Reload will discard them." = "当前有未保存的修改，重新加载会丢失。";
 "Reload" = "重新加载";
 "Note reloaded" = "笔记已重新加载";
-"Font size: %d" = "字体大小：%d";
+"Font size: %d" = "字号：%d";
 
 /* Version History */
 "Version History" = "版本历史";
@@ -272,7 +272,7 @@
 "All Fonts" = "全部字体";
 "Not installed" = "未安装";
 "Install the font first" = "需要先安装字体";
-"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a license from Tsanger." = "妙言未内置此字体。下载后双击文件安装即可自动生效。个人非商业使用免费，商用需向仓耳单独购买授权。";
+"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a license from Tsanger." = "妙言没有内置这款字体，下载后双击安装就能自动生效，个人非商用免费，商用需要向仓耳购买授权。";
 "Download Font" = "下载字体";
 "Chinese" = "中文";
 "Latin" = "西文";
@@ -280,10 +280,10 @@
 "Rename" = "重命名";
 "Unpin Note" = "取消置顶";
 "Image" = "图片";
-"This note could not be read, so it was left as it is" = "该笔记读取失败，已保持原样避免内容丢失";
-"This note's text encoding could not be determined, so it opened read-only" = "该笔记的文本编码无法确定，已用只读方式打开";
-"This note is read-only, so it was not moved" = "该笔记是只读的，没有移动";
-"This note no longer exists on disk, so edits are not saved" = "该笔记已不在磁盘上，修改不会保存";
+"This note could not be read, so it was left as it is" = "这篇笔记读取失败，已保持原样避免内容丢失";
+"This note's text encoding could not be determined, so it opened read-only" = "这篇笔记的文本编码无法确定，已用只读方式打开";
+"This note is read-only, so it was not moved" = "这篇笔记是只读的，没有移动";
+"This note no longer exists on disk, so edits are not saved" = "这篇笔记已不在磁盘上，修改不会保存";
 "Version" = "版本";
 "Show Info" = "显示简介";
 "Copy URL" = "拷贝链接";
@@ -296,7 +296,7 @@
 "Move to…" = "移动到…";
 "This folder cannot be moved." = "此文件夹无法移动。";
 "Choose a folder in the same library." = "选择同一个笔记库内的文件夹。";
-"A folder cannot be moved into itself or its subfolders." = "不能将文件夹移入自身或其子文件夹。";
+"A folder cannot be moved into itself or its subfolders." = "不能把文件夹移到它自己或子文件夹里。";
 "A folder with this name already exists at the destination." = "目标位置已有同名文件夹。";
 "Save the pending changes before moving this folder." = "先保存未保存的内容，再移动文件夹。";
 "A folder is already being moved." = "已有文件夹正在移动。";
@@ -334,12 +334,12 @@
 "Presentation Font Size" = "演示字号";
 "Used for MiaoYan PPT slides" = "用于妙言 PPT 幻灯片";
 "All Notes" = "全部";
-"Move the folder “%@” and everything in it to the Trash?" = "将「%@」文件夹连同里面的内容一起移到废纸篓？";
+"Move the folder “%@” and everything in it to the Trash?" = "将“%@”文件夹连同里面的内容一起移到废纸篓？";
 "Move %d unused attachment(s) to Trash?" = "将 %d 个未使用的附件移到废纸篓？";
 "No unused attachments" = "没有未使用的附件";
 "Title not saved. Click it again to rename" = "标题未保存，再点一次标题即可重命名";
 "Title is too long to save" = "标题太长，没法保存";
-"MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认它在 Finder 中可见。";
+"MiaoYan cannot read this folder. If it is on a cloud drive, open that drive's app and make sure the folder shows in Finder." = "妙言无法读取这个文件夹，如果它在云盘里，打开云盘应用并确认 Finder 里能看到它。";
 "Keep this window above other apps" = "窗口始终显示在其他应用上方";
 "Where the preview starts when you open it" = "打开预览时从哪里开始显示";
 "How wide the text runs in the preview" = "预览中正文的最大宽度";

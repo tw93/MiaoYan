@@ -302,7 +302,7 @@
 "nBn-aV-7mt.title" = "更改";
 
 /* Class = "NSMenuItem"; title = "Single mode"; ObjectID = "O8Z-cg-XnH"; */
-"O8Z-cg-XnH.title" = "单独模式";
+"O8Z-cg-XnH.title" = "独立编辑模式";
 
 /* Class = "NSMenuItem"; title = "Import"; ObjectID = "imP-fl-mn1"; */
 "imP-fl-mn1.title" = "导入";
