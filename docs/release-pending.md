@@ -1,6 +1,3 @@
 # Release pending
 
 Work an earlier session left for the next release. The release reads this before drafting notes, does each item, and deletes its entry in the release commit, or writes in the entry why it waits for a later release. MiaoYan-Pro merges this repository's `main`, so its App Store release reads the same file.
-
-- 2026-11-16: the App Store's iPhone and iPad 4.10.0 went out as a later build than the one V4.10.0's notes describe, with four things those notes do not list: Recent Notes widgets for the Home Screen and Lock Screen with a New Note button for the Lock Screen and Control Center, Shortcuts and Siri actions (create, open, search, append), notes in the system's search, and six more interface languages (Traditional Chinese, Japanese, Korean, German, French, Spanish). Carry them as `iPhone and iPad:` items in the next version's notes, worded as already available, and drop this entry in that release commit.
-- 2026-11-17: an ordinary item inside a task list now keeps its bullet in the preview (`li.cb-plain` in `common.js` and `typography.css`). It was checked in the preview only; before the next release export a note with a mixed task list to PDF, PNG and HTML and look at that list, then drop this entry.
