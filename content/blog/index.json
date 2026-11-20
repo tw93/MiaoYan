@@ -787,15 +787,15 @@
     {
       "slug": "markdown-keyboard-shortcuts-mac",
       "date": "2026-11-05",
-      "modified": "2026-11-05",
+      "modified": "2026-11-20",
       "category": "notes",
       "en": {
         "title": "Markdown keyboard shortcuts on Mac: macOS and MiaoYan",
-        "description": "Look up the macOS text-editing keys and the MiaoYan V4.9.0 shortcuts for views, formatting, notes, search and export, and remap any of them in System Settings."
+        "description": "Look up the macOS text-editing keys and the MiaoYan V4.11.0 shortcuts for views, formatting, notes, search and export, and remap any of them in System Settings."
       },
       "zh": {
         "title": "Mac 上的 Markdown 键盘快捷键：macOS 与妙言",
-        "description": "查 macOS 文本编辑按键和妙言 V4.9.0 的快捷键，按视图、格式、笔记、搜索和导出分组，并在系统设置里改键。"
+        "description": "查 macOS 文本编辑按键和妙言 V4.11.0 的快捷键，按视图、格式、笔记、搜索和导出分组，并在系统设置里改键。"
       }
     },
     {

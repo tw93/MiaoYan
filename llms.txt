@@ -20,6 +20,7 @@ MiaoYan is for people who want a focused, native writing app on Mac, iPhone and 
 - Version history, auto-formatting, keyboard shortcuts, and dark mode
 - Markdown presentation mode and a command-line interface
 - On iPhone and iPad: a typeset reading view where task boxes can be ticked, a Contents sheet, an editor with photo insert, find, list continuation and hardware-keyboard format keys, opening the same folder as the Mac
+- Also on iPhone and iPad: share a note or a selected passage as one long image or 3:4 cards, Recent Notes widgets on the Home Screen and Lock Screen, a New Note control on the Lock Screen and in Control Center, Shortcuts and Siri actions to create, open, search and append to notes, notes in system search, and an interface in English, Simplified and Traditional Chinese, Japanese, Korean, German, French and Spanish
 - Native Swift 6 app with no Electron runtime
 - Requires macOS 12.0 or later; the iPhone and iPad apps require iOS 18.0 or iPadOS 18.0 or later
 
@@ -97,7 +98,7 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown definition list: syntax, support and fallbacks](https://miaoyan.app/blog/markdown-definition-lists/): Standard Markdown has no definition list. Learn the colon syntax, which tools render it, and the HTML and table fallbacks that work in MiaoYan.
 - [How to write a README: sections, links and previews](https://miaoyan.app/blog/how-to-write-a-readme/): Write a README.md that GitHub renders well: where it is found, a section order that works, relative links, badges, the outline, and what to preview first.
 - [Mermaid ER diagram syntax: entities, crow's foot and keys](https://miaoyan.app/blog/mermaid-er-diagram/): Write a Mermaid erDiagram in Markdown: read crow's foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema.
-- [Markdown keyboard shortcuts on Mac: macOS and MiaoYan](https://miaoyan.app/blog/markdown-keyboard-shortcuts-mac/): Look up the macOS text-editing keys and the MiaoYan V4.9.0 shortcuts for views, formatting, notes, search and export, and remap any of them in System Settings.
+- [Markdown keyboard shortcuts on Mac: macOS and MiaoYan](https://miaoyan.app/blog/markdown-keyboard-shortcuts-mac/): Look up the macOS text-editing keys and the MiaoYan V4.11.0 shortcuts for views, formatting, notes, search and export, and remap any of them in System Settings.
 - [Markdown highlight text: ==mark== syntax and the mark tag](https://miaoyan.app/blog/markdown-highlight-text/): Highlight text in Markdown with the HTML mark tag, find out where ==text== works, change the colour with CSS, and mark added lines in code with diff.
 - [AI agent Markdown notes: let Claude Code read them safely](https://miaoyan.app/blog/ai-agents-markdown-notes/): Why plain Markdown files suit Claude Code and Codex, how to give an agent your notes folder with git and read-only tasks, and what MiaoYan's skill covers.
 - [Markdown callouts: GitHub alerts, Obsidian and more](https://miaoyan.app/blog/markdown-callouts/): Write a Markdown callout in GitHub alerts, Obsidian and MkDocs Material or Docusaurus syntax, and see how each looks where the renderer does not know it.
@@ -164,7 +165,7 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown 定义列表怎么写，哪里能用，不能用怎么办](https://miaoyan.app/zh/blog/markdown-definition-lists/): CommonMark 和 GFM 都没有定义列表，学会冒号写法、支持它的工具，以及 HTML 和表格这些通用替代写法。
 - [README 怎么写：章节顺序、链接与预览](https://miaoyan.app/zh/blog/how-to-write-a-readme/): 写出在 GitHub 上渲染良好的 README.md，包括放哪里、章节顺序、相对链接、徽章，以及推送前的预览。
 - [Mermaid ER 图写法：实体、鸭脚符号和主外键](https://miaoyan.app/zh/blog/mermaid-er-diagram/): 在 Markdown 里写 Mermaid erDiagram，读懂鸭脚基数标记，区分实线虚线，给属性加 PK、FK、UK，并排查常见错误。
-- [Mac 上的 Markdown 键盘快捷键：macOS 与妙言](https://miaoyan.app/zh/blog/markdown-keyboard-shortcuts-mac/): 查 macOS 文本编辑按键和妙言 V4.9.0 的快捷键，按视图、格式、笔记、搜索和导出分组，并在系统设置里改键。
+- [Mac 上的 Markdown 键盘快捷键：macOS 与妙言](https://miaoyan.app/zh/blog/markdown-keyboard-shortcuts-mac/): 查 macOS 文本编辑按键和妙言 V4.11.0 的快捷键，按视图、格式、笔记、搜索和导出分组，并在系统设置里改键。
 - [Markdown 高亮文字怎么写：==语法和 mark 标签](https://miaoyan.app/zh/blog/markdown-highlight-text/): 说明 Markdown 里 mark 标签和 ==文字== 各在哪里有效，怎么用 CSS 改颜色，以及代码块里用 diff 标出新增行。
 - [让 AI Agent 读写 Markdown 笔记，怎么安全做](https://miaoyan.app/zh/blog/ai-agents-markdown-notes/): 纯 Markdown 文件为什么适合 Claude Code 和 Codex，怎样配合 git 和只读任务开放笔记，妙言 Skill 与 miao 命令管什么。
 - [Markdown 提示框：GitHub、Obsidian 等写法](https://miaoyan.app/zh/blog/markdown-callouts/): 写出 GitHub alerts、Obsidian、MkDocs Material 和 Docusaurus 的提示框，并看清它们在不支持的应用里会变成什么样。

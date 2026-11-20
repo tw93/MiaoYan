@@ -1,4 +1,4 @@
-Writing Markdown on a Mac by keyboard uses two layers: the macOS text system gives every native text view the same movement and deletion keys, and the app adds its own shortcuts on top. Below are both, from Apple's "Mac keyboard shortcuts" page and from MiaoYan V4.9.0's menus and code. ⌘ is Command, ⇧ is Shift, ⌥ is Option and ⌃ is Control.
+Writing Markdown on a Mac by keyboard uses two layers: the macOS text system gives every native text view the same movement and deletion keys, and the app adds its own shortcuts on top. Below are both, from Apple's "Mac keyboard shortcuts" page and from MiaoYan V4.11.0's menus and code. ⌘ is Command, ⇧ is Shift, ⌥ is Option and ⌃ is Control.
 
 ## macOS keys that work in any text field
 
@@ -72,7 +72,7 @@ These keys are in no menu; the app handles them in code.
 | Keys | What it does |
 | --- | --- |
 | Tab / ⇧ Tab | Indent or outdent the line, or every selected line, by two spaces (three after a numbered item) |
-| Return | Continue a list: bullets, numbers (next number) and tasks (unticked). On an empty marker it removes the marker |
+| Return | Continue a list: bullets, numbers (next number), tasks (unticked) and quotes. On an empty marker it removes the marker |
 | ⇧ Return | A plain new line, with no list continuation |
 | ⌘ Delete | Delete to the start of the line while the editor is focused |
 | ⌘ S | Flush the pending save and show a "Saved" toast |
@@ -91,14 +91,14 @@ Type a slash and a name, then press Tab, to insert a template. Format > Tab Quic
 | `/fold` | A `<details>` collapsible section |
 | `/time` | The current time as `yyyy-MM-dd HH:mm:ss` |
 
-The placeholder text inside these templates is Chinese in V4.9.0, so replace it. What each block renders is in [Mermaid diagrams in Markdown](/blog/mermaid-diagrams-in-markdown/).
+The placeholder text inside these templates is Chinese in V4.11.0, so replace it. What each block renders is in [Mermaid diagrams in Markdown](/blog/mermaid-diagrams-in-markdown/).
 
 ## MiaoYan: notes and folders
 
 | Keys | Menu item | Chinese menu |
 | --- | --- | --- |
 | ⌘ N | New | 新建 |
-| ⌘ O | Single Mode | 单独模式 |
+| ⌘ O | Single Mode | 独立编辑模式 |
 | ⌘ D | Duplicate | 制作副本 |
 | ⌘ R | Rename | 重命名 |
 | ⇧⌘ P | Pin Note | 置顶笔记 |
@@ -136,8 +136,9 @@ The placeholder text inside these templates is Chinese in V4.9.0, so replace it.
 | ⇧⌘ H | Version History |
 | ⌥⌘ I | Show Info |
 | ⌥⌘ U | Copy URL |
+| ⌥⌘ C | Copy Path |
 
-A note's right-click menu shows ⌃⇧ H, ⌃⇧ I and ⌃⇧ P under Export, and File > Export opens that submenu. ⌃⇧ H works anywhere in the main window; the other export keys need the note list focused and slide mode off. ⌥⌘ P, ⇧⌘ H, ⌥⌘ I and ⌥⌘ U are handled in code, not by File menu items. Slides are in [Markdown to slides](/blog/markdown-to-slides/), export formats in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/).
+A note's right-click menu shows ⌃⇧ H, ⌃⇧ I and ⌃⇧ P under Export, and File > Export opens that submenu. ⌃⇧ H works anywhere in the main window; the other export keys need the note list focused and slide mode off. ⌥⌘ P, ⇧⌘ H, ⌥⌘ I, ⌥⌘ U and ⌥⌘ C are handled in code, not by File menu items. Slides are in [Markdown to slides](/blog/markdown-to-slides/), export formats in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/).
 
 ## Change a shortcut
 
