@@ -60,6 +60,59 @@ enum ShellSplitMath {
         let whole = Int(line)
         return (whole - 1 + frontmatterLines, line - CGFloat(whole))
     }
+
+    /// The preview position of a point `fraction` down buffer line `line`.
+    /// The preview has no frontmatter, so all of it reads as the top of the
+    /// body's first line.
+    static func previewLine(bufferLine line: Int, fraction: CGFloat, frontmatterLines: Int) -> CGFloat {
+        let body = line + 1 - frontmatterLines
+        return body < 1 ? 1 : CGFloat(body) + max(0, min(fraction, 0.999))
+    }
+
+    /// How near its end the editor is: 0 until its last screenful, 1 at the
+    /// end. The preview uses it to reach its own end together with the
+    /// editor when the note's tail is taller there than in the source.
+    static func endPull(offset: CGFloat, maxOffset: CGFloat, viewport: CGFloat) -> CGFloat {
+        guard maxOffset > 0 else { return 0 }
+        let zone = min(max(viewport, 1), maxOffset)
+        return max(0, min(1 - (maxOffset - offset) / zone, 1))
+    }
+}
+
+/// Where a source line sits in the editor, for the split view's scroll sync
+/// in both windows. A line is a line of the file: a paragraph that wraps to
+/// ten rows is one line ten rows tall, and a position inside it is a fraction.
+extension EditTextView {
+    /// The 0-based buffer line under `y` (in the document view) and how far
+    /// down that line `y` is.
+    func sourceLine(atDocumentY y: CGFloat, lineStarts starts: [Int]) -> (line: Int, fraction: CGFloat)? {
+        guard let layout = layoutManager, let container = textContainer, let storage = textStorage, !starts.isEmpty else { return nil }
+        let inContainer = max(y - textContainerOrigin.y, 0)
+        let index = layout.characterIndex(for: NSPoint(x: 8, y: inContainer), in: container, fractionOfDistanceBetweenInsertionPoints: nil)
+        let line = ShellSplitMath.bodyLine(atCharacter: min(index, storage.length), lineStarts: starts, frontmatterLines: 0) - 1
+        guard let rect = sourceLineRect(line, lineStarts: starts), rect.height > 0 else { return (line, 0) }
+        return (line, max(0, min((y - rect.minY) / rect.height, 0.999)))
+    }
+
+    /// The document-view y of the point `fraction` down buffer line `line`.
+    func documentY(ofSourceLine line: Int, fraction: CGFloat, lineStarts starts: [Int]) -> CGFloat? {
+        guard let rect = sourceLineRect(line, lineStarts: starts) else { return nil }
+        return rect.minY + max(0, min(fraction, 1)) * rect.height
+    }
+
+    /// The box of a whole source line, every row it wraps to, in the document view.
+    private func sourceLineRect(_ line: Int, lineStarts starts: [Int]) -> NSRect? {
+        guard let layout = layoutManager, let container = textContainer, let storage = textStorage, !starts.isEmpty else { return nil }
+        let index = max(0, min(line, starts.count - 1))
+        let start = min(starts[index], storage.length)
+        let end = index + 1 < starts.count ? min(starts[index + 1], storage.length) : storage.length
+        let glyphs = layout.glyphRange(forCharacterRange: NSRange(location: start, length: max(end - start, 0)), actualCharacterRange: nil)
+        var rect = layout.boundingRect(forGlyphRange: glyphs, in: container)
+        // The empty line after a final line break has no glyph of its own.
+        if rect.height <= 0, start == storage.length { rect = layout.extraLineFragmentRect }
+        guard rect.height > 0 else { return nil }
+        return rect.offsetBy(dx: textContainerOrigin.x, dy: textContainerOrigin.y)
+    }
 }
 
 /// Owns the one `EditTextView` the shell uses and does for it what
@@ -265,13 +318,19 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
 
     /// The body line at the top of the editor, for the preview to scroll to.
     func topBodyLine() -> CGFloat {
-        guard let layout = textView.layoutManager, let container = textView.textContainer, let storage = textView.textStorage
-        else { return 1 }
-        let y = max(scrollView.contentView.bounds.origin.y - textView.textContainerOrigin.y, 0)
-        let index = layout.characterIndex(for: NSPoint(x: 8, y: y), in: container, fractionOfDistanceBetweenInsertionPoints: nil)
+        previewLine(atDocumentY: scrollView.contentView.bounds.origin.y)
+    }
+
+    /// The preview's line for a height in the editor's document.
+    private func previewLine(atDocumentY y: CGFloat) -> CGFloat {
         let starts = lineStarts()
-        return CGFloat(
-            ShellSplitMath.bodyLine(atCharacter: min(index, storage.length), lineStarts: starts, frontmatterLines: frontmatterLines))
+        guard let place = textView.sourceLine(atDocumentY: y, lineStarts: starts) else { return 1 }
+        return ShellSplitMath.previewLine(bufferLine: place.line, fraction: place.fraction, frontmatterLines: frontmatterLines)
+    }
+
+    /// How far the editor can scroll.
+    private var maxScrollOffset: CGFloat {
+        max((scrollView.documentView?.bounds.height ?? 0) - scrollView.contentSize.height, 0)
     }
 
     private var lineStartsCache: [Int]?
@@ -294,17 +353,6 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         lineStartsLength = -1
     }
 
-    private func lineRect(_ line: Int) -> NSRect {
-        guard let layout = textView.layoutManager, let container = textView.textContainer, let storage = textView.textStorage
-        else { return .zero }
-        let starts = lineStarts()
-        guard !starts.isEmpty else { return .zero }
-        let location = min(starts[max(0, min(line, starts.count - 1))], storage.length)
-        let glyphs = layout.glyphRange(forCharacterRange: NSRange(location: location, length: 0), actualCharacterRange: nil)
-        let rect = layout.boundingRect(forGlyphRange: glyphs, in: container)
-        return rect.offsetBy(dx: textView.textContainerOrigin.x, dy: textView.textContainerOrigin.y)
-    }
-
     // MARK: - Split view
 
     /// The preview beside the editor in split mode. While set, the two
@@ -313,7 +361,14 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
     private var clipObserver: NSObjectProtocol?
     /// Held while one side scrolls the other, so the echo does not bounce back.
     private var syncSuppression = 0
-    private var lastSyncedLine: CGFloat = -1
+    /// The editor offset the preview last followed.
+    private var lastSyncedOffset: CGFloat = -1
+    /// The editor moved while the preview was still settling from the last
+    /// sync; it follows once more when that ends, so a fast scroll does not
+    /// leave the preview where the editor was a moment before it stopped.
+    private var editorScrolledWhileSettling = false
+    /// True while the preview is moving the editor.
+    private var isFollowingPreview = false
     private var previewDelay = ShellSplitMath.typingDelay
     private var previewTimer: Timer?
 
@@ -325,7 +380,8 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         previewTimer?.invalidate()
         previewTimer = nil
         syncSuppression = 0
-        lastSyncedLine = -1
+        lastSyncedOffset = -1
+        editorScrolledWhileSettling = false
         splitPreview = preview
         guard let preview else { return }
         preview.scrollDelegate = self
@@ -343,20 +399,31 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
     }
 
     private func editorDidScroll() {
-        guard syncSuppression == 0, let preview = splitPreview, !preview.isUpdatingContent else { return }
+        guard !isFollowingPreview, let preview = splitPreview, !preview.isUpdatingContent else { return }
+        guard syncSuppression == 0 else {
+            editorScrolledWhileSettling = true
+            return
+        }
         syncPreviewToEditor(force: false)
     }
 
     private func syncPreviewToEditor(force: Bool) {
         guard let preview = splitPreview else { return }
-        let line = topBodyLine()
-        guard force || abs(line - lastSyncedLine) >= 0.25 else { return }
-        lastSyncedLine = line
+        let maxOffset = maxScrollOffset
+        let offset = max(0, min(scrollView.contentView.bounds.origin.y, maxOffset))
+        guard force || abs(offset - lastSyncedOffset) >= 0.5 else { return }
+        lastSyncedOffset = offset
         syncSuppression += 1
-        preview.scrollToLine(line)
+        let pull = ShellSplitMath.endPull(offset: offset, maxOffset: maxOffset, viewport: scrollView.contentSize.height)
+        preview.scrollToLine(previewLine(atDocumentY: offset), end: (previewLine(atDocumentY: maxOffset), pull))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
             guard let self else { return }
             self.syncSuppression = max(0, self.syncSuppression - 1)
+            guard self.syncSuppression == 0, self.editorScrolledWhileSettling else { return }
+            self.editorScrolledWhileSettling = false
+            // A page being patched holds its own place; the next scroll syncs.
+            guard self.splitPreview?.isUpdatingContent != true else { return }
+            self.syncPreviewToEditor(force: false)
         }
     }
 
@@ -563,15 +630,16 @@ extension ShellEditorController: MPreviewScrollDelegate {
                 self.syncSuppression = max(0, self.syncSuppression - 1)
             }
         }
-        _ = lineStarts()
+        let starts = lineStarts()
         let target = ShellSplitMath.bufferLine(forPreviewLine: line, frontmatterLines: frontmatterLines)
-        let rect = lineRect(target.line)
-        guard rect != .zero, let document = scrollView.documentView else { return }
-        let maxOffset = max(document.bounds.height - scrollView.contentSize.height, 0)
-        let y = max(0, min(rect.minY + target.fraction * rect.height, maxOffset))
+        guard let lineY = textView.documentY(ofSourceLine: target.line, fraction: target.fraction, lineStarts: starts) else { return }
+        let y = max(0, min(lineY, maxScrollOffset))
         guard abs(y - scrollView.contentView.bounds.origin.y) > 0.5 else { return }
+        isFollowingPreview = true
         scrollView.contentView.setBoundsOrigin(NSPoint(x: 0, y: y))
         scrollView.reflectScrolledClipView(scrollView.contentView)
+        isFollowingPreview = false
+        lastSyncedOffset = y
     }
 }
 

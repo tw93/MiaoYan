@@ -611,6 +611,101 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(ShellSplitMath.bufferLine(forPreviewLine: 3, frontmatterLines: 0).line, 2)
     }
 
+    /// The editor reported a whole line number, so a paragraph that wraps
+    /// to many rows, or the one line an image takes, moved the preview in a
+    /// single jump. The position inside the line now travels with it, and
+    /// the way back lands on the same height.
+    @available(macOS 14, *)
+    @MainActor
+    func testAPlaceInsideAWrappedLineSurvivesTheTripToThePreviewAndBack() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let long = String(repeating: "wrapped words ", count: 120)
+        let note = makeLoadedNote("wrap.md", body: "first\n\(long)\nlast")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.scrollView.frame = NSRect(x: 0, y: 0, width: 420, height: 300)
+        controller.show(note)
+        controller.scrollView.layoutSubtreeIfNeeded()
+        let textView = controller.textView
+        let starts = ShellSplitMath.lineStarts(of: textView.string)
+
+        let top = try XCTUnwrap(textView.documentY(ofSourceLine: 1, fraction: 0, lineStarts: starts))
+        let foot = try XCTUnwrap(textView.documentY(ofSourceLine: 1, fraction: 1, lineStarts: starts))
+        XCTAssertGreaterThan(foot - top, 100, "the paragraph wraps to several rows")
+
+        let middle = top + (foot - top) * 0.5
+        let place = try XCTUnwrap(textView.sourceLine(atDocumentY: middle, lineStarts: starts))
+        XCTAssertEqual(place.line, 1)
+        XCTAssertEqual(place.fraction, 0.5, accuracy: 0.01)
+        let back = try XCTUnwrap(textView.documentY(ofSourceLine: place.line, fraction: place.fraction, lineStarts: starts))
+        XCTAssertEqual(back, middle, accuracy: 0.5)
+
+        XCTAssertEqual(ShellSplitMath.previewLine(bufferLine: 1, fraction: 0.5, frontmatterLines: 0), 2.5)
+        XCTAssertEqual(ShellSplitMath.previewLine(bufferLine: 1, fraction: 0.5, frontmatterLines: 3), 1, "frontmatter is the top of the body")
+        XCTAssertEqual(ShellSplitMath.previewLine(bufferLine: 4, fraction: 0.25, frontmatterLines: 3), 2.25)
+    }
+
+    func testThePreviewIsPulledToItsEndOnlyOverTheEditorsLastScreen() {
+        XCTAssertEqual(ShellSplitMath.endPull(offset: 0, maxOffset: 3000, viewport: 600), 0)
+        XCTAssertEqual(ShellSplitMath.endPull(offset: 2400, maxOffset: 3000, viewport: 600), 0)
+        XCTAssertEqual(ShellSplitMath.endPull(offset: 2700, maxOffset: 3000, viewport: 600), 0.5, accuracy: 0.0001)
+        XCTAssertEqual(ShellSplitMath.endPull(offset: 3000, maxOffset: 3000, viewport: 600), 1)
+        XCTAssertEqual(ShellSplitMath.endPull(offset: 3050, maxOffset: 3000, viewport: 600), 1, "rubber-banding past the end")
+        // A note shorter than two screens: the whole scroll is the last screen.
+        XCTAssertEqual(ShellSplitMath.endPull(offset: 100, maxOffset: 200, viewport: 600), 0.5, accuracy: 0.0001)
+        XCTAssertEqual(ShellSplitMath.endPull(offset: 0, maxOffset: 0, viewport: 600), 0, "nothing to scroll")
+    }
+
+    /// A fast scroll to the end left the preview a third of the way up: the
+    /// editor's scrolls were ignored for 50ms after each sync and nothing
+    /// followed the last of them, so the preview stayed where the editor
+    /// had been a moment before it stopped, until the next scroll.
+    @available(macOS 14, *)
+    @MainActor
+    func testThePreviewFollowsTheLastScrollOfAFastGesture() async throws {
+        final class Recorder: MPreviewView {
+            var calls: [(line: CGFloat, end: (line: CGFloat, pull: CGFloat)?)] = []
+            override func scrollToLine(_ line: CGFloat, fallbackRatio: CGFloat? = nil, end: (line: CGFloat, pull: CGFloat)? = nil) {
+                calls.append((line, end))
+            }
+            override func runWhenPreviewReady(_ block: @escaping () -> Void) { block() }
+        }
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let body = (1...200).map { "line \($0)" }.joined(separator: "\n")
+        let note = makeLoadedNote("fast.md", body: body)
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.scrollView.frame = NSRect(x: 0, y: 0, width: 420, height: 300)
+        controller.show(note)
+        controller.scrollView.layoutSubtreeIfNeeded()
+        let preview = Recorder(frame: .zero, note: note, closure: nil)
+        controller.attachSplitPreview(preview)
+        defer { controller.attachSplitPreview(nil) }
+        try await Task.sleep(nanoseconds: 120_000_000)
+
+        let clip = controller.scrollView.contentView
+        let document = try XCTUnwrap(controller.scrollView.documentView)
+        let maxOffset = document.bounds.height - controller.scrollView.contentSize.height
+        XCTAssertGreaterThan(maxOffset, 1000)
+        preview.calls.removeAll()
+        // Two scrolls inside one 50ms window, the second reaching the end.
+        clip.setBoundsOrigin(NSPoint(x: 0, y: 200))
+        clip.setBoundsOrigin(NSPoint(x: 0, y: maxOffset))
+        XCTAssertEqual(preview.calls.count, 1, "the first scroll moves the preview at once")
+        try await Task.sleep(nanoseconds: 200_000_000)
+
+        let last = try XCTUnwrap(preview.calls.last)
+        let end = try XCTUnwrap(last.end)
+        XCTAssertEqual(preview.calls.count, 2, "and the last one follows when the window closes")
+        XCTAssertEqual(end.pull, 1, "the editor is at its end")
+        XCTAssertEqual(last.line, end.line, accuracy: 0.001)
+        XCTAssertGreaterThan(last.line, 150)
+    }
+
     func testSplitPaneWidthFollowsEditorContentSplitView() {
         // First use: half, at most 600pt.
         XCTAssertEqual(ShellSplitMath.editorWidth(total: 800, savedRatio: 0), 400)

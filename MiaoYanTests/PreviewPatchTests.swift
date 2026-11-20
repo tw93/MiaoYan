@@ -411,6 +411,93 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(after, before, accuracy: 1, "the words under the reader stay put")
     }
 
+    /// With the editor scrolled to its end the split preview showed the
+    /// block for the editor's top line and stopped there, short of its own
+    /// end whenever the note's tail is taller in the page than in the
+    /// source. The page now adds what is missing as the editor nears its
+    /// end, takes a place part way down a line, and shows its top edge when
+    /// the editor is on the first line.
+    @MainActor
+    func testTheSplitPreviewReachesItsEdgesWithTheEditor() async throws {
+        let filler = String(repeating: "word ", count: 30)
+        let paragraphs = (1...60).map { "Paragraph \($0) \(filler)" }
+        let webView = try await loadRenderedPage(paragraphs.joined(separator: "\n\n"))
+        // The app's page has a margin above the note's first block.
+        _ = try await webView.evaluateJavaScript("document.getElementById('write').style.paddingTop = '80px'; 0")
+        _ = try await webView.evaluateJavaScript(MPreviewView.scrollSyncScript + "; 0")
+        func scrolled(_ call: String) async throws -> Double {
+            let script = "(function() { window.__miaoyanSync.rebuild(); window.__miaoyanSync.\(call); return window.scrollY; })();"
+            let value = try await webView.evaluateJavaScript(script)
+            return try XCTUnwrap(value as? Double)
+        }
+        let maxScrollRaw = try await webView.evaluateJavaScript("document.documentElement.scrollHeight - window.innerHeight")
+        let maxScroll = try XCTUnwrap(maxScrollRaw as? Double)
+
+        // Paragraph n is on source line 2n - 1. The editor's end is line 91.
+        let alone = try await scrolled("scrollToLine(91)")
+        XCTAssertLessThan(alone, maxScroll - 300, "the tail is taller than a screen")
+        let far = try await scrolled("scrollToLine(41, 91, 0)")
+        let farAlone = try await scrolled("scrollToLine(41)")
+        XCTAssertEqual(far, farAlone, accuracy: 0.5, "away from the end the line alone decides")
+        let half = try await scrolled("scrollToLine(71, 91, 0.5)")
+        let halfAlone = try await scrolled("scrollToLine(71)")
+        XCTAssertEqual(half, halfAlone + (maxScroll - alone) / 2, accuracy: 1)
+        let atEnd = try await scrolled("scrollToLine(91, 91, 1)")
+        XCTAssertEqual(atEnd, maxScroll, accuracy: 1, "both panes at their end")
+
+        // The same through the script the editor's call runs.
+        let fromEditor = try XCTUnwrap(MPreviewView.scrollToLineScript(91.25, end: (91.25, 1)))
+        XCTAssertTrue(fromEditor.contains("scrollToLine(91.25, 91.25, 1.0)"), fromEditor)
+        _ = try await scrolled("scrollToLine(1)")
+        _ = try await webView.evaluateJavaScript(fromEditor + "; 0")
+        let viaSwiftRaw = try await webView.evaluateJavaScript("window.scrollY")
+        XCTAssertEqual(try XCTUnwrap(viaSwiftRaw as? Double), maxScroll, accuracy: 1)
+        let alonePlain = try XCTUnwrap(MPreviewView.scrollToLineScript(41))
+        XCTAssertTrue(alonePlain.contains("scrollToLine(41.0)"), "preview mode's callers pass a line alone")
+        XCTAssertNil(MPreviewView.scrollToLineScript(.nan))
+
+        let first = try await scrolled("scrollToLine(1)")
+        XCTAssertEqual(first, 0, "the first line shows the page from its top edge")
+        let third = try await scrolled("scrollToLine(3)")
+        let between = try await scrolled("scrollToLine(2.5)")
+        XCTAssertGreaterThan(third, 20)
+        XCTAssertEqual(between, third * 0.75, accuracy: 1, "a place part way down a line")
+    }
+
+    /// The page reports its scrolls so the editor can follow, and the
+    /// editor ignored them for 50ms after moving the page itself. An echo
+    /// later than that read as the reader scrolling the preview and moved
+    /// the editor on its own; the page now knows where it was put and keeps
+    /// quiet while it is still there.
+    @MainActor
+    func testThePageDoesNotReportTheScrollTheEditorGaveIt() async throws {
+        let filler = String(repeating: "word ", count: 30)
+        let paragraphs = (1...60).map { "Paragraph \($0) \(filler)" }
+        let webView = try await loadRenderedPage(paragraphs.joined(separator: "\n\n"))
+        let setUp = """
+            window.requestAnimationFrame = (callback) => setTimeout(callback, 16);
+            window.__reported = [];
+            Object.defineProperty(window, 'webkit', { configurable: true, value: { messageHandlers: { previewScroll: {
+                postMessage: (message) => window.__reported.push(message.line)
+            } } } });
+            0
+            """
+        _ = try await webView.evaluateJavaScript(setUp)
+        _ = try await webView.evaluateJavaScript(MPreviewView.scrollSyncScript + "; 0")
+        func reported() async throws -> Int {
+            try await Task.sleep(nanoseconds: 150_000_000)
+            let count = try await webView.evaluateJavaScript("window.__reported.length")
+            return try XCTUnwrap(count as? Int)
+        }
+
+        _ = try await webView.evaluateJavaScript("window.__miaoyanSync.rebuild(); window.__miaoyanSync.scrollToLine(41); 0")
+        let afterEditor = try await reported()
+        XCTAssertEqual(afterEditor, 0, "the editor's own move is not a scroll to follow")
+        _ = try await webView.evaluateJavaScript("window.scrollBy(0, 400); 0")
+        let afterReader = try await reported()
+        XCTAssertEqual(afterReader, 1, "the reader's scroll is")
+    }
+
     /// Split view loaded its page again from the top when the open note
     /// changed on disk, so a sync from another device threw the reader back
     /// to the start. A change from outside now patches the page in place in

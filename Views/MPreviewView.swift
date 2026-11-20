@@ -224,6 +224,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 var rebuildTimer = null;
                 var rafId = null;
                 var lastReportedLine = -1;
+                // Where the editor last put the page. A scroll event that
+                // finds the page still there is that move's own echo, however
+                // late it arrives, and is not reported back as a scroll.
+                var placedAt = null;
 
                 function rebuildAnchors() {
                     var els = document.querySelectorAll('[data-sourcepos]');
@@ -240,6 +244,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
                         result.push({ line: line, top: top });
                     }
                     result.sort(function(a, b) { return a.line - b.line; });
+                    // The first block stands for the top of the page, so an
+                    // editor at its first line shows the page from its edge.
+                    for (var j = 0; j < result.length && result[j].line === result[0].line; j++) {
+                        result[j].top = 0;
+                    }
                     anchors = result;
                 }
 
@@ -258,11 +267,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     return a.line + (b.line - a.line) * (scrollY - a.top) / (b.top - a.top);
                 }
 
-                function scrollToLine(line) {
-                    if (anchors.length === 0) { return false; }
+                function topForLine(line) {
                     var first = anchors[0], last = anchors[anchors.length - 1];
-                    if (line <= first.line) { window.scrollTo(0, first.top); return true; }
-                    if (line >= last.line) { window.scrollTo(0, last.top); return true; }
+                    if (line <= first.line) { return first.top; }
+                    if (line >= last.line) { return last.top; }
                     var lo = 0, hi = anchors.length - 1;
                     while (lo + 1 < hi) {
                         var mid = (lo + hi) >> 1;
@@ -270,7 +278,24 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     }
                     var a = anchors[lo], b = anchors[hi];
                     var frac = (b.line === a.line) ? 0 : (line - a.line) / (b.line - a.line);
-                    window.scrollTo(0, a.top + (b.top - a.top) * frac);
+                    return a.top + (b.top - a.top) * frac;
+                }
+
+                // `endLine` is the line at the top of the editor when it is
+                // scrolled to its end and `pull` how near that end it is, 0
+                // to 1. A page whose tail is taller than the source (images,
+                // tables, code) would stop short of its own end there, so
+                // the part still missing is added as the editor closes in.
+                function scrollToLine(line, endLine, pull) {
+                    if (anchors.length === 0) { return false; }
+                    var top = topForLine(line);
+                    if (pull > 0 && typeof endLine === 'number') {
+                        var doc = document.scrollingElement || document.documentElement;
+                        var missing = Math.max(0, doc.scrollHeight - window.innerHeight) - topForLine(endLine);
+                        if (missing > 0) { top += missing * Math.min(pull, 1); }
+                    }
+                    window.scrollTo(0, top);
+                    placedAt = window.pageYOffset || 0;
                     return true;
                 }
 
@@ -303,6 +328,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     rafId = requestAnimationFrame(function() {
                         rafId = null;
                         var scrollY = window.pageYOffset || 0;
+                        if (placedAt !== null && Math.abs(scrollY - placedAt) < 1) { return; }
+                        placedAt = null;
                         var line = lineForScroll(scrollY);
                         if (Math.abs(line - lastReportedLine) > 0.1) {
                             window.webkit.messageHandlers.previewScroll.postMessage({ line: line });
@@ -769,14 +796,29 @@ class MPreviewView: WKWebView, WKUIDelegate {
             self?.evaluateJavaScript("Reveal.slide(\(index));", completionHandler: nil)
         }
     }
-    public func scrollToLine(_ line: CGFloat, fallbackRatio: CGFloat? = nil) {
+    /// Scrolls the page to a source line of the note's body, which may fall
+    /// part way down a line. `end` is the split editor's own end: the line at
+    /// its top when scrolled all the way down, and how near that it is now.
+    public func scrollToLine(_ line: CGFloat, fallbackRatio: CGFloat? = nil, end: (line: CGFloat, pull: CGFloat)? = nil) {
+        guard let script = Self.scrollToLineScript(line, fallbackRatio: fallbackRatio, end: end) else { return }
+        evaluateJavaScript(script) { _, error in
+            #if DEBUG
+                if let error = error { print("[ScrollSync] scrollToLine error: \(error.localizedDescription)") }
+            #endif
+        }
+    }
+
+    /// The script `scrollToLine` runs, or nil for a line that is no number.
+    nonisolated static func scrollToLineScript(_ line: CGFloat, fallbackRatio: CGFloat? = nil, end: (line: CGFloat, pull: CGFloat)? = nil) -> String? {
+        guard line.isFinite else { return nil }
         let clampedFallback = fallbackRatio.map { Double(max(min($0, 1), 0)) }
         let fallback = clampedFallback.map { String($0) } ?? "null"
-        let script = """
+        let tail = end.flatMap { $0.line.isFinite && $0.pull.isFinite ? ", \(Double($0.line)), \(Double($0.pull))" : nil } ?? ""
+        return """
                 (function() {
                     const fallbackRatio = \(fallback);
                     const canUseLineSync = window.__miaoyanSync && typeof window.__miaoyanSync.scrollToLine === 'function';
-                    const didScroll = canUseLineSync ? window.__miaoyanSync.scrollToLine(\(line)) : false;
+                    const didScroll = canUseLineSync ? window.__miaoyanSync.scrollToLine(\(Double(line))\(tail)) : false;
                     if (!didScroll && fallbackRatio !== null) {
                         const doc = document.scrollingElement || document.documentElement || document.body;
                         const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
@@ -784,11 +826,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     }
                 })();
             """
-        evaluateJavaScript(script) { _, error in
-            #if DEBUG
-                if let error = error { print("[ScrollSync] scrollToLine error: \(error.localizedDescription)") }
-            #endif
-        }
     }
     private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         guard let url = navigationAction.request.url else {

@@ -132,9 +132,16 @@ class ViewController:
     nonisolated(unsafe) var splitScrollObserver: NSObjectProtocol?
     var splitScrollSuppressionCount: Int = 0
     var activeSplitScrollSource: SplitScrollSource = .editor
-    var lastSyncedLine: CGFloat = -1
+    /// The editor offset the split preview last followed.
+    var lastSyncedEditorOffset: CGFloat = -1
+    /// The editor moved while the preview was still settling from the last
+    /// sync; it follows once more when that ends, so a fast scroll does not
+    /// leave the preview where the editor was a moment before it stopped.
+    var editorScrolledWhileSettling = false
+    /// True while the split preview is moving the editor.
+    var isFollowingPreviewScroll = false
     // Line-start char-index cache for split scroll sync. Built lazily by
-    // editorTopLine() / editorLineRect(forLine:) so a 5000-line note doesn't
+    // editorTopLine() / previewDidScroll(line:) so a 5000-line note doesn't
     // re-walk the whole text storage on every scroll tick. Invalidated on edit.
     var editorLineStartsCache: [Int]?
     var editorLineStartsCacheLength: Int = -1

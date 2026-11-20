@@ -1078,12 +1078,14 @@ extension ViewController {
         editArea.markdownView?.scrollDelegate = nil
         splitScrollSuppressionCount = 0
         activeSplitScrollSource = .editor
-        lastSyncedLine = -1
+        lastSyncedEditorOffset = -1
+        editorScrolledWhileSettling = false
     }
 
     private func handleSplitScrollEvent() {
-        guard splitScrollSuppressionCount == 0 else { return }
-        guard editArea.markdownView?.isUpdatingContent != true else {
+        guard !isFollowingPreviewScroll, editArea.markdownView?.isUpdatingContent != true else { return }
+        guard splitScrollSuppressionCount == 0 else {
+            editorScrolledWhileSettling = true
             return
         }
         activeSplitScrollSource = .editor
@@ -1101,91 +1103,70 @@ extension ViewController {
         activeSplitScrollSource = .preview
         splitScrollSuppressionCount += 1
 
-        // The preview reports 1-based lines of the body without frontmatter;
-        // editorLineRect takes a 0-based line of the whole buffer.
-        let lineInt = Int(line)
-        let fraction = line - CGFloat(lineInt)
-        if let storage = editArea.textStorage { _ = lineStarts(for: storage) }
-        let rect = editorLineRect(forLine: lineInt - 1 + editorFrontmatterLines)
-        guard rect != .zero,
-            let documentView = editAreaScroll.documentView
-        else {
+        // The preview reports 1-based lines of the body without frontmatter.
+        guard let storage = editArea.textStorage else {
             splitScrollSuppressionCount -= 1
             return
         }
-        let contentHeight = editAreaScroll.contentSize.height
-        let maxOffset = max(documentView.bounds.height - contentHeight, 0)
-        let targetY = max(0, min(rect.minY + fraction * rect.height, maxOffset))
+        let starts = lineStarts(for: storage)
+        let target = ShellSplitMath.bufferLine(forPreviewLine: line, frontmatterLines: editorFrontmatterLines)
+        guard let lineY = editArea.documentY(ofSourceLine: target.line, fraction: target.fraction, lineStarts: starts) else {
+            splitScrollSuppressionCount -= 1
+            return
+        }
+        let targetY = max(0, min(lineY, editorMaxScrollOffset))
         let currentY = editAreaScroll.contentView.bounds.origin.y
         guard abs(targetY - currentY) > 0.5 else {
             splitScrollSuppressionCount -= 1
             return
         }
+        isFollowingPreviewScroll = true
         editAreaScroll.contentView.setBoundsOrigin(NSPoint(x: 0, y: targetY))
         editAreaScroll.reflectScrolledClipView(editAreaScroll.contentView)
+        isFollowingPreviewScroll = false
+        lastSyncedEditorOffset = targetY
         DispatchQueue.main.async { [weak self] in
             self?.splitScrollSuppressionCount = max(0, (self?.splitScrollSuppressionCount ?? 0) - 1)
         }
     }
 
-    private func editorLineRect(forLine line: Int) -> NSRect {
-        guard let lm = editArea.layoutManager,
-            let tc = editArea.textContainer,
-            let storage = editArea.textStorage
-        else { return .zero }
-        let starts = lineStarts(for: storage)
-        guard !starts.isEmpty else { return .zero }
-        let clamped = max(0, min(line, starts.count - 1))
-        let loc = min(starts[clamped], storage.length)
-        let glyphRange = lm.glyphRange(
-            forCharacterRange: NSRange(location: loc, length: 0),
-            actualCharacterRange: nil
-        )
-        let rect = lm.boundingRect(forGlyphRange: glyphRange, in: tc)
-        return rect.offsetBy(dx: editArea.textContainerOrigin.x, dy: editArea.textContainerOrigin.y)
+    /// How far the editor can scroll.
+    private var editorMaxScrollOffset: CGFloat {
+        max((editAreaScroll.documentView?.bounds.height ?? 0) - editAreaScroll.contentSize.height, 0)
     }
 
     private func scheduleSplitScrollSync() {
         guard sessionSplitMode, activeSplitScrollSource == .editor else { return }
-        let topLine = editorTopLine()
-        guard abs(topLine - lastSyncedLine) >= 0.25 else { return }
-        lastSyncedLine = topLine
-        applySplitScrollSync(line: topLine)
-    }
-
-    private func applySplitScrollSync(line: CGFloat) {
-        guard sessionSplitMode else { return }
+        let maxOffset = editorMaxScrollOffset
+        let offset = max(0, min(editAreaScroll.contentView.bounds.origin.y, maxOffset))
+        guard abs(offset - lastSyncedEditorOffset) >= 0.5 else { return }
+        lastSyncedEditorOffset = offset
         splitScrollSuppressionCount += 1
-        editArea.markdownView?.scrollToLine(line)
+        let pull = ShellSplitMath.endPull(offset: offset, maxOffset: maxOffset, viewport: editAreaScroll.contentSize.height)
+        editArea.markdownView?.scrollToLine(previewLine(atEditorY: offset), end: (previewLine(atEditorY: maxOffset), pull))
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.splitScrollSyncDelay) { [weak self] in
-            self?.splitScrollSuppressionCount = max(0, (self?.splitScrollSuppressionCount ?? 0) - 1)
+            guard let self else { return }
+            self.splitScrollSuppressionCount = max(0, self.splitScrollSuppressionCount - 1)
+            guard self.splitScrollSuppressionCount == 0, self.editorScrolledWhileSettling else { return }
+            self.editorScrolledWhileSettling = false
+            // A page being patched holds its own place; the next scroll syncs.
+            guard self.editArea.markdownView?.isUpdatingContent != true else { return }
+            self.activeSplitScrollSource = .editor
+            self.scheduleSplitScrollSync()
         }
     }
 
     private func editorTopLine() -> CGFloat {
-        let topY = editAreaScroll.contentView.bounds.origin.y
-        guard let lm = editArea.layoutManager,
-            let tc = editArea.textContainer,
-            let storage = editArea.textStorage
-        else { return 1 }
-        let adjustedY = max(topY - editArea.textContainerOrigin.y, 0)
-        let charIndex = lm.characterIndex(
-            for: NSPoint(x: 8, y: adjustedY),
-            in: tc,
-            fractionOfDistanceBetweenInsertionPoints: nil
-        )
+        previewLine(atEditorY: editAreaScroll.contentView.bounds.origin.y)
+    }
+
+    /// The preview's line (1-based in the body, with the part of the line
+    /// already scrolled past as a fraction) for a height in the editor.
+    private func previewLine(atEditorY y: CGFloat) -> CGFloat {
+        guard let storage = editArea.textStorage else { return 1 }
         let starts = lineStarts(for: storage)
-        guard !starts.isEmpty else { return 1 }
-        let clamped = min(charIndex, storage.length)
-        // Binary search the largest line start <= clamped.
-        var lo = 0
-        var hi = starts.count - 1
-        while lo < hi {
-            let mid = (lo + hi + 1) / 2
-            if starts[mid] <= clamped { lo = mid } else { hi = mid - 1 }
-        }
-        // 1-based body line, the numbering the preview's data-sourcepos uses.
-        return CGFloat(max(lo + 1 - editorFrontmatterLines, 1))
+        guard let place = editArea.sourceLine(atDocumentY: y, lineStarts: starts) else { return 1 }
+        return ShellSplitMath.previewLine(bufferLine: place.line, fraction: place.fraction, frontmatterLines: editorFrontmatterLines)
     }
 
     // Lazily-populated, per-document cache of line-start character indices.
