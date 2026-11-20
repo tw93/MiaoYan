@@ -90,4 +90,4 @@ As a front-end developer with some iOS experience, I wanted to explore Swift and
 
 ## Done reading
 
-You can [put this guide away](miaoyan://guide/hide): the whole "MiaoYan Guide" folder moves to the Trash, and you can bring it back from there any time.
+You can [put this guide away](miaoyan://guide/hide): MiaoYan Guide moves to the Trash, and you can bring it back from there any time.
