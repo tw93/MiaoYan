@@ -19,7 +19,7 @@
 - **專注**：資料夾、筆記列表和編輯器分成三欄，內建深色模式，不用維護外掛
 - **原生**：Swift 6 開發，比網頁套殼更輕，分欄預覽支援 60fps 雙向捲動同步
 - **夠用**：雙向連結、LaTeX 公式、Mermaid 圖表、版本歷史、自動排版和 PPT 簡報都內建
-- **隨身**：iPhone 和 iPad 版在 [App Store](https://apps.apple.com/app/miaoyan/id6759252269) 上，和 Mac 一次購買通用，打開同一個 iCloud 雲碟筆記資料夾，在手機和平板上也能接著寫
+- **隨身**：iPhone 和 iPad 版在 [App Store](https://apps.apple.com/app/miaoyan/id6759252269) 上，和 Mac 一次購買通用，打開同一個 iCloud 雲碟筆記資料夾，在手機和平板上也能接著寫，還能把筆記分享成圖片，用小工具、Siri 和捷徑新增筆記
 
 ## 安裝使用
 
@@ -55,7 +55,7 @@ miao update             # 更新 CLI
 
 編輯區與預覽區並排顯示，按 `⌘\` 切換分欄模式，或在設定的編輯器頁將預設模式設為分欄。為什麼不做 Typora 式所見即所得？我想讓你一直看著 Markdown 原文寫，用原生 Swift 做所見即所得很重，也難保證穩定，分欄模式能專心寫字，旁邊就是即時預覽。
 
-<img src="https://miaoyan.app/assets/shots/zh-split-2400.webp" width="100%" alt="分欄編輯預覽模式" />
+<img src="https://miaoyan.app/assets/shots/zh-split-2400.webp?v=20261115" width="100%" alt="分欄編輯預覽模式" />
 
 ## 使用指南
 
@@ -69,7 +69,7 @@ miao update             # 更新 CLI
 ## 支持
 
 - 購買我製作的 Mac 清理工具 [Mole for Mac](https://mole.fit)，是對我最直接的支持
-- 如果你喜歡妙言，歡迎給它一個 Star，推薦給身邊喜歡純文字的朋友，[分享出去](https://x.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BC%95%E9%9D%88%E7%9A%84%20Markdown%20%E7%AD%86%E8%A8%98%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%AF%AB%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
+- 如果你喜歡妙言，歡迎給它一個 Star，推薦給身邊喜歡純文字的朋友，[分享出去](https://x.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BC%95%E9%9D%88%E7%9A%84%20Markdown%20%E7%AD%86%E8%A8%98%E6%9C%AC%E4%BC%B4%E4%BD%A0%E5%AF%AB%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
 - 我有兩隻貓，湯圓和可樂，如果妙言讓你開心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">請她們吃罐頭 🥩</a>
 
 這些可愛的朋友已經餵過了 🐱
