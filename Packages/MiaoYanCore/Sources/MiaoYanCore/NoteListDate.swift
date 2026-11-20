@@ -19,6 +19,24 @@ public enum NoteListDate {
         return date.formatted(style.year().month().day())
     }
 
+    /// The locale for a list whose app speaks `language` on a system set to
+    /// `system`: the app's words with the system's region and clock. The Mac
+    /// app has its own language, and a locale made from that alone lost both:
+    /// an English interface in China or Britain printed `10:06 PM` beside a
+    /// menu bar clock reading 22:06, and so did anyone who had switched a
+    /// 12-hour region to 24-hour time (2026-11-20). The iPhone app follows the
+    /// system's language and passes `Locale.current` as it is.
+    public static func displayLocale(language: String, system: Locale = .current) -> Locale {
+        let region = NSLocale.Key.countryCode.rawValue
+        var parts = Locale.components(fromIdentifier: language)
+        if let code = Locale.components(fromIdentifier: system.identifier)[region] { parts[region] = code }
+        // `j` is the hour as the system shows it, the person's own 12 or
+        // 24-hour choice included; `H` and `k` are the 24-hour letters.
+        let hour = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: system) ?? ""
+        parts["hours"] = hour.contains("H") || hour.contains("k") ? "h23" : "h12"
+        return Locale(identifier: Locale.identifier(fromComponents: parts))
+    }
+
     /// The word for yesterday, made once per language: a list scrolling past
     /// notes from yesterday had built a RelativeDateTimeFormatter for every
     /// row (iPhone review, 2026-11-11). NSCache is safe to share across threads.

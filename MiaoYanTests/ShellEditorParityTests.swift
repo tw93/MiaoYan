@@ -17,6 +17,21 @@ final class ShellEditorParityTests: XCTestCase {
         super.tearDown()
     }
 
+    /// Both windows' list dates: a locale made from the app's language alone
+    /// had no region and no clock, so an English interface in China or
+    /// Britain printed `10:06 PM` beside a 22:06 menu bar clock (I-60).
+    @MainActor
+    func testTheListDateKeepsTheSystemsRegionAndClock() {
+        let shown = Locale.components(fromIdentifier: Note.listDateLocale.identifier)
+        let system = Locale.components(fromIdentifier: Locale.current.identifier)
+        let region = NSLocale.Key.countryCode.rawValue
+        XCTAssertNotNil(system[region], "the test machine names a region")
+        XCTAssertEqual(shown[region], system[region])
+        let systemHour = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: .current) ?? ""
+        let shownHour = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: Note.listDateLocale) ?? ""
+        XCTAssertEqual(shownHour.contains("H"), systemHour.contains("H"), "12 or 24-hour as the system shows it")
+    }
+
     @MainActor
     private func makeLoadedNote(_ name: String, body: String) -> Note {
         let url = tempDir.appendingPathComponent(name)

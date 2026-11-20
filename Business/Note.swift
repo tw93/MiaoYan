@@ -441,8 +441,9 @@ public class Note: NSObject {
         return NoteListDate.short(date, locale: Self.listDateLocale)
     }
 
-    /// The app's own language, which can differ from the system's.
-    static let listDateLocale = Locale(identifier: Bundle.main.preferredLocalizations.first ?? "en")
+    /// The app's own language, which can differ from the system's, with the
+    /// system's region and 12 or 24-hour clock.
+    static let listDateLocale = NoteListDate.displayLocale(language: Bundle.main.preferredLocalizations.first ?? "en")
 
     @objc func getCreationDateForLabel() -> String? {
         guard let creationDate = creationDate else { return nil }
