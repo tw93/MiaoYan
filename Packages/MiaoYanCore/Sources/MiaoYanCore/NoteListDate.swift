@@ -28,7 +28,7 @@ public enum NoteListDate {
     /// system's language and passes `Locale.current` as it is.
     public static func displayLocale(language: String, system: Locale = .current) -> Locale {
         let words = subtags(of: language).filter { !isRegion($0) }.joined(separator: "-")
-        let region = subtags(of: system.identifier).dropFirst().first(where: isRegion).map { "_" + $0 } ?? ""
+        let region = region(of: system.identifier).map { "_" + $0 } ?? ""
         // `j` is the hour as the system shows it, the person's own 12 or
         // 24-hour choice included; `H` and `k` are the 24-hour letters.
         let hour = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: system) ?? ""
@@ -42,6 +42,20 @@ public enum NoteListDate {
     /// and this package builds for both.
     private static func subtags(of identifier: String) -> [String] {
         identifier.prefix { $0 != "@" }.split { $0 == "_" || $0 == "-" }.map(String.init)
+    }
+
+    /// The region a system locale formats for: its Region setting when the
+    /// identifier carries one apart from the language's own (`US` in
+    /// `en_GB@rg=uszzzz`, British English on a Mac set to the United
+    /// States), else its region subtag.
+    private static func region(of identifier: String) -> String? {
+        if let keywords = identifier.split(separator: "@").dropFirst().first,
+            let override = keywords.split(separator: ";").first(where: { $0.hasPrefix("rg=") })
+        {
+            let code = override.dropFirst(3).prefix(2).uppercased()
+            if isRegion(code) { return code }
+        }
+        return subtags(of: identifier).dropFirst().first(where: isRegion)
     }
 
     /// Two capitals (`CN`) or three digits (`419`); a script has four letters.

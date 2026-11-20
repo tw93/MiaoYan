@@ -65,6 +65,8 @@ final class NoteListDateTests: XCTestCase {
         XCTAssertEqual(identifier("pt-BR", "pt_PT"), "pt_PT@hours=h23", "the system's region, not the language's own")
         XCTAssertEqual(identifier("es", "es_419"), "es_419@hours=h12")
         XCTAssertEqual(identifier("en", "en"), "en@hours=h12", "a system with no region adds none")
+        XCTAssertEqual(identifier("en", "en_GB@rg=uszzzz"), "en_US@hours=h12", "the Region setting over the language's own")
+        XCTAssertEqual(identifier("en", "en_US@calendar=buddhist;rg=dezzzz"), "en_DE@hours=h23")
     }
 
     func testAnEarlierYearKeepsTheYear() {
