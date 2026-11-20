@@ -24,18 +24,11 @@
 
 ## 설치
 
-1. **App Store** (추천, 한 번 구매로 iPhone, iPad, Mac 모두 사용, 자동 업데이트):
+App Store에서 설치하는 것을 추천합니다. 한 번 구매로 iPhone, iPad, Mac 모두 사용하고 자동으로 업데이트됩니다:
 
-   <a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+<a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-2. **Homebrew**:
-   ```bash
-   brew install --cask miaoyan
-   ```
-
-3. **GitHub Releases**: [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest)에서 최신 DMG 다운로드 (macOS 12.0+)
-
-Homebrew와 GitHub Releases는 계속 개발되는 무료 오픈소스 Mac 앱을 설치합니다. Mac에서만 쓴다면 오픈소스 버전으로 충분하고, iPhone과 iPad에서도 이어 쓰려면 App Store 버전을 고르세요.
+Mac 오픈소스 버전은 Homebrew(`brew install --cask miaoyan`)나 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest)에서도 받을 수 있습니다 (macOS 12.0+).
 
 ## Nutstore 및 기타 클라우드 드라이브 동기화
 

@@ -23,18 +23,11 @@
 
 ## 安装使用
 
-1. **App Store**（推荐，一次购买 iPhone、iPad 和 Mac 都能用，自动更新）：
+推荐从 App Store 安装，一次购买 iPhone、iPad 和 Mac 都能用，自动更新：
 
-   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+<a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-2. **Homebrew**：
-   ```bash
-   brew install --cask miaoyan
-   ```
-
-3. **GitHub Releases**：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG（macOS 12.0+）
-
-Homebrew 与 GitHub Releases 分发的是同一个开源免费的 Mac 版本，会一直更新，只在 Mac 上写的话开源版就够了，想在手机和平板上接着写，就选 App Store 版。
+Mac 开源版也可以用 Homebrew（`brew install --cask miaoyan`）安装，或从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载（macOS 12.0+）。
 
 ## 用坚果云或其他云盘同步妙言
 

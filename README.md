@@ -24,18 +24,11 @@
 
 ## Installation
 
-1. **App Store** (recommended, one purchase for iPhone, iPad and Mac, automatic updates):
+Get it on the App Store, one purchase for iPhone, iPad and Mac, with automatic updates:
 
-   <a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+<a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-2. **Homebrew**:
-   ```bash
-   brew install --cask miaoyan
-   ```
-
-3. **GitHub Releases**: download the latest DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 12.0+)
-
-Homebrew and GitHub Releases install the same free, open-source Mac app, which keeps being developed. If you only write on a Mac, the open-source version is enough; to keep writing on iPhone and iPad, get the App Store version.
+The open-source Mac app is also available through Homebrew (`brew install --cask miaoyan`) or [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 12.0+).
 
 ## Sync with Nutstore or Other Cloud Drives
 
