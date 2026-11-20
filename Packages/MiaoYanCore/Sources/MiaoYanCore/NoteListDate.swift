@@ -27,14 +27,26 @@ public enum NoteListDate {
     /// 12-hour region to 24-hour time (2026-11-20). The iPhone app follows the
     /// system's language and passes `Locale.current` as it is.
     public static func displayLocale(language: String, system: Locale = .current) -> Locale {
-        let region = NSLocale.Key.countryCode.rawValue
-        var parts = Locale.components(fromIdentifier: language)
-        if let code = Locale.components(fromIdentifier: system.identifier)[region] { parts[region] = code }
+        let words = subtags(of: language).filter { !isRegion($0) }.joined(separator: "-")
+        let region = subtags(of: system.identifier).dropFirst().first(where: isRegion).map { "_" + $0 } ?? ""
         // `j` is the hour as the system shows it, the person's own 12 or
         // 24-hour choice included; `H` and `k` are the 24-hour letters.
         let hour = DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: system) ?? ""
-        parts["hours"] = hour.contains("H") || hour.contains("k") ? "h23" : "h12"
-        return Locale(identifier: Locale.identifier(fromComponents: parts))
+        let cycle = hour.contains("H") || hour.contains("k") ? "h23" : "h12"
+        return Locale(identifier: words + region + "@hours=" + cycle)
+    }
+
+    /// The parts of a locale identifier before its keywords (`zh`, `Hans`,
+    /// `CN` in `zh-Hans_CN@calendar=…`). Read from the text: the Foundation
+    /// calls that name them are deprecated on iOS 16 or missing on macOS 12,
+    /// and this package builds for both.
+    private static func subtags(of identifier: String) -> [String] {
+        identifier.prefix { $0 != "@" }.split { $0 == "_" || $0 == "-" }.map(String.init)
+    }
+
+    /// Two capitals (`CN`) or three digits (`419`); a script has four letters.
+    private static func isRegion(_ tag: String) -> Bool {
+        (tag.count == 2 && tag.allSatisfy { $0.isLetter && $0.isUppercase }) || (tag.count == 3 && tag.allSatisfy(\.isNumber))
     }
 
     /// The word for yesterday, made once per language: a list scrolling past

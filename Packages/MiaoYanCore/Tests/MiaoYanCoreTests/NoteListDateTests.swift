@@ -53,6 +53,18 @@ final class NoteListDateTests: XCTestCase {
         XCTAssertEqual(shown(date(2026, 10, 11), language: "zh-Hans", system: "en_US"), "10月11日")
         XCTAssertEqual(shown(date(2026, 11, 18, 22, 8), language: "zh-Hans", system: "zh_CN"), "22:08")
         XCTAssertEqual(shown(date(2026, 11, 17, 9), language: "ja", system: "en_GB"), "昨日")
+        XCTAssertEqual(shown(date(2026, 10, 11), language: "zh-Hant", system: "zh-Hans_CN@calendar=gregorian"), "10月11日")
+    }
+
+    func testTheLocaleIsTheLanguagePlusTheSystemsRegion() {
+        func identifier(_ language: String, _ system: String) -> String {
+            NoteListDate.displayLocale(language: language, system: Locale(identifier: system)).identifier
+        }
+        XCTAssertEqual(identifier("zh-Hans", "en_US"), "zh-Hans_US@hours=h12")
+        XCTAssertEqual(identifier("en", "zh-Hans_CN"), "en_CN@hours=h23")
+        XCTAssertEqual(identifier("pt-BR", "pt_PT"), "pt_PT@hours=h23", "the system's region, not the language's own")
+        XCTAssertEqual(identifier("es", "es_419"), "es_419@hours=h12")
+        XCTAssertEqual(identifier("en", "en"), "en@hours=h12", "a system with no region adds none")
     }
 
     func testAnEarlierYearKeepsTheYear() {
