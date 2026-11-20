@@ -86,7 +86,7 @@ class ShortcutTemplateManager {
         "table": ShortcutTemplate(
             template: """
                 | {{select}}列1{{/select}} | 列2 | 列3 |
-                |-----|-----|-----|
+                | --- | --- | --- |
                 |     |     |     |
                 |     |     |     |
                 """

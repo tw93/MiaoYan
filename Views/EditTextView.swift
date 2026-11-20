@@ -1,6 +1,7 @@
 import Carbon.HIToolbox
 import Cocoa
 import Highlightr
+import MiaoYanCore
 
 // Configuration options for EditTextView fill operations
 struct FillOptions {
@@ -1349,7 +1350,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
 
             let formatter = TextFormatter(textView: self, note: note)
-            if event.modifierFlags.contains(.shift) {
+            if formatter.tableEdit(event.modifierFlags.contains(.shift) ? .previousCell : .nextCell) {
+                // In a table Tab moves between cells.
+            } else if event.modifierFlags.contains(.shift) {
                 formatter.unTab()
             } else {
                 formatter.tab()
@@ -1362,7 +1365,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             if event.modifierFlags.contains(.shift) {
                 insertNewline(nil)
-            } else {
+            } else if !formatter.tableEdit(.nextRow) {
                 formatter.newLine()
             }
             fillHighlightLinks(range: paragraphsAroundCaret())

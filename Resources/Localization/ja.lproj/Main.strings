@@ -674,3 +674,36 @@
 
 /* Class = "NSMenuItem"; title = "MiaoYan for iPhone and iPad"; ObjectID = "mYi-Ph-iPd"; */
 "mYi-Ph-iPd.title" = "iPhone・iPad 版";
+
+/* Class = "NSMenuItem"; title = "Table"; ObjectID = "Tbl-Mn-Itm"; */
+"Tbl-Mn-Itm.title" = "表";
+
+/* Class = "NSMenu"; title = "Table"; ObjectID = "Tbl-Mn-Sub"; */
+"Tbl-Mn-Sub.title" = "表";
+
+/* Class = "NSMenuItem"; title = "Insert Row Above"; ObjectID = "TbR-Ab-Itm"; */
+"TbR-Ab-Itm.title" = "上に行を挿入";
+
+/* Class = "NSMenuItem"; title = "Insert Row Below"; ObjectID = "TbR-Bl-Itm"; */
+"TbR-Bl-Itm.title" = "下に行を挿入";
+
+/* Class = "NSMenuItem"; title = "Insert Column Left"; ObjectID = "TbC-Lf-Itm"; */
+"TbC-Lf-Itm.title" = "左に列を挿入";
+
+/* Class = "NSMenuItem"; title = "Insert Column Right"; ObjectID = "TbC-Rt-Itm"; */
+"TbC-Rt-Itm.title" = "右に列を挿入";
+
+/* Class = "NSMenuItem"; title = "Delete Row"; ObjectID = "TbR-Dl-Itm"; */
+"TbR-Dl-Itm.title" = "行を削除";
+
+/* Class = "NSMenuItem"; title = "Delete Column"; ObjectID = "TbC-Dl-Itm"; */
+"TbC-Dl-Itm.title" = "列を削除";
+
+/* Class = "NSMenuItem"; title = "Align Left"; ObjectID = "TbA-Lf-Itm"; */
+"TbA-Lf-Itm.title" = "左揃え";
+
+/* Class = "NSMenuItem"; title = "Align Center"; ObjectID = "TbA-Ct-Itm"; */
+"TbA-Ct-Itm.title" = "中央揃え";
+
+/* Class = "NSMenuItem"; title = "Align Right"; ObjectID = "TbA-Rt-Itm"; */
+"TbA-Rt-Itm.title" = "右揃え";

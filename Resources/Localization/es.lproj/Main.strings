@@ -674,3 +674,36 @@
 
 /* Class = "NSMenuItem"; title = "MiaoYan for iPhone and iPad"; ObjectID = "mYi-Ph-iPd"; */
 "mYi-Ph-iPd.title" = "MiaoYan para iPhone y iPad";
+
+/* Class = "NSMenuItem"; title = "Table"; ObjectID = "Tbl-Mn-Itm"; */
+"Tbl-Mn-Itm.title" = "Tabla";
+
+/* Class = "NSMenu"; title = "Table"; ObjectID = "Tbl-Mn-Sub"; */
+"Tbl-Mn-Sub.title" = "Tabla";
+
+/* Class = "NSMenuItem"; title = "Insert Row Above"; ObjectID = "TbR-Ab-Itm"; */
+"TbR-Ab-Itm.title" = "Insertar fila arriba";
+
+/* Class = "NSMenuItem"; title = "Insert Row Below"; ObjectID = "TbR-Bl-Itm"; */
+"TbR-Bl-Itm.title" = "Insertar fila abajo";
+
+/* Class = "NSMenuItem"; title = "Insert Column Left"; ObjectID = "TbC-Lf-Itm"; */
+"TbC-Lf-Itm.title" = "Insertar columna a la izquierda";
+
+/* Class = "NSMenuItem"; title = "Insert Column Right"; ObjectID = "TbC-Rt-Itm"; */
+"TbC-Rt-Itm.title" = "Insertar columna a la derecha";
+
+/* Class = "NSMenuItem"; title = "Delete Row"; ObjectID = "TbR-Dl-Itm"; */
+"TbR-Dl-Itm.title" = "Eliminar fila";
+
+/* Class = "NSMenuItem"; title = "Delete Column"; ObjectID = "TbC-Dl-Itm"; */
+"TbC-Dl-Itm.title" = "Eliminar columna";
+
+/* Class = "NSMenuItem"; title = "Align Left"; ObjectID = "TbA-Lf-Itm"; */
+"TbA-Lf-Itm.title" = "Alinear a la izquierda";
+
+/* Class = "NSMenuItem"; title = "Align Center"; ObjectID = "TbA-Ct-Itm"; */
+"TbA-Ct-Itm.title" = "Centrar";
+
+/* Class = "NSMenuItem"; title = "Align Right"; ObjectID = "TbA-Rt-Itm"; */
+"TbA-Rt-Itm.title" = "Alinear a la derecha";

@@ -411,6 +411,69 @@ CA
                                                 </items>
                                             </menu>
                                         </menuItem>
+                                        <menuItem title="Table" image="tablecells" catalog="system" id="Tbl-Mn-Itm">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Table" id="Tbl-Mn-Sub">
+                                                <items>
+                                                    <menuItem title="Insert Row Above" id="TbR-Ab-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertTableRowAbove:" target="Ady-hI-5gd" id="TbR-Ab-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Insert Row Below" id="TbR-Bl-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertTableRowBelow:" target="Ady-hI-5gd" id="TbR-Bl-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Insert Column Left" id="TbC-Lf-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertTableColumnLeft:" target="Ady-hI-5gd" id="TbC-Lf-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Insert Column Right" id="TbC-Rt-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertTableColumnRight:" target="Ady-hI-5gd" id="TbC-Rt-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="TbS-p1-Itm"/>
+                                                    <menuItem title="Delete Row" id="TbR-Dl-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="deleteTableRow:" target="Ady-hI-5gd" id="TbR-Dl-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Delete Column" id="TbC-Dl-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="deleteTableColumn:" target="Ady-hI-5gd" id="TbC-Dl-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="TbS-p2-Itm"/>
+                                                    <menuItem title="Align Left" id="TbA-Lf-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="alignTableColumnLeft:" target="Ady-hI-5gd" id="TbA-Lf-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Align Center" id="TbA-Ct-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="alignTableColumnCenter:" target="Ady-hI-5gd" id="TbA-Ct-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Align Right" id="TbA-Rt-Itm">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="alignTableColumnRight:" target="Ady-hI-5gd" id="TbA-Rt-Act"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="3qd-xT-Shm"/>
                                         <menuItem title="Shift Left" keyEquivalent="[" id="Iba-Po-ajH">
                                             <connections>
@@ -1308,6 +1371,7 @@ CA
         <image name="project" width="20" height="20"/>
         <image name="square.split.2x1" catalog="system" width="15" height="14"/>
         <image name="wand.and.rays" catalog="system" width="16" height="16"/>
+        <image name="tablecells" catalog="system" width="18" height="14"/>
         <image name="wand.and.sparkles" catalog="system" width="17" height="15"/>
         <namedColor name="divider">
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

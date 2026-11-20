@@ -588,3 +588,36 @@
 
 /* Class = "NSMenuItem"; title = "MiaoYan for iPhone and iPad"; ObjectID = "mYi-Ph-iPd"; */
 "mYi-Ph-iPd.title" = "iPhone 和 iPad 版";
+
+/* Class = "NSMenuItem"; title = "Table"; ObjectID = "Tbl-Mn-Itm"; */
+"Tbl-Mn-Itm.title" = "表格";
+
+/* Class = "NSMenu"; title = "Table"; ObjectID = "Tbl-Mn-Sub"; */
+"Tbl-Mn-Sub.title" = "表格";
+
+/* Class = "NSMenuItem"; title = "Insert Row Above"; ObjectID = "TbR-Ab-Itm"; */
+"TbR-Ab-Itm.title" = "在上方插入行";
+
+/* Class = "NSMenuItem"; title = "Insert Row Below"; ObjectID = "TbR-Bl-Itm"; */
+"TbR-Bl-Itm.title" = "在下方插入行";
+
+/* Class = "NSMenuItem"; title = "Insert Column Left"; ObjectID = "TbC-Lf-Itm"; */
+"TbC-Lf-Itm.title" = "在左侧插入列";
+
+/* Class = "NSMenuItem"; title = "Insert Column Right"; ObjectID = "TbC-Rt-Itm"; */
+"TbC-Rt-Itm.title" = "在右侧插入列";
+
+/* Class = "NSMenuItem"; title = "Delete Row"; ObjectID = "TbR-Dl-Itm"; */
+"TbR-Dl-Itm.title" = "删除行";
+
+/* Class = "NSMenuItem"; title = "Delete Column"; ObjectID = "TbC-Dl-Itm"; */
+"TbC-Dl-Itm.title" = "删除列";
+
+/* Class = "NSMenuItem"; title = "Align Left"; ObjectID = "TbA-Lf-Itm"; */
+"TbA-Lf-Itm.title" = "左对齐";
+
+/* Class = "NSMenuItem"; title = "Align Center"; ObjectID = "TbA-Ct-Itm"; */
+"TbA-Ct-Itm.title" = "居中对齐";
+
+/* Class = "NSMenuItem"; title = "Align Right"; ObjectID = "TbA-Rt-Itm"; */
+"TbA-Rt-Itm.title" = "右对齐";

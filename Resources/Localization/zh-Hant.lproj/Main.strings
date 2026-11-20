@@ -673,3 +673,36 @@
 
 /* Class = "NSMenuItem"; title = "MiaoYan for iPhone and iPad"; ObjectID = "mYi-Ph-iPd"; */
 "mYi-Ph-iPd.title" = "iPhone 與 iPad 版";
+
+/* Class = "NSMenuItem"; title = "Table"; ObjectID = "Tbl-Mn-Itm"; */
+"Tbl-Mn-Itm.title" = "表格";
+
+/* Class = "NSMenu"; title = "Table"; ObjectID = "Tbl-Mn-Sub"; */
+"Tbl-Mn-Sub.title" = "表格";
+
+/* Class = "NSMenuItem"; title = "Insert Row Above"; ObjectID = "TbR-Ab-Itm"; */
+"TbR-Ab-Itm.title" = "在上方加入橫列";
+
+/* Class = "NSMenuItem"; title = "Insert Row Below"; ObjectID = "TbR-Bl-Itm"; */
+"TbR-Bl-Itm.title" = "在下方加入橫列";
+
+/* Class = "NSMenuItem"; title = "Insert Column Left"; ObjectID = "TbC-Lf-Itm"; */
+"TbC-Lf-Itm.title" = "在左側加入直欄";
+
+/* Class = "NSMenuItem"; title = "Insert Column Right"; ObjectID = "TbC-Rt-Itm"; */
+"TbC-Rt-Itm.title" = "在右側加入直欄";
+
+/* Class = "NSMenuItem"; title = "Delete Row"; ObjectID = "TbR-Dl-Itm"; */
+"TbR-Dl-Itm.title" = "刪除橫列";
+
+/* Class = "NSMenuItem"; title = "Delete Column"; ObjectID = "TbC-Dl-Itm"; */
+"TbC-Dl-Itm.title" = "刪除直欄";
+
+/* Class = "NSMenuItem"; title = "Align Left"; ObjectID = "TbA-Lf-Itm"; */
+"TbA-Lf-Itm.title" = "靠左對齊";
+
+/* Class = "NSMenuItem"; title = "Align Center"; ObjectID = "TbA-Ct-Itm"; */
+"TbA-Ct-Itm.title" = "置中對齊";
+
+/* Class = "NSMenuItem"; title = "Align Right"; ObjectID = "TbA-Rt-Itm"; */
+"TbA-Rt-Itm.title" = "靠右對齊";

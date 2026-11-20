@@ -1,4 +1,5 @@
 import Cocoa
+import MiaoYanCore
 
 @MainActor
 class EditorMenuManager {
@@ -190,5 +191,52 @@ enum FormattingAction {
         default:
             return true
         }
+    }
+}
+
+// MARK: - Table Menu Actions
+
+/// Format > Table. The items go to the first responder, so they reach the
+/// editor that has the focus in either window and are off anywhere else.
+extension EditTextView {
+    @IBAction func insertTableRowAbove(_ sender: Any) { runTableCommand(.insertRowAbove) }
+    @IBAction func insertTableRowBelow(_ sender: Any) { runTableCommand(.insertRowBelow) }
+    @IBAction func insertTableColumnLeft(_ sender: Any) { runTableCommand(.insertColumnLeft) }
+    @IBAction func insertTableColumnRight(_ sender: Any) { runTableCommand(.insertColumnRight) }
+    @IBAction func deleteTableRow(_ sender: Any) { runTableCommand(.deleteRow) }
+    @IBAction func deleteTableColumn(_ sender: Any) { runTableCommand(.deleteColumn) }
+    @IBAction func alignTableColumnLeft(_ sender: Any) { runTableCommand(.align(.left)) }
+    @IBAction func alignTableColumnCenter(_ sender: Any) { runTableCommand(.align(.center)) }
+    @IBAction func alignTableColumnRight(_ sender: Any) { runTableCommand(.align(.right)) }
+
+    /// The Table menu's commands, each on only where it has something to
+    /// act on: the caret in a table, and for Delete Row a row under the
+    /// header, for Delete Column a second column.
+    static let tableCommands: [Selector: TableEditing.Command] = [
+        #selector(insertTableRowAbove(_:)): .insertRowAbove,
+        #selector(insertTableRowBelow(_:)): .insertRowBelow,
+        #selector(insertTableColumnLeft(_:)): .insertColumnLeft,
+        #selector(insertTableColumnRight(_:)): .insertColumnRight,
+        #selector(deleteTableRow(_:)): .deleteRow,
+        #selector(deleteTableColumn(_:)): .deleteColumn,
+        #selector(alignTableColumnLeft(_:)): .align(.left),
+        #selector(alignTableColumnCenter(_:)): .align(.center),
+        #selector(alignTableColumnRight(_:)): .align(.right),
+    ]
+
+    fileprivate func runTableCommand(_ command: TableEditing.Command) {
+        guard isEditable, !hasMarkedText(), let note = storageNote ?? EditTextView.note else { return }
+        breakUndoCoalescing()
+        if TextFormatter(textView: self, note: note, shouldScanMarkdown: false).tableEdit(command) {
+            saveCursorPosition()
+        }
+    }
+
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if let action = menuItem.action, let command = EditTextView.tableCommands[action] {
+            guard isEditable, !hasMarkedText(), let storage = textStorage else { return false }
+            return TableEditing.edit(command, in: storage.string as NSString, selection: selectedRange()) != nil
+        }
+        return super.validateMenuItem(menuItem)
     }
 }

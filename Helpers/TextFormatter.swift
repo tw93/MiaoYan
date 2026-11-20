@@ -240,6 +240,21 @@ public class TextFormatter {
         return (NSRange(location: caret, length: 0), ListContinuation.lineBreak(in: text) + text.substring(with: match.range))
     }
 
+    /// Runs a table key or command when the selection is in a table and
+    /// says whether it did: Tab, Shift-Tab and Return there move between
+    /// cells and rows instead of indenting or breaking the row.
+    @discardableResult
+    public func tableEdit(_ command: TableEditing.Command) -> Bool {
+        let text = storage.string as NSString
+        guard let edit = TableEditing.edit(command, in: text, selection: textView.selectedRange) else { return false }
+        if edit.range.length > 0 || !edit.replacement.isEmpty {
+            insertText(edit.replacement, replacementRange: edit.range)
+        }
+        setSelectedRange(edit.selection)
+        textView.scrollRangeToVisible(edit.selection)
+        return true
+    }
+
     public func newLine() {
         guard let currentParagraphRange = getParagraphRange() else { return }
         let currentParagraph = storage.attributedSubstring(from: currentParagraphRange)
