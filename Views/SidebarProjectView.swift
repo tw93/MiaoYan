@@ -424,7 +424,6 @@ class SidebarProjectView: NSOutlineView,
         let defaultSpacing: CGFloat = 6
         let defaultIconLeading: CGFloat = 1
 
-        cell.centersContent = false
         updateIconLeading(cell, leading: defaultIconLeading)
         adjustIconSize(cell, size: defaultIconSize)
         setupBasicCellAppearance(cell, baseFont: baseFont)
@@ -591,7 +590,6 @@ class SidebarProjectView: NSOutlineView,
             cell.label.textColor = accentColor
             updateLabelVerticalNudge(cell, nudge: labelNudge)
             updateLabelSpacing(cell, spacing: accentSpacing)
-            cell.centersContent = false
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
             // The bird icon has a different visual center from folder icons.
