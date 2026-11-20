@@ -115,14 +115,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=6b12d989755c") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=737df64bf0b1") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=03e3fd63e712") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5b030ecd8c33") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -851,6 +851,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <main class="blog-index releases">
   <h1 class="section-title">Release Notes</h1>
   <p class="section-lede">MiaoYan has been open source since 2020 and maintained ever since, with issues and pull requests handled promptly, and the iPhone and iPad versions have lately had concentrated work on writing and reading.</p>
+  <section class="release" id="v4-11-0">
+    <h2 class="release-title">V4.11.0 <span class="release-name">Kirin</span> <time class="release-date" datetime="2026-11-20">2026-11-20</time></h2>
+    <div class="release-notes"><ol><li>The first time you use MiaoYan it adds a MiaoYan guide that shows a table, a to-do list, a Mermaid diagram and a formula, and one tap puts it away</li><li>Dates in the note list read the way iPhone shows them: the time for today, Yesterday, the day for this year and the full date before that</li><li>Items without a checkbox in a to-do list keep their bullet, and in a list spaced with blank lines each checkbox sits on the same line as its text</li></ol><h3 class="release-device">Mac</h3><ol><li>Images in the folder beside a Markdown file opened from Finder now show, and the App Store version asks once to read that folder and remembers it</li><li>Link brackets no longer vanish as you type with a Simplified Chinese interface, and pasting a whole note into the title by mistake keeps only its first line instead of freezing the app</li><li>Copying with the caret on a heading takes the words without the #, and the Simplified Chinese menus and prompts read more plainly, matching iPhone</li><li>The icon sits on a lighter warm white, the MiaoYan mark at the top of the sidebar is laid out afresh, the lines between notes are easier to see, the title bar buttons have more room, and long folder names end with an ellipsis</li></ol><h3 class="release-device">iPhone and iPad</h3><ol><li>Share a note, or a passage you select, as an image: pick a paper and a font, and make one long image or 3:4 cards</li><li>Search opens ready to type, with your recent searches and recently edited notes below, and note lists follow the font you choose</li><li>Recent Notes widgets for the Home Screen and Lock Screen, a New Note button on the Lock Screen and in Control Center, Shortcuts and Siri actions to create, open, search and append to notes, and notes in system search</li><li>The interface now speaks Traditional Chinese, Japanese, Korean, German, French and Spanish, the icon is white, and the new note cursor is MiaoYan green</li></ol></div>
+  </section>
   <section class="release" id="v4-10-0">
     <h2 class="release-title">V4.10.0 <span class="release-name">Mizutsune</span> <time class="release-date" datetime="2026-11-15">2026-11-15</time></h2>
     <div class="release-notes"><h3 class="release-device">Mac</h3><ol><li>Markdown files opened from Finder list under Opened in the sidebar while the library stays as it was, Move To lists folders as the sidebar nests and orders them, and [[Note|label]] links to that note</li><li>Local images in notes show again in the App Store version, and photos dragged in from Photos, Mail or a browser go straight into the note</li><li>Exported PNG, PDF and HTML no longer print the title twice, emoji in HTML show on Windows and older iOS, \$ writes a dollar sign, and an inline $ pairs only with a $ in the same paragraph</li><li>The editor colours indented headings, lists that start with 1), and headings with a tab after #, and no longer reads _ or __ inside a word as italic or bold, matching the preview</li><li>A note named like an existing one keeps its name when it gets a number, Option-Command-C copies the note&#x27;s path, the split editor follows the preview again after a new note, and Return continues lists as it does on iPhone</li><li>The icon sits on a warm white ground, MiaoYan in the sidebar has a new typeface, the preview draws Japanese and Traditional Chinese glyph forms when you pick those languages, folder names in a serif interface font are no longer cut off at the bottom, and About shows the open-source licences</li></ol><h3 class="release-device">iPhone and iPad</h3><ol><li>Tap an image in a note to see it full screen, links between notes and to headings open where they point, and your search carries into Find in the note</li><li>miaoyan:// links create and open notes, touch and hold the Home Screen icon for a new note, and reopening after iOS closed the app brings back the note you were reading</li><li>The reading font follows the note&#x27;s language, Traditional Chinese notes use Traditional Kaiti, Kaiti reads a little larger, Mermaid diagrams take the Mac&#x27;s warm colours, and a pinned note stays pinned when you save it</li></ol></div>
@@ -1098,7 +1102,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <div class="foot">
       <div class="foot-mark">
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
-        <p class="foot-about">A light, native Markdown notebook for Mac</p>
+        <p class="foot-about">A light, native Markdown notebook</p>
       </div>
       <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
