@@ -23,7 +23,7 @@ MiaoYan is a lightweight Markdown editor built with Swift. This open-source repo
 - `Shell/` - the SwiftUI main window in progress (`-MiaoYanShell YES`), see `.claude/rules/shell.md`.
 - `MiaoYan.xcodeproj/` - Xcode project and version settings.
 - `Package.swift` - a reference list of the Swift package dependencies; no Xcode project reads it, the real package references live in `project.pbxproj`.
-- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
+- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews, list row dates, the first-run guide), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
 - `scripts/` - local build, release, and project maintenance scripts.
 - `scripts/release-ci/` - release note rendering, appcast, notarization, and package helpers.
 - `skills/miaoyan/` - published Agent Skill (tracked) describing MiaoYan's Markdown, PPT, and `miao` CLI surfaces to outside agents; it restates product syntax, so it drifts when those surfaces change.
@@ -57,7 +57,7 @@ fresh unique 24-hex ID for each new object.
 
 ## CI
 
-`.github/workflows/ci.yml` runs on every PR and push to `main`:
+`.github/workflows/ci.yml` runs on every PR and push to `main`, except one that touches only the README files, the agent guides, `skills/**`, `.claude/**` or the other docs in its `paths-ignore` (a README-only push starts no run; a tag push always runs):
 
 - macOS Debug build, then `xcodebuild test` for the unit suite (no signing required), then `swift test` for `Packages/MiaoYanCore`
 - SwiftLint and swift-format, both `--strict`, so any warning is a merge gate
