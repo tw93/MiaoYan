@@ -143,6 +143,7 @@ public enum UserDefaultsManagement {
         static let SingleModePath = "singleModePath"
         static let SingleModeBookmark = "singleModeBookmark"
         static let SingleModeAccessBookmark = "singleModeAccessBookmark"
+        static let OpenedFolderBookmarks = "openedFolderBookmarks"
         static let PreviewWidth = "previewWidth"
         static let PreviewLocation = "previewLocation"
         static let EditorLineBreak = "editorLineBreak"
@@ -421,6 +422,18 @@ public enum UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.SingleModeAccessBookmark)
+        }
+    }
+
+    /// Security-scoped bookmarks of folders the user let the sandboxed build
+    /// read, so images beside a file opened from Finder show (#582). Newest
+    /// last; `Storage.rememberOpenedFolder` keeps the list short.
+    static var openedFolderBookmarks: [Data] {
+        get {
+            UserDefaults.standard.array(forKey: Constants.OpenedFolderBookmarks) as? [Data] ?? []
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.OpenedFolderBookmarks)
         }
     }
 

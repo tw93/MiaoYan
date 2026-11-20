@@ -1388,6 +1388,39 @@ class ViewController:
             self.notesTableView.scrollRowToVisible(row: index, animated: false)
             self.editArea.fill(note: note, options: .silent)
             self.revealEditor()
+            self.requestOpenedFolderAccess(for: note)
+        }
+    }
+
+    /// Folders whose access was declined this run, so reopening a file from
+    /// them does not ask again.
+    private var declinedOpenedFolders = Set<String>()
+
+    /// The App Store build is sandboxed and may read only the file Finder
+    /// opened, so images beside it came out as broken icons (#582). An open
+    /// panel on the note's folder is the one way the user can grant the
+    /// rest; it shows only when the note has local images the app cannot
+    /// read, never in the GitHub build.
+    private func requestOpenedFolderAccess(for note: Note) {
+        guard let folder = storage.folderNeedingAccess(for: note), let window = view.window,
+            !declinedOpenedFolders.contains(folder.path)
+        else { return }
+        let panel = NSOpenPanel()
+        panel.directoryURL = folder
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+        panel.message = I18n.str("Allow MiaoYan to read this folder to show the note's images")
+        panel.prompt = I18n.str("Allow")
+        panel.beginSheetModal(for: window) { [weak self] response in
+            guard let self else { return }
+            guard response == .OK, let url = panel.url else {
+                self.declinedOpenedFolders.insert(folder.path)
+                return
+            }
+            self.storage.rememberOpenedFolder(url)
+            self.refillEditArea(previewOnly: true, keepPreviewPage: true)
         }
     }
 

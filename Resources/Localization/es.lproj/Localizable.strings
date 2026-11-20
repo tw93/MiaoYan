@@ -348,3 +348,6 @@
 
 /* Window title of MiaoYan > Open Source Licenses */
 "Open Source Licenses" = "Licencias de código abierto";
+
+"Allow MiaoYan to read this folder to show the note's images" = "Permite que MiaoYan lea esta carpeta para mostrar las imágenes de la nota";
+"Allow" = "Permitir";

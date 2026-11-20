@@ -666,4 +666,44 @@ final class StorageRelocationTests: XCTestCase {
         XCTAssertFalse(storage.noteList.contains { $0 === outside })
         XCTAssertFalse(FileManager.default.fileExists(atPath: rootURL.appendingPathComponent("Trash").path))
     }
+
+    /// The App Store build may read only the file Finder opened, so images
+    /// beside it showed as broken icons until the user grants the folder
+    /// (#582). A folder with no permissions stands in for the sandbox here.
+    @MainActor
+    func testAnOpenedNoteAsksForItsFolderOnlyWhenItsImagesCannotBeRead() throws {
+        let base = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanGrant-\(UUID().uuidString)")
+        let rootURL = base.appendingPathComponent("Library", isDirectory: true)
+        let courseURL = base.appendingPathComponent("Course", isDirectory: true)
+        try FileManager.default.createDirectory(at: rootURL, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: courseURL.appendingPathComponent("images"), withIntermediateDirectories: true)
+        try Data([0x89, 0x50, 0x4E, 0x47]).write(to: courseURL.appendingPathComponent("images/shot.png"))
+        let lessonFile = courseURL.appendingPathComponent("Lesson.md")
+        let plainFile = courseURL.appendingPathComponent("Plain.md")
+        let insideFile = rootURL.appendingPathComponent("Inside.md")
+        try "# Lesson\n\n![shot](images/shot.png)\n".write(to: lessonFile, atomically: true, encoding: .utf8)
+        try "# Plain\n\nNo pictures.\n".write(to: plainFile, atomically: true, encoding: .utf8)
+        try "![shot](images/shot.png)\n".write(to: insideFile, atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: rootURL, isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        defer {
+            try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: courseURL.path)
+            for project in storage.getProjects().filter({ $0.url.path.hasPrefix(rootURL.path) }) {
+                UserDefaults.standard.removeObject(forKey: project.url.path)
+                storage.removeBy(project: project)
+            }
+            try? FileManager.default.removeItem(at: base)
+        }
+
+        let lesson = try XCTUnwrap(storage.openFromFinder(lessonFile))
+        let plain = try XCTUnwrap(storage.openFromFinder(plainFile))
+        let inside = try XCTUnwrap(storage.openFromFinder(insideFile))
+        XCTAssertNil(storage.folderNeedingAccess(for: lesson), "a readable folder, as in the GitHub build, asks nothing")
+
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: courseURL.path)
+        XCTAssertEqual(storage.folderNeedingAccess(for: lesson)?.path, lesson.project.url.path)
+        XCTAssertNil(storage.folderNeedingAccess(for: plain), "a note with no local images asks nothing")
+        XCTAssertNil(storage.folderNeedingAccess(for: inside), "a library note is read through the library's access")
+    }
 }

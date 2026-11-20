@@ -1617,7 +1617,25 @@ class Storage {
         return project
     }
 
+    /// The sandbox grants a file opened from Finder and nothing beside it, so
+    /// the folder is readable only through a bookmark of a folder the user
+    /// picked earlier (`rememberOpenedFolder`); without one the bookmark
+    /// below fails and its images stay blank (#582). The GitHub build is not
+    /// sandboxed and reads the folder either way.
     private func startAccessingOpenedFolder(_ folder: URL) {
+        let path = folder.resolvingSymlinksInPath().path
+        for data in UserDefaultsManagement.openedFolderBookmarks {
+            var isStale = false
+            guard
+                let granted = try? URL(
+                    resolvingBookmarkData: data, options: .withSecurityScope, relativeTo: nil,
+                    bookmarkDataIsStale: &isStale)
+            else { continue }
+            let root = granted.resolvingSymlinksInPath().path
+            guard path == root || path.hasPrefix(root.hasSuffix("/") ? root : root + "/") else { continue }
+            if granted.startAccessingSecurityScopedResource() { openedFolderScopes.append(granted) }
+            return
+        }
         guard
             let bookmark = try? folder.bookmarkData(
                 options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
@@ -1630,6 +1648,29 @@ class Storage {
             scoped.startAccessingSecurityScopedResource()
         else { return }
         openedFolderScopes.append(scoped)
+    }
+
+    /// The folder of a note opened from Finder that shows local images the
+    /// app cannot read, which only the user can grant by picking it in an
+    /// open panel. Nil for a library note, a readable folder or a note with
+    /// no local images.
+    func folderNeedingAccess(for note: Note) -> URL? {
+        guard note.project.isExternal, !note.getAllImages().isEmpty else { return nil }
+        let folder = note.project.url
+        guard (try? FileManager.default.contentsOfDirectory(atPath: folder.path)) == nil else { return nil }
+        return folder
+    }
+
+    /// Keeps a folder the user picked readable for this run and the next
+    /// ones. The newest 20 are kept, enough for the course folders a reader
+    /// moves between.
+    func rememberOpenedFolder(_ folder: URL) {
+        guard
+            let bookmark = try? folder.bookmarkData(
+                options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+        else { return }
+        if folder.startAccessingSecurityScopedResource() { openedFolderScopes.append(folder) }
+        UserDefaultsManagement.openedFolderBookmarks = Array((UserDefaultsManagement.openedFolderBookmarks + [bookmark]).suffix(20))
     }
 
     public func initNote(url: URL) -> Note? {

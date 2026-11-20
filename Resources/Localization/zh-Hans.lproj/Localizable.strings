@@ -356,3 +356,6 @@
 
 /* Window title of MiaoYan > Open Source Licenses */
 "Open Source Licenses" = "开源许可";
+
+"Allow MiaoYan to read this folder to show the note's images" = "允许妙言读取这个文件夹，笔记里的图片才能显示";
+"Allow" = "允许";
