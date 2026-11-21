@@ -84,6 +84,15 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         ) { [weak self] _ in
             Task { @MainActor in self?.model.applyEditorSettings() }
         }
+        model.windowWidthChanged(window.frame.width)
+        windowResizeObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.didResizeNotification, object: window, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self, let window = self.window else { return }
+                self.model.windowWidthChanged(window.frame.width)
+            }
+        }
         pinsObserver = NotificationCenter.default.addObserver(
             forName: .pinsChangedElsewhere, object: nil, queue: .main
         ) { [weak self] _ in
@@ -508,6 +517,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
     private var settingsObserver: NSObjectProtocol?
     private var pinsObserver: NSObjectProtocol?
+    private var windowResizeObserver: NSObjectProtocol?
     private var fontSetObserver: NSObjectProtocol?
 
     // MARK: Export

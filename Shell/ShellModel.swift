@@ -143,8 +143,10 @@ final class ShellModel {
     var snippets: [URL: String] = [:]
     private(set) var layout = Layout.all {
         didSet {
-            // A presentation's note-only layout is not the user's.
-            guard !isPresenting else { return }
+            // A presentation's note-only layout is not the user's, and
+            // neither is the folders column giving way to a crowded window.
+            guard !isPresenting, !isFittingSidebar else { return }
+            sidebarGaveWay = false
             UserDefaults.standard.set(layout.rawValue, forKey: Self.layoutKey)
         }
     }
@@ -159,6 +161,7 @@ final class ShellModel {
                 UserDefaultsManagement.splitViewMode = editorMode == .split
             }
             editor.attachSplitPreview(editorMode == .split ? preview : nil)
+            fitSidebar()
         }
     }
     /// Bumped when the open note changed outside the editor (disk, version
@@ -508,6 +511,41 @@ final class ShellModel {
         case .noteOnly:
             layout = .listAndNote
             isUnfolding = true
+        }
+    }
+
+    /// Below this window width the folders column gives way: at the default
+    /// widths (folders 180, list 280) the note would keep under 500pt.
+    static let roomyWindowWidth: CGFloat = 960
+    @ObservationIgnored private var windowWidth: CGFloat = 0
+    @ObservationIgnored private var wasCrowded = false
+    @ObservationIgnored private var sidebarGaveWay = false
+    @ObservationIgnored private var isFittingSidebar = false
+
+    func windowWidthChanged(_ width: CGFloat) {
+        windowWidth = width
+        fitSidebar()
+    }
+
+    /// The folders column hides when the split preview opens or the window
+    /// gets narrow, and comes back when neither holds any more, unless the
+    /// person moved a column meanwhile (maintainer 2026-11-21, no setting).
+    /// It acts only when the window turns crowded or roomy, so showing the
+    /// folders again by hand keeps them.
+    private func fitSidebar() {
+        guard !isPresenting else { return }
+        let crowded = editorMode == .split || (windowWidth > 0 && windowWidth < Self.roomyWindowWidth)
+        guard crowded != wasCrowded else { return }
+        wasCrowded = crowded
+        isFittingSidebar = true
+        defer { isFittingSidebar = false }
+        if crowded {
+            guard layout == .all else { return }
+            layout = .listAndNote
+            sidebarGaveWay = true
+        } else if sidebarGaveWay {
+            sidebarGaveWay = false
+            if layout == .listAndNote { layout = .all }
         }
     }
 

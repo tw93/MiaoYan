@@ -247,6 +247,52 @@ final class ShellModelTests: XCTestCase {
         XCTAssertEqual(model.editorMode, mode)
     }
 
+    /// The folders give way to a narrow window and to the split preview,
+    /// come back once there is room, and leave a choice made by hand alone.
+    @MainActor
+    func testTheFoldersGiveWayToANarrowWindowAndTheSplitPreview() {
+        let defaults = UserDefaults.standard
+        let previousLayout = defaults.string(forKey: "ShellLayout")
+        let previousPreview = UserDefaultsManagement.preview
+        let previousSplit = UserDefaultsManagement.splitViewMode
+        defer {
+            defaults.set(previousLayout, forKey: "ShellLayout")
+            UserDefaultsManagement.preview = previousPreview
+            UserDefaultsManagement.splitViewMode = previousSplit
+        }
+        defaults.set("all", forKey: "ShellLayout")
+        UserDefaultsManagement.preview = false
+        UserDefaultsManagement.splitViewMode = false
+        let model = ShellModel()
+
+        model.windowWidthChanged(1200)
+        XCTAssertEqual(model.layout, .all)
+        model.windowWidthChanged(800)
+        XCTAssertEqual(model.layout, .listAndNote)
+        XCTAssertEqual(defaults.string(forKey: "ShellLayout"), "all", "giving way is not the saved layout")
+        model.windowWidthChanged(1200)
+        XCTAssertEqual(model.layout, .all)
+
+        // Shown again by hand while narrow, the folders stay.
+        model.windowWidthChanged(800)
+        model.toggleSidebar()
+        model.windowWidthChanged(760)
+        XCTAssertEqual(model.layout, .all)
+        model.windowWidthChanged(1200)
+
+        model.toggleSplit()
+        XCTAssertEqual(model.editorMode, .split)
+        XCTAssertEqual(model.layout, .listAndNote)
+        model.toggleSplit()
+        XCTAssertEqual(model.layout, .all)
+
+        // Hidden by hand before, they stay hidden after.
+        model.toggleSidebar()
+        model.toggleSplit()
+        model.toggleSplit()
+        XCTAssertEqual(model.layout, .listAndNote)
+    }
+
     private func urls(_ count: Int) -> [URL] {
         (0..<count).map { URL(fileURLWithPath: "/tmp/note-\($0).md") }
     }
