@@ -299,6 +299,12 @@ enum Theme {
     /// (maintainer's pick of three, 2026-11-06). Sand at 35% sat 1.07:1 on
     /// the paper and the matches could not be found by eye.
     nonisolated static let searchMatch = dynamic(0x1C5D33, 0x54C59F, lightAlpha: 0.18, darkAlpha: 0.22)
+    /// Version history's preview: a line the version added, the find
+    /// match's green but fainter, since whole lines are tinted, and a line
+    /// it rewrote, the editor's bold gold (`html`) at the same weight. At 10%
+    /// the green read as a cool grey on the paper.
+    nonisolated static let versionAddedLine = dynamic(0x1C5D33, 0x54C59F, lightAlpha: 0.14, darkAlpha: 0.18)
+    nonisolated static let versionRewrittenLine = dynamic(0x9A7400, 0xDAAE76, lightAlpha: 0.14, darkAlpha: 0.16)
 
     /// The Settings window's colours: the shell's warm paper, Kami's warm
     /// greys and sand, and MiaoYan green for switches and actions. Opaque on

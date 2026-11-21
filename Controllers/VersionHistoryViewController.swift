@@ -115,7 +115,13 @@ final class VersionHistoryViewController: NSViewController {
     private var entries: [VersionEntry] = []
 
     private let tableView = NSTableView()
-    private let previewTextView = NSTextView()
+    private let previewTextView = VersionPreviewTextView(usingTextLayoutManager: false)
+    /// Each entry's text, newest first, once read off the main thread; nil
+    /// for a version that could not be read.
+    private var texts: [String?]?
+    /// What each entry changed against the one below it, the version saved
+    /// before it. The oldest has none.
+    private var changes: [Int: VersionChanges] = [:]
     private let restoreButton = NSButton()
 
     // In the app's language, as the note list's dates are: with the app set
@@ -153,8 +159,8 @@ final class VersionHistoryViewController: NSViewController {
     }
 
     override func loadView() {
-        view = VersionHistoryBackgroundView(frame: NSRect(x: 0, y: 0, width: 660, height: 440))
-        preferredContentSize = NSSize(width: 660, height: 440)
+        view = VersionHistoryBackgroundView(frame: NSRect(x: 0, y: 0, width: 700, height: 440))
+        preferredContentSize = NSSize(width: 700, height: 440)
     }
 
     override func viewDidLoad() {
@@ -165,6 +171,36 @@ final class VersionHistoryViewController: NSViewController {
         tableView.reloadData()
         tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
         updateRestoreButtonState()
+        loadChanges()
+    }
+
+    /// Reads every version once and compares each with the one saved before
+    /// it, then fills in the list's line counts and the preview's marks.
+    private func loadChanges() {
+        guard entries.count > 1 else { return }
+        let current = note.content.string
+        let urls = entries.compactMap { entry -> URL? in
+            if case .saved(_, let url) = entry { return url }
+            return nil
+        }
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            let texts: [String?] = [current] + urls.map { try? String(contentsOf: $0, encoding: .utf8) }
+            var counted: [Int: VersionChanges] = [:]
+            for index in 0..<(texts.count - 1) {
+                guard let newer = texts[index], let older = texts[index + 1] else { continue }
+                counted[index] = VersionChanges.between(older: older, newer: newer)
+            }
+            let changes = counted
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.texts = texts
+                self.changes = changes
+                let selected = self.tableView.selectedRowIndexes
+                self.tableView.reloadData()
+                self.tableView.selectRowIndexes(selected, byExtendingSelection: false)
+                self.loadPreview(for: self.tableView.selectedRow)
+            }
+        }
     }
 
     override func keyDown(with event: NSEvent) {
@@ -374,7 +410,7 @@ final class VersionHistoryViewController: NSViewController {
             sidebarBg.leadingAnchor.constraint(equalTo: content.leadingAnchor),
             sidebarBg.topAnchor.constraint(equalTo: content.topAnchor),
             sidebarBg.bottomAnchor.constraint(equalTo: content.bottomAnchor),
-            sidebarBg.widthAnchor.constraint(equalToConstant: 176),
+            sidebarBg.widthAnchor.constraint(equalToConstant: 208),
 
             vDiv.leadingAnchor.constraint(equalTo: sidebarBg.trailingAnchor),
             vDiv.topAnchor.constraint(equalTo: content.topAnchor),
@@ -441,6 +477,13 @@ final class VersionHistoryViewController: NSViewController {
         }
     }
 
+    /// Lines this entry added and removed against the version before it,
+    /// or nil for the oldest, an unchanged pair, or before they are counted.
+    private func countsLabel(at index: Int) -> String? {
+        guard let change = changes[index], change.added + change.removed > 0 else { return nil }
+        return "+\(change.added) \u{2212}\(change.removed)"
+    }
+
     private func secondaryLabel(for entry: VersionEntry) -> String? {
         switch entry {
         case .current:
@@ -453,18 +496,26 @@ final class VersionHistoryViewController: NSViewController {
     // MARK: - Preview & restore
 
     private func loadPreview(for index: Int) {
-        guard index >= 0, index < entries.count else { previewTextView.string = ""; return }
+        guard index >= 0, index < entries.count else {
+            previewTextView.show("", marks: [])
+            return
+        }
+        if let texts, index < texts.count, let text = texts[index] {
+            previewTextView.show(text, marks: changes[index]?.marks ?? [])
+            return
+        }
         switch entries[index] {
         case .current:
-            previewTextView.string = note.content.string
-            previewTextView.scrollToBeginningOfDocument(nil)
+            previewTextView.show(note.content.string, marks: [])
         case .saved(_, let url):
-            previewTextView.string = ""
+            previewTextView.show("", marks: [])
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 let text = (try? String(contentsOf: url, encoding: .utf8)) ?? ""
                 DispatchQueue.main.async { [weak self] in
-                    self?.previewTextView.string = text
-                    self?.previewTextView.scrollToBeginningOfDocument(nil)
+                    // The counted texts may have arrived meanwhile and drawn
+                    // the marks; this plain copy must not wipe them.
+                    guard let self, self.texts == nil, self.tableView.selectedRow == index else { return }
+                    self.previewTextView.show(text, marks: [])
                 }
             }
         }
@@ -486,9 +537,11 @@ final class VersionHistoryViewController: NSViewController {
 
     @objc private func restoreAction() {
         let row = tableView.selectedRow
+        // The text read when the panel opened: another note's save may have
+        // dropped this file since, under the history's size ceiling.
         guard row >= 0, row < entries.count, !note.loadFailed,
             case .saved(let date, let url) = entries[row],
-            let text = try? String(contentsOf: url, encoding: .utf8)
+            let text = (texts.flatMap { row < $0.count ? $0[row] : nil }) ?? (try? String(contentsOf: url, encoding: .utf8))
         else { return }
 
         NoteVersionManager.shared.saveVersionIfNeeded(for: note, force: true)
@@ -537,6 +590,7 @@ extension VersionHistoryViewController: NSTableViewDelegate {
         cell.configure(
             primary: primaryLabel(for: entry),
             secondary: secondaryLabel(for: entry),
+            counts: countsLabel(at: row),
             isCurrent: {
                 if case .current = entry { return true }; return false
             }()
@@ -589,6 +643,7 @@ private final class VersionHistoryRowView: NSTableRowView {
 private final class VersionHistoryCellView: NSView {
     private let primaryField = NSTextField(labelWithString: "")
     private let secondaryField = NSTextField(labelWithString: "")
+    private let countsField = NSTextField(labelWithString: "")
     private let dotView = NSView()
 
     override init(frame: NSRect) {
@@ -607,10 +662,18 @@ private final class VersionHistoryCellView: NSView {
         secondaryField.font = .systemFont(ofSize: 12)
         secondaryField.textColor = Theme.secondaryTextColor
         secondaryField.lineBreakMode = .byTruncatingTail
+        secondaryField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        countsField.translatesAutoresizingMaskIntoConstraints = false
+        countsField.font = .monospacedDigitSystemFont(ofSize: 11, weight: .regular)
+        countsField.textColor = Theme.secondaryTextColor
+        countsField.setContentCompressionResistancePriority(.required, for: .horizontal)
+        countsField.setContentHuggingPriority(.required, for: .horizontal)
 
         addSubview(dotView)
         addSubview(primaryField)
         addSubview(secondaryField)
+        addSubview(countsField)
 
         NSLayoutConstraint.activate([
             dotView.widthAnchor.constraint(equalToConstant: 7),
@@ -623,8 +686,11 @@ private final class VersionHistoryCellView: NSView {
             primaryField.topAnchor.constraint(equalTo: topAnchor, constant: 12),
 
             secondaryField.leadingAnchor.constraint(equalTo: primaryField.leadingAnchor),
-            secondaryField.trailingAnchor.constraint(equalTo: primaryField.trailingAnchor),
+            secondaryField.trailingAnchor.constraint(lessThanOrEqualTo: countsField.leadingAnchor, constant: -6),
             secondaryField.topAnchor.constraint(equalTo: primaryField.bottomAnchor, constant: 3),
+
+            countsField.trailingAnchor.constraint(equalTo: primaryField.trailingAnchor),
+            countsField.firstBaselineAnchor.constraint(equalTo: secondaryField.firstBaselineAnchor),
         ])
     }
 
@@ -633,11 +699,13 @@ private final class VersionHistoryCellView: NSView {
 
     private var isCurrent = false
 
-    func configure(primary: String, secondary: String?, isCurrent: Bool) {
+    func configure(primary: String, secondary: String?, counts: String?, isCurrent: Bool) {
         self.isCurrent = isCurrent
         primaryField.stringValue = primary
         secondaryField.stringValue = secondary ?? ""
         secondaryField.isHidden = secondary == nil
+        countsField.stringValue = counts ?? ""
+        countsField.isHidden = counts == nil
         applyStyle(selected: false)
     }
 
@@ -652,5 +720,59 @@ private final class VersionHistoryCellView: NSView {
             active
             ? Theme.accentColor.cgColor
             : Theme.secondaryTextColor.withAlphaComponent(0.4).cgColor
+    }
+}
+
+// MARK: - Preview with the version's changes
+
+/// The version's text with the lines it added or rewrote tinted across the
+/// whole width, as diff views draw them, scrolled to the first change.
+@MainActor
+final class VersionPreviewTextView: NSTextView {
+    private(set) var marks: [(range: NSRange, kind: VersionChanges.Kind)] = []
+
+    func show(_ text: String, marks newMarks: [VersionChanges.Mark]) {
+        string = text
+        marks = VersionChanges.ranges(of: newMarks, in: text)
+        needsDisplay = true
+        guard let first = marks.first, let manager = layoutManager, let container = textContainer else {
+            scrollToBeginningOfDocument(nil)
+            return
+        }
+        let glyphs = manager.glyphRange(forCharacterRange: first.range, actualCharacterRange: nil)
+        let rect = manager.boundingRect(forGlyphRange: glyphs, in: container)
+        // A few lines of what comes before stay in view above the change.
+        scroll(NSPoint(x: 0, y: max(0, rect.minY + textContainerOrigin.y - 60)))
+    }
+
+    override func drawBackground(in rect: NSRect) {
+        super.drawBackground(in: rect)
+        guard !marks.isEmpty, let manager = layoutManager, let container = textContainer else { return }
+        // Only the marks on screen: a version that pasted thousands of
+        // lines would otherwise be walked, and laid out, on every frame.
+        let dirty = rect.offsetBy(dx: -textContainerOrigin.x, dy: -textContainerOrigin.y)
+        let visible = manager.characterRange(forGlyphRange: manager.glyphRange(forBoundingRect: dirty, in: container), actualGlyphRange: nil)
+        // An empty last line has no glyph for the culling to find, so it is
+        // always drawn; there is at most one.
+        for mark in marks where mark.range.length == 0 || NSIntersectionRange(mark.range, visible).length > 0 {
+            let color = mark.kind == .added ? Theme.versionAddedLine : Theme.versionRewrittenLine
+            color.setFill()
+            let glyphs = manager.glyphRange(forCharacterRange: mark.range, actualCharacterRange: nil)
+            guard glyphs.length > 0 else {
+                // An empty last line has no glyph, only the extra fragment.
+                fillAcross(manager.extraLineFragmentRect, clippedTo: rect)
+                continue
+            }
+            manager.enumerateLineFragments(forGlyphRange: glyphs) { fragment, _, _, _, _ in
+                self.fillAcross(fragment, clippedTo: rect)
+            }
+        }
+    }
+
+    private func fillAcross(_ fragment: NSRect, clippedTo dirty: NSRect) {
+        guard !fragment.isEmpty else { return }
+        let line = NSRect(x: 0, y: fragment.minY + textContainerOrigin.y, width: bounds.width, height: fragment.height)
+        guard line.intersects(dirty) else { return }
+        line.fill()
     }
 }

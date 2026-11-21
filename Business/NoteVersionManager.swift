@@ -67,7 +67,53 @@ final class NoteVersionManager: @unchecked Sendable {
 
             self.lastSaved[key] = Date()
             self.prune(dir: dir)
+            Self.keepWithinBudget(root: self.versionsRoot, budget: Self.libraryBudget)
         }
+    }
+
+    /// Every note's versions together stay under this: 20 versions of a
+    /// few long notes, kept forever, otherwise grow without a ceiling
+    /// (quiet-md keeps the same 200 MiB, 2026-11-21).
+    static let libraryBudget: Int64 = 200 << 20
+
+    /// Removes the oldest versions across all notes until the history fits
+    /// in `budget`, never a note's newest one, so each note keeps the
+    /// version it can always go back to. Version files are named by their
+    /// UTC time, so names sort oldest first in every folder alike.
+    static func keepWithinBudget(root: URL, budget: Int64) {
+        let manager = FileManager.default
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
+        guard let folders = try? manager.contentsOfDirectory(at: root, includingPropertiesForKeys: keys) else { return }
+        var total: Int64 = 0
+        var removable: [(url: URL, size: Int64)] = []
+        // Only real folders and files named as a version are counted or
+        // removed: a symlink, a .DS_Store or anything else left in the folder
+        // is neither, and must not pass for a note's newest version.
+        for folder in folders {
+            let folderValues = try? folder.resourceValues(forKeys: Set(keys))
+            guard folderValues?.isDirectory == true, folderValues?.isSymbolicLink != true else { continue }
+            let files = (try? manager.contentsOfDirectory(at: folder, includingPropertiesForKeys: keys)) ?? []
+            let versions = files.filter { file in
+                let values = try? file.resourceValues(forKeys: Set(keys))
+                return values?.isRegularFile == true && values?.isSymbolicLink != true && isVersionFileName(file.lastPathComponent)
+            }
+            let newestFirst = versions.sorted { $0.lastPathComponent > $1.lastPathComponent }
+            for (index, file) in newestFirst.enumerated() {
+                let size = Int64((try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0)
+                total += size
+                if index > 0 { removable.append((file, size)) }
+            }
+        }
+        guard total > budget else { return }
+        for file in removable.sorted(by: { $0.url.lastPathComponent < $1.url.lastPathComponent }) {
+            guard total > budget else { break }
+            if (try? manager.removeItem(at: file.url)) != nil { total -= file.size }
+        }
+    }
+
+    /// `2026-11-21T10-00-00Z.md`, the name `saveVersion` gives a version.
+    static func isVersionFileName(_ name: String) -> Bool {
+        name.range(of: #"^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z\.md$"#, options: .regularExpression) != nil
     }
 
     @MainActor
