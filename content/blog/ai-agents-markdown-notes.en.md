@@ -72,7 +72,7 @@ The skill is a set of instructions, not a plugin that connects to the app. Read 
 - identify whether you want a note, a PPT presentation, note organization or a CLI operation, and keep your language without translating;
 - preserve existing front matter, fenced code, inline code, math, links, wikilinks and attachment paths when editing;
 - fall back to standard GitHub Flavored Markdown when no MiaoYan-specific feature is needed, with tables, task lists, strikethrough and footnotes as supported extensions;
-- link notes with `[[Exact title]]`, without the `.md` suffix, and not invent alias, heading or block-reference syntax;
+- link notes with `[[Exact title]]`, without the `.md` suffix, and use `[[Exact title|label]]` when it should read differently, but not invent heading or block-reference syntax;
 - keep local images in an `i/` folder under the note's folder and reference them as `/i/<filename>`, not as `file://` URLs or absolute paths;
 - use fenced `mermaid`, `plantuml` and `markmap` blocks for diagrams, `$...$` and `$$...$$` for math, GitHub alert markers such as `> [!NOTE]` for callouts, and `<details>` for collapsible sections;
 - separate slides with a standalone `---` line, and never use `---` as a plain rule inside a slide;

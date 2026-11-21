@@ -920,7 +920,7 @@ git commit -m &quot;notes before agent session&quot;
 <li>identify whether you want a note, a PPT presentation, note organization or a CLI operation, and keep your language without translating;</li>
 <li>preserve existing front matter, fenced code, inline code, math, links, wikilinks and attachment paths when editing;</li>
 <li>fall back to standard GitHub Flavored Markdown when no MiaoYan-specific feature is needed, with tables, task lists, strikethrough and footnotes as supported extensions;</li>
-<li>link notes with <code>[[Exact title]]</code>, without the <code>.md</code> suffix, and not invent alias, heading or block-reference syntax;</li>
+<li>link notes with <code>[[Exact title]]</code>, without the <code>.md</code> suffix, and use <code>[[Exact title|label]]</code> when it should read differently, but not invent heading or block-reference syntax;</li>
 <li>keep local images in an <code>i/</code> folder under the note's folder and reference them as <code>/i/&lt;filename&gt;</code>, not as <code>file://</code> URLs or absolute paths;</li>
 <li>use fenced <code>mermaid</code>, <code>plantuml</code> and <code>markmap</code> blocks for diagrams, <code>$...$</code> and <code>$$...$$</code> for math, GitHub alert markers such as <code>&gt; [!NOTE]</code> for callouts, and <code>&lt;details&gt;</code> for collapsible sections;</li>
 <li>separate slides with a standalone <code>---</code> line, and never use <code>---</code> as a plain rule inside a slide;</li>
