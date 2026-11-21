@@ -53,6 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         migratePreferences()
+        UserDefaultsManagement.settleLineBreakDefault(stored: Bundle.main.bundleIdentifier.flatMap { UserDefaults.standard.persistentDomain(forName: $0) })
         UserDefaultsManagement.migrateFontDefaultsIfNeeded()
         UserDefaultsManagement.clearSingleMode()
         let storage = appContext.storage

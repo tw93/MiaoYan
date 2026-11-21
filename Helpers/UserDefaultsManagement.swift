@@ -250,6 +250,19 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultPicUpload)
         }
     }
+    /// Line breaks follow CommonMark for a new install, so one Return in a
+    /// paragraph reads as a space and a blank line starts the next one, as
+    /// on GitHub; an install that ran before keeps breaking on every Return,
+    /// the default it has always had (maintainer 2026-11-21). Runs once, at
+    /// launch, before anything else is stored: `stored` is the preferences
+    /// domain as it was then, and any key in it besides the old-domain
+    /// migration's own mark says the app ran here before.
+    static func settleLineBreakDefault(in defaults: UserDefaults = .standard, stored: [String: Any]?) {
+        guard defaults.object(forKey: Constants.EditorLineBreak) == nil else { return }
+        let ranBefore = (stored ?? [:]).keys.contains { $0 != AppDelegate.legacyMigrationKey }
+        defaults.set(ranBefore ? "MiaoYan" : "Github", forKey: Constants.EditorLineBreak)
+    }
+
     static var editorLineBreak: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.EditorLineBreak) as? String {

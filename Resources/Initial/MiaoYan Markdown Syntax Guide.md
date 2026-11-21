@@ -329,11 +329,11 @@ Where logic gives way to delightful nonsense...
 
 Alice's emotional journey through Wonderland:
 
-😮 Surprise at seeing the talking rabbit
+😮 Surprise at seeing the talking rabbit  
 😰 Fear while falling down the hole  
-🤔 Confusion in the hall of doors
-😊 Joy at the tea party
-😤 Frustration with the Queen
+🤔 Confusion in the hall of doors  
+😊 Joy at the tea party  
+😤 Frustration with the Queen  
 😴 Peaceful sleep at the end
 
 ### Special Characters

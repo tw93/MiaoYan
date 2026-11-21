@@ -45,4 +45,31 @@ final class LegacyPreferencesMigrationTests: XCTestCase {
         AppDelegate.migrateLegacyPreferences(into: standard, legacy: legacy, bundleIdentifier: AppDelegate.shippedBundleIdentifier)
         XCTAssertNil(standard.object(forKey: "fontName"))
     }
+
+    /// A new install reads one Return inside a paragraph as a space, as
+    /// CommonMark and GitHub do; an install that ran before keeps the break
+    /// on every Return it always had, and a choice made in Settings stays.
+    @MainActor
+    func testLineBreaksFollowCommonMarkOnlyForANewInstall() {
+        let key = "editorLineBreak"
+        let fresh = freshDefaults()
+        UserDefaultsManagement.settleLineBreakDefault(in: fresh, stored: nil)
+        XCTAssertEqual(fresh.string(forKey: key), "Github")
+
+        let migratedOnly = freshDefaults()
+        UserDefaultsManagement.settleLineBreakDefault(in: migratedOnly, stored: [AppDelegate.legacyMigrationKey: true])
+        XCTAssertEqual(migratedOnly.string(forKey: key), "Github", "the migration's own mark is not a sign of an earlier run")
+
+        let earlier = freshDefaults()
+        UserDefaultsManagement.settleLineBreakDefault(in: earlier, stored: [AppDelegate.legacyMigrationKey: true, "fontsize": 15])
+        XCTAssertEqual(earlier.string(forKey: key), "MiaoYan")
+
+        let chosen = freshDefaults()
+        chosen.set("MiaoYan", forKey: key)
+        UserDefaultsManagement.settleLineBreakDefault(in: chosen, stored: nil)
+        XCTAssertEqual(chosen.string(forKey: key), "MiaoYan", "a stored choice is never replaced")
+        chosen.set("Github", forKey: key)
+        UserDefaultsManagement.settleLineBreakDefault(in: chosen, stored: ["fontsize": 15])
+        XCTAssertEqual(chosen.string(forKey: key), "Github")
+    }
 }
