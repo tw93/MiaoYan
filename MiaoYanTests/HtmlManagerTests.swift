@@ -155,12 +155,10 @@ final class HtmlManagerTests: XCTestCase {
     }
 
     func testMathProtectionCoversAllPreviewDelimiters() throws {
-        let markdown = #"""
-            Inline $a_b*c_d$ and \(e_f*g_h\).
-
-            \[
-            i_j < k_l & m_n
-            \]
+        // `\(` and `\[` are math only in a note without `$` math, so each
+        // pair of styles is its own note.
+        let dollars = #"""
+            Inline $a_b*c_d$.
 
             $$
             \begin{matrix}
@@ -169,16 +167,48 @@ final class HtmlManagerTests: XCTestCase {
             \end{matrix}
             $$
             """#
-        let html = try XCTUnwrap(
-            renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false)
-        )
+        let brackets = #"""
+            Inline \(e_f*g_h\).
 
-        XCTAssertTrue(html.contains("$a_b*c_d$"))
-        XCTAssertTrue(html.contains(#"\(e_f*g_h\)"#))
-        XCTAssertTrue(html.contains(#"i_j &lt; k_l &amp; m_n"#))
-        XCTAssertTrue(html.contains(#"a_b &amp; c_d"#))
-        XCTAssertFalse(html.contains("<em>"))
-        XCTAssertFalse(html.contains("<strong>"))
+            \[
+            i_j < k_l & m_n
+            \]
+            """#
+        let dollarHTML = try XCTUnwrap(renderMarkdownHTML(markdown: dollars, useGithubLineBreak: false))
+        let bracketHTML = try XCTUnwrap(renderMarkdownHTML(markdown: brackets, useGithubLineBreak: false))
+
+        XCTAssertTrue(dollarHTML.contains("$a_b*c_d$"))
+        XCTAssertTrue(dollarHTML.contains(#"a_b &amp; c_d"#))
+        XCTAssertTrue(bracketHTML.contains(#"\(e_f*g_h\)"#))
+        XCTAssertTrue(bracketHTML.contains(#"i_j &lt; k_l &amp; m_n"#))
+        for html in [dollarHTML, bracketHTML] {
+            XCTAssertFalse(html.contains("<em>"))
+            XCTAssertFalse(html.contains("<strong>"))
+        }
+    }
+
+    /// Beside `$` math, `\[1\]` is the Markdown escape for a literal `[1]`
+    /// and `\(` for `(`; on their own they are still math, as ChatGPT and
+    /// Claude write it (maintainer, 2026-11-21).
+    func testBracketsAreMathOnlyInANoteWithoutDollarMath() throws {
+        let mixed = #"""
+            The energy $E = mc^2$ is cited as \[1\], see \(note\).
+
+            ```
+            \[kept in code\]
+            ```
+            """#
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: mixed, useGithubLineBreak: false))
+        XCTAssertTrue(html.contains("$E = mc^2$"), html)
+        XCTAssertTrue(html.contains("cited as [1], see (note)."), html)
+        XCTAssertFalse(html.contains(#"\[1\]"#), html)
+        XCTAssertTrue(html.contains(#"\[kept in code\]"#), "code stays as written")
+
+        // A currency sign or an escaped dollar is not `$` math.
+        for prose in [#"It costs $5 and \(a_b*c\) holds."#, #"Pay \$x and \$y, then \(a_b*c\)."#] {
+            let bracketHTML = try XCTUnwrap(renderMarkdownHTML(markdown: prose, useGithubLineBreak: false))
+            XCTAssertTrue(bracketHTML.contains(#"\(a_b*c\)"#), bracketHTML)
+        }
     }
 
     func testMathLineBreaksDoNotDependOnTheLineBreakMode() throws {
@@ -192,16 +222,16 @@ final class HtmlManagerTests: XCTestCase {
 
             Lead \(a
             b\) tail
-            $$
+            \[
             x^2
-            $$
+            \]
 
             After
             """#
         for useGithubLineBreak in [false, true] {
             let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak))
             let mode = useGithubLineBreak ? "Github" : "MiaoYan"
-            for (open, close) in [(#"\["#, #"\]"#), (#"\("#, #"\)"#), ("$$", "$$")] {
+            for (open, close) in [(#"\["#, #"\]"#), (#"\("#, #"\)"#)] {
                 let start = try XCTUnwrap(html.range(of: open), "\(mode) \(open)")
                 let end = try XCTUnwrap(html.range(of: close, range: start.upperBound..<html.endIndex), "\(mode) \(close)")
                 XCTAssertFalse(html[start.lowerBound..<end.upperBound].contains("<br"), "\(mode) \(open)")
@@ -209,6 +239,22 @@ final class HtmlManagerTests: XCTestCase {
             XCTAssertFalse(html.unicodeScalars.contains("\u{E000}"), mode)
             XCTAssertTrue(html.contains(#"<p data-sourcepos="14:1-14:5">After</p>"#), "\(mode): \(html)")
             XCTAssertEqual(html.contains("Prose one<br />"), !useGithubLineBreak, mode)
+        }
+        let dollars = #"""
+            Lead $a
+            b$ tail
+            $$
+            x^2
+            $$
+            """#
+        for useGithubLineBreak in [false, true] {
+            let html = try XCTUnwrap(renderMarkdownHTML(markdown: dollars, useGithubLineBreak: useGithubLineBreak))
+            let mode = useGithubLineBreak ? "Github" : "MiaoYan"
+            for (open, close) in [("$a", "b$"), ("$$", "$$")] {
+                let start = try XCTUnwrap(html.range(of: open), "\(mode) \(open)")
+                let end = try XCTUnwrap(html.range(of: close, range: start.upperBound..<html.endIndex), "\(mode) \(close)")
+                XCTAssertFalse(html[start.lowerBound..<end.upperBound].contains("<br"), "\(mode) \(open)")
+            }
         }
     }
 
@@ -848,14 +894,25 @@ final class MathRenderingRuntimeTests: XCTestCase {
 
             Lead \(a
             b\) tail
+            \[
+            x^2
+            \]
+            """#
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        let count = try await renderedKaTeXCount(page: try writePreviewPage(markdownHTML: html))
+        XCTAssertEqual(count, 3, html)
+
+        // `$` math is its own note: beside it the brackets are escapes.
+        let dollars = #"""
+            Lead $a
+            b$ tail
             $$
             x^2
             $$
             """#
-        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
-        let page = try writePreviewPage(markdownHTML: html)
-        let count = try await renderedKaTeXCount(page: page)
-        XCTAssertEqual(count, 3, html)
+        let dollarHTML = try XCTUnwrap(renderMarkdownHTML(markdown: dollars, useGithubLineBreak: false))
+        let dollarCount = try await renderedKaTeXCount(page: try writePreviewPage(markdownHTML: dollarHTML))
+        XCTAssertEqual(dollarCount, 2, dollarHTML)
     }
 
     /// Markmap's branches take the family palette from theme-config.js, and a

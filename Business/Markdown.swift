@@ -55,6 +55,14 @@ func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false, lite
 
     let scalars = Array(markdown.unicodeScalars)
     let codeMask = markdownCodeMask(in: scalars, markdown: markdown)
+    // Backslash-paren and backslash-bracket math counts only in a note that
+    // writes no `$` math: beside `$` math they are Markdown escapes, as in
+    // \[1\] for a literal [1], and cmark drops their backslash once they are
+    // not shielded here (maintainer, 2026-11-21).
+    let bracketsAreMath =
+        !markdown.contains("$") || !(markdown.contains("\\(") || markdown.contains("\\["))
+        || !containsDollarMath(scalars, codeMask: codeMask)
+    let delimiters = bracketsAreMath ? markdownMathDelimiters : markdownDollarDelimiters
     var protected = ""
     protected.reserveCapacity(markdown.utf8.count)
 
@@ -66,7 +74,7 @@ func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false, lite
             continue
         }
         guard !codeMask[index],
-            let delimiter = markdownMathDelimiters.first(where: {
+            let delimiter = delimiters.first(where: {
                 matches($0.left, in: scalars, at: index, codeMask: codeMask)
                     && !isEscaped(in: scalars, at: index)
                     && !isCurrencyDollar($0.left, in: scalars, at: index)
@@ -98,6 +106,25 @@ func protectMarkdownMath(_ markdown: String, marksLineBreaks: Bool = false, lite
     }
 
     return protected
+}
+
+private let markdownDollarDelimiters = Array(markdownMathDelimiters.prefix(2))
+
+/// Whether a `$` or `$$` outside code opens math that closes, by the rules
+/// the protection pass itself uses.
+private func containsDollarMath(_ scalars: [Unicode.Scalar], codeMask: [Bool]) -> Bool {
+    for index in scalars.indices where scalars[index] == "$" && !codeMask[index] {
+        for delimiter in markdownDollarDelimiters
+        where matches(delimiter.left, in: scalars, at: index, codeMask: codeMask)
+            && !isEscaped(in: scalars, at: index)
+            && !isCurrencyDollar(delimiter.left, in: scalars, at: index)
+            && canOpenInlineDollar(delimiter.left, in: scalars, at: index)
+            && findMathEnd(delimiter.right, in: scalars, from: index + delimiter.left.count, codeMask: codeMask) != nil
+        {
+            return true
+        }
+    }
+    return false
 }
 
 private func findMathEnd(
