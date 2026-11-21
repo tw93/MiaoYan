@@ -8,7 +8,7 @@ If the preview is hidden, MiaoYan switches it on, waits one second, exports, and
 
 ## What ends up in the PNG
 
-The image is a snapshot of the live preview, drawn at double scale. The note's title is inserted as an `h1` above the content, with a thin rule under it. This happens every time: if the note already begins with a `#` heading of the same text, the PNG shows the title twice, so delete that first heading before exporting if you only want it once. The table of contents and the heading anchors are hidden. Tables are set to the width of the column instead of scrolling sideways, so a wide table is squeezed into equal columns, as it is in a PDF.
+The image is a snapshot of the live preview, drawn at double scale. The note's title is inserted as an `h1` above the content, with a thin rule under it, unless the note already opens with a level-one `#` heading, which then serves as the title. Before V4.10.0 the title was added every time, so a note starting with its own heading showed it twice. The table of contents and the heading anchors are hidden. Tables are set to the width of the column instead of scrolling sideways, so a wide table is squeezed into equal columns, as it is in a PDF.
 
 The height is the full height of the rendered note. There is one image, not pages, and the export code sets no height limit of its own. For a very long note, open the PNG and check that the bottom is there.
 
@@ -23,6 +23,10 @@ Yes for images, Mermaid and Markmap. Before the snapshot, the export loads every
 The readiness check does not mention math. KaTeX is loaded with the preview page, so formulas are normally drawn by then, but a formula-heavy note is worth a quick look in the result. The three diagram types are separated in [Mermaid diagrams in Markdown](/blog/mermaid-diagrams-in-markdown/).
 
 ## Other ways to get a long image
+
+### Share as Image on iPhone and iPad
+
+Since 4.11.0 the iPhone and iPad app makes the image itself. Choose Share as Image from a note's menu, or from the menu that appears when you select a passage, then pick a paper and a font and either Long Image or Cards, which splits the note into 3:4 cards. The page is laid out 360 points wide and captured at three times that, so the image is 1080 pixels wide on every device, and the preview you see is the file you save or share.
 
 ### A browser full-page screenshot
 

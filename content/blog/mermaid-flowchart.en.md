@@ -44,7 +44,7 @@ The classic syntax picks the shape with brackets around the text:
 | `A[/text/]` and `A[\text\]` | parallelograms |
 | `A[/text\]` and `A[\text/]` | trapezoids |
 
-Mermaid 11.3.0 added a second syntax with many more shapes, written as `A@{ shape: cyl, label: "Orders DB" }`. Names include `cyl`, `diam`, `hex`, `doc`, `stadium` and `circle`, each with aliases such as `database` and `decision`. It is verbose, so it earns its place only for shapes the brackets cannot express, such as a document or a stacked rectangle. MiaoYan V4.9.0 bundles Mermaid 11.14.0, so both syntaxes work there. Check the [Mermaid flowchart page](https://mermaid.js.org/syntax/flowchart.html) for the full shape list.
+Mermaid 11.3.0 added a second syntax with many more shapes, written as `A@{ shape: cyl, label: "Orders DB" }`. Names include `cyl`, `diam`, `hex`, `doc`, `stadium` and `circle`, each with aliases such as `database` and `decision`. It is verbose, so it earns its place only for shapes the brackets cannot express, such as a document or a stacked rectangle. MiaoYan V4.11.0 bundles Mermaid 11.14.0, so both syntaxes work there. Check the [Mermaid flowchart page](https://mermaid.js.org/syntax/flowchart.html) for the full shape list.
 
 ## Edges, labels and chaining
 
@@ -126,7 +126,7 @@ To check a chart in MiaoYan, type `/mermaid` and press `Tab` to insert a three-n
 
 ## Limits
 
-Flowcharts above about thirty nodes are hard to read in any renderer. Features newer than Mermaid 11.14.0, such as collapsible subgraphs added in 11.17.0, will not work in MiaoYan V4.9.0 and may be ignored or fail depending on the construct. For a flow whose structure is just an outline, [Markmap](/blog/markmap-mind-maps/) may be a better fit.
+Flowcharts above about thirty nodes are hard to read in any renderer. Features newer than Mermaid 11.14.0, such as collapsible subgraphs added in 11.17.0, will not work in MiaoYan V4.11.0 and may be ignored or fail depending on the construct. For a flow whose structure is just an outline, [Markmap](/blog/markmap-mind-maps/) may be a better fit.
 
 ## FAQ
 
@@ -140,4 +140,4 @@ Yes, with `&`. `A --> B & C` draws two links from `A`, and `A & B --> C & D` dra
 
 ### Why does my chart render on GitHub but not in my editor, or the other way around?
 
-The two run different Mermaid versions. Put `info` alone in a `mermaid` fence on GitHub to read its version, and compare it with the version your editor bundles. MiaoYan V4.9.0 bundles 11.14.0.
+The two run different Mermaid versions. Put `info` alone in a `mermaid` fence on GitHub to read its version, and compare it with the version your editor bundles. MiaoYan V4.11.0 bundles 11.14.0.

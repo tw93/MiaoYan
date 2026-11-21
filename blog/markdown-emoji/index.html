@@ -20,7 +20,7 @@
 <meta property="og:description" content="Type emoji as Unicode or as GitHub-style shortcodes, see where each renders, and avoid broken heading anchors when an emoji sits in a heading.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-emoji.webp">
 <meta property="article:published_time" content="2026-11-11">
-<meta property="article:modified_time" content="2026-11-11">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown emoji: Unicode characters vs :shortcodes:", "item": "https://miaoyan.app/blog/markdown-emoji/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-emoji/#article", "headline": "Markdown emoji: Unicode characters vs :shortcodes:", "description": "Type emoji as Unicode or as GitHub-style shortcodes, see where each renders, and avoid broken heading anchors when an emoji sits in a heading.", "url": "https://miaoyan.app/blog/markdown-emoji/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-emoji/", "datePublished": "2026-11-11", "dateModified": "2026-11-11", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-emoji.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does :smile: work in all Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. CommonMark and the GFM spec do not define it, and Pandoc converts it only with the emoji extension, which is on for gfm and off for commonmark."}}, {"@type": "Question", "name": "How do I get the list of GitHub emoji names?", "acceptedAnswer": {"@type": "Answer", "text": "Run gh api emojis. It returns a JSON object of names and image addresses."}}, {"@type": "Question", "name": "Why does my link to a heading with an emoji not work?", "acceptedAnswer": {"@type": "Answer", "text": "GitHub removes the emoji from the id but keeps the hyphen from the space next to it, and may keep an invisible variation selector. Copy the anchor from the heading's link icon instead of typing it."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown emoji: Unicode characters vs :shortcodes:", "item": "https://miaoyan.app/blog/markdown-emoji/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-emoji/#article", "headline": "Markdown emoji: Unicode characters vs :shortcodes:", "description": "Type emoji as Unicode or as GitHub-style shortcodes, see where each renders, and avoid broken heading anchors when an emoji sits in a heading.", "url": "https://miaoyan.app/blog/markdown-emoji/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-emoji/", "datePublished": "2026-11-11", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-emoji.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does :smile: work in all Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. CommonMark and the GFM spec do not define it, and Pandoc converts it only with the emoji extension, which is on for gfm and off for commonmark."}}, {"@type": "Question", "name": "How do I get the list of GitHub emoji names?", "acceptedAnswer": {"@type": "Answer", "text": "Run gh api emojis. It returns a JSON object of names and image addresses."}}, {"@type": "Question", "name": "Why does my link to a heading with an emoji not work?", "acceptedAnswer": {"@type": "Answer", "text": "GitHub removes the emoji from the id but keeps the hyphen from the space next to it, and may keep an invisible variation selector. Copy the anchor from the heading's link icon instead of typing it."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -922,7 +922,7 @@ white_check_mark  .../emoji/unicode/2705.png
 </table>
 <p>The emoji is dropped from the id, but the space next to it becomes a hyphen, so a leading emoji gives an anchor that starts with a hyphen and a trailing one gives an anchor that ends with one. The third row is the trap. 🛠️ is the wrench followed by U+FE0F, the variation selector that asks for the colour form, and that selector stayed in the id, whose last three bytes are <code>ef b8 8f</code>. A link typed by hand as <code>#quickstart-</code> looks the same but does not match that id exactly.</p>
 <p>To avoid the problem, keep emoji out of headings you link to, or put <code>&lt;a name="..."&gt;&lt;/a&gt;</code> above the heading and link to that. The general rules are in <a href="/blog/markdown-links-and-anchors/">Markdown links and anchors</a>.</p>
-<h2 id="what-miaoyan-v490-does">What MiaoYan V4.9.0 does</h2>
+<h2 id="what-miaoyan-v4110-does">What MiaoYan V4.11.0 does</h2>
 <p>The preview converts shortcodes. It loads <code>emoji.min.js</code>, a copy of the open-source js-emoji library, and after the note is rendered a function in <code>common.js</code> walks the text nodes and replaces each <code>:name:</code> the library knows with the Unicode character, not an image, so <code>:tada:</code> becomes 🎉 in the system emoji font. It skips anything inside <code>&lt;code&gt;</code> and <code>&lt;pre&gt;</code>. It runs when a note loads and again on blocks inserted while you edit in split view, and a unit test in the repository asserts that <code>:smile:</code> is gone from the preview text after both.</p>
 <p>PDF and image export capture that rendered preview, so they carry the converted emoji, and Toggle Presentation uses the same page. MiaoYan PPT, the slide mode built from <code>---</code>, loads a different page without js-emoji, so a shortcode on a slide stays as text.</p>
 <p>Two limits follow from the source. The name table belongs to js-emoji, not GitHub's list. The file has <code>tada</code>, <code>rocket</code>, <code>white_check_mark</code>, <code>memo</code>, <code>warning</code> and <code>+1</code>, and lacks <code>octocat</code>, <code>shipit</code> and <code>bowtie</code>. A name the library does not know stays as text, so test an unusual one before relying on it. The conversion also happens only in the preview: the saved <code>.md</code> still contains <code>:smile:</code>, and another app opening the file sees a shortcode.</p>
@@ -939,7 +939,7 @@ white_check_mark  .../emoji/unicode/2705.png
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
-    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-html-tags/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">HTML in Markdown: which tags work and where</span><span class="blog-related-meta">8 min read</span></a></li><li><a href="/blog/markdown-to-image/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown to image: export a note as a long PNG</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-html-tags/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">HTML in Markdown: which tags work and where</span><span class="blog-related-meta">8 min read</span></a></li><li><a href="/blog/markdown-to-image/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown to image: export a note as a long PNG</span><span class="blog-related-meta">7 min read</span></a></li></ul>
   </nav>
 </main>
 </div>

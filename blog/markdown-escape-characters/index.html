@@ -20,7 +20,7 @@
 <meta property="og:description" content="Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown escape characters: backslash, entities and code spans", "item": "https://miaoyan.app/blog/markdown-escape-characters/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-escape-characters/#article", "headline": "Markdown escape characters: backslash, entities and code spans", "description": "Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.", "url": "https://miaoyan.app/blog/markdown-escape-characters/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-escape-characters/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I escape characters inside a code block?", "acceptedAnswer": {"@type": "Answer", "text": "No. Backslash escapes do not work in code spans or code blocks, so a backslash would print."}}, {"@type": "Question", "name": "How do I show a literal backslash?", "acceptedAnswer": {"@type": "Answer", "text": "Type two: \\\\."}}, {"@type": "Question", "name": "Why does my numbered line turn into a list?", "acceptedAnswer": {"@type": "Answer", "text": "A line that starts with digits and a dot is a list marker. Escape the dot, as in 2024\\.."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown escape characters: backslash, entities and code spans", "item": "https://miaoyan.app/blog/markdown-escape-characters/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-escape-characters/#article", "headline": "Markdown escape characters: backslash, entities and code spans", "description": "Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.", "url": "https://miaoyan.app/blog/markdown-escape-characters/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-escape-characters/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I escape characters inside a code block?", "acceptedAnswer": {"@type": "Answer", "text": "No. Backslash escapes do not work in code spans or code blocks, so a backslash would print."}}, {"@type": "Question", "name": "How do I show a literal backslash?", "acceptedAnswer": {"@type": "Answer", "text": "Type two: \\\\."}}, {"@type": "Question", "name": "Why does my numbered line turn into a list?", "acceptedAnswer": {"@type": "Answer", "text": "A line that starts with digits and a dot is a list marker. Escape the dot, as in 2024\\.."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -868,7 +868,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
     <h1 class="blog-title">Markdown escape characters: backslash, entities and code spans</h1>
-    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>5 min read</span></p>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-escape-characters.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
 <p>Put a backslash in front of any ASCII punctuation character and Markdown treats it as plain text, so <code>\*not italic\*</code> shows asterisks and <code>\# not a heading</code> shows a hash. Inside code spans and code blocks you do not need it, because nothing is parsed there. The one place MiaoYan behaves differently from plain CommonMark is the dollar sign, which its math renderer also reads, so prices need extra care.</p>
@@ -894,7 +894,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>Escapes also do not work in autolinks (<code>&lt;https://example.com?find=\*&gt;</code>) or raw HTML attributes, but they do work in link destinations, link titles and the info string of a fenced block.</p>
 <h2 id="dollar-signs-in-miaoyan">Dollar signs in MiaoYan</h2>
 <p>MiaoYan renders math with KaTeX using <code>$...$</code> for inline and <code>$$...$$</code> for display, in every preview. A dollar sign in prose can therefore start a formula. Two layers protect ordinary prices. The Swift side treats <code>$</code> followed by digits, an optional decimal part, and then a character that is not a letter, digit or math operator as currency, and the preview script applies a similar rule. So <code>costs $5 or $10.</code> stays text.</p>
-<p>The guard stops at letters and operators. <code>$5M and $10M</code> is read as a formula between the two dollars, and <code>$5-10</code> is also treated as possible math. A backslash does not help here: <code>\$</code> is an ordinary Markdown escape, so the parser turns it into a bare <code>$</code> before the preview script and KaTeX scan for dollar signs, and <code>\$5M and \$10M</code> still becomes a formula. Two reliable options: put the amount in a code span, such as <code>$5M</code>, or reword it as "5M dollars". Code spans and fenced blocks are skipped by the math pass. See <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a> for how the formula side works.</p>
+<p>The guard stops at letters and operators. <code>$5M and $10M</code> is read as a formula between the two dollars, and <code>$5-10</code> is also treated as possible math. Since V4.10.0 a backslash works: MiaoYan turns each <code>\$</code> outside code and math into a dollar sign the math pass skips, so <code>\$5M and \$10M</code> stays text. In earlier versions the parser removed the backslash before KaTeX saw it, and the pair still became a formula. An inline <code>$</code> also pairs only with a <code>$</code> in the same paragraph now, so one stray dollar no longer turns the headings and lists after it into raw text. A code span, such as <code>$5M</code>, is the form that also holds in older versions and other apps, since code spans and fenced blocks are skipped by the math pass. See <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a> for how the formula side works.</p>
 <h2 id="differences-between-renderers">Differences between renderers</h2>
 <p>Escaping is defined by CommonMark, so the backslash rules above are the same in GitHub and any other conforming parser. The differences are in what counts as syntax. GFM adds tables and strikethrough, so <code>|</code> and <code>~</code> need escaping there but not in strict CommonMark. Math with dollar signs is not part of either standard: MiaoYan renders it, other tools may not, and a note that mentions <code>$</code> heavily may look different in each. Raw HTML is another split. MiaoYan passes it through, while some hosts strip it, so <code>\&lt;div&gt;</code> is the form that survives everywhere.</p>
 <h2 id="checking-the-result">Checking the result</h2>

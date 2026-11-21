@@ -20,7 +20,7 @@
 <meta property="og:description" content="用妙言、Chrome 整页截图或 Pandoc 加开发者工具，把 Markdown 笔记做成一张长 PNG，发到聊天或社交平台。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-image.webp">
 <meta property="article:published_time" content="2026-11-12">
-<meta property="article:modified_time" content="2026-11-12">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转图片：把笔记导出成一张长图", "item": "https://miaoyan.app/zh/blog/markdown-to-image/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-image/#article", "headline": "Markdown 转图片：把笔记导出成一张长图", "description": "用妙言、Chrome 整页截图或 Pandoc 加开发者工具，把 Markdown 笔记做成一张长 PNG，发到聊天或社交平台。", "url": "https://miaoyan.app/zh/blog/markdown-to-image/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-image/", "datePublished": "2026-11-12", "dateModified": "2026-11-12", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-image.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "放大能看清楚吗？", "acceptedAnswer": {"@type": "Answer", "text": "快照按预览区点数的两倍绘制，在 Retina 屏上相当于每个点四个像素，放大后文字依然清楚，但对方应用之后怎么处理它就不好说了。"}}, {"@type": "Question", "name": "文件存在哪里？", "acceptedAnswer": {"@type": "Answer", "text": "下载文件夹，用笔记标题命名。"}}, {"@type": "Question", "name": "能只导出一部分吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出菜单只处理整篇笔记，想导一部分，就把那部分复制到新笔记里再导出。"}}, {"@type": "Question", "name": "分享用图片还是 PDF？", "acceptedAnswer": {"@type": "Answer", "text": "图片更容易发，在手机上也好读。PDF 有分页和可选中的文字，打印时更合适，见 Mac 上把 Markdown 导出成 PDF。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转图片：把笔记导出成一张长图", "item": "https://miaoyan.app/zh/blog/markdown-to-image/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-image/#article", "headline": "Markdown 转图片：把笔记导出成一张长图", "description": "用妙言、Chrome 整页截图或 Pandoc 加开发者工具，把 Markdown 笔记做成一张长 PNG，发到聊天或社交平台。", "url": "https://miaoyan.app/zh/blog/markdown-to-image/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-image/", "datePublished": "2026-11-12", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-image.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "放大能看清楚吗？", "acceptedAnswer": {"@type": "Answer", "text": "快照按预览区点数的两倍绘制，在 Retina 屏上相当于每个点四个像素，放大后文字依然清楚，但对方应用之后怎么处理它就不好说了。"}}, {"@type": "Question", "name": "文件存在哪里？", "acceptedAnswer": {"@type": "Answer", "text": "下载文件夹，用笔记标题命名。"}}, {"@type": "Question", "name": "能只导出一部分吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出菜单只处理整篇笔记，想导一部分，就把那部分复制到新笔记里再导出。"}}, {"@type": "Question", "name": "分享用图片还是 PDF？", "acceptedAnswer": {"@type": "Answer", "text": "图片更容易发，在手机上也好读。PDF 有分页和可选中的文字，打印时更合适，见 Mac 上把 Markdown 导出成 PDF。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -878,7 +878,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>在笔记列表里选中笔记，点「文件」&gt;「导出」，会在选中那一行旁边弹出导出子菜单，里面有 HTML、图片、PDF 和妙言 PPT PDF。笔记列表获得焦点、且没开幻灯片模式时，按 <code>Control + Shift + I</code> 效果一样，没有选中任何一行就什么都不会导出。</p>
 <p>预览如果是关着的，妙言会先打开它，等一秒再导出，导完再关回去。导出时提示条显示「正在导出」和百分比，结束后是「已导出到下载文件夹」或「导出失败」。文件名是 <code>笔记标题.png</code>，下载文件夹里已有同名文件时，会在名字后面加上 <code>_yyyy-MM-dd_HH-mm-ss</code> 的时间，写不进下载文件夹时，比如在沙盒版本里，会改为弹出存储面板。快捷键、预览开关和命名规则都和 PDF 导出一致，细节在 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上把 Markdown 导出成 PDF</a>。</p>
 <h2 id="png-里有什么">PNG 里有什么</h2>
-<p>图片是对实时预览的一次快照，按两倍比例绘制。笔记标题会作为一个 <code>h1</code> 加在内容最上面，下面带一条细线，而且每次都会加，笔记本身如果已经以同样文字的 <code>#</code> 标题开头，PNG 里标题就会出现两遍，只想要一遍就在导出前删掉笔记里那行标题，目录和标题旁边的锚点链接都会隐藏，表格不再横向滚动，而是铺满正文列宽，所以很宽的表格会被挤成等宽的几列，和 PDF 里一样。</p>
+<p>图片是对实时预览的一次快照，按两倍比例绘制。笔记标题会作为一个 <code>h1</code> 加在内容最上面，下面带一条细线，笔记本身已经以一级 <code>#</code> 标题开头时就不再加，直接用这行当标题，V4.10.0 之前是每次都加，以标题开头的笔记会印出两遍，目录和标题旁边的锚点链接都会隐藏，表格不再横向滚动，而是铺满正文列宽，所以很宽的表格会被挤成等宽的几列，和 PDF 里一样。</p>
 <p>高度就是渲染后整篇笔记的完整高度，只有一张图，不分页，导出代码自己没有设高度上限，笔记很长时导出后拉到最底下，确认结尾还在。</p>
 <p>宽度是预览区域的宽度，快照按预览区点数的两倍绘制，Retina 屏上一个点又是两个像素，所以 800 点宽的预览区导出的 PNG 是 3200 像素宽，高度也按同样比例放大。预览区里的正文列宽受「设置」&gt;「编辑器」&gt;「预览宽度」限制，可选 600px、800px、1000px、1200px、1400px 和全宽，默认 1000px。正文列是靠左排的，预览区比正文列宽时，右边会留出一块空白底色。要发手机看的图，可以拖动分隔线把预览区调窄，或者选 600px，导出后看一下右边缘。</p>
 <p>颜色跟着应用走，浅色模式是白底加 <code>#262626</code> 文字，深色模式是 <code>#1E1D1B</code> 底加 <code>#D6D1C6</code> 文字。PDF 导出会固定成浅色页面，图片导出不会。</p>
@@ -886,6 +886,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>图片、Mermaid 和 Markmap 会等。快照之前，导出会把所有懒加载图片先加载出来，再检查所有图片是否加载完成，以及有没有 Mermaid 块缺少 <code>data-processed</code>、Markmap 块缺少显示完成或失败的标记。最多检查五次，每次间隔半秒，大约两秒半之后不管有没有好都会继续导出，所以网速慢的图片或者很重的图表，仍然可能在 PNG 里缺一块。PlantUML 是从 plantuml.com 取回来的图片，按图片算，需要联网。整个导出超过 30 秒会放弃并提示导出失败。</p>
 <p>等待条件里没有数学公式。KaTeX 随预览页面一起加载，公式一般到这时已经画好，但公式很多的笔记，导出后还是看一眼结果。三种图表的区别见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画图表</a>。</p>
 <h2 id="其他做长图的办法">其他做长图的办法</h2>
+<h3 id="iphone-和-ipad-上的分享为图片">iPhone 和 iPad 上的分享为图片</h3>
+<p>4.11.0 起 iPhone 和 iPad 版自己就能出图，在笔记的菜单里选分享为图片，或者选中一段文字后在弹出的菜单里选它，再挑纸色和字体，选长图或卡片，卡片会把笔记切成一张张 3:4 的图。页面按 360 点宽排版、按三倍截取，所以不管在哪台设备上做，图都是 1080 像素宽，看到的预览就是保存或分享出去的那张。</p>
 <h3 id="浏览器整页截图">浏览器整页截图</h3>
 <p>先把笔记导出成 HTML，用 Chrome 打开，再用开发者工具的设备模式。打开开发者工具，点 Toggle device toolbar，在 More options 菜单里选 Capture a full size screenshot，Chrome 文档把它和只截可视区域的 Capture screenshot 放在一起。宽度就是你在工具栏里设的设备宽度，所以适合做手机比例的图。</p>
 <p>问题出在 HTML 本身。妙言导出的 HTML 样式和脚本从 CDN 加载，截图时页面要联网，细节见 <a href="/zh/blog/markdown-to-html/">Markdown 转 HTML</a>。</p>

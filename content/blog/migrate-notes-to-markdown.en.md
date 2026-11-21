@@ -75,7 +75,7 @@ created: 2024-03-02
 ---
 ```
 
-MiaoYan hides a block like this in the preview and in exports when the file starts with `---`. MiaoYan V4.9.0 does not turn those tags into a sidebar or filter, so treat the block as data that stays in the file for other tools. [Markdown front matter](/blog/markdown-front-matter/) has the syntax and quoting rules.
+MiaoYan hides a block like this in the preview and in exports when the file starts with `---`. MiaoYan V4.11.0 does not turn those tags into a sidebar or filter, so treat the block as data that stays in the file for other tools. [Markdown front matter](/blog/markdown-front-matter/) has the syntax and quoting rules.
 
 ## Open the folder in MiaoYan
 

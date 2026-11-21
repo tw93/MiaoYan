@@ -81,7 +81,7 @@ timeline TD
 ```
 ````
 
-文档标注方向支持从 Mermaid v11.14.0 开始。妙言 V4.9.0 自带的 Mermaid 正是 11.14.0，它的时间线解析规则里有 `timeline LR` 和 `timeline TD` 两条，所以能用，更旧的 Mermaid 会报错。
+文档标注方向支持从 Mermaid v11.14.0 开始。妙言 V4.11.0 自带的 Mermaid 正是 11.14.0，它的时间线解析规则里有 `timeline LR` 和 `timeline TD` 两条，所以能用，更旧的 Mermaid 会报错。
 
 ## 颜色和主题
 

@@ -85,7 +85,7 @@ timeline TD
 ```
 ````
 
-The documentation marks direction as available from Mermaid v11.14.0. The Mermaid bundled in MiaoYan V4.9.0 is 11.14.0, and its timeline parser has rules for both `timeline LR` and `timeline TD`, so the keyword works there. An older Mermaid, for example the one in an older preview tool, will fail on it.
+The documentation marks direction as available from Mermaid v11.14.0. The Mermaid bundled in MiaoYan V4.11.0 is 11.14.0, and its timeline parser has rules for both `timeline LR` and `timeline TD`, so the keyword works there. An older Mermaid, for example the one in an older preview tool, will fail on it.
 
 ## Colour and theme options
 

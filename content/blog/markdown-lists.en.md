@@ -123,12 +123,13 @@ The comment renders nothing and ends the list, so the indented block is real cod
 
 ## Lists in MiaoYan
 
-MiaoYan's preview is built with cmark-gfm, so the rules above are what you see. The editor adds list continuation on Return, from the V4.9.0 source:
+MiaoYan's preview is built with cmark-gfm, so the rules above are what you see. The editor continues lists and quotes on Return, and since V4.10.0 the Mac and the iPhone and iPad editors share one rule:
 
-- With the caret at the end of a line that starts with `- `, `* ` or `+ `, Return starts the next line with the same marker.
-- On a numbered line like `1. ` or `10. `, Return starts the next line with the number plus one, so `1. a` becomes `2. ` and `10. item` becomes `11. `. This follows plain counting and does not copy a column of all ones. It recognizes the period form only, so a `1)` line is not continued.
-- Return on an item that has only the marker removes the marker and leaves an empty line, which ends the list.
-- Return with the caret in the middle of the line, or Shift-Return, gives a plain newline with no marker.
+- With the caret at the end of a line that starts with `- `, `* ` or `+ `, Return starts the next line with the same marker and indent.
+- On a numbered line like `1. `, `10. ` or `1) `, Return starts the next line with the number plus one and the same closer, so `1. a` becomes `2. `, `10. item` becomes `11. ` and `1) a` becomes `2) `. This follows plain counting and does not copy a column of all ones.
+- On a quote line, Return starts the next line with the same `>` prefix, so a nested `> > ` keeps its depth.
+- Return on an item or quote line that has only the marker removes the marker and leaves an empty line, which ends the list or quote.
+- Return with the caret in the middle of the line, inside a fenced code block, or with Shift held gives a plain newline with no marker.
 
 The same continuation also copies `- [ ]` for task lists, with the box reset to open; that is covered in [Markdown task lists](/blog/markdown-task-lists/).
 

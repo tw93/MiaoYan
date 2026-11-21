@@ -20,7 +20,7 @@
 <meta property="og:description" content="妙言和 Obsidian 相比有什么、没有什么，怎么打开 vault，以及哪些语法能带过来。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/obsidian-alternative-mac.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="笔记管理">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mac 上更轻的 Obsidian 替代品", "item": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/#article", "headline": "Mac 上更轻的 Obsidian 替代品", "description": "妙言和 Obsidian 相比有什么、没有什么，怎么打开 vault，以及哪些语法能带过来。", "url": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/obsidian-alternative-mac.webp", "timeRequired": "PT7M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "不转换可以直接用妙言打开 Obsidian vault 吗？", "acceptedAnswer": {"@type": "Answer", "text": "笔记本身可以，文件夹原样打开，.obsidian 文件夹会被忽略，别名、标题链接和嵌入不会生效。"}}, {"@type": "Question", "name": "妙言会改我的 vault 文件吗？", "acceptedAnswer": {"@type": "Answer", "text": "你打开过的笔记在切换到别的笔记时会被保存一次，即使没改，修改时间也会更新，非 UTF-8 编码的笔记会被存成 UTF-8，所以先在副本上试，妙言不会碰 .obsidian，如果需要冲突备份，会在笔记库根目录写一个隐藏的 .miaoyan-conflicts 文件夹。"}}, {"@type": "Question", "name": "妙言有标签或图谱吗？", "acceptedAnswer": {"@type": "Answer", "text": "源码里看不到，笔记靠文件夹组织、靠搜索查找，链接以反向链接的形式显示。"}}, {"@type": "Question", "name": "还能换回去吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，笔记始终是同一个文件夹里的纯 Markdown 文件。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mac 上更轻的 Obsidian 替代品", "item": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/#article", "headline": "Mac 上更轻的 Obsidian 替代品", "description": "妙言和 Obsidian 相比有什么、没有什么，怎么打开 vault，以及哪些语法能带过来。", "url": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/obsidian-alternative-mac/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/obsidian-alternative-mac.webp", "timeRequired": "PT7M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "不转换可以直接用妙言打开 Obsidian vault 吗？", "acceptedAnswer": {"@type": "Answer", "text": "笔记本身可以，文件夹原样打开，.obsidian 文件夹会被忽略，标题链接、块链接和嵌入不会生效。"}}, {"@type": "Question", "name": "妙言会改我的 vault 文件吗？", "acceptedAnswer": {"@type": "Answer", "text": "你打开过的笔记在切换到别的笔记时会被保存一次，即使没改，修改时间也会更新，非 UTF-8 编码的笔记会被存成 UTF-8，所以先在副本上试，妙言不会碰 .obsidian，如果需要冲突备份，会在笔记库根目录写一个隐藏的 .miaoyan-conflicts 文件夹。"}}, {"@type": "Question", "name": "妙言有标签或图谱吗？", "acceptedAnswer": {"@type": "Answer", "text": "源码里看不到，笔记靠文件夹组织、靠搜索查找，链接以反向链接的形式显示。"}}, {"@type": "Question", "name": "还能换回去吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，笔记始终是同一个文件夹里的纯 Markdown 文件。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -873,7 +873,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/obsidian-alternative-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>如果觉得 Obsidian 拿来记笔记太重，妙言是一个更轻的 Mac 应用，打开的是同样的东西，一个装着 Markdown 文件的文件夹。它有三栏笔记库、分栏的编辑与预览、带反向链接的 wikilink、版本历史和 PPT 模式，同时有意不做插件、关系图谱和 Obsidian 额外加的那些链接语法。普通的笔记和最常见的 <code>[[标题]]</code> 链接不用转换就能带过来，别名、标题链接和嵌入则需要做一点清理。</p>
+<p>如果觉得 Obsidian 拿来记笔记太重，妙言是一个更轻的 Mac 应用，打开的是同样的东西，一个装着 Markdown 文件的文件夹。它有三栏笔记库、分栏的编辑与预览、带反向链接的 wikilink、版本历史和 PPT 模式，同时有意不做插件、关系图谱和 Obsidian 额外加的那些链接语法。普通的笔记、最常见的 <code>[[标题]]</code> 链接和 <code>[[标题|别名]]</code> 不用转换就能带过来，标题链接、块链接和嵌入则需要做一点清理。</p>
 <h2 id="为什么有人想要更轻的">为什么有人想要更轻的</h2>
 <p>Obsidian 功能很深。它的文档写到，vault 里有一个隐藏的 <code>.obsidian</code> 文件夹，存放快捷键、主题和社区插件，还有一个核心插件 Graph view，用来可视化笔记之间的关系。这些能力正是很多人用它的原因，也是另一些人放弃它的原因，每个设置、插件和主题都是多一样要维护的东西，一个 vault 还可能依赖只有某个应用才认识的插件。</p>
 <p>妙言的取舍正好相反。它没有插件系统，官网上的对比说它倾向于提供较少的内置写作功能和本地 Markdown 文件，也没有 Electron 运行时。如果你主要是写、链接和查找笔记，零件少意味着摩擦少。</p>
@@ -893,7 +893,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <ul>
 <li><strong>没有插件。</strong> 没有插件或主题市场，功能要么随应用发布，要么就不存在。</li>
 <li><strong>没有关系图谱。</strong> Mac 版源码里没有图谱可视化，关联以反向链接列表的形式出现。</li>
-<li><strong>Wikilink 只按标题。</strong> <code>[[笔记|别名]]</code>、<code>[[笔记#标题]]</code> 和块引用都没有实现。</li>
+<li><strong>Wikilink 只按标题。</strong> <code>[[笔记|别名]]</code> 从 V4.10.0 起可以用，<code>[[笔记#标题]]</code> 和块引用还没有实现。</li>
 <li><strong>没有嵌入。</strong> Obsidian 里的 <code>![[笔记]]</code> 和 <code>![[image.png]]</code> 嵌入语法，妙言源码里没有对应的解析处理。</li>
 <li><strong>插件里或 <code>.obsidian</code> 里的 Obsidian 专属功能。</strong> 存在快捷键、主题或插件设置里的东西都会留在原地。</li>
 </ul>
@@ -915,9 +915,9 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </ul>
 <h3 id="带不过来的">带不过来的</h3>
 <ul>
-<li><strong>别名、标题链接和块链接。</strong> 在妙言里，括号之间的全部文字会成为要查找的标题，所以链接指向的是一篇不存在的笔记。可以这样找出来：</li>
+<li><strong>标题链接和块链接。</strong> 在妙言里，<code>|</code> 之前的全部文字会成为要查找的标题，所以 <code>[[笔记#标题]]</code> 指向的是一篇不存在的笔记，写成 <code>[[笔记|别名]]</code> 的别名倒没有问题。剩下的可以这样找出来：</li>
 </ul>
-<pre><code class="language-bash">rg -n --glob '*.md' '\[\[[^]]*[|#^]' .
+<pre><code class="language-bash">rg -n --glob '*.md' '\[\[[^]|]*[#^]' .
 </code></pre>
 <p>把每一处改成纯标题链接或普通 Markdown 链接。
 - <strong>嵌入。</strong> 用 <code>rg -n --glob '*.md' '!\[\[' .</code> 找出 <code>![[...]]</code>，换成普通链接或标准图片。
@@ -955,7 +955,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <tr>
 <td>链接语法</td>
 <td>带别名、标题、块的 wikilink</td>
-<td>按标题的 wikilink</td>
+<td>按标题的 wikilink，可带别名</td>
 </tr>
 <tr>
 <td>嵌入</td>
@@ -975,7 +975,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>Mac 版在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> 开源，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本一次购买覆盖 Mac、iPhone 和 iPad。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="不转换可以直接用妙言打开-obsidian-vault-吗">不转换可以直接用妙言打开 Obsidian vault 吗？</h3>
-<p>笔记本身可以，文件夹原样打开，<code>.obsidian</code> 文件夹会被忽略，别名、标题链接和嵌入不会生效。</p>
+<p>笔记本身可以，文件夹原样打开，<code>.obsidian</code> 文件夹会被忽略，标题链接、块链接和嵌入不会生效。</p>
 <h3 id="妙言会改我的-vault-文件吗">妙言会改我的 vault 文件吗？</h3>
 <p>你打开过的笔记在切换到别的笔记时会被保存一次，即使没改，修改时间也会更新，非 UTF-8 编码的笔记会被存成 UTF-8，所以先在副本上试，妙言不会碰 <code>.obsidian</code>，如果需要冲突备份，会在笔记库根目录写一个隐藏的 <code>.miaoyan-conflicts</code> 文件夹。</p>
 <h3 id="妙言有标签或图谱吗">妙言有标签或图谱吗？</h3>

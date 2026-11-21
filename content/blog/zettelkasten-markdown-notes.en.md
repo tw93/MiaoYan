@@ -32,7 +32,7 @@ An ID plus title, such as `202610191402 Spaced repetition needs retrieval.md`, s
 
 ## Wikilinks and backlinks in MiaoYan
 
-Write the title between double brackets, without the extension. The match is exact, so case and spacing count. MiaoYan treats everything between the brackets as the title, so the Obsidian forms `[[Note|alias]]` and `[[Note#Heading]]` are not supported: there is no alias and no jump to a heading, and the backlinks list records the whole text as the title. The [wikilinks and backlinks](/blog/wikilinks-and-backlinks/) post lists the rules and the error messages.
+Write the title between double brackets, without the extension. The match is exact, so case and spacing count. `[[Note|shown text]]` links to Note and shows the text after the bar, as in Obsidian, but `[[Note#Heading]]` is not supported: there is no jump to a heading, and the backlinks list records the whole `Note#Heading` as the title. The [wikilinks and backlinks](/blog/wikilinks-and-backlinks/) post lists the rules and the error messages.
 
 The backlinks list is in the panel opened by Show Info (`⌘⌥I`), next to the word count and the created and modified dates. It shows the titles of notes that link to the current one, or "None". The titles are text, not links, so you jump to one with the search field. The index is built at launch from every note file in the library and updated whenever a note is saved, renamed or deleted.
 
@@ -40,7 +40,7 @@ For finding things, the search field matches the words you type against titles a
 
 ## What MiaoYan does not have
 
-There is no graph view and no plugin system. Link aliases, heading links and embeds are not supported either. If seeing the shape of your notes matters to you, or you want plugins for daily notes or spaced review, Obsidian is the better fit, and [an Obsidian alternative for Mac](/blog/obsidian-alternative-mac/) lists what moves across and what does not. Plain `[[Title]]` links and ordinary notes do move between the two, since both read a folder of Markdown files.
+There is no graph view and no plugin system. Heading links and embeds are not supported either. If seeing the shape of your notes matters to you, or you want plugins for daily notes or spaced review, Obsidian is the better fit, and [an Obsidian alternative for Mac](/blog/obsidian-alternative-mac/) lists what moves across and what does not. Plain `[[Title]]` links and ordinary notes do move between the two, since both read a folder of Markdown files.
 
 If you only want to write notes, link them and find them again, the smaller tool means fewer settings to maintain.
 
@@ -69,13 +69,13 @@ To list every link whose target no longer exists, run this from the notes folder
 
 ```bash
 grep -rhoE '\[\[[^]]+\]\]' --include='*.md' --include='*.markdown' --include='*.txt' . |
-  sed -E 's/^\[\[//; s/\]\]$//; s/#.*$//' | sort -u |
+  sed -E 's/^\[\[//; s/\]\]$//; s/[[:space:]]*[|].*$//' | sort -u |
   while IFS= read -r t; do
     [ -n "$(find . \( -name "$t.md" -o -name "$t.markdown" -o -name "$t.txt" \) -print -quit)" ] || echo "missing: $t"
   done
 ```
 
-It uses the same `[[...]]` pattern as MiaoYan's backlinks index drops a `#heading` part, and compares names with exact case, and each `missing:` line is a title to search for and fix. Links inside code blocks are counted too.
+It uses the same `[[...]]` pattern as MiaoYan's backlinks index, keeps only the part before a `|` as the index does, and compares names with exact case, so each `missing:` line is a title to search for and fix. A `[[Note#Heading]]` link is listed as missing, which matches MiaoYan, where it does not open either. Links inside code blocks are counted too.
 
 ## FAQ
 
@@ -89,4 +89,4 @@ Either works with MiaoYan's exact-title links. Titles read better in the body an
 
 ### Can I move my notes to Obsidian later?
 
-Yes for the files and plain `[[Title]]` links, since both apps read Markdown folders. Aliases and heading links written in Obsidian will not work in MiaoYan.
+Yes for the files and plain `[[Title]]` links, since both apps read Markdown folders. `[[Title|alias]]` works too, while heading links written in Obsidian will not work in MiaoYan.

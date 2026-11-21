@@ -111,7 +111,7 @@ gantt
 
 带 `mermaid` 语言名的围栏块对 Markdown 解析器来说只是文本，预览在页面加载后找到它，把文本交给 Mermaid 库，库解析甘特图语法，把每个 `after` 引用换算成日期，应用排除规则，再画成 SVG。
 
-妙言 V4.9.0 自带 Mermaid 11.14.0，从应用内的文件运行，所以甘特图离线也能渲染。打包文件里的甘特图语法包含 `tickInterval`、`weekend`、`until`、`todayMarker` 和 `vert` 标签。更新的 Mermaid 版本才加的写法这里没有，用新选项之前先拿一张小图试。
+妙言 V4.11.0 自带 Mermaid 11.14.0，从应用内的文件运行，所以甘特图离线也能渲染。打包文件里的甘特图语法包含 `tickInterval`、`weekend`、`until`、`todayMarker` 和 `vert` 标签。更新的 Mermaid 版本才加的写法这里没有，用新选项之前先拿一张小图试。
 
 ## 常见错误
 

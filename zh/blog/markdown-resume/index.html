@@ -20,7 +20,7 @@
 <meta property="og:description" content="把简历写成一个 .md 文件放进 git，用 Pandoc 或妙言导出 A4 PDF，附完整示例、分页和多岗位版本管理。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-resume.webp">
 <meta property="article:published_time" content="2026-11-09">
-<meta property="article:modified_time" content="2026-11-09">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "用 Markdown 写简历并导出 PDF", "item": "https://miaoyan.app/zh/blog/markdown-resume/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-resume/#article", "headline": "用 Markdown 写简历并导出 PDF", "description": "把简历写成一个 .md 文件放进 git，用 Pandoc 或妙言导出 A4 PDF，附完整示例、分页和多岗位版本管理。", "url": "https://miaoyan.app/zh/blog/markdown-resume/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-resume/", "datePublished": "2026-11-09", "dateModified": "2026-11-09", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-resume.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 简历能通过招聘系统的筛选吗？", "acceptedAnswer": {"@type": "Answer", "text": "这取决于具体的系统，它们只看到 PDF，看不到 Markdown，你能控制的是 PDF 里有按阅读顺序排好的真实文字，上面 Pandoc 的两条路导出的都是能选中的文字，pdftotext resume.pdf - 能从上到下读出来，投递前对自己的文件跑一下就行。"}}, {"@type": "Question", "name": "投递时可以直接发 .md 文件吗？", "acceptedAnswer": {"@type": "Answer", "text": "发 PDF。多数投递表单要的是 PDF 或 Word，PDF 也保得住版式，.md 留作源文件。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "用 Markdown 写简历并导出 PDF", "item": "https://miaoyan.app/zh/blog/markdown-resume/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-resume/#article", "headline": "用 Markdown 写简历并导出 PDF", "description": "把简历写成一个 .md 文件放进 git，用 Pandoc 或妙言导出 A4 PDF，附完整示例、分页和多岗位版本管理。", "url": "https://miaoyan.app/zh/blog/markdown-resume/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-resume/", "datePublished": "2026-11-09", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-resume.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 简历能通过招聘系统的筛选吗？", "acceptedAnswer": {"@type": "Answer", "text": "这取决于具体的系统，它们只看到 PDF，看不到 Markdown，你能控制的是 PDF 里有按阅读顺序排好的真实文字，上面 Pandoc 的两条路导出的都是能选中的文字，pdftotext resume.pdf - 能从上到下读出来，投递前对自己的文件跑一下就行。"}}, {"@type": "Question", "name": "投递时可以直接发 .md 文件吗？", "acceptedAnswer": {"@type": "Answer", "text": "发 PDF。多数投递表单要的是 PDF 或 Word，PDF 也保得住版式，.md 留作源文件。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -943,7 +943,7 @@ a { color: inherit; }
 <p><code>papersize</code>、<code>geometry</code> 和 <code>mainfont</code> 都是 Pandoc 手册 LaTeX 部分的变量，出来的是 Pandoc 默认的 LaTeX 样子，不是上面那种紧凑版式。写中文简历时，手册说 <code>xelatex</code> 下的 <code>CJKmainfont</code> 需要 <code>xeCJK</code>，走 HTML 这条路就没有这个麻烦。</p>
 <h2 id="用妙言导出-pdf">用妙言导出 PDF</h2>
 <p>选中笔记，点「文件」&gt;「导出」&gt;「PDF」，妙言把渲染好的预览印到 A4 上（595.2 × 841.8 点），上边距 40 点、下边距 48 点、左右各 45 点，文件按笔记标题命名存到「下载」。具体步骤和快捷键见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
-<p>4.9.0 里能改和不能改的有这些：</p>
+<p>4.11.0 里能改和不能改的有这些：</p>
 <ul>
 <li>正文和标题用设置里的预览字体。</li>
 <li>纸张、边距、页眉都是固定的。</li>

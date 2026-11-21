@@ -20,7 +20,7 @@
 <meta property="og:description" content="把 Excel、Numbers 或 Google Sheets 复制的单元格转成 Markdown 表格，并检查合并单元格、竖线和换行。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp">
 <meta property="article:published_time" content="2026-10-30">
-<meta property="article:modified_time" content="2026-10-30">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Excel 转 Markdown 表格，粘贴转换和检查", "item": "https://miaoyan.app/zh/blog/excel-to-markdown-table/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/excel-to-markdown-table/#article", "headline": "Excel 转 Markdown 表格，粘贴转换和检查", "description": "把 Excel、Numbers 或 Google Sheets 复制的单元格转成 Markdown 表格，并检查合并单元格、竖线和换行。", "url": "https://miaoyan.app/zh/blog/excel-to-markdown-table/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/excel-to-markdown-table/", "datePublished": "2026-10-30", "dateModified": "2026-10-30", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "为什么从 Excel 粘贴出来是制表符？", "acceptedAnswer": {"@type": "Answer", "text": "电子表格应用把复制的区域当成用制表符分隔的纯文本，Markdown 表格用的是竖线，所以要先转换。"}}, {"@type": "Question", "name": "Markdown 表格能合并单元格吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，竖线表格就是一张普通网格，要合并就用带 colspan 或 rowspan 的 HTML 表格，或者把数据拆开。"}}, {"@type": "Question", "name": "CSV 文件怎么转成 Markdown 表格？", "acceptedAnswer": {"@type": "Answer", "text": "运行 pandoc -f csv -t gfm file.csv，或者把文件导入 tablesgenerator.com 这类生成器，想让 Pandoc 写竖线表格，先去掉单元格里的换行。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Excel 转 Markdown 表格，粘贴转换和检查", "item": "https://miaoyan.app/zh/blog/excel-to-markdown-table/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/excel-to-markdown-table/#article", "headline": "Excel 转 Markdown 表格，粘贴转换和检查", "description": "把 Excel、Numbers 或 Google Sheets 复制的单元格转成 Markdown 表格，并检查合并单元格、竖线和换行。", "url": "https://miaoyan.app/zh/blog/excel-to-markdown-table/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/excel-to-markdown-table/", "datePublished": "2026-10-30", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "为什么从 Excel 粘贴出来是制表符？", "acceptedAnswer": {"@type": "Answer", "text": "电子表格应用把复制的区域当成用制表符分隔的纯文本，Markdown 表格用的是竖线，所以要先转换。"}}, {"@type": "Question", "name": "Markdown 表格能合并单元格吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，竖线表格就是一张普通网格，要合并就用带 colspan 或 rowspan 的 HTML 表格，或者把数据拆开。"}}, {"@type": "Question", "name": "CSV 文件怎么转成 Markdown 表格？", "acceptedAnswer": {"@type": "Answer", "text": "运行 pandoc -f csv -t gfm file.csv，或者把文件导入 tablesgenerator.com 这类生成器，想让 Pandoc 写竖线表格，先去掉单元格里的换行。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -949,7 +949,7 @@ pandoc -f tsv -t gfm data.tsv
 <p>这些限制来自 GFM 规范，表头行和分隔行的单元格数量必须一样，否则整块不会被识别成表格，数据行单元格比表头少会补空单元格，多出来的被忽略，单元格里也不能放块级元素。</p>
 <p>表格依赖合并单元格或单元格内的列表时，写成带 <code>colspan</code> 或 <code>rowspan</code> 的 HTML <code>&lt;table&gt;</code>，或者拆成两张更简单的表。</p>
 <h2 id="在妙言里粘贴表格">在妙言里粘贴表格</h2>
-<p>妙言没有 CSV 或 TSV 导入，粘贴制表符分隔的文本时也不会自动变成竖线，它转换的是 HTML。剪贴板里带有包含 <code>&lt;table&gt;</code>、标题、列表、引用或代码块的 HTML 版本时，编辑器会插入 Markdown 而不是纯文本。表格这部分，V4.9.0 的源码是这样处理的。</p>
+<p>妙言没有 CSV 或 TSV 导入，粘贴制表符分隔的文本时也不会自动变成竖线，它转换的是 HTML。剪贴板里带有包含 <code>&lt;table&gt;</code>、标题、列表、引用或代码块的 HTML 版本时，编辑器会插入 Markdown 而不是纯文本。表格这部分，V4.11.0 的源码是这样处理的。</p>
 <ul>
 <li>第一行一律成为表头，不管有没有 <code>th</code>。</li>
 <li>单元格里的竖线转义成 <code>\|</code>。</li>

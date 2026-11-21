@@ -20,7 +20,7 @@
 <meta property="og:description" content="Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan&#x27;s preview handles fragments and relative links.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown links and anchors: inline, reference, headings", "item": "https://miaoyan.app/blog/markdown-links-and-anchors/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-links-and-anchors/#article", "headline": "Markdown links and anchors: inline, reference, headings", "description": "Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan's preview handles fragments and relative links.", "url": "https://miaoyan.app/blog/markdown-links-and-anchors/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-links-and-anchors/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I link to a heading in Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "Use [text](#heading-slug). On GitHub the slug is the heading in lower case with hyphens for spaces and punctuation removed. Other tools differ, so check where the note is read."}}, {"@type": "Question", "name": "Why does my anchor link not work in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "The preview uses the heading text as its id, not a lower-case slug, and a fragment with a space cannot be selected. Link a one-word heading as written, or add <a id=\"name\"></a> above it."}}, {"@type": "Question", "name": "How do I put spaces in a Markdown link?", "acceptedAnswer": {"@type": "Answer", "text": "Wrap the destination in angle brackets, [text](<my file.md>), or write %20 for each space."}}, {"@type": "Question", "name": "Do bare URLs become links?", "acceptedAnswer": {"@type": "Answer", "text": "On GitHub yes. In MiaoYan's preview no. Wrap them in angle brackets."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown links and anchors: inline, reference, headings", "item": "https://miaoyan.app/blog/markdown-links-and-anchors/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-links-and-anchors/#article", "headline": "Markdown links and anchors: inline, reference, headings", "description": "Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan's preview handles fragments and relative links.", "url": "https://miaoyan.app/blog/markdown-links-and-anchors/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-links-and-anchors/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I link to a heading in Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "Use [text](#heading-slug). On GitHub the slug is the heading in lower case with hyphens for spaces and punctuation removed. Other tools differ, so check where the note is read."}}, {"@type": "Question", "name": "Why does my anchor link not work in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "The preview uses the heading text as its id, not a lower-case slug, and a fragment with a space cannot be selected. Link a one-word heading as written, or add <a id=\"name\"></a> above it."}}, {"@type": "Question", "name": "How do I put spaces in a Markdown link?", "acceptedAnswer": {"@type": "Answer", "text": "Wrap the destination in angle brackets, [text](<my file.md>), or write %20 for each space."}}, {"@type": "Question", "name": "Do bare URLs become links?", "acceptedAnswer": {"@type": "Answer", "text": "On GitHub yes, and in MiaoYan's preview since V4.10.0. A viewer without GFM's autolink extension leaves them as text, so wrap them in angle brackets when that matters."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -885,7 +885,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </code></pre>
 <p>Definitions are not rendered and may sit before or after the links that use them, so many writers collect them at the bottom of the note. An autolink wraps a URL in angle brackets, <code>&lt;https://example.com&gt;</code>, and uses the URL itself as the text.</p>
 <h2 id="bare-urls-are-not-the-same-as-links">Bare URLs are not the same as links</h2>
-<p>GitHub turns a plain <code>https://example.com</code> into a link, because GFM adds an autolink extension on top of CommonMark. Not every renderer includes it. MiaoYan's renderer attaches four GFM extensions (tables, footnotes, strikethrough and task lists) and no autolink extension, so in the preview and in HTML export a bare address is plain text. The editor pane does turn it into a clickable link, so a URL that works while you type can lose its link once rendered. If a URL must be clickable everywhere, write <code>&lt;https://example.com&gt;</code> or <code>[text](https://example.com)</code>.</p>
+<p>GitHub turns a plain <code>https://example.com</code> into a link, because GFM adds an autolink extension on top of CommonMark. Not every renderer includes it. MiaoYan's renderer has attached it since V4.10.0, so a bare <code>https://</code> or <code>www.</code> address is a link in the preview and in HTML export as well as in the editor pane; before that version it became plain text once rendered. If a URL must be clickable everywhere, including viewers without the extension, write <code>&lt;https://example.com&gt;</code> or <code>[text](https://example.com)</code>.</p>
 <h2 id="spaces-and-parentheses-in-destinations">Spaces and parentheses in destinations</h2>
 <p>A destination cannot contain a space unless it is wrapped in angle brackets, and it may contain parentheses only if they are balanced or backslash-escaped. Three ways to write the same file name:</p>
 <pre><code class="language-markdown">[Report](&lt;Q3 report (final).md&gt;)
@@ -918,7 +918,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h3 id="how-do-i-put-spaces-in-a-markdown-link">How do I put spaces in a Markdown link?</h3>
 <p>Wrap the destination in angle brackets, <code>[text](&lt;my file.md&gt;)</code>, or write <code>%20</code> for each space.</p>
 <h3 id="do-bare-urls-become-links">Do bare URLs become links?</h3>
-<p>On GitHub yes. In MiaoYan's preview no. Wrap them in angle brackets.</p>
+<p>On GitHub yes, and in MiaoYan's preview since V4.10.0. A viewer without GFM's autolink extension leaves them as text, so wrap them in angle brackets when that matters.</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

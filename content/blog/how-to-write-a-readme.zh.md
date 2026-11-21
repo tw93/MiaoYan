@@ -67,7 +67,7 @@ README 如果还会在别处被阅读，就在那边也测一遍。
 
 README 容易出一些小毛病，表格的分隔行和表头单元格数量对不上就退回普通文字，相对路径写错，围栏没闭合把后面整页吞掉，最好在 GitHub 替你发现之前先预览。
 
-在妙言里把 README 当笔记打开，按 `⌘\` 切换分栏，Markdown 和渲染结果并排显示。按 V4.9.0 的源码，预览用的是 cmark-gfm，开启了表格、脚注、删除线和任务列表，会渲染 Mermaid，原始 HTML 直接放行，所以很多 README 里居中的 `<div>` 和带 `width` 的 `<img>` 会按写的样子显示，`> [!NOTE]` 这类引用也会转成和 GitHub 类似的提示块。依赖 GitHub 本身的东西它查不了，相对链接要等推送后按分支解析，shields.io 徽章需要联网，Outline 菜单只在 github.com 上有，推送之后再打开一次仓库页确认。
+在妙言里把 README 当笔记打开，按 `⌘\` 切换分栏，Markdown 和渲染结果并排显示。按 V4.11.0 的源码，预览用的是 cmark-gfm，开启了表格、脚注、删除线、任务列表和自动链接，会渲染 Mermaid，原始 HTML 直接放行，所以很多 README 里居中的 `<div>` 和带 `width` 的 `<img>` 会按写的样子显示，`> [!NOTE]` 这类引用也会转成和 GitHub 类似的提示块。依赖 GitHub 本身的东西它查不了，相对链接要等推送后按分支解析，shields.io 徽章需要联网，Outline 菜单只在 github.com 上有，推送之后再打开一次仓库页确认。
 
 任何本地的 Markdown 预览都行，关键是在别人之前先看到渲染结果，在 Mac 上选编辑器可以看 [Mac 上怎么选 Markdown 编辑器](/zh/blog/markdown-editor-for-mac/)。
 

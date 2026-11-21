@@ -17,7 +17,7 @@
     {
       "slug": "markdown-cheat-sheet",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown cheat sheet: CommonMark, GFM and extensions",
@@ -31,7 +31,7 @@
     {
       "slug": "latex-math-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "LaTeX math in Markdown: syntax, KaTeX and pitfalls",
@@ -45,7 +45,7 @@
     {
       "slug": "mermaid-diagrams-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Mermaid in Markdown: flowchart, sequence, Gantt and timeline examples",
@@ -73,7 +73,7 @@
     {
       "slug": "markdown-to-pdf-mac",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown to PDF on Mac",
@@ -101,7 +101,7 @@
     {
       "slug": "local-first-markdown-notes",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Local-first Markdown notes: keep them as plain files",
@@ -115,7 +115,7 @@
     {
       "slug": "sync-markdown-notes-across-devices",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Sync Markdown notes across devices without a sync service",
@@ -129,7 +129,7 @@
     {
       "slug": "wikilinks-and-backlinks",
       "date": "2026-10-19",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Wikilinks: [[note]] links and backlinks in Markdown",
@@ -143,7 +143,7 @@
     {
       "slug": "markdown-notes-from-terminal",
       "date": "2026-10-19",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Markdown notes from the terminal with the miao CLI",
@@ -157,7 +157,7 @@
     {
       "slug": "obsidian-alternative-mac",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "A lighter Obsidian alternative for Mac",
@@ -185,7 +185,7 @@
     {
       "slug": "apple-notes-to-markdown",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Export Apple Notes as Markdown and open the files",
@@ -199,7 +199,7 @@
     {
       "slug": "bear-alternative-mac",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "A Bear alternative for Mac: plain Markdown files",
@@ -227,7 +227,7 @@
     {
       "slug": "commonmark-vs-gfm",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "CommonMark vs GFM: which Markdown flavor to write",
@@ -269,7 +269,7 @@
     {
       "slug": "markdown-escape-characters",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown escape characters: backslash, entities and code spans",
@@ -311,7 +311,7 @@
     {
       "slug": "markdown-images",
       "date": "2026-10-19",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown image syntax: insert, resize and fix paths",
@@ -339,7 +339,7 @@
     {
       "slug": "markdown-links-and-anchors",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown links and anchors: inline, reference, headings",
@@ -353,7 +353,7 @@
     {
       "slug": "markdown-on-ipad",
       "date": "2026-10-19",
-      "modified": "2026-11-11",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Markdown on iPad: files, sync and editors",
@@ -381,7 +381,7 @@
     {
       "slug": "markdown-task-lists",
       "date": "2026-10-19",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown checkbox and checklist: - [ ] and - [x]",
@@ -395,7 +395,7 @@
     {
       "slug": "markmap-mind-maps",
       "date": "2026-10-19",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markmap: turn a Markdown outline into a mind map",
@@ -507,7 +507,7 @@
     {
       "slug": "open-md-file-mac",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "How to open a .md file on Mac",
@@ -521,7 +521,7 @@
     {
       "slug": "markdown-to-html",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown to HTML: Pandoc, markdown-it and MiaoYan export",
@@ -549,7 +549,7 @@
     {
       "slug": "zettelkasten-markdown-notes",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Zettelkasten with Markdown files: IDs, links and a weekly routine",
@@ -563,7 +563,7 @@
     {
       "slug": "mermaid-flowchart",
       "date": "2026-10-20",
-      "modified": "2026-10-20",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Mermaid flowchart syntax: TD, LR, shapes, edges and subgraphs",
@@ -577,7 +577,7 @@
     {
       "slug": "markdown-lists",
       "date": "2026-10-21",
-      "modified": "2026-10-21",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown numbered list and bullet points: syntax and rules",
@@ -605,7 +605,7 @@
     {
       "slug": "markdown-indent",
       "date": "2026-10-23",
-      "modified": "2026-10-23",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown indent: why spaces vanish and what works instead",
@@ -619,7 +619,7 @@
     {
       "slug": "mermaid-sequence-diagram",
       "date": "2026-10-24",
-      "modified": "2026-10-24",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Mermaid sequence diagram: syntax, arrows and a login example",
@@ -633,7 +633,7 @@
     {
       "slug": "markdown-superscript-subscript",
       "date": "2026-10-25",
-      "modified": "2026-10-25",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown superscript and subscript: what works",
@@ -647,7 +647,7 @@
     {
       "slug": "mermaid-gantt-chart",
       "date": "2026-10-26",
-      "modified": "2026-10-26",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Mermaid gantt chart: dateFormat, sections and tasks",
@@ -661,7 +661,7 @@
     {
       "slug": "markdown-headings",
       "date": "2026-10-27",
-      "modified": "2026-10-27",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown headings: ATX, setext, levels and anchors",
@@ -675,7 +675,7 @@
     {
       "slug": "markdown-table-of-contents",
       "date": "2026-10-28",
-      "modified": "2026-10-28",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown table of contents: manual, [TOC] and generators",
@@ -689,7 +689,7 @@
     {
       "slug": "migrate-notes-to-markdown",
       "date": "2026-10-29",
-      "modified": "2026-10-29",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Export Notion and Evernote to Markdown files",
@@ -703,7 +703,7 @@
     {
       "slug": "excel-to-markdown-table",
       "date": "2026-10-30",
-      "modified": "2026-10-30",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Excel to Markdown table: paste, convert and check",
@@ -717,7 +717,7 @@
     {
       "slug": "mermaid-timeline",
       "date": "2026-10-31",
-      "modified": "2026-10-31",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Mermaid timeline in Markdown: syntax, sections and examples",
@@ -731,7 +731,7 @@
     {
       "slug": "daily-notes-markdown",
       "date": "2026-11-01",
-      "modified": "2026-11-01",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "Daily notes in Markdown: one file per day, plus a script",
@@ -759,7 +759,7 @@
     {
       "slug": "how-to-write-a-readme",
       "date": "2026-11-03",
-      "modified": "2026-11-03",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "How to write a README: sections, links and previews",
@@ -773,7 +773,7 @@
     {
       "slug": "mermaid-er-diagram",
       "date": "2026-11-04",
-      "modified": "2026-11-04",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Mermaid ER diagram syntax: entities, crow's foot and keys",
@@ -815,7 +815,7 @@
     {
       "slug": "ai-agents-markdown-notes",
       "date": "2026-11-07",
-      "modified": "2026-11-07",
+      "modified": "2026-11-21",
       "category": "notes",
       "en": {
         "title": "AI agent Markdown notes: let Claude Code read them safely",
@@ -829,7 +829,7 @@
     {
       "slug": "markdown-callouts",
       "date": "2026-11-08",
-      "modified": "2026-11-08",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown callouts: GitHub alerts, Obsidian and more",
@@ -843,7 +843,7 @@
     {
       "slug": "markdown-resume",
       "date": "2026-11-09",
-      "modified": "2026-11-09",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown resume: write a CV in .md and export a PDF",
@@ -857,7 +857,7 @@
     {
       "slug": "markdown-html-tags",
       "date": "2026-11-10",
-      "modified": "2026-11-10",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "HTML in Markdown: which tags work and where",
@@ -871,7 +871,7 @@
     {
       "slug": "markdown-emoji",
       "date": "2026-11-11",
-      "modified": "2026-11-11",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown emoji: Unicode characters vs :shortcodes:",
@@ -885,7 +885,7 @@
     {
       "slug": "markdown-to-image",
       "date": "2026-11-12",
-      "modified": "2026-11-12",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Markdown to image: export a note as a long PNG",
@@ -899,7 +899,7 @@
     {
       "slug": "mermaid-class-diagram",
       "date": "2026-11-13",
-      "modified": "2026-11-13",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "Mermaid class diagram syntax: classes, relationships, generics",
@@ -913,7 +913,7 @@
     {
       "slug": "latex-math-symbols",
       "date": "2026-11-14",
-      "modified": "2026-11-14",
+      "modified": "2026-11-21",
       "category": "writing",
       "en": {
         "title": "LaTeX math symbols: Greek letters, arrows, operators and more",

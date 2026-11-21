@@ -114,7 +114,7 @@ The CLI is a convenience layer over a folder of files. For the rationale behind 
 
 ### Can the CLI edit or append to an existing note?
 
-No. There is no edit or append command. Edit the file directly with any tool and MiaoYan reloads it.
+No. There is no edit or append command. Edit the file directly with any tool and MiaoYan reloads it. On iPhone and iPad, the Shortcuts action Append to Note (4.11.0) adds text on a line of its own at the end of a note.
 
 ### Does the CLI work with the App Store version?
 

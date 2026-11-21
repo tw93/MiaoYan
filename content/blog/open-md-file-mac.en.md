@@ -50,9 +50,11 @@ MiaoYan declares itself in its Info.plist as an editor for Markdown files with t
 
 Terminal shows the same thing. `mdls -name kMDItemContentType note.md` prints the type macOS gave the file, `net.daringfireball.markdown` for a `.md` file, while an extension that no installed app declares comes back as a value starting with `dyn.`, as `.mdown` and `.mkd` did on a Mac with MiaoYan installed. `open -a MiaoYan note.md` opens one file in MiaoYan without changing any default, and `open -e note.md` opens it in TextEdit.
 
-Double-clicking a file starts what the app calls Single Mode, whose menu item is File > Single Mode (`⌘O`), in Chinese 「单独模式」. The same mode starts when you choose that menu item and pick a file or folder. The note list shows the files that sit next to the one you opened. The app's own prompt says to leave this mode with `Command+Shift+W`.
+Double-clicking a `.md` file, or opening it with Open With, opens it beside your library: a file outside the notes folder is listed under Opened Files in the sidebar (临时打开 in the Chinese interface) while the library stays as it was, and a file inside the notes folder is simply selected. Double-clicking a folder, or choosing File > Single Mode (`⌘O`) and picking a file or folder, starts what the app calls Single Mode, 独立编辑模式 in Chinese, where the note list shows only the files that sit next to the one you opened. The app's own prompt says to leave this mode with `⌘⇧W`.
 
-Which neighbors appear depends on the extension. The list is built from files ending in `md`, `markdown` or `txt`, in any letter case, so `README.MD` shows up like `README.md`. When it reads a folder, MiaoYan also skips files that macOS does not identify as text and files of 100 MB or more.
+Since V4.11.0, images in the folder beside a file opened from Finder show in the preview. The App Store version is sandboxed and may read only the file Finder handed it, so when the note has local images it asks once for that folder with a panel that says Allow MiaoYan to read this folder to show the note's images. Once allowed, the folder is remembered; if you cancel, it does not ask again until the next launch. The GitHub build never asks.
+
+In Single Mode, which neighbors appear depends on the extension. The list is built from files ending in `md`, `markdown` or `txt`, in any letter case, so `README.MD` shows up like `README.md`. When it reads a folder, MiaoYan also skips files that macOS does not identify as text and files of 100 MB or more.
 
 To bring files into your own notes folder instead of browsing them in place, use File > Import (「导入」), which accepts files and folders and copies Markdown files in.
 

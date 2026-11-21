@@ -20,7 +20,7 @@
 <meta property="og:description" content="弄清 CommonMark 的 HTML 块规则、GFM 过滤的九个标签、GitHub 额外去掉的内容，以及妙言预览里哪些标签能用。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-html-tags.webp">
 <meta property="article:published_time" content="2026-11-10">
-<meta property="article:modified_time" content="2026-11-10">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里能用 HTML 标签吗", "item": "https://miaoyan.app/zh/blog/markdown-html-tags/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-html-tags/#article", "headline": "Markdown 里能用 HTML 标签吗", "description": "弄清 CommonMark 的 HTML 块规则、GFM 过滤的九个标签、GitHub 额外去掉的内容，以及妙言预览里哪些标签能用。", "url": "https://miaoyan.app/zh/blog/markdown-html-tags/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-html-tags/", "datePublished": "2026-11-10", "dateModified": "2026-11-10", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-html-tags.webp", "timeRequired": "PT8M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 里可以用 HTML 吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，CommonMark 允许行内 HTML 和 HTML 块，至于某个标签最后出不出来，由渲染器决定。"}}, {"@type": "Question", "name": "为什么 HTML 标签里的 Markdown 没有渲染？", "acceptedAnswer": {"@type": "Answer", "text": "那个标签开启了 HTML 块，块会一直到下一个空行，期间 Markdown 是关掉的，在开始标签后面补一个空行即可。"}}, {"@type": "Question", "name": "为什么 GitHub 把 <script> 显示成文字？", "acceptedAnswer": {"@type": "Answer", "text": "GFM 的 tagfilter 会把九个标签的 < 换成 &lt;，GitHub 又对输出做了进一步清理。"}}, {"@type": "Question", "name": "妙言会去掉笔记里的 HTML 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会，预览保留原始 HTML 和属性，适合试一个标签，不适合用来判断别的读者会看到什么。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里能用 HTML 标签吗", "item": "https://miaoyan.app/zh/blog/markdown-html-tags/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-html-tags/#article", "headline": "Markdown 里能用 HTML 标签吗", "description": "弄清 CommonMark 的 HTML 块规则、GFM 过滤的九个标签、GitHub 额外去掉的内容，以及妙言预览里哪些标签能用。", "url": "https://miaoyan.app/zh/blog/markdown-html-tags/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-html-tags/", "datePublished": "2026-11-10", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-html-tags.webp", "timeRequired": "PT8M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 里可以用 HTML 吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，CommonMark 允许行内 HTML 和 HTML 块，至于某个标签最后出不出来，由渲染器决定。"}}, {"@type": "Question", "name": "为什么 HTML 标签里的 Markdown 没有渲染？", "acceptedAnswer": {"@type": "Answer", "text": "那个标签开启了 HTML 块，块会一直到下一个空行，期间 Markdown 是关掉的，在开始标签后面补一个空行即可。"}}, {"@type": "Question", "name": "为什么 GitHub 把 <script> 显示成文字？", "acceptedAnswer": {"@type": "Answer", "text": "GFM 的 tagfilter 会把九个标签的 < 换成 &lt;，GitHub 又对输出做了进一步清理。"}}, {"@type": "Question", "name": "妙言会去掉笔记里的 HTML 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会，预览保留原始 HTML 和属性，适合试一个标签，不适合用来判断别的读者会看到什么。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1060,8 +1060,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </table>
 <p>能用语义标签就别用 <code>style</code> 属性，<code>&lt;mark&gt;</code> 在 GitHub 上能留下来，<code>&lt;span style="color:red"&gt;</code> 文字留着颜色没了。</p>
 <h2 id="妙言怎么处理-html">妙言怎么处理 HTML</h2>
-<p>V4.9.0 的预览用 cmark-gfm 解析，按名字挂了四个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>（<code>Business/Markdown.swift</code> 第 22 行），tagfilter 不在其中。渲染时传的是 <code>CMARK_OPT_UNSAFE</code>，cmark 默认会把原始 HTML 换成占位注释，这里不换，所以每个标签和每个属性都会到预览里，<code>style</code> 和 <code>iframe</code> 也不例外。</p>
-<p>从解析器到屏幕之间，除了改写图片地址，不再动这些 HTML。渲染出来的 HTML 被填进预览模板的 <code>DOWN_HTML</code> 位置，写成临时的 <code>index-&lt;uuid&gt;.html</code>，用 <code>loadFileURL</code> 打开，读取权限设为 <code>/</code>，所在的 web view 配置里 <code>allowsContentJavaScript</code> 为 true，模板没有声明 Content-Security-Policy，这条路径上也没有删除 <code>script</code> 标签的步骤。</p>
+<p>V4.11.0 的预览用 cmark-gfm 解析，按名字挂了五个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code>、<code>tasklist</code> 和 <code>autolink</code>（<code>Business/Markdown.swift</code> 第 22 行），tagfilter 不在其中。渲染时传的是 <code>CMARK_OPT_UNSAFE</code>，cmark 默认会把原始 HTML 换成占位注释，这里不换，所以每个标签和每个属性都会到预览里，<code>style</code> 和 <code>iframe</code> 也不例外。</p>
+<p>从解析器到屏幕之间，除了改写图片地址，不再动这些 HTML。渲染出来的 HTML 被填进预览模板的 <code>DOWN_HTML</code> 位置，写成临时的 <code>index-&lt;uuid&gt;.html</code>，用 <code>loadFileURL</code> 打开，V4.10.0 起读取权限只给这个文件所在的文件夹，本地图片改走应用自己的 <code>miaoyan-file</code> 地址，所在的 web view 配置里 <code>allowsContentJavaScript</code> 为 true，模板没有声明 Content-Security-Policy，这条路径上也没有删除 <code>script</code> 标签的步骤。</p>
 <p>同一个渲染器也供 PDF 和 HTML 导出使用，见 <a href="/zh/blog/markdown-to-html/">Markdown 转 HTML</a>。</p>
 <h2 id="html-没有出现时">HTML 没有出现时</h2>
 <ul>

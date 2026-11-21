@@ -20,7 +20,7 @@
 <meta property="og:description" content="A KaTeX-checked list of LaTeX math symbols: Greek letters, operators, relations, arrows, big operators, accents, delimiters and spacing, plus common gotchas.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/latex-math-symbols.webp">
 <meta property="article:published_time" content="2026-11-14">
-<meta property="article:modified_time" content="2026-11-14">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "LaTeX math symbols: Greek letters, arrows, operators and more", "item": "https://miaoyan.app/blog/latex-math-symbols/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/latex-math-symbols/#article", "headline": "LaTeX math symbols: Greek letters, arrows, operators and more", "description": "A KaTeX-checked list of LaTeX math symbols: Greek letters, operators, relations, arrows, big operators, accents, delimiters and spacing, plus common gotchas.", "url": "https://miaoyan.app/blog/latex-math-symbols/", "mainEntityOfPage": "https://miaoyan.app/blog/latex-math-symbols/", "datePublished": "2026-11-14", "dateModified": "2026-11-14", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/latex-math-symbols.webp", "timeRequired": "PT8M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why is my sum limit beside the symbol instead of above it?", "acceptedAnswer": {"@type": "Answer", "text": "Inline math keeps limits beside the sign. Use a $$ block, or add \\displaystyle or \\limits inline."}}, {"@type": "Question", "name": "How do I write a vector or a bold letter?", "acceptedAnswer": {"@type": "Answer", "text": "\\vec{v} draws an arrow over one letter, and \\mathbf{v} makes it bold. For bold Greek, use \\boldsymbol{\\alpha}, because \\mathbf leaves Greek letters unchanged."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "LaTeX math symbols: Greek letters, arrows, operators and more", "item": "https://miaoyan.app/blog/latex-math-symbols/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/latex-math-symbols/#article", "headline": "LaTeX math symbols: Greek letters, arrows, operators and more", "description": "A KaTeX-checked list of LaTeX math symbols: Greek letters, operators, relations, arrows, big operators, accents, delimiters and spacing, plus common gotchas.", "url": "https://miaoyan.app/blog/latex-math-symbols/", "mainEntityOfPage": "https://miaoyan.app/blog/latex-math-symbols/", "datePublished": "2026-11-14", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/latex-math-symbols.webp", "timeRequired": "PT8M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why is my sum limit beside the symbol instead of above it?", "acceptedAnswer": {"@type": "Answer", "text": "Inline math keeps limits beside the sign. Use a $$ block, or add \\displaystyle or \\limits inline."}}, {"@type": "Question", "name": "How do I write a vector or a bold letter?", "acceptedAnswer": {"@type": "Answer", "text": "\\vec{v} draws an arrow over one letter, and \\mathbf{v} makes it bold. For bold Greek, use \\boldsymbol{\\alpha}, because \\mathbf leaves Greek letters unchanged."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -871,7 +871,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-11-14">Nov 14, 2026</time></span><span>8 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/latex-math-symbols.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Every math symbol in LaTeX is a backslash command: <code>\alpha</code> gives α, <code>\leq</code> gives ≤, <code>\sum</code> gives ∑. Put the command between <code>$...$</code> for inline math or <code>$$...$$</code> for a block. The tables below group the commands people look up most, and each one was run through KaTeX 0.16.0, the engine bundled in MiaoYan V4.9.0. Setup, delimiters and environments such as matrices are in <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a>.</p>
+<p>Every math symbol in LaTeX is a backslash command: <code>\alpha</code> gives α, <code>\leq</code> gives ≤, <code>\sum</code> gives ∑. Put the command between <code>$...$</code> for inline math or <code>$$...$$</code> for a block. The tables below group the commands people look up most, and each one was run through KaTeX 0.16.0, the engine bundled in MiaoYan V4.11.0. Setup, delimiters and environments such as matrices are in <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a>.</p>
 <h2 id="how-to-read-the-tables">How to read the tables</h2>
 <p>Each row pairs a command with the symbol it produces, written as a plain character so it shows up on this page. Wrap the command in dollar signs in your note and KaTeX draws its own glyph, which can differ a little in shape (compare <code>\epsilon</code> and <code>\varepsilon</code>).</p>
 <p>MiaoYan's preview runs KaTeX's auto-render extension with four delimiter pairs: <code>$$...$$</code> and <code>\[...\]</code> for display math, <code>$...$</code> and <code>\(...\)</code> for inline math. The KaTeX files ship inside the app, so no network is needed.</p>
@@ -1817,9 +1817,9 @@ $$
 <p>Dots between terms are <code>\ldots</code> on the baseline, as in <code>a_1, \ldots, a_n</code>, and <code>\cdots</code> centered, as in <code>a_1 + \cdots + a_n</code>. To print characters LaTeX treats as syntax, escape them: <code>\%</code>, <code>\#</code>, <code>\&amp;</code>, <code>\_</code>, <code>\$</code>, <code>\{</code> and <code>\}</code>. An unescaped <code>%</code> starts a comment.</p>
 <h2 id="gotchas">Gotchas</h2>
 <ol>
-<li><strong>Braces.</strong> <code>{</code> and <code>}</code> only group, so <code>{x}</code> prints <code>x</code>. To show them, write <code>\{</code> and <code>\}</code>, or <code>\lbrace</code> and <code>\rbrace</code>. In MiaoYan V4.9.0 the backslash forms are safe, because the Markdown pass shields math. In a renderer that does not, CommonMark's rule applies: a backslash before ASCII punctuation, including <code>{</code>, <code>|</code>, <code>,</code>, <code>;</code>, <code>!</code> and <code>\</code>, is dropped before KaTeX runs. For notes that travel between apps, the word forms (<code>\lbrace</code>, <code>\vert</code>, <code>\quad</code>) survive everywhere.</li>
+<li><strong>Braces.</strong> <code>{</code> and <code>}</code> only group, so <code>{x}</code> prints <code>x</code>. To show them, write <code>\{</code> and <code>\}</code>, or <code>\lbrace</code> and <code>\rbrace</code>. In MiaoYan V4.11.0 the backslash forms are safe, because the Markdown pass shields math. In a renderer that does not, CommonMark's rule applies: a backslash before ASCII punctuation, including <code>{</code>, <code>|</code>, <code>,</code>, <code>;</code>, <code>!</code> and <code>\</code>, is dropped before KaTeX runs. For notes that travel between apps, the word forms (<code>\lbrace</code>, <code>\vert</code>, <code>\quad</code>) survive everywhere.</li>
 <li><strong><code>|</code> and <code>\|</code>.</strong> A bare <code>|</code> is a single bar. <code>\|</code> is a double bar, the same as <code>\Vert</code>. For absolute value and norms, prefer <code>\lvert x \rvert</code> and <code>\lVert v \rVert</code>, which are proper left and right delimiters. Inside a Markdown table a literal pipe splits the column, so write <code>\vert</code>; MiaoYan masks pipes inside math, other tools do not, and <a href="/blog/markdown-tables/">Markdown tables</a> covers the rest.</li>
-<li><strong>Underscores and asterisks.</strong> In plain Markdown, <code>_</code> and <code>*</code> start emphasis, which can chew up <code>a_i * b_j</code>. MiaoYan V4.9.0 shields math from that: it scans for the four delimiter pairs outside code spans and fences, skips escaped ones, and hands the formula text to KaTeX untouched, so <code>\\</code>, <code>\{</code>, <code>_</code> and <code>*</code> arrive intact. A formula with no closing delimiter is not protected, and neither is anything inside a code span.</li>
+<li><strong>Underscores and asterisks.</strong> In plain Markdown, <code>_</code> and <code>*</code> start emphasis, which can chew up <code>a_i * b_j</code>. MiaoYan V4.11.0 shields math from that: it scans for the four delimiter pairs outside code spans and fences, skips escaped ones, and hands the formula text to KaTeX untouched, so <code>\\</code>, <code>\{</code>, <code>_</code> and <code>*</code> arrive intact. A formula with no closing delimiter is not protected, and neither is anything inside a code span.</li>
 <li><strong>A command shows as plain text.</strong> The name is either not in KaTeX or has a typo. KaTeX 0.16.0 rejects <code>\mathbbm{1}</code>, <code>\mathds{1}</code> and <code>\usepackage{amsmath}</code>, while <code>\mathbb{1}</code> and <code>\bm{x}</code> work. When MiaoYan cannot parse a formula it shows the source, dollar signs included.</li>
 <li><strong>Dollar signs in prose.</strong> Prices can start a formula; see the dollar section of <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a>.</li>
 </ol>
@@ -1832,7 +1832,7 @@ $$
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
-    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/mermaid-class-diagram/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Mermaid class diagram syntax: classes, relationships, generics</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-to-image/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown to image: export a note as a long PNG</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/mermaid-class-diagram/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Mermaid class diagram syntax: classes, relationships, generics</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-to-image/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown to image: export a note as a long PNG</span><span class="blog-related-meta">7 min read</span></a></li></ul>
   </nav>
 </main>
 </div>

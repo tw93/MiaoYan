@@ -9,7 +9,7 @@
 | Dropbox | Mac、Windows、Linux 混用 | 冲突会变成「conflicted copy」文件 |
 | git | 想要提交历史、能接受手动同步的人 | 不会自动同步，提交、拉取和推送都要自己来 |
 
-如果只用苹果设备，iCloud 云盘最省事。妙言的 App Store 版本就是围绕它做的，没选文件夹并且 iCloud 可用时，应用会使用 iCloud 云盘里的一个文件夹，iPhone 和 iPad 版打开的是同一个。
+如果只用苹果设备，iCloud 云盘最省事。妙言的 App Store 版本就是围绕它做的，没选文件夹并且 iCloud 可用时，应用会使用 iCloud 云盘里的一个文件夹，iPhone 和 iPad 版打开的是同一个。没有 iCloud 账号也能用，V4.8.0 起 iPhone 和 iPad 版会在设备上建一个 MiaoYan 文件夹，在文件 App 的“我的 iPhone”下面能看到，这个笔记库只留在这台设备上，要同步就用选择文件夹换成云盘里的文件夹。用的是 iCloud 文件夹而 iCloud 不可用时，比如退出了 iCloud，或者对妙言关了 iCloud 云盘，列表顶部会显示 iCloud 未开启的标记。删除的笔记放进笔记库里的 `Trash` 文件夹，在 iPhone 上删的笔记会出现在 Mac 的废纸篓里，在一台设备上清空，另一台也跟着清掉。
 
 ## 文件同步到底怎么工作
 

@@ -20,7 +20,7 @@
 <meta property="og:description" content="Notion 导出 Markdown，Evernote 导出 ENEX 再转换，清理文件名、图片和 front matter，最后在妙言里打开。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/migrate-notes-to-markdown.webp">
 <meta property="article:published_time" content="2026-10-29">
-<meta property="article:modified_time" content="2026-10-29">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="笔记管理">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "把 Notion 和 Evernote 笔记导出为 Markdown", "item": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/#article", "headline": "把 Notion 和 Evernote 笔记导出为 Markdown", "description": "Notion 导出 Markdown，Evernote 导出 ENEX 再转换，清理文件名、图片和 front matter，最后在妙言里打开。", "url": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/", "datePublished": "2026-10-29", "dateModified": "2026-10-29", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/migrate-notes-to-markdown.webp", "timeRequired": "PT8M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Notion 的 Markdown 导出带图片吗？", "acceptedAnswer": {"@type": "Answer", "text": "帮助页说图片等资源单独保存，但这句话讲的是 HTML 和 PDF 导出，Markdown & CSV 没有说，解压后看一下文件夹。"}}, {"@type": "Question", "name": "不用桌面版能导出 Evernote 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，帮助页说导出只能在 Mac 或 Windows 的桌面版里做。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "把 Notion 和 Evernote 笔记导出为 Markdown", "item": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/#article", "headline": "把 Notion 和 Evernote 笔记导出为 Markdown", "description": "Notion 导出 Markdown，Evernote 导出 ENEX 再转换，清理文件名、图片和 front matter，最后在妙言里打开。", "url": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/migrate-notes-to-markdown/", "datePublished": "2026-10-29", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/migrate-notes-to-markdown.webp", "timeRequired": "PT8M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Notion 的 Markdown 导出带图片吗？", "acceptedAnswer": {"@type": "Answer", "text": "帮助页说图片等资源单独保存，但这句话讲的是 HTML 和 PDF 导出，Markdown & CSV 没有说，解压后看一下文件夹。"}}, {"@type": "Question", "name": "不用桌面版能导出 Evernote 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，帮助页说导出只能在 Mac 或 Windows 的桌面版里做。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -918,7 +918,7 @@ tags: [work, planning]
 created: 2024-03-02
 ---
 </code></pre>
-<p>文件以 <code>---</code> 开头时，妙言会在预览和导出里隐藏这样的块。妙言 V4.9.0 不会把这些标签变成侧栏或筛选，所以把它当成留在文件里、给其他工具用的数据。语法和引号规则见 <a href="/zh/blog/markdown-front-matter/">Markdown front matter</a>。</p>
+<p>文件以 <code>---</code> 开头时，妙言会在预览和导出里隐藏这样的块。妙言 V4.11.0 不会把这些标签变成侧栏或筛选，所以把它当成留在文件里、给其他工具用的数据。语法和引号规则见 <a href="/zh/blog/markdown-front-matter/">Markdown front matter</a>。</p>
 <h2 id="在妙言里打开">在妙言里打开</h2>
 <p>想把迁移好的文件夹当成笔记库，选妙言 &gt; 设置…（Command-逗号），点笔记位置旁边的 <code>更改</code>，选中文件夹。妙言会检查它是不是可写的目录，不是就提示「无法使用这个文件夹」并保留原来的位置，选对之后会出现 <code>重新启动</code> 按钮，新文件夹下次启动才生效。</p>
 <p>想把笔记加进已有的笔记库，用文件 &gt; 导入，打开面板的提示是「选择要导入的 Markdown 文件或文件夹」，可以多选。扫描会递归进入文件夹，保留 <code>.md</code>、<code>.markdown</code> 和 <code>.txt</code> 文件，跳过隐藏项和名为 <code>i</code>、<code>files</code>、<code>.Trash</code> 的文件夹。导入只会把笔记文件按文件名复制进主笔记文件夹，不复制图片文件夹，也不保留原来的目录结构，名字重复时副本会叫 <code>Name Copy.md</code>，再重复是 <code>Name Copy 2.md</code>。笔记里有图片链接的话，图片文件夹要手动复制，或者改用笔记位置，链接才不会断，什么都没匹配到会弹出「没有可导入的 Markdown 文件」。</p>

@@ -15,26 +15,28 @@ The first and last are the ones that bite later. A note stuck in an app's privat
 
 MiaoYan's site says the same App Store purchase runs on iPhone and iPad and opens the same iCloud Drive folder as your Mac. It is a one-time payment with no subscription or in-app purchases, and the iPhone and iPad apps require iOS or iPadOS 18 or later.
 
-What the iPad app does in version 4.9.0:
+What the iPad app does in version 4.11.0:
 
-- On a wide screen it uses a three-column layout: a sidebar with Notes (recent ones), All Notes, your folders and Trash, a note list, and the note itself.
+- On a wide screen it uses a three-column layout: a sidebar with Recent, All Notes, your folders and Trash, a note list, and the note itself.
 - A note opens in a reading view. Tap the edit button to type in a Markdown editor and tap "Done" to finish. The editor shows a save state, "Saving" then "Saved". Task boxes can be ticked in the reading view, going into the editor and back keeps your place, and a note with two or more headings offers Contents in its menu.
 - While editing, a menu beside "Done" has Insert Photo, Find in Note, Undo and Redo. Return at the end of a list item or a quote line starts the next one, and Return on an empty item ends the list.
 - The app handles notes, folders, renaming, moving, duplicating, pinning, sharing and Trash. A folder can be renamed, or deleted once it is empty, and a Markdown file opens from the Files app or a share sheet. Search matches every word in titles and note bodies locally and puts title matches first.
 - Settings has an Appearance section for font and size, and a Library section with "Choose Folder". Its text says MiaoYan reads and writes Markdown files in the folder and that iCloud Drive or your cloud drive app keeps it in sync with Mac.
-- The reader renders tables, footnotes, strikethrough and task lists, highlights code with highlight.js, draws Mermaid diagrams, and typesets LaTeX math with a bundled KaTeX, so formulas render without a network. `[[Title]]` wikilinks open the target note.
+- The reader renders tables, footnotes, strikethrough and task lists, highlights code with highlight.js, draws Mermaid diagrams, and typesets LaTeX math with a bundled KaTeX, so formulas render without a network. `[[Title]]` wikilinks and links to other notes open the target note, a link to a heading in the note scrolls to it, and tapping an image shows it full screen.
 
 With a hardware keyboard the editor takes the Mac's format keys: `⌘B`, `⌘I` and `⌘U` for bold, italic and underline, `⌘K` for a link, `⌘E` for inline code, `⇧⌘E` for a code block and `⇧⌘X` for strikethrough. `⌘T` toggles a task, `⌘]` and `⌘[` shift lines right and left, and Tab and Shift-Tab indent a list item. `⌘N` starts a note and `⌘3` switches between reading and editing.
 
-What it does not do in 4.9.0: the reader has no step that draws PlantUML or Markmap, so those blocks show as source text on the iPad even though the Mac app renders them. The syntax is covered in the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) and [LaTeX math in Markdown](/blog/latex-math-in-markdown/).
+Since 4.10.0 and 4.11.0 it also works from outside the app. Touch and hold the Home Screen icon for New Note, open or create notes with `miaoyan://` links, put Recent Notes widgets on the Home Screen and Lock Screen and a New Note button on the Lock Screen or in Control Center, create, open, search and append to notes from Shortcuts and Siri, and find notes in system search. Search opens ready to type, with recent searches and recently edited notes below it, and the interface now also comes in Traditional Chinese, Japanese, Korean, German, French and Spanish.
+
+What it does not do in 4.11.0: the reader has no step that draws PlantUML or Markmap, so those blocks show as source text on the iPad even though the Mac app renders them. The syntax is covered in the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) and [LaTeX math in Markdown](/blog/latex-math-in-markdown/).
 
 ## How the iPad finds your notes
 
-The Mac app reads a folder you choose in Preferences. The iPad app finds the library in one of two ways. On first launch it checks iCloud Drive and, when it is available, uses the app's own iCloud Drive folder, which the app declares as public so it shows in the Files app under the name MiaoYan. Otherwise, or if you want a different folder, you pick one with "Choose folder". The app then reads and writes plain files there.
+The Mac app reads a folder you choose in Preferences. The iPad app finds the library in one of two ways. On first launch it checks iCloud Drive and, when it is available, uses the app's own iCloud Drive folder, which the app declares as public so it shows in the Files app under the name MiaoYan. With no iCloud account it has, since 4.8.0, made a MiaoYan folder on the device instead, shown in Files under On My iPad. To use another folder, pick one with Choose Folder. The app then reads and writes plain files there.
 
 So the sync path is: the Mac saves a `.md` file in iCloud Drive, iCloud uploads it, the iPad sees the file appear and lists it. MiaoYan has no sync of its own. That is why the folder on the Mac must be the same iCloud Drive folder the iPad opens. The details are in [Sync Markdown notes across devices](/blog/sync-markdown-notes-across-devices/).
 
-One more detail: the iPad app first reads the catalog of notes iCloud reports and then their contents. During a first launch it shows "Found N notes…", and until the files arrive search shows a count such as "12 iCloud notes still downloading" A list that looks short right after install is usually this, not data loss.
+One more detail: the iPad app first reads the catalog of notes iCloud reports and then their contents. During a first launch it shows "Found N notes…", and until the files arrive search shows a count such as "12 iCloud notes still downloading". A list that looks short right after install is usually this, not data loss.
 
 ## When a note does not show up on the other device
 
@@ -42,8 +44,8 @@ Work down this list.
 
 1. **Check the Mac saved it.** The Mac app writes the file about a second and a half after you stop typing. Open the folder in Finder and confirm the `.md` file is there.
 2. **Check both devices point at the same folder.** On the Mac, Preferences > "Note Location". On the iPad, Settings > Library. A different folder on either side means two separate libraries.
-3. **Look for a sync status.** In Settings > Library the iPad app shows Syncing, Synced, Offline or "Sync issue". Offline means the app could not reach its iCloud container, so check that iCloud Drive is on for the iPad.
-4. **Wait for the first launch to finish.** The app says "Downloading your iCloud notes…" on a large library.
+3. **Look for a sync status.** In Settings > Library the iCloud row reads Syncing, Synced or Off. Off means the app has no iCloud container, because the iPad is signed out of iCloud or iCloud Drive is off for MiaoYan, so check both; it says nothing about the network. A folder picked in Files has no iCloud row, since MiaoYan does not sync it.
+4. **Wait for the first launch to finish.** On a large library the first read takes a while, and search shows how many iCloud notes are still downloading.
 5. **Pull down on the note list** to reload it if a note exists on disk but not in the list.
 6. **Open Files.** If the note is in iCloud Drive in Files, the problem is the app. If it is not, the problem is iCloud.
 

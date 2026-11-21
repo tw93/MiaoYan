@@ -20,7 +20,7 @@
 <meta property="og:description" content="Why leading spaces disappear in Markdown, and how to indent with &amp;nbsp;, a full-width space, text-indent, blockquotes, list content columns, tabs or fences.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-indent.webp">
 <meta property="article:published_time" content="2026-10-23">
-<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown indent: why spaces vanish and what works instead", "item": "https://miaoyan.app/blog/markdown-indent/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-indent/#article", "headline": "Markdown indent: why spaces vanish and what works instead", "description": "Why leading spaces disappear in Markdown, and how to indent with &nbsp;, a full-width space, text-indent, blockquotes, list content columns, tabs or fences.", "url": "https://miaoyan.app/blog/markdown-indent/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-indent/", "datePublished": "2026-10-23", "dateModified": "2026-10-23", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-indent.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is there a Markdown syntax for first-line indent?", "acceptedAnswer": {"@type": "Answer", "text": "No. The CommonMark spec defines no syntax for it, so the options are characters, raw HTML or a stylesheet."}}, {"@type": "Question", "name": "How many &nbsp; make a Chinese two-character indent?", "acceptedAnswer": {"@type": "Answer", "text": "Two U+3000 characters, which are as wide as a Chinese character in CJK fonts. A &nbsp; is only as wide as a space in the current font, so &emsp;&emsp; is the closer match."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown indent: why spaces vanish and what works instead", "item": "https://miaoyan.app/blog/markdown-indent/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-indent/#article", "headline": "Markdown indent: why spaces vanish and what works instead", "description": "Why leading spaces disappear in Markdown, and how to indent with &nbsp;, a full-width space, text-indent, blockquotes, list content columns, tabs or fences.", "url": "https://miaoyan.app/blog/markdown-indent/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-indent/", "datePublished": "2026-10-23", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-indent.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is there a Markdown syntax for first-line indent?", "acceptedAnswer": {"@type": "Answer", "text": "No. The CommonMark spec defines no syntax for it, so the options are characters, raw HTML or a stylesheet."}}, {"@type": "Question", "name": "How many &nbsp; make a Chinese two-character indent?", "acceptedAnswer": {"@type": "Answer", "text": "Two U+3000 characters, which are as wide as a Chinese character in CJK fonts. A &nbsp; is only as wide as a space in the current font, so &emsp;&emsp; is the closer match."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -920,7 +920,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <pre><code class="language-markdown">&lt;p style=&quot;text-indent: 2em&quot;&gt;This paragraph is indented by two em.&lt;/p&gt;
 </code></pre>
 <p>Two things limit it. A raw HTML block is not parsed as Markdown, so <code>**bold**</code> inside that <code>&lt;p&gt;</code> stays as asterisks. The block also ends at the first blank line, so each paragraph needs its own tag.</p>
-<p>MiaoYan 4.9.0 renders with cmark-gfm in unsafe mode, so raw HTML and its <code>style</code> attribute reach the preview untouched. MiaoYan has no setting for a custom preview stylesheet, and the preview page does not load a user stylesheet, so you cannot indent every paragraph with one line of CSS. Its own typography does not indent paragraphs, so in MiaoYan the choices are the characters above or a per-paragraph <code>style</code>. For a real stylesheet, export to HTML and edit the file; see <a href="/blog/markdown-to-html/">Markdown to HTML</a>.</p>
+<p>MiaoYan 4.11.0 renders with cmark-gfm in unsafe mode, so raw HTML and its <code>style</code> attribute reach the preview untouched. MiaoYan has no setting for a custom preview stylesheet, and the preview page does not load a user stylesheet, so you cannot indent every paragraph with one line of CSS. Its own typography does not indent paragraphs, so in MiaoYan the choices are the characters above or a per-paragraph <code>style</code>. For a real stylesheet, export to HTML and edit the file; see <a href="/blog/markdown-to-html/">Markdown to HTML</a>.</p>
 <h2 id="indenting-a-whole-block">Indenting a whole block</h2>
 <p>A blockquote indents text and changes its meaning:</p>
 <pre><code class="language-markdown">&gt; This block is set in from the left.

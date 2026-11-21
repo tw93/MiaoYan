@@ -20,7 +20,7 @@
 <meta property="og:description" content="行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 链接与锚点：行内、引用和标题跳转", "item": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/#article", "headline": "Markdown 链接与锚点：行内、引用和标题跳转", "description": "行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。", "url": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 怎么链接到某个标题？", "acceptedAnswer": {"@type": "Answer", "text": "写 [文字](#标题slug)。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪里读。"}}, {"@type": "Question", "name": "为什么锚点链接在妙言里不好用？", "acceptedAnswer": {"@type": "Answer", "text": "预览用标题文字当 id，不是小写 slug，带空格的片段也选不中。只有一个词的标题按原样链接，或者在标题上方加 <a id=\"name\"></a>。"}}, {"@type": "Question", "name": "Markdown 链接里有空格怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "把目的地放进尖括号，[文字](<my file.md>)，或者每个空格写成 %20。"}}, {"@type": "Question", "name": "裸网址会变成链接吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 会，妙言的预览不会，用尖括号包起来。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 链接与锚点：行内、引用和标题跳转", "item": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/#article", "headline": "Markdown 链接与锚点：行内、引用和标题跳转", "description": "行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。", "url": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 怎么链接到某个标题？", "acceptedAnswer": {"@type": "Answer", "text": "写 [文字](#标题slug)。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪里读。"}}, {"@type": "Question", "name": "为什么锚点链接在妙言里不好用？", "acceptedAnswer": {"@type": "Answer", "text": "预览用标题文字当 id，不是小写 slug，带空格的片段也选不中。只有一个词的标题按原样链接，或者在标题上方加 <a id=\"name\"></a>。"}}, {"@type": "Question", "name": "Markdown 链接里有空格怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "把目的地放进尖括号，[文字](<my file.md>)，或者每个空格写成 %20。"}}, {"@type": "Question", "name": "裸网址会变成链接吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 会，妙言的预览从 V4.10.0 起也会，不带 GFM 自动链接扩展的查看器不会，在意的话用尖括号包起来。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -887,7 +887,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </code></pre>
 <p>定义本身不会被渲染，放在用到它的链接之前或之后都行，所以很多人把它们集中放在笔记末尾。自动链接是把网址放进尖括号，<code>&lt;https://example.com&gt;</code>，网址本身就是显示文字。</p>
 <h2 id="裸网址不等于链接">裸网址不等于链接</h2>
-<p>GitHub 会把单独的 <code>https://example.com</code> 变成链接，因为 GFM 在 CommonMark 之上加了自动链接扩展，但不是每个渲染器都带这个扩展。妙言的渲染器挂了四个 GFM 扩展，表格、脚注、删除线和任务列表，没有自动链接，所以预览和 HTML 导出里的裸网址只是普通文字，而编辑区确实会把它变成可点击的链接，打字时能点的网址，渲染之后就不是链接了。想让网址在哪里都可点，就写成 <code>&lt;https://example.com&gt;</code> 或 <code>[文字](https://example.com)</code>。</p>
+<p>GitHub 会把单独的 <code>https://example.com</code> 变成链接，因为 GFM 在 CommonMark 之上加了自动链接扩展，但不是每个渲染器都带这个扩展。妙言的渲染器从 V4.10.0 起也挂上了它，裸写的 <code>https://</code> 或 <code>www.</code> 地址在编辑区、预览和 HTML 导出里都能点，更早的版本里渲染之后只是普通文字。想让网址在哪里都可点，就写成 <code>&lt;https://example.com&gt;</code> 或 <code>[文字](https://example.com)</code>。</p>
 <h2 id="目的地里的空格和括号">目的地里的空格和括号</h2>
 <p>目的地里不能直接有空格，除非整个目的地包在尖括号里，括号则只能成对出现，或者用反斜杠转义。同一个文件名有三种写法：</p>
 <pre><code class="language-markdown">[报告](&lt;Q3 报告 (终稿).md&gt;)
@@ -920,7 +920,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h3 id="markdown-链接里有空格怎么办">Markdown 链接里有空格怎么办？</h3>
 <p>把目的地放进尖括号，<code>[文字](&lt;my file.md&gt;)</code>，或者每个空格写成 <code>%20</code>。</p>
 <h3 id="裸网址会变成链接吗">裸网址会变成链接吗？</h3>
-<p>GitHub 会，妙言的预览不会，用尖括号包起来。</p>
+<p>GitHub 会，妙言的预览从 V4.10.0 起也会，不带 GFM 自动链接扩展的查看器不会，在意的话用尖括号包起来。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

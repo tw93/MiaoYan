@@ -81,7 +81,7 @@ If the sheet depends on merged cells or lists inside cells, write an HTML `<tabl
 
 ## Pasting a table in MiaoYan
 
-MiaoYan has no CSV or TSV import and does not turn tab-separated text into pipes on paste. It does convert HTML. When the clipboard holds an HTML version containing a `<table>`, a heading, a list, a quote or a code block, the editor inserts Markdown instead of the plain text. For tables the V4.9.0 source shows this:
+MiaoYan has no CSV or TSV import and does not turn tab-separated text into pipes on paste. It does convert HTML. When the clipboard holds an HTML version containing a `<table>`, a heading, a list, a quote or a code block, the editor inserts Markdown instead of the plain text. For tables the V4.11.0 source shows this:
 
 - The first row always becomes the header, with `th` cells or without.
 - A pipe in a cell is escaped as `\|`.

@@ -97,7 +97,7 @@ pandoc resume.md -o resume.pdf --pdf-engine=xelatex -V papersize=a4 -V geometry:
 
 Select the note and choose File > Export > PDF. MiaoYan prints the rendered preview onto an A4 page (595.2 by 841.8 points) with margins of 40 points at the top, 48 at the bottom and 45 at the sides, and saves a file named after the note title in Downloads. The steps and shortcuts are in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/).
 
-What you can and cannot change in version 4.9.0:
+What you can and cannot change in version 4.11.0:
 
 - The text and headings use the Preview Font from settings.
 - Paper size, margins and headers are fixed.

@@ -88,9 +88,9 @@ Prefer semantic tags over `style` attributes. `<mark>` survives on GitHub; `<spa
 
 ## What MiaoYan does with HTML
 
-In V4.9.0 the preview parses with cmark-gfm and attaches four extensions by name, `table`, `footnotes`, `strikethrough` and `tasklist` (`Business/Markdown.swift`, line 22). Tagfilter is not among them. The render call passes `CMARK_OPT_UNSAFE`, and cmark's default would instead replace raw HTML with a placeholder. So every tag and every attribute reaches the preview, `style` and `iframe` included.
+In V4.11.0 the preview parses with cmark-gfm and attaches five extensions by name, `table`, `footnotes`, `strikethrough`, `tasklist` and `autolink` (`Business/Markdown.swift`, line 22). Tagfilter is not among them. The render call passes `CMARK_OPT_UNSAFE`, and cmark's default would instead replace raw HTML with a placeholder. So every tag and every attribute reaches the preview, `style` and `iframe` included.
 
-Apart from rewriting image addresses, nothing between the parser and the screen changes it. The rendered HTML is substituted into the `DOWN_HTML` slot of the preview template, written to a temporary `index-<uuid>.html` and opened with `loadFileURL`, with read access set to `/`, in a web view whose configuration sets `allowsContentJavaScript` to true. The template declares no Content-Security-Policy, and no step on that path removes `script` tags.
+Apart from rewriting image addresses, nothing between the parser and the screen changes it. The rendered HTML is substituted into the `DOWN_HTML` slot of the preview template, written to a temporary `index-<uuid>.html` and opened with `loadFileURL`, with read access limited to that file's own folder since V4.10.0 (local images come in through the app's own `miaoyan-file` scheme), in a web view whose configuration sets `allowsContentJavaScript` to true. The template declares no Content-Security-Policy, and no step on that path removes `script` tags.
 
 The same renderer feeds PDF and HTML export, as [Markdown to HTML](/blog/markdown-to-html/) explains.
 

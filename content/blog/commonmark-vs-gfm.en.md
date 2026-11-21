@@ -1,4 +1,4 @@
-CommonMark is a precise specification of core Markdown, and GitHub Flavored Markdown (GFM) is a strict superset of it that adds tables, task lists, strikethrough, extended autolinks and a filter for a few dangerous HTML tags. Anything beyond that, such as footnotes, math, callouts and diagrams, is an app feature, not a standard. If you want a note to render the same everywhere, stick to CommonMark plus the GFM extensions you have tested. MiaoYan uses the cmark-gfm parser with four extensions turned on, then adds math, callouts and diagrams in its preview.
+CommonMark is a precise specification of core Markdown, and GitHub Flavored Markdown (GFM) is a strict superset of it that adds tables, task lists, strikethrough, extended autolinks and a filter for a few dangerous HTML tags. Anything beyond that, such as footnotes, math, callouts and diagrams, is an app feature, not a standard. If you want a note to render the same everywhere, stick to CommonMark plus the GFM extensions you have tested. MiaoYan uses the cmark-gfm parser with five extensions turned on, then adds math, callouts and diagrams in its preview.
 
 ## Why there are flavors at all
 
@@ -24,10 +24,10 @@ This is the whole story of "flavors". There is a core that is now well specified
 
 ## Which layer MiaoYan implements
 
-MiaoYan renders Markdown with cmark-gfm. In the source, the parser is created with the footnotes option and four extensions attached by name: `table`, `footnotes`, `strikethrough` and `tasklist`. The rendering call passes the option that lets raw HTML through. Two things follow:
+MiaoYan renders Markdown with cmark-gfm. In the source, the parser is created with the footnotes option and five extensions attached by name: `table`, `footnotes`, `strikethrough`, `tasklist` and, since V4.10.0, `autolink`. The rendering call passes the option that lets raw HTML through. Two things follow:
 
-- The extended autolink extension is not attached, so a bare URL is not turned into a link by the parser. Write `<https://example.com>` or a normal link.
-- The tagfilter extension is not attached either, so GFM's disallowed raw HTML rule is not applied in the preview. Raw HTML such as a `<details>` block renders, which is what makes collapsible sections work, and it also means you should only open notes you trust.
+- With the autolink extension attached, a bare `https://example.com` or `www.example.com` becomes a link in the preview and in exports, as on GitHub. Before V4.10.0 it stayed plain text, so `<https://example.com>` is still the safer form for notes read in older versions or other apps.
+- The tagfilter extension is not attached, so GFM's disallowed raw HTML rule is not applied in the preview. Raw HTML such as a `<details>` block renders, which is what makes collapsible sections work, and it also means you should only open notes you trust.
 
 Before the parser runs, MiaoYan shields math. It protects `$$ ... $$`, `$ ... $`, `\( ... \)` and `\[ ... \]` so that underscores and asterisks in a formula are not read as emphasis; KaTeX typesets them later in the preview. After the parser, a post-processing step turns `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` and `[!CAUTION]` blockquotes into callouts, as GitHub does. The preview's script then draws fenced `mermaid`, `plantuml` and `markmap` blocks and colors code with highlight.js. A leading `---` front matter block is stripped from the preview when it looks like YAML.
 

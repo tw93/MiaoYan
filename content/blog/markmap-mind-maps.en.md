@@ -34,7 +34,7 @@ A fenced block with a language tag reaches the page as a code element with the c
 Reading the loader, a few behaviors are fixed:
 
 - The box height is computed from the block: roughly 30 pixels per non-empty line plus a depth allowance, with a minimum of 300 pixels. A long outline gets a taller box, not a smaller font.
-- Node colors come from a built-in palette of twelve colors cycled by depth. The diagram background follows the light or dark appearance through the app's CSS, but a branch palette you choose is not read.
+- Node colors come from a palette of five colors by depth: MiaoYan green at the root, then purple, teal, gold and grey, starting over at the sixth level, with lighter values in dark mode. The diagram background follows the light or dark appearance through the app's CSS, but a branch palette you choose is not read.
 - Everything starts expanded, and in the normal preview it stays that way. The app's handler sets `pointer-events: none` on the block, so clicks never reach the nodes and nothing folds.
 - The map is created with wheel zoom on and drag panning off, but with pointer events off the wheel does nothing either. The map is fitted to the box when it first renders.
 

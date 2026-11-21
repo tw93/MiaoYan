@@ -37,7 +37,7 @@ markdown-it 有对应的插件，装了 `markdown-it-sup` 之后 `29^th^` 变成
 
 ## 妙言的预览会怎么渲染
 
-V4.9.0 的预览用 cmark-gfm 把 Markdown 转成 HTML，`Business/Markdown.swift` 里创建解析器时只传了脚注选项，再按名字挂上 `table`、`footnotes`、`strikethrough` 和 `tasklist` 四个扩展，输出 HTML 时带 `CMARK_OPT_UNSAFE`，让 cmark 保留原始 HTML 而不是替换掉。由此可以得到各种写法的结果：
+V4.11.0 的预览用 cmark-gfm 把 Markdown 转成 HTML，`Business/Markdown.swift` 里创建解析器时只传了脚注选项，再按名字挂上 `table`、`footnotes`、`strikethrough`、`tasklist` 和 `autolink` 五个扩展，输出 HTML 时带 `CMARK_OPT_UNSAFE`，让 cmark 保留原始 HTML 而不是替换掉。由此可以得到各种写法的结果：
 
 | 你写的 | 妙言预览 |
 | --- | --- |

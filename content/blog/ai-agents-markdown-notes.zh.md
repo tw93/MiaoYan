@@ -51,7 +51,7 @@ git commit -m "notes before agent session"
 - **附件。** 只挪笔记不挪图片，图片路径就断了。
 - **一次改太多。** 「把我的笔记都整理一下」是一次很难审的批量修改，一次给一个文件夹更好。
 
-## 妙言 V4.9.0 能给 Agent 什么
+## 妙言 V4.11.0 能给 Agent 什么
 
 妙言把每篇笔记存成你选的文件夹里的一个 `.md` 文件，所以上面说的文件夹就是你的笔记库，开源仓库里另有两样东西能帮上 Agent。
 
@@ -67,7 +67,7 @@ git commit -m "notes before agent session"
 npx skills add tw93/MiaoYan/skills/miaoyan -g
 ```
 
-这个 Skill 是一套说明，不是连到应用上的插件，按 V4.9.0 里的内容，它要求 Agent：
+这个 Skill 是一套说明，不是连到应用上的插件，按 V4.11.0 里的内容，它要求 Agent：
 
 - 先判断你要的是写笔记、做 PPT、整理笔记还是命令行操作，并沿用你的语言，不擅自翻译；
 - 修改时保留已有的 front matter、围栏代码、行内代码、公式、链接、wikilink 和附件路径；

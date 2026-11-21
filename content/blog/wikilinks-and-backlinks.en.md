@@ -1,4 +1,4 @@
-A wikilink is a link written as a note's title inside double square brackets, like `[[Project plan]]`. In MiaoYan, typing one links to the note whose file name exactly matches that title, and the linked note lists incoming references as backlinks. They keep links short and readable. The trade-off is that wikilinks are not part of standard Markdown. In MiaoYan, they match titles only, so renaming a note breaks existing links, and aliases or heading links are not supported.
+A wikilink is a link written as a note's title inside double square brackets, like `[[Project plan]]`. In MiaoYan, typing one links to the note whose file name exactly matches that title, and the linked note lists incoming references as backlinks. They keep links short and readable. The trade-off is that wikilinks are not part of standard Markdown. In MiaoYan, they match titles only, so renaming a note breaks existing links; `[[Title|shown text]]` changes the text a link shows, while heading links and embeds are not supported.
 
 ## Wikilinks versus normal Markdown links
 
@@ -13,7 +13,7 @@ A wikilink drops the path and the label: `[[Project plan]]`. You name the note a
 | Works in any Markdown viewer | Yes | No, the app must support it |
 | Survives moving the file | No, the path changes | Yes, if the title stays |
 | Survives renaming the file | Only if the path is updated | No, the title changes |
-| Custom link text | `[text](...)` | Not in MiaoYan |
+| Custom link text | `[text](...)` | `[[Note title|text]]` |
 
 Portability is the real cost. Open the same folder in a viewer that does not know wikilinks and `[[Project plan]]` shows up as literal text. If you publish notes to GitHub or a static site, expect to convert them.
 
@@ -27,19 +27,19 @@ See [[Project plan]] for next steps, and [[Meeting notes 2026-10]] for context.
 
 The title is the file name without its extension, so `Project plan.md` is `[[Project plan]]`. The match is case-sensitive and exact, so extra characters break the link. MiaoYan's agent skill makes the same point: keep the target aligned with the note title and do not invent alias, heading or block-reference syntax.
 
-This differs from Obsidian. Obsidian documents `[[Example|Custom name]]` for display text, `[[Note#Heading]]` for headings and `#^block-id` for blocks. MiaoYan does not implement any of them. Its index reads everything between the brackets as the title, so `[[Project plan|plan]]` is a link to a note titled "Project plan|plan", which does not exist.
+Obsidian documents `[[Example|Custom name]]` for display text, `[[Note#Heading]]` for headings and `#^block-id` for blocks. Since V4.10.0 MiaoYan reads the first form the same way: `[[Project plan|plan]]` shows "plan" in the preview, opens Project plan, and counts as a backlink for Project plan. The other two are not implemented, so `[[Project plan#Budget]]` looks for a note titled "Project plan#Budget", which does not exist.
 
 ## How MiaoYan implements them
 
 Here is how it works, based on the source.
 
-**Pattern matching.** The editor and the index both look for `[[` followed by text and `]]`. The editor highlights the title as a link while you write. The index uses a separate pattern that takes any run of characters that is not a closing bracket, trims surrounding spaces, and treats the result as the target title.
+**Pattern matching.** The editor and the index both look for `[[` followed by text and `]]`. The editor highlights the title as a link while you write. The index uses a separate pattern that takes any run of characters that is not a closing bracket, keeps the part before the first `|`, trims surrounding spaces, and treats the result as the target title.
 
 **The index.** At launch, MiaoYan builds the index from every note file under the library folders, reading from disk the notes whose text is not loaded, and records for each title the set of titles it links to (outgoing links) and the set of titles that link to it (incoming links). Saving a note updates its entry in the index.
 
 **Clicking a link.** A wikilink becomes a `miaoyan://goto/<title>` address, the same URL scheme the `miao open` command uses. MiaoYan looks for a note with exactly that title. One match opens it. No match shows "No note has this title" and creates nothing. Several matches, for example two folders that each contain `Meeting notes.md`, start a search for that title and show "Several notes share this title. Showing search results". So unique titles are not just tidy, they are what makes a link unambiguous.
 
-**Preview and export.** For the rendered preview, MiaoYan rewrites each wikilink into an ordinary Markdown link of the form `[Title](miaoyan://goto/Title)` before rendering, and skips anything inside code spans and fenced code blocks, so an `[[example]]` in a code sample stays as text. The export path uses the same preparation, which means an exported file contains `miaoyan://` links that only work on a Mac with MiaoYan installed.
+**Preview and export.** For the rendered preview, MiaoYan rewrites each wikilink into an ordinary Markdown link of the form `[Title](miaoyan://goto/Title)` before rendering, with the text after a `|` as the link text, and skips anything inside code spans and fenced code blocks, so an `[[example]]` in a code sample stays as text. The export path uses the same preparation, which means an exported file contains `miaoyan://` links that only work on a Mac with MiaoYan installed.
 
 **Copy URL.** The "Copy URL" command places this same address on the clipboard, so you can paste a link to a note into another app.
 
@@ -55,7 +55,7 @@ The list is plain text and the titles are not clickable, so use the search field
 - **"No note has this title".** The target does not match any file name exactly. Check case, spaces and punctuation, and remember that `Project plan.md` is `Project plan`.
 - **You renamed a note and links elsewhere stopped working.** MiaoYan does not rewrite links in other notes when you rename a file. Search for the old title with the search field, which looks in both titles and bodies, and update the links.
 - **Backlinks look incomplete.** The index covers every note file in the library, so a missing backlink usually means the title inside the link does not match the note's title exactly. Check case, spaces and punctuation.
-- **A link written for another app shows as text.** Aliases, heading links and embeds such as `![[image.png]]` are Obsidian syntax and MiaoYan does not support them. Convert them to plain titles or standard Markdown.
+- **A link written for another app shows as text.** Heading links, block references and embeds such as `![[image.png]]` are Obsidian syntax and MiaoYan does not support them. Convert them to plain titles or standard Markdown.
 
 ## When to use plain links instead
 
@@ -73,7 +73,7 @@ No. Use the title only, such as `[[Project plan]]`.
 
 ### Does MiaoYan support `[[Note|alias]]` or `[[Note#Heading]]`?
 
-No. The whole text between the brackets is treated as the title, so those forms do not resolve.
+The first, yes, since V4.10.0: `[[Note|alias]]` links to Note and shows alias. `[[Note#Heading]]` does not resolve, because everything before a `|` is treated as the title.
 
 ### Do wikilinks work in code blocks?
 

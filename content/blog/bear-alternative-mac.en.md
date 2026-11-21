@@ -44,8 +44,8 @@ For the iPhone and iPad, MiaoYan has no account and no sync service of its own. 
 ## What Bear does better, and what you lose
 
 - **Tags across folders.** MiaoYan has none. You can type `#recipes` as text and search for it, but it is only text.
-- **A mobile app built for writing.** Bear has native iPhone and iPad apps, and its FAQ documents iPadOS keyboard shortcuts. MiaoYan's iPhone and iPad app opens a note in a reader first, switches to an editor when you tap the edit button, and has no keyboard shortcuts of its own.
-- **Widgets, Apple Watch and Shortcuts.** Bear's FAQ lists these. MiaoYan's pages do not mention them.
+- **A mobile app built for writing.** Bear has native iPhone and iPad apps, and its FAQ documents iPadOS keyboard shortcuts. MiaoYan's iPhone and iPad app opens a note in a reader first and switches to an editor when you tap the edit button; with a hardware keyboard it has had its own shortcuts since V4.9.0, such as `⌘T` for a task, `⌘K` for a link, and `⌘]` and `⌘[` to shift lines.
+- **Apple Watch.** Bear's FAQ lists a Watch app, and MiaoYan has none. Widgets and Shortcuts are no longer a gap: since 4.11.0 MiaoYan's iPhone and iPad app has Recent Notes widgets for the Home Screen and Lock Screen, a New Note button for the Lock Screen and Control Center, and Shortcuts and Siri actions that create, open, search and append to notes.
 - **Export to PDF, DOCX and JPG as Pro features.** MiaoYan has its own PDF route, described in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/), without DOCX.
 - **One note, several places.** A note lives in one folder, so it cannot also sit under a second heading.
 

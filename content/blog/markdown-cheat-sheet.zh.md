@@ -129,7 +129,7 @@ CommonMark 里段落中间的单个换行是软换行，渲染出来是一个空
 
 ### 自动链接
 
-GFM 会把纯文本网址变成链接，不过妙言的解析器只打开了 table、footnotes、strikethrough 和 tasklist 这几个扩展，autolink 不在其中，重要的网址写成 `<https://example.com>` 或普通链接更稳妥。
+GFM 会把纯文本网址变成链接，妙言的解析器从 V4.10.0 起也打开了 autolink 扩展，`https://example.com` 和 `www.example.com` 在预览里都是链接，笔记还要放到只认 CommonMark 的查看器里读的话，重要的网址写成 `<https://example.com>` 或普通链接更稳妥。
 
 ## GFM 之外
 

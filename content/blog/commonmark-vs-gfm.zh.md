@@ -1,4 +1,4 @@
-CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言用的是 cmark-gfm 解析器，打开了四个扩展，然后在预览里另外加上公式、提示框和图表。
+CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言用的是 cmark-gfm 解析器，打开了五个扩展，然后在预览里另外加上公式、提示框和图表。
 
 ## 为什么会有这么多方言
 
@@ -24,10 +24,10 @@ John Gruber 在 2004 年发布 Markdown，当时是一份语法说明加一个 P
 
 ## 妙言实现到哪一层
 
-妙言用 cmark-gfm 渲染 Markdown。源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，`table`、`footnotes`、`strikethrough` 和 `tasklist`，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。
+妙言用 cmark-gfm 渲染 Markdown。源码里，解析器带着脚注选项创建，并按名字挂了五个扩展，`table`、`footnotes`、`strikethrough`、`tasklist` 和 V4.10.0 起加上的 `autolink`，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。
 
-- 扩展自动链接没有挂上，所以裸 URL 不会被解析器变成链接，要写 `<https://example.com>` 或者普通链接。
-- tagfilter 也没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，`<details>` 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。
+- 挂上了扩展自动链接，裸写的 `https://example.com` 或 `www.example.com` 在预览和导出里都会变成链接，和 GitHub 一样，V4.10.0 之前它们只是普通文字，所以要在旧版本或别的应用里读的笔记，写成 `<https://example.com>` 还是更稳。
+- tagfilter 没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，`<details>` 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。
 
 解析之前，妙言会先保护公式，`$$ ... $$`、`$ ... $`、`\( ... \)` 和 `\[ ... \]` 里的下划线和星号不会被当成强调，预览里再由 KaTeX 排版。解析之后有一步后处理，把 `> [!NOTE]`、`[!TIP]`、`[!IMPORTANT]`、`[!WARNING]`、`[!CAUTION]` 这五种引用块变成提示框，和 GitHub 的写法一致。预览页的脚本再把围栏里的 `mermaid`、`plantuml`、`markmap` 画出来，用 highlight.js 给代码上色，文件开头的 `---` front matter 在预览里会被去掉（前提是中间看起来像 YAML）。
 

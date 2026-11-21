@@ -20,7 +20,7 @@
 <meta property="og:description" content="Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp">
 <meta property="article:published_time" content="2026-10-30">
-<meta property="article:modified_time" content="2026-10-30">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Excel to Markdown table: paste, convert and check", "item": "https://miaoyan.app/blog/excel-to-markdown-table/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/excel-to-markdown-table/#article", "headline": "Excel to Markdown table: paste, convert and check", "description": "Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.", "url": "https://miaoyan.app/blog/excel-to-markdown-table/", "mainEntityOfPage": "https://miaoyan.app/blog/excel-to-markdown-table/", "datePublished": "2026-10-30", "dateModified": "2026-10-30", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does pasting from Excel give me tabs?", "acceptedAnswer": {"@type": "Answer", "text": "Spreadsheet apps copy a range as tab-separated plain text. Markdown tables use pipes, so the text needs converting first."}}, {"@type": "Question", "name": "Can a Markdown table have merged cells?", "acceptedAnswer": {"@type": "Answer", "text": "No. Pipe tables are a plain grid. Use an HTML table with colspan or rowspan, or split the data."}}, {"@type": "Question", "name": "How do I convert a CSV file to a Markdown table?", "acceptedAnswer": {"@type": "Answer", "text": "Run pandoc -f csv -t gfm file.csv, or import the file into a generator such as tablesgenerator.com. Remove line breaks inside cells first if you want Pandoc to write a pipe table."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Excel to Markdown table: paste, convert and check", "item": "https://miaoyan.app/blog/excel-to-markdown-table/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/excel-to-markdown-table/#article", "headline": "Excel to Markdown table: paste, convert and check", "description": "Turn cells copied from Excel, Numbers or Google Sheets into a Markdown table with a generator, Pandoc or awk, and check merged cells, pipes and line breaks.", "url": "https://miaoyan.app/blog/excel-to-markdown-table/", "mainEntityOfPage": "https://miaoyan.app/blog/excel-to-markdown-table/", "datePublished": "2026-10-30", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/excel-to-markdown-table.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does pasting from Excel give me tabs?", "acceptedAnswer": {"@type": "Answer", "text": "Spreadsheet apps copy a range as tab-separated plain text. Markdown tables use pipes, so the text needs converting first."}}, {"@type": "Question", "name": "Can a Markdown table have merged cells?", "acceptedAnswer": {"@type": "Answer", "text": "No. Pipe tables are a plain grid. Use an HTML table with colspan or rowspan, or split the data."}}, {"@type": "Question", "name": "How do I convert a CSV file to a Markdown table?", "acceptedAnswer": {"@type": "Answer", "text": "Run pandoc -f csv -t gfm file.csv, or import the file into a generator such as tablesgenerator.com. Remove line breaks inside cells first if you want Pandoc to write a pipe table."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -947,7 +947,7 @@ pandoc -f tsv -t gfm data.tsv
 <p>The limits come from the GFM spec. The header row and divider row must have the same number of cells or the block is not a table. A body row with fewer cells gets empty cells added, extra cells are ignored, and block-level elements cannot go inside a cell.</p>
 <p>If the sheet depends on merged cells or lists inside cells, write an HTML <code>&lt;table&gt;</code> with <code>colspan</code> or <code>rowspan</code>, or split it into two simpler tables.</p>
 <h2 id="pasting-a-table-in-miaoyan">Pasting a table in MiaoYan</h2>
-<p>MiaoYan has no CSV or TSV import and does not turn tab-separated text into pipes on paste. It does convert HTML. When the clipboard holds an HTML version containing a <code>&lt;table&gt;</code>, a heading, a list, a quote or a code block, the editor inserts Markdown instead of the plain text. For tables the V4.9.0 source shows this:</p>
+<p>MiaoYan has no CSV or TSV import and does not turn tab-separated text into pipes on paste. It does convert HTML. When the clipboard holds an HTML version containing a <code>&lt;table&gt;</code>, a heading, a list, a quote or a code block, the editor inserts Markdown instead of the plain text. For tables the V4.11.0 source shows this:</p>
 <ul>
 <li>The first row always becomes the header, with <code>th</code> cells or without.</li>
 <li>A pipe in a cell is escaped as <code>\|</code>.</li>

@@ -51,7 +51,7 @@ Start with tasks that should not write anything: "summarize the notes tagged `pr
 - **Attachments.** Moving a note without its images leaves broken image paths.
 - **Many files at once.** A "tidy up all my notes" request is a bulk edit that is hard to review, so ask for one folder at a time.
 
-## What MiaoYan gives an agent at V4.9.0
+## What MiaoYan gives an agent at V4.11.0
 
 MiaoYan stores each note as a `.md` file in the folder you choose, so the folder above is simply your library. Two pieces in the open-source repository help an agent.
 

@@ -97,7 +97,7 @@ pandoc resume.md -o resume.pdf --pdf-engine=xelatex -V papersize=a4 -V geometry:
 
 选中笔记，点「文件」>「导出」>「PDF」，妙言把渲染好的预览印到 A4 上（595.2 × 841.8 点），上边距 40 点、下边距 48 点、左右各 45 点，文件按笔记标题命名存到「下载」。具体步骤和快捷键见[在 Mac 上把 Markdown 转成 PDF](/zh/blog/markdown-to-pdf-mac/)。
 
-4.9.0 里能改和不能改的有这些：
+4.11.0 里能改和不能改的有这些：
 
 - 正文和标题用设置里的预览字体。
 - 纸张、边距、页眉都是固定的。

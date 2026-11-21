@@ -69,12 +69,12 @@ For files that GitHub renders, you do not need a table of contents at all. GitHu
 
 MiaoYan shows a table of contents in the preview, not in the Markdown file, and it needs no marker. The menu item is View, Toggle TOC (切换目录 in the Chinese interface), with the shortcut `Cmd+5`.
 
-What the panel does, from the V4.9.0 source:
+What the panel does, from the V4.11.0 source:
 
 - It lists headings of levels 1 to 3 in a floating panel on the right edge of the preview. A narrow strip on the edge shows it when you hover; `Cmd+5` opens it pinned, and a pin button in the panel keeps it open.
 - It appears only when the note has at least two headings of level 1 to 3, and when the preview is narrower than 600 pixels the edge strip is hidden and an unpinned panel closes.
 - The menu item works in preview and split mode, and is disabled in MiaoYan PPT mode.
-- The first time you see a preview, a small red "TOC" badge appears on the edge strip, once.
+- The first time a preview has a table of contents to show, a small green "TOC" badge appears beside the edge strip, once. Clicking it opens the panel, and exports never include it.
 - Click an entry and the preview scrolls to that heading. The active heading is highlighted as you scroll.
 - PDF export hides the panel and instead writes headings h1 to h3 into the PDF as bookmarks, which a PDF reader shows in its sidebar.
 

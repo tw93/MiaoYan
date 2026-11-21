@@ -20,7 +20,7 @@
 <meta property="og:description" content="Write a Mermaid erDiagram in Markdown: read crow&#x27;s foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/mermaid-er-diagram.webp">
 <meta property="article:published_time" content="2026-11-04">
-<meta property="article:modified_time" content="2026-11-04">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid ER diagram syntax: entities, crow's foot and keys", "item": "https://miaoyan.app/blog/mermaid-er-diagram/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/mermaid-er-diagram/#article", "headline": "Mermaid ER diagram syntax: entities, crow's foot and keys", "description": "Write a Mermaid erDiagram in Markdown: read crow's foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema.", "url": "https://miaoyan.app/blog/mermaid-er-diagram/", "mainEntityOfPage": "https://miaoyan.app/blog/mermaid-er-diagram/", "datePublished": "2026-11-04", "dateModified": "2026-11-04", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/mermaid-er-diagram.webp", "timeRequired": "PT8M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does ||--o{ mean in a Mermaid ER diagram?", "acceptedAnswer": {"@type": "Answer", "text": "Exactly one on the left, zero or more on the right, joined by a solid identifying line. USER ||--o{ POST is one user with any number of posts."}}, {"@type": "Question", "name": "How do I show a many-to-many relationship?", "acceptedAnswer": {"@type": "Answer", "text": "Draw both sides as zero or more with }o--o{ for a conceptual view, or add a join table with a one-to-many relationship from each side for a physical schema, as the blog example does."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid ER diagram syntax: entities, crow's foot and keys", "item": "https://miaoyan.app/blog/mermaid-er-diagram/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/mermaid-er-diagram/#article", "headline": "Mermaid ER diagram syntax: entities, crow's foot and keys", "description": "Write a Mermaid erDiagram in Markdown: read crow's foot markers, set identifying lines, add PK, FK and UK attributes, and fix common errors with a blog schema.", "url": "https://miaoyan.app/blog/mermaid-er-diagram/", "mainEntityOfPage": "https://miaoyan.app/blog/mermaid-er-diagram/", "datePublished": "2026-11-04", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/mermaid-er-diagram.webp", "timeRequired": "PT8M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What does ||--o{ mean in a Mermaid ER diagram?", "acceptedAnswer": {"@type": "Answer", "text": "Exactly one on the left, zero or more on the right, joined by a solid identifying line. USER ||--o{ POST is one user with any number of posts."}}, {"@type": "Question", "name": "How do I show a many-to-many relationship?", "acceptedAnswer": {"@type": "Answer", "text": "Draw both sides as zero or more with }o--o{ for a conceptual view, or add a join table with a one-to-many relationship from each side for a physical schema, as the blog example does."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1014,7 +1014,7 @@ erDiagram
 <li><strong>A relationship line fails.</strong> If you give anything after the first entity, you need the marker, second entity and label. <code>USER ||--o{ POST</code> without <code>: writes</code> is incomplete.</li>
 <li><strong>An attribute fails.</strong> Each line needs both a type and a name, so <code>id PK</code> alone is wrong; write <code>int id PK</code>. Keys are <code>PK</code>, <code>FK</code> and <code>UK</code> only, and a comment cannot contain a double quote.</li>
 <li><strong>A name with spaces fails.</strong> Quote it: <code>"order item"</code>. Quote labels with spaces too.</li>
-<li><strong>Newer syntax breaks.</strong> The Mermaid documentation also describes optional types written as <code>string? name</code> (from 11.16.0) and subgraphs (from 11.17.0), and its page documents version 12 defaults. MiaoYan V4.9.0 bundles 11.14.0, so skip those: a <code>?</code> type fails the diagram, and a subgraph does not raise an error but draws <code>subgraph</code>, the group name and <code>end</code> as extra entity boxes. Expect the preview to look a bit different from the pictures on the Mermaid site.</li>
+<li><strong>Newer syntax breaks.</strong> The Mermaid documentation also describes optional types written as <code>string? name</code> (from 11.16.0) and subgraphs (from 11.17.0), and its page documents version 12 defaults. MiaoYan V4.11.0 bundles 11.14.0, so skip those: a <code>?</code> type fails the diagram, and a subgraph does not raise an error but draws <code>subgraph</code>, the group name and <code>end</code> as extra entity boxes. Expect the preview to look a bit different from the pictures on the Mermaid site.</li>
 <li><strong>A huge schema is unreadable.</strong> Split it by area, one diagram for accounts and one for content, rather than forty entities in one.</li>
 </ul>
 <p>To test a diagram, type <code>/mermaid</code> and press <code>Tab</code> to insert a template, replace its contents with the ER text, and open the preview with <code>⌘3</code> or split mode with <code>⌘\</code>. An ER diagram is also easy to keep next to a <a href="/blog/markdown-tables/">Markdown table</a> of column notes for the details Mermaid cannot hold, and <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a> covers exporting the result.</p>

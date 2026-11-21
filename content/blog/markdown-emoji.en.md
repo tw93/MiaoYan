@@ -54,7 +54,7 @@ The emoji is dropped from the id, but the space next to it becomes a hyphen, so 
 
 To avoid the problem, keep emoji out of headings you link to, or put `<a name="..."></a>` above the heading and link to that. The general rules are in [Markdown links and anchors](/blog/markdown-links-and-anchors/).
 
-## What MiaoYan V4.9.0 does
+## What MiaoYan V4.11.0 does
 
 The preview converts shortcodes. It loads `emoji.min.js`, a copy of the open-source js-emoji library, and after the note is rendered a function in `common.js` walks the text nodes and replaces each `:name:` the library knows with the Unicode character, not an image, so `:tada:` becomes 🎉 in the system emoji font. It skips anything inside `<code>` and `<pre>`. It runs when a note loads and again on blocks inserted while you edit in split view, and a unit test in the repository asserts that `:smile:` is gone from the preview text after both.
 

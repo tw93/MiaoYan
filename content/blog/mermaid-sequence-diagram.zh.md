@@ -1,4 +1,4 @@
-Mermaid 时序图的写法，是在语言名为 `mermaid` 的围栏代码块里先写一行 `sequenceDiagram`，后面每条消息一行，格式是 `发送方->>接收方: 文字`。参与者按第一次出现的顺序排列，图很小的时候可以不声明，想要好读的标签、固定的顺序或者火柴人，再单独声明。本文讲到 Mermaid 11.14.0 为止的语法，这是妙言 V4.9.0 随应用打包的版本，其他图类型放在 [Markdown 里画 Mermaid 图](/zh/blog/mermaid-diagrams-in-markdown/) 那篇里。
+Mermaid 时序图的写法，是在语言名为 `mermaid` 的围栏代码块里先写一行 `sequenceDiagram`，后面每条消息一行，格式是 `发送方->>接收方: 文字`。参与者按第一次出现的顺序排列，图很小的时候可以不声明，想要好读的标签、固定的顺序或者火柴人，再单独声明。本文讲到 Mermaid 11.14.0 为止的语法，这是妙言 V4.11.0 随应用打包的版本，其他图类型放在 [Markdown 里画 Mermaid 图](/zh/blog/mermaid-diagrams-in-markdown/) 那篇里。
 
 ## 最小的时序图
 
@@ -125,7 +125,7 @@ sequenceDiagram
 
 ## 自动编号和背景高亮
 
-在消息之前单独一行写 `autonumber`，每根箭头就有了编号。后面可以再跟起始值和增量，但小数值是 Mermaid 11.15.0 才有的，妙言 V4.9.0 还没有，所以只写 `autonumber` 就好。
+在消息之前单独一行写 `autonumber`，每根箭头就有了编号。后面可以再跟起始值和增量，但小数值是 Mermaid 11.15.0 才有的，妙言 V4.11.0 还没有，所以只写 `autonumber` 就好。
 
 `rect` 给图的一部分铺上彩色背景，接受 `rgb()` 或 `rgba()`，用 `end` 结束。
 
@@ -171,7 +171,7 @@ sequenceDiagram
 
 ## 妙言怎么渲染它
 
-预览先把围栏块转成带 `language-mermaid` 类的 HTML，再由脚本把文字交给随应用打包的 `mermaid.min.js`，V4.9.0 源码里它报的版本是 11.14.0，生成的 SVG 会替换掉代码块，整个过程不联网，所以离线也能用，颜色跟着浅色或深色外观走。想插入起手模板，输入 `/mermaid` 再按 `Tab`，模板是一张流程图，把里面的内容换成 `sequenceDiagram` 就行。
+预览先把围栏块转成带 `language-mermaid` 类的 HTML，再由脚本把文字交给随应用打包的 `mermaid.min.js`，V4.11.0 源码里它报的版本是 11.14.0，生成的 SVG 会替换掉代码块，整个过程不联网，所以离线也能用，颜色跟着浅色或深色外观走。想插入起手模板，输入 `/mermaid` 再按 `Tab`，模板是一张流程图，把里面的内容换成 `sequenceDiagram` 就行。
 
 ## 常见错误
 
@@ -181,7 +181,7 @@ sequenceDiagram
 - **结束一个没有激活的参与者。** 参与者没有打开的激活条时写 `-` 或 `deactivate`，Mermaid 会报 `Trying to inactivate an inactive participant` 并停止渲染，图就一直显示成代码，数一下 `+` 和 `-` 是不是成对。
 - **创建发送方。** `create participant Carl` 后面必须紧跟一条发给 Carl 的消息，而不是 Carl 发出的。
 - **消息后面加注释。** `%%` 只能整行使用。
-- **更新的语法。** Mermaid 文档里标着 11.15.0 及以后的内容，比如 `autonumber` 的小数值，在 V4.9.0 里渲染不出来。
+- **更新的语法。** Mermaid 文档里标着 11.15.0 及以后的内容，比如 `autonumber` 的小数值，在 V4.11.0 里渲染不出来。
 
 检查时按 `⌘3` 切到预览，或者按 `⌘\` 进分栏。导出 PDF 用的是同一份预览，见 [Mac 上 Markdown 转 PDF](/zh/blog/markdown-to-pdf-mac/)，演示模式里图也会渲染，见 [Markdown 转幻灯片](/zh/blog/markdown-to-slides/)。
 

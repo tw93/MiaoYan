@@ -20,7 +20,7 @@
 <meta property="og:description" content="讲清 Markdown 开头空格消失和变成代码块的原因，以及首行缩进、整块缩进、列表项缩进和制表符各自怎么写。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-indent.webp">
 <meta property="article:published_time" content="2026-10-23">
-<meta property="article:modified_time" content="2026-10-23">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 缩进：空格为什么会消失，以及能用的写法", "item": "https://miaoyan.app/zh/blog/markdown-indent/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-indent/#article", "headline": "Markdown 缩进：空格为什么会消失，以及能用的写法", "description": "讲清 Markdown 开头空格消失和变成代码块的原因，以及首行缩进、整块缩进、列表项缩进和制表符各自怎么写。", "url": "https://miaoyan.app/zh/blog/markdown-indent/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-indent/", "datePublished": "2026-10-23", "dateModified": "2026-10-23", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-indent.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 有首行缩进的语法吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有。CommonMark 规范没有定义这样的语法，只能靠字符、原始 HTML 或者样式表。"}}, {"@type": "Question", "name": "中文缩进两个字要写几个 &nbsp;？", "acceptedAnswer": {"@type": "Answer", "text": "用两个 U+3000，在中日韩字体里它和汉字一样宽；&nbsp; 只有当前字体里一个空格那么宽，要接近的话用 &emsp;&emsp;。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 缩进：空格为什么会消失，以及能用的写法", "item": "https://miaoyan.app/zh/blog/markdown-indent/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-indent/#article", "headline": "Markdown 缩进：空格为什么会消失，以及能用的写法", "description": "讲清 Markdown 开头空格消失和变成代码块的原因，以及首行缩进、整块缩进、列表项缩进和制表符各自怎么写。", "url": "https://miaoyan.app/zh/blog/markdown-indent/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-indent/", "datePublished": "2026-10-23", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-indent.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 有首行缩进的语法吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有。CommonMark 规范没有定义这样的语法，只能靠字符、原始 HTML 或者样式表。"}}, {"@type": "Question", "name": "中文缩进两个字要写几个 &nbsp;？", "acceptedAnswer": {"@type": "Answer", "text": "用两个 U+3000，在中日韩字体里它和汉字一样宽；&nbsp; 只有当前字体里一个空格那么宽，要接近的话用 &emsp;&emsp;。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -921,7 +921,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <pre><code class="language-markdown">&lt;p style=&quot;text-indent: 2em&quot;&gt;这一段缩进两个字宽。&lt;/p&gt;
 </code></pre>
 <p>有两处限制。原始 HTML 块里面不会再按 Markdown 解析，<code>&lt;p&gt;</code> 里的 <code>**加粗**</code> 会保留星号，这个块也在第一个空行处结束，所以每个段落都要自己的标签。</p>
-<p>妙言 4.9.0 用 cmark-gfm 的 unsafe 模式渲染，原始 HTML 和 <code>style</code> 属性会原样进入预览。妙言没有自定义预览样式表的设置，预览页面也不会加载用户样式表，所以没法用一行 CSS 让所有段落缩进。它自带的排版不给段落缩进，所以在妙言里能用的就是上面的字符，或者每段加一个 <code>style</code>。真要用样式表，就导出成 HTML 再手改文件，见 <a href="/zh/blog/markdown-to-html/">Markdown 转 HTML</a>。</p>
+<p>妙言 4.11.0 用 cmark-gfm 的 unsafe 模式渲染，原始 HTML 和 <code>style</code> 属性会原样进入预览。妙言没有自定义预览样式表的设置，预览页面也不会加载用户样式表，所以没法用一行 CSS 让所有段落缩进。它自带的排版不给段落缩进，所以在妙言里能用的就是上面的字符，或者每段加一个 <code>style</code>。真要用样式表，就导出成 HTML 再手改文件，见 <a href="/zh/blog/markdown-to-html/">Markdown 转 HTML</a>。</p>
 <h2 id="让整块内容缩进">让整块内容缩进</h2>
 <p>引用块能让文字往里缩，但它同时改了含义：</p>
 <pre><code class="language-markdown">&gt; 这一块从左边往里缩。

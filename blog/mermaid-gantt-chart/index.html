@@ -20,7 +20,7 @@
 <meta property="og:description" content="Write a Mermaid gantt chart in Markdown: dateFormat vs axisFormat, task ids and after, excludes weekends, todayMarker, tickInterval and a full release plan.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/mermaid-gantt-chart.webp">
 <meta property="article:published_time" content="2026-10-26">
-<meta property="article:modified_time" content="2026-10-26">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid gantt chart: dateFormat, sections and tasks", "item": "https://miaoyan.app/blog/mermaid-gantt-chart/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/mermaid-gantt-chart/#article", "headline": "Mermaid gantt chart: dateFormat, sections and tasks", "description": "Write a Mermaid gantt chart in Markdown: dateFormat vs axisFormat, task ids and after, excludes weekends, todayMarker, tickInterval and a full release plan.", "url": "https://miaoyan.app/blog/mermaid-gantt-chart/", "mainEntityOfPage": "https://miaoyan.app/blog/mermaid-gantt-chart/", "datePublished": "2026-10-26", "dateModified": "2026-10-26", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/mermaid-gantt-chart.webp", "timeRequired": "PT8M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the difference between dateFormat and axisFormat?", "acceptedAnswer": {"@type": "Answer", "text": "dateFormat is how you write dates in task lines. axisFormat is how the timeline prints them."}}, {"@type": "Question", "name": "How do I make a task start after another one?", "acceptedAnswer": {"@type": "Answer", "text": "Give the first task an id and write after <id> as the second task's start. Several ids work, and the task starts after the last of them ends."}}, {"@type": "Question", "name": "How do I skip weekends in a Mermaid Gantt chart?", "acceptedAnswer": {"@type": "Answer", "text": "Add excludes weekends under dateFormat. Bars stretch across the days they skip."}}, {"@type": "Question", "name": "Can a Gantt chart show hours?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use a dateFormat with time tokens such as YYYY-MM-DD HH:mm, durations in h or m, and an axisFormat such as %H:%M."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid gantt chart: dateFormat, sections and tasks", "item": "https://miaoyan.app/blog/mermaid-gantt-chart/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/mermaid-gantt-chart/#article", "headline": "Mermaid gantt chart: dateFormat, sections and tasks", "description": "Write a Mermaid gantt chart in Markdown: dateFormat vs axisFormat, task ids and after, excludes weekends, todayMarker, tickInterval and a full release plan.", "url": "https://miaoyan.app/blog/mermaid-gantt-chart/", "mainEntityOfPage": "https://miaoyan.app/blog/mermaid-gantt-chart/", "datePublished": "2026-10-26", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/mermaid-gantt-chart.webp", "timeRequired": "PT8M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the difference between dateFormat and axisFormat?", "acceptedAnswer": {"@type": "Answer", "text": "dateFormat is how you write dates in task lines. axisFormat is how the timeline prints them."}}, {"@type": "Question", "name": "How do I make a task start after another one?", "acceptedAnswer": {"@type": "Answer", "text": "Give the first task an id and write after <id> as the second task's start. Several ids work, and the task starts after the last of them ends."}}, {"@type": "Question", "name": "How do I skip weekends in a Mermaid Gantt chart?", "acceptedAnswer": {"@type": "Answer", "text": "Add excludes weekends under dateFormat. Bars stretch across the days they skip."}}, {"@type": "Question", "name": "Can a Gantt chart show hours?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use a dateFormat with time tokens such as YYYY-MM-DD HH:mm, durations in h or m, and an axisFormat such as %H:%M."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -945,7 +945,7 @@ gantt
 <p><code>Editor work</code> and <code>Preview work</code> both start when <code>spec</code> ends, so they run in parallel. <code>Beta</code> waits for the later of the two. <code>excludes weekends</code> pushes every bar across Saturdays and Sundays, and the 8d editor task therefore lasts longer than eight calendar days. The milestone takes zero days and appears as a single marker on the day the notarize step ends. Change one duration and everything after it moves, which is the reason to use <code>after &lt;id&gt;</code> rather than typing every date.</p>
 <h2 id="how-it-actually-works">How it actually works</h2>
 <p>A fenced block with the language <code>mermaid</code> is plain text to the Markdown parser. Your preview finds it after the page loads and hands the text to the Mermaid library, which parses the Gantt grammar, resolves every <code>after</code> reference into dates, applies the exclusions and draws an SVG. </p>
-<p>MiaoYan V4.9.0 bundles Mermaid 11.14.0 and runs it from files inside the app, so Gantt charts render without a network connection. The Gantt grammar in that bundled file includes <code>tickInterval</code>, <code>weekend</code>, <code>until</code>, <code>todayMarker</code> and the <code>vert</code> tag. Syntax added in a later Mermaid release is not, so test a new option with a small chart first.</p>
+<p>MiaoYan V4.11.0 bundles Mermaid 11.14.0 and runs it from files inside the app, so Gantt charts render without a network connection. The Gantt grammar in that bundled file includes <code>tickInterval</code>, <code>weekend</code>, <code>until</code>, <code>todayMarker</code> and the <code>vert</code> tag. Syntax added in a later Mermaid release is not, so test a new option with a small chart first.</p>
 <h2 id="common-errors">Common errors</h2>
 <ul>
 <li><strong>The bars sit at the wrong dates, or the chart does not render.</strong> <code>dateFormat</code> probably does not match the dates in the task lines. When a date does not fit <code>dateFormat</code>, Mermaid falls back to the browser's own date parsing, so <code>02/11/2026</code> under <code>dateFormat YYYY-MM-DD</code> lands on February 11, and a date neither can read is an error. Compare character by character, including separators and zero padding.</li>

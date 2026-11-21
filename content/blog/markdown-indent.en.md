@@ -46,7 +46,7 @@ In HTML, the property that does this properly is `text-indent`, which sets the e
 
 Two things limit it. A raw HTML block is not parsed as Markdown, so `**bold**` inside that `<p>` stays as asterisks. The block also ends at the first blank line, so each paragraph needs its own tag.
 
-MiaoYan 4.9.0 renders with cmark-gfm in unsafe mode, so raw HTML and its `style` attribute reach the preview untouched. MiaoYan has no setting for a custom preview stylesheet, and the preview page does not load a user stylesheet, so you cannot indent every paragraph with one line of CSS. Its own typography does not indent paragraphs, so in MiaoYan the choices are the characters above or a per-paragraph `style`. For a real stylesheet, export to HTML and edit the file; see [Markdown to HTML](/blog/markdown-to-html/).
+MiaoYan 4.11.0 renders with cmark-gfm in unsafe mode, so raw HTML and its `style` attribute reach the preview untouched. MiaoYan has no setting for a custom preview stylesheet, and the preview page does not load a user stylesheet, so you cannot indent every paragraph with one line of CSS. Its own typography does not indent paragraphs, so in MiaoYan the choices are the characters above or a per-paragraph `style`. For a real stylesheet, export to HTML and edit the file; see [Markdown to HTML](/blog/markdown-to-html/).
 
 ## Indenting a whole block
 

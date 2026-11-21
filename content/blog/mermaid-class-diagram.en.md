@@ -1,4 +1,4 @@
-To draw a class diagram in Markdown, open a fenced code block tagged `mermaid`, start it with `classDiagram`, declare classes with `class Name`, and connect them with arrows such as `<|--` for inheritance and `*--` for composition. A Mermaid-aware preview turns the text into an SVG. MiaoYan V4.9.0 bundles Mermaid 11.14.0 and runs it offline, so everything below works without a network connection. Two newer features, namespace labels and nested namespaces, arrived in Mermaid 11.15.0 and are left out here.
+To draw a class diagram in Markdown, open a fenced code block tagged `mermaid`, start it with `classDiagram`, declare classes with `class Name`, and connect them with arrows such as `<|--` for inheritance and `*--` for composition. A Mermaid-aware preview turns the text into an SVG. MiaoYan V4.11.0 bundles Mermaid 11.14.0 and runs it offline, so everything below works without a network connection. Two newer features, namespace labels and nested namespaces, arrived in Mermaid 11.15.0 and are left out here.
 
 ## Declare a class
 
@@ -214,7 +214,7 @@ To try it, type `/mermaid` and press `Tab`. MiaoYan inserts a `graph LR` templat
 
 - **The block stays as code.** MiaoYan keeps the fenced source when Mermaid fails to parse it and shows no error message. Bisect by deleting lines until it renders.
 - **A method shows up as an attribute.** Without parentheses it is an attribute, so add `()`.
-- **A feature from the live documentation fails.** The site documents the newest Mermaid. Namespace labels and nested namespaces need 11.15.0, newer than the 11.14.0 in MiaoYan V4.9.0, so `namespace Core["Core layer"]` or a namespace inside a namespace is a parse error and the block stays as code. A newer diagram type may be missing too.
+- **A feature from the live documentation fails.** The site documents the newest Mermaid. Namespace labels and nested namespaces need 11.15.0, newer than the 11.14.0 in MiaoYan V4.11.0, so `namespace Core["Core layer"]` or a namespace inside a namespace is a parse error and the block stays as code. A newer diagram type may be missing too.
 - **A very large model is unreadable.** Split it by namespace into several diagrams. If you prefer PlantUML's class syntax, [PlantUML in Markdown](/blog/plantuml-in-markdown/) covers it, with the caveat that it needs a network connection.
 
 ## FAQ

@@ -20,7 +20,7 @@
 <meta property="og:description" content="在 Markdown 里写 Mermaid 时序图，覆盖参与者、箭头类型、激活条、注释、分支块、自动编号和登录流程示例。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/mermaid-sequence-diagram.webp">
 <meta property="article:published_time" content="2026-10-24">
-<meta property="article:modified_time" content="2026-10-24">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid 时序图写法：箭头、激活、分支块和登录示例", "item": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/#article", "headline": "Mermaid 时序图写法：箭头、激活、分支块和登录示例", "description": "在 Markdown 里写 Mermaid 时序图，覆盖参与者、箭头类型、激活条、注释、分支块、自动编号和登录流程示例。", "url": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/", "datePublished": "2026-10-24", "dateModified": "2026-10-24", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/mermaid-sequence-diagram.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "participant 和 actor 有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "只有图形，participant 是方框，actor 是火柴人，代表人的时候用 actor。"}}, {"@type": "Question", "name": "回复怎么画？", "acceptedAnswer": {"@type": "Answer", "text": "反方向画一根虚线箭头 -->>，这是一种约定，不是单独的消息类型。"}}, {"@type": "Question", "name": "离线能在笔记里画时序图吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，妙言里的 Mermaid 随应用打包，离线也能渲染。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mermaid 时序图写法：箭头、激活、分支块和登录示例", "item": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/#article", "headline": "Mermaid 时序图写法：箭头、激活、分支块和登录示例", "description": "在 Markdown 里写 Mermaid 时序图，覆盖参与者、箭头类型、激活条、注释、分支块、自动编号和登录流程示例。", "url": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/mermaid-sequence-diagram/", "datePublished": "2026-10-24", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/mermaid-sequence-diagram.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "participant 和 actor 有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "只有图形，participant 是方框，actor 是火柴人，代表人的时候用 actor。"}}, {"@type": "Question", "name": "回复怎么画？", "acceptedAnswer": {"@type": "Answer", "text": "反方向画一根虚线箭头 -->>，这是一种约定，不是单独的消息类型。"}}, {"@type": "Question", "name": "离线能在笔记里画时序图吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，妙言里的 Mermaid 随应用打包，离线也能渲染。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -873,7 +873,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-24">2026年10月24日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/mermaid-sequence-diagram.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Mermaid 时序图的写法，是在语言名为 <code>mermaid</code> 的围栏代码块里先写一行 <code>sequenceDiagram</code>，后面每条消息一行，格式是 <code>发送方-&gt;&gt;接收方: 文字</code>。参与者按第一次出现的顺序排列，图很小的时候可以不声明，想要好读的标签、固定的顺序或者火柴人，再单独声明。本文讲到 Mermaid 11.14.0 为止的语法，这是妙言 V4.9.0 随应用打包的版本，其他图类型放在 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a> 那篇里。</p>
+<p>Mermaid 时序图的写法，是在语言名为 <code>mermaid</code> 的围栏代码块里先写一行 <code>sequenceDiagram</code>，后面每条消息一行，格式是 <code>发送方-&gt;&gt;接收方: 文字</code>。参与者按第一次出现的顺序排列，图很小的时候可以不声明，想要好读的标签、固定的顺序或者火柴人，再单独声明。本文讲到 Mermaid 11.14.0 为止的语法，这是妙言 V4.11.0 随应用打包的版本，其他图类型放在 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a> 那篇里。</p>
 <h2 id="最小的时序图">最小的时序图</h2>
 <pre><code class="language-markdown">```mermaid
 sequenceDiagram
@@ -991,7 +991,7 @@ sequenceDiagram
 <li><code>break</code> ... <code>end</code> 表示满足条件后流程中止。</li>
 </ul>
 <h2 id="自动编号和背景高亮">自动编号和背景高亮</h2>
-<p>在消息之前单独一行写 <code>autonumber</code>，每根箭头就有了编号。后面可以再跟起始值和增量，但小数值是 Mermaid 11.15.0 才有的，妙言 V4.9.0 还没有，所以只写 <code>autonumber</code> 就好。</p>
+<p>在消息之前单独一行写 <code>autonumber</code>，每根箭头就有了编号。后面可以再跟起始值和增量，但小数值是 Mermaid 11.15.0 才有的，妙言 V4.11.0 还没有，所以只写 <code>autonumber</code> 就好。</p>
 <p><code>rect</code> 给图的一部分铺上彩色背景，接受 <code>rgb()</code> 或 <code>rgba()</code>，用 <code>end</code> 结束。</p>
 <pre><code class="language-markdown">```mermaid
 sequenceDiagram
@@ -1027,7 +1027,7 @@ sequenceDiagram
 </code></pre>
 <p>数据库的激活条开在 API 的激活条里面，也先于它结束。API 的激活条是在 <code>alt</code> 块后面用 <code>deactivate A</code> 结束的，没有在分支里各写一个 <code>-</code>，因为 Mermaid 是一行一行数激活次数的，不会把两个分支当成二选一，两个分支各写一个 <code>-</code> 就会把 API 的激活条结束两次，第二次会报错。</p>
 <h2 id="妙言怎么渲染它">妙言怎么渲染它</h2>
-<p>预览先把围栏块转成带 <code>language-mermaid</code> 类的 HTML，再由脚本把文字交给随应用打包的 <code>mermaid.min.js</code>，V4.9.0 源码里它报的版本是 11.14.0，生成的 SVG 会替换掉代码块，整个过程不联网，所以离线也能用，颜色跟着浅色或深色外观走。想插入起手模板，输入 <code>/mermaid</code> 再按 <code>Tab</code>，模板是一张流程图，把里面的内容换成 <code>sequenceDiagram</code> 就行。</p>
+<p>预览先把围栏块转成带 <code>language-mermaid</code> 类的 HTML，再由脚本把文字交给随应用打包的 <code>mermaid.min.js</code>，V4.11.0 源码里它报的版本是 11.14.0，生成的 SVG 会替换掉代码块，整个过程不联网，所以离线也能用，颜色跟着浅色或深色外观走。想插入起手模板，输入 <code>/mermaid</code> 再按 <code>Tab</code>，模板是一张流程图，把里面的内容换成 <code>sequenceDiagram</code> 就行。</p>
 <h2 id="常见错误">常见错误</h2>
 <ul>
 <li><strong>图一直显示成代码。</strong> Mermaid 报错时，妙言会把原始源码留在预览里，不显示错误信息，可以检查箭头有没有拼错、<code>end</code> 有没有漏、用的是不是比 11.14.0 更新的语法。</li>
@@ -1036,7 +1036,7 @@ sequenceDiagram
 <li><strong>结束一个没有激活的参与者。</strong> 参与者没有打开的激活条时写 <code>-</code> 或 <code>deactivate</code>，Mermaid 会报 <code>Trying to inactivate an inactive participant</code> 并停止渲染，图就一直显示成代码，数一下 <code>+</code> 和 <code>-</code> 是不是成对。</li>
 <li><strong>创建发送方。</strong> <code>create participant Carl</code> 后面必须紧跟一条发给 Carl 的消息，而不是 Carl 发出的。</li>
 <li><strong>消息后面加注释。</strong> <code>%%</code> 只能整行使用。</li>
-<li><strong>更新的语法。</strong> Mermaid 文档里标着 11.15.0 及以后的内容，比如 <code>autonumber</code> 的小数值，在 V4.9.0 里渲染不出来。</li>
+<li><strong>更新的语法。</strong> Mermaid 文档里标着 11.15.0 及以后的内容，比如 <code>autonumber</code> 的小数值，在 V4.11.0 里渲染不出来。</li>
 </ul>
 <p>检查时按 <code>⌘3</code> 切到预览，或者按 <code>⌘\</code> 进分栏。导出 PDF 用的是同一份预览，见 <a href="/zh/blog/markdown-to-pdf-mac/">Mac 上 Markdown 转 PDF</a>，演示模式里图也会渲染，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
 <h2 id="常见问题">常见问题</h2>

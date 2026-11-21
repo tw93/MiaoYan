@@ -1,4 +1,4 @@
-If Obsidian feels like more tool than your notes need, MiaoYan is a lighter Mac app that opens the same format, a folder of Markdown files. It provides a three-column library, split editor and preview, wikilinks with backlinks, version history and PPT mode, and it deliberately leaves out plugins, a graph view and the extra link syntax Obsidian adds. Plain notes and ordinary `[[Title]]` links move across without conversion, while aliases, heading links and embeds need a small cleanup.
+If Obsidian feels like more tool than your notes need, MiaoYan is a lighter Mac app that opens the same format, a folder of Markdown files. It provides a three-column library, split editor and preview, wikilinks with backlinks, version history and PPT mode, and it deliberately leaves out plugins, a graph view and the extra link syntax Obsidian adds. Plain notes, ordinary `[[Title]]` links and `[[Title|alias]]` links move across without conversion, while heading links, block links and embeds need a small cleanup.
 
 ## Why people look for something lighter
 
@@ -23,7 +23,7 @@ Consider these limitations before you migrate.
 
 - **No plugins.** There is no plugin or theme marketplace. Features either ship in the app or do not exist.
 - **No graph view.** The Mac app does not include graph visualization. Connections appear as backlinks in a list.
-- **Title-only wikilinks.** `[[Note|alias]]`, `[[Note#Heading]]` and block references are not implemented.
+- **Title-only wikilinks.** `[[Note|alias]]` works since V4.10.0, but `[[Note#Heading]]` and block references are not implemented.
 - **No embeds.** Obsidian's `![[Note]]` and `![[image.png]]` embeds are not supported in MiaoYan.
 - **No Obsidian-specific features that live in plugins or in `.obsidian`.** Anything stored in hotkey, theme or plugin settings stays behind.
 
@@ -47,10 +47,10 @@ An Obsidian vault is a folder, so migration mostly means pointing MiaoYan at it.
 
 ### What does not carry over
 
-- **Aliases, heading and block links.** In MiaoYan the whole text between the brackets becomes the title to look up, so the link points at a note that does not exist. Find them with:
+- **Heading and block links.** In MiaoYan everything before a `|` becomes the title to look up, so `[[Note#Heading]]` points at a note that does not exist, while an alias written as `[[Note|alias]]` is fine. Find the others with:
 
 ```bash
-rg -n --glob '*.md' '\[\[[^]]*[|#^]' .
+rg -n --glob '*.md' '\[\[[^]|]*[#^]' .
 ```
 
   Replace each with a plain title link or a normal Markdown link.
@@ -71,7 +71,7 @@ Because both apps use the same files, you can keep Obsidian for the notes that n
 | Storage | Folder of Markdown files (vault) | Folder of Markdown files |
 | Plugins | Community plugins | None |
 | Graph view | Core plugin | Not in the Mac app |
-| Link syntax | Wikilinks with aliases, headings, blocks | Wikilinks by title |
+| Link syntax | Wikilinks with aliases, headings, blocks | Wikilinks by title, with aliases |
 | Embeds | `![[note]]`, `![[image.png]]` | Not available |
 | Editing | Not compared here | Source editor with split preview |
 
@@ -87,7 +87,7 @@ The Mac app is open source on [GitHub](https://github.com/tw93/MiaoYan), and the
 
 ### Can I open my Obsidian vault in MiaoYan without converting it?
 
-Yes, for the notes themselves. The folder opens as is, and the `.obsidian` folder is ignored. Aliases, heading links and embeds will not resolve.
+Yes, for the notes themselves. The folder opens as is, and the `.obsidian` folder is ignored. Heading links, block links and embeds will not resolve.
 
 ### Will MiaoYan change my vault files?
 

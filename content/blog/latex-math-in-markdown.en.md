@@ -60,7 +60,7 @@ Engines also differ in speed and LaTeX coverage. KaTeX is fast and renders synch
 
 ## Dollar signs and prices
 
-A single `$` is also a currency symbol, which is the most common pitfall. MiaoYan has a guard for it: a dollar sign followed by digits and then something that is not a math continuation is treated as currency. So `It costs $5 today` stays text, while `$2+2$` is still math, because a `+` after the digits counts as math. The guard stops at letters: `$5M and $10M` is read as one formula between the two dollars. A backslash does not help in MiaoYan, because `\$` is an ordinary Markdown escape and the parser turns it into a bare `$` before the math pass scans the text. When an amount must stay text, put it in a code span or reword it:
+A single `$` is also a currency symbol, which is the most common pitfall. MiaoYan has a guard for it: a dollar sign followed by digits and then something that is not a math continuation is treated as currency. So `It costs $5 today` stays text, while `$2+2$` is still math, because a `+` after the digits counts as math. The guard stops at letters: `$5M and $10M` is read as one formula between the two dollars. Since V4.10.0 a backslash helps: `\$5M and \$10M` shows two dollar signs, because MiaoYan turns each `\$` outside code and math into a dollar the math pass skips, and an inline `$` pairs only with a `$` in the same paragraph. In older versions, and in apps that drop the backslash before the math pass, put the amount in a code span or reword it:
 
 ```markdown
 The budget grew from `$5M` to 10 million dollars.
@@ -108,7 +108,7 @@ If you need a specific MathJax-only extension, use an editor that offers it. For
 
 ### How do I write a literal dollar sign?
 
-In MiaoYan a price such as `$5` followed by a space or punctuation already stays text. For anything else, such as `$5M`, put it in inline code; a backslash is removed by the Markdown parser before the math pass sees it.
+In MiaoYan a price such as `$5` followed by a space or punctuation already stays text. For anything else, such as `$5M`, write `\$5M`, which MiaoYan shows as a plain dollar sign since V4.10.0, or put it in inline code, which also works in other apps.
 
 ### Can I number equations?
 

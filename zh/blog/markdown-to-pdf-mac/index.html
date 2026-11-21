@@ -20,7 +20,7 @@
 <meta property="og:description" content="妙言把笔记印成固定的 A4 PDF。要改纸张或边距，用 Pandoc、Typora 或别的应用打印。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-pdf-mac.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "在 Mac 上把 Markdown 转成 PDF", "item": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/#article", "headline": "在 Mac 上把 Markdown 转成 PDF", "description": "妙言把笔记印成固定的 A4 PDF。要改纸张或边距，用 Pandoc、Typora 或别的应用打印。", "url": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-pdf-mac.webp", "timeRequired": "PT10M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "这份 PDF 能改成 Letter 吗", "acceptedAnswer": {"@type": "Answer", "text": "妙言没有纸张选项，把 Pandoc 的 papersize 设成 letter，或用 Typora 的纸张大小，或在能打印这篇笔记的应用里选文件菜单的打印，在保存为 PDF 之前把尺寸定好。"}}, {"@type": "Question", "name": "妙言导出 PDF 要安装 TeX 吗", "acceptedAnswer": {"@type": "Answer", "text": "妙言导出 PDF 不需要另装 TeX，它的 PDF 是 WebKit 把预览打印出来，TeX 用在 Pandoc 默认的 LaTeX 路径上，Typora 也要等你加上 PDF (LaTeX / Pandoc) 之后才会用到。"}}, {"@type": "Question", "name": "为什么选了 PDF 却得到幻灯片", "acceptedAnswer": {"@type": "Answer", "text": "幻灯片模式开着时，PDF 走 reveal.js 的快照，先退出这个模式再导出。妙言 PPT PDF 的文件名是 标题_PPT.pdf，幻灯片模式下选 PDF 得到的仍叫 标题.pdf。"}}, {"@type": "Question", "name": "书签打开的页不对，页脚也错了吗", "acceptedAnswer": {"@type": "Answer", "text": "页脚是当前页码和总页数，书签的页按标题在不分页文档里的高度估算，可能偏一页。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "在 Mac 上把 Markdown 转成 PDF", "item": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/#article", "headline": "在 Mac 上把 Markdown 转成 PDF", "description": "妙言把笔记印成固定的 A4 PDF。要改纸张或边距，用 Pandoc、Typora 或别的应用打印。", "url": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-pdf-mac/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-pdf-mac.webp", "timeRequired": "PT11M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "这份 PDF 能改成 Letter 吗", "acceptedAnswer": {"@type": "Answer", "text": "妙言没有纸张选项，把 Pandoc 的 papersize 设成 letter，或用 Typora 的纸张大小，或在能打印这篇笔记的应用里选文件菜单的打印，在保存为 PDF 之前把尺寸定好。"}}, {"@type": "Question", "name": "妙言导出 PDF 要安装 TeX 吗", "acceptedAnswer": {"@type": "Answer", "text": "妙言导出 PDF 不需要另装 TeX，它的 PDF 是 WebKit 把预览打印出来，TeX 用在 Pandoc 默认的 LaTeX 路径上，Typora 也要等你加上 PDF (LaTeX / Pandoc) 之后才会用到。"}}, {"@type": "Question", "name": "为什么选了 PDF 却得到幻灯片", "acceptedAnswer": {"@type": "Answer", "text": "幻灯片模式开着时，PDF 走 reveal.js 的快照，先退出这个模式再导出。妙言 PPT PDF 的文件名是 标题_PPT.pdf，幻灯片模式下选 PDF 得到的仍叫 标题.pdf。"}}, {"@type": "Question", "name": "书签打开的页不对，页脚也错了吗", "acceptedAnswer": {"@type": "Answer", "text": "页脚是当前页码和总页数，书签的页按标题在不分页文档里的高度估算，可能偏一页。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -870,7 +870,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
     <h1 class="blog-title">在 Mac 上把 Markdown 转成 PDF</h1>
-    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 10 分钟</span></p>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 11 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-pdf-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
 <p>选中笔记，从菜单栏打开「文件」，再点「导出」，在弹出的菜单里选「PDF」，妙言会把当前预览印成固定的 A4，按笔记标题存到下载目录。纸张、边距、页眉和深色页面都没有开关，字体跟着设置里的预览字体走，分页可以用原始 HTML 写进笔记。要 Letter 或者别的边距，就用 Pandoc、Typora，或者走别的应用的打印对话框。</p>
@@ -884,7 +884,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>Mermaid 和 Markmap 跑的是应用里自带的脚本，打印前会等到 Mermaid 块带上 <code>data-processed</code>，Markmap 块带上 <code>data-markmap-rendered</code>，图片宽度也不再是 0。一共等 80 次，每次 120 毫秒，源码注释里写成 9.6 秒，到点就照样写出 PDF。Mermaid 渲染失败时留下源代码，错误文字不会写进页面。</p>
 <p>PlantUML 向 <code>https://www.plantuml.com/plantuml/svg/</code> 要图，所以需要网络，图的原文也会离开这台 Mac。三种图怎么区分，写在 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
 <p>相对路径的图片按笔记所在的项目文件夹查找，<code>/i/photo.png</code> 会去掉开头的斜杠，变成这个文件夹里的 <code>i/photo.png</code>。写成完整路径而且文件存在就用那个路径，本地文件找不到就换成标着 <code>Image Not Found</code> 的小方块。第一张之后的图片是懒加载，占位图加上 <code>data-src</code>，打印用的页面不会滚动，导出时把 <code>data-src</code> 抄回 <code>src</code>。表格被拉成页宽，屏幕上的目录会藏起来，链接去掉下划线。</p>
-<p>纸张是 A4，595.2 乘 841.8 点，边距上 40 点、下 48 点、左右各 45 点，打印设置旁的注释写成上 14 毫米、下 17 毫米、左右 16 毫米。打印面板不出现，过宽的内容缩到页宽以内，预览是深色时纸面仍然是白的。文字用设置里的预览字体，中文由后面的 PingFang SC 和 Hiragino Sans GB 接上。</p>
+<p>纸张是 A4，595.2 乘 841.8 点，边距上 40 点、下 48 点、左右各 45 点，打印设置旁的注释写成上 14 毫米、下 17 毫米、左右 16 毫米。打印面板不出现，过宽的内容缩到页宽以内，预览是深色时纸面仍然是白的，V4.9.0 起整份副本都换成浅色主题，Mermaid、Markmap 图和代码按浅色配色画，不会在白纸上留下深色的块，还没画完的图也不会把加载提示印进去。文字用设置里的预览字体，中文由后面的 PingFang SC 和 Hiragino Sans GB 接上。</p>
 <p>h1 到 h3 写成 PDF 大纲，每条书签落在哪一页，按标题在不分页的整篇文档里的高度估算，图片或者被要求整块保留的内容会让它偏一页。页脚是 8.5 磅的灰色字，内容是 <code>1 / N</code>，PDF 标题用导出标题，creator 字段写成 MiaoYan。</p>
 <h2 id="幻灯片是另一份-pdf">幻灯片是另一份 PDF</h2>
 <p>笔记文本里出现 <code>---</code> 时，导出菜单里的妙言 PPT PDF 会写出 <code>标题_PPT.pdf</code>，没有这三个字符就提示「用 --- 分隔幻灯片后才能演示」。这个判断是子串搜索，表格行 <code>|---|</code> 也能通过。一行 <code>---</code> 怎样变成一页，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>

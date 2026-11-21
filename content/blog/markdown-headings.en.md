@@ -73,14 +73,14 @@ Headings accept inline Markdown. `## The *fast* path`, ``## The `--force` flag``
 
 ## How MiaoYan uses headings
 
-MiaoYan renders notes with cmark-gfm, so both `#` and underline headings follow CommonMark. These details come from the V4.9.0 source.
+MiaoYan renders notes with cmark-gfm, so both `#` and underline headings follow CommonMark. These details come from the V4.11.0 source.
 
 - **Editor.** The editor pane colours `#` heading lines and treats the `#` markers as syntax; for underline headings it marks the `===` or `---` line as syntax.
 - **Outline panel.** The preview has a table of contents panel that lists `h1`, `h2` and `h3` headings only, built with the tocbot library. It appears when a note has at least two such headings, and the hover trigger that opens it is hidden when the preview is narrower than 600 pixels. Toggle it with Toggle TOC in the View menu (切换目录 under 视图 in the Chinese UI) or `⌘5` while the preview or split view is showing; opening it that way pins it, and the same shortcut closes it. So a note with only a title and `####` sections has no outline, which is one more reason to keep the levels continuous.
 - **Preview sizes.** The preview stylesheet sets `h1` to 1.76em, `h2` to 1.41em and `h3` to 1.18em, and `h4` to `h6` to the body size, so `h4`, `h5` and `h6` look identical: bold text at body size.
 - **Anchors.** Each heading gets an ID equal to its text, with `-1`, `-2` for repeats, and a small link icon appears beside it on hover in the preview, linking to that fragment. This differs from GitHub's lowercase slug, as the links post explains.
 
-MiaoYan V4.9.0 has no heading folding and no keyboard shortcut for setting a heading level, so you type the `#` characters. See the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) for the other syntax.
+MiaoYan V4.11.0 has no heading folding and no keyboard shortcut for setting a heading level, so you type the `#` characters. See the [Markdown cheat sheet](/blog/markdown-cheat-sheet/) for the other syntax.
 
 ## Checking your headings
 

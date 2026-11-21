@@ -37,7 +37,7 @@ This is where the single tilde becomes a trap. The GFM spec defines strikethroug
 
 ## What MiaoYan's preview renders
 
-MiaoYan's preview in V4.9.0 turns Markdown into HTML with cmark-gfm. In `Business/Markdown.swift` the parser is created with only the footnotes option, and four extensions are attached by name: `table`, `footnotes`, `strikethrough` and `tasklist`. The HTML is rendered with `CMARK_OPT_UNSAFE`, which tells cmark to keep raw HTML instead of replacing it. From that, here is what each form does:
+MiaoYan's preview in V4.11.0 turns Markdown into HTML with cmark-gfm. In `Business/Markdown.swift` the parser is created with only the footnotes option, and five extensions are attached by name: `table`, `footnotes`, `strikethrough`, `tasklist` and `autolink`. The HTML is rendered with `CMARK_OPT_UNSAFE`, which tells cmark to keep raw HTML instead of replacing it. From that, here is what each form does:
 
 | You write | MiaoYan preview |
 | --- | --- |

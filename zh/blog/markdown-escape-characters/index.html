@@ -20,7 +20,7 @@
 <meta property="og:description" content="反斜杠能转义哪些字符、什么时候需要，实体和行内代码的替代做法，以及妙言里的美元符号。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转义字符：反斜杠、实体与行内代码", "item": "https://miaoyan.app/zh/blog/markdown-escape-characters/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-escape-characters/#article", "headline": "Markdown 转义字符：反斜杠、实体与行内代码", "description": "反斜杠能转义哪些字符、什么时候需要，实体和行内代码的替代做法，以及妙言里的美元符号。", "url": "https://miaoyan.app/zh/blog/markdown-escape-characters/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-escape-characters/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp", "timeRequired": "PT5M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "代码块里要转义吗？", "acceptedAnswer": {"@type": "Answer", "text": "不用，行内代码和代码块里反斜杠转义不生效，写了反斜杠就会显示出来。"}}, {"@type": "Question", "name": "怎么显示一个反斜杠？", "acceptedAnswer": {"@type": "Answer", "text": "写两个 \\\\。"}}, {"@type": "Question", "name": "为什么编号的那一行变成了列表？", "acceptedAnswer": {"@type": "Answer", "text": "以数字加点开头的行就是列表标记，把点转义，写成 2024\\.。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转义字符：反斜杠、实体与行内代码", "item": "https://miaoyan.app/zh/blog/markdown-escape-characters/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-escape-characters/#article", "headline": "Markdown 转义字符：反斜杠、实体与行内代码", "description": "反斜杠能转义哪些字符、什么时候需要，实体和行内代码的替代做法，以及妙言里的美元符号。", "url": "https://miaoyan.app/zh/blog/markdown-escape-characters/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-escape-characters/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "代码块里要转义吗？", "acceptedAnswer": {"@type": "Answer", "text": "不用，行内代码和代码块里反斜杠转义不生效，写了反斜杠就会显示出来。"}}, {"@type": "Question", "name": "怎么显示一个反斜杠？", "acceptedAnswer": {"@type": "Answer", "text": "写两个 \\\\。"}}, {"@type": "Question", "name": "为什么编号的那一行变成了列表？", "acceptedAnswer": {"@type": "Answer", "text": "以数字加点开头的行就是列表标记，把点转义，写成 2024\\.。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -870,7 +870,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
     <h1 class="blog-title">Markdown 转义字符：反斜杠、实体与行内代码</h1>
-    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 5 分钟</span></p>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-escape-characters.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
 <p>在任何 ASCII 标点前面加一个反斜杠，Markdown 就把它当普通文字，<code>\*不是斜体\*</code> 会显示星号，<code>\# 不是标题</code> 会显示井号；行内代码和代码块里不需要转义，因为那里什么都不解析。妙言和标准 CommonMark 唯一不太一样的地方是美元符号，它的公式渲染也会读这个字符，所以写价格要多留意。</p>
@@ -896,7 +896,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>转义在自动链接（<code>&lt;https://example.com?find=\*&gt;</code>）和原始 HTML 属性里不生效，但在链接地址、链接标题和围栏代码块的信息串里生效。</p>
 <h2 id="妙言里的美元符号">妙言里的美元符号</h2>
 <p>妙言用 KaTeX 渲染公式，<code>$...$</code> 是行内公式，<code>$$...$$</code> 是块级公式，每次预览都会运行，所以正文里的美元符号可能开启一个公式。普通价格有两层保护，Swift 这一层把 <code>$</code> 后面跟数字、可选小数部分、再接一个不是字母、数字或数学运算符的字符判为货币，预览脚本里有类似的规则，所以 <code>costs $5 or $10.</code> 保持文字。</p>
-<p>保护在字母和运算符处就停了，<code>$5M and $10M</code> 会被读成两个美元符号之间的公式，<code>$5-10</code> 也可能被当成数学。反斜杠在这里帮不上忙，<code>\$</code> 是普通的 Markdown 转义，解析器会先把它变成裸的 <code>$</code>，等预览脚本和 KaTeX 扫描美元符号时已经看不到反斜杠，<code>\$5M and \$10M</code> 照样会变成公式。更稳妥的做法有两个，把金额放进行内代码，比如 <code>$5M</code>，或者改写成 500 万美元，公式处理会跳过行内代码和围栏代码块。公式的写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<p>保护在字母和运算符处就停了，<code>$5M and $10M</code> 会被读成两个美元符号之间的公式，<code>$5-10</code> 也可能被当成数学。从 V4.10.0 起反斜杠管用了，妙言会把代码和公式之外的每个 <code>\$</code> 换成公式处理会跳过的美元符号，<code>\$5M and \$10M</code> 保持文字，更早的版本里解析器会先去掉反斜杠，KaTeX 拿到的还是一对美元符号，照样排成公式。行内的 <code>$</code> 现在也只和同一段里的 <code>$</code> 配对，一个落单的美元符号不会再让后面的标题和列表变成原样的文字。放进行内代码，比如 <code>$5M</code>，在旧版本和别的应用里也稳妥，公式处理会跳过行内代码和围栏代码块。公式的写法见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
 <h2 id="不同渲染器的差异">不同渲染器的差异</h2>
 <p>转义由 CommonMark 定义，所以上面的反斜杠规则在 GitHub 和其他符合规范的解析器里一致，差别在于什么算语法。GFM 增加了表格和删除线，所以 <code>|</code> 和 <code>~</code> 在 GFM 里要转义，严格的 CommonMark 里不用。美元符号公式不属于这两个标准，妙言会渲染，别的工具不一定，大量出现 <code>$</code> 的笔记在不同工具里看起来可能不同。原始 HTML 也是一处分歧，妙言放行，有些托管平台会去掉，所以 <code>\&lt;div&gt;</code> 是哪里都能用的写法。</p>
 <h2 id="检查结果">检查结果</h2>

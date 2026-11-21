@@ -129,7 +129,7 @@ In MiaoYan, you can click the checkbox in preview mode to toggle it, and the cha
 
 ### Autolinks
 
-GFM turns bare URLs into links. MiaoYan's parser turns on tables, footnotes, strikethrough and task lists, and autolinking is not in that list, so write `<https://example.com>` or a normal link if the URL matters.
+GFM turns bare URLs into links, and since V4.10.0 MiaoYan's parser turns that extension on too, so `https://example.com` and `www.example.com` are links in its preview. Write `<https://example.com>` or a normal link if the note will also be read in a CommonMark-only viewer.
 
 ## Beyond GFM
 

@@ -111,7 +111,7 @@ gantt
 
 A fenced block with the language `mermaid` is plain text to the Markdown parser. Your preview finds it after the page loads and hands the text to the Mermaid library, which parses the Gantt grammar, resolves every `after` reference into dates, applies the exclusions and draws an SVG. 
 
-MiaoYan V4.9.0 bundles Mermaid 11.14.0 and runs it from files inside the app, so Gantt charts render without a network connection. The Gantt grammar in that bundled file includes `tickInterval`, `weekend`, `until`, `todayMarker` and the `vert` tag. Syntax added in a later Mermaid release is not, so test a new option with a small chart first.
+MiaoYan V4.11.0 bundles Mermaid 11.14.0 and runs it from files inside the app, so Gantt charts render without a network connection. The Gantt grammar in that bundled file includes `tickInterval`, `weekend`, `until`, `todayMarker` and the `vert` tag. Syntax added in a later Mermaid release is not, so test a new option with a small chart first.
 
 ## Common errors
 

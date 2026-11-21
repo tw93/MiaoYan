@@ -41,7 +41,7 @@ In MiaoYan, select a note and choose File > Export > HTML, or press `Control + S
 What the file contains:
 
 - The body is cmark-gfm's output with raw HTML allowed, so tags you typed are kept. Front matter at the top of the note is removed first.
-- MiaoYan puts the note title in an `<h1>` at the top. The check meant to skip this when the note already opens with a `#` heading never matches, so the title line is added above your own heading too, and when the two are the same the title appears twice; delete one in the exported file if that matters.
+- MiaoYan puts the note title in an `<h1>` at the top unless the note already opens with a level-one `#` heading. Before V4.10.0 that check never matched, so a note starting with its own heading got the title twice.
 - The page uses the preview template, with your Preview Font setting, a content column limited to 760 pixels, and light or dark colors depending on the current theme.
 - Apart from local images, it inlines nothing. A `<base>` tag points to `https://cdn.miaoyan.app/Resources/DownView.bundle/`, so the template's stylesheets and scripts for typography, KaTeX, highlight.js, Mermaid and Markmap load from there. Opened offline, the file keeps the background, text color and column width written into the page itself but loses the typography stylesheet, and math and diagrams are not drawn.
 

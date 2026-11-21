@@ -23,7 +23,7 @@ Definitions are not rendered and may sit before or after the links that use them
 
 ## Bare URLs are not the same as links
 
-GitHub turns a plain `https://example.com` into a link, because GFM adds an autolink extension on top of CommonMark. Not every renderer includes it. MiaoYan's renderer attaches four GFM extensions (tables, footnotes, strikethrough and task lists) and no autolink extension, so in the preview and in HTML export a bare address is plain text. The editor pane does turn it into a clickable link, so a URL that works while you type can lose its link once rendered. If a URL must be clickable everywhere, write `<https://example.com>` or `[text](https://example.com)`.
+GitHub turns a plain `https://example.com` into a link, because GFM adds an autolink extension on top of CommonMark. Not every renderer includes it. MiaoYan's renderer has attached it since V4.10.0, so a bare `https://` or `www.` address is a link in the preview and in HTML export as well as in the editor pane; before that version it became plain text once rendered. If a URL must be clickable everywhere, including viewers without the extension, write `<https://example.com>` or `[text](https://example.com)`.
 
 ## Spaces and parentheses in destinations
 
@@ -85,4 +85,4 @@ Wrap the destination in angle brackets, `[text](<my file.md>)`, or write `%20` f
 
 ### Do bare URLs become links?
 
-On GitHub yes. In MiaoYan's preview no. Wrap them in angle brackets.
+On GitHub yes, and in MiaoYan's preview since V4.10.0. A viewer without GFM's autolink extension leaves them as text, so wrap them in angle brackets when that matters.

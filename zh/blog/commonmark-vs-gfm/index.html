@@ -20,7 +20,7 @@
 <meta property="og:description" content="CommonMark、GFM 与应用扩展各管什么，妙言实现到哪一层，以及检查任意应用的测试文件。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/commonmark-vs-gfm.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "CommonMark 与 GFM 有什么区别", "item": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/#article", "headline": "CommonMark 与 GFM 有什么区别", "description": "CommonMark、GFM 与应用扩展各管什么，妙言实现到哪一层，以及检查任意应用的测试文件。", "url": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/commonmark-vs-gfm.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "GFM 和 CommonMark 是一回事吗？", "acceptedAnswer": {"@type": "Answer", "text": "不是。GFM 包含全部 CommonMark，再加上上面列的扩展，所以合法的 CommonMark 笔记也是合法的 GFM，反过来不成立。"}}, {"@type": "Question", "name": "为什么我的表格显示成纯文本？", "acceptedAnswer": {"@type": "Answer", "text": "表格需要表头行和单元格数相同的分隔行，只实现 CommonMark 的应用永远不会渲染它。"}}, {"@type": "Question", "name": "妙言支持脚注和公式吗？", "acceptedAnswer": {"@type": "Answer", "text": "支持，脚注由解析器处理，公式在预览里由 KaTeX 排版，见 Markdown 里写 LaTeX 公式。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "CommonMark 与 GFM 有什么区别", "item": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/#article", "headline": "CommonMark 与 GFM 有什么区别", "description": "CommonMark、GFM 与应用扩展各管什么，妙言实现到哪一层，以及检查任意应用的测试文件。", "url": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/commonmark-vs-gfm/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/commonmark-vs-gfm.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "GFM 和 CommonMark 是一回事吗？", "acceptedAnswer": {"@type": "Answer", "text": "不是。GFM 包含全部 CommonMark，再加上上面列的扩展，所以合法的 CommonMark 笔记也是合法的 GFM，反过来不成立。"}}, {"@type": "Question", "name": "为什么我的表格显示成纯文本？", "acceptedAnswer": {"@type": "Answer", "text": "表格需要表头行和单元格数相同的分隔行，只实现 CommonMark 的应用永远不会渲染它。"}}, {"@type": "Question", "name": "妙言支持脚注和公式吗？", "acceptedAnswer": {"@type": "Answer", "text": "支持，脚注由解析器处理，公式在预览里由 KaTeX 排版，见 Markdown 里写 LaTeX 公式。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -873,7 +873,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/commonmark-vs-gfm.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言用的是 cmark-gfm 解析器，打开了四个扩展，然后在预览里另外加上公式、提示框和图表。</p>
+<p>CommonMark 是对 Markdown 核心语法的一份精确规范，GitHub Flavored Markdown（GFM）是它的严格超集，多出了表格、任务列表、删除线、扩展自动链接，以及对几个危险 HTML 标签的过滤。再往外的脚注、公式、提示框、图表这些都是各个应用自己的功能，不在任何标准里。想让一篇笔记到哪都渲染一致，就只用 CommonMark 加上你实测过的 GFM 扩展。妙言用的是 cmark-gfm 解析器，打开了五个扩展，然后在预览里另外加上公式、提示框和图表。</p>
 <h2 id="为什么会有这么多方言">为什么会有这么多方言</h2>
 <p>John Gruber 在 2004 年发布 Markdown，当时是一份语法说明加一个 Perl 脚本 Markdown.pl。按 <a href="https://commonmark.org/" target="_blank" rel="noopener">CommonMark 官网</a>的说法，这份说明并没有把语法写得没有歧义，实现者只好照着 Markdown.pl 的行为来，而它有不少 bug，最后一次更新是 2004 年 12 月。到 2014 年已经有几十种实现，各家渐渐跑偏，同一个文件换个网站渲染就可能不一样。</p>
 <p><a href="https://spec.commonmark.org/0.31.2/" target="_blank" rel="noopener">CommonMark 规范</a>把规则连同大量示例写了下来，当前版本是 2024 年 1 月的 0.31.2。<a href="https://github.github.com/gfm/" target="_blank" rel="noopener">GFM 规范</a>以它为基础，并明确写了 GFM 是 CommonMark 的严格超集，最新发布的版本是 2019 年 4 月的 0.29-gfm，是一个快照，不是一直在动的目标。</p>
@@ -890,10 +890,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </ul>
 <p><strong>应用扩展</strong>就是其余的一切。脚注、美元符号公式、<code>&gt; [!NOTE]</code> 提示框、双链、Mermaid 图表都很常见，但没有一个写在 CommonMark 或 GFM 规范里。GitHub 自己的语法文档里写了脚注和提示框，那是 GitHub 的功能，不属于已发布的 GFM 规范。</p>
 <h2 id="妙言实现到哪一层">妙言实现到哪一层</h2>
-<p>妙言用 cmark-gfm 渲染 Markdown。源码里，解析器带着脚注选项创建，并按名字挂了四个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。</p>
+<p>妙言用 cmark-gfm 渲染 Markdown。源码里，解析器带着脚注选项创建，并按名字挂了五个扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code>、<code>tasklist</code> 和 V4.10.0 起加上的 <code>autolink</code>，输出 HTML 时用的是允许原始 HTML 通过的选项，由此带来两点。</p>
 <ul>
-<li>扩展自动链接没有挂上，所以裸 URL 不会被解析器变成链接，要写 <code>&lt;https://example.com&gt;</code> 或者普通链接。</li>
-<li>tagfilter 也没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，<code>&lt;details&gt;</code> 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。</li>
+<li>挂上了扩展自动链接，裸写的 <code>https://example.com</code> 或 <code>www.example.com</code> 在预览和导出里都会变成链接，和 GitHub 一样，V4.10.0 之前它们只是普通文字，所以要在旧版本或别的应用里读的笔记，写成 <code>&lt;https://example.com&gt;</code> 还是更稳。</li>
+<li>tagfilter 没有挂，GFM 的禁用原始 HTML 规则在预览里不生效，<code>&lt;details&gt;</code> 这样的原始 HTML 会正常渲染，折叠段落能用就靠这个，同时也意味着只打开你信得过的笔记。</li>
 </ul>
 <p>解析之前，妙言会先保护公式，<code>$$ ... $$</code>、<code>$ ... $</code>、<code>\( ... \)</code> 和 <code>\[ ... \]</code> 里的下划线和星号不会被当成强调，预览里再由 KaTeX 排版。解析之后有一步后处理，把 <code>&gt; [!NOTE]</code>、<code>[!TIP]</code>、<code>[!IMPORTANT]</code>、<code>[!WARNING]</code>、<code>[!CAUTION]</code> 这五种引用块变成提示框，和 GitHub 的写法一致。预览页的脚本再把围栏里的 <code>mermaid</code>、<code>plantuml</code>、<code>markmap</code> 画出来，用 highlight.js 给代码上色，文件开头的 <code>---</code> front matter 在预览里会被去掉（前提是中间看起来像 YAML）。</p>
 <figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/commonmark-vs-gfm-mobile.webp" width="600" height="1282"><img src="/img/blog/commonmark-vs-gfm.webp" width="1000" height="336" loading="lazy" alt="Markdown 笔记依次经过公式保护、带四个扩展的 cmark-gfm 解析器、提示框改写，再由运行 KaTeX、图表脚本和 highlight.js 的网页视图生成预览。"></picture><figcaption>解析器负责 CommonMark 加表格、脚注、删除线和任务列表，公式、提示框和图表是在它前后额外加的。</figcaption></figure>

@@ -20,7 +20,7 @@
 <meta property="og:description" content="Set up a Markdown journal as one YYYY-MM-DD.md file per day, with a small template, a shell script for today&#x27;s note, wikilinks between days and search.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/daily-notes-markdown.webp">
 <meta property="article:published_time" content="2026-11-01">
-<meta property="article:modified_time" content="2026-11-01">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Managing notes">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Daily notes in Markdown: one file per day, plus a script", "item": "https://miaoyan.app/blog/daily-notes-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/daily-notes-markdown/#article", "headline": "Daily notes in Markdown: one file per day, plus a script", "description": "Set up a Markdown journal as one YYYY-MM-DD.md file per day, with a small template, a shell script for today's note, wikilinks between days and search.", "url": "https://miaoyan.app/blog/daily-notes-markdown/", "mainEntityOfPage": "https://miaoyan.app/blog/daily-notes-markdown/", "datePublished": "2026-11-01", "dateModified": "2026-11-01", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/daily-notes-markdown.webp", "timeRequired": "PT7M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does MiaoYan have a daily note feature?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no command that opens today's note and no template setting at V4.9.0. The naming convention and the script above give the same result with one extra step."}}, {"@type": "Question", "name": "Can I make the template appear when I press New?", "acceptedAnswer": {"@type": "Answer", "text": "Not directly. As a manual route, keep a note called Template, press Command D to duplicate it into \"Template Copy\", then rename it with Command R. The script is faster."}}, {"@type": "Question", "name": "Can I use weekly or monthly notes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, with the same pattern, such as 2026-W46.md or 2026-11.md, linking to the days from the summary. date +%G-W%V prints the ISO week."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Daily notes in Markdown: one file per day, plus a script", "item": "https://miaoyan.app/blog/daily-notes-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/daily-notes-markdown/#article", "headline": "Daily notes in Markdown: one file per day, plus a script", "description": "Set up a Markdown journal as one YYYY-MM-DD.md file per day, with a small template, a shell script for today's note, wikilinks between days and search.", "url": "https://miaoyan.app/blog/daily-notes-markdown/", "mainEntityOfPage": "https://miaoyan.app/blog/daily-notes-markdown/", "datePublished": "2026-11-01", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/daily-notes-markdown.webp", "timeRequired": "PT7M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does MiaoYan have a daily note feature?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no command that opens today's note and no template setting at V4.11.0. The naming convention and the script above give the same result with one extra step."}}, {"@type": "Question", "name": "Can I make the template appear when I press New?", "acceptedAnswer": {"@type": "Answer", "text": "Not directly. As a manual route, keep a note called Template, press Command D to duplicate it into \"Template Copy\", then rename it with Command R. The script is faster."}}, {"@type": "Question", "name": "Can I use weekly or monthly notes?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, with the same pattern, such as 2026-W46.md or 2026-11.md, linking to the days from the summary. date +%G-W%V prints the ISO week."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -871,7 +871,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-11-01">Nov 1, 2026</time></span><span>7 min read</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/daily-notes-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>A daily note in Markdown is one plain file per day, named with the ISO date, such as <code>2026-11-14.md</code>, kept in a folder per year. That name sorts correctly in any file browser, becomes the note title in MiaoYan, and works as a wikilink target, so one choice does three jobs. Add a short template with a <code>date</code> in front matter, create today's file with a few lines of shell, and rely on search for everything older. MiaoYan has no daily-note command or template setting at V4.9.0, so what follows is a convention plus a script, not a built-in feature.</p>
+<p>A daily note in Markdown is one plain file per day, named with the ISO date, such as <code>2026-11-14.md</code>, kept in a folder per year. That name sorts correctly in any file browser, becomes the note title in MiaoYan, and works as a wikilink target, so one choice does three jobs. Add a short template with a <code>date</code> in front matter, create today's file with a few lines of shell, and rely on search for everything older. MiaoYan has no daily-note command or template setting at V4.11.0, so what follows is a convention plus a script, not a built-in feature.</p>
 <h2 id="name-the-file-for-the-day">Name the file for the day</h2>
 <p>Use <code>YYYY-MM-DD.md</code>. Year first, then month, then day, each zero-padded to a fixed width, means alphabetical order and chronological order are the same order. Names like <code>14-11-2026</code> or <code>Nov 14</code> sort by day or by month name and scatter your entries.</p>
 <p>The shell can produce the name. <code>date +%F</code> prints the current date as <code>2026-11-14</code>, and it works with the <code>date</code> that ships with macOS. For yesterday, macOS uses <code>date -v-1d +%F</code>, while GNU <code>date</code> on Linux uses <code>date -d yesterday +%F</code>.</p>
@@ -944,7 +944,7 @@ rg -l -F 'date: 2026-11' Journal      # every day in November, by front matter
 </ul>
 <h2 id="faq">FAQ</h2>
 <h3 id="does-miaoyan-have-a-daily-note-feature">Does MiaoYan have a daily note feature?</h3>
-<p>No. There is no command that opens today's note and no template setting at V4.9.0. The naming convention and the script above give the same result with one extra step.</p>
+<p>No. There is no command that opens today's note and no template setting at V4.11.0. The naming convention and the script above give the same result with one extra step.</p>
 <h3 id="can-i-make-the-template-appear-when-i-press-new">Can I make the template appear when I press New?</h3>
 <p>Not directly. As a manual route, keep a note called Template, press Command D to duplicate it into "Template Copy", then rename it with Command R. The script is faster.</p>
 <h3 id="can-i-use-weekly-or-monthly-notes">Can I use weekly or monthly notes?</h3>

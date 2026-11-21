@@ -44,7 +44,7 @@ flowchart TD
 | `A[/text/]` 和 `A[\text\]` | 平行四边形 |
 | `A[/text\]` 和 `A[\text/]` | 梯形 |
 
-Mermaid 11.3.0 加了第二种写法，形状多得多，写成 `A@{ shape: cyl, label: "订单库" }`，名字有 `cyl`、`diam`、`hex`、`doc`、`stadium`、`circle` 等，每个还有 `database`、`decision` 这样的别名。它比较啰嗦，只在括号表达不了的形状上才值得用，比如文档或层叠矩形。妙言 V4.9.0 打包的是 Mermaid 11.14.0，两种写法都能用，完整的形状列表在 [Mermaid 流程图文档](https://mermaid.js.org/syntax/flowchart.html) 里。
+Mermaid 11.3.0 加了第二种写法，形状多得多，写成 `A@{ shape: cyl, label: "订单库" }`，名字有 `cyl`、`diam`、`hex`、`doc`、`stadium`、`circle` 等，每个还有 `database`、`decision` 这样的别名。它比较啰嗦，只在括号表达不了的形状上才值得用，比如文档或层叠矩形。妙言 V4.11.0 打包的是 Mermaid 11.14.0，两种写法都能用，完整的形状列表在 [Mermaid 流程图文档](https://mermaid.js.org/syntax/flowchart.html) 里。
 
 ## 连线、标签和连写
 
@@ -126,7 +126,7 @@ GitHub 在它那边做的是同一件事，README、issue、拉取请求和 wiki
 
 ## 限制
 
-节点超过三十个左右的流程图，在哪个渲染器里都不好读。比 Mermaid 11.14.0 更新的功能，比如 11.17.0 加入的可折叠子图，在妙言 V4.9.0 里用不了，具体是被忽略还是报错要看写法。如果流程只是一个大纲结构，[Markmap](/zh/blog/markmap-mind-maps/) 可能更合适。
+节点超过三十个左右的流程图，在哪个渲染器里都不好读。比 Mermaid 11.14.0 更新的功能，比如 11.17.0 加入的可折叠子图，在妙言 V4.11.0 里用不了，具体是被忽略还是报错要看写法。如果流程只是一个大纲结构，[Markmap](/zh/blog/markmap-mind-maps/) 可能更合适。
 
 ## 常见问题
 
@@ -136,7 +136,7 @@ GitHub 在它那边做的是同一件事，README、issue、拉取请求和 wiki
 
 ### 为什么图在 GitHub 上能渲染，在我的编辑器里不行，或者反过来？
 
-两边跑的 Mermaid 版本不同。在 GitHub 的 `mermaid` 围栏里单独写 `info` 看它的版本，再和编辑器打包的版本比一下，妙言 V4.9.0 打包的是 11.14.0。
+两边跑的 Mermaid 版本不同。在 GitHub 的 `mermaid` 围栏里单独写 `info` 看它的版本，再和编辑器打包的版本比一下，妙言 V4.11.0 打包的是 11.14.0。
 
 ### `flowchart` 和 `graph` 有什么区别？
 

@@ -20,7 +20,7 @@
 <meta property="og:description" content="讲清 Markdown 标题的 # 写法、下划线写法和 --- 陷阱，以及层级、锚点和妙言的大纲面板。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-headings.webp">
 <meta property="article:published_time" content="2026-10-27">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -106,28 +106,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -849,7 +849,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 标题怎么写：# 语法、层级和锚点", "item": "https://miaoyan.app/zh/blog/markdown-headings/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-headings/#article", "headline": "Markdown 标题怎么写：# 语法、层级和锚点", "description": "讲清 Markdown 标题的 # 写法、下划线写法和 --- 陷阱，以及层级、锚点和妙言的大纲面板。", "url": "https://miaoyan.app/zh/blog/markdown-headings/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-headings/", "datePublished": "2026-10-27", "dateModified": "2026-10-27", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-headings.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "一个 Markdown 文件该有几个一级标题？", "acceptedAnswer": {"@type": "Answer", "text": "一个最稳，作为笔记标题。CommonMark 允许多个，W3C 的标题教程也没有要求只能一个，但只留一个 # 大纲更好读。"}}, {"@type": "Question", "name": "为什么 #标题 没有变成标题？", "acceptedAnswer": {"@type": "Answer", "text": "# 后面没有空格。CommonMark 要求空格或制表符，#标题 是段落，写成 # 标题。"}}, {"@type": "Question", "name": "为什么我的段落变成了大标题？", "acceptedAnswer": {"@type": "Answer", "text": "段落正下方写了 --- 或 ===，被当成了 setext 下划线，在短横线上面加一个空行就好。"}}, {"@type": "Question", "name": "能在 Markdown 里自定义标题 ID 吗？", "acceptedAnswer": {"@type": "Answer", "text": "CommonMark 不行，{#id} 在 Pandoc 和 PHP Markdown Extra 里有效。要让笔记通用，就在标题上面放 <a id=\"name\" name=\"name\"></a>。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 标题怎么写：# 语法、层级和锚点", "item": "https://miaoyan.app/zh/blog/markdown-headings/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-headings/#article", "headline": "Markdown 标题怎么写：# 语法、层级和锚点", "description": "讲清 Markdown 标题的 # 写法、下划线写法和 --- 陷阱，以及层级、锚点和妙言的大纲面板。", "url": "https://miaoyan.app/zh/blog/markdown-headings/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-headings/", "datePublished": "2026-10-27", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-headings.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "一个 Markdown 文件该有几个一级标题？", "acceptedAnswer": {"@type": "Answer", "text": "一个最稳，作为笔记标题。CommonMark 允许多个，W3C 的标题教程也没有要求只能一个，但只留一个 # 大纲更好读。"}}, {"@type": "Question", "name": "为什么 #标题 没有变成标题？", "acceptedAnswer": {"@type": "Answer", "text": "# 后面没有空格。CommonMark 要求空格或制表符，#标题 是段落，写成 # 标题。"}}, {"@type": "Question", "name": "为什么我的段落变成了大标题？", "acceptedAnswer": {"@type": "Answer", "text": "段落正下方写了 --- 或 ===，被当成了 setext 下划线，在短横线上面加一个空行就好。"}}, {"@type": "Question", "name": "能在 Markdown 里自定义标题 ID 吗？", "acceptedAnswer": {"@type": "Answer", "text": "CommonMark 不行，{#id} 在 Pandoc 和 PHP Markdown Extra 里有效。要让笔记通用，就在标题上面放 <a id=\"name\" name=\"name\"></a>。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -917,14 +917,14 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="标题里的强调链接和代码">标题里的强调、链接和代码</h2>
 <p>标题接受行内 Markdown，<code>## 更*快*的路径</code>、<code>## `--force` 参数</code> 和 <code>## 参见 [规范](https://spec.commonmark.org/)</code> 都能正常渲染。锚点是按可见文字生成的，所以带链接或代码的标题生成的仍是纯文字锚点，改了标题文字，指向它的链接就断了，标题尽量写成朴素的标签。</p>
 <h2 id="妙言怎么用标题">妙言怎么用标题</h2>
-<p>妙言用 cmark-gfm 渲染，<code>#</code> 和下划线两种标题都遵循 CommonMark。下面这些来自 V4.9.0 的源码。</p>
+<p>妙言用 cmark-gfm 渲染，<code>#</code> 和下划线两种标题都遵循 CommonMark。下面这些来自 V4.11.0 的源码。</p>
 <ul>
 <li><strong>编辑器。</strong> 编辑器给 <code>#</code> 标题行上色，并把 <code>#</code> 标记当作语法符号处理，下划线写法则把 <code>===</code> 或 <code>---</code> 那一行标成语法符号。</li>
 <li><strong>大纲面板。</strong> 预览里有一个目录面板，只列 <code>h1</code>、<code>h2</code>、<code>h3</code>，用 tocbot 生成。笔记里至少有两个这样的标题才会出现，预览窄于 600 像素时，用来呼出它的悬停入口会隐藏。在显示预览或分栏时，用「视图」菜单里的「切换目录」或 <code>⌘5</code> 打开，这样打开会固定住，再按一次关闭。所以只有标题加一堆 <code>####</code> 的笔记没有大纲，这也是层级要连续的又一个理由。</li>
 <li><strong>预览字号。</strong> 预览样式表里 <code>h1</code> 是 1.76em，<code>h2</code> 是 1.41em，<code>h3</code> 是 1.18em，<code>h4</code> 到 <code>h6</code> 和正文一样大，所以 <code>h4</code>、<code>h5</code>、<code>h6</code> 看起来完全一样，都是正文大小的粗体。</li>
 <li><strong>锚点。</strong> 每个标题的 ID 就是它的文字，重复的加 <code>-1</code>、<code>-2</code>，预览里鼠标悬停会在旁边出现一个链接图标，指向这个标题。这和 GitHub 的小写 slug 不同，链接那篇里讲过。</li>
 </ul>
-<p>妙言 V4.9.0 没有标题折叠，也没有设置标题级别的快捷键，<code>#</code> 要自己敲。其他语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 速查表</a>。</p>
+<p>妙言 V4.11.0 没有标题折叠，也没有设置标题级别的快捷键，<code>#</code> 要自己敲。其他语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 速查表</a>。</p>
 <h2 id="检查标题">检查标题</h2>
 <p>打开大纲（妙言里 <code>⌘5</code>，GitHub 上是 Outline 按钮）当列表读一遍，不看正文也读得通，结构就没问题。再找 <code>##</code> 直接跳到 <code>####</code>、行首 <code>#</code> 后面没有空格、段落下面多出来的 <code>---</code>，最后在笔记会被阅读的每个地方点一遍页内链接。</p>
 <h2 id="常见问题">常见问题</h2>

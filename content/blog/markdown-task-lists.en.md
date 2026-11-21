@@ -28,13 +28,13 @@ That is the standard. MiaoYan's click toggle, described below, accepts all of th
 - **CommonMark without the GFM extension.** The item is a normal bullet whose text begins with `[ ]`. You see the brackets.
 - **Other editors.** Whether a rendered box can be clicked is not part of the spec, so each editor decides for itself. Test a click once before relying on it.
 
-MiaoYan's preview uses a Swift build of cmark-gfm with four extensions turned on: table, footnotes, strikethrough and tasklist (`Business/Markdown.swift`). So task lists render as real `input` checkboxes in the preview.
+MiaoYan's preview uses a Swift build of cmark-gfm with five extensions turned on: table, footnotes, strikethrough, tasklist and, since V4.10.0, autolink (`Business/Markdown.swift`). So task lists render as real `input` checkboxes in the preview.
 
 ## How clicking a checkbox works in MiaoYan
 
 In the preview, the page script (`common.js`) enables every checkbox and records the source line of its list item. A click sends that line to the app, and the app (`HandlerCheckbox` in `MPreviewHandlers.swift`) finds the box on that line, swaps the space or `x` between the brackets for the other one and saves the note.
 
-This mechanism explains the edge cases. The app works from the source line, so the box you click is the one that changes, whichever marker the note uses: `-`, `*`, `+`, `1.` or `1)`, a lowercase or capital `X`, and a task on a quoted line all count. Text such as `- [ ] ` inside a fenced code block draws no checkbox, so it is never clicked and never changed. If a click changes nothing, check that the line really renders as a task.
+This mechanism explains the edge cases. The app works from the source line, so the box you click is the one that changes, whichever marker the note uses: `-`, `*`, `+`, `1.` or `1)`, a lowercase or capital `X`, and a task on a quoted line all count. Text such as `- [ ] ` inside a fenced code block draws no checkbox, so it is never clicked and never changed. If a click changes nothing, check that the line really renders as a task. The iPhone and iPad app has done the same in its reading view since V4.9.0: tap a box and that line is rewritten and saved, without opening the editor.
 
 In the editor, the Format menu has a "Todo" item (`⌘T`, labeled 「待办」 in the Chinese interface). On a line that is not a task it inserts `- [ ] `, and on a task it switches between `- [ ] ` and `- [x] `. It changes only the character between the brackets, so indented and numbered tasks work too, and pressing Return on a task line starts the next one unticked. Typing `/task` and pressing `Tab` inserts a three-line template, two open tasks and one done, with Chinese placeholder text; the Tab Quick Input menu lists it as "/task - Task List".
 

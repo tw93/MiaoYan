@@ -88,9 +88,9 @@ GitHub 先做这层过滤，再对结果做清理。[github/markup 的 README](h
 
 ## 妙言怎么处理 HTML
 
-V4.9.0 的预览用 cmark-gfm 解析，按名字挂了四个扩展，`table`、`footnotes`、`strikethrough` 和 `tasklist`（`Business/Markdown.swift` 第 22 行），tagfilter 不在其中。渲染时传的是 `CMARK_OPT_UNSAFE`，cmark 默认会把原始 HTML 换成占位注释，这里不换，所以每个标签和每个属性都会到预览里，`style` 和 `iframe` 也不例外。
+V4.11.0 的预览用 cmark-gfm 解析，按名字挂了五个扩展，`table`、`footnotes`、`strikethrough`、`tasklist` 和 `autolink`（`Business/Markdown.swift` 第 22 行），tagfilter 不在其中。渲染时传的是 `CMARK_OPT_UNSAFE`，cmark 默认会把原始 HTML 换成占位注释，这里不换，所以每个标签和每个属性都会到预览里，`style` 和 `iframe` 也不例外。
 
-从解析器到屏幕之间，除了改写图片地址，不再动这些 HTML。渲染出来的 HTML 被填进预览模板的 `DOWN_HTML` 位置，写成临时的 `index-<uuid>.html`，用 `loadFileURL` 打开，读取权限设为 `/`，所在的 web view 配置里 `allowsContentJavaScript` 为 true，模板没有声明 Content-Security-Policy，这条路径上也没有删除 `script` 标签的步骤。
+从解析器到屏幕之间，除了改写图片地址，不再动这些 HTML。渲染出来的 HTML 被填进预览模板的 `DOWN_HTML` 位置，写成临时的 `index-<uuid>.html`，用 `loadFileURL` 打开，V4.10.0 起读取权限只给这个文件所在的文件夹，本地图片改走应用自己的 `miaoyan-file` 地址，所在的 web view 配置里 `allowsContentJavaScript` 为 true，模板没有声明 Content-Security-Policy，这条路径上也没有删除 `script` 标签的步骤。
 
 同一个渲染器也供 PDF 和 HTML 导出使用，见 [Markdown 转 HTML](/zh/blog/markdown-to-html/)。
 

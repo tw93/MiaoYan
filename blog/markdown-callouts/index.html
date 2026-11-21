@@ -20,7 +20,7 @@
 <meta property="og:description" content="Write a Markdown callout in GitHub alerts, Obsidian and MkDocs Material or Docusaurus syntax, and see how each looks where the renderer does not know it.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-callouts.webp">
 <meta property="article:published_time" content="2026-11-08">
-<meta property="article:modified_time" content="2026-11-08">
+<meta property="article:modified_time" content="2026-11-21">
 <meta property="article:section" content="Writing in Markdown">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -104,28 +104,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f864b73a624d") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=bd8883b5caa2") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=3c7fc0c1db7b") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=5c028d4f6b7f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -847,7 +847,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown callouts: GitHub alerts, Obsidian and more", "item": "https://miaoyan.app/blog/markdown-callouts/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-callouts/#article", "headline": "Markdown callouts: GitHub alerts, Obsidian and more", "description": "Write a Markdown callout in GitHub alerts, Obsidian and MkDocs Material or Docusaurus syntax, and see how each looks where the renderer does not know it.", "url": "https://miaoyan.app/blog/markdown-callouts/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-callouts/", "datePublished": "2026-11-08", "dateModified": "2026-11-08", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-callouts.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What types does GitHub support?", "acceptedAnswer": {"@type": "Answer", "text": "Five: NOTE, TIP, IMPORTANT, WARNING and CAUTION. The marker goes alone on the first line of a block quote."}}, {"@type": "Question", "name": "Can I give a GitHub alert a custom title?", "acceptedAnswer": {"@type": "Answer", "text": "Not in GitHub's syntax as documented. The type word is the title. Obsidian and MkDocs Material allow custom titles."}}, {"@type": "Question", "name": "Why does my callout show as a plain quote with [!NOTE]?", "acceptedAnswer": {"@type": "Answer", "text": "The app does not implement the syntax, or the marker is not an exact match for a type it knows. Check the spelling and that the body follows on the next line."}}, {"@type": "Question", "name": "Do callouts work in every Markdown editor?", "acceptedAnswer": {"@type": "Answer", "text": "No. They are extensions, and each dialect is understood only by the tools built for it."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown callouts: GitHub alerts, Obsidian and more", "item": "https://miaoyan.app/blog/markdown-callouts/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-callouts/#article", "headline": "Markdown callouts: GitHub alerts, Obsidian and more", "description": "Write a Markdown callout in GitHub alerts, Obsidian and MkDocs Material or Docusaurus syntax, and see how each looks where the renderer does not know it.", "url": "https://miaoyan.app/blog/markdown-callouts/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-callouts/", "datePublished": "2026-11-08", "dateModified": "2026-11-21", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-callouts.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What types does GitHub support?", "acceptedAnswer": {"@type": "Answer", "text": "Five: NOTE, TIP, IMPORTANT, WARNING and CAUTION. The marker goes alone on the first line of a block quote."}}, {"@type": "Question", "name": "Can I give a GitHub alert a custom title?", "acceptedAnswer": {"@type": "Answer", "text": "Not in GitHub's syntax as documented. The type word is the title. Obsidian and MkDocs Material allow custom titles."}}, {"@type": "Question", "name": "Why does my callout show as a plain quote with [!NOTE]?", "acceptedAnswer": {"@type": "Answer", "text": "The app does not implement the syntax, or the marker is not an exact match for a type it knows. Check the spelling and that the body follows on the next line."}}, {"@type": "Question", "name": "Do callouts work in every Markdown editor?", "acceptedAnswer": {"@type": "Answer", "text": "No. They are extensions, and each dialect is understood only by the tools built for it."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -959,7 +959,7 @@ Markdown works inside.
 </table>
 <p>The GitHub form degrades best, because the quote itself survives and the marker word is a readable label. That is the practical reason to prefer it for notes that travel. The admonition forms fail worse, since the four-space body can end up as a code block. For files read in several apps, see <a href="/blog/commonmark-vs-gfm/">CommonMark vs GFM</a> for which features count as standard.</p>
 <h2 id="what-miaoyan-does-with-them">What MiaoYan does with them</h2>
-<p>MiaoYan 4.9.0 supports the GitHub form and nothing else from this list. The source shows how. After cmark-gfm renders the note, a post-processing function looks for a <code>&lt;blockquote&gt;</code> whose first paragraph starts with <code>[!NOTE]</code>, <code>[!TIP]</code>, <code>[!IMPORTANT]</code>, <code>[!WARNING]</code> or <code>[!CAUTION]</code>, matched in any letter case, and rewrites it as a <code>div</code> with a title row and an icon. Because it runs on the rendered HTML, a marker inside a fenced code block never matches, and the test suite checks that. A quote nested inside an alert stays a quote. The five colours are blue, green, purple, amber and red.</p>
+<p>MiaoYan 4.11.0 supports the GitHub form and nothing else from this list. The source shows how. After cmark-gfm renders the note, a post-processing function looks for a <code>&lt;blockquote&gt;</code> whose first paragraph starts with <code>[!NOTE]</code>, <code>[!TIP]</code>, <code>[!IMPORTANT]</code>, <code>[!WARNING]</code> or <code>[!CAUTION]</code>, matched in any letter case, and rewrites it as a <code>div</code> with a title row and an icon. Because it runs on the rendered HTML, a marker inside a fenced code block never matches, and the test suite checks that. A quote nested inside an alert stays a quote. The five colours are blue, green, purple, amber and red.</p>
 <p>Things the code does not do. An unknown word such as <code>[!DANGER]</code> stays an ordinary quote, as do Obsidian's <code>+</code> and <code>-</code> fold markers, because a marker followed directly by another character is not converted. There is no custom title and no folding, and the <code>!!!</code> and <code>:::</code> forms are not recognized, so they show as text. One edge worth knowing from the code: a space after the marker is accepted, so a line like <code>&gt; [!tip] My title</code> becomes a Tip box whose body begins with "My title", not a box titled "My title". Write the body on the next line, which is the form GitHub documents.</p>
 <p>If you need a fold in a note, use a <code>&lt;details&gt;</code> block as described in <a href="/blog/markdown-collapsible-sections/">Markdown collapsible sections</a>; it works in MiaoYan's preview and on GitHub.</p>
 <h2 id="choosing-and-checking">Choosing and checking</h2>

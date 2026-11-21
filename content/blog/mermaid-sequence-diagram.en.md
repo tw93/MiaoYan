@@ -1,4 +1,4 @@
-A Mermaid sequence diagram starts with the line `sequenceDiagram` inside a fenced block tagged `mermaid`, followed by one line per message in the form `Sender->>Receiver: text`. Participants appear in the order they are first mentioned, so for a small diagram you can skip declaring them. Declare them when you want readable labels, a fixed order or a stick figure. This post covers the syntax up to Mermaid 11.14.0, which is the version MiaoYan V4.9.0 bundles; the [overview of Mermaid in Markdown](/blog/mermaid-diagrams-in-markdown/) covers the other diagram types.
+A Mermaid sequence diagram starts with the line `sequenceDiagram` inside a fenced block tagged `mermaid`, followed by one line per message in the form `Sender->>Receiver: text`. Participants appear in the order they are first mentioned, so for a small diagram you can skip declaring them. Declare them when you want readable labels, a fixed order or a stick figure. This post covers the syntax up to Mermaid 11.14.0, which is the version MiaoYan V4.11.0 bundles; the [overview of Mermaid in Markdown](/blog/mermaid-diagrams-in-markdown/) covers the other diagram types.
 
 ## The smallest diagram
 
@@ -125,7 +125,7 @@ sequenceDiagram
 
 ## Autonumber and background highlighting
 
-Put `autonumber` on its own line, before the messages, and every arrow gets a number. A start value and increment can follow it, but decimal values there arrived in Mermaid 11.15.0, which MiaoYan V4.9.0 does not have, so stay with the plain keyword.
+Put `autonumber` on its own line, before the messages, and every arrow gets a number. A start value and increment can follow it, but decimal values there arrived in Mermaid 11.15.0, which MiaoYan V4.11.0 does not have, so stay with the plain keyword.
 
 `rect` paints a coloured background behind part of the diagram. It takes `rgb()` or `rgba()` and closes with `end`:
 
@@ -171,7 +171,7 @@ The database bar opens and closes inside the API bar. The API bar is closed with
 
 ## How MiaoYan renders it
 
-The preview turns the fenced block into HTML with a `language-mermaid` class. A script then passes the text to the bundled `mermaid.min.js`, which reports version 11.14.0 in the V4.9.0 source, and puts the SVG in place of the code. Nothing is fetched, so it works offline. Colours follow the light or dark appearance. To insert a starter, type `/mermaid` and press `Tab`; the template is a flowchart, so replace its body with `sequenceDiagram`.
+The preview turns the fenced block into HTML with a `language-mermaid` class. A script then passes the text to the bundled `mermaid.min.js`, which reports version 11.14.0 in the V4.11.0 source, and puts the SVG in place of the code. Nothing is fetched, so it works offline. Colours follow the light or dark appearance. To insert a starter, type `/mermaid` and press `Tab`; the template is a flowchart, so replace its body with `sequenceDiagram`.
 
 ## Common errors
 
@@ -181,7 +181,7 @@ The preview turns the fenced block into HTML with a `language-mermaid` class. A 
 - **Deactivating an inactive participant.** A `-` or `deactivate` on a participant with no open bar makes Mermaid stop with `Trying to inactivate an inactive participant`, so the diagram stays as code. Count your `+` and `-`.
 - **Creating the sender.** `create participant Carl` must be followed by a message that sends to Carl, not from him.
 - **A comment after a message.** `%%` only works as a whole line.
-- **Newer syntax.** Anything marked 11.15.0 or later in the Mermaid documentation, such as decimal `autonumber` values, will not render in V4.9.0.
+- **Newer syntax.** Anything marked 11.15.0 or later in the Mermaid documentation, such as decimal `autonumber` values, will not render in V4.11.0.
 
 To check a diagram, switch to preview with `⌘3` or split mode with `⌘\`. Exports to PDF come from the same preview, covered in [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/), and diagrams also render in presentation mode, covered in [Markdown to slides](/blog/markdown-to-slides/).
 

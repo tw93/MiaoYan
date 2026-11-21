@@ -9,7 +9,7 @@ MiaoYan does not sync anything itself. It reads and writes one folder of Markdow
 | Dropbox | Mixed Mac, Windows and Linux machines | Conflicts show up as "conflicted copy" files |
 | git | People who want history and are fine syncing by hand | Nothing is automatic: you commit, pull and push yourself |
 
-If you use Apple devices only, iCloud Drive is the shortest path. MiaoYan's App Store version is built around it: with no folder chosen and iCloud available, the app uses a folder in iCloud Drive, and the iPhone and iPad apps open the same one.
+If you use Apple devices only, iCloud Drive is the shortest path. MiaoYan's App Store version is built around it: with no folder chosen and iCloud available, the app uses a folder in iCloud Drive, and the iPhone and iPad apps open the same one. Without an iCloud account the iPhone and iPad app still starts: since V4.8.0 it makes a MiaoYan folder on the device, visible in Files under On My iPhone, and that library stays on the device until you choose a synced folder with Choose Folder. If the iCloud folder becomes unavailable because iCloud is signed out or iCloud Drive is off for MiaoYan, the list header shows an iCloud Off mark. Deleted notes go to a `Trash` folder inside the library, so a note deleted on the iPhone shows in the Mac's Trash, and emptying it on one device clears it on the other.
 
 ## How file sync actually works
 

@@ -1,4 +1,4 @@
-A daily note in Markdown is one plain file per day, named with the ISO date, such as `2026-11-14.md`, kept in a folder per year. That name sorts correctly in any file browser, becomes the note title in MiaoYan, and works as a wikilink target, so one choice does three jobs. Add a short template with a `date` in front matter, create today's file with a few lines of shell, and rely on search for everything older. MiaoYan has no daily-note command or template setting at V4.9.0, so what follows is a convention plus a script, not a built-in feature.
+A daily note in Markdown is one plain file per day, named with the ISO date, such as `2026-11-14.md`, kept in a folder per year. That name sorts correctly in any file browser, becomes the note title in MiaoYan, and works as a wikilink target, so one choice does three jobs. Add a short template with a `date` in front matter, create today's file with a few lines of shell, and rely on search for everything older. MiaoYan has no daily-note command or template setting at V4.11.0, so what follows is a convention plus a script, not a built-in feature.
 
 ## Name the file for the day
 
@@ -115,7 +115,7 @@ MiaoYan for Mac is open source on [GitHub](https://github.com/tw93/MiaoYan), and
 
 ### Does MiaoYan have a daily note feature?
 
-No. There is no command that opens today's note and no template setting at V4.9.0. The naming convention and the script above give the same result with one extra step.
+No. There is no command that opens today's note and no template setting at V4.11.0. The naming convention and the script above give the same result with one extra step.
 
 ### Can I make the template appear when I press New?
 
