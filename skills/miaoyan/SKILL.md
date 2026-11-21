@@ -72,7 +72,7 @@ When writing raw HTML for media, tables, or iframes, keep it responsive and avoi
 
 ### Add math and diagrams
 
-Use `$...$` for inline math and `$$...$$` for display math:
+Use `$...$` for inline math and `$$...$$` for display math (KaTeX's `mhchem` extension `\ce{...}` / `\pu{...}` is also supported):
 
 ```markdown
 The result is $E = mc^2$.

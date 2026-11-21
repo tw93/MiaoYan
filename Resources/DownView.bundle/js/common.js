@@ -465,6 +465,36 @@ const MiaoYanCommon = {
     this.convertEmoji(write);
   },
 
+  // KaTeX's mhchem extension throws plain arrays (e.g. `["MhchemBugT", ...]` or
+  // `["ExtraCloseMissingOpen", ...]`) on malformed inputs instead of
+  // `katex.ParseError`. `auto-render` only recovers from `katex.ParseError` and
+  // rethrows everything else, which aborts rendering for every subsequent
+  // formula on the page. Keep this guard and its array error codes in sync with
+  // `ppt/plugin/math/math.js` when upgrading KaTeX / mhchem.
+  guardKaTeXRender() {
+    const katex = window.katex;
+    if (!katex || katex.__miaoyanMhchemGuarded || typeof katex.render !== 'function') {
+      return;
+    }
+    katex.__miaoyanMhchemGuarded = true;
+    const originalRender = katex.render;
+    katex.render = function (...args) {
+      try {
+        return originalRender.apply(this, args);
+      } catch (error) {
+        if (
+          Array.isArray(error) &&
+          typeof error[0] === 'string' &&
+          (error[0].startsWith('Mhchem') || error[0] === 'ExtraCloseMissingOpen') &&
+          typeof katex.ParseError === 'function'
+        ) {
+          throw new katex.ParseError(error[1] || error[0]);
+        }
+        throw error;
+      }
+    };
+  },
+
   // Native characters everywhere. Left to itself the convertor sniffs the
   // user agent on first use: outside Apple's browsers it draws from an image
   // sheet this bundle does not ship, and it reads iOS 17 as iOS 1 and writes
@@ -531,12 +561,13 @@ const MiaoYanCommon = {
       return;
     }
 
+    const hasCurrencyCandidate = /\$[0-9]/;
     const walker = document.createTreeWalker(
       root,
       NodeFilter.SHOW_TEXT,
       {
         acceptNode(node) {
-          if (!node.textContent.includes('$')) {
+          if (!hasCurrencyCandidate.test(node.textContent)) {
             return NodeFilter.FILTER_REJECT;
           }
 
@@ -571,11 +602,13 @@ const MiaoYanCommon = {
 
     nodesToUpdate.forEach(node => {
       const text = node.textContent;
-      if (!text.includes('$')) {
+      if (!hasCurrencyCandidate.test(text)) {
         return;
       }
 
       const fragment = document.createDocumentFragment();
+      const lastCloseBrace = text.lastIndexOf('}');
+      const noClose = { '\\)': false, '\\]': false, '$$': false };
       let index = 0;
       let lastIndex = 0;
       let replaced = false;
@@ -583,12 +616,43 @@ const MiaoYanCommon = {
       while (index < text.length) {
         const char = text[index];
 
-        if (char === '\\' && index + 1 < text.length && text[index + 1] === '$') {
-          index += 2;
-          continue;
+        if (char === '\\' && index + 1 < text.length) {
+          const nextChar = text[index + 1];
+          if (nextChar === '$' || nextChar === '\\') {
+            index += 2;
+            continue;
+          }
+          if (nextChar === '(' || nextChar === '[') {
+            const right = nextChar === '(' ? '\\)' : '\\]';
+            if (!noClose[right]) {
+              const mathEnd = this.findMathDelimiterEnd(text, right, index + 2, false, lastCloseBrace);
+              if (mathEnd !== -1) {
+                index = mathEnd + right.length;
+                continue;
+              }
+              if (text.indexOf(right, index + 2) === -1) {
+                noClose[right] = true;
+              }
+            }
+          }
         }
 
         if (char === '$') {
+          if (text[index + 1] === '$') {
+            if (!noClose['$$']) {
+              const mathEnd = this.findMathDelimiterEnd(text, '$$', index + 2, false, lastCloseBrace);
+              if (mathEnd !== -1) {
+                index = mathEnd + 2;
+                continue;
+              }
+              if (text.indexOf('$$', index + 2) === -1) {
+                noClose['$$'] = true;
+              }
+            }
+            index += 1;
+            continue;
+          }
+
           const remaining = text.slice(index);
           const match = remaining.match(currencyRegex);
           if (match) {
@@ -603,6 +667,17 @@ const MiaoYanCommon = {
             lastIndex = index;
             replaced = true;
             continue;
+          }
+
+          // Skip balanced inline `$...$` ranges (including brace-nested math
+          // such as `$\ce{A ->[$80 ^\circ C$] B}$`) so inner numeric labels are
+          // not split as currency amounts.
+          if (index + 1 < text.length && !/\s/.test(text[index + 1])) {
+            const mathEnd = this.findMathDelimiterEnd(text, '$', index + 1, true, lastCloseBrace);
+            if (mathEnd !== -1) {
+              index = mathEnd + 1;
+              continue;
+            }
           }
         }
 
@@ -619,6 +694,44 @@ const MiaoYanCommon = {
 
       node.parentNode?.replaceChild(fragment, node);
     });
+  },
+
+  findMathDelimiterEnd(text, rightDelimiter, start, inlineDollar = false, lastCloseBrace = text.lastIndexOf('}')) {
+    let cursor = start;
+    let braceLevel = 0;
+
+    while (cursor < text.length) {
+      if (braceLevel > 0 && cursor > lastCloseBrace) {
+        return -1;
+      }
+      if (braceLevel <= 0 && text.startsWith(rightDelimiter, cursor)) {
+        if (!inlineDollar) {
+          return cursor;
+        }
+        const prev = cursor > start ? text[cursor - 1] : '';
+        const next = cursor + 1 < text.length ? text[cursor + 1] : '';
+        if (prev && !/\s/.test(prev) && !/[0-9]/.test(next)) {
+          return cursor;
+        }
+        // In KaTeX auto-render an unescaped `$` at brace level 0 always ends
+        // the inline scan; never jump past a currency amount or later opener.
+        return -1;
+      }
+
+      const ch = text[cursor];
+      if (ch === '\\') {
+        cursor += 2;
+        continue;
+      }
+      if (ch === '{') {
+        braceLevel += 1;
+      } else if (ch === '}') {
+        braceLevel -= 1;
+      }
+      cursor += 1;
+    }
+
+    return -1;
   },
 
   onDOMReady(callback) {
@@ -705,6 +818,7 @@ const MiaoYanCommon = {
 
     // Deferred so it does not hold up the first paint.
     const renderMath = () => {
+      this.guardKaTeXRender();
       if (typeof renderMathInElement !== 'function') return;
       renderMathInElement(document.body, {
         delimiters: [
@@ -728,6 +842,7 @@ const MiaoYanCommon = {
   // (MPreviewView.buildUpdateScript); the blocks it kept had it done when
   // they came in. Math and diagrams follow in the update, throttled.
   renderBlocks(nodes) {
+    this.guardKaTeXRender();
     const targets = nodes.filter(node => node.nodeType === Node.ELEMENT_NODE);
     if (window.hljs && typeof window.hljs.highlightElement === 'function') {
       targets.forEach((target) => {
