@@ -1322,6 +1322,7 @@ class ViewController:
         editArea.isAutomaticTextReplacementEnabled = false
         editArea.isAutomaticDashSubstitutionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
+        editArea.followWidthForTables()
         editArea?.linkTextAttributes = [
             .foregroundColor: Theme.highlightColor
         ]

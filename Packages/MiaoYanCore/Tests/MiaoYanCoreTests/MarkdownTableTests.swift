@@ -336,36 +336,15 @@ final class MarkdownTableTests: XCTestCase {
     /// not table punctuation: 400 texts made from the characters that
     /// steer the parser, every command at every offset of each.
     func testNoCommandLosesTextOrLeavesTheTextOnAnyInput() {
-        let alphabet: [String] = [
-            "|", "|", "|", "-", "-", ":", " ", " ", "\n", "\n", "\r\n", "\r", "[", "]", "\\", "$", "`", "~", "\t", "a", "b",
-            "\u{4E2D}", "\u{1F600}", "\u{00A0}", "\u{3000}", "e\u{301}",
-        ]
         let punctuation = Set<Character>(["|", "-", ":", " ", "\t", "\n", "\r", "\r\n"])
         func words(_ text: String) -> String { String(text.filter { !punctuation.contains($0) }) }
         let keeping: [TableEditing.Command] = [
             .nextCell, .previousCell, .nextRow, .insertRowAbove, .insertRowBelow, .insertColumnLeft, .insertColumnRight, .align(.center),
         ]
-        var state: UInt64 = 0x2026_1120
-        func random(_ bound: Int) -> Int {
-            state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
-            return Int((state >> 33) % UInt64(bound))
-        }
+        let texts = MadeUpTexts(seed: 0x2026_1120)
         var edits = 0
-        func soup(_ length: Int) -> String { (0..<length).map { _ in alphabet[random(alphabet.count)] }.joined() }
-        /// Rows of cells, most with a line of dashes second, between two
-        /// stretches of anything.
-        func tableLike() -> String {
-            let lineBreak = ["\n", "\r\n", "\r"][random(3)]
-            let columns = 1 + random(4)
-            var lines = (0..<(1 + random(4))).map { _ -> String in
-                let cells = (0..<(columns + random(2))).map { _ in soup(random(4)).filter { $0 != "\n" && $0 != "\r" && $0 != "\r\n" } }
-                return (random(4) == 0 ? "" : "|") + cells.joined(separator: "|") + (random(4) == 0 ? "" : "|")
-            }
-            if random(5) != 0 { lines.insert("|" + (0..<columns).map { _ in [":-", "-", "-:", ":-:", "---"][random(5)] }.joined(separator: "|") + "|", at: min(1, lines.count)) }
-            return soup(random(6)) + lineBreak + lines.joined(separator: lineBreak) + lineBreak + soup(random(6))
-        }
         for round in 0..<400 {
-            let source = round % 2 == 0 ? soup(4 + random(36)) : tableLike()
+            let source = round % 2 == 0 ? texts.soup(4 + texts.random(36)) : texts.tableLike()
             let text = source as NSString
             for offset in 0...text.length {
                 let selection = NSRange(location: offset, length: 0)
@@ -386,5 +365,118 @@ final class MarkdownTableTests: XCTestCase {
             }
         }
         XCTAssertGreaterThan(edits, 10_000, "the texts did hold tables")
+    }
+
+    // MARK: - Where the pipes stand
+
+    func testTheLayoutNamesWhereEachCellStarts() {
+        let source = "Intro\n\n| a | \u{4E2D} |\n| :-- | --: |\n| long cell | b |\nafter"
+        let text = source as NSString
+        let layouts = TableEditing.layouts(in: text)
+        XCTAssertEqual(layouts.count, 1)
+        let layout = layouts[0]
+        XCTAssertEqual(text.substring(with: layout.range), "| a | \u{4E2D} |\n| :-- | --: |\n| long cell | b |")
+        XCTAssertEqual(layout.alignments, [.left, .right])
+        XCTAssertEqual(layout.rows.count, 3)
+        for row in layout.rows {
+            XCTAssertEqual(row.count, 3, "two cells and the closing pipe")
+            XCTAssertTrue(row.allSatisfy { text.character(at: $0) == 0x7C })
+        }
+        XCTAssertEqual(layout.rows[0], [7, 11, 15])
+    }
+
+    func testARowWithoutALeadingPipeStartsAtItsFirstWord() {
+        let text = "  a | b\n  --- | ---\n  c | d" as NSString
+        let layout = TableEditing.layouts(in: text)[0]
+        XCTAssertEqual(layout.rows[0], [2, 4], "the first cell starts after the indent, the second at its pipe")
+        XCTAssertEqual(layout.alignments, [.none])
+    }
+
+    func testOnlyRealTablesHaveALayout() {
+        func count(_ source: String) -> Int { TableEditing.layouts(in: source as NSString).count }
+        XCTAssertEqual(count("a | b in a sentence\nand |x| + |y|"), 0)
+        XCTAssertEqual(count("| a | b |\n| c | d |"), 0, "rows still being typed, no dashes yet")
+        XCTAssertEqual(count("```\n| a | b |\n| - | - |\n```"), 0)
+        XCTAssertEqual(count("~~~\n| a | b |\n| - | - |"), 0, "a fence never closed runs to the end")
+        XCTAssertEqual(count("$$\n| a | b |\n| - | - |\n$$"), 0)
+        XCTAssertEqual(count("    | a | b |\n    | - | - |"), 0, "four columns of indent is code")
+        XCTAssertEqual(count("```\ncode\n```\n| a | b |\n| - | - |\n\n| c |\n| - |"), 2)
+        XCTAssertEqual(count("prose | here\n| a | b |\n| - | - |"), 1, "the table starts at the line above the dashes")
+    }
+
+    /// The layouts are the tables the keys edit: read from the top, read
+    /// for a few lines, and found from the caret, they name the same lines.
+    func testTheLayoutsAreTheTablesTheKeysEdit() {
+        let texts = MadeUpTexts(seed: 0x2026_1121)
+        var tables = 0
+        for round in 0..<600 {
+            var source = round % 3 == 0 ? texts.soup(4 + texts.random(36)) : texts.tableLike()
+            if round % 5 == 0 { source = ["```", "~~~", "$$", "``` \n```"][texts.random(4)] + "\n" + source }
+            let text = source as NSString
+            let fromTheTop = TableEditing.layouts(in: text)
+            XCTAssertEqual(TableEditing.layouts(in: text, lines: NSRange(location: 0, length: text.length)), fromTheTop, source.debugDescription)
+            tables += fromTheTop.count
+            for offset in 0...text.length {
+                // Between the two halves of a Windows line ending is no line.
+                if offset > 0, offset < text.length, text.character(at: offset - 1) == 0x0D, text.character(at: offset) == 0x0A { continue }
+                let located = TableEditing.locate(in: text, selection: NSRange(location: offset, length: 0))
+                let expected = located.flatMap { $0.hasDelimiter ? $0.range : nil }
+                let layout = fromTheTop.first { $0.range.location <= offset && offset <= NSMaxRange($0.range) }
+                guard layout?.range == expected else {
+                    return XCTFail("at \(offset) of \(source.debugDescription) the keys see \(String(describing: expected)), the layout \(String(describing: layout?.range))")
+                }
+            }
+            for layout in fromTheTop {
+                XCTAssertEqual(TableEditing.layouts(in: text, lines: layout.range), [layout], "read for its own lines alone")
+                for row in layout.rows {
+                    guard row == row.sorted(), row.allSatisfy({ layout.range.location <= $0 && $0 < NSMaxRange(layout.range) }) else {
+                        return XCTFail("a cell starts outside its table in \(source.debugDescription)")
+                    }
+                }
+            }
+        }
+        XCTAssertGreaterThan(tables, 150, "the texts did hold tables")
+    }
+
+    func testTheTablesOfALongNoteAreReadInOnePass() {
+        let table = "| a | b |\n| --- | --- |\n| c | d |\n\n"
+        let prose = String(repeating: "A line of prose with a | pipe in it.\n", count: 40)
+        let note = String(repeating: "```\ncode | here\n```\n" + prose + table, count: 600) as NSString
+        XCTAssertGreaterThan(note.length, 900_000)
+        let start = Date()
+        XCTAssertEqual(TableEditing.layouts(in: note).count, 600)
+        XCTAssertLessThan(Date().timeIntervalSince(start), 2, "one pass, not one from the top for each table")
+    }
+}
+
+/// Made-up texts for the tests that try every offset: anything at all, and
+/// rows of cells between two stretches of anything.
+private final class MadeUpTexts {
+    private let alphabet: [String] = [
+        "|", "|", "|", "-", "-", ":", " ", " ", "\n", "\n", "\r\n", "\r", "[", "]", "\\", "$", "`", "~", "\t", "a", "b",
+        "\u{4E2D}", "\u{1F600}", "\u{00A0}", "\u{3000}", "e\u{301}",
+    ]
+    private var state: UInt64
+
+    init(seed: UInt64) { state = seed }
+
+    func random(_ bound: Int) -> Int {
+        state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
+        return Int((state >> 33) % UInt64(bound))
+    }
+
+    func soup(_ length: Int) -> String { (0..<length).map { _ in alphabet[random(alphabet.count)] }.joined() }
+
+    /// Rows of cells, most with a line of dashes second, between two
+    /// stretches of anything.
+    func tableLike() -> String {
+        let lineBreak = ["\n", "\r\n", "\r"][random(3)]
+        let columns = 1 + random(4)
+        var lines = (0..<(1 + random(4))).map { _ -> String in
+            let cells = (0..<(columns + random(2))).map { _ in soup(random(4)).filter { $0 != "\n" && $0 != "\r" && $0 != "\r\n" } }
+            return (random(4) == 0 ? "" : "|") + cells.joined(separator: "|") + (random(4) == 0 ? "" : "|")
+        }
+        if random(5) != 0 { lines.insert("|" + (0..<columns).map { _ in [":-", "-", "-:", ":-:", "---"][random(5)] }.joined(separator: "|") + "|", at: min(1, lines.count)) }
+        return soup(random(6)) + lineBreak + lines.joined(separator: lineBreak) + lineBreak + soup(random(6))
     }
 }

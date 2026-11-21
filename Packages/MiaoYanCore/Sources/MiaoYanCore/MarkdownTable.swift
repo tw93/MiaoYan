@@ -170,6 +170,8 @@ public enum TableEditing {
         let atRowStart: Bool
         /// The line break the table's own lines end with.
         let lineBreak: String
+        /// False for a row still being typed, with no line of dashes yet.
+        let hasDelimiter: Bool
     }
 
     static func locate(in text: NSString, selection: NSRange) -> Located? {
@@ -245,7 +247,7 @@ public enum TableEditing {
         let lineBreak = afterHeader > headerEnd ? text.substring(with: NSRange(location: headerEnd, length: afterHeader - headerEnd)) : ListContinuation.lineBreak(in: text)
         return Located(
             table: table, range: range, focus: Focus(row: focusRow, column: column),
-            atRowStart: inRow <= (rows[row].indent as NSString).length, lineBreak: lineBreak)
+            atRowStart: inRow <= (rows[row].indent as NSString).length, lineBreak: lineBreak, hasDelimiter: hasDelimiter)
     }
 
     /// The line of the file holding `offset`, without its line ending, and
@@ -276,11 +278,24 @@ public enum TableEditing {
         func appears(_ mark: String) -> Bool { text.range(of: mark, options: .literal, range: above).location != NSNotFound }
         // The common note has none of these and is not read any further.
         guard appears("```") || appears("~~~") || appears("$$") else { return false }
-        var fence: (mark: Character, count: Int)?
-        var inMath = false
+        var state = CodeState()
         SourceLines.forEach(in: text) { _, range in
             guard range.location < limit else { return false }
-            let line = text.substring(with: range).drop { $0 == " " || $0 == "\t" }
+            state.take(text.substring(with: range))
+            return true
+        }
+        return state.isCode
+    }
+
+    /// Whether the lines read so far leave a fence or a `$$` formula open.
+    private struct CodeState {
+        private var fence: (mark: Character, count: Int)?
+        private var inMath = false
+
+        var isCode: Bool { fence != nil || inMath }
+
+        mutating func take(_ raw: String) {
+            let line = raw.drop { $0 == " " || $0 == "\t" }
             if let open = fence {
                 let run = line.prefix { $0 == open.mark }.count
                 if run >= open.count, line.dropFirst(run).allSatisfy({ $0 == " " || $0 == "\t" }) { fence = nil }
@@ -291,9 +306,76 @@ public enum TableEditing {
                 // `$$ x $$` on one line carries two and opens nothing.
                 inMath.toggle()
             }
-            return true
         }
-        return fence != nil || inMath
+    }
+
+    // MARK: - Where the pipes stand
+
+    /// A table as it stands in the text, for an editor that lines its
+    /// columns up on screen without changing a character.
+    public struct Layout: Equatable, Sendable {
+        /// The table's lines, without the last one's line break.
+        public let range: NSRange
+        /// One for each column.
+        public let alignments: [Alignment]
+        /// For each line from the header down (the second is the line of
+        /// dashes), the UTF-16 offsets in the text where its cells start:
+        /// at the cell's pipe, or at the first word of a row written without
+        /// a leading pipe. The last offset is the pipe that closes the last
+        /// cell, so a row holds one cell fewer than offsets.
+        public let rows: [[Int]]
+    }
+
+    /// The tables of `text`, or only those on the whole lines `lines`
+    /// covers. They are the tables the commands above edit: a run of lines
+    /// with a pipe, from the line above its first line of dashes down. A
+    /// row still being typed, with no dashes under it, is not one yet.
+    ///
+    /// Read from the top, the fences and formulas are followed on the way;
+    /// read for a few lines, each header is checked against the lines above
+    /// it, as the commands check it, so both name the same tables.
+    public static func layouts(in text: NSString, lines: NSRange? = nil) -> [Layout] {
+        var found: [Layout] = []
+        var run: [(row: Row, inCode: Bool)] = []
+        var state = CodeState()
+        let follows = lines == nil && ["```", "~~~", "$$"].contains { text.range(of: $0, options: .literal).location != NSNotFound }
+
+        func close() {
+            defer { run.removeAll(keepingCapacity: true) }
+            guard let delimiter = run.indices.dropFirst().first(where: { isDelimiter(run[$0].row.cells) }) else { return }
+            let rows = run[(delimiter - 1)...].map(\.row)
+            guard let header = rows.first, let last = rows.last else { return }
+            guard header.indent.reduce(0, { $0 + ($1 == "\t" ? 4 : 1) }) < 4 else { return }
+            guard !(lines == nil ? run[delimiter - 1].inCode : isCode(header, in: text)) else { return }
+            let starts = rows.map { row -> [Int] in
+                let cuts = separators(in: text.substring(with: row.range)).map { row.range.location + $0 }
+                return row.leads ? cuts : [row.range.location + (row.indent as NSString).length] + cuts
+            }
+            let width = max((starts.map(\.count).max() ?? 1) - 1, 0)
+            let marked = rows[1].cells.map(alignment).prefix(width)
+            found.append(
+                Layout(
+                    range: NSRange(location: header.range.location, length: NSMaxRange(last.range) - header.range.location),
+                    alignments: marked + Array(repeating: Alignment.none, count: width - marked.count), rows: starts))
+        }
+
+        var offset = min(max(lines?.location ?? 0, 0), text.length)
+        let end = min(lines.map(NSMaxRange) ?? text.length, text.length)
+        while offset < end {
+            let span = line(at: offset, in: text)
+            let inCode = state.isCode
+            if follows { state.take(text.substring(with: span.contents)) }
+            if text.range(of: "|", options: .literal, range: span.contents).location != NSNotFound {
+                let row = row(of: text.substring(with: span.contents), at: span.contents)
+                if row.hasPipe { run.append((row, inCode)) } else { close() }
+            } else {
+                close()
+            }
+            guard span.next > offset else { break }
+            offset = span.next
+        }
+        close()
+        return found
     }
 
     /// The separators of a row: every pipe not escaped by a backslash, as

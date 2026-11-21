@@ -734,6 +734,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         // Apply letter spacing after all formatting is complete
         if let storage = textStorage {
             storage.applyEditorLetterSpacing()
+            TableColumnAligner.alignAll(in: storage)
         }
         restoreCursorPosition(needScrollToCursor: options.needScrollToCursor)
     }
@@ -1169,6 +1170,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         storage.updateParagraphStyle()
         NotesTextProcessor(storage: storage, range: NSRange(location: 0, length: storage.length)).highlightLinks()
         storage.applyEditorLetterSpacing()
+        TableColumnAligner.alignAll(in: storage, editing: true)
         storage.endEditing()
         didChangeText()
         breakUndoCoalescing()

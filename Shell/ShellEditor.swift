@@ -181,6 +181,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         textView.isAutomaticTextReplacementEnabled = false
         textView.isAutomaticDashSubstitutionEnabled = false
         textView.textStorage?.delegate = textView.textStorage
+        textView.followWidthForTables()
         textView.linkTextAttributes = [.foregroundColor: Theme.highlightColor]
         // ViewController.configureLayout: images scale down to the column,
         // and nothing is editable until a note is filled in.
