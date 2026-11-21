@@ -23,13 +23,14 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
             } else {
                 rescanAll(textStorage: textStorage)
             }
-            TableColumnAligner.alignAll(in: textStorage, editing: true)
+            ListHangingIndent.drawStructure(of: textStorage, editing: true)
         } else {
             rescanPartial(textStorage: textStorage, delta: delta, editedRange: editedRange)
             // The lines the highlighter just went over, so a table beside
             // the edited paragraph is drawn again as well.
             let paragraphs = textStorage.mutableString.paragraphRange(for: editedRange)
             TableColumnAligner.align(around: expandedSyntaxContextRange(for: paragraphs, in: textStorage), in: textStorage)
+            ListHangingIndent.apply(in: paragraphs, of: textStorage)
         }
 
         loadImages(in: textStorage, checkRange: editedRange)
