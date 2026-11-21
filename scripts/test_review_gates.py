@@ -113,7 +113,7 @@ class RiskTierTests(unittest.TestCase):
             "scripts/miaoyan": "installer",
             "Business/Note.swift": "notes",
             "Views/EditTextView.swift": "notes",
-            "Business/CloudSyncManager.swift": "sync",
+            "Helpers/UserDefaultsManagement.swift": "sync",
             "Resources/DownView.bundle/js/app.js": "export",
             "Packages/MiaoYanCore/Sources/MiaoYanCore/NoteText.swift": "core",
         }.items():

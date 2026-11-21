@@ -51,7 +51,6 @@ Process-wide singletons (each "global" surface that holds state):
 | ---------------------------------- | ------------------------------------------ | -------------------------------------- |
 | `Storage.sharedInstance()`         | `Business/Storage.swift`                   | Filesystem-backed note + project model |
 | `WikilinkIndex.shared`             | `Business/WikilinkIndex.swift`             | `[[note]]` outgoing/incoming index     |
-| `CloudSyncManager.shared`          | `Business/CloudSyncManager.swift`          | iCloud Drive coordination              |
 | `NoteVersionManager.shared`        | `Business/NoteVersionManager.swift`        | Per-note version history               |
 | `UserDataService.instance`         | `Helpers/UserDataService.swift`            | Cached user-level appearance state     |
 | `AppContext.shared`                | `Business/Types.swift`                     | Holds storage + sessionState + view ref |

@@ -40,7 +40,7 @@ TIERS = [
         "Controllers/ViewController+Action.swift", "Shell/ShellModel+Folders.swift",
     ]),
     ("sync", "a run with iCloud unavailable and one through a symlinked library", [
-        "Business/CloudSyncManager.swift",
+        "Helpers/UserDefaultsManagement.swift",
     ]),
     ("export", "Mermaid, images, PDF pagination and async readiness checked together, PNG export repeated", [
         "Business/HtmlManager.swift", "Helpers/PdfExportController.swift", "Extensions/MPreviewView+Export.swift",
