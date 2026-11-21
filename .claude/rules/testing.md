@@ -31,6 +31,19 @@ tests, and a test appended to the end of a file holding two `XCTestCase`
 classes lands in the second one. For a regression test, red-run it once on
 the old code and see it fail.
 
+`EditorKeyFuzzTests` runs 1000 seeded random runs of Return, Tab, their
+Shift forms, the Format and Table commands, typing and Backspace through a
+real `EditTextView` (about 1.5s), and fails when a run cannot undo back to its
+note or redo forward again, or when structural keys alone lose a letter. Run
+it deeper after touching `TextFormatter`, `ListContinuation`, `TableEditing`
+or `EditTextView.keyDown`: prefix the test command with
+`TEST_RUNNER_MIAOYAN_FUZZ_RUNS=20000` (about 50s; `TEST_RUNNER_MIAOYAN_FUZZ_SEED`
+picks the first seed). A failure prints its seed, note and steps. Any edit the
+editor makes must go through `insertText(_:replacementRange:)` or another call
+that registers undo: writing `textStorage` directly is what the undo check
+catches. Both checks were red-run on 2026-11-21, once with Tab writing to the
+storage directly and once with Bold dropping a character.
+
 `CODE_SIGNING_ALLOWED=NO` is required on the local test command because
 the dev signing identity used for `MiaoYan.app` and the per-developer
 identity used for `MiaoYanTests.xctest` end up with different Team IDs,

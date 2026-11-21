@@ -100,6 +100,7 @@
 		6D598E602672301D68492CFE /* MiaoYanTests/MediaPlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A37AAC49C73DD85DF1A2AA /* MiaoYanTests/MediaPlaceholderTests.swift */; };
 		3ED257B778940D276AFD3DD7 /* MiaoYanTests/EditorHotPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */; };
 		8E20EB5112BF68479994AF9B /* MiaoYanTests/TableEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 696F5BE010FC1EAEB744188D /* MiaoYanTests/TableEditingTests.swift */; };
+		300605A547807443808E38B4 /* MiaoYanTests/EditorKeyFuzzTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDCA2A5041520BBC09611EAC /* MiaoYanTests/EditorKeyFuzzTests.swift */; };
 		95B90A6B90561F9C08D03B8E /* MiaoYanTests/ModificationDateCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */; };
 		1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */; };
 		64A7C3AC4CF3AB1BD56C6515 /* MiaoYanTests/VisualRulesGateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/VisualRulesGateTests.swift */; };
@@ -326,6 +327,7 @@
 		E7A37AAC49C73DD85DF1A2AA /* MiaoYanTests/MediaPlaceholderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/MediaPlaceholderTests.swift; sourceTree = SOURCE_ROOT; };
 		B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/EditorHotPathTests.swift; sourceTree = SOURCE_ROOT; };
 		696F5BE010FC1EAEB744188D /* MiaoYanTests/TableEditingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/TableEditingTests.swift; sourceTree = SOURCE_ROOT; };
+		EDCA2A5041520BBC09611EAC /* MiaoYanTests/EditorKeyFuzzTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/EditorKeyFuzzTests.swift; sourceTree = SOURCE_ROOT; };
 		40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ModificationDateCacheTests.swift; sourceTree = SOURCE_ROOT; };
 		0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsFitTests.swift; sourceTree = SOURCE_ROOT; };
 		971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/VisualRulesGateTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/VisualRulesGateTests.swift; sourceTree = SOURCE_ROOT; };
@@ -520,6 +522,7 @@
 				E7A37AAC49C73DD85DF1A2AA /* MiaoYanTests/MediaPlaceholderTests.swift */,
 				B2CE39EDEDAEDB42F5248111 /* MiaoYanTests/EditorHotPathTests.swift */,
 				696F5BE010FC1EAEB744188D /* MiaoYanTests/TableEditingTests.swift */,
+				EDCA2A5041520BBC09611EAC /* MiaoYanTests/EditorKeyFuzzTests.swift */,
 				40E0BEA74C4CEE39E9C0E709 /* MiaoYanTests/ModificationDateCacheTests.swift */,
 				0FF2896D88303249C0EBFAAF /* MiaoYanTests/PrefsFitTests.swift */,
 				971C8ACB3D6FCD0B6884A336 /* MiaoYanTests/VisualRulesGateTests.swift */,
@@ -908,6 +911,7 @@
 				6D598E602672301D68492CFE /* MiaoYanTests/MediaPlaceholderTests.swift in Sources */,
 				3ED257B778940D276AFD3DD7 /* MiaoYanTests/EditorHotPathTests.swift in Sources */,
 				8E20EB5112BF68479994AF9B /* MiaoYanTests/TableEditingTests.swift in Sources */,
+				300605A547807443808E38B4 /* MiaoYanTests/EditorKeyFuzzTests.swift in Sources */,
 				95B90A6B90561F9C08D03B8E /* MiaoYanTests/ModificationDateCacheTests.swift in Sources */,
 				1813334AECD8B76370233A18 /* MiaoYanTests/PrefsFitTests.swift in Sources */,
 				64A7C3AC4CF3AB1BD56C6515 /* MiaoYanTests/VisualRulesGateTests.swift in Sources */,
