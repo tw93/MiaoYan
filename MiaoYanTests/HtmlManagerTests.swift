@@ -849,6 +849,23 @@ final class HtmlManagerTests: XCTestCase {
         NotesTextProcessor.headersAtxRegex.matches("#Title", range: NSRange(location: 0, length: 6)) { if $0 != nil { glued = true } }
         XCTAssertFalse(glued)
     }
+
+    /// KaTeX's mhchem extension ships in `DownView.bundle` and loads between
+    /// `katex.min.js` and `auto-render.min.js` in `index.html`. Runtime PPT
+    /// load order is asserted against `document.scripts` in
+    /// `MathRenderingRuntimeTests.testPPTRendersMhchemChemistry`.
+    func testMhchemShipsInThePreviewBundleInLoadOrder() throws {
+        let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
+        let mhchemURL = bundle.appendingPathComponent("js/mhchem.min.js")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: mhchemURL.path))
+
+        let indexHTML = try String(contentsOf: bundle.appendingPathComponent("index.html"), encoding: .utf8)
+        let katex = try XCTUnwrap(indexHTML.range(of: "js/katex.min.js"))
+        let mhchem = try XCTUnwrap(indexHTML.range(of: "js/mhchem.min.js"))
+        let autoRender = try XCTUnwrap(indexHTML.range(of: "js/auto-render.min.js"))
+        XCTAssertLessThan(katex.lowerBound, mhchem.lowerBound)
+        XCTAssertLessThan(mhchem.lowerBound, autoRender.lowerBound)
+    }
 }
 
 @available(macOS 12.0, *)
@@ -913,6 +930,327 @@ final class MathRenderingRuntimeTests: XCTestCase {
         let dollarHTML = try XCTUnwrap(renderMarkdownHTML(markdown: dollars, useGithubLineBreak: false))
         let dollarCount = try await renderedKaTeXCount(page: try writePreviewPage(markdownHTML: dollarHTML))
         XCTAssertEqual(dollarCount, 2, dollarHTML)
+    }
+
+    /// The real preview (`index.html`) loads KaTeX's bundled `mhchem` extension
+    /// offline and renders `\ce` and `\pu` chemistry formulas with zero KaTeX
+    /// errors, without affecting regular math, currency amounts, escaped dollars,
+    /// or inline code.
+    @MainActor
+    func testPreviewRendersMhchemChemistry() async throws {
+        let markdown = #"""
+            Water is $\ce{H2O}$, rate $\ce{A ->[$k_1$] B}$, heated $\ce{A ->[$80 ^\circ C$] B}$, paren \(\ce{A ->[$5$] B}\), units $\pu{123 kJ/mol}$, and $E = mc^2$.
+
+            $$
+            \ce{2H2 + O2 -> 2H2O}
+            $$
+
+            $$
+            \ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}
+            $$
+
+            Prices $20 and $30, escaped \$100, code `$\ce{H2O}$`.
+
+            The variable $PATH costs $20 and the radius is $r$.
+
+            Cost $$20 and $x$.
+            """#
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        let previewURL = try writeIndexPage(bodyHTML: html, named: "mhchem-preview")
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(previewURL, allowingReadAccessTo: tempDirectory)
+
+        let probe = """
+            (() => {
+                const paragraphs = Array.from(document.querySelectorAll('#write p'));
+                const envParagraph = paragraphs[paragraphs.length - 2];
+                const doubleDollarParagraph = paragraphs[paragraphs.length - 1];
+                return {
+                    katex: document.querySelectorAll('#write .katex').length,
+                    display: document.querySelectorAll('#write .katex-display').length,
+                    errors: document.querySelectorAll('#write .katex-error').length,
+                    skippedDollars: Array.from(document.querySelectorAll('#write .skip-math-dollar'), (s) => s.textContent),
+                    codeText: Array.from(document.querySelectorAll('#write code'), (c) => c.textContent),
+                    rawCe: document.getElementById('write').innerText.includes('\\\\ce{2H2') || document.getElementById('write').innerText.includes('\\\\ce{A'),
+                    rawPu: document.getElementById('write').innerText.includes('\\\\pu{'),
+                    envParagraph: envParagraph ? envParagraph.innerText : '',
+                    envParagraphKatex: envParagraph ? envParagraph.querySelectorAll('.katex').length : 0,
+                    doubleDollarParagraph: doubleDollarParagraph ? doubleDollarParagraph.innerText : '',
+                    doubleDollarKatex: doubleDollarParagraph ? doubleDollarParagraph.querySelectorAll('.katex').length : 0,
+                    text: document.getElementById('write').innerText
+                };
+            })()
+            """
+        let deadline = Date().addingTimeInterval(10)
+        var state: [String: Any] = [:]
+        while Date() < deadline {
+            state = (try? await webView.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
+            if (state["katex"] as? Int) == 10 { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(state["katex"] as? Int, 10, "\(state)")
+        XCTAssertEqual(state["display"] as? Int, 2, "\(state)")
+        XCTAssertEqual(state["errors"] as? Int, 0, "\(state)")
+        XCTAssertEqual(state["skippedDollars"] as? [String], ["$20", "$30", "$", "$20", "$20"], "\(state)")
+        XCTAssertEqual(state["codeText"] as? [String], [#"\ce{H2O}"#].map { "$\($0)$" }, "\(state)")
+        XCTAssertEqual(state["rawCe"] as? Bool, false, "\(state)")
+        XCTAssertEqual(state["rawPu"] as? Bool, false, "\(state)")
+        XCTAssertEqual(state["envParagraphKatex"] as? Int, 1, "\(state)")
+        let envParagraph = try XCTUnwrap(state["envParagraph"] as? String)
+        XCTAssertTrue(envParagraph.contains("The variable $PATH costs $20 and the radius is "), envParagraph)
+        XCTAssertEqual(state["doubleDollarKatex"] as? Int, 1, "\(state)")
+        let doubleDollarParagraph = try XCTUnwrap(state["doubleDollarParagraph"] as? String)
+        XCTAssertTrue(doubleDollarParagraph.contains("Cost $$20 and "), doubleDollarParagraph)
+        let text = try XCTUnwrap(state["text"] as? String)
+        XCTAssertTrue(text.contains("$20"), text)
+        XCTAssertTrue(text.contains("$30"), text)
+        XCTAssertTrue(text.contains("$100"), text)
+    }
+
+    /// PDF export reloads already-rendered preview HTML into `index.html`;
+    /// rendered `mhchem` formulas must survive the reload without
+    /// double-rendering or errors once `renderPage()` finishes its math pass.
+    @MainActor
+    func testRenderedMhchemSurvivesReloadForPDFExport() async throws {
+        let markdown = #"""
+            Inline $\ce{H2O}$ and $\pu{123 kJ/mol}$.
+
+            $$
+            \ce{2H2 + O2 -> 2H2O}
+            $$
+            """#
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        let firstURL = try writeIndexPage(bodyHTML: html, named: "mhchem-pdf-first")
+        let firstWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        firstWebView.loadFileURL(firstURL, allowingReadAccessTo: tempDirectory)
+
+        let firstDeadline = Date().addingTimeInterval(10)
+        var savedWriteHTML: String?
+        while Date() < firstDeadline {
+            let count = (try? await firstWebView.evaluateJavaScript("document.querySelectorAll('#write .katex').length") as? Int) ?? 0
+            if count == 3 {
+                savedWriteHTML = try? await firstWebView.evaluateJavaScript("document.getElementById('write').innerHTML") as? String
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        let bodyHTML = try XCTUnwrap(savedWriteHTML, "initial preview did not finish rendering mhchem")
+
+        // Queues a completion flag behind `renderPage()`'s own deferred math pass
+        // so slow CI runners wait deterministically without a fixed sleep.
+        let reloadDoneScript = """
+            <script>
+            window.__miaoyanReloadDone = false;
+            document.addEventListener('DOMContentLoaded', function () {
+              const markDone = () => { window.__miaoyanReloadDone = true; };
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(markDone, { timeout: 250 });
+              } else {
+                setTimeout(markDone, 0);
+              }
+            });
+            </script>
+            """
+        let reloadURL = try writeIndexPage(bodyHTML: bodyHTML, named: "mhchem-pdf-reload", extraBodyScript: reloadDoneScript)
+        let reloadWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        reloadWebView.loadFileURL(reloadURL, allowingReadAccessTo: tempDirectory)
+
+        let reloadDeadline = Date().addingTimeInterval(10)
+        var reloadDone = false
+        while Date() < reloadDeadline {
+            if (try? await reloadWebView.evaluateJavaScript("window.__miaoyanReloadDone === true") as? Bool) == true {
+                reloadDone = true
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertTrue(reloadDone, "reloaded preview did not complete renderPage() math pass")
+        let reloaded = try await reloadWebView.evaluateJavaScript(
+            "({katex: document.querySelectorAll('#write .katex').length, errors: document.querySelectorAll('#write .katex-error').length})"
+        )
+        let reloadedState = try XCTUnwrap(reloaded as? [String: Any])
+        XCTAssertEqual(reloadedState["katex"] as? Int, 3, "\(reloadedState)")
+        XCTAssertEqual(reloadedState["errors"] as? Int, 0, "\(reloadedState)")
+    }
+
+    /// Real Reveal.js slides (`ppt.html`) load KaTeX's bundled `mhchem`
+    /// extension in order (`katex` -> `mhchem` -> `auto-render`), render `\ce`
+    /// and `\pu` formulas offline, and leave raw HTML `<code>` examples untouched.
+    @MainActor
+    func testPPTRendersMhchemChemistry() async throws {
+        let pptMarkdown = #"""
+            Example: <code>$\ce{H2O}$</code>. Rendered: $\ce{H2O}$ and $\pu{123 kJ/mol}$.
+
+            $$
+            \ce{2H2 + O2 -> 2H2O}
+            $$
+
+            $$
+            \ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}
+            $$
+            """#
+        let pptURL = try writePPTPage(markdown: pptMarkdown, named: "mhchem-ppt")
+        let pptWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        pptWebView.loadFileURL(pptURL, allowingReadAccessTo: tempDirectory)
+        let pptProbe = """
+            (() => ({
+                katex: document.querySelectorAll('.katex').length,
+                codeKatex: document.querySelectorAll('code .katex').length,
+                codeText: Array.from(document.querySelectorAll('code'), (c) => c.textContent),
+                errors: document.querySelectorAll('.katex-error').length,
+                rawPu: document.body.innerText.includes('\\\\pu{'),
+                scripts: Array.from(document.scripts, (s) => s.getAttribute('src') || '')
+            }))()
+            """
+        let pptDeadline = Date().addingTimeInterval(10)
+        var pptState: [String: Any] = [:]
+        while Date() < pptDeadline {
+            if (try? await pptWebView.evaluateJavaScript("window.__miaoyanMathDone === true") as? Bool) == true {
+                pptState = (try? await pptWebView.evaluateJavaScript(pptProbe) as? [String: Any]) ?? [:]
+                if (pptState["katex"] as? Int) == 4 { break }
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(pptState["katex"] as? Int, 4, "\(pptState)")
+        XCTAssertEqual(pptState["codeKatex"] as? Int, 0, "\(pptState)")
+        XCTAssertEqual(pptState["codeText"] as? [String], [#"\ce{H2O}"#].map { "$\($0)$" }, "\(pptState)")
+        XCTAssertEqual(pptState["errors"] as? Int, 0, "\(pptState)")
+        XCTAssertEqual(pptState["rawPu"] as? Bool, false, "\(pptState)")
+        let scripts = try XCTUnwrap(pptState["scripts"] as? [String])
+        let katexIdx = try XCTUnwrap(scripts.firstIndex(of: "js/katex.min.js"), "\(scripts)")
+        let mhchemIdx = try XCTUnwrap(scripts.firstIndex(of: "js/mhchem.min.js"), "\(scripts)")
+        let autoRenderIdx = try XCTUnwrap(scripts.firstIndex(of: "js/auto-render.min.js"), "\(scripts)")
+        XCTAssertLessThan(katexIdx, mhchemIdx)
+        XCTAssertLessThan(mhchemIdx, autoRenderIdx)
+    }
+
+    /// Malformed mhchem inputs such as `\ce{A \bond{} B}` (`MhchemBugT`) or
+    /// `\ce{A ->[\}] B}` (`ExtraCloseMissingOpen`) throw raw arrays instead of
+    /// `katex.ParseError`. Both preview and slides must keep those formulas as
+    /// raw text and continue rendering every subsequent formula on the page.
+    @MainActor
+    func testMalformedMhchemBondDoesNotBlockSubsequentMath() async throws {
+        let markdown = #"""
+            First $a^2$.
+
+            Typing $\ce{A \bond{} B}$.
+
+            Brace error $\ce{A ->[\}] B}$.
+
+            Later $E=mc^2$.
+            """#
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        let previewURL = try writeIndexPage(bodyHTML: html, named: "mhchem-malformed-preview")
+        let previewWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        previewWebView.loadFileURL(previewURL, allowingReadAccessTo: tempDirectory)
+
+        let previewProbe = """
+            (() => ({
+                katex: document.querySelectorAll('#write .katex').length,
+                errors: document.querySelectorAll('#write .katex-error').length,
+                hasRawBond: document.getElementById('write').innerText.includes('\\\\bond{}'),
+                hasRawBrace: document.getElementById('write').innerText.includes('\\\\}]'),
+                hasRawLater: document.getElementById('write').innerText.includes('$E=mc^2$')
+            }))()
+            """
+        let previewDeadline = Date().addingTimeInterval(10)
+        var previewState: [String: Any] = [:]
+        while Date() < previewDeadline {
+            previewState = (try? await previewWebView.evaluateJavaScript(previewProbe) as? [String: Any]) ?? [:]
+            if (previewState["katex"] as? Int) == 2 { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(previewState["katex"] as? Int, 2, "\(previewState)")
+        XCTAssertEqual(previewState["errors"] as? Int, 0, "\(previewState)")
+        XCTAssertEqual(previewState["hasRawBond"] as? Bool, true, "\(previewState)")
+        XCTAssertEqual(previewState["hasRawBrace"] as? Bool, true, "\(previewState)")
+        XCTAssertEqual(previewState["hasRawLater"] as? Bool, false, "\(previewState)")
+
+        let pptURL = try writePPTPage(markdown: markdown, named: "mhchem-malformed-ppt")
+        let pptWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        pptWebView.loadFileURL(pptURL, allowingReadAccessTo: tempDirectory)
+        let pptProbe = """
+            (() => ({
+                katex: document.querySelectorAll('.katex').length,
+                errors: document.querySelectorAll('.katex-error').length,
+                hasRawBond: document.body.innerText.includes('\\\\bond{}'),
+                hasRawBrace: document.body.innerText.includes('\\\\}]'),
+                hasRawLater: document.body.innerText.includes('$E=mc^2$')
+            }))()
+            """
+        let pptDeadline = Date().addingTimeInterval(10)
+        var pptState: [String: Any] = [:]
+        while Date() < pptDeadline {
+            if (try? await pptWebView.evaluateJavaScript("window.__miaoyanMathDone === true") as? Bool) == true {
+                pptState = (try? await pptWebView.evaluateJavaScript(pptProbe) as? [String: Any]) ?? [:]
+                if (pptState["katex"] as? Int) == 2 { break }
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(pptState["katex"] as? Int, 2, "\(pptState)")
+        XCTAssertEqual(pptState["errors"] as? Int, 0, "\(pptState)")
+        XCTAssertEqual(pptState["hasRawBond"] as? Bool, true, "\(pptState)")
+        XCTAssertEqual(pptState["hasRawBrace"] as? Bool, true, "\(pptState)")
+        XCTAssertEqual(pptState["hasRawLater"] as? Bool, false, "\(pptState)")
+    }
+
+    /// If `js/mhchem.min.js` is absent (e.g. stale cache or older CDN copy),
+    /// PPT math must still degrade gracefully and render standard LaTeX.
+    @MainActor
+    func testPPTStandardMathDegradesGracefullyWithoutMhchem() async throws {
+        let degradedDir = tempDirectory.appendingPathComponent("degraded-ppt", isDirectory: true)
+        let degradedJS = degradedDir.appendingPathComponent("js", isDirectory: true)
+        try FileManager.default.createDirectory(at: degradedJS, withIntermediateDirectories: true)
+        for directory in ["css", "ppt", "themes"] {
+            try FileManager.default.createSymbolicLink(
+                at: degradedDir.appendingPathComponent(directory),
+                withDestinationURL: downViewBundleURL.appendingPathComponent(directory))
+        }
+        for jsFile in try FileManager.default.contentsOfDirectory(atPath: downViewBundleURL.appendingPathComponent("js").path) where jsFile != "mhchem.min.js" {
+            try FileManager.default.createSymbolicLink(
+                at: degradedJS.appendingPathComponent(jsFile),
+                withDestinationURL: downViewBundleURL.appendingPathComponent("js/\(jsFile)"))
+        }
+        let degradedTemplate = try String(contentsOf: downViewBundleURL.appendingPathComponent("ppt.html"), encoding: .utf8)
+        let degradedPage = HtmlManager.applyTemplateReplacements(
+            degradedTemplate,
+            replacements: [
+                "DOWN_RAW": HtmlManager.prepareMarkdownForPPT("Energy $E = mc^2$."),
+                "DOWN_THEME": "",
+                "DOWN_CSS": "",
+                "DOWN_FONT_PATH": ".",
+                "DOWN_EXPORT_TYPE": "",
+            ]
+        )
+        let degradedURL = degradedDir.appendingPathComponent("degraded.html")
+        try degradedPage.write(to: degradedURL, atomically: true, encoding: .utf8)
+        let degradedWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        degradedWebView.loadFileURL(degradedURL, allowingReadAccessTo: tempDirectory)
+        let degradedDeadline = Date().addingTimeInterval(10)
+        var degradedCount = 0
+        while Date() < degradedDeadline {
+            degradedCount = (try? await degradedWebView.evaluateJavaScript("document.querySelectorAll('.katex').length") as? Int) ?? 0
+            if degradedCount == 1 { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(degradedCount, 1, "standard PPT math must still render when mhchem.min.js is unavailable")
+    }
+
+    private func writeIndexPage(bodyHTML: String, named: String, extraBodyScript: String = "") throws -> URL {
+        let template = try String(contentsOf: downViewBundleURL.appendingPathComponent("index.html"), encoding: .utf8)
+        var page = HtmlManager.applyTemplateReplacements(
+            template,
+            replacements: [
+                "DOWN_META": "",
+                "DOWN_CSS": "",
+                "CUSTOM_CSS": "lightmode",
+                "DOWN_HTML": bodyHTML,
+            ]
+        )
+        if !extraBodyScript.isEmpty {
+            page = page.replacingOccurrences(of: "</body>", with: extraBodyScript + "</body>")
+        }
+        return try write(page: page, named: named)
     }
 
     /// Markmap's branches take the family palette from theme-config.js, and a
@@ -1201,8 +1539,8 @@ final class MathRenderingRuntimeTests: XCTestCase {
         return try write(page: page, named: "preview")
     }
 
-    private func writePPTPage() throws -> URL {
-        let prepared = HtmlManager.prepareMarkdownForPPT(nestedUnderbraceFormula)
+    private func writePPTPage(markdown: String = nestedUnderbraceFormula, named: String = "ppt") throws -> URL {
+        let prepared = HtmlManager.prepareMarkdownForPPT(markdown)
         let templateURL = downViewBundleURL.appendingPathComponent("ppt.html")
         var page = try String(contentsOf: templateURL, encoding: .utf8)
         let replacements = [
@@ -1227,7 +1565,7 @@ final class MathRenderingRuntimeTests: XCTestCase {
             </script>
             """
         page = page.replacingOccurrences(of: "</body>", with: readinessProbe + "</body>")
-        return try write(page: page, named: "ppt")
+        return try write(page: page, named: named)
     }
 
     private func write(page: String, named: String) throws -> URL {

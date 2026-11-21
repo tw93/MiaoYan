@@ -155,7 +155,7 @@ final class PreviewPatchTests: XCTestCase {
     private func loadRenderedPage(_ markdown: String, userAgent: String? = nil) async throws -> WKWebView {
         let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: markdown, useGithubLineBreak: false, imagesStorage: tempDirectory))
         let bundle = commonScript.deletingLastPathComponent().deletingLastPathComponent()
-        let scripts = ["highlight.min.js", "katex.min.js", "auto-render.min.js", "emoji.min.js", "lightense.min.js", "tocbot.min.js", "common.js"]
+        let scripts = ["highlight.min.js", "katex.min.js", "mhchem.min.js", "auto-render.min.js", "emoji.min.js", "lightense.min.js", "tocbot.min.js", "common.js"]
             .map { "<script src=\"\(bundle.appendingPathComponent("js/\($0)").absoluteString)\"></script>" }.joined()
         let sheets = ["typography.css", "theme-light.css", "base.css"]
             .map { "<link rel=\"stylesheet\" href=\"\(bundle.appendingPathComponent("css/\($0)").absoluteString)\">" }.joined()
@@ -288,6 +288,90 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(got["id"] as? String, "Two")
         XCTAssertEqual(got["toc"] as? Int, 2, "the new heading joins the table of contents")
         XCTAssertEqual(got["html"] as? [String], want["html"] as? [String], "an updated block reads as a loaded one")
+    }
+
+    /// Typing a `\ce{...}` or `\pu{...}` mhchem chemistry formula in split view
+    /// renders cleanly through the incremental patch path.
+    @MainActor
+    func testALiveUpdateRendersMhchemChemistry() async throws {
+        let before = "# Chemistry\n\nIntro."
+        let after = #"""
+            # Chemistry
+
+            Intro.
+
+            Inline $\pu{123 kJ/mol}$.
+
+            $$
+            \ce{2H2 + O2 -> 2H2O}
+            $$
+            """#
+        let updated = try await loadRenderedPage(before)
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: after, useGithubLineBreak: false, imagesStorage: tempDirectory))
+        _ = try await updated.evaluateJavaScript(
+            MPreviewView.buildUpdateScript(html: html, initializeMath: true, initializeDiagrams: false, preserveScroll: false))
+
+        let probe = """
+            (() => ({
+                katex: document.querySelectorAll('#write .katex').length,
+                display: document.querySelectorAll('#write .katex-display').length,
+                errors: document.querySelectorAll('#write .katex-error').length,
+                rawCe: document.getElementById('write').innerText.includes('\\\\ce{'),
+                rawPu: document.getElementById('write').innerText.includes('\\\\pu{')
+            }))()
+            """
+        let deadline = Date().addingTimeInterval(10)
+        var state: [String: Any] = [:]
+        while Date() < deadline {
+            state = (try? await updated.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
+            if (state["katex"] as? Int) == 2 { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(state["katex"] as? Int, 2, "\(state)")
+        XCTAssertEqual(state["display"] as? Int, 1, "\(state)")
+        XCTAssertEqual(state["errors"] as? Int, 0, "\(state)")
+        XCTAssertEqual(state["rawCe"] as? Bool, false, "\(state)")
+        XCTAssertEqual(state["rawPu"] as? Bool, false, "\(state)")
+    }
+
+    /// Typing an incomplete `\ce{A \bond{} B}` in split view must not abort
+    /// live KaTeX rendering for formulas that follow it.
+    @MainActor
+    func testALiveUpdateRecoversFromMalformedMhchemBond() async throws {
+        let before = "# Chemistry\n\nFirst $a^2$."
+        let after = #"""
+            # Chemistry
+
+            First $a^2$.
+
+            Typing $\ce{A \bond{} B}$.
+
+            Later $E=mc^2$.
+            """#
+        let updated = try await loadRenderedPage(before)
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: after, useGithubLineBreak: false, imagesStorage: tempDirectory))
+        _ = try await updated.evaluateJavaScript(
+            MPreviewView.buildUpdateScript(html: html, initializeMath: true, initializeDiagrams: false, preserveScroll: false))
+
+        let probe = """
+            (() => ({
+                katex: document.querySelectorAll('#write .katex').length,
+                errors: document.querySelectorAll('#write .katex-error').length,
+                hasRawBond: document.getElementById('write').innerText.includes('\\\\bond{}'),
+                hasRawLater: document.getElementById('write').innerText.includes('$E=mc^2$')
+            }))()
+            """
+        let deadline = Date().addingTimeInterval(10)
+        var state: [String: Any] = [:]
+        while Date() < deadline {
+            state = (try? await updated.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
+            if (state["katex"] as? Int) == 2 { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(state["katex"] as? Int, 2, "\(state)")
+        XCTAssertEqual(state["errors"] as? Int, 0, "\(state)")
+        XCTAssertEqual(state["hasRawBond"] as? Bool, true, "\(state)")
+        XCTAssertEqual(state["hasRawLater"] as? Bool, false, "\(state)")
     }
 
     /// Each heading shows a small link beside it on hover, as on GitHub,

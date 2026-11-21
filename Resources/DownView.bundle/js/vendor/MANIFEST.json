@@ -82,7 +82,16 @@
       "license": "MIT",
       "sha256": "eb18207487161674e717087c317db14ac1a62dadaecccb802499ce173bfeb739",
       "purpose": "LaTeX math rendering in preview. Its 20 woff2 fonts sit in css/fonts/, byte-identical to the copies katex.min.css used to fetch from gw.alipayobjects.com, so formulas typeset offline.",
-      "version_source": "no banner. Pair with auto-render.min.js."
+      "version_source": "no banner. Pair with mhchem.min.js and auto-render.min.js."
+    },
+    {
+      "name": "mhchem.min.js",
+      "version": "0.16.0",
+      "source_url": "https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js",
+      "license": "MIT AND Apache-2.0",
+      "sha256": "5c0a121a8b490afc85860a522347aeb34fb508c6b23044e5d29f6b2194227b51",
+      "purpose": "KaTeX mhchem extension (`\\ce` and `\\pu`) for chemical formulas and equations in preview and slides. Must stay version-locked with katex.min.js (0.16.0) when upgrading KaTeX.",
+      "version_source": "KaTeX v0.16.0 release contrib/mhchem.min.js (mhchem 3.3.0); SRI sha384-RTN08a0AXIioPBcVosEqPUfKK+rPp+h1x/izR7xMkdMyuwkcZCWdxO+RSwIFtJXN. Upgrade in lockstep with katex.min.js and re-check the array-error guards in js/common.js (guardKaTeXRender) and ppt/plugin/math/math.js."
     },
     {
       "name": "auto-render.min.js",

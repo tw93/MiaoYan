@@ -18,7 +18,11 @@ the presentation mode, the slides and HTML, PDF and image export.
 - **Source:** <https://github.com/KaTeX/KaTeX>
 - **Copyright:** Copyright (c) 2013-2020 Khan Academy and other contributors
 - **License:** MIT License
-- **Bundled files:** `js/katex.min.js`, `js/auto-render.min.js`, `css/katex.min.css`
+- **Bundled files:** `js/katex.min.js`, `js/mhchem.min.js`, `js/auto-render.min.js`, `css/katex.min.css`
+
+`js/mhchem.min.js` is adapted from MathJax's `mhchem` extension (version 3.3.0):
+Copyright (c) 2011-2015 The MathJax Consortium; Copyright (c) 2015-2018 Martin
+Hensel, Apache License 2.0 (KaTeX adaptation under the MIT License).
 
 ### KaTeX fonts
 
@@ -334,7 +338,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ### Apache License 2.0
 
-This text applies to swift-cmark-gfm and to DOMPurify.
+This text applies to swift-cmark-gfm, DOMPurify and the MathJax mhchem upstream of `js/mhchem.min.js`.
 
 ```text
                                  Apache License
