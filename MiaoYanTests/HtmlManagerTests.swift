@@ -1130,6 +1130,53 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertEqual(state["scrolled"], ["Getting Started", "API (v2) & More!", "Notes-1", "Getting Started"])
     }
 
+    /// A display formula starts 1.5em in from the text, where a bulleted
+    /// list's text starts, not in the middle of the column (maintainer's
+    /// pick, 2026-11-21); the iPhone reader holds the same rule.
+    @MainActor
+    func testADisplayFormulaStartsAtTheListIndent() async throws {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "Text\n\n$$\nx = 1\n$$\n\n- item", useGithubLineBreak: true))
+        let css = downViewBundleURL.appendingPathComponent("css", isDirectory: true)
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let page = try write(
+            page: """
+                <!doctype html><html><head><meta charset="utf-8">
+                <link rel="stylesheet" href="\(css.appendingPathComponent("katex.min.css").absoluteString)">
+                <link rel="stylesheet" href="\(css.appendingPathComponent("typography.css").absoluteString)">
+                <link rel="stylesheet" href="\(css.appendingPathComponent("base.css").absoluteString)">
+                <script src="\(js.appendingPathComponent("katex.min.js").absoluteString)"></script>
+                <script src="\(js.appendingPathComponent("auto-render.min.js").absoluteString)"></script>
+                </head><body><div id="write" class="heti">\(html)</div><script>
+                renderMathInElement(document.getElementById('write'), { delimiters: [{left: '$$', right: '$$', display: true}] });
+                window.__ready = true;
+                </script></body></html>
+                """, named: "display-indent")
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(page, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(10)
+        while (try? await webView.evaluateJavaScript("window.__ready === true && !!document.querySelector('.katex-display')") as? Bool) != true,
+            Date() < deadline
+        {
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        let result = try await webView.evaluateJavaScript(
+            """
+            (() => {
+              const math = document.querySelector('.katex-display .base').getBoundingClientRect().left;
+              const text = document.querySelector('#write p').getBoundingClientRect().left;
+              const item = document.querySelector('#write li');
+              const range = document.createRange(); range.selectNodeContents(item);
+              return JSON.stringify({ math: math - text, item: range.getBoundingClientRect().left - text });
+            })()
+            """)
+        let json = try XCTUnwrap((result as? String)?.data(using: .utf8))
+        let offsets = try XCTUnwrap(try JSONSerialization.jsonObject(with: json) as? [String: Double])
+        let math = try XCTUnwrap(offsets["math"])
+        let item = try XCTUnwrap(offsets["item"])
+        XCTAssertGreaterThan(math, 0, "\(offsets)")
+        XCTAssertEqual(math, item, accuracy: 1, "the formula starts where the list's text starts: \(offsets)")
+    }
+
     private func writePreviewPage(markdownHTML: String) throws -> URL {
         let jsDirectory = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
         let page = """

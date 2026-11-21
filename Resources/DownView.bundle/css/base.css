@@ -614,3 +614,20 @@ body.miaoyan-split-mode::-webkit-scrollbar {
 body.miaoyan-split-mode {
   scrollbar-width: none;
 }
+
+/*
+ * A display formula ($$) starts 1.5em in from the text, where a bulleted
+ * list's text starts, rather than in the middle. The body is set from the
+ * left edge, and a centred formula moved with the window's width, so the eye
+ * jumped across the column and back (maintainer's pick of three rendered,
+ * 2026-11-21). The indent sits on .katex-display, in the text's em: on
+ * .katex, which KaTeX sets 1.21 times larger, it ran 5px past the list.
+ * Slides have no #write and keep reveal's centring; a \tag number stays at
+ * the right.
+ */
+#write .katex-display {
+  padding-left: 1.5em;
+}
+#write .katex-display > .katex {
+  text-align: left;
+}
