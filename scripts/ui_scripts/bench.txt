@@ -1,0 +1,19 @@
+# Typing, Backspace and scrolling in a note highlighted in full (Medium,
+# under 2000 lines) and in a note of a million characters (Large, the
+# simplified highlighting). Each step draws a frame before the next.
+resize 1280 800
+open Medium
+wait 1500
+select 400 0
+bench 100 type x
+bench 100 key backspace
+bench 100 key return
+bench 100 scroll 40
+open Large
+wait 4000
+select 400 0
+bench 100 type x
+bench 100 key backspace
+bench 100 key return
+bench 100 scroll 40
+quit

@@ -12,7 +12,7 @@ final class NoteVersionManager: @unchecked Sendable {
     private init() {
         // Unit tests run inside the app and used to file their fixture notes
         // into the user's real history, hundreds of directories over time.
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil || Self.isScripted {
             versionsRoot = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanTestVersions-\(ProcessInfo.processInfo.processIdentifier)")
         } else {
             let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -75,6 +75,17 @@ final class NoteVersionManager: @unchecked Sendable {
     /// few long notes, kept forever, otherwise grow without a ceiling
     /// (quiet-md keeps the same 200 MiB, 2026-11-21).
     static let libraryBudget: Int64 = 200 << 20
+
+    /// A scripted run (UIScript) is a Debug or timing build typing into a
+    /// scratch library, and those builds share the release app's folder.
+    /// Shipped builds never take this path.
+    private static var isScripted: Bool {
+        #if DEBUG || MIAOYAN_SCRIPT
+            return UserDefaults.standard.string(forKey: "MiaoYanScript") != nil
+        #else
+            return false
+        #endif
+    }
 
     /// Removes the oldest versions across all notes until the history fits
     /// in `budget`, never a note's newest one, so each note keeps the

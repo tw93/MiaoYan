@@ -55,6 +55,9 @@ process exited mid-run twice, and nothing on disk changed.
 `testTheTestsNeverOpenTheLibraryTheSettingsName` holds it. Version history
 goes to a temporary folder for the same reason.
 
+Scripted runs of a whole Debug build, with captures compared between two
+builds and editor timings, are in `scripts/ui_scripts/README.md`.
+
 `CODE_SIGNING_ALLOWED=NO` is required on the local test command because
 the dev signing identity used for `MiaoYan.app` and the per-developer
 identity used for `MiaoYanTests.xctest` end up with different Team IDs,

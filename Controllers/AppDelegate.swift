@@ -101,6 +101,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
         configureSystemLogging()
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
+        #if DEBUG || MIAOYAN_SCRIPT
+            UIScript.startIfRequested()
+        #endif
 
         applyAppearance()
 

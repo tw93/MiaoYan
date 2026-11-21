@@ -43,6 +43,7 @@ swift test --package-path Packages/MiaoYanCore
 python3 scripts/check_incidents.py      # docs/incidents.md rows hold
 python3 scripts/risk_tier.py [path ...]  # extra gates a change needs, from its paths
 bash scripts/build.sh
+python3 scripts/ui_script.py run|compare ...   # scripted runs and captures of a Debug build, see scripts/ui_scripts/README.md
 ruby scripts/add_tests_target.rb     # only when re-wiring MiaoYanTests after pbxproj reset
 ```
 
@@ -140,7 +141,7 @@ Claude Code loads each `.claude/rules/*.md` when a file matching its `paths:` is
 
 ## Verification
 
-- UI or interaction fixes: launch the built app and exercise the changed flow before reporting done (two builds that share the `com.tw93.miaoyan.qa` bundle id share the `wkPreview` copy of `DownView.bundle`, which is refreshed only from a newer file, so clear that folder when switching between them, or the page runs the other build's scripts); a green build is not visual proof. If the first fix attempt does not hold, stop guessing and add `#if DEBUG` runtime logging to capture evidence before the next code change.
+- UI or interaction fixes: launch the built app and exercise the changed flow before reporting done; `scripts/ui_script.py` does it on a scratch library without the mouse or focus, and `compare` checks two builds capture for capture (two builds that share the `com.tw93.miaoyan.qa` bundle id share the `wkPreview` copy of `DownView.bundle`, which is refreshed only from a newer file, so clear that folder when switching between them, or the page runs the other build's scripts); a green build is not visual proof. If the first fix attempt does not hold, stop guessing and add `#if DEBUG` runtime logging to capture evidence before the next code change.
 - Handing a change to the maintainer to test (maintainer, 2026-10-25): replace the installed `/Applications/MiaoYan.app` with the new build without asking, because that copy is both the maintainer's daily app and the test build. Build Release with the project's own signing (`xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -configuration Release -derivedDataPath <scratch> build`), check it with `codesign --verify --deep --strict`, quit the running copy through `osascript -e 'tell application id "com.tw93.miaoyan" to quit'` (its normal quit saves notes; never kill it), move the old bundle to the Trash under a distinct name so it can be restored, `ditto` the new one in, reopen it, and report the commit it was built from. The build is Developer ID signed but not notarized, which is fine on this Mac because a local copy carries no quarantine flag; notarized packages for users still come from `scripts/build.sh`.
 - Release or signing changes: verify version alignment and inspect the relevant repository script; do not assume a tracked `release.yml` exists.
 - Release note changes: inspect `.github/RELEASE_NOTES.md` and the affected `scripts/release-ci/` renderer.

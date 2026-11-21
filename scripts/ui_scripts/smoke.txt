@@ -1,0 +1,28 @@
+# Open two notes, edit one, and capture the editor, the preview and the
+# split view. Every capture should match between two builds that were not
+# meant to change the look.
+resize 1200 760
+open Tables
+wait 600
+shot tables-edit
+caret end
+key return
+type - [ ] a task typed by the script
+key return
+type Finished.
+wait 300
+shot tables-typed
+open Lists
+wait 600
+shot lists-edit
+menu togglePreview:
+wait 1500
+shot lists-preview
+menu togglePreview:
+wait 400
+menu toggleSplitMode:
+wait 1500
+shot lists-split
+menu toggleSplitMode:
+wait 300
+quit
