@@ -357,3 +357,23 @@
 
 "Allow MiaoYan to read this folder to show the note's images" = "このフォルダの読み取りを妙言に許可すると、メモの画像が表示されます";
 "Allow" = "許可";
+
+/* Placeholder words of the templates typed as /table, /markmap, /mermaid, /plantuml, /fold and /task plus Tab */
+"Column 1" = "列1";
+"Column 2" = "列2";
+"Column 3" = "列3";
+"Topic" = "テーマ";
+"Branch 1" = "分岐1";
+"Branch 2" = "分岐2";
+"Item 1" = "項目1";
+"Item 2" = "項目2";
+"Item 3" = "項目3";
+"Start" = "開始";
+"Process" = "処理";
+"Finish" = "終了";
+"Message" = "メッセージ";
+"Click to expand" = "クリックで展開";
+"Content goes here" = "ここに内容";
+"Task 1" = "タスク1";
+"Task 2" = "タスク2";
+"Finished task" = "完了したタスク";

@@ -333,3 +333,23 @@
 
 "Allow MiaoYan to read this folder to show the note's images" = "允許妙言讀取這個檔案夾，筆記裡的圖片才能顯示";
 "Allow" = "允許";
+
+/* Placeholder words of the templates typed as /table, /markmap, /mermaid, /plantuml, /fold and /task plus Tab */
+"Column 1" = "欄1";
+"Column 2" = "欄2";
+"Column 3" = "欄3";
+"Topic" = "主題";
+"Branch 1" = "分支1";
+"Branch 2" = "分支2";
+"Item 1" = "內容1";
+"Item 2" = "內容2";
+"Item 3" = "內容3";
+"Start" = "開始";
+"Process" = "處理";
+"Finish" = "結束";
+"Message" = "訊息";
+"Click to expand" = "點擊展開";
+"Content goes here" = "內容區域";
+"Task 1" = "待完成任務1";
+"Task 2" = "待完成任務2";
+"Finished task" = "已完成任務";

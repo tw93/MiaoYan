@@ -1,4 +1,5 @@
 import Foundation
+import MiaoYanCore
 
 // MARK: - Shortcut Template Structure
 struct ShortcutTemplate {
@@ -82,84 +83,99 @@ class ShortcutTemplateManager {
 
     private init() {}
 
-    private let templates: [String: ShortcutTemplate] = [
-        "table": ShortcutTemplate(
-            template: """
-                | {{select}}列1{{/select}} | 列2 | 列3 |
-                | --- | --- | --- |
-                |     |     |     |
-                |     |     |     |
-                """
-        ),
+    /// The placeholder words come in the interface's language (they were
+    /// Chinese for every reader until 2026-11-21); the Chinese ones are the
+    /// words the templates always had.
+    private func template(for key: String) -> ShortcutTemplate? {
+        func word(_ key: String) -> String { I18n.str(key) }
+        switch key {
+        case "table":
+            return tableTemplate([word("Column 1"), word("Column 2"), word("Column 3")])
+        case "img":
+            return ShortcutTemplate(template: "<img src=\"{{cursor}}\" width=\"800\">")
+        case "video":
+            return ShortcutTemplate(
+                template: "<video width=\"800px\" preload=\"metadata\" loop autoplay controls muted><source src=\"{{cursor}}\" type=\"video/mp4\"></video>"
+            )
+        case "markmap":
+            return ShortcutTemplate(
+                template: """
+                    ```markmap
+                    # {{select}}\(word("Topic")){{/select}}
+                    ## \(word("Branch 1"))
+                    - \(word("Item 1"))
+                    - \(word("Item 2"))
+                    ## \(word("Branch 2"))
+                    - \(word("Item 3"))
+                    ```
+                    """
+            )
+        case "mermaid":
+            return ShortcutTemplate(
+                template: """
+                    ```mermaid
+                    graph LR
+                    A[{{select}}\(word("Start")){{/select}}] --> B[\(word("Process"))]
+                    B --> C[\(word("Finish"))]
+                    ```
+                    """
+            )
+        case "plantuml":
+            return ShortcutTemplate(
+                template: """
+                    ```plantuml
+                    @startuml
+                    participant A
+                    participant B
+                    A -> B: {{select}}\(word("Message")){{/select}}
+                    @enduml
+                    ```
+                    """
+            )
+        case "fold":
+            return ShortcutTemplate(
+                template: """
+                    <details>
+                    <summary>{{select}}\(word("Click to expand")){{/select}}</summary>
 
-        "img": ShortcutTemplate(
-            template: "<img src=\"{{cursor}}\" width=\"800\">"
-        ),
+                    \(word("Content goes here"))
 
-        "video": ShortcutTemplate(
-            template: "<video width=\"800px\" preload=\"metadata\" loop autoplay controls muted><source src=\"{{cursor}}\" type=\"video/mp4\"></video>"
-        ),
+                    </details>
+                    """
+            )
+        case "task":
+            return ShortcutTemplate(
+                template: """
+                    - [ ] {{select}}\(word("Task 1")){{/select}}
+                    - [ ] \(word("Task 2"))
+                    - [x] \(word("Finished task"))
+                    """
+            )
+        default:
+            return nil
+        }
+    }
 
-        "markmap": ShortcutTemplate(
-            template: """
-                ```markmap
-                # {{select}}主题{{/select}}
-                ## 分支1
-                - 内容1
-                - 内容2
-                ## 分支2
-                - 内容3
-                ```
-                """
-        ),
-
-        "mermaid": ShortcutTemplate(
-            template: """
-                ```mermaid
-                graph LR
-                A[{{select}}开始{{/select}}] --> B[处理]
-                B --> C[结束]
-                ```
-                """
-        ),
-
-        "plantuml": ShortcutTemplate(
-            template: """
-                ```plantuml
-                @startuml
-                participant A
-                participant B
-                A -> B: {{select}}消息{{/select}}
-                @enduml
-                ```
-                """
-        ),
-
-        "fold": ShortcutTemplate(
-            template: """
-                <details>
-                <summary>{{select}}点击展开{{/select}}</summary>
-
-                内容区域
-
-                </details>
-                """
-        ),
-
-        "task": ShortcutTemplate(
-            template: """
-                - [ ] {{select}}待完成任务1{{/select}}
-                - [ ] 待完成任务2
-                - [x] 已完成任务
-                """
-        ),
-    ]
+    /// A header, its line of dashes and two empty rows, written the way
+    /// the table keys and Format write a table, with the first header
+    /// selected: a word wider than three columns needs wider rows under it.
+    private func tableTemplate(_ headers: [String]) -> ShortcutTemplate {
+        let empty = "|" + String(repeating: "  |", count: headers.count)
+        let dashes = "|" + String(repeating: " --- |", count: headers.count)
+        let rough = (["| " + headers.joined(separator: " | ") + " |", dashes, empty, empty].joined(separator: "\n")) as NSString
+        guard let edit = TableEditing.edit(.align(.none), in: rough, selection: NSRange(location: 2, length: 0)) else {
+            return ShortcutTemplate(content: rough as String, cursorOffset: 2, cursorLength: (headers.first ?? "").utf16.count)
+        }
+        return ShortcutTemplate(
+            content: rough.replacingCharacters(in: edit.range, with: edit.replacement),
+            cursorOffset: edit.selection.location, cursorLength: edit.selection.length)
+    }
 
     func getTemplate(for key: String) -> ShortcutTemplate? {
         if key == "time" {
             return getCurrentTimeTemplate()
         }
-        return templates[key]
+        return template(for: key)
     }
 
     private lazy var timeFormatter: DateFormatter = {

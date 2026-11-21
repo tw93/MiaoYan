@@ -359,3 +359,23 @@
 
 "Allow MiaoYan to read this folder to show the note's images" = "允许妙言读取这个文件夹，笔记里的图片才能显示";
 "Allow" = "允许";
+
+/* Placeholder words of the templates typed as /table, /markmap, /mermaid, /plantuml, /fold and /task plus Tab */
+"Column 1" = "列1";
+"Column 2" = "列2";
+"Column 3" = "列3";
+"Topic" = "主题";
+"Branch 1" = "分支1";
+"Branch 2" = "分支2";
+"Item 1" = "内容1";
+"Item 2" = "内容2";
+"Item 3" = "内容3";
+"Start" = "开始";
+"Process" = "处理";
+"Finish" = "结束";
+"Message" = "消息";
+"Click to expand" = "点击展开";
+"Content goes here" = "内容区域";
+"Task 1" = "待完成任务1";
+"Task 2" = "待完成任务2";
+"Finished task" = "已完成任务";

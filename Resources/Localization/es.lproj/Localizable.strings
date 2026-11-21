@@ -351,3 +351,23 @@
 
 "Allow MiaoYan to read this folder to show the note's images" = "Permite que MiaoYan lea esta carpeta para mostrar las imágenes de la nota";
 "Allow" = "Permitir";
+
+/* Placeholder words of the templates typed as /table, /markmap, /mermaid, /plantuml, /fold and /task plus Tab */
+"Column 1" = "Columna 1";
+"Column 2" = "Columna 2";
+"Column 3" = "Columna 3";
+"Topic" = "Tema";
+"Branch 1" = "Rama 1";
+"Branch 2" = "Rama 2";
+"Item 1" = "Elemento 1";
+"Item 2" = "Elemento 2";
+"Item 3" = "Elemento 3";
+"Start" = "Inicio";
+"Process" = "Proceso";
+"Finish" = "Fin";
+"Message" = "Mensaje";
+"Click to expand" = "Haz clic para expandir";
+"Content goes here" = "Contenido";
+"Task 1" = "Tarea 1";
+"Task 2" = "Tarea 2";
+"Finished task" = "Tarea terminada";

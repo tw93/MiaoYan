@@ -197,4 +197,35 @@ final class TableEditingTests: XCTestCase {
             for id in ids { XCTAssertTrue(strings.contains("\"\(id).title\" = \""), "\(language) \(id)") }
         }
     }
+
+    /// The first header is selected and the rows under it are as wide as the
+    /// headers, in every language's words.
+    @MainActor
+    func testTheTableTemplateIsTidyInEveryLanguage() throws {
+        for code in ["en", "zh-Hans", "zh-Hant", "ja", "es"] {
+            I18n.overrideBundle = try XCTUnwrap(Bundle.main.path(forResource: code, ofType: "lproj").flatMap(Bundle.init(path:)))
+            defer { I18n.overrideBundle = nil }
+            let template = try XCTUnwrap(ShortcutTemplateManager.shared.getTemplate(for: "table"))
+            let text = template.content as NSString
+            let lines = template.content.components(separatedBy: "\n")
+            XCTAssertEqual(lines.count, 4, code)
+            let again = try XCTUnwrap(TableEditing.edit(.align(.none), in: text, selection: NSRange(location: 2, length: 0)))
+            XCTAssertTrue(again.range.length == 0 && again.replacement.isEmpty, "\(code): already as the keys write it")
+            XCTAssertEqual(text.substring(with: NSRange(location: template.cursorOffset, length: template.cursorLength)), I18n.str("Column 1"), code)
+        }
+        I18n.overrideBundle = try XCTUnwrap(Bundle.main.path(forResource: "en", ofType: "lproj").flatMap(Bundle.init(path:)))
+        defer { I18n.overrideBundle = nil }
+        XCTAssertEqual(
+            ShortcutTemplateManager.shared.getTemplate(for: "table")?.content,
+            "| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n|          |          |          |\n|          |          |          |")
+        for key in ["table", "markmap", "mermaid", "plantuml", "fold", "task"] {
+            let content = try XCTUnwrap(ShortcutTemplateManager.shared.getTemplate(for: key)).content
+            XCTAssertNil(content.unicodeScalars.first { $0.value >= 0x2E80 }, "/\(key) in English holds no Chinese word")
+        }
+        I18n.overrideBundle = try XCTUnwrap(Bundle.main.path(forResource: "zh-Hans", ofType: "lproj").flatMap(Bundle.init(path:)))
+        XCTAssertEqual(
+            ShortcutTemplateManager.shared.getTemplate(for: "table")?.content,
+            "| \u{5217}1 | \u{5217}2 | \u{5217}3 |\n| --- | --- | --- |\n|     |     |     |\n|     |     |     |", "the Chinese template is the one it always was")
+        XCTAssertEqual(ShortcutTemplateManager.shared.getTemplate(for: "task")?.content, "- [ ] \u{5F85}\u{5B8C}\u{6210}\u{4EFB}\u{52A1}1\n- [ ] \u{5F85}\u{5B8C}\u{6210}\u{4EFB}\u{52A1}2\n- [x] \u{5DF2}\u{5B8C}\u{6210}\u{4EFB}\u{52A1}")
+    }
 }
