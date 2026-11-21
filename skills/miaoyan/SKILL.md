@@ -52,7 +52,7 @@ Link to another note by its exact title, without the `.md` suffix:
 See [[Project plan]] for the next steps.
 ```
 
-Keep the target text aligned with the note title so MiaoYan can build backlinks. Do not invent alias, heading, or block-reference syntax.
+Keep the target text aligned with the note title so MiaoYan can build backlinks. `[[Project plan|plan]]` shows plan and still links to Project plan (MiaoYan 4.10.0 and later). Do not invent heading or block-reference syntax, since `[[Note#Heading]]` and embeds are not supported.
 
 ### Add local images
 
