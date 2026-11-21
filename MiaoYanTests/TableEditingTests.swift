@@ -432,11 +432,16 @@ final class TableEditingTests: XCTestCase {
         }
         let inTable = average(typingAfter: "row 100")
         let inProse = average(typingAfter: "Prose above")
+        print("table keystroke \(inTable * 1000) ms, prose keystroke \(inProse * 1000) ms")
         // 27 ms and 0.6 ms in a Debug build on an M-series Mac (2026-11-21);
         // the limits leave room for a slow CI runner and catch a pass that
         // grows with the square of the rows or reads the whole note.
         XCTAssertLessThan(inTable, 0.25)
         XCTAssertLessThan(inProse, 0.02)
+        // The paragraph sits one empty line above the table: going over the
+        // table from there took half a table keystroke, under the limit on a
+        // fast Mac and over it on CI, which is where it was caught.
+        XCTAssertLessThan(inProse, inTable / 8, "prose above a table does not go over the table")
         for xs in try pipeColumns(in: editor) { XCTAssertLessThan(spread(xs), 0.5) }
 
         // Rows far below a line of dashes that is typed over are plain

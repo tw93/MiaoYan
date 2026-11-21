@@ -78,12 +78,21 @@ enum TableColumnAligner {
         grow(below)
         // A line break typed at the end of a row parts the rows under it
         // from their line of dashes: they are plain lines now, one line
-        // without a pipe away from the edit. One such step, not a chain of
-        // them through every table of the note.
-        if let gap = below(), !hasPipe(gap) {
-            let after = NSMaxRange(gap) < text.length ? text.paragraphRange(for: NSRange(location: NSMaxRange(gap), length: 0)) : NSRange(location: 0, length: 0)
-            if after.length > 0, holdsMarks(storage, in: after) {
-                range = NSUnionRange(range, after)
+        // without a pipe away from the edit. A table that merely stands
+        // under the edited paragraph is told from them by its second line,
+        // dashes drawn as markup, and left alone: prose typed above a table
+        // must not go over the table on every keystroke. One such step, not
+        // a chain of them through every table of the note.
+        if let gap = below(), !hasPipe(gap), NSMaxRange(gap) < text.length {
+            let first = text.paragraphRange(for: NSRange(location: NSMaxRange(gap), length: 0))
+            var isWhole = false
+            if NSMaxRange(first) < text.length {
+                let second = text.paragraphRange(for: NSRange(location: NSMaxRange(first), length: 0))
+                let dash = text.range(of: "-", options: .literal, range: second).location
+                isWhole = dash != NSNotFound && storage.attribute(quietKey, at: dash, effectiveRange: nil) != nil
+            }
+            if first.length > 0, !isWhole, holdsMarks(storage, in: first) {
+                range = NSUnionRange(range, first)
                 grow(below)
             }
         }
