@@ -1084,6 +1084,52 @@ final class MathRenderingRuntimeTests: XCTestCase {
         return [:]
     }
 
+    /// Ids stay the headings' own text, and a link written for GitHub
+    /// (`#getting-started`) finds its heading by GitHub's slug as well
+    /// (maintainer, 2026-11-21).
+    @MainActor
+    func testAGitHubSlugLinkFindsItsHeading() async throws {
+        let markdown = """
+            [a](#getting-started) [b](#api-v2--more) [c](#notes-1) [d](#Getting%20Started) [e](#missing)
+
+            # Getting Started
+
+            ## API (v2) & More!
+
+            ## Notes
+
+            ## Notes
+            """
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: true))
+        let common = downViewBundleURL.appendingPathComponent("js/common.js").absoluteString
+        let page = try write(
+            page: """
+                <!doctype html><html><head><meta charset="utf-8"></head><body><div id="write">\(html)</div>
+                <script src="\(common)"></script><script>
+                window.__scrolled = [];
+                Element.prototype.scrollIntoView = function () { window.__scrolled.push(this.id); };
+                MiaoYanCommon.setupHeaderAnchors();
+                window.__ready = true;
+                </script></body></html>
+                """, named: "anchors")
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(page, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(10)
+        while (try? await webView.evaluateJavaScript("window.__ready === true") as? Bool) != true, Date() < deadline {
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        let result = try await webView.evaluateJavaScript(
+            """
+            document.querySelectorAll('#write p a').forEach((a) => a.click());
+            JSON.stringify({ scrolled: window.__scrolled,
+              ids: Array.from(document.querySelectorAll('h1, h2')).map((h) => h.id) })
+            """)
+        let json = try XCTUnwrap((result as? String)?.data(using: .utf8))
+        let state = try XCTUnwrap(try JSONSerialization.jsonObject(with: json) as? [String: [String]])
+        XCTAssertEqual(state["ids"], ["Getting Started", "API (v2) & More!", "Notes", "Notes-1"], "ids are the headings' text")
+        XCTAssertEqual(state["scrolled"], ["Getting Started", "API (v2) & More!", "Notes-1", "Getting Started"])
+    }
+
     private func writePreviewPage(markdownHTML: String) throws -> URL {
         let jsDirectory = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
         let page = """

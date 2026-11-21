@@ -411,6 +411,17 @@ const MiaoYanCommon = {
     // This runs on every live update: every innerText is read before any
     // write, so a long note lays out once rather than once per heading.
     const texts = headings.map((h) => h.innerText.trim());
+    // A link written for GitHub (`#getting-started`, from a README or an
+    // agent's table of contents) finds its heading by GitHub's slug; the
+    // ids stay the headings' own text (maintainer, 2026-11-05 and 2026-11-21).
+    this._slugTargets = new Map();
+    const slugCounts = new Map();
+    headings.forEach((h, index) => {
+      const base = this.githubSlug(texts[index]);
+      const seen = slugCounts.get(base) || 0;
+      slugCounts.set(base, seen + 1);
+      this._slugTargets.set(seen ? `${base}-${seen}` : base, h);
+    });
     headings.forEach((h, index) => {
       let baseId = texts[index];
       let id = baseId;
@@ -450,8 +461,15 @@ const MiaoYanCommon = {
       let id = anchor.getAttribute('href').slice(1);
       try { id = decodeURIComponent(id); } catch (error) { /* keep it as written */ }
       const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      document.getElementById(id)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+      const target = document.getElementById(id) || this._slugTargets?.get(id.toLowerCase());
+      target?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
     });
+  },
+
+  // GitHub's heading slug (github-slugger): lower case, punctuation dropped
+  // except `-` and `_`, each space a `-`.
+  githubSlug(text) {
+    return text.toLowerCase().replace(/[^\p{L}\p{M}\p{N}\p{Pc} -]/gu, '').replace(/ /g, '-');
   },
 
   initializeCore() {
