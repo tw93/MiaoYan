@@ -939,7 +939,7 @@ final class MathRenderingRuntimeTests: XCTestCase {
     @MainActor
     func testPreviewRendersMhchemChemistry() async throws {
         let markdown = #"""
-            Water is $\ce{H2O}$, rate $\ce{A ->[$k_1$] B}$, heated $\ce{A ->[$80 ^\circ C$] B}$, paren \(\ce{A ->[$5$] B}\), units $\pu{123 kJ/mol}$, and $E = mc^2$.
+            Water is $\ce{H2O}$, rate $\ce{A ->[$k_1$] B}$, heated $\ce{A ->[$80 ^\circ C$] B}$, units $\pu{123 kJ/mol}$, and $E = mc^2$.
 
             $$
             \ce{2H2 + O2 -> 2H2O}
@@ -985,10 +985,10 @@ final class MathRenderingRuntimeTests: XCTestCase {
         var state: [String: Any] = [:]
         while Date() < deadline {
             state = (try? await webView.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
-            if (state["katex"] as? Int) == 10 { break }
+            if (state["katex"] as? Int) == 9 { break }
             try await Task.sleep(nanoseconds: 50_000_000)
         }
-        XCTAssertEqual(state["katex"] as? Int, 10, "\(state)")
+        XCTAssertEqual(state["katex"] as? Int, 9, "\(state)")
         XCTAssertEqual(state["display"] as? Int, 2, "\(state)")
         XCTAssertEqual(state["errors"] as? Int, 0, "\(state)")
         XCTAssertEqual(state["skippedDollars"] as? [String], ["$20", "$30", "$", "$20", "$20"], "\(state)")
@@ -1005,6 +1005,48 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertTrue(text.contains("$20"), text)
         XCTAssertTrue(text.contains("$30"), text)
         XCTAssertTrue(text.contains("$100"), text)
+    }
+
+    /// `\( \)` and `\[ \]` are math only in a note without `$` math (the
+    /// maintainer's rule, 2026-11-21), so chemistry in them is checked on a
+    /// note of its own; beside `$` math they are Markdown escapes.
+    @MainActor
+    func testBracketDelimitersRenderMhchemInANoteWithoutDollarMath() async throws {
+        let markdown = #"""
+            Water is \(\ce{H2O}\) and the reaction is:
+
+            \[
+            \ce{2H2 + O2 -> 2H2O}
+            \]
+            """#
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: false))
+        let previewURL = try writeIndexPage(bodyHTML: html, named: "mhchem-brackets")
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(previewURL, allowingReadAccessTo: tempDirectory)
+        let probe = """
+            JSON.stringify({
+              katex: document.querySelectorAll('#write .katex').length,
+              display: document.querySelectorAll('#write .katex-display').length,
+              errors: document.querySelectorAll('#write .katex-error').length,
+              raw: document.getElementById('write').innerText.includes('\\\\ce{')
+            })
+            """
+        let deadline = Date().addingTimeInterval(10)
+        var state: [String: Any] = [:]
+        while Date() < deadline {
+            if let json = try? await webView.evaluateJavaScript(probe) as? String,
+                let data = json.data(using: .utf8),
+                let parsed = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            {
+                state = parsed
+                if (state["katex"] as? Int) == 2 { break }
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(state["katex"] as? Int, 2, "\(state)")
+        XCTAssertEqual(state["display"] as? Int, 1, "\(state)")
+        XCTAssertEqual(state["errors"] as? Int, 0, "\(state)")
+        XCTAssertEqual(state["raw"] as? Bool, false, "\(state)")
     }
 
     /// PDF export reloads already-rendered preview HTML into `index.html`;
