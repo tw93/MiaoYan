@@ -44,6 +44,17 @@ that registers undo: writing `textStorage` directly is what the undo check
 catches. Both checks were red-run on 2026-11-21, once with Tab writing to the
 storage directly and once with Bold dropping a character.
 
+The tests run inside the app, and the app opens its notes library at
+launch: under XCTest `UserDefaultsManagement.storageUrl` is always an empty
+folder of the test process's own (`testLibrary`), whatever the test build's
+settings say. Until 2026-11-21 it opened the library the `com.tw93.miaoyan.qa`
+settings named, and when that folder was gone (another session's deleted
+scratch library) it fell back to the iCloud library and loaded the
+maintainer's own notes; the editor's owner guard refused the saves, the test
+process exited mid-run twice, and nothing on disk changed.
+`testTheTestsNeverOpenTheLibraryTheSettingsName` holds it. Version history
+goes to a temporary folder for the same reason.
+
 `CODE_SIGNING_ALLOWED=NO` is required on the local test command because
 the dev signing identity used for `MiaoYan.app` and the per-developer
 identity used for `MiaoYanTests.xctest` end up with different Team IDs,

@@ -29,6 +29,21 @@ final class StorageRelocationTests: XCTestCase {
         try await body(storage, root, source, base)
     }
 
+    /// A test build whose settings name a folder that is gone used to fall
+    /// back to the iCloud library and load the maintainer's own notes.
+    @MainActor
+    func testTheTestsNeverOpenTheLibraryTheSettingsName() throws {
+        let defaults = UserDefaults.standard
+        let saved = defaults.object(forKey: "storageUrl")
+        defer { defaults.set(saved, forKey: "storageUrl") }
+        defaults.set("/nonexistent/MiaoYan-\(UUID().uuidString)", forKey: "storageUrl")
+
+        let library = try XCTUnwrap(UserDefaultsManagement.testLibrary)
+        XCTAssertEqual(UserDefaultsManagement.storageUrl, library)
+        XCTAssertEqual(UserDefaultsManagement.storagePath, library.path)
+        XCTAssertTrue(library.path.hasPrefix(FileManager.default.temporaryDirectory.resolvingSymlinksInPath().path))
+    }
+
     /// Only the Trash folder itself is kept out of the sidebar; a folder whose
     /// name or ancestor merely contains "Trash" is the user's own.
     @MainActor

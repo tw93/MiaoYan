@@ -761,8 +761,21 @@ public enum UserDefaultsManagement {
         }
         return nil
     }
+    /// The unit tests run inside the app, which opened whatever library the
+    /// test build's settings named and, when that folder was gone, fell back
+    /// to the iCloud library: on 2026-11-21 a run loaded the maintainer's
+    /// own notes after another session's scratch library was deleted. Tests
+    /// get an empty folder of their own instead, whatever the settings say.
+    static let testLibrary: URL? = {
+        guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil else { return nil }
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanTestLibrary-\(ProcessInfo.processInfo.processIdentifier)")
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        return url.resolvingSymlinksInPath()
+    }()
+
     static var storagePath: String? {
         get {
+            if let testLibrary { return testLibrary.path }
             if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) as? String {
                 if FileManager.default.isWritableFile(atPath: storagePath) {
                     return storagePath
@@ -802,6 +815,7 @@ public enum UserDefaultsManagement {
     }
 
     static var storageUrl: URL? {
+        if let testLibrary { return testLibrary }
         if let bookmarkData = storageBookmark {
             var isStale = false
             do {
