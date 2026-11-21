@@ -373,6 +373,22 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
     private var previewDelay = ShellSplitMath.typingDelay
     private var previewTimer: Timer?
 
+    /// Puts the editor's container in the left pane, sized by its mask. The
+    /// edit-only view hands it over with Auto Layout switched on by SwiftUI's
+    /// host and no constraints, which the layout engine sized to nothing:
+    /// split mode's editor drew blank or ran under the preview, and the
+    /// container came back to the edit-only view through a zero size that
+    /// left its scroll view twice the column, over the header, the whole note
+    /// column blank (2026-11-21, a size log of a scripted run).
+    func moveContainer(into pane: NSView) {
+        container.translatesAutoresizingMaskIntoConstraints = true
+        if container.superview !== pane {
+            container.frame = pane.bounds
+            pane.addSubview(container)
+        }
+        container.autoresizingMask = [.width, .height]
+    }
+
     func attachSplitPreview(_ preview: MPreviewView?) {
         guard preview !== splitPreview else { return }
         splitPreview?.scrollDelegate = nil
@@ -740,9 +756,7 @@ struct ShellEditorSplit<Preview: View>: NSViewRepresentable {
         split.dividerStyle = .thin
         split.delegate = context.coordinator
         let editorPane = NSView()
-        controller.container.frame = editorPane.bounds
-        controller.container.autoresizingMask = [.width, .height]
-        editorPane.addSubview(controller.container)
+        controller.moveContainer(into: editorPane)
         let previewPane = NSHostingView(rootView: preview)
         previewPane.sizingOptions = []
         split.addSubview(editorPane)
@@ -752,10 +766,9 @@ struct ShellEditorSplit<Preview: View>: NSViewRepresentable {
     }
 
     func updateNSView(_ split: ShellSplitView, context: Context) {
-        if let editorPane = split.subviews.first, controller.container.superview !== editorPane {
-            editorPane.addSubview(controller.container)
+        if let editorPane = split.subviews.first {
+            controller.moveContainer(into: editorPane)
         }
-        controller.container.autoresizingMask = [.width, .height]
         Coordinator.fitEditor(in: split)
         (split.subviews.last as? NSHostingView<Preview>)?.rootView = preview
         controller.update(note)

@@ -739,6 +739,37 @@ final class ShellEditorParityTests: XCTestCase {
             AppDelegate.relaunchCommand(quotedAppPath: path, intoShell: true),
             "sleep 0.7; /usr/bin/open -n -a '/Applications/MiaoYan.app' --args -MiaoYanShell YES")
     }
+
+    /// Split mode takes the editor's container as SwiftUI's host leaves it,
+    /// Auto Layout on and no constraints; the layout engine sized it to
+    /// nothing, the split editor drew blank or ran under the preview, and
+    /// leaving split mode left the whole note column blank (2026-11-21).
+    @available(macOS 14, *)
+    @MainActor
+    func testTheSplitPaneSizesTheEditorTheEditOnlyViewHandsOver() {
+        let controller = ShellEditorController()
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 900, height: 760), styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        defer { window.close() }
+        let root = NSView(frame: window.contentLayoutRect)
+        window.contentView = root
+        let pane = NSView(frame: NSRect(x: 0, y: 0, width: 459, height: 708))
+        root.addSubview(pane)
+        // The window runs the layout engine, as SwiftUI's host does.
+        let pinned = NSView()
+        pinned.translatesAutoresizingMaskIntoConstraints = false
+        root.addSubview(pinned)
+        NSLayoutConstraint.activate([pinned.widthAnchor.constraint(equalToConstant: 10), pinned.heightAnchor.constraint(equalToConstant: 10)])
+        controller.container.translatesAutoresizingMaskIntoConstraints = false
+
+        controller.moveContainer(into: pane)
+        root.layoutSubtreeIfNeeded()
+        XCTAssertEqual(controller.container.frame, pane.bounds)
+        pane.frame = NSRect(x: 0, y: 0, width: 384, height: 708)
+        root.layoutSubtreeIfNeeded()
+        XCTAssertEqual(controller.container.frame, pane.bounds)
+        XCTAssertEqual(controller.scrollView.frame, controller.container.bounds)
+    }
 }
 
 /// A drag the test controls: a private pasteboard and a point in the view.
