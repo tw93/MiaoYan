@@ -268,6 +268,7 @@ class Storage {
     /// the old path, where every save failed; dropping and reloading the
     /// folder also removed it from `projects` and gave the open note a twin.
     public func relocateFolder(_ project: Project, to newURL: URL) {
+        PinSync.cloud.moved(from: project.url, to: newURL)
         let oldPath = project.url.path
         let newPath = newURL.path
         func moved(_ path: String) -> String? {
@@ -850,16 +851,7 @@ class Storage {
             note.creationDate = document.creationDate
             note.project = item
 
-            let pinData =
-                (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
-                ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
-            if let data = pinData {
-                let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                    ptr.load(as: Bool.self)
-                }
-
-                note.isPinned = isPinned
-            }
+            note.isPinned = PinSync.isPinned(note.url)
 
             if loadContent {
                 note.load()
@@ -932,15 +924,7 @@ class Storage {
             note.creationDate = document.creationDate
             note.project = project
 
-            let pinData =
-                (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
-                ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
-            if let data = pinData {
-                let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                    ptr.load(as: Bool.self)
-                }
-                note.isPinned = isPinned
-            }
+            note.isPinned = PinSync.isPinned(note.url)
 
             if note.isPinned {
                 pinned += 1

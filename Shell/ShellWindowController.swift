@@ -84,6 +84,11 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         ) { [weak self] _ in
             Task { @MainActor in self?.model.applyEditorSettings() }
         }
+        pinsObserver = NotificationCenter.default.addObserver(
+            forName: .pinsChangedElsewhere, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.model.refreshNotes(keepSelection: true) }
+        }
         fontSetObserver = NotificationCenter.default.addObserver(
             forName: NSFont.fontSetChangedNotification, object: nil, queue: .main
         ) { [weak self] _ in
@@ -502,6 +507,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     }
 
     private var settingsObserver: NSObjectProtocol?
+    private var pinsObserver: NSObjectProtocol?
     private var fontSetObserver: NSObjectProtocol?
 
     // MARK: Export

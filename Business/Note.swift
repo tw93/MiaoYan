@@ -257,14 +257,7 @@ public class Note: NSObject {
         loadModifiedLocalAt()
         creationDate = (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate
 
-        let pinData =
-            (try? url.extendedAttribute(forName: AppIdentifier.pinKey))
-            ?? (try? url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
-        if let data = pinData {
-            isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                ptr.load(as: Bool.self)
-            }
-        }
+        isPinned = PinSync.isPinned(url)
     }
 
     public func getExtensionForContainer() -> String {
@@ -509,6 +502,7 @@ public class Note: NSObject {
         var pin = true
         let data = Data(bytes: &pin, count: 1)
         try? url.setExtendedAttribute(data: data, forName: AppIdentifier.pinKey)
+        PinSync.cloud.setPinned(true, url)
     }
 
     func removePin(cloudSave: Bool = true) {
@@ -518,6 +512,7 @@ public class Note: NSObject {
             var pin = false
             let data = Data(bytes: &pin, count: 1)
             try? url.setExtendedAttribute(data: data, forName: AppIdentifier.pinKey)
+            PinSync.cloud.setPinned(false, url)
         }
     }
 
@@ -546,6 +541,7 @@ public class Note: NSObject {
         self.url = url
         if previousURL != url {
             NoteVersionManager.shared.moveVersions(from: previousURL, to: url)
+            PinSync.cloud.moved(from: previousURL, to: url)
         }
 
         parseURL()

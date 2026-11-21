@@ -57,6 +57,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         UserDefaultsManagement.migrateFontDefaultsIfNeeded()
         UserDefaultsManagement.clearSingleMode()
         let storage = appContext.storage
+        PinSync.start(storage: storage)
         storage.loadProjects()
         storage.loadDocuments {}
     }

@@ -45,6 +45,7 @@ class ViewController:
     var shouldDisablePPTAfterExport: Bool = false
     private var disablePreviewWorkItem: DispatchWorkItem?
     nonisolated(unsafe) private var fontSetObserver: NSObjectProtocol?
+    nonisolated(unsafe) private var pinsObserver: NSObjectProtocol?
     private var missingChosenFonts: Set<String> = []
     nonisolated(unsafe) var liveResizeObserver: NSObjectProtocol?
     var needsPreviewLayoutAfterLiveResize = false
@@ -391,6 +392,9 @@ class ViewController:
         if let observer = fontSetObserver {
             NotificationCenter.default.removeObserver(observer)
         }
+        if let observer = pinsObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     /// A chosen face that was missing (TsangerJinKai02 picked before it is
@@ -418,6 +422,11 @@ class ViewController:
 
     override func viewDidLoad() {
         observeChosenFontInstalls()
+        pinsObserver = NotificationCenter.default.addObserver(
+            forName: .pinsChangedElsewhere, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.updateTable {} }
+        }
         appContext.bind(viewController: self)
         // Shown by updateEmptyEditArea once the list turns out empty.
         emptyEditAreaView.isHidden = true
