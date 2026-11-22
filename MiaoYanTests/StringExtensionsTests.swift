@@ -4,10 +4,6 @@ import XCTest
 
 final class StringExtensionsTests: XCTestCase {
 
-    func testCondenseWhitespaceCollapsesMixedSeparators() {
-        XCTAssertEqual("  foo\t\n bar   baz ".condenseWhitespace(), "foo bar baz")
-    }
-
     func testTrimRemovesLeadingTrailingSpaces() {
         XCTAssertEqual("   hello   ".trim(), "hello")
     }

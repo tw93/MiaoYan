@@ -18,12 +18,6 @@ extension String {
         return nil
     }
 
-    public func condenseWhitespace() -> String {
-        components(separatedBy: .whitespacesAndNewlines)
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
-    }
-
     public func localizedStandardContains<S: StringProtocol>(_ terms: [S]) -> Bool {
         terms.contains { localizedStandardContains($0) }
     }

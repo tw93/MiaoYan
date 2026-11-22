@@ -567,32 +567,6 @@ extension ViewController {
         }
     }
 
-    public func sortAndMove(note: Note) {
-        guard let notes = filteredNoteList else { return }
-        guard let srcIndex = notesTableView.noteList.firstIndex(of: note) else { return }
-
-        let resorted = storage.sortNotes(noteList: notes, filter: search.stringValue)
-        guard let dstIndex = resorted.firstIndex(of: note) else { return }
-
-        if srcIndex != dstIndex {
-            notesTableView.moveRow(at: srcIndex, to: dstIndex)
-            notesTableView.noteList = resorted
-            filteredNoteList = resorted
-        }
-    }
-
-    func moveNoteToTop(note index: Int) {
-        let isPinned = notesTableView.noteList[index].isPinned
-        let position = isPinned ? 0 : notesTableView.countVisiblePinned()
-        let note = notesTableView.noteList.remove(at: index)
-
-        notesTableView.noteList.insert(note, at: position)
-
-        notesTableView.reloadRow(note: note)
-        notesTableView.moveRow(at: index, to: position)
-        notesTableView.scrollRowToVisible(0)
-    }
-
     // MARK: - Selection Management
     @objc func selectNullTableRow(timer: Bool = false) {
         if timer {

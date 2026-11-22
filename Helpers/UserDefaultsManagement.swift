@@ -900,11 +900,8 @@ public enum UserDefaultsManagement {
         func setMode(_ mode: EditorMode) {
             currentMode = mode
         }
-        func reset() {
-            currentMode = .normal
-        }
     }
-    // Public interface - non-persistent state, reset on each startup
+    // Public interface - the mode is saved to UserDefaults (`editorMode`) and read back at startup
     static var preview: Bool {
         get {
             return EditorStateManager.shared.isPreviewMode

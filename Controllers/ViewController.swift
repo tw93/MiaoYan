@@ -29,7 +29,6 @@ class ViewController:
     var storage: Storage { appContext.storage }
     var filteredNoteList: [Note]?
     var alert: NSAlert?
-    var refilled: Bool = false
     var timer = Timer()
     var sidebarTimer = Timer()
     let searchQueue = OperationQueue()
