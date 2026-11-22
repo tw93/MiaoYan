@@ -9,6 +9,42 @@ import XCTest
 @available(macOS 14, *)
 final class ShellModelTests: XCTestCase {
 
+    // MARK: - Reload bursts
+
+    /// Fifty disk events in a burst list the folders once; the last note
+    /// asked for is selected and every completion still runs, in order.
+    @MainActor
+    func testReloadBurstIsOneReloadWithEveryCompletion() {
+        let url = FileManager.default.temporaryDirectory
+        let project = Project(url: url, label: "test", isRoot: true)
+        let first = Note(url: url.appendingPathComponent("a.md"), with: project)
+        let last = Note(url: url.appendingPathComponent("b.md"), with: project)
+        var reloads: [(Note?, Int)] = []
+        var order: [Int] = []
+        let done = expectation(description: "reload")
+        let coalescer = ShellReloadCoalescer(window: 0.05) { note, completions in
+            reloads.append((note, completions.count))
+            for completion in completions { completion() }
+            done.fulfill()
+        }
+        for index in 0..<50 {
+            let note: Note? = index == 0 ? first : (index == 49 ? last : nil)
+            coalescer.request(selecting: note) { order.append(index) }
+        }
+        XCTAssertTrue(reloads.isEmpty, "nothing runs inside the caller's turn")
+        wait(for: [done], timeout: 2)
+        XCTAssertEqual(reloads.count, 1)
+        XCTAssertTrue(reloads.first?.0 === last)
+        XCTAssertEqual(order, Array(0..<50))
+
+        // A later burst gets its own reload.
+        let again = expectation(description: "second")
+        let second = ShellReloadCoalescer(window: 0.01) { _, _ in again.fulfill() }
+        second.request(selecting: nil, completion: nil)
+        wait(for: [again], timeout: 2)
+        XCTAssertFalse(second.isScheduled)
+    }
+
     // MARK: - Selection after notes leave the list
 
     @MainActor

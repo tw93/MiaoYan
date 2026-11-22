@@ -1214,6 +1214,16 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
     private var lastResignKeyFlushAt: TimeInterval = 0
 
+    /// Disk events arrive in bursts (a synced folder, a git checkout); the
+    /// list is listed from disk and redrawn once per burst.
+    lazy var reloadCoalescer = ShellReloadCoalescer { [weak self] note, completions in
+        guard let self else { return }
+        self.model.reload()
+        self.model.refreshNow(selecting: note?.url) {
+            for completion in completions { completion() }
+        }
+    }
+
     /// Losing key can be the last moment before a kill, so the open note's
     /// pending save is written now. Spotlight, open panels and permission
     /// prompts take key too, so as in MainWindowController this runs at most
@@ -1252,11 +1262,49 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     }
 }
 
+/// Folds a burst of list reloads into one. The first request opens a short
+/// window; every request inside it joins that one reload, which selects the
+/// last note asked for and then runs every completion in arrival order. The
+/// window is fixed from the first request, so a steady stream of events
+/// cannot hold the list back past it.
+@available(macOS 14, *)
+@MainActor
+final class ShellReloadCoalescer {
+    let window: TimeInterval
+    private let perform: (_ selecting: Note?, _ completions: [@MainActor @Sendable () -> Void]) -> Void
+    private var pendingSelection: Note?
+    private var pendingCompletions: [@MainActor @Sendable () -> Void] = []
+    private(set) var isScheduled = false
+
+    init(window: TimeInterval = 0.15, perform: @escaping (Note?, [@MainActor @Sendable () -> Void]) -> Void) {
+        self.window = window
+        self.perform = perform
+    }
+
+    func request(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?) {
+        if let note { pendingSelection = note }
+        if let completion { pendingCompletions.append(completion) }
+        guard !isScheduled else { return }
+        isScheduled = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + window) { [weak self] in
+            MainActor.assumeIsolated { self?.fire() }
+        }
+    }
+
+    private func fire() {
+        let selection = pendingSelection
+        let completions = pendingCompletions
+        pendingSelection = nil
+        pendingCompletions = []
+        isScheduled = false
+        perform(selection, completions)
+    }
+}
+
 @available(macOS 14, *)
 extension ShellWindowController: FileSystemEventHost {
     func fsReloadList(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?) {
-        model.reload()
-        model.refreshNow(selecting: note?.url) { completion?() }
+        reloadCoalescer.request(selecting: note, completion: completion)
     }
 
     func fsInsert(_ note: Note) { model.refreshNow() }
