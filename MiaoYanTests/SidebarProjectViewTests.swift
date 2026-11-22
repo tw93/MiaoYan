@@ -306,6 +306,21 @@ final class SidebarProjectViewTests: XCTestCase {
         XCTAssertEqual(latinCentre, markCentre, accuracy: 0.01, "the two birds share a centre line")
     }
 
+    /// The sidebar's divider stopped anywhere above the 86pt snap, and at
+    /// 126.5pt the English wordmark truncated to "MiaoY…" (seen in a scripted
+    /// run, 2026-11-22). Under the snap it still collapses; between the snap
+    /// and the 138pt minimum it holds at the minimum.
+    @MainActor
+    func testTheSidebarDividerHoldsAtTheMinimumAboveTheSnap() {
+        let controller = ViewController()
+        let split = NSSplitView()
+        controller.sidebarSplitView = split
+        XCTAssertEqual(controller.splitView(split, constrainSplitPosition: 50, ofSubviewAt: 0), 0)
+        XCTAssertEqual(controller.splitView(split, constrainSplitPosition: 126.5, ofSubviewAt: 0), 138)
+        XCTAssertEqual(controller.splitView(split, constrainSplitPosition: 200, ofSubviewAt: 0), 200)
+        XCTAssertEqual(controller.splitView(NSSplitView(), constrainSplitPosition: 120, ofSubviewAt: 0), 120, "other split views")
+    }
+
     @MainActor
     func testAV450SidebarRowMovesDownOnceForTheBrandRow() throws {
         // Fixed names: a removed domain still leaves its empty plist in

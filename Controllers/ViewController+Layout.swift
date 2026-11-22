@@ -418,15 +418,24 @@ extension ViewController {
     }
 
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
-        if splitView == sidebarSplitView,
-            dividerIndex == 0,
-            proposedPosition > 0,
-            proposedPosition <= Theme.Metrics.sidebarCollapseSnapWidth
-        {
-            return 0
+        if splitView == sidebarSplitView, dividerIndex == 0, proposedPosition > 0 {
+            // Under the snap the sidebar collapses; above it the divider holds at
+            // the minimum setSidebarVisible restores, since a narrower sidebar
+            // truncated the English wordmark to "MiaoY…".
+            return proposedPosition <= Theme.Metrics.sidebarCollapseSnapWidth ? 0 : max(proposedPosition, LayoutConstants.minSidebarWidth)
         }
 
         return proposedPosition
+    }
+
+    /// The split view's autosave restores the width the divider last stopped
+    /// at, which an older build let fall under the minimum (126.5pt on the
+    /// maintainer's Mac); a visible sidebar narrower than that is widened.
+    func widenSidebarToMinimumIfNeeded() {
+        let width = sidebarWidth
+        guard width > 0, width < LayoutConstants.minSidebarWidth else { return }
+        sidebarSplitView.setPosition(LayoutConstants.minSidebarWidth, ofDividerAt: 0)
+        updateSidebarColumnWidth()
     }
 
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {

@@ -545,6 +545,8 @@ class ViewController:
         disablePreviewWorkItem?.cancel()
         disablePreviewWorkItem = nil
         applyLegacySidebarWidthFixIfNeeded()
+        sidebarSplitView?.layoutSubtreeIfNeeded()
+        widenSidebarToMinimumIfNeeded()
     }
 
     override func viewDidAppear() {
