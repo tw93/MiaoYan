@@ -1200,13 +1200,14 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     /// The note's HTML as every preview path shows it: rendered, with local
-    /// image and video paths resolved and videos held to `preload="none"`.
+    /// image and video paths resolved, videos held to `preload="none"` and
+    /// YouTube frames sent through `PreviewMedia.youTubeRelay`.
     /// A live update used to resolve them only when the note had an image, so
     /// a note with a local video and no image lost its player on the first
     /// edit: the patch swapped in the raw tag, relative to the cache page.
     nonisolated static func previewHTML(markdown: String, useGithubLineBreak: Bool, imagesStorage: URL) -> String? {
         renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak, documentLanguage: LanguageType.current.documentLanguage).map {
-            HtmlManager.processImages(in: $0, imagesStorage: imagesStorage)
+            PreviewMedia.relayedYouTubeFrames(HtmlManager.processImages(in: $0, imagesStorage: imagesStorage))
         }
     }
 

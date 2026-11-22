@@ -161,6 +161,78 @@ enum PreviewMedia {
         }
         return result
     }
+
+    /// YouTube will not play in the preview: the page is a local file, so
+    /// the player gets no Referer and shows Error 153, and a `watch` address
+    /// refuses to be framed at all. An iframe showing a YouTube video points
+    /// at `youtube.html` on cdn.miaoyan.app instead, a web page that frames
+    /// the player for that video (2026-11-22).
+    static let youTubeRelay = "https://cdn.miaoyan.app/Resources/DownView.bundle/youtube.html"
+
+    private static let iframeSourceRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: #"<iframe\b[^>]*?\ssrc\s*=\s*(["'])(.*?)\1"#, options: [.caseInsensitive, .dotMatchesLineSeparators])
+    }()
+
+    static func relayedYouTubeFrames(_ html: String) -> String {
+        guard html.range(of: "<iframe", options: .caseInsensitive) != nil, let regex = iframeSourceRegex else { return html }
+        let text = html as NSString
+        let result = NSMutableString(string: html)
+        for match in regex.matches(in: html, range: NSRange(location: 0, length: text.length)).reversed() {
+            let source = match.range(at: 2)
+            guard let video = youTubeVideo(text.substring(with: source)) else { continue }
+            let start = video.start.map { "&amp;start=\($0)" } ?? ""
+            result.replaceCharacters(in: source, with: "\(youTubeRelay)?v=\(video.id)\(start)")
+        }
+        return result as String
+    }
+
+    /// The video id and start second in a YouTube address: `watch`,
+    /// `youtu.be`, `embed`, `shorts` and `live`, as an attribute holds it.
+    static func youTubeVideo(_ address: String) -> (id: String, start: Int?)? {
+        var address = address.trimmingCharacters(in: .whitespaces).replacingOccurrences(of: "&amp;", with: "&")
+        if address.hasPrefix("//") { address = "https:" + address }
+        guard let parts = URLComponents(string: address), let host = parts.host?.lowercased() else { return nil }
+        let site = host.hasPrefix("www.") || host.hasPrefix("m.") ? String(host.drop { $0 != "." }.dropFirst()) : host
+        let path = parts.path.split(separator: "/").map(String.init)
+        let query = parts.queryItems ?? []
+        let id: String?
+        switch site {
+        case "youtu.be":
+            id = path.first
+        case "youtube.com", "youtube-nocookie.com":
+            if path == ["watch"] {
+                id = query.first { $0.name == "v" }?.value
+            } else if path.count >= 2, ["embed", "shorts", "live", "v"].contains(path[0]), !["videoseries", "live_stream"].contains(path[1]) {
+                id = path[1]
+            } else {
+                id = nil
+            }
+        default:
+            id = nil
+        }
+        guard let id, id.range(of: #"^[A-Za-z0-9_-]{11}$"#, options: .regularExpression) != nil else { return nil }
+        let time = query.first { $0.name == "start" || $0.name == "t" }?.value ?? ""
+        return (id, seconds(time))
+    }
+
+    /// `90`, `90s` or `1h2m3s`; nine characters at most, so the sum cannot
+    /// overflow on a note's `t=9999999999999999h`.
+    private static func seconds(_ time: String) -> Int? {
+        guard time.count <= 9 else { return nil }
+        if let plain = Int(time) { return plain > 0 ? plain : nil }
+        guard !time.isEmpty, time.range(of: #"^(\d+h)?(\d+m)?(\d+s)?$"#, options: .regularExpression) != nil else { return nil }
+        var total = 0
+        var number = 0
+        for character in time {
+            if let digit = character.wholeNumberValue {
+                number = number * 10 + digit
+                continue
+            }
+            total += number * (character == "h" ? 3600 : character == "m" ? 60 : 1)
+            number = 0
+        }
+        return total > 0 ? total : nil
+    }
 }
 
 /// Image sizes already read, keyed by path and checked against the file's

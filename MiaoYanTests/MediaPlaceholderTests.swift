@@ -240,4 +240,43 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertNil(source.range(of: "contains(\"<img\")"), "no path skips media for notes without images")
         XCTAssertEqual(source.components(separatedBy: "Self.previewHTML(markdown:").count - 1, 3, "load, in-place switch and live update")
     }
+
+    /// A YouTube iframe framed the player straight from the local page, which
+    /// YouTube answers with Error 153 (no Referer), and a `watch` address is
+    /// never framed at all. It now goes through the relay on cdn.miaoyan.app,
+    /// which ships in the bundle at the same path.
+    func testYouTubeFramesGoThroughTheRelay() throws {
+        let markdown = #"<div class="video-container" style="margin-top:-12px"><iframe src="https://www.youtube.com/watch?v=FCKJL-mTncY&t=90s" width="800" height="450" allowfullscreen></iframe></div>"#
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: markdown + "\n\n```\n<iframe src=\"https://youtu.be/FCKJL-mTncY\"></iframe>\n```", useGithubLineBreak: false, imagesStorage: directory))
+        XCTAssertTrue(html.contains(#"<iframe src="https://cdn.miaoyan.app/Resources/DownView.bundle/youtube.html?v=FCKJL-mTncY&amp;start=90" width="800""#), html)
+        XCTAssertTrue(html.contains("&lt;iframe src=&quot;https://youtu.be/FCKJL-mTncY"), "a frame in a code block is text")
+
+        for (address, start) in [
+            ("https://youtu.be/FCKJL-mTncY?t=1m5s", 65),
+            ("//www.youtube-nocookie.com/embed/FCKJL-mTncY?start=12", 12),
+            ("https://m.youtube.com/shorts/FCKJL-mTncY", nil),
+            ("https://www.youtube.com/watch?feature=share&amp;v=FCKJL-mTncY", nil),
+        ] as [(String, Int?)] {
+            let video = try XCTUnwrap(PreviewMedia.youTubeVideo(address), address)
+            XCTAssertEqual(video.id, "FCKJL-mTncY", address)
+            XCTAssertEqual(video.start, start, address)
+        }
+        // A start this long overflowed the sum and crashed the render.
+        for address in ["https://youtu.be/FCKJL-mTncY?t=9999999999999999h", "https://youtu.be/FCKJL-mTncY?t=99999999999999999999s"] {
+            XCTAssertNil(try XCTUnwrap(PreviewMedia.youTubeVideo(address)).start, address)
+        }
+        for address in [
+            "https://www.youtube.com/watch?v=short", "https://player.bilibili.com/player.html?bvid=BV1", "https://example.com/embed/FCKJL-mTncY",
+            "https://www.youtube.com/embed/videoseries?list=PL1", "https://www.youtube.com/embed/live_stream?channel=UC1",
+        ] {
+            XCTAssertNil(PreviewMedia.youTubeVideo(address), address)
+        }
+        let other = #"<iframe src="https://player.bilibili.com/player.html?bvid=BV1"></iframe>"#
+        XCTAssertEqual(PreviewMedia.relayedYouTubeFrames(other), other)
+
+        let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
+        let relay = try String(contentsOf: bundle.appendingPathComponent("youtube.html"), encoding: .utf8)
+        XCTAssertTrue(PreviewMedia.youTubeRelay.hasSuffix("/DownView.bundle/youtube.html"))
+        XCTAssertTrue(relay.contains("https://www.youtube-nocookie.com/embed/"))
+    }
 }

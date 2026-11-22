@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>YouTube</title>
+<style>
+html, body { margin: 0; height: 100%; background: #000; }
+iframe { display: block; width: 100%; height: 100%; border: 0; }
+</style>
+</head>
+<body>
+<!-- MiaoYan's preview is a local file, which YouTube's player refuses (Error 153: no Referer). The preview frames this page, served from cdn.miaoyan.app, and this page frames the player. -->
+<script>
+(function () {
+  var query = new URLSearchParams(location.search);
+  var id = query.get('v') || '';
+  if (!/^[A-Za-z0-9_-]{11}$/.test(id)) return;
+  var start = parseInt(query.get('start') || '', 10);
+  var frame = document.createElement('iframe');
+  frame.src = 'https://www.youtube-nocookie.com/embed/' + id + (start > 0 ? '?start=' + start : '');
+  frame.title = 'YouTube';
+  frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  frame.allowFullscreen = true;
+  frame.referrerPolicy = 'strict-origin-when-cross-origin';
+  document.body.appendChild(frame);
+})();
+</script>
+</body>
+</html>
