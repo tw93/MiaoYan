@@ -334,6 +334,19 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(state["rawPu"] as? Bool, false, "\(state)")
     }
 
+    /// The first-run TOC badge sits on the body, so switching notes in place
+    /// removes it instead of leaving it over a note with no TOC.
+    @MainActor
+    func testShowingAnotherNoteRemovesTheTOCBadge() async throws {
+        let page = try await loadRenderedPage("# One\n\nText.")
+        _ = try await page.evaluateJavaScript("(() => { const d = document.createElement('div'); d.id = 'toc-red-dot-hint'; document.body.appendChild(d); return true })()")
+        let html = try XCTUnwrap(MPreviewView.previewHTML(markdown: "Two.", useGithubLineBreak: false, imagesStorage: tempDirectory))
+        let shown = try await page.evaluateJavaScript(MPreviewView.showNoteScript(html: html))
+        XCTAssertEqual(shown as? Bool, true)
+        let left = try await page.evaluateJavaScript("document.getElementById('toc-red-dot-hint') !== null")
+        XCTAssertEqual(left as? Bool, false)
+    }
+
     /// `\( \)` and `\[ \]` are math in a note with no `$` math, so such a note
     /// has no `$`; the live update still has to initialize KaTeX for it.
     func testBracketMathCountsAsMathOnALiveUpdate() {

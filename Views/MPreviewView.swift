@@ -963,6 +963,14 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// switch, or going back to it mid-render let the other note replace it.
     private var inPlaceNote: Note?
 
+    /// The script that shows `html` in the page already on screen. The first-run
+    /// TOC badge is fixed on the body, so it goes with the note it pointed at,
+    /// or it stayed over a note that has no TOC.
+    static func showNoteScript(html: String) -> String {
+        "(document.getElementById('toc-red-dot-hint') || {remove() {}}).remove(); "
+            + "window.MiaoYanCommon && typeof MiaoYanCommon.showNote === 'function' ? MiaoYanCommon.showNote(\(HtmlManager.jsStringLiteral(html))) : false"
+    }
+
     /// Opens `note` in the page already on screen (common.js `showNote`)
     /// instead of loading the template again: the scripts stay parsed and
     /// the previous note stays visible until the next one replaces it, so
@@ -989,7 +997,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 self.load(note: note, force: true, completion: completion)
                 return
             }
-            let script = "window.MiaoYanCommon && typeof MiaoYanCommon.showNote === 'function' ? MiaoYanCommon.showNote(\(HtmlManager.jsStringLiteral(html))) : false"
+            let script = Self.showNoteScript(html: html)
             let shown = (try? await self.evaluateJavaScript(script)) as? Bool == true
             guard epoch == self.loadEpoch else { return }
             self.inPlaceNote = nil
