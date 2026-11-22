@@ -86,7 +86,7 @@ public class TextFormatter {
         let beforeLineRange = getLineRangeBefore(str: nsContent, lineRange: pRange)
         if beforeLineRange != nil {
             let beforeText = storage.attributedSubstring(from: beforeLineRange!).string
-            if beforeText.isNumberList() { padding = "   " }
+            if beforeText.isNumberList() { padding = Self.numberedContentPadding(of: beforeText) }
         }
         guard range.length > 0 else {
             let original = storage.attributedSubstring(from: pRange).string
@@ -115,14 +115,32 @@ public class TextFormatter {
             lines.append(padding + newLine)
         }
 
-        var result = lines.joined(separator: "\n")
-        if pRange.upperBound != storage.length { result += "\n" }
+        let lineBreak = ListContinuation.lineBreak(in: nsContent)
+        var result = lines.joined(separator: lineBreak)
+        if pRange.upperBound != storage.length { result += lineBreak }
 
         if textView.textStorage?.length == 0 { EditTextView.shouldForceRescan = true }
 
         textView.insertText(result, replacementRange: pRange)
         setSelectedRange(NSRange(location: pRange.lowerBound, length: (result as NSString).length))
     }
+
+    /// Spaces that nest a line under the numbered item `line`: its content
+    /// column, the marker's width plus the one to four spaces after it
+    /// (three for `1. `, four for `10. `), as MiaoYanCore's `LineEdits.indent` does.
+    static func numberedContentPadding(of line: String) -> String {
+        let ns = line as NSString
+        guard let match = numberedMarker.firstMatch(in: line, range: NSRange(location: 0, length: ns.length)) else {
+            return "   "
+        }
+        let marker = ns.substring(with: match.range(at: 1)).count
+        let gap = ns.substring(with: match.range(at: 2)).count
+        let rest = ns.substring(from: NSMaxRange(match.range))
+        let width = marker + (gap >= 1 && gap <= 4 && !rest.trimmingCharacters(in: .newlines).isEmpty ? gap : 1)
+        return String(repeating: " ", count: width)
+    }
+
+    private static let numberedMarker = try! NSRegularExpression(pattern: "^[ \\t]*(\\d{1,9}[.)])( +)")
 
     func unTab() {
         guard let pRange = getParagraphRange() else { return }
@@ -138,7 +156,7 @@ public class TextFormatter {
                 replacement = processedText
             }
             textView.insertText(replacement, replacementRange: pRange)
-            setSelectedRange(NSRange(location: range.location - diff, length: 0))
+            setSelectedRange(NSRange(location: max(pRange.location, range.location - diff), length: 0))
             return
         }
 
@@ -155,8 +173,9 @@ public class TextFormatter {
             resultList.append(processedLine)
         }
 
-        var result = resultList.joined(separator: "\n")
-        if pRange.upperBound != storage.length { result += "\n" }
+        let lineBreak = ListContinuation.lineBreak(in: storage.mutableString)
+        var result = resultList.joined(separator: lineBreak)
+        if pRange.upperBound != storage.length { result += lineBreak }
         textView.insertText(result, replacementRange: pRange)
         let finalRange = NSRange(location: pRange.lowerBound, length: (result as NSString).length)
         setSelectedRange(finalRange)

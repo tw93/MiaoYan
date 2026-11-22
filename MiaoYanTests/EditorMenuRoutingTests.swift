@@ -384,6 +384,51 @@ final class EditorMenuRoutingTests: XCTestCase {
         }
     }
 
+    /// Shift-Tab with the caret inside the indent took the caret to the
+    /// previous line (or below zero on the first line): it stays on its line.
+    @MainActor
+    func testShiftTabInsideTheIndentKeepsTheCaretOnItsLine() {
+        for (text, caret, expected, expectedCaret) in [
+            ("  - item", 0, "- item", 0),
+            ("  - item", 1, "- item", 0),
+            ("x\n  - item", 2, "x\n- item", 2),
+            ("x\n  - item", 3, "x\n- item", 2),
+            ("  - item", 5, "- item", 3),
+        ] {
+            let (editor, note) = makeEditor(text)
+            editor.setSelectedRange(NSRange(location: caret, length: 0))
+            TextFormatter(textView: editor, note: note).unTab()
+            XCTAssertEqual(editor.string, expected, text)
+            XCTAssertEqual(editor.selectedRange(), NSRange(location: expectedCaret, length: 0), "\(text) at \(caret)")
+        }
+    }
+
+    /// Tab and Shift-Tab over several lines of a CRLF note joined the lines
+    /// with a bare LF.
+    @MainActor
+    func testTabOverLinesOfACRLFNoteKeepsCRLF() {
+        let text = "- a\r\n- b\r\nc"
+        let (editor, note) = makeEditor(text)
+        editor.setSelectedRange(NSRange(location: 0, length: 9))
+        TextFormatter(textView: editor, note: note).tab()
+        XCTAssertEqual(editor.string, "  - a\r\n  - b\r\nc")
+        TextFormatter(textView: editor, note: note).unTab()
+        XCTAssertEqual(editor.string, text)
+        XCTAssertFalse(editor.string.replacingOccurrences(of: "\r\n", with: "").contains("\n"))
+    }
+
+    /// Under `10. ` CommonMark nests at the content column, four spaces.
+    @MainActor
+    func testTabUnderANumberedItemPadsToItsContentColumn() {
+        for (item, padding) in [("1. item", 3), ("9. item", 3), ("10. item", 4), ("100. item", 5), ("1.  item", 4)] {
+            let text = "\(item)\nnext"
+            let (editor, note) = makeEditor(text)
+            editor.setSelectedRange(NSRange(location: (item as NSString).length + 1, length: 0))
+            TextFormatter(textView: editor, note: note).tab()
+            XCTAssertEqual(editor.string, "\(item)\n\(String(repeating: " ", count: padding))next", item)
+        }
+    }
+
     // MARK: - Find and replace
 
     /// A shell-hosted editor in a scroll view, so the find bar has a container.
