@@ -83,6 +83,25 @@ td small{color:var(--subtle);font-size:12px}
 .legend i{display:inline-block;width:18px;margin-right:6px;vertical-align:middle;border-top:2px solid var(--accent)}
 .legend i.dash{border-top:2px dashed var(--subtle)}
 .alert{font-size:14px;line-height:1.6;color:var(--muted)}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px}
+.head>div{display:grid;gap:4px}
+.readout{color:var(--subtle);font-size:12px;white-space:nowrap}
+.chart-frame{position:relative}
+.chart-line{position:absolute;top:36px;left:8px;right:8px;width:calc(100% - 16px);pointer-events:none;overflow:visible}
+.chart-frame.visits .chart-bar{background:color-mix(in srgb,#3C6B52 20%,transparent)}
+.split{display:grid;grid-template-columns:minmax(240px,1fr) minmax(0,2fr);gap:18px 28px;align-items:start;border-top:1px solid var(--line);padding-top:14px}
+.split h3{font-size:13px;font-weight:650;color:var(--muted);margin-bottom:6px}
+.mixes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.mix{display:grid;gap:10px;min-width:0;margin:0;align-content:start}
+.mix svg{width:132px;height:132px}
+.mix-value{font-family:var(--serif);font-size:20px;fill:var(--ink)}
+.mix-note{font-size:11px;fill:var(--subtle)}
+.mix ul{list-style:none;display:grid;gap:4px;min-width:0;width:100%;padding:0;margin:0}
+.mix li{display:grid;grid-template-columns:10px minmax(0,1fr) auto 46px;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.mix li i{width:10px;height:10px;border-radius:2px}
+.mix li span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.mix li span:nth-child(n+3){text-align:right;font-variant-numeric:tabular-nums}
+
 .alert.danger{color:var(--danger)}
 .login-shell{min-height:100vh;display:grid;place-items:center;padding:24px}
 .login-card{width:min(440px,100%);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:40px 36px;display:grid;gap:18px}
@@ -94,9 +113,9 @@ td small{color:var(--subtle);font-size:12px}
 .login-card input:focus,.login-card input:focus-visible{outline:none}
 .login-card button{background:var(--ink);border-color:var(--ink);color:#fffdf7;font-weight:650;cursor:pointer}
 @media (min-width:1081px){.board>.panel[class*=" s"]{grid-column:span var(--span)}}
-@media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pace{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pace{grid-template-columns:minmax(0,1fr)}.split{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){.chart-value.dense{display:none}}
-@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}.topbar{flex-wrap:wrap;gap:8px}.switch a{padding:0 8px}.brand{display:contents}.sync{display:none}.filters{order:1;margin-left:auto;justify-content:flex-end;gap:8px}.switch.range,.month{display:none}.range-select{display:block;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 22px 0 10px;background:var(--panel) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--accent);font:inherit;font-size:16px}.range-select:focus,.range-select:focus-visible{outline:none}.board{gap:10px}.mini{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.mini article{padding:10px}.mini strong{font-size:18px}.ring{width:84px;height:84px}.ring svg{width:84px;height:84px}.day td:first-child{max-width:0}.day td small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}.topbar{flex-wrap:wrap;gap:8px}.switch a{padding:0 8px}.brand{display:contents}.sync{display:none}.filters{order:1;margin-left:auto;justify-content:flex-end;gap:8px}.switch.range,.month{display:none}.range-select{display:block;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 22px 0 10px;background:var(--panel) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--accent);font:inherit;font-size:16px}.range-select:focus,.range-select:focus-visible{outline:none}.board{gap:10px}.mini{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.mini article{padding:10px}.mini strong{font-size:18px}.ring{width:84px;height:84px}.chart-line{display:none}.mixes{grid-template-columns:minmax(0,1fr)}.ring svg{width:84px;height:84px}.day td:first-child{max-width:0}.day td small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 `;
 
 function shell(title, body) {
@@ -172,6 +191,50 @@ const cell = (n, cls = '') => (n ? `<td${cls ? ` class="${cls}"` : ''}>${int(n)}
 // Where a day's units went, as one phrase per country and device.
 const dayMix = (mix) => mix.map((m) => `${country(m.country)} ${m.device} ${int(m.units)}`).join('、');
 
+const compactCount = (v) => (v >= 10000 ? `${(v / 1000).toFixed(0)}K` : v >= 1000 ? `${(v / 1000).toFixed(1).replace(/\.0$/, '')}K` : int(v));
+
+// A line over the bars of a chart-frame, on its own scale, Mole's way of
+// putting money over units (and clicks over visits). `up` is the share of the
+// frame the bars above the axis take; null values break the line.
+function lineOverlay(values, up, color) {
+  const max = Math.max(0, ...values.filter((v) => v !== null));
+  if (!max) return '';
+  const n = values.length;
+  let d = '';
+  let pen = false;
+  values.forEach((v, i) => {
+    if (v === null) { pen = false; return; }
+    const x = (((i + 0.5) / n) * 100).toFixed(2);
+    const y = (100 - (Math.max(0, v) / max) * 96).toFixed(2);
+    d += `${pen ? 'L' : 'M'}${x} ${y}`;
+    pen = true;
+  });
+  return `<svg class="chart-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" style="height:calc((100% - 60px) * ${up.toFixed(4)})"><path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+}
+
+// Mole's palette for a part-of-whole ring; the tail past five folds into 其他.
+const MIX_COLORS = ['#1B365D', '#3C6B52', '#4C6B86', '#7A6A4F', '#8C6D3F'];
+function donut(title, items, unit, nameOf) {
+  const total = items.reduce((n, x) => n + x.count, 0);
+  if (!total) return '';
+  const head = items.slice(0, 5);
+  const rest = total - head.reduce((n, x) => n + x.count, 0);
+  const parts = [...head.map((x, i) => ({ name: nameOf(x.key), count: x.count, color: MIX_COLORS[i] })), ...(rest > 0 ? [{ name: '其他', count: rest, color: '#b9b3a3' }] : [])];
+  const R = 72;
+  const r = 50;
+  const pt = (a, rad) => `${(80 + rad * Math.sin(a)).toFixed(2)} ${(80 - rad * Math.cos(a)).toFixed(2)}`;
+  let a0 = 0;
+  const arcs = parts.map((p) => {
+    const a1 = a0 + (p.count / total) * 2 * Math.PI - (parts.length > 1 ? 0 : 1e-4);
+    const big = a1 - a0 > Math.PI ? 1 : 0;
+    const path = `<path d="M ${pt(a0, R)} A ${R} ${R} 0 ${big} 1 ${pt(a1, R)} L ${pt(a1, r)} A ${r} ${r} 0 ${big} 0 ${pt(a0, r)} Z" fill="${p.color}"><title>${esc(`${p.name} · ${int(p.count)} ${unit} · ${percent(p.count / total)}`)}</title></path>`;
+    a0 = a1;
+    return path;
+  }).join('');
+  const legend = parts.map((p) => `<li><i style="background:${p.color}"></i><span>${esc(p.name)}</span><span>${int(p.count)}</span><span>${percent(p.count / total)}</span></li>`).join('');
+  return `<figure class="mix"><h3>${esc(title)}</h3><svg viewBox="0 0 160 160" role="img" aria-label="${esc(`${title}，共 ${int(total)} ${unit}`)}">${arcs}<text class="mix-value" x="80" y="82" text-anchor="middle">${esc(compactCount(total))}</text><text class="mix-note" x="80" y="100" text-anchor="middle">${esc(unit)}</text></svg><ul>${legend}</ul></figure>`;
+}
+
 function recentSection(view) {
   if (!view.recent.length) return '';
   const rows = view.recent.map((d, i) => {
@@ -185,16 +248,61 @@ function recentSection(view) {
     }
     return `<tr${fold('day', i)}><td>${esc(date)} <small>等 Apple 报表</small></td><td></td><td></td><td></td></tr>`;
   }).join('');
-  return `<section class="panel day s7"><h2>每天销量</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th></tr></thead><tbody>${rows}</tbody></table></div>${moreButton('day', view.recent.length, '天')}</section>`;
+  return `<section class="panel day s5"><h2>每天销量</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">售出</th><th scope="col">退款</th><th scope="col">到手</th></tr></thead><tbody>${rows}</tbody></table></div>${moreButton('day', view.recent.length, '天')}</section>`;
 }
 
 const sourceName = (s) => (s === '(direct)' ? '直接打开' : s === '(not set)' ? '未知' : s);
 
-function trafficSection(view) {
+const CHANNEL_LABELS = {
+  'Organic Search': '自然搜索', Direct: '直接访问', Referral: '外链', 'Organic Social': '社交', 'Organic Video': '视频',
+  Email: '邮件', Unassigned: '未归因', 'Paid Search': '付费搜索', 'Paid Social': '付费社交', 'Organic Shopping': '购物',
+  Display: '展示广告', Affiliates: '联盟', 'Cross-network': '跨网络', SMS: '短信', Audio: '音频', 'Mobile Push Notifications': '推送',
+};
+const regionName = (code) => (!code || code === '(not set)' ? '未知' : country(code));
+
+// Mole's 访客来源: visits as bars with App Store clicks as the line, three
+// cards, then sources beside the channel and country rings.
+function visitorsSection(view) {
   const t = view.traffic;
-  if (!t.available || !t.sources.length) return '';
-  const rows = t.sources.map((s, i) => `<tr${fold('traffic', i)}><td>${esc(sourceName(s.source))}</td><td>${int(s.count)}</td></tr>`).join('');
-  return `<section class="panel s4"><h2>官网流量来源</h2><div class="scroll"><table><thead><tr><th scope="col">来源</th><th scope="col">访问</th></tr></thead><tbody>${rows}</tbody></table></div>${moreButton('traffic', t.sources.length, '个')}</section>`;
+  if (!t.available) return '';
+  const p = view.pulse;
+  const prev = p.trafficPrev;
+  const pts = t.series;
+  const maxUp = Math.max(1, ...pts.map((x) => x.sessions));
+  const every = Math.max(1, Math.ceil(pts.length / 12));
+  const showValues = pts.length <= 31;
+  const dense = pts.length > 12;
+  const columns = pts.map((x, i) => {
+    const clicks = x.clicksKnown && t.clicksKnown ? `<br>${int(x.clicks)} 次点击` : '';
+    const value = showValues && x.sessions ? `<span class="chart-value${dense ? ' dense' : ''}" style="bottom:${(x.sessions / maxUp * 100).toFixed(1)}%">${esc(compactCount(x.sessions))}${dense ? '' : clicks}</span>` : '';
+    const bar = x.sessions ? `<i class="chart-bar" style="height:${(x.sessions / maxUp * 100).toFixed(1)}%"></i>` : '';
+    const tick = i % every === 0 ? esc(t.byMonth ? x.key.slice(2) : x.key.slice(5)) : '';
+    const title = `${x.key} 会话 ${int(x.sessions)}${x.clicksKnown && t.clicksKnown ? `，App Store 点击 ${int(x.clicks)}` : ''}`;
+    return `<div class="chart-col" title="${esc(title)}"><div class="chart-up">${bar}${value}</div><div class="chart-down"></div><span class="chart-tick${i % (every * 2) ? ' alt' : ''}">${tick}</span></div>`;
+  }).join('');
+  const line = t.clicksKnown ? lineOverlay(pts.map((x) => (x.clicksKnown ? x.clicks : null)), 1, '#3C6B52') : '';
+  const frame = `<div class="chart-frame visits" role="img" aria-label="官网会话和 App Store 点击" style="--up:calc(100% - 24px);--down:0px">${columns}${line}</div>`;
+  const ld = t.latestDay;
+  const readout = ld ? `<span class="readout">${esc(ld.date.slice(5))} · ${int(ld.sessions)} 会话${ld.date >= '2026-11-09' && t.clicksKnown ? ` · ${int(ld.clicks)} 次点击` : ''}</span>` : '';
+
+  const card = (label, value, note) => `<article><span>${esc(label)}</span><strong>${value}</strong><em>${note}</em></article>`;
+  const was = (v) => (prev ? `${p.prevLabel} ${v}` : '');
+  const clickNote = t.clickRate === null ? (t.clicksKnown || view.to < '2026-11-09' ? '11-09 起才有' : '下次整段同步后可见') : [`${int(t.clicks)} 次点击`, prev && prev.clickRate !== null ? was(percent(prev.clickRate)) : ''].filter(Boolean).join(' · ');
+  const cards = [
+    card('会话', int(t.sessions), prev ? was(int(prev.sessions)) : `页面浏览 ${int(t.views)}`),
+    card('App Store 点击率', t.clickRate === null ? '--' : percent(t.clickRate), clickNote),
+    card('新用户', t.newUsers === null ? '--' : int(t.newUsers), t.newUsers === null ? '下次整段同步后可见' : t.sessions ? `占会话 ${percent(t.newUsers / t.sessions)}` : ''),
+  ].join('');
+
+  const withClicks = t.clicksKnown && t.clickRate !== null;
+  const srcRows = t.sources.map((x, i) => `<tr${fold('traffic', i)}><td>${esc(sourceName(x.source))}</td><td>${int(x.count)}</td>${withClicks ? `<td>${x.clicks ? int(x.clicks) : ''}</td><td>${x.clicks && x.count ? percent(x.clicks / x.count) : ''}</td>` : ''}</tr>`).join('');
+  const sources = t.sources.length ? `<div><h3>来源</h3><div class="scroll"><table><thead><tr><th scope="col">来源</th><th scope="col">会话</th>${withClicks ? '<th scope="col">点击</th><th scope="col">点击率</th>' : ''}</tr></thead><tbody>${srcRows}</tbody></table></div>${moreButton('traffic', t.sources.length, '个')}</div>` : '';
+  const mixes = [
+    t.channels ? donut('渠道', t.channels, '会话', (k) => CHANNEL_LABELS[k] || k) : '',
+    t.countries ? donut('访客国家', t.countries, '会话', regionName) : '',
+  ].join('');
+  const split = sources || mixes ? `<div class="split">${sources}${mixes ? `<div class="mixes">${mixes}</div>` : ''}</div>` : '';
+  return `<section class="panel"><div class="head"><div><h2>访客来源</h2></div>${readout}</div>${frame}<div class="mini">${cards}</div>${split}</section>`;
 }
 
 function chart(view) {
@@ -220,14 +328,35 @@ function chart(view) {
   if (rec.money) recParts.push(`${esc(money(rec.money.value, view.currency))}（${esc(rec.money.date.slice(2))}）`);
   if (rec.units) recParts.push(`${int(rec.units.value)} 份（${esc(rec.units.date.slice(2))}）`);
   const caption = recParts.length ? `<p>单日纪录 ${recParts.join(' · ')}</p>` : '';
-  return `<section class="panel"><div class="head"><h2>收入走势</h2>${caption}</div><div class="chart-frame" role="img" aria-label="售出和退款份数" style="--up:calc((100% - 24px) * ${(maxUp / total).toFixed(4)});--down:calc((100% - 24px) * ${(maxDown / total).toFixed(4)})">${columns}</div></section>`;
+  // Bars count units; the line is money on its own scale, as Mole draws it.
+  const line = lineOverlay(pts.map((p) => p.proceeds), maxUp / total, 'var(--accent)');
+  const last = [...pts].reverse().find((p) => p.sold || p.refunded);
+  const readout = last ? `<span class="readout">${esc(view.byMonth ? last.key : last.key.slice(5))} · ${esc(money(last.proceeds, view.currency))} · ${int(last.sold)} 份</span>` : '';
+  return `<section class="panel"><div class="head"><div><h2>收入走势</h2>${caption}</div>${readout}</div><div class="chart-frame" role="img" aria-label="售出份数和到手金额" style="--up:calc((100% - 24px) * ${(maxUp / total).toFixed(4)});--down:calc((100% - 24px) * ${(maxDown / total).toFixed(4)})">${columns}${line}</div></section>`;
 }
 
+// Mole's 买家国家 columns, less what Apple cannot say (discounts): units,
+// money, share, the previous window's units, App Store product-page views
+// and purchases per view from the channel report, refund rate, first sale.
 function countryTable(view) {
   const rows = view.countries;
   if (!rows.length) return '';
-  const body = rows.map((r, i) => `<tr${fold('country', i)}><td>${esc(country(r.key))}</td>${cell(r.sold)}<td>${r.share === null ? '' : percent(r.share)}</td>${cell(r.refunded, 'refund')}<td>${money(r.gross, view.currency)}</td><td class="wide-only">${r.first ? esc(r.first.slice(2)) : ''}</td></tr>`).join('');
-  return `<section class="panel s5"><h2>国家和地区</h2><div class="scroll"><table><thead><tr><th scope="col">国家和地区</th><th scope="col">售出</th><th scope="col">占比</th><th scope="col">退款</th><th scope="col">销售额</th><th scope="col" class="wide-only">首次</th></tr></thead><tbody>${body}</tbody></table></div>${moreButton('country', rows.length, '个')}</section>`;
+  const withPrev = rows.some((r) => r.prevSold !== null);
+  const withStore = view.analytics.available && rows.some((r) => r.pageViews);
+  const head = ['国家和地区', '售出', '销售额', '占比', ...(withPrev ? [[view.pulse.prevLabel, 'wide-only']] : []), ...(withStore ? [['产品页浏览', 'wide-only'], ['购买/浏览', 'wide-only']] : []), '退款率', ['首次', 'wide-only']]
+    .map((h) => (Array.isArray(h) ? `<th scope="col" class="${h[1]}">${esc(h[0])}</th>` : `<th scope="col">${esc(h)}</th>`)).join('');
+  const body = rows.map((r, i) => [
+    `<td>${esc(country(r.key))}</td>`,
+    cell(r.sold),
+    `<td>${money(r.gross, view.currency)}</td>`,
+    `<td>${r.share === null ? '' : percent(r.share)}</td>`,
+    withPrev ? `<td class="wide-only">${r.prevSold ? int(r.prevSold) : ''}</td>` : '',
+    withStore ? `<td class="wide-only">${r.pageViews ? int(r.pageViews) : ''}</td><td class="wide-only">${r.storeRate === null ? '' : percent(r.storeRate)}</td>` : '',
+    `<td${r.refunded ? ' class="refund"' : ''}>${r.refunded && r.refundRate !== null ? percent(r.refundRate) : ''}</td>`,
+    `<td class="wide-only">${r.first ? esc(r.first.slice(2)) : ''}</td>`,
+  ].join('')).map((cells, i) => `<tr${fold('country', i)}>${cells}</tr>`).join('');
+  const ever = view.countriesEver ? `<p>累计 ${int(view.countriesEver)} 个国家和地区买过</p>` : '';
+  return `<section class="panel s7"><div class="head"><div><h2>国家和地区</h2>${ever}</div></div><div class="scroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${moreButton('country', rows.length, '个')}</section>`;
 }
 
 function splitTable(view, title, rows, nameOf, head, order, kind) {
@@ -276,8 +405,8 @@ function settledMetric(view, metric) {
   const known = view.finance.filter((f) => f.rate !== null);
   if (!view.finance.length) return metric('实际到账', '没有', '');
   const paid = view.finance.reduce((n, f) => n + f.amount, 0);
-  const gross = known.reduce((n, f) => n + f.gross, 0);
-  const rate = gross > 0 ? ` · 入账 ${percent(known.reduce((n, f) => n + f.amount, 0) / gross)}` : '';
+  const base = known.reduce((n, f) => n + f.paid, 0);
+  const rate = base > 0 ? ` · 入账 ${percent(known.reduce((n, f) => n + f.amount, 0) / base)}` : '';
   return metric('实际到账', money(paid, view.currency), `${view.finance.length} 个结算月${rate}`);
 }
 
@@ -313,15 +442,18 @@ function refundsSection(view) {
   return `<section class="panel s6"><h2>退款明细</h2><div class="scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">国家和地区</th><th scope="col">设备</th><th scope="col" class="wide-only">版本</th><th scope="col" class="wide-only">份数</th><th scope="col">金额</th></tr></thead><tbody>${body}</tbody></table></div>${moreButton('refund', view.refunds.length, '笔')}</section>`;
 }
 
+// Mole's 结算与到账 columns: the payout, its rate over what buyers paid, then
+// each deduction with its share of that same amount. Apple never splits its
+// commission from tax in these reports, so they share one column.
 function financeSection(view) {
   if (!view.finance.length) return '';
-  const body = view.finance.map((f, i) => `<tr${fold('finance', i)}><td>${esc(f.start.slice(2))} 到 ${esc(f.end.slice(2))}</td><td>${int(f.units)}</td><td>${money(f.amount, view.currency)}${f.unconverted ? ' <small>部分货币未折算</small>' : ''}</td><td>${f.rate === null ? '--' : percent(f.rate)}</td></tr>`).join('');
-  // The whole history's payout over what buyers paid, under the table as Mole's 全期打款 line.
+  const share = (v, f) => (f.paid > 0 ? ` <small>${percent(v / f.paid)}</small>` : '');
+  const body = view.finance.map((f, i) => `<tr${fold('finance', i)}><td>${esc(f.start.slice(2))} 到 ${esc(f.end.slice(2))}</td><td>${money(f.amount, view.currency)}${f.unconverted ? ' <small>部分货币未折算</small>' : ''}</td><td>${f.rate === null ? '--' : percent(f.rate)}</td><td class="wide-only">${f.apple === null ? '--' : money(f.apple, view.currency) + share(f.apple, f)}</td><td class="wide-only">${f.refunds ? money(f.refunds, view.currency) + share(f.refunds, f) : ''}</td></tr>`).join('');
   const known = view.finance.filter((f) => f.rate !== null);
-  const paid = known.reduce((n, f) => n + f.amount, 0);
-  const gross = known.reduce((n, f) => n + f.gross, 0);
-  const all = gross > 0 ? `<p class="line">全期结算 ${money(paid, view.currency)}，入账 ${percent(paid / gross)}</p>` : '';
-  return `<section class="panel s6"><h2>Apple 结算月</h2><div class="scroll"><table><thead><tr><th scope="col">结算周期</th><th scope="col">净份数</th><th scope="col">到手</th><th scope="col">入账率</th></tr></thead><tbody>${body}</tbody></table></div>${moreButton('finance', view.finance.length, '个月')}${all}</section>`;
+  const paid = known.reduce((n, f) => n + f.paid, 0);
+  const amount = known.reduce((n, f) => n + f.amount, 0);
+  const all = paid > 0 ? `<p class="line">全期结算 ${money(view.finance.reduce((n, f) => n + f.amount, 0), view.currency)}，入账 ${percent(amount / paid)}</p>` : '';
+  return `<section class="panel s6"><h2>Apple 结算月</h2><div class="scroll"><table><thead><tr><th scope="col">结算周期</th><th scope="col">到手</th><th scope="col">入账率</th><th scope="col" class="wide-only">抽成和税</th><th scope="col" class="wide-only">退款</th></tr></thead><tbody>${body}</tbody></table></div>${moreButton('finance', view.finance.length, '个月')}${all}</section>`;
 }
 
 function storeSection(view) {
@@ -397,7 +529,7 @@ function renderDashboard(view) {
     metric('日均到手', p.daily ? money(p.daily.proceeds, view.currency) : '没有', p.daily ? `日均 ${p.daily.sold.toFixed(1).replace(/\.0$/, '')} 份` : ''),
     metric('产品页转化', f.pageViews ? percent(f.purchases / f.pageViews) : '没有', f.pageViews ? `浏览 ${int(f.pageViews)} · 购买 ${int(f.purchases)}` : ''),
     metric('App Store 曝光', f.impressions ? int(f.impressions) : '没有', f.impressions ? `点进产品页 ${percent(f.pageViews / f.impressions)}` : ''),
-    metric(isAll ? '官网累计访问' : '官网访问', view.traffic.available ? int(view.traffic.sessions) : '没有', view.traffic.available ? (p.trafficPrev ? lead(`页面浏览 ${int(view.traffic.views)}`, delta(int(p.trafficPrev))) : `页面浏览 ${int(view.traffic.views)}`) : ''),
+    metric(isAll ? '官网累计访问' : '官网访问', view.traffic.available ? int(view.traffic.sessions) : '没有', view.traffic.available ? (p.trafficPrev ? lead(`页面浏览 ${int(view.traffic.views)}`, delta(int(p.trafficPrev.sessions))) : `页面浏览 ${int(view.traffic.views)}`) : ''),
   ].join('');
   // Pairs share a row on wide screens; a pair missing one half lets the other
   // take the row.
@@ -407,9 +539,10 @@ function renderDashboard(view) {
     monthSection(view),
     pair(recentSection(view), countryTable(view)),
     pair(channels(view), splitTable(view, '设备', view.devices, (k) => k, '设备', 's5')),
-    pair(trafficSection(view), reviewsSection(view)),
-    pair(refundsSection(view), financeSection(view)),
+    visitorsSection(view),
+    pair(financeSection(view), refundsSection(view)),
     pair(storeSection(view), otherDownloadsSection(view)),
+    pair(reviewsSection(view), ''),
     briefSection(view),
   ].join('');
   // A select is as wide as its longest option; size it to the chosen one.

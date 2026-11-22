@@ -477,14 +477,27 @@ const SITE_ONLY = {
   },
 };
 
+// Each day is [sessions, activeUsers, screenPageViews, newUsers].
 const DAILY_QUERY = {
   dimensions: [{ name: 'date' }],
-  metrics: [{ name: 'sessions' }, { name: 'activeUsers' }, { name: 'screenPageViews' }],
+  metrics: [{ name: 'sessions' }, { name: 'activeUsers' }, { name: 'screenPageViews' }, { name: 'newUsers' }],
 };
-const SOURCE_QUERY = {
-  dimensions: [{ name: 'date' }, { name: 'sessionSource' }],
-  metrics: [{ name: 'sessions' }],
+// Breakdowns kept per day, read the way Mole's 访客来源 panel reads them:
+// sessions by source, country and channel, and App Store link clicks
+// (`store_click`, sent by the site since 2026-11-09) by source.
+const TRAFFIC_VERSION = 2;
+const STORE_CLICK_SINCE = '2026-11-09';
+const BREAKDOWNS = {
+  sources: { dim: 'sessionSource', metric: 'sessions' },
+  countries: { dim: 'countryId', metric: 'sessions' },
+  channels: { dim: 'sessionDefaultChannelGroup', metric: 'sessions' },
+  clicks: { dim: 'sessionSource', metric: 'eventCount', event: 'store_click', since: STORE_CLICK_SINCE },
 };
+const breakdownQuery = (b, withDate = true) => ({
+  dimensions: [...(withDate ? [{ name: 'date' }] : []), { name: b.dim }],
+  metrics: [{ name: b.metric }],
+  ...(b.event ? { dimensionFilter: { andGroup: { expressions: [SITE_ONLY, { filter: { fieldName: 'eventName', stringFilter: { matchType: 'EXACT', value: b.event } } }] } } } : {}),
+});
 const dayRows = (rows) => rows.map((r) => [gaDate(r.dimensionValues[0].value), r.metricValues.map((m) => Number(m.value) || 0)]);
 const sourceRows = (rows) => rows.map((r) => [gaDate(r.dimensionValues[0].value), r.dimensionValues[1].value, Number(r.metricValues[0].value) || 0]);
 
@@ -493,36 +506,50 @@ const sourceRows = (rows) => rows.map((r) => [gaDate(r.dimensionValues[0].value)
 async function syncTraffic(state, today, problems, now = new Date()) {
   const property = process.env.MIAOYAN_GA_PROPERTY_ID;
   const token = await googleToken();
+  // Pages through a report GA cut at its row limit, so a long daily
+  // breakdown is never silently short.
   const run = async (startDate, endDate, body) => {
-    const res = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${property}:runReport`, {
-      method: 'POST',
-      headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ dateRanges: [{ startDate, endDate }], limit: 100000, dimensionFilter: SITE_ONLY, ...body }),
-      signal: AbortSignal.timeout(60000),
-    });
-    if (!res.ok) throw new Error(`ga ${res.status}`);
-    return (await res.json()).rows || [];
+    const rows = [];
+    for (;;) {
+      const res = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${property}:runReport`, {
+        method: 'POST',
+        headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+        body: JSON.stringify({ dateRanges: [{ startDate, endDate }], limit: 100000, offset: rows.length, dimensionFilter: SITE_ONLY, ...body }),
+        signal: AbortSignal.timeout(60000),
+      });
+      if (!res.ok) throw new Error(`ga ${res.status}`);
+      const json = await res.json();
+      const got = json.rows || [];
+      rows.push(...got);
+      if (!got.length || rows.length >= (json.rowCount || 0)) return rows;
+    }
   };
   const old = state.traffic || {};
   const fullAt = old.fullAt ? Date.parse(old.fullAt) : 0;
-  if (now.getTime() - fullAt >= TRAFFIC_FULL_EVERY) {
+  // A snapshot written before a breakdown existed is pulled whole at once.
+  if (now.getTime() - fullAt >= TRAFFIC_FULL_EVERY || old.v !== TRAFFIC_VERSION) {
     try {
-      // Sources stay daily for a year, which every preset and month needs;
+      // Breakdowns stay daily for a year, which every preset and month needs;
       // older ones fold into one row dated at the start, so "all" counts them.
       const yearAgo = addDays(today, -365);
-      const [daily, recentSources, olderSources] = await Promise.all([
+      const keys = Object.keys(BREAKDOWNS);
+      const [daily, ...parts] = await Promise.all([
         run(TRAFFIC_START, 'today', DAILY_QUERY),
-        run(yearAgo, 'today', SOURCE_QUERY),
-        run(TRAFFIC_START, addDays(yearAgo, -1), { dimensions: [{ name: 'sessionSource' }], metrics: [{ name: 'sessions' }] }),
+        ...keys.flatMap((k) => {
+          const b = BREAKDOWNS[k];
+          const start = b.since && b.since > yearAgo ? b.since : yearAgo;
+          const older = b.since && b.since >= yearAgo ? Promise.resolve([]) : run(TRAFFIC_START, addDays(yearAgo, -1), breakdownQuery(b, false));
+          return [run(start, 'today', breakdownQuery(b)), older];
+        }),
       ]);
-      state.traffic = {
-        fullAt: now.toISOString(),
-        days: Object.fromEntries(dayRows(daily)),
-        sources: [
-          ...olderSources.map((r) => [TRAFFIC_START, r.dimensionValues[0].value, Number(r.metricValues[0].value) || 0]),
-          ...sourceRows(recentSources),
-        ],
-      };
+      state.traffic = { v: TRAFFIC_VERSION, fullAt: now.toISOString(), days: Object.fromEntries(dayRows(daily)) };
+      keys.forEach((k, i) => {
+        const [recent, older] = [parts[i * 2], parts[i * 2 + 1]];
+        state.traffic[k] = [
+          ...older.map((r) => [TRAFFIC_START, r.dimensionValues[0].value, Number(r.metricValues[0].value) || 0]),
+          ...sourceRows(recent),
+        ];
+      });
       return;
     } catch (error) {
       // Without any history there is nothing to patch; otherwise the recent
@@ -532,15 +559,26 @@ async function syncTraffic(state, today, problems, now = new Date()) {
     }
   }
   const from = addDays(today, -(TRAFFIC_RECENT_DAYS - 1));
-  const [daily, sources] = await Promise.all([run(from, 'today', DAILY_QUERY), run(from, 'today', SOURCE_QUERY)]);
+  const keys = Object.keys(BREAKDOWNS);
+  // Visits per day must land; a breakdown that fails keeps its old rows.
+  const [daily, ...parts] = await Promise.all([
+    run(from, 'today', DAILY_QUERY),
+    ...keys.map((k) => run(from, 'today', breakdownQuery(BREAKDOWNS[k])).catch((error) => ({ error }))),
+  ]);
   // A day inside the window that GA no longer lists had no visits.
   const days = Object.fromEntries(Object.entries(old.days || {}).filter(([d]) => d < from));
   for (const [d, v] of dayRows(daily)) days[d] = v;
-  state.traffic = {
-    fullAt: old.fullAt || null,
-    days,
-    sources: [...(old.sources || []).filter(([d]) => d < from), ...sourceRows(sources)],
-  };
+  // The version is kept as found: a snapshot still missing the older
+  // breakdowns stays marked so the next hour pulls it whole.
+  state.traffic = { v: old.v, fullAt: old.fullAt || null, days };
+  keys.forEach((k, i) => {
+    if (parts[i].error) {
+      state.traffic[k] = old[k] || [];
+      if (now.getTime() - fullAt > 3 * 24 * HOUR) problems.push(`${k} 没刷新成功，${parts[i].error.message}`);
+      return;
+    }
+    state.traffic[k] = [...(old[k] || []).filter(([d]) => d < from), ...sourceRows(parts[i])];
+  });
 }
 
 // Each part keeps its last good data when it fails; only the failed part's
@@ -664,8 +702,11 @@ function buildAnalytics(state, from, to, convertUsd) {
   const sources = new Map();
   // Standard reports carry no Source Info column (checked on the first real
   // instances, 2026-11-11), so its slot stays empty and only types are summed.
-  for (const [type, , , , purchases, proceedsUsd, salesUsd] of analyticsIn(reports.purchases, from, to)) {
+  // Per territory, for the country table's 产品页浏览 and 购买/浏览.
+  const territories = new Map();
+  for (const [type, , , territory, purchases, proceedsUsd, salesUsd] of analyticsIn(reports.purchases, from, to)) {
     sumByKey(sources, type || 'Unavailable', { purchases, proceeds: convertUsd(proceedsUsd) || 0, sales: convertUsd(salesUsd) || 0 });
+    if (territory) sumByKey(territories, territory, { purchases });
   }
   let firstDownloads = 0;
   for (const [kind, type, , , , counts] of analyticsIn(reports.downloads, from, to)) {
@@ -675,13 +716,14 @@ function buildAnalytics(state, from, to, convertUsd) {
   }
   let impressions = 0;
   let pageViews = 0;
-  for (const [event, type, , , counts] of analyticsIn(reports.discovery, from, to)) {
+  for (const [event, type, , territory, counts] of analyticsIn(reports.discovery, from, to)) {
     if (/impression/i.test(event)) {
       impressions += counts;
       sumByKey(sources, type || 'Unavailable', { impressions: counts });
     } else if (/page view/i.test(event)) {
       pageViews += counts;
       sumByKey(sources, type || 'Unavailable', { pageViews: counts });
+      if (territory) sumByKey(territories, territory, { pageViews: counts });
     }
   }
   let installs = 0;
@@ -702,30 +744,67 @@ function buildAnalytics(state, from, to, convertUsd) {
       .map(([type, v]) => ({ type, purchases: 0, downloads: 0, impressions: 0, pageViews: 0, proceeds: 0, ...v }))
       .sort((a, b) => b.purchases - a.purchases || b.downloads - a.downloads || b.pageViews - a.pageViews),
     funnel: { impressions, pageViews, firstDownloads, purchases },
+    territories: Object.fromEntries(territories),
     usage: { installs, deletions, sessions },
   };
 }
 
+// Visitors as Mole's 访客来源 reads them. App Store clicks exist only from
+// STORE_CLICK_SINCE, so their rate divides by the sessions of those same days
+// and an earlier window has no click figure at all, never a zero.
+function trafficSum(t, from, to) {
+  const out = { sessions: 0, views: 0, newUsers: 0, clicks: 0, clickSessions: 0, clickDays: 0 };
+  for (const [date, [sessions, , views, newUsers]] of Object.entries(t.days || {})) {
+    if (date < from || date > to) continue;
+    out.sessions += sessions;
+    out.views += views;
+    out.newUsers += newUsers || 0;
+    if (date >= STORE_CLICK_SINCE) { out.clickSessions += sessions; out.clickDays += 1; }
+  }
+  for (const [date, , n] of t.clicks || []) if (date >= from && date <= to) out.clicks += n;
+  // A snapshot from before these were pulled knows neither: unknown, not zero.
+  const days = Object.entries(t.days || {}).filter(([d]) => d >= from && d <= to);
+  if (days.some(([, v]) => v.length < 4)) out.newUsers = null;
+  out.clickRate = Array.isArray(t.clicks) && out.clickDays && out.clickSessions ? out.clicks / out.clickSessions : null;
+  return out;
+}
+
+function breakdownIn(rows, from, to, top) {
+  const map = new Map();
+  for (const [date, key, n] of rows || []) if (date >= from && date <= to) map.set(key, (map.get(key) || 0) + n);
+  return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, top).map(([key, count]) => ({ key, count }));
+}
+
 function buildTraffic(state, from, to) {
-  const t = state.traffic || { days: {}, sources: [] };
-  let sessions = 0;
-  let views = 0;
-  for (const [date, [s, , v]] of Object.entries(t.days)) {
-    if (date >= from && date <= to) {
-      sessions += s;
-      views += v;
-    }
+  const t = state.traffic || { days: {} };
+  const sum = trafficSum(t, from, to);
+  const clicksBySource = new Map(breakdownIn(t.clicks, from, to, 1000).map((c) => [c.key, c.count]));
+  // Daily bars, by month past three months, with clicks on the same buckets.
+  const latest = Object.keys(t.days || {}).sort().pop() || null;
+  const end = latest && latest < to ? latest : to;
+  const byMonth = dayCount(from, end) > 92;
+  const series = new Map();
+  for (const [date, [sessions]] of Object.entries(t.days || {})) {
+    if (date < from || date > end) continue;
+    sumByKey(series, byMonth ? date.slice(0, 7) : date, { sessions });
   }
-  const sources = new Map();
-  for (const [date, source, count] of t.sources) {
-    if (date >= from && date <= to) sources.set(source, (sources.get(source) || 0) + count);
+  for (const [date, , n] of t.clicks || []) {
+    if (date < from || date > end) continue;
+    sumByKey(series, byMonth ? date.slice(0, 7) : date, { clicks: n });
   }
+  if (!byMonth) for (let d = from; d <= end; d = addDays(d, 1)) if (!series.has(d)) series.set(d, {});
+  const hasBreakdown = (k) => Array.isArray(t[k]) && t[k].length > 0;
   return {
-    available: Object.keys(t.days).length > 0,
-    latest: Object.keys(t.days).sort().pop() || null,
-    sessions,
-    views,
-    sources: [...sources.entries()].sort((a, b) => b[1] - a[1]).slice(0, 50).map(([source, count]) => ({ source, count })),
+    available: Object.keys(t.days || {}).length > 0,
+    latest,
+    latestDay: latest ? { date: latest, sessions: t.days[latest][0], clicks: (t.clicks || []).reduce((n, [d, , c]) => (d === latest ? n + c : n), 0) } : null,
+    ...sum,
+    clicksKnown: hasBreakdown('clicks') && end >= STORE_CLICK_SINCE,
+    byMonth,
+    series: [...series.entries()].sort().map(([key, v]) => ({ key, sessions: v.sessions || 0, clicks: v.clicks || 0, clicksKnown: (byMonth ? `${key}-31` : key) >= STORE_CLICK_SINCE })),
+    sources: breakdownIn(t.sources, from, to, 50).map((s) => ({ source: s.key, count: s.count, clicks: clicksBySource.get(s.key) || 0 })),
+    countries: hasBreakdown('countries') ? breakdownIn(t.countries, from, to, 1000) : null,
+    channels: hasBreakdown('channels') ? breakdownIn(t.channels, from, to, 1000) : null,
   };
 }
 
@@ -847,15 +926,17 @@ function buildPulse(state, convert, { range, from, to, latestSalesDate }) {
     out.daily = { days, proceeds: cur.proceeds / days, sold: cur.sold / days };
     if (range !== 'all') {
       const [pFrom, pTo] = previous(reportedTo);
-      if (rows.length && rows[0][0] <= pFrom) out.prev = salesSum(rows, convert, pFrom, pTo);
+      if (rows.length && rows[0][0] <= pFrom) {
+        out.prev = salesSum(rows, convert, pFrom, pTo);
+        out.prevWindow = { from: pFrom, to: pTo };
+      }
     }
   }
   const tDays = (state.traffic && state.traffic.days) || {};
   const tLatest = Object.keys(tDays).sort().pop();
   if (range !== 'all' && tLatest && tLatest >= from) {
     const [pFrom, pTo] = previous(tLatest < to ? tLatest : to);
-    const sum = (a, b) => Object.entries(tDays).reduce((n, [d, v]) => (d >= a && d <= b ? n + v[0] : n), 0);
-    if (Object.keys(tDays).sort()[0] <= pFrom) out.trafficPrev = sum(pFrom, pTo);
+    if (Object.keys(tDays).sort()[0] <= pFrom) out.trafficPrev = trafficSum(state.traffic, pFrom, pTo);
   }
   return out;
 }
@@ -965,7 +1046,17 @@ function buildAlerts(state, { today, latestSalesDate, trafficStale, store }) {
       s7 += sold.get(d) || 0;
       r7 += refunded.get(d) || 0;
     }
-    if (r7 >= 2 && s7 && r7 / s7 > 0.2) out.push({ rule: '退款率', level: 'danger', text: `近 7 天退款 ${r7} 份，占售出 ${Math.round((r7 / s7) * 100)}%，超过 20%` });
+    if (r7 >= 2 && s7 && r7 / s7 > 0.2) {
+      let sp = 0;
+      let rp = 0;
+      for (let i = 7; i < 14; i += 1) {
+        const d = addDays(latestSalesDate, -i);
+        sp += sold.get(d) || 0;
+        rp += refunded.get(d) || 0;
+      }
+      const before = sp ? `，前 7 天 ${Math.round((rp / sp) * 100)}%` : '';
+      out.push({ rule: '退款率', level: 'danger', text: `近 7 天退款率 ${Math.round((r7 / s7) * 100)}%（${r7} / ${s7}），超过 20%${before}` });
+    }
     // Apple normally reports a Pacific day the next morning, so two days behind is late.
     if (latestSalesDate < addDays(today, -2)) out.push({ rule: '销售报表', level: 'warn', text: `Apple 销售报表停在 ${latestSalesDate.slice(5)}` });
   }
@@ -1046,10 +1137,31 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
   for (const [date, type, units, , , price, , country] of allRows) {
     if (units > 0 && kindOf(type, price) === 'sale' && !firstSale.has(country)) firstSale.set(country, date);
   }
-  const countryList = toList(countries).map((c) => ({ ...c, share: totals.sold ? c.sold / totals.sold : null, first: firstSale.get(c.key) || null }));
-
   const convertUsd = (v) => convert(v, 'USD');
   const latestSalesDate = Object.keys(state.sales.dates).filter((d) => state.sales.dates[d] === 'ok').sort().pop() || null;
+  const pulse = buildPulse(state, convert, { range, from, to, latestSalesDate });
+  const analytics = buildAnalytics(state, from, to, convertUsd);
+  // Units each country sold over the same reported days one window earlier.
+  const prevByCountry = new Map();
+  if (pulse.prevWindow) {
+    for (const [date, type, units, , , price, , ctry] of allRows) {
+      if (date < pulse.prevWindow.from || date > pulse.prevWindow.to || units <= 0 || kindOf(type, price) !== 'sale') continue;
+      prevByCountry.set(ctry, (prevByCountry.get(ctry) || 0) + units);
+    }
+  }
+  const countryList = toList(countries).map((c) => {
+    const store = analytics.territories[c.key] || {};
+    return {
+      ...c,
+      share: totals.sold ? c.sold / totals.sold : null,
+      first: firstSale.get(c.key) || null,
+      prevSold: pulse.prevWindow ? prevByCountry.get(c.key) || 0 : null,
+      refundRate: c.sold ? c.refunded / c.sold : null,
+      pageViews: store.pageViews || 0,
+      storeRate: store.pageViews ? (store.purchases || 0) / store.pageViews : null,
+    };
+  });
+
   return {
     range, currency, from, to, today,
     totals: {
@@ -1062,11 +1174,12 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
     series: [...points.entries()].sort().map(([key, v]) => ({ key, sold: v.sold || 0, refunded: v.refunded || 0, proceeds: v.proceeds || 0 })),
     devices: toList(devices),
     countries: countryList,
+    countriesEver: firstSale.size,
     refunds: refunds.sort((a, b) => (a.date < b.date ? 1 : -1)),
-    analytics: buildAnalytics(state, from, to, convertUsd),
+    analytics,
     traffic: buildTraffic(state, range === 'all' ? TRAFFIC_START : from, to),
     recent: buildRecent(state, convert, { from, to, today, latestSalesDate }),
-    pulse: buildPulse(state, convert, { range, from, to, latestSalesDate }),
+    pulse,
     latest: latestIncome(state, convert),
     months: monthOptions(allRows, today),
     finance: buildFinance(state, convert),
@@ -1116,14 +1229,25 @@ function buildFinance(state, convert) {
     }
     // What buyers paid for the same days, refunds netted, so the payout reads
     // as a share of it the way Mole's payouts read against their payments.
-    let gross = 0;
+    // Mole reads a payout against the payments behind it: the rate is the
+    // payout over what buyers paid, and refunds and Apple's share (commission
+    // and tax together, which these reports never split) are shares of it.
+    let paid = 0;
+    let refunds = 0;
     for (const [date, type, n, , , price, cur] of state.sales.rows) {
       if (date < rows[0].start || date > rows[0].end || kindOf(type, price) !== 'sale') continue;
       const c = convert(Math.abs(price), cur);
       if (c === null) unconverted = true;
-      else gross += c * n;
+      else if (n > 0) paid += c * n;
+      else refunds -= c * n;
     }
-    out.push({ period, start: rows[0].start, end: rows[0].end, units, amount, gross, rate: gross > 0 && !unconverted ? amount / gross : null, unconverted });
+    const known = paid > 0 && !unconverted;
+    out.push({
+      period, start: rows[0].start, end: rows[0].end, units, amount, paid, refunds,
+      rate: known ? amount / paid : null,
+      apple: known ? paid - refunds - amount : null,
+      unconverted,
+    });
   }
   return out.sort((a, b) => (a.start < b.start ? 1 : -1));
 }

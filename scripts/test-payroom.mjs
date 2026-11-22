@@ -91,7 +91,7 @@ state.traffic = {
 };
 const week = lib.buildView(state, { range: '7d', currency: 'CNY', today });
 eq([week.traffic.sessions, week.traffic.views], [15, 26], 'traffic sums inside the window only');
-eq(week.traffic.sources[0], { source: 'github.com', count: 12 }, 'sources sum across days');
+eq(week.traffic.sources[0], { source: 'github.com', count: 12, clicks: 0 }, 'sources sum across days');
 // The comparison and the daily average count only days Apple has reported:
 // 11-07 is not in yet, so this week is 11-01 to 11-06 against 10-25 to 10-30.
 eq(week.pulse.daily.days, 6, 'the daily average divides by reported days');
@@ -113,7 +113,7 @@ eq([week.monthProgress.month, week.monthProgress.sold], ['2026-11', 3], 'this mo
   p.traffic = { days: { '2026-10-20': [1, 0, 1], '2026-10-25': [4, 0, 4], '2026-10-28': [50, 0, 50], '2026-11-02': [9, 0, 9] }, sources: [] };
   const v = lib.buildView(p, { range: '7d', currency: 'CNY', today });
   eq(v.pulse.prev.sold, 1, 'the previous window stops as many days early as this one: 10-31 is left out');
-  eq(v.pulse.trafficPrev, 4, 'traffic compares the same days a week earlier, cut where GA stops (11-02)');
+  eq(v.pulse.trafficPrev.sessions, 4, 'traffic compares the same days a week earlier, cut where GA stops (11-02)');
   const mv = lib.buildView(p, { range: 'month', currency: 'CNY', today });
   eq([mv.pulse.prev.sold, mv.pulse.prevLabel], [2, '上月同期'], '当月 compares with last month to the same day');
   eq(v.pulse.prevLabel, '上期', 'a rolling window compares with the one before it');
@@ -255,7 +255,13 @@ eq(Object.fromEntries(dropView.recent.map((d) => [d.date, d.known]))['2026-11-05
     },
   });
   await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
-  eq(gaBodies.length, 3, 'all three traffic queries ran');
+  // Daily, then each breakdown for the last year and folded before it;
+  // App Store clicks start 2026-11-09, so they have no older half.
+  eq(gaBodies.length, 8, 'every traffic query ran');
+  assert.ok(gaBodies.some((b) => JSON.stringify(b).includes('"store_click"')), 'App Store clicks are asked for');
+  assert.ok(gaBodies.some((b) => JSON.stringify(b.dimensions).includes('countryId')) && gaBodies.some((b) => JSON.stringify(b.dimensions).includes('sessionDefaultChannelGroup')), 'countries and channels are asked for');
+  assert.ok(gaBodies[0].metrics.some((m) => m.name === 'newUsers'), 'new users ride on the daily query');
+  checks += 3;
   for (const body of gaBodies) {
     const filter = JSON.stringify(body.dimensionFilter);
     assert.ok(filter.includes('"miaoyan.app"') && filter.includes('/cats'), 'each query is limited to the site');
@@ -271,6 +277,7 @@ eq(Object.fromEntries(dropView.recent.map((d) => [d.date, d.known]))['2026-11-05
   process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = JSON.stringify({ client_email: 'a@b.c', private_key: gaKey.export({ type: 'pkcs8', format: 'pem' }) });
   const warm = JSON.parse(JSON.stringify(seeded));
   warm.traffic = {
+    v: 2,
     fullAt: new Date(SYNC_NOW.getTime() - 3600e3).toISOString(),
     days: { '2026-10-01': [50, 40, 60], '2026-11-07': [1, 1, 1] },
     sources: [['2022-06-01', 'old.com', 9], ['2026-10-01', 'github.com', 50], ['2026-11-07', 'stale.com', 1]],
@@ -293,13 +300,30 @@ eq(Object.fromEntries(dropView.recent.map((d) => [d.date, d.known]))['2026-11-05
   writes = stub({ blob: stored(warm), sales: () => answer(404), json: ga });
   await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
   const merged = writes[writes.length - 1];
-  eq(gaBodies.length, 2, 'a run after a fresh full pull asks GA only for the recent days');
+  eq(gaBodies.length, 5, 'a run after a fresh full pull asks GA only for the recent days');
   eq(gaBodies[0].dateRanges[0], { startDate: '2026-11-05', endDate: 'today' }, 'the recent window ends at GA\'s own today');
   eq(merged.traffic.days['2026-10-01'], [50, 40, 60], 'older days survive the patch');
   eq(merged.traffic.days['2026-11-07'], undefined, 'a recent day GA no longer lists reads as no visits');
   eq(merged.traffic.days['2026-11-08'], [4, 3, 5], 'the newest day lands');
   eq(merged.traffic.sources.map((r) => r[1]), ['old.com', 'github.com', 'github.com'], 'older sources survive and recent ones are replaced');
   eq(fxCalls, 0, 'a part not due yet is skipped');
+
+  // A snapshot from before the breakdowns is pulled whole on the next run.
+  gaBodies.length = 0;
+  const unversioned = JSON.parse(JSON.stringify(warm));
+  delete unversioned.traffic.v;
+  writes = stub({ blob: stored(unversioned), sales: () => answer(404), json: ga });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+  eq([gaBodies.length, writes[writes.length - 1].traffic.v], [8, 2], 'an old snapshot is pulled whole and marked');
+
+  // A breakdown that fails in the hourly patch keeps its rows; visits still land.
+  const shaky = (u, init) => (u.includes('analyticsdata') && JSON.stringify(JSON.parse(init.body).dimensions).includes('countryId') ? answer(500) : ga(u, init));
+  const kept = JSON.parse(JSON.stringify(merged));
+  kept.traffic.countries = [['2026-10-01', 'CN', 7]];
+  writes = stub({ blob: stored(kept), sales: () => answer(404), json: shaky });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+  const patched = writes[writes.length - 1];
+  eq([patched.traffic.countries, patched.traffic.days['2026-11-08']], [[['2026-10-01', 'CN', 7]], [4, 3, 5]], 'a failed breakdown keeps its rows while visits land');
 
   gaDown = true;
   writes = stub({ blob: stored(merged), sales: () => answer(404), json: ga });
@@ -394,7 +418,8 @@ eq(JSON.stringify(q('/payroom', 'miaoyan_payroom_view=bogus%7CEUR').view), JSON.
 
   st.finance.months = { '2027-01': [{ start: '2026-10-01', end: '2026-10-31', quantity: 3, amount: 180, currency: 'CNY' }] };
   const fin = lib.buildView(st, { range: 'all', today: T }).finance[0];
-  near(fin.gross, 3 * 88, 'the payout reads against what buyers paid for the same days');
+  near(fin.paid, 3 * 88, 'the payout reads against what buyers paid for the same days');
+  near(fin.apple, 3 * 88 - 180, 'Apple\'s share is what buyers paid less refunds and the payout');
   near(fin.rate, 180 / (3 * 88), 'as a rate');
   assert.ok(page.renderDashboard(lib.buildView(st, { range: 'all', today: T })).includes('全期结算'), 'the lifetime payout line renders');
   checks += 1;
@@ -421,6 +446,57 @@ eq(JSON.stringify(q('/payroom', 'miaoyan_payroom_view=bogus%7CEUR').view), JSON.
   assert.ok(brief.includes('经营简报') && brief.includes('class="alert danger"'), 'crossed rules render as one sentence');
   assert.ok(!page.renderDashboard(lib.buildView(st, { today: T })).includes('经营简报'), 'nothing crossed, no panel');
   checks += 3;
+}
+
+// ---- the second pass on Mole's reading: visitors, countries, chart line ----
+{
+  const mk = (date, units, country = 'CN') => [date, '1F', units, 76.89, 'CNY', 88, 'CNY', country, 'iPhone', '', ''];
+  const st = lib.emptyState();
+  st.fx = { rates: { USD: 1, CNY: 7 } };
+  st.sales.rows = [mk('2026-10-01', 1), mk('2026-10-30', 2, 'US'), mk('2026-11-04', 3), mk('2026-11-05', -1), mk('2026-11-06', 1, 'US')];
+  for (let d = '2026-10-01'; d <= '2026-11-10'; d = lib.addDays(d, 1)) st.sales.dates[d] = 'ok';
+  st.analytics = { reports: {
+    purchases: { '2026-11-04': [['App Store search', '', 'iPhone', 'CN', 3, 33, 39]] },
+    discovery: { '2026-11-04': [['Page view', 'App Store search', 'iPhone', 'CN', 60], ['Impression', 'App Store search', 'iPhone', 'CN', 500]] },
+  } };
+  st.traffic = {
+    v: 2,
+    days: { '2026-11-01': [100, 0, 120, 70], '2026-11-08': [40, 0, 50, 30], '2026-11-09': [60, 0, 70, 40], '2026-11-10': [50, 0, 60, 20] },
+    sources: [['2026-11-09', 'google', 60], ['2026-11-10', 'google', 50]],
+    clicks: [['2026-11-09', 'google', 6], ['2026-11-10', 'google', 4]],
+    countries: [['2026-11-09', 'CN', 70], ['2026-11-10', 'US', 40]],
+    channels: [['2026-11-09', 'Organic Search', 80], ['2026-11-10', 'Direct', 30]],
+  };
+  const T = '2026-11-11';
+  const v = lib.buildView(st, { range: '7d', today: T });
+  eq([v.traffic.sessions, v.traffic.newUsers, v.traffic.clicks], [150, 90, 10], 'visits, new users and clicks sum inside the window');
+  near(v.traffic.clickRate, 10 / 110, 'the click rate divides by the sessions of days clicks were counted');
+  eq(lib.buildView(st, { range: 'm:2026-10', today: T }).traffic.clickRate, null, 'a window before clicks existed has no click rate');
+  const legacy = JSON.parse(JSON.stringify(st));
+  legacy.traffic = { days: { '2026-11-09': [60, 0, 70] }, sources: [] };
+  const lt = lib.buildView(legacy, { range: '7d', today: T }).traffic;
+  eq([lt.newUsers, lt.clickRate], [null, null], 'a snapshot from before the pull reads as unknown, not zero');
+  eq(v.traffic.sources[0], { source: 'google', count: 110, clicks: 10 }, 'a source carries its clicks');
+  eq(v.traffic.channels.map((c) => c.key), ['Organic Search', 'Direct'], 'channels rank by visits');
+
+  const cn = v.countries.find((c) => c.key === 'CN');
+  eq([cn.pageViews, cn.refundRate], [60, 1 / 3], 'a country carries its product-page views and refund rate');
+  near(cn.storeRate, 3 / 60, 'and purchases per view from the same channel report');
+  const us = v.countries.find((c) => c.key === 'US');
+  eq(us.prevSold, 2, 'the previous window counts each country on its own');
+  eq(v.countriesEver, 2, 'the countries ever bought from');
+
+  const html = page.renderDashboard(v);
+  assert.ok(html.includes('访客来源') && html.includes('App Store 点击率') && html.includes('自然搜索') && html.includes('class="mix"'), 'the visitors panel renders its cards and rings');
+  assert.ok(/class="chart-line"/.test(html), 'the money line rides over the bars');
+  assert.ok(html.includes('购买/浏览') && html.includes('累计 2 个国家和地区买过'), 'the country table carries the store columns');
+  checks += 3;
+
+  st.sales.rows.push(mk('2026-11-06', -1), mk('2026-10-30', 4), mk('2026-11-01', -1, 'US'));
+  st.sales.rows.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+  const alert = lib.buildView(st, { today: T }).alerts.find((a) => a.rule === '退款率');
+  assert.ok(alert && alert.text.includes('前 7 天'), 'the refund alert names the week before');
+  checks += 1;
 }
 
 console.log(`payroom: ${checks} checks passed`);
