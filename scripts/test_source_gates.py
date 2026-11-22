@@ -111,6 +111,22 @@ class PreviewRoundTripGateTests(unittest.TestCase):
         self.assertEqual(queued, ["[weak self] in", "self?.scrollEditor(toTopPlace: place)"])
         self.assertRegex(disable[place:], r"(?s)^if shouldUseStoredState, let place = storedTopPlace \{.*?\} else \{\s*self\.scrollEditor\(toRatio: ratioToRestore\)")
 
+class PreviewShowsTheNoteGateTests(unittest.TestCase):
+    def test_scrolls_to_the_editor_wait_for_the_page_to_show_the_note(self):
+        """The first Command-3 on a long note showed its top, and the split pane went back to the top after a round
+        trip through preview (2026-11-22, in 4.11.0): enablePreview's scroll ran on a page that was ready but still
+        held the preloaded blank note, and enableSplitViewMode never synced again because the scroll observer from
+        before preview was still there. Both wait for the page to show the editor's note."""
+        text = source("Controllers/ViewController+Editor.swift")
+        enable = function_body(text, "func enablePreview()")
+        at = enable.find("self?.editArea.markdownView?.scrollToLine(editorVisibleLine")
+        self.assertGreater(at, 0, "the scroll moved; update this gate with it")
+        self.assertRegex(enable[:at], r"editArea\.markdownView\?\.runWhenShowing\(note\) \{ \[weak self\] in\s*\Z")
+        split = function_body(text, "private func enableSplitViewMode()")
+        self.assertRegex(split, r"startSplitScrollSync\(\)[\s\S]*?editArea\.markdownView\?\.runWhenShowing\(note\) \{ \[weak self\] in\s*self\?\.syncPreviewToEditor\(\)")
+        sync = code_lines(function_body(text, "private func syncPreviewToEditor()"))
+        self.assertIn("lastSyncedEditorOffset = -1", sync)
+
 class SingleModeGateTests(unittest.TestCase):
     def test_single_mode_is_cleared_before_launch_loads_the_library_and_on_quit(self):
         """#503: opening one .md file stored single mode in UserDefaults, and a Command-Q or crash kept it, so the next

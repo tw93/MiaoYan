@@ -35,6 +35,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// that would either fire too early on slow loads or waste time on fast
     /// ones.
     private var postReadyCallbacks: [() -> Void] = []
+    /// Closures waiting for the page to show one note (`runWhenShowing`).
+    private var noteShownCallbacks: [(note: Note, block: () -> Void)] = []
     /// Whether this preview is currently rendered as the right pane of
     /// MiaoYan's split editor. Tracked locally so we can re-apply the
     /// `body.miaoyan-split-mode` class on every webView(_:didFinish:),
@@ -589,6 +591,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         for cb in callbacks {
             cb()
         }
+        drainNoteShownCallbacks()
     }
 
     /// Runs the closure once the preview DOM is ready. If we are already
@@ -601,6 +604,28 @@ class MPreviewView: WKWebView, WKUIDelegate {
             block()
         } else {
             postReadyCallbacks.append(block)
+        }
+    }
+
+    /// Runs the closure once the page shows `note`. A ready page can still
+    /// hold the previous note, such as the blank one preloaded before the
+    /// first preview, and a scroll run on it was lost when the note arrived,
+    /// so the first Command-3 showed the top. Drained when a template load
+    /// finishes and when an in-place switch lands; a closure for a note the
+    /// page did not end up showing is dropped.
+    public func runWhenShowing(_ note: Note, _ block: @escaping () -> Void) {
+        if hasLoadedTemplate, !isLoadingTemplate, inPlaceNote == nil, self.note === note {
+            block()
+        } else {
+            noteShownCallbacks.append((note, block))
+        }
+    }
+
+    private func drainNoteShownCallbacks() {
+        let waiting = noteShownCallbacks
+        noteShownCallbacks.removeAll()
+        for entry in waiting where entry.note === note {
+            entry.block()
         }
     }
 
@@ -652,6 +677,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         isLoadingTemplate = false
         pendingPostLoadUpdateNote = nil
         postReadyCallbacks.removeAll()
+        noteShownCallbacks.removeAll()
         splitChromeEnabled = false
         note = nil
         stopLoading()
@@ -905,6 +931,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 // makeFirstResponder on a webview that displays a different
                 // note).
                 self.postReadyCallbacks.removeAll()
+                self.noteShownCallbacks.removeAll()
                 self.pendingPostLoadUpdateNote = nil
                 AppDelegate.trackError(
                     NSError(
@@ -936,6 +963,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 self.hasLoadedTemplate = false
                 self.isLoadingTemplate = false
                 self.postReadyCallbacks.removeAll()
+                self.noteShownCallbacks.removeAll()
                 self.pendingPostLoadUpdateNote = nil
                 AppDelegate.trackError(error, context: "MPreviewView.load")
                 self.loadHTMLString("<html><body><p>Failed to load preview</p></body></html>", baseURL: nil)
@@ -1004,6 +1032,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             if shown {
                 self.note = note
                 completion?()
+                self.drainNoteShownCallbacks()
             } else {
                 self.load(note: note, force: true, completion: completion)
             }

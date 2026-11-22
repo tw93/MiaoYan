@@ -92,6 +92,7 @@ extension ViewController {
     }
 
     // MARK: - Preview Management
+
     func enablePreview() {
         // Debounce rapid repeated calls (within 0.15 seconds)
         let now = Date().timeIntervalSince1970
@@ -177,8 +178,8 @@ extension ViewController {
             guard let self else { return }
             self.editArea.window?.makeFirstResponder(self.editArea.markdownView)
         }
-        if UserDefaultsManagement.previewLocation == "Editing", !sessionIsExporting {
-            editArea.markdownView?.runWhenPreviewReady { [weak self] in
+        if UserDefaultsManagement.previewLocation == "Editing", !sessionIsExporting, let note = EditTextView.note {
+            editArea.markdownView?.runWhenShowing(note) { [weak self] in
                 self?.editArea.markdownView?.scrollToLine(editorVisibleLine, fallbackRatio: editorScrollRatio)
             }
         }
@@ -226,6 +227,14 @@ extension ViewController {
         previewScrollView?.hasHorizontalScroller = false
 
         startSplitScrollSync()
+        // The page loads the note again at its top while the editor keeps its
+        // place and sends no scroll, and back from preview the observer above
+        // already exists, so nothing lined the two up: sync once it shows.
+        if let note = EditTextView.note {
+            editArea.markdownView?.runWhenShowing(note) { [weak self] in
+                self?.syncPreviewToEditor()
+            }
+        }
 
         // Hide the WebKit-rendered scrollbar in the right pane so the
         // editor's NSScrollView overlay scroller is the single visible
@@ -1064,6 +1073,15 @@ extension ViewController {
 
         activeSplitScrollSource = .editor
 
+        scheduleSplitScrollSync()
+    }
+
+    /// Moves the split preview to the editor's place even when the editor has
+    /// not moved since the last sync.
+    private func syncPreviewToEditor() {
+        guard sessionSplitMode else { return }
+        lastSyncedEditorOffset = -1
+        activeSplitScrollSource = .editor
         scheduleSplitScrollSync()
     }
 

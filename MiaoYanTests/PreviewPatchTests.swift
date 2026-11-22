@@ -694,4 +694,59 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertTrue(source.contains("if let note = inPlaceNote ?? self.note {\n            self.load(note: note, force: true)"), "WebContent restart")
         XCTAssertTrue(source.contains("guard let note = inPlaceNote ?? note else { return }\n        load(note: note, force: true)"), "app reactivation")
     }
+
+    /// The first Command-3 on a long note showed its top, and so did the split
+    /// pane back from preview: the scroll to the editor's line ran on a page
+    /// that was ready but still held another note (the blank one preloaded
+    /// before the first preview) and was lost when the note arrived. A closure
+    /// for a note now waits until the page shows that note, through a full
+    /// load and through an in-place switch, and one for a note the page did
+    /// not end up showing never runs.
+    @MainActor
+    func testAClosureForANoteWaitsUntilThePageShowsIt() async throws {
+        let project = Project(url: tempDirectory, label: "test", isRoot: true)
+        func makeNote(_ name: String, _ body: String) throws -> Note {
+            let url = tempDirectory.appendingPathComponent(name)
+            try body.write(to: url, atomically: true, encoding: .utf8)
+            let note = Note(url: url, with: project)
+            note.content = NSMutableAttributedString(string: body)
+            note.markContentAsLoaded()
+            return note
+        }
+        let first = try makeNote("first.md", "First.")
+        let second = try makeNote("second.md", "Second.")
+        let third = try makeNote("third.md", "Third.")
+        let preview = MPreviewView(frame: NSRect(x: 0, y: 0, width: 400, height: 300), note: first, closure: nil)
+
+        let firstShown = expectation(description: "first note shown")
+        preview.load(note: first)
+        preview.runWhenShowing(first) { firstShown.fulfill() }
+        await fulfillment(of: [firstShown], timeout: 20)
+
+        var shownWith: [Note?] = []
+        preview.runWhenShowing(second) { shownWith.append(preview.displayedNote) }
+        XCTAssertTrue(shownWith.isEmpty, "the page is ready but holds the first note")
+
+        let secondShown = expectation(description: "second note shown")
+        preview.load(note: second)
+        preview.runWhenShowing(first) { XCTFail("the page did not show the first note again") }
+        preview.runWhenShowing(second) { secondShown.fulfill() }
+        await fulfillment(of: [secondShown], timeout: 20)
+        XCTAssertEqual(shownWith.count, 1)
+        XCTAssertTrue(shownWith.first.flatMap { $0 } === second)
+
+        var ranAtOnce = false
+        preview.runWhenShowing(second) { ranAtOnce = true }
+        XCTAssertTrue(ranAtOnce, "a page already showing the note runs it at once")
+
+        let thirdShown = expectation(description: "third note shown in place")
+        var thirdShownWith: Note?
+        preview.runWhenShowing(third) {
+            thirdShownWith = preview.displayedNote
+            thirdShown.fulfill()
+        }
+        preview.showNoteInPlace(third)
+        await fulfillment(of: [thirdShown], timeout: 20)
+        XCTAssertTrue(thirdShownWith === third)
+    }
 }
