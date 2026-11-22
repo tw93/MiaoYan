@@ -190,7 +190,7 @@ none stale.
   agents, read-only; five fix agents in separate worktrees; one independent review of each merged stack.
 - Mechanical: `check_incidents.py` 35 rows, 0 problems; SwiftLint and swift-format `--strict` clean.
 - Verified by the main session before reporting: the iPhone's Empty Trash deleting every entry (read both sides).
-- Next window from: the last commit of this run.
+- Next window from: `787f572c` (the last commit of this run, recorded by hash on 2026-11-22).
 
 ### Fixed (MiaoYan)
 
@@ -256,3 +256,65 @@ deletes flush the pending save first and undo checks the file's identity; a fail
 14 new strings in all four languages and the new menu item in both windows; the print-only CSS cannot reach
 PNG, HTML or PPT export; every `renderPage` step also runs in `renderBlocks`; 911 quoted tokens in the guides
 checked, 8 stale; no uncalled function in the six non-vendored preview scripts.
+
+## 2026-11-22 (after V4.11.0, whole tree)
+
+- Audited: MiaoYan `71f490a1` (window `787f572c..71f490a1`, 110 commits, 100 source files), MiaoYan-Pro `246e7c97`.
+  Five Opus agents, read-only; six fix agents in separate worktrees; one independent Opus review of the
+  deletion-path commits.
+- Mechanical: `check_incidents.py` 62 rows, 0 problems; SwiftLint and swift-format `--strict` clean.
+- Verified by the main session before reporting: `needsMath` at `MPreviewView.swift:1060` tests `$` only, and
+  `attachmentListing` returns no notes for a folder without its own `i/`.
+- Next window from: `33cfeaf4`.
+
+### Fixed (MiaoYan)
+
+- Behaviour: Clean Unused Attachments counts notes at any depth below a scanned folder (`ea383621`, I-63), with
+  one `Project` per folder and iCloud-only notes or dead folder links failing closed (`33cfeaf4`, from the
+  review); pins move back on undo and drop when a note leaves for good, folder deletes share
+  `Storage.trashFolder` (`10a8e776`); quitting in a presentation or PPT reopens the columns it hid (`543a1e38`,
+  I-68).
+- Editing: Tab under `10.` pads the content column and Shift-Tab keeps the caret and takes the same back, Tab
+  over lines keeps CRLF (`28b960cc`, `57c60efc`, I-70); a CRLF fence is code (`8e1f0fc2`, I-67); web code pasted
+  inside a fence goes in plain (`0b09998a`, I-71); Replace no longer wraps into its own replacement and searches
+  once (`be81bc29`, I-69).
+- Preview: `\( \)` math renders on a live update (`c2d9f791`, I-64); a wide display formula scrolls, a tall one
+  keeps its glyphs (`e2578339`, I-65); pie charts get eight soft colours (`037b9492`, I-66); the first-run TOC badge
+  goes with an in-place switch (`8a67149b`); a ranged local media reply is capped at 8 MiB (`762dde70`).
+- Performance: a note row restyles only when its inputs change (`6b710c25`); the shell folds a burst of disk
+  events into one reload (`5032ad11`); split scroll reads the length before copying the buffer (`248414fd`).
+- Stale: CloudSync, CustomTextStorage, the CI test sentence, the MiaoYanCore lists, MANIFEST's
+  `frame-fallback.js`, the 妙言 tracking sentence, two comments (`5d932d00`, `8fabb4e5`); five dead symbols and
+  `condenseWhitespace` (`830f6e7f`, `67448bcb`).
+
+### Refuted
+
+- "The hanging indent copies the whole note per paragraph" (two agents): measured on a real `NSTextStorage`, a
+  34,080-line, 1.26M-character note takes 17 ms either way.
+- `TaskMarker.itemRegex` inside a line holding U+2028: no click reaches a mid-line match.
+
+### Decided, do not re-report
+
+- The iPhone wordmark stays 0.08em; the Mac's 0.12em was picked with its larger sidebar lockup (2026-11-18).
+- The Mac alone continues an en dash, an em dash, `•` and `| ` on Return: Chinese dialogue opens with `——`.
+- `TableEditing.isInTable` (MiaoYanCore) is a test seam: the shared package keeps its API.
+- The find bar searches per keystroke (`5b276c9b`).
+
+### Open
+
+- Real-app checks: quit during a presentation and relaunch; a PDF of a note with a wide formula; a 500 MB local
+  video's memory; the sandboxed build's `Storage.systemTrashDestination`; the 2026-11-11 dark PDF list.
+- A table below a fence or `$$` still walks from the top per keystroke inside `TableEditing.isCode`; the fix
+  needs a MiaoYanCore change. A skip for tables drawn as code was tried and not landed.
+- Replace in a note with several matches can still reach an earlier replacement after wrapping, as TextEdit does.
+- The storyboard sidebar shows MiaoYan as `MiaoY...` at its default width in an English interface (seen in the
+  scripted run's captures).
+- iPhone: gantt date labels at phone width; the device checks listed on 2026-11-11.
+
+### Checked and fine
+
+Every `renderPage` step on live updates and in-place switches; `guardKaTeXRender` on every math path; the folder
+delete order and error handling in both sidebars after `Storage.trashFolder`; the `[[Note|label]]` paths; every
+new menu item and `I18n` key in all four languages; 792 quoted tokens in the guides, 7 stale; no size logs left in
+`Shell/`; UserDefaults keys all read.
+

@@ -101,7 +101,8 @@ found.
   push. UI fixes go through AGENTS.md Verification (the built app replaces
   `/Applications/MiaoYan.app`).
 - Append the run to `docs/weekly-audit.md` (audited and landed commits, next
-  window, fixed / decided / open) in the last commit of the run.
+  window, fixed / decided / open) in the last commit of the run. "Next window
+  from" names a commit hash (the last fix), never "the last commit of this run".
 
 ## Known traps
 
