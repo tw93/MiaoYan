@@ -939,16 +939,6 @@ class Storage {
         )
     }
 
-    public func unload(project: Project) {
-        let notes = noteList.filter { $0.project == project }
-        for note in notes {
-            if let i = noteList.firstIndex(where: { $0 === note }) {
-                noteList.remove(at: i)
-            }
-        }
-        loadedProjectInfo.removeValue(forKey: project.url.path)
-    }
-
     /// Reconcile a Trash project before presenting it. FSEvents can coalesce
     /// or delay a removal from the system Trash, so the in-memory list may
     /// still contain a Note whose file is already gone. Retiring the old
