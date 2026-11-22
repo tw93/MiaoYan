@@ -54,6 +54,9 @@ final class LocalMediaSchemeHandler: NSObject, WKURLSchemeHandler {
         running.remove(ObjectIdentifier(urlSchemeTask))
     }
 
+    /// The most one 206 reply carries: 8 MiB.
+    nonisolated static let maxRangeLength: UInt64 = 8 * 1024 * 1024
+
     enum Reply: Sendable, Equatable {
         case file(status: Int, headers: [String: String], data: Data)
         case failure(URLError.Code)
@@ -80,7 +83,11 @@ final class LocalMediaSchemeHandler: NSObject, WKURLSchemeHandler {
             headers["Content-Range"] = "bytes */\(size)"
             return .file(status: 416, headers: headers, data: Data())
         }
-        let bytes = requested ?? (0..<size)
+        var bytes = requested ?? (0..<size)
+        // An open range (`bytes=0-`) on a large video would read the whole
+        // file into memory; answer one chunk and the player asks for the rest.
+        // A request with no Range header is left as it was.
+        if requested != nil { bytes = bytes.lowerBound..<(bytes.lowerBound + min(UInt64(bytes.count), maxRangeLength)) }
         do {
             try handle.seek(toOffset: bytes.lowerBound)
             let data = try handle.read(upToCount: Int(bytes.count)) ?? Data()

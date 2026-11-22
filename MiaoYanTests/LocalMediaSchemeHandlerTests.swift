@@ -105,6 +105,32 @@ final class LocalMediaSchemeHandlerTests: XCTestCase {
         XCTAssertEqual(pastHeaders["Content-Range"], "bytes */100")
     }
 
+    /// `bytes=0-` on a large video used to read the whole file into memory.
+    /// Each partial reply stops at the cap and says which bytes it holds, so
+    /// the player asks for the rest.
+    func testAnOpenRangeIsAnsweredOneChunkAtATime() async throws {
+        let file = directory.appendingPathComponent("big.mp4")
+        let cap = LocalMediaSchemeHandler.maxRangeLength
+        let size = cap * 3 + 5
+        XCTAssertTrue(FileManager.default.createFile(atPath: file.path, contents: nil))
+        let writer = try FileHandle(forWritingTo: file)
+        try writer.truncate(atOffset: size)
+        try writer.close()
+        let url = URL(string: HtmlManager.localMediaURL(forPath: file.path))
+
+        let reply = await LocalMediaSchemeHandler.reply(to: url, range: "bytes=0-")
+        guard case .file(let status, let headers, let data) = reply else { return XCTFail("\(reply)") }
+        XCTAssertEqual(status, 206)
+        XCTAssertEqual(UInt64(data.count), cap)
+        XCTAssertEqual(headers["Content-Range"], "bytes 0-\(cap - 1)/\(size)")
+        XCTAssertEqual(headers["Content-Length"], String(cap))
+
+        let tail = await LocalMediaSchemeHandler.reply(to: url, range: "bytes=\(cap * 3)-")
+        guard case .file(_, let tailHeaders, let tailData) = tail else { return XCTFail("\(tail)") }
+        XCTAssertEqual(tailData.count, 5)
+        XCTAssertEqual(tailHeaders["Content-Range"], "bytes \(cap * 3)-\(size - 1)/\(size)")
+    }
+
     func testRangeHeaderForms() {
         XCTAssertEqual(LocalMediaSchemeHandler.byteRange("bytes=0-1", size: 100), 0..<2)
         XCTAssertEqual(LocalMediaSchemeHandler.byteRange("bytes=90-", size: 100), 90..<100)
