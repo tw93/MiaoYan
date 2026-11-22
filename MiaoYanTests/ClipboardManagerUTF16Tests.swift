@@ -50,6 +50,21 @@ final class ClipboardManagerUTF16Tests: XCTestCase {
         XCTAssertEqual(copied(NSRange(location: comment.location + 2, length: 0)), "# comment", "a comment in a code block")
     }
 
+    /// A CRLF note's fence is a fence: its `[[0, 1]]` is code, not a link.
+    @MainActor
+    func testCRLFFenceIsSeenAsCode() {
+        let text = "intro\r\n```swift\r\narr[[0, 1]]\r\n```\r\noutro [[note]]\r\n"
+        let attributed = NSAttributedString(string: text)
+        let ranges = NotesTextProcessor.fencedCodeBlockRanges(in: attributed)
+        XCTAssertEqual(ranges.count, 1)
+        let inner = (text as NSString).range(of: "arr[[0, 1]]")
+        XCTAssertTrue(ranges.first.map { NSIntersectionRange($0, inner).length == inner.length } ?? false)
+        let lf = NotesTextProcessor.fencedCodeBlockRanges(in: NSAttributedString(string: text.replacingOccurrences(of: "\r\n", with: "\n")))
+        XCTAssertEqual(lf.count, 1)
+        let converted = NotesTextProcessor.convertAppLinks(in: NSMutableAttributedString(string: text))
+        XCTAssertEqual((converted.string as NSString).substring(with: inner), "arr[[0, 1]]", "the code keeps its brackets")
+    }
+
     func testEmojiPrefixedPlaceholderMatchedWithNSStringLength() throws {
         // Reproduce the failure mode exactly: the placeholder is the last thing
         // in the buffer. With a surrogate-pair emoji ahead of it, String.count

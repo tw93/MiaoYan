@@ -644,7 +644,7 @@ public class NotesTextProcessor {
      */
     public static let _codeQuoteBlockPattern = [
         "(?<=\\n|\\A)",
-        "(^```[\\S\\ \\(\\)]*\\n[\\s\\S]*?\\n```(?:\\n|\\Z))",
+        "(^```[\\S\\ \\(\\)]*\\r?\\n[\\s\\S]*?\\r?\\n```(?:\\r?\\n|\\Z))",
     ].joined(separator: "\n")
 
     fileprivate static let codeSpanPattern = [
