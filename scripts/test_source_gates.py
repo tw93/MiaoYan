@@ -153,6 +153,23 @@ class MarkupFontGateTests(unittest.TestCase):
         self.assertFalse(any(line.startswith("NSFont.systemFont(") for line in body), body)
 
 
+class CountedStringLocaleGateTests(unittest.TestCase):
+    def test_counted_strings_format_with_the_bundles_locale(self):
+        """I-76: `String.localizedStringWithFormat` picks the plural form by `Locale.current`, so on a Mac running in
+        Chinese, which has no singular in CLDR, the English interface read "1 notes". `testCountedStringsTakeSingularAndPlural`
+        reads `Locale.current` from the host, which is English here and in CI, so it passes on the old code there; this
+        gate holds the fix wherever it runs."""
+        body = code_lines(function_body(source("Helpers/Localization.swift"), "static func count(_ key: String, _ n: Int) -> String"))
+        self.assertIn(
+            "let locale = bundle.preferredLocalizations.first.map(Locale.init(identifier:)) ?? .current", body)
+        self.assertIn("return String(format: str(key), locale: locale, n)", body)
+        for path in sorted(ROOT.rglob("*.swift")):
+            if any(part in {".build", "build", "DerivedData", "Pods"} for part in path.relative_to(ROOT).parts):
+                continue
+            text = path.read_text("utf-8", errors="replace")
+            self.assertNotIn("localizedStringWithFormat(", text, f"{path.relative_to(ROOT)} formats by the host's locale")
+
+
 class PieColorGateTests(unittest.TestCase):
     def test_pie_slices_are_eight_colours_apart_from_the_panel(self):
         """Mermaid took pie1..3 from primary, secondary and tertiary, which are the paper and its panel, so slices 1
