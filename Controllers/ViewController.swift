@@ -56,6 +56,9 @@ class ViewController:
     var lastPreviewReloadTime: TimeInterval = 0
     var savedEditorSelection: NSRange?
     var savedEditorScrollRatio: CGFloat?
+    /// The source line at the top of the editor when preview opened, and how
+    /// far down it; leaving preview scrolls back to it once the refill lands.
+    var savedEditorTopPlace: (line: Int, fraction: CGFloat)?
     var savedEditorNoteURL: URL?
     var sessionState: EditorSessionState { appContext.sessionState }
 

@@ -107,6 +107,7 @@ extension ViewController {
         if !sessionPreviewMode {
             savedEditorSelection = editArea.selectedRange()
             savedEditorScrollRatio = editorScrollRatio
+            savedEditorTopPlace = editorTopPlace()
             savedEditorNoteURL = EditTextView.note?.url
         }
 
@@ -249,6 +250,7 @@ extension ViewController {
 
                 var storedSelection = self.savedEditorSelection
                 var storedScrollRatio = self.savedEditorScrollRatio
+                let storedTopPlace = self.savedEditorTopPlace
                 let storedNoteURL = self.savedEditorNoteURL
                 let currentNoteURL = EditTextView.note?.url
                 let shouldUseStoredState = storedNoteURL != nil && storedNoteURL == currentNoteURL
@@ -259,6 +261,7 @@ extension ViewController {
                 let shouldRestoreCursor = storedSelection == nil
                 self.savedEditorSelection = nil
                 self.savedEditorScrollRatio = nil
+                self.savedEditorTopPlace = nil
                 self.savedEditorNoteURL = nil
 
                 self.sessionPreviewMode = false
@@ -300,17 +303,16 @@ extension ViewController {
                 self.editAreaScroll.contentView.layoutSubtreeIfNeeded()
                 self.editArea.layoutSubtreeIfNeeded()
 
-                if let ratio = ratioToRestore,
-                    ratio > 0,
-                    let documentView = self.editAreaScroll.documentView
-                {
-                    let contentHeight = self.editAreaScroll.contentSize.height
-                    let scrollHeight = documentView.bounds.height
-                    let offset = max(scrollHeight - contentHeight, 0)
-                    if offset > 0 {
-                        let scrollTop = offset * ratio
-                        documentView.scroll(NSPoint(x: 0, y: scrollTop))
+                if shouldUseStoredState, let place = storedTopPlace {
+                    // refillEditArea fills the editor on the next tick, and until
+                    // then its height is not the note's: a ratio of it put the
+                    // editor a third higher on every round trip. Queued after the
+                    // fill, the line is laid out where the reader left it.
+                    DispatchQueue.main.async { [weak self] in
+                        self?.scrollEditor(toTopPlace: place)
                     }
+                } else {
+                    self.scrollEditor(toRatio: ratioToRestore)
                 }
 
                 self.titleLabel.isEditable = true
@@ -367,12 +369,15 @@ extension ViewController {
         // Fallback if no webView (shouldn't happen but for safety)
         var storedSelection = savedEditorSelection
         var storedScrollRatio = savedEditorScrollRatio
+        var storedTopPlace = savedEditorTopPlace
+        savedEditorTopPlace = nil
         let storedNoteURL = savedEditorNoteURL
         let currentNoteURL = EditTextView.note?.url
         let shouldUseStoredState = storedNoteURL != nil && storedNoteURL == currentNoteURL
         if !shouldUseStoredState {
             storedSelection = nil
             storedScrollRatio = nil
+            storedTopPlace = nil
         }
         let shouldRestoreCursor = storedSelection == nil
         savedEditorSelection = nil
@@ -401,17 +406,10 @@ extension ViewController {
                 let clampedRange = NSRange(location: clampedLocation, length: clampedLength)
                 self.editArea.setSelectedRange(clampedRange)
             }
-            if let ratio = storedScrollRatio,
-                ratio > 0,
-                let documentView = self.editAreaScroll.documentView
-            {
-                let contentHeight = self.editAreaScroll.contentSize.height
-                let scrollHeight = documentView.bounds.height
-                let offset = max(scrollHeight - contentHeight, 0)
-                if offset > 0 {
-                    let scrollTop = offset * ratio
-                    documentView.scroll(NSPoint(x: 0, y: scrollTop))
-                }
+            if let place = storedTopPlace {
+                self.scrollEditor(toTopPlace: place)
+            } else {
+                self.scrollEditor(toRatio: storedScrollRatio)
             }
         }
 
@@ -1153,6 +1151,34 @@ extension ViewController {
             guard self.editArea.markdownView?.isUpdatingContent != true else { return }
             self.activeSplitScrollSource = .editor
             self.scheduleSplitScrollSync()
+        }
+    }
+
+    /// The buffer line at the top of the editor and how far down it the view starts.
+    private func editorTopPlace() -> (line: Int, fraction: CGFloat)? {
+        guard let storage = editArea.textStorage else { return nil }
+        return editArea.sourceLine(atDocumentY: editAreaScroll.contentView.bounds.origin.y, lineStarts: lineStarts(for: storage))
+    }
+
+    private func scrollEditor(toTopPlace place: (line: Int, fraction: CGFloat)) {
+        guard let storage = editArea.textStorage, let layout = editArea.layoutManager, let container = editArea.textContainer,
+            let y = editArea.documentY(ofSourceLine: place.line, fraction: place.fraction, lineStarts: lineStarts(for: storage))
+        else { return }
+        // Right after a refill the document's height is an estimate, and a place
+        // near the end lies past the scroll range it allows. Laying out the one
+        // screen below the place (about 2 ms; sizeToFit took 250 ms on a 1 MB
+        // note) stretches the range to reach it.
+        let screen = NSRect(x: 0, y: y - editArea.textContainerOrigin.y, width: container.size.width, height: editAreaScroll.contentSize.height)
+        layout.ensureLayout(forBoundingRect: screen, in: container)
+        restoreEditorScrollPosition(max(0, min(y, editorMaxScrollOffset)))
+    }
+
+    /// The fallback when no line was kept: a ratio of the editor's scroll range.
+    private func scrollEditor(toRatio ratio: CGFloat?) {
+        guard let ratio, ratio > 0, let documentView = editAreaScroll.documentView else { return }
+        let offset = max(documentView.bounds.height - editAreaScroll.contentSize.height, 0)
+        if offset > 0 {
+            documentView.scroll(NSPoint(x: 0, y: offset * ratio))
         }
     }
 

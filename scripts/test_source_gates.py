@@ -93,6 +93,24 @@ class PreviewFrameGateTests(unittest.TestCase):
         self.assertRegex(refresh, r"let newFrame = \(vc\.previewScrollView \?\? vc\.editAreaScroll\)\.bounds")
 
 
+class PreviewRoundTripGateTests(unittest.TestCase):
+    def test_leaving_preview_scrolls_back_to_the_line_after_the_refill(self):
+        """Every Command-3 round trip left the editor about a third higher (paragraph 50, 33, 23, 15; 2026-11-22,
+        in 4.11.0): disablePreview scaled the ratio saved on entry by the editor's height before refillEditArea's
+        queued fill, a layout estimate (11402 pt for a 16762 pt note). Entry keeps the top line, and the exit scrolls
+        to it in a block queued after the refill, the ratio only a fallback."""
+        text = source("Controllers/ViewController+Editor.swift")
+        enable = code_lines(function_body(text, "func enablePreview()"))
+        self.assertIn("savedEditorTopPlace = editorTopPlace()", enable)
+        disable = function_body(text, "func disablePreview()")
+        refill = disable.find("self.refillEditArea(suppressSave: true)")
+        place = disable.find("if shouldUseStoredState, let place = storedTopPlace {")
+        self.assertGreater(refill, 0, "the refill moved; update this gate with it")
+        self.assertGreater(place, refill, "the line is restored after the refill is queued")
+        queued = code_lines(block_after(disable, disable.index("DispatchQueue.main.async", place)))
+        self.assertEqual(queued, ["[weak self] in", "self?.scrollEditor(toTopPlace: place)"])
+        self.assertRegex(disable[place:], r"(?s)^if shouldUseStoredState, let place = storedTopPlace \{.*?\} else \{\s*self\.scrollEditor\(toRatio: ratioToRestore\)")
+
 class SingleModeGateTests(unittest.TestCase):
     def test_single_mode_is_cleared_before_launch_loads_the_library_and_on_quit(self):
         """#503: opening one .md file stored single mode in UserDefaults, and a Command-Q or crash kept it, so the next
