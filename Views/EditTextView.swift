@@ -98,6 +98,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private var editorSearchRanges: [NSRange] = []
     private var editorCurrentMatchIndex: Int = 0
     private var editorLastSearchText: String = ""
+    private var editorJustReplacedRange: NSRange?  // text the last Replace inserted (cat to cats)
     private var runtimeState: EditorSessionState? {
         viewDelegate?.sessionState ?? AppContext.shared.sessionState
     }
@@ -840,6 +841,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     override func didChangeText() {
         super.didChangeText()
+        editorJustReplacedRange = nil
         if editorSearchBar != nil, !editorLastSearchText.isEmpty {
             handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
         }
@@ -1643,18 +1645,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard editorSearchRanges.indices.contains(editorCurrentMatchIndex), let storage = textStorage else { return }
 
         let currentRange = editorSearchRanges[editorCurrentMatchIndex]
-
+        if let done = editorJustReplacedRange, NSIntersectionRange(done, currentRange).length == currentRange.length { return }
         guard shouldChangeText(in: currentRange, replacementString: replaceText) else { return }
         storage.replaceCharacters(in: currentRange, with: replaceText)
-        didChangeText()
-
-        handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
-
+        didChangeText()  // searches again, so the ranges below belong to the new text
+        let inserted = NSRange(location: currentRange.location, length: (replaceText as NSString).length)
+        editorJustReplacedRange = inserted
         if !editorSearchRanges.isEmpty {
-            // The replacement can match the search (iphone to iPhone, cat to cats):
-            // go on after it, wrapping, or every Replace rewrites the same word.
-            let insertedEnd = currentRange.location + (replaceText as NSString).length
-            editorCurrentMatchIndex = editorSearchRanges.firstIndex { $0.location >= insertedEnd } ?? 0
+            // Go on after the replacement, wrapping past a match inside it, or every Replace rewrites the same word.
+            editorCurrentMatchIndex =
+                editorSearchRanges.firstIndex { $0.location >= NSMaxRange(inserted) }
+                ?? editorSearchRanges.firstIndex { NSIntersectionRange(inserted, $0).length == 0 } ?? 0
             focusSearchResult(at: editorCurrentMatchIndex)
             editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
         }
@@ -1671,11 +1672,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
         didChangeText()
         undoManager?.endUndoGrouping()
-
-        handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
     }
 
     private func handleSearchInput(_ text: String, jumpToFirstMatch: Bool) {
+        if text != editorLastSearchText { editorJustReplacedRange = nil }
         editorLastSearchText = text
         clearEditorSearchHighlights()
         guard let storage = textStorage, !text.isEmpty else {

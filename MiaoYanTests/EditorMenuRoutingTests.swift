@@ -480,6 +480,41 @@ final class EditorMenuRoutingTests: XCTestCase {
         withExtendedLifetime((container, caseContainer)) {}
     }
 
+    /// A lone match that the replacement still contains: Replace wrapped to the
+    /// start and found the text it had just inserted, so "cat" became "catss".
+    @MainActor
+    func testReplaceDoesNotWrapIntoItsOwnReplacement() {
+        let (editor, container) = makeSearchEditor("cat")
+        editor.showSearchBar(prefilledText: "cat", mode: .replace)
+        editor.replaceNext(with: "cats")
+        editor.replaceNext(with: "cats")
+        XCTAssertEqual(editor.string, "cats")
+
+        // Other matches are still reached by wrapping past the inserted text.
+        let (wrap, wrapContainer) = makeSearchEditor("cat dog cat")
+        wrap.showSearchBar(prefilledText: "cat", mode: .replace)
+        wrap.findNext()
+        wrap.replaceNext(with: "cats")
+        XCTAssertEqual(wrap.string, "cat dog cats")
+        wrap.replaceNext(with: "cats")
+        XCTAssertEqual(wrap.string, "cats dog cats")
+        withExtendedLifetime((container, wrapContainer)) {}
+    }
+
+    /// Replace All searches the new text once, on the edit itself, and leaves
+    /// the matches (and the highlights) the new text holds.
+    @MainActor
+    func testReplaceAllLeavesTheMatchesOfTheNewText() {
+        let (editor, container) = makeSearchEditor("cat dog cat")
+        editor.showSearchBar(prefilledText: "cat", mode: .replace)
+        editor.replaceAll(with: "cats")
+        XCTAssertEqual(editor.string, "cats dog cats")
+        XCTAssertTrue(isHighlighted(editor, at: 0))
+        XCTAssertFalse(isHighlighted(editor, at: 5))
+        XCTAssertTrue(isHighlighted(editor, at: 9))
+        withExtendedLifetime(container) {}
+    }
+
     @MainActor
     private func isHighlighted(_ editor: EditTextView, at index: Int) -> Bool {
         editor.layoutManager?.temporaryAttribute(.backgroundColor, atCharacterIndex: index, effectiveRange: nil) != nil
