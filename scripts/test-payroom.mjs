@@ -341,6 +341,25 @@ eq(Object.fromEntries(dropView.recent.map((d) => [d.date, d.known]))['2026-11-05
   process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = '{bad';
 }
 
+// ---- the quick run asks for yesterday only and writes only when it landed --
+{
+  const quickNow = new Date('2026-11-08T14:10:00Z');
+  const base = JSON.parse(JSON.stringify(seeded));
+  let asked = [];
+  writes = stub({ blob: stored(base), sales: (u) => { asked.push(/reportDate\]=([\d-]+)/.exec(u)[1]); return answer(404); } });
+  eq((await lib.quickSales({ now: quickNow })).quick, '2026-11-07 not out yet', 'a report not out yet is said so');
+  eq([asked, writes.length], [['2026-11-07'], 0], 'only yesterday is asked for, and nothing is written');
+  asked = [];
+  writes = stub({ blob: stored(base), sales: (u) => { asked.push(1); return salesFor('2026-11-07', report)(u); } });
+  eq((await lib.quickSales({ now: quickNow })).quick, '2026-11-07 landed', 'a report that came out lands');
+  eq([writes.length, writes[0].sales.dates['2026-11-07']], [1, 'ok'], 'and is written once');
+  const landed = writes[0];
+  asked = [];
+  writes = stub({ blob: stored(landed), sales: () => { asked.push(1); return answer(404); } });
+  await lib.quickSales({ now: quickNow });
+  eq([asked.length, writes.length], [0, 0], 'once in, the quick run asks Apple nothing');
+}
+
 // ---- the page ------------------------------------------------------------
 const bad = lib.emptyState();
 bad.sales.rows = [['2026-11-01', '1F', -1, 5, 'USD', 5, '', 'US', 'iPhone', '', '4.0.0']];

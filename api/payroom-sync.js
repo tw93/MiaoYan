@@ -4,7 +4,7 @@
 // one credential and a missing one refuses, never runs open.
 
 const crypto = require('node:crypto');
-const { runSync } = require('./_payroom-lib');
+const { quickSales, runSync } = require('./_payroom-lib');
 
 function authorized(req) {
   const secret = process.env.CRON_SECRET;
@@ -22,7 +22,9 @@ module.exports = async function handler(req, res) {
     return res.end('{"error":"unauthorized"}');
   }
   try {
-    const result = await runSync();
+    // `?quick=1` is the ten-minute check for yesterday's sales report.
+    const quick = new URL(req.url || '/', 'http://local').searchParams.get('quick') === '1';
+    const result = quick ? await quickSales() : await runSync();
     res.statusCode = 200;
     return res.end(JSON.stringify(result));
   } catch (error) {

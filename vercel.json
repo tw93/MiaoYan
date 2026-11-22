@@ -11,6 +11,10 @@
     {
       "path": "/api/payroom-sync",
       "schedule": "17 * * * *"
+    },
+    {
+      "path": "/api/payroom-sync?quick=1",
+      "schedule": "0,10,30,40,50 11-16 * * *"
     }
   ],
   "rewrites": [

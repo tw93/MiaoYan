@@ -264,12 +264,12 @@ function compactAnalyticsRows(spec, parsed) {
 
 // ---- sync ----------------------------------------------------------------
 
-async function syncSales(state, vendor, today, errors, now = new Date()) {
+async function syncSales(state, vendor, today, errors, now = new Date(), { onlyYesterday = false } = {}) {
   const dates = state.sales.dates;
   const seenAt = (state.sales.seenAt ||= {});
   const yesterday = addDays(today, -1);
   const wanted = [];
-  for (let i = 0; i < FIRST_SALES_LOOKBACK_DAYS; i += 1) {
+  for (let i = 0; i < (onlyYesterday ? 1 : FIRST_SALES_LOOKBACK_DAYS); i += 1) {
     const d = addDays(yesterday, -i);
     const seen = dates[d];
     if (seen === 'ok') continue;
@@ -583,6 +583,27 @@ async function syncTraffic(state, today, problems, now = new Date()) {
 
 // Each part keeps its last good data when it fails; only the failed part's
 // error reaches the page.
+// The quick run fires every ten minutes around the hour Apple publishes the
+// previous Pacific day (11:00 to 16:50 UTC, about 3 to 9 a.m. Pacific in either offset; reports measured landing 5 to 7 a.m.), asks for
+// that one report only, and writes only when it arrived, so the day shows up
+// within minutes instead of at the next hourly run. Everything else stays on
+// the hourly run.
+async function quickSales({ now = new Date() } = {}) {
+  const vendor = process.env.ASC_VENDOR_NUMBER;
+  if (!vendor) throw new Error('ASC_VENDOR_NUMBER missing');
+  const stored = await readState();
+  if (!stored) return { quick: 'no store yet' };
+  const today = pacificToday(now);
+  const yesterday = addDays(today, -1);
+  if (stored.sales.dates[yesterday] === 'ok') return { quick: `${yesterday} already in` };
+  const problems = [];
+  await syncSales(stored, vendor, today, problems, now, { onlyYesterday: true });
+  if (stored.sales.dates[yesterday] !== 'ok') return { quick: `${yesterday} not out yet`, problems };
+  ((stored.health ||= {}).sales ||= {}).ok = now.toISOString();
+  await writeState(stored);
+  return { quick: `${yesterday} landed` };
+}
+
 async function runSync({ budgetMs = 200000, now = new Date() } = {}) {
   const deadline = Date.now() + budgetMs;
   const vendor = process.env.ASC_VENDOR_NUMBER;
@@ -1276,6 +1297,7 @@ module.exports = {
   pacificToday,
   parseTsv,
   rangeBounds,
+  quickSales,
   readState,
   runSync,
   salesRowsFromReport,
