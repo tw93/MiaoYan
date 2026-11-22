@@ -629,6 +629,8 @@ function rangeBounds(range, today, firstDate) {
   const to = addDays(today, -1);
   const preset = /^(\d+)d$/.exec(range);
   if (preset) return { from: addDays(to, -(Number(preset[1]) - 1)), to };
+  // 当月 runs to yesterday, so on the 1st it is the month just ended.
+  if (range === 'month') return { from: `${to.slice(0, 7)}-01`, to };
   const month = /^m:(\d{4}-\d{2})$/.exec(range);
   if (month) {
     const [y, m] = month[1].split('-').map(Number);
@@ -827,43 +829,156 @@ const dayCount = (from, to) => Math.round((Date.parse(`${to}T00:00:00Z`) - Date.
 function buildPulse(state, convert, { range, from, to, latestSalesDate }) {
   const rows = state.sales.rows;
   const reportedTo = latestSalesDate && latestSalesDate < to ? latestSalesDate : to;
-  const out = { prev: null, trafficPrev: null, daily: null, month: null };
+  // A calendar month compares with the month before it, day for day, as Mole's
+  // 当月 does; a rolling window with the same number of days just before it.
+  const monthly = range === 'month' || range.startsWith('m:');
+  const out = { prev: null, trafficPrev: null, daily: null, prevLabel: range === 'month' ? '上月同期' : monthly ? '上月' : '上期' };
+  const previous = (end) => {
+    if (!monthly) {
+      const span = dayCount(from, to);
+      return [addDays(from, -span), addDays(end, -span)];
+    }
+    const pm = prevMonthOf(from.slice(0, 7));
+    return [`${pm}-01`, `${pm}-${String(Math.min(Number(end.slice(8)), daysInMonth(pm))).padStart(2, '0')}`];
+  };
   if (latestSalesDate && reportedTo >= from) {
     const days = dayCount(from, reportedTo);
     const cur = salesSum(rows, convert, from, reportedTo);
     out.daily = { days, proceeds: cur.proceeds / days, sold: cur.sold / days };
     if (range !== 'all') {
-      const span = dayCount(from, to);
-      const pFrom = addDays(from, -span);
-      if (rows.length && rows[0][0] <= pFrom) out.prev = salesSum(rows, convert, pFrom, addDays(reportedTo, -span));
+      const [pFrom, pTo] = previous(reportedTo);
+      if (rows.length && rows[0][0] <= pFrom) out.prev = salesSum(rows, convert, pFrom, pTo);
     }
   }
   const tDays = (state.traffic && state.traffic.days) || {};
   const tLatest = Object.keys(tDays).sort().pop();
   if (range !== 'all' && tLatest && tLatest >= from) {
-    const tTo = tLatest < to ? tLatest : to;
-    const span = dayCount(from, to);
-    const pFrom = addDays(from, -span);
+    const [pFrom, pTo] = previous(tLatest < to ? tLatest : to);
     const sum = (a, b) => Object.entries(tDays).reduce((n, [d, v]) => (d >= a && d <= b ? n + v[0] : n), 0);
-    if (Object.keys(tDays).sort()[0] <= pFrom) out.trafficPrev = sum(pFrom, addDays(tTo, -span));
+    if (Object.keys(tDays).sort()[0] <= pFrom) out.trafficPrev = sum(pFrom, pTo);
   }
+  return out;
+}
+
+const daysInMonth = (month) => {
+  const [y, m] = month.split('-').map(Number);
+  return new Date(Date.UTC(y, m, 0)).getUTCDate();
+};
+const prevMonthOf = (month) => {
+  const [y, m] = month.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 2, 1)).toISOString().slice(0, 7);
+};
+
+// Month progress, as Mole reads it: how far through the month the reported
+// days are, where the month lands at this pace, and the month so far drawn day
+// by day against the whole previous month. A chosen closed month shows itself;
+// any other window shows the month of Apple's newest report.
+function buildMonthProgress(state, convert, { range, latestSalesDate, firstDate }) {
+  if (!latestSalesDate || !firstDate) return null;
+  const closed = /^m:(\d{4}-\d{2})$/.exec(range);
+  const month = closed ? closed[1] : latestSalesDate.slice(0, 7);
+  const total = daysInMonth(month);
+  const reported = closed ? total : Number(latestSalesDate.slice(8));
+  if (month < firstDate.slice(0, 7) || month > latestSalesDate.slice(0, 7)) return null;
+  const daily = (m, lastDay) => {
+    const out = Array.from({ length: lastDay }, () => ({ proceeds: 0, sold: 0, refunded: 0 }));
+    for (const [date, type, units, proceeds, proceedsCur, price] of state.sales.rows) {
+      if (date.slice(0, 7) !== m || kindOf(type, price) !== 'sale') continue;
+      const i = Number(date.slice(8)) - 1;
+      if (i >= lastDay) continue;
+      out[i].proceeds += (convert(proceeds, proceedsCur) || 0) * units;
+      if (units > 0) out[i].sold += units; else out[i].refunded -= units;
+    }
+    let run = 0;
+    return out.map((d) => { run += d.proceeds; return { ...d, cumulative: run }; });
+  };
+  const cur = daily(month, reported);
+  const sum = (days, k) => days.reduce((n, d) => n + d[k], 0);
+  const proceeds = sum(cur, 'proceeds');
+  const sold = sum(cur, 'sold');
+  const refunded = sum(cur, 'refunded');
+  const prevMonth = prevMonthOf(month);
+  // A previous month sales did not fully cover draws nothing.
+  const prev = firstDate <= `${prevMonth}-01` ? daily(prevMonth, daysInMonth(prevMonth)) : null;
+  return {
+    month, total, reported, closed: Boolean(closed),
+    proceeds, sold, refunded,
+    refundRate: sold ? refunded / sold : null,
+    dailyAverage: reported ? proceeds / reported : 0,
+    forecast: closed || !reported ? null : (proceeds / reported) * total,
+    curve: cur.map((d) => d.cumulative),
+    prev: prev ? { month: prevMonth, curve: prev.map((d) => d.cumulative), proceeds: sum(prev, 'proceeds') } : null,
+  };
+}
+
+// The lifetime best day by money and by units, each with its own date.
+function buildRecords(state, convert) {
+  const byDay = new Map();
+  for (const [date, type, units, proceeds, proceedsCur, price] of state.sales.rows) {
+    if (kindOf(type, price) !== 'sale') continue;
+    sumByKey(byDay, date, { proceeds: (convert(proceeds, proceedsCur) || 0) * units, sold: units > 0 ? units : 0 });
+  }
+  let money = null;
+  let units = null;
+  for (const [date, v] of byDay) {
+    if (v.proceeds > 0 && (!money || v.proceeds > money.value)) money = { date, value: v.proceeds };
+    if (v.sold > 0 && (!units || v.sold > units.value)) units = { date, value: v.sold };
+  }
+  return { money, units };
+}
+
+const STORE_REJECTED = new Set(['REJECTED', 'METADATA_REJECTED', 'INVALID_BINARY']);
+
+// Rule alerts, one number each with its line printed in the sentence, set from
+// the normal bands of this app's own history (2026-11-22 snapshot): Mole's
+// "yesterday under 70% of the 7-day mean" would have been lit on 127 of 167
+// days at a couple of sales a day, so silence is judged against chance instead.
+// A rule whose inputs are missing is skipped, never read as zero.
+function buildAlerts(state, { today, latestSalesDate, trafficStale, store }) {
+  const out = [];
+  const sold = new Map();
+  const refunded = new Map();
+  for (const [date, type, units, , , price] of state.sales.rows) {
+    if (kindOf(type, price) !== 'sale') continue;
+    if (units > 0) sold.set(date, (sold.get(date) || 0) + units);
+    else refunded.set(date, (refunded.get(date) || 0) - units);
+  }
+  const reported = (d) => state.sales.dates[d] === 'ok' || state.sales.dates[d] === 'none';
   if (latestSalesDate) {
-    const month = latestSalesDate.slice(0, 7);
-    const day = Number(latestSalesDate.slice(8));
-    const [y, m] = month.split('-').map(Number);
-    const prevMonth = new Date(Date.UTC(y, m - 2, 1)).toISOString().slice(0, 7);
-    const prevLast = Number(new Date(Date.UTC(y, m - 1, 0)).toISOString().slice(8, 10));
-    const prevTo = `${prevMonth}-${String(Math.min(day, prevLast)).padStart(2, '0')}`;
-    out.month = {
-      month, day,
-      cur: salesSum(rows, convert, `${month}-01`, latestSalesDate),
-      prev: rows.length && rows[0][0] <= prevTo ? salesSum(rows, convert, `${prevMonth}-01`, prevTo) : null,
-    };
+    // Silence: reported days in a row with no sale, lit once that run is less
+    // than 5% likely at the previous 28 days' pace (mean x days >= 3).
+    let streak = 0;
+    for (let d = latestSalesDate; reported(d) && !sold.get(d); d = addDays(d, -1)) streak += 1;
+    if (streak) {
+      const end = addDays(latestSalesDate, -streak);
+      let n = 0;
+      for (let i = 0; i < 28; i += 1) n += sold.get(addDays(end, -i)) || 0;
+      const mean = n / 28;
+      if (mean * streak >= 3) out.push({ rule: '连续零销量', level: 'danger', text: `已连续 ${streak} 天没有售出，前 28 天日均 ${mean.toFixed(1)} 份` });
+    }
+    // Refunds: two or more in the last 7 reported days and over 20% of units;
+    // p90 of the 7-day rate is 33% on a handful of units, so the count gates it.
+    let s7 = 0;
+    let r7 = 0;
+    for (let i = 0; i < 7; i += 1) {
+      const d = addDays(latestSalesDate, -i);
+      s7 += sold.get(d) || 0;
+      r7 += refunded.get(d) || 0;
+    }
+    if (r7 >= 2 && s7 && r7 / s7 > 0.2) out.push({ rule: '退款率', level: 'danger', text: `近 7 天退款 ${r7} 份，占售出 ${Math.round((r7 / s7) * 100)}%，超过 20%` });
+    // Apple normally reports a Pacific day the next morning, so two days behind is late.
+    if (latestSalesDate < addDays(today, -2)) out.push({ rule: '销售报表', level: 'warn', text: `Apple 销售报表停在 ${latestSalesDate.slice(5)}` });
+  }
+  if (trafficStale) out.push({ rule: '官网流量', level: 'warn', text: `官网流量停在 ${trafficStale.slice(5)}` });
+  for (const v of store || []) {
+    if (STORE_REJECTED.has(v.state)) out.push({ rule: '审核', level: 'danger', text: `${v.platform === 'IOS' ? 'iPhone 和 iPad' : 'Mac'} ${v.version} 没过审` });
   }
   return out;
 }
 
 function buildView(state, { range = 'all', currency = 'CNY', today = pacificToday() } = {}) {
+  // A month remembered from before 当月 existed reads as 当月.
+  if (range === `m:${addDays(today, -1).slice(0, 7)}`) range = 'month';
   const allRows = state.sales.rows;
   const firstDate = allRows[0] && allRows[0][0];
   const { from, to } = rangeBounds(range, today, firstDate);
@@ -925,6 +1040,13 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
   const toList = (map) => [...map.entries()]
     .map(([key, v]) => ({ key, sold: 0, refunded: 0, gross: 0, proceeds: 0, ...v }))
     .sort((a, b) => b.sold - a.sold || b.proceeds - a.proceeds);
+  // When each country first bought, over the whole history: a new market shows
+  // up as a recent date whatever window is open.
+  const firstSale = new Map();
+  for (const [date, type, units, , , price, , country] of allRows) {
+    if (units > 0 && kindOf(type, price) === 'sale' && !firstSale.has(country)) firstSale.set(country, date);
+  }
+  const countryList = toList(countries).map((c) => ({ ...c, share: totals.sold ? c.sold / totals.sold : null, first: firstSale.get(c.key) || null }));
 
   const convertUsd = (v) => convert(v, 'USD');
   const latestSalesDate = Object.keys(state.sales.dates).filter((d) => state.sales.dates[d] === 'ok').sort().pop() || null;
@@ -939,7 +1061,7 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
     byMonth,
     series: [...points.entries()].sort().map(([key, v]) => ({ key, sold: v.sold || 0, refunded: v.refunded || 0, proceeds: v.proceeds || 0 })),
     devices: toList(devices),
-    countries: toList(countries),
+    countries: countryList,
     refunds: refunds.sort((a, b) => (a.date < b.date ? 1 : -1)),
     analytics: buildAnalytics(state, from, to, convertUsd),
     traffic: buildTraffic(state, range === 'all' ? TRAFFIC_START : from, to),
@@ -948,6 +1070,9 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
     latest: latestIncome(state, convert),
     months: monthOptions(allRows, today),
     finance: buildFinance(state, convert),
+    monthProgress: buildMonthProgress(state, convert, { range, latestSalesDate, firstDate }),
+    records: buildRecords(state, convert),
+    alerts: buildAlerts(state, { today, latestSalesDate, trafficStale: isTrafficStale(state, today), store: buildStore(state) }),
     store: buildStore(state),
     reviews: state.reviews || [],
     syncedAt: state.syncedAt,
@@ -960,13 +1085,15 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
   };
 }
 
+// Closed months only: the running month is the 当月 preset, so one question
+// never has two entry points with two different numbers.
 function monthOptions(rows, today) {
   const paid = rows.filter((r) => kindOf(r[1], r[5]) === 'sale');
   if (!paid.length) return [];
   const out = [];
   let m = paid[0][0].slice(0, 7);
-  const last = today.slice(0, 7);
-  while (m <= last) {
+  const current = addDays(today, -1).slice(0, 7);
+  while (m < current) {
     out.unshift(m);
     const [y, mm] = m.split('-').map(Number);
     m = new Date(Date.UTC(y, mm, 1)).toISOString().slice(0, 7);
@@ -987,7 +1114,16 @@ function buildFinance(state, convert) {
       if (c === null) unconverted = true;
       else amount += c;
     }
-    out.push({ period, start: rows[0].start, end: rows[0].end, units, amount, unconverted });
+    // What buyers paid for the same days, refunds netted, so the payout reads
+    // as a share of it the way Mole's payouts read against their payments.
+    let gross = 0;
+    for (const [date, type, n, , , price, cur] of state.sales.rows) {
+      if (date < rows[0].start || date > rows[0].end || kindOf(type, price) !== 'sale') continue;
+      const c = convert(Math.abs(price), cur);
+      if (c === null) unconverted = true;
+      else gross += c * n;
+    }
+    out.push({ period, start: rows[0].start, end: rows[0].end, units, amount, gross, rate: gross > 0 && !unconverted ? amount / gross : null, unconverted });
   }
   return out.sort((a, b) => (a.start < b.start ? 1 : -1));
 }

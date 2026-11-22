@@ -67,6 +67,23 @@ td small{color:var(--subtle);font-size:12px}
 .review .meta{color:var(--subtle);font-size:12px}
 .review p{margin-top:4px;font-size:13px;line-height:1.5;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
 .range-select{display:none}
+.pace{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px 20px;align-items:center}
+.ring{position:relative;width:96px;height:96px}
+.ring svg{display:block;transform:rotate(-90deg)}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring strong{font-family:var(--serif);font-size:20px;line-height:1.1}
+.ring small{color:var(--subtle);font-size:11px}
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.mini article{padding:12px 14px;border-radius:7px;background:var(--panel-3);display:grid;gap:4px;min-width:0}
+.mini span,.mini em{color:var(--muted);font-size:12px;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini strong{font-family:var(--serif);font-size:22px;line-height:1.15;white-space:nowrap}
+.cumulative{border-top:1px solid var(--line);padding-top:14px;display:grid;gap:8px}
+.cumulative svg{display:block;width:100%;height:140px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 18px;color:var(--muted);font-size:12px}
+.legend i{display:inline-block;width:18px;margin-right:6px;vertical-align:middle;border-top:2px solid var(--accent)}
+.legend i.dash{border-top:2px dashed var(--subtle)}
+.alert{font-size:14px;line-height:1.6;color:var(--muted)}
+.alert.danger{color:var(--danger)}
 .login-shell{min-height:100vh;display:grid;place-items:center;padding:24px}
 .login-card{width:min(440px,100%);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:40px 36px;display:grid;gap:18px}
 .login-card p{color:var(--muted);font-size:15px;line-height:1.5}
@@ -77,9 +94,9 @@ td small{color:var(--subtle);font-size:12px}
 .login-card input:focus,.login-card input:focus-visible{outline:none}
 .login-card button{background:var(--ink);border-color:var(--ink);color:#fffdf7;font-weight:650;cursor:pointer}
 @media (min-width:1081px){.board>.panel[class*=" s"]{grid-column:span var(--span)}}
-@media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pace{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){.chart-value.dense{display:none}}
-@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}.topbar{flex-wrap:wrap;gap:8px}.switch a{padding:0 8px}.brand{display:contents}.sync{display:none}.filters{order:1;margin-left:auto;justify-content:flex-end;gap:8px}.switch.range,.month{display:none}.range-select{display:block;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 22px 0 10px;background:var(--panel) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--accent);font:inherit;font-size:16px}.range-select:focus,.range-select:focus-visible{outline:none}.board{gap:10px}.day td:first-child{max-width:0}.day td small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}.topbar{flex-wrap:wrap;gap:8px}.switch a{padding:0 8px}.brand{display:contents}.sync{display:none}.filters{order:1;margin-left:auto;justify-content:flex-end;gap:8px}.switch.range,.month{display:none}.range-select{display:block;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 22px 0 10px;background:var(--panel) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--accent);font:inherit;font-size:16px}.range-select:focus,.range-select:focus-visible{outline:none}.board{gap:10px}.mini{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.mini article{padding:10px}.mini strong{font-size:18px}.ring{width:84px;height:84px}.ring svg{width:84px;height:84px}.day td:first-child{max-width:0}.day td small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 `;
 
 function shell(title, body) {
@@ -197,10 +214,20 @@ function chart(view) {
     const title = `${p.key} 售出 ${p.sold}${p.refunded ? `，退款 ${p.refunded}` : ''}，到手 ${money(p.proceeds, view.currency)}`;
     return `<div class="chart-col" title="${esc(title)}"><div class="chart-up">${up}${value}</div><div class="chart-down">${down}</div><span class="chart-tick${i % (every * 2) ? ' alt' : ''}">${tick}</span></div>`;
   }).join('');
-  const best = pts.reduce((a, b) => (b.proceeds > a.proceeds ? b : a), pts[0]);
-  const unit = view.byMonth ? '单月' : '单日';
-  const caption = best.proceeds > 0 ? `<p>${unit}最高 ${esc(money(best.proceeds, view.currency))}（${esc(best.key)}）</p>` : '';
+  // Lifetime records, whatever the window, as Mole's 单日纪录 line reads.
+  const rec = view.records;
+  const recParts = [];
+  if (rec.money) recParts.push(`${esc(money(rec.money.value, view.currency))}（${esc(rec.money.date.slice(2))}）`);
+  if (rec.units) recParts.push(`${int(rec.units.value)} 份（${esc(rec.units.date.slice(2))}）`);
+  const caption = recParts.length ? `<p>单日纪录 ${recParts.join(' · ')}</p>` : '';
   return `<section class="panel"><div class="head"><h2>收入走势</h2>${caption}</div><div class="chart-frame" role="img" aria-label="售出和退款份数" style="--up:calc((100% - 24px) * ${(maxUp / total).toFixed(4)});--down:calc((100% - 24px) * ${(maxDown / total).toFixed(4)})">${columns}</div></section>`;
+}
+
+function countryTable(view) {
+  const rows = view.countries;
+  if (!rows.length) return '';
+  const body = rows.map((r, i) => `<tr${fold('country', i)}><td>${esc(country(r.key))}</td>${cell(r.sold)}<td>${r.share === null ? '' : percent(r.share)}</td>${cell(r.refunded, 'refund')}<td>${money(r.gross, view.currency)}</td><td class="wide-only">${r.first ? esc(r.first.slice(2)) : ''}</td></tr>`).join('');
+  return `<section class="panel s5"><h2>国家和地区</h2><div class="scroll"><table><thead><tr><th scope="col">国家和地区</th><th scope="col">售出</th><th scope="col">占比</th><th scope="col">退款</th><th scope="col">销售额</th><th scope="col" class="wide-only">首次</th></tr></thead><tbody>${body}</tbody></table></div>${moreButton('country', rows.length, '个')}</section>`;
 }
 
 function splitTable(view, title, rows, nameOf, head, order, kind) {
@@ -227,6 +254,59 @@ function channels(view) {
   return `<section class="panel s7"><h2>购买渠道</h2>${table}${funnel}${usage}${coverage}</section>`;
 }
 
+// Cumulative money through the month, x by day of month, both months on one
+// scale; the previous month is dashed and the current one stops at its last
+// reported day.
+function cumulativeChart(mp, currency) {
+  const W = 600;
+  const H = 140;
+  const days = Math.max(mp.total, mp.prev ? mp.prev.curve.length : 0);
+  const top = Math.max(1, ...mp.curve, ...(mp.prev ? mp.prev.curve : []));
+  const path = (curve) => curve.map((v, i) => `${i ? 'L' : 'M'}${((i / Math.max(1, days - 1)) * W).toFixed(1)} ${(H - 4 - (Math.max(0, v) / top) * (H - 8)).toFixed(1)}`).join(' ');
+  const prev = mp.prev ? `<path d="${path(mp.prev.curve)}" fill="none" stroke="var(--subtle)" stroke-width="1.5" stroke-dasharray="5 4" vector-effect="non-scaling-stroke"/>` : '';
+  const cur = mp.curve.length ? `<path d="${path(mp.curve)}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>` : '';
+  const name = (m) => `${Number(m.slice(5))} 月`;
+  const legend = `<div class="legend"><span><i></i>${esc(name(mp.month))} ${esc(compactMoney(mp.proceeds, currency))}</span>${mp.prev ? `<span><i class="dash"></i>${esc(name(mp.prev.month))} ${esc(compactMoney(mp.prev.proceeds, currency))}</span>` : ''}</div>`;
+  return `<div class="cumulative"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="本月和上月的累计到手">${prev}${cur}</svg>${legend}</div>`;
+}
+
+// Mole's 实际到账: what Apple has paid out over the whole history, read
+// against what buyers paid for the same days.
+function settledMetric(view, metric) {
+  const known = view.finance.filter((f) => f.rate !== null);
+  if (!view.finance.length) return metric('实际到账', '没有', '');
+  const paid = view.finance.reduce((n, f) => n + f.amount, 0);
+  const gross = known.reduce((n, f) => n + f.gross, 0);
+  const rate = gross > 0 ? ` · 入账 ${percent(known.reduce((n, f) => n + f.amount, 0) / gross)}` : '';
+  return metric('实际到账', money(paid, view.currency), `${view.finance.length} 个结算月${rate}`);
+}
+
+function monthSection(view) {
+  const mp = view.monthProgress;
+  if (!mp) return '';
+  const C = 2 * Math.PI * 42;
+  const share = mp.reported / mp.total;
+  const ring = `<div class="ring"><svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="42" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="48" cy="48" r="42" fill="none" stroke="var(--accent)" stroke-width="8" stroke-dasharray="${(C * share).toFixed(1)} ${C.toFixed(1)}"/></svg><div><strong>${Math.round(share * 100)}%</strong><small>${mp.reported}/${mp.total} 天</small></div></div>`;
+  const card = (label, value, note) => `<article><span>${esc(label)}</span><strong>${value}</strong><em>${note}</em></article>`;
+  // Last month to the same day, read off its own running total.
+  const prevSame = mp.prev ? mp.prev.curve[Math.min(mp.reported, mp.prev.curve.length) - 1] : null;
+  const cards = [
+    card(mp.closed ? '当月到手' : '本月到手', money(mp.proceeds, view.currency), prevSame === null ? `${int(mp.sold)} 份` : `${mp.closed ? '上月' : '上月同期'} ${money(prevSame, view.currency)}`),
+    mp.forecast === null ? '' : card('预计月到手', money(mp.forecast, view.currency), `按日均 × ${mp.total} 天`),
+    card('月内日均', money(mp.dailyAverage, view.currency), `按 ${mp.reported} 个整天`),
+    card('退款压力', mp.refundRate === null ? '--' : percent(mp.refundRate), `${int(mp.refunded)} 份退款`),
+  ].join('');
+  return `<section class="panel"><h2>${esc(`${Number(mp.month.slice(5))} 月进度`)}</h2><div class="pace">${ring}<div class="mini">${cards}</div></div>${cumulativeChart(mp, view.currency)}</section>`;
+}
+
+// Crossed rules in one sentence, as Mole's brief opens; nothing crossed, no panel.
+function briefSection(view) {
+  if (!view.alerts.length) return '';
+  const danger = view.alerts.some((a) => a.level === 'danger');
+  const text = view.alerts.map((a) => `<span data-rule="${esc(a.rule)}">${esc(a.text)}</span>`).join('，');
+  return `<section class="panel"><h2>经营简报</h2><p class="alert${danger ? ' danger' : ''}">${text}</p></section>`;
+}
+
 function refundsSection(view) {
   if (!view.refunds.length) return '';
   const body = view.refunds.map((r, i) => `<tr${fold('refund', i)}><td>${esc(r.date)}</td><td>${esc(country(r.country))}</td><td>${esc(r.device)}</td><td class="wide-only">${esc(r.version)}</td><td class="wide-only">${r.units}</td><td class="refund">${money(r.price * r.units, r.currency)}</td></tr>`).join('');
@@ -235,8 +315,13 @@ function refundsSection(view) {
 
 function financeSection(view) {
   if (!view.finance.length) return '';
-  const body = view.finance.map((f, i) => `<tr${fold('finance', i)}><td>${esc(f.start)} 到 ${esc(f.end)}</td><td>${int(f.units)}</td><td>${money(f.amount, view.currency)}${f.unconverted ? ' <small>部分货币未折算</small>' : ''}</td></tr>`).join('');
-  return `<section class="panel s6"><h2>Apple 结算月</h2><div class="scroll"><table><thead><tr><th scope="col">结算周期</th><th scope="col">净份数</th><th scope="col">到手</th></tr></thead><tbody>${body}</tbody></table></div>${moreButton('finance', view.finance.length, '个月')}</section>`;
+  const body = view.finance.map((f, i) => `<tr${fold('finance', i)}><td>${esc(f.start.slice(2))} 到 ${esc(f.end.slice(2))}</td><td>${int(f.units)}</td><td>${money(f.amount, view.currency)}${f.unconverted ? ' <small>部分货币未折算</small>' : ''}</td><td>${f.rate === null ? '--' : percent(f.rate)}</td></tr>`).join('');
+  // The whole history's payout over what buyers paid, under the table as Mole's 全期打款 line.
+  const known = view.finance.filter((f) => f.rate !== null);
+  const paid = known.reduce((n, f) => n + f.amount, 0);
+  const gross = known.reduce((n, f) => n + f.gross, 0);
+  const all = gross > 0 ? `<p class="line">全期结算 ${money(paid, view.currency)}，入账 ${percent(paid / gross)}</p>` : '';
+  return `<section class="panel s6"><h2>Apple 结算月</h2><div class="scroll"><table><thead><tr><th scope="col">结算周期</th><th scope="col">净份数</th><th scope="col">到手</th><th scope="col">入账率</th></tr></thead><tbody>${body}</tbody></table></div>${moreButton('finance', view.finance.length, '个月')}${all}</section>`;
 }
 
 function storeSection(view) {
@@ -270,7 +355,8 @@ function iso3to2(code) {
 
 function controls(view) {
   const link = (r, c, text, on) => `<a href="/payroom?r=${encodeURIComponent(r)}&amp;c=${c}"${on ? ' aria-current="true"' : ''}>${esc(text)}</a>`;
-  const presets = [['all', '全部'], ['90d', '近90天'], ['30d', '近30天'], ['7d', '近7天']];
+  // Mole's order, shortest first: 当月, then the rolling windows, then 全部.
+  const presets = [['month', '当月'], ['7d', '近7天'], ['30d', '近30天'], ['90d', '近90天'], ['all', '全部']];
   const ranges = presets.map(([r, t]) => link(r, view.currency, t, view.range === r)).join('');
   const inMonth = view.range.startsWith('m:');
   // A month reads 2611: 2026-11 did not fit the desktop select and cost the
@@ -297,19 +383,17 @@ function renderDashboard(view) {
   const p = view.pulse;
   // The previous window's own figure: early windows sold a handful, so a
   // percentage reads +1643% and says nothing.
-  const delta = (prev, what = '上期') => `${what} ${prev}`;
+  const delta = (prev, what = p.prevLabel) => `${what} ${prev}`;
   // The first half of a note gives way on phones, its dot with it.
   const lead = (text, rest) => (rest ? `<span class="wide-only">${text} · </span>${rest}` : text);
   const f = view.analytics.funnel;
-  const m = p.month;
-  const monthName = m ? (m.month === view.today.slice(0, 7) ? '本月' : `${Number(m.month.slice(5))} 月`) : '';
   // Apple's sales report reaches the previous Pacific day at best, so the newest
   // day leads (maintainer 2026-11-14 asked for today's sales on top).
   const metrics = [
     metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date.slice(5))} 售出 ${int(latest.units)} 份` : ''),
     metric(isAll ? '累计到手' : '到手', money(t.proceeds, view.currency), p.prev ? lead(`销售额 ${money(t.net, view.currency)}`, delta(money(p.prev.proceeds, view.currency))) : `销售额 ${money(t.net, view.currency)}${isAll ? `<span class="wide-only"> · 自 ${esc(view.from.slice(2))}</span>` : ''}`),
     metric(isAll ? '累计售出' : '售出', `${int(t.sold)} 份`, p.prev ? lead(`退款 ${int(t.refunded)}`, delta(`${int(p.prev.sold)} 份`)) : (t.refunded ? `退款 ${int(t.refunded)} 份 · ${percent(t.refundRate)}` : '没有退款')),
-    metric(`${monthName}到手`, m ? money(m.cur.proceeds, view.currency) : '没有', m ? lead(`${int(m.cur.sold)} 份`, m.prev ? delta(money(m.prev.proceeds, view.currency), '上月同期') : '') : ''),
+    settledMetric(view, metric),
     metric('日均到手', p.daily ? money(p.daily.proceeds, view.currency) : '没有', p.daily ? `日均 ${p.daily.sold.toFixed(1).replace(/\.0$/, '')} 份` : ''),
     metric('产品页转化', f.pageViews ? percent(f.purchases / f.pageViews) : '没有', f.pageViews ? `浏览 ${int(f.pageViews)} · 购买 ${int(f.purchases)}` : ''),
     metric('App Store 曝光', f.impressions ? int(f.impressions) : '没有', f.impressions ? `点进产品页 ${percent(f.pageViews / f.impressions)}` : ''),
@@ -320,11 +404,13 @@ function renderDashboard(view) {
   const pair = (a, b) => (a && b ? a + b : (a || b).replace(/class="panel([^"]*) s\d/, 'class="panel$1'));
   const panels = [
     chart(view),
-    pair(recentSection(view), splitTable(view, '国家和地区', view.countries, country, '国家和地区', 's5', 'country')),
+    monthSection(view),
+    pair(recentSection(view), countryTable(view)),
     pair(channels(view), splitTable(view, '设备', view.devices, (k) => k, '设备', 's5')),
     pair(trafficSection(view), reviewsSection(view)),
     pair(refundsSection(view), financeSection(view)),
     pair(storeSection(view), otherDownloadsSection(view)),
+    briefSection(view),
   ].join('');
   // A select is as wide as its longest option; size it to the chosen one.
   const fit = `<script>document.querySelectorAll('.range-select').forEach((s)=>{const st=getComputedStyle(s);const m=document.createElement('span');m.textContent=s.options[s.selectedIndex].text;m.style.cssText='position:absolute;visibility:hidden;white-space:pre';['fontFamily','fontSize','fontWeight','fontVariantNumeric','letterSpacing'].forEach((k)=>{m.style[k]=st[k];});document.body.appendChild(m);s.style.width=Math.ceil(m.getBoundingClientRect().width+parseFloat(st.paddingLeft)+parseFloat(st.paddingRight)+parseFloat(st.borderLeftWidth)+parseFloat(st.borderRightWidth)+1)+'px';m.remove();});</script>`;

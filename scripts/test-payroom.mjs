@@ -97,13 +97,13 @@ eq(week.traffic.sources[0], { source: 'github.com', count: 12 }, 'sources sum ac
 eq(week.pulse.daily.days, 6, 'the daily average divides by reported days');
 near(week.pulse.daily.proceeds, (2 * 76.89) / 6, 'daily proceeds net of the refund');
 eq(week.pulse.prev, null, 'no comparison when history does not reach the previous window');
-eq(week.pulse.month.prev, null, 'no month comparison before the first sale');
-eq([week.pulse.month.month, week.pulse.month.cur.sold], ['2026-11', 3], 'this month runs to the newest report');
+eq(week.monthProgress.prev, null, 'no month comparison before the first sale');
+eq([week.monthProgress.month, week.monthProgress.sold], ['2026-11', 3], 'this month runs to the newest report');
 {
   const p = lib.emptyState();
   p.sales.rows = lib.salesRowsFromReport([
     HEAD,
-    row({ type: '1F', units: 2, proceeds: '76.89', date: '10/02/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
+    row({ type: '1F', units: 2, proceeds: '76.89', date: '10/01/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
     row({ type: '1F', units: 1, proceeds: '76.89', date: '10/26/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
     row({ type: '1F', units: 1, proceeds: '76.89', date: '10/31/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
     row({ type: '1F', units: 4, proceeds: '76.89', date: '11/03/2026', cur: 'CNY', country: 'CN', price: '88.00' }),
@@ -114,7 +114,9 @@ eq([week.pulse.month.month, week.pulse.month.cur.sold], ['2026-11', 3], 'this mo
   const v = lib.buildView(p, { range: '7d', currency: 'CNY', today });
   eq(v.pulse.prev.sold, 1, 'the previous window stops as many days early as this one: 10-31 is left out');
   eq(v.pulse.trafficPrev, 4, 'traffic compares the same days a week earlier, cut where GA stops (11-02)');
-  eq(v.pulse.month.prev.sold, 2, 'last month to the same day');
+  const mv = lib.buildView(p, { range: 'month', currency: 'CNY', today });
+  eq([mv.pulse.prev.sold, mv.pulse.prevLabel], [2, '上月同期'], '当月 compares with last month to the same day');
+  eq(v.pulse.prevLabel, '上期', 'a rolling window compares with the one before it');
   const html = page.renderDashboard(v);
   assert.ok(html.includes('上期 1 份') && html.includes('上月同期'), 'the cards show the previous figures');
   assert.ok(html.includes('href="/assets/icon-64.png"') && html.includes('rel="apple-touch-icon" href="/assets/icon-180.png"'), 'the tab and home-screen icons are the site\'s own');
@@ -354,5 +356,71 @@ eq(picked, 'miaoyan_payroom_view=m%3A2026-10%7CCNY', 'a pick is remembered');
 eq(JSON.stringify(q('/payroom', picked).view), JSON.stringify({ range: 'm:2026-10', currency: 'CNY' }), 'a bare visit opens the saved view');
 eq(JSON.stringify(q('/payroom?c=USD', picked).view), JSON.stringify({ range: 'm:2026-10', currency: 'USD' }), 'a currency pick keeps the saved range');
 eq(JSON.stringify(q('/payroom', 'miaoyan_payroom_view=bogus%7CEUR').view), JSON.stringify({ range: 'all', currency: 'USD' }), 'a bad saved value falls back');
+
+// ---- Mole's reading: 当月, month progress, records, countries, payouts, alerts
+{
+  const mk = (date, units, country = 'CN', price = 88, proceeds = 76.89) => [date, '1F', units, proceeds, 'CNY', price, 'CNY', country, 'iPhone', '', ''];
+  const st = lib.emptyState();
+  st.fx = { rates: { USD: 1, CNY: 7 } };
+  st.sales.rows = [mk('2026-10-01', 2, 'US'), mk('2026-10-20', 1), mk('2026-11-02', 3), mk('2026-11-05', 1, 'JP'), mk('2026-11-06', -1)];
+  // A day Apple reported with no sale still has a report (updates, redownloads).
+  for (let d = '2026-10-01'; d <= '2026-11-10'; d = lib.addDays(d, 1)) st.sales.dates[d] = 'ok';
+  const T = '2026-11-12';
+
+  const mv = lib.buildView(st, { range: 'month', today: T });
+  eq([mv.from, mv.to], ['2026-11-01', '2026-11-11'], '当月 runs from the 1st to yesterday');
+  eq(lib.buildView(st, { range: 'month', today: '2026-12-01' }).from, '2026-11-01', 'on the 1st 当月 is the month just ended');
+  eq(mv.months.includes('2026-11'), false, '按月 lists closed months only');
+  eq(lib.buildView(st, { range: 'm:2026-11', today: T }).range, 'month', 'a remembered running month reads as 当月');
+
+  const mp = mv.monthProgress;
+  eq([mp.month, mp.reported, mp.total], ['2026-11', 10, 30], 'progress counts the reported days of the month');
+  near(mp.proceeds, 3 * 76.89, 'the month nets its refund');
+  near(mp.forecast, (3 * 76.89 / 10) * 30, 'the forecast is the daily mean times the month');
+  eq(mp.curve.length, 10, 'the current line stops at the last reported day');
+  eq(mp.prev.month, '2026-10', 'the dashed line is the previous month');
+  near(mp.prev.proceeds, 3 * 76.89, 'and its whole-month total');
+  eq(lib.buildView(st, { range: 'm:2026-10', today: T }).monthProgress.prev, null, 'a previous month sales did not fully cover draws nothing');
+  eq(lib.buildView(st, { range: 'm:2026-10', today: T }).monthProgress.forecast, null, 'a closed month has no forecast');
+
+  eq(mv.records.units, { date: '2026-11-02', value: 3 }, 'the unit record is lifetime');
+  eq(lib.buildView(st, { range: '7d', today: T }).records.units.date, '2026-11-02', 'whatever the window');
+
+  const all = lib.buildView(st, { range: 'all', today: T });
+  const jp = all.countries.find((c) => c.key === 'JP');
+  eq(jp.first, '2026-11-05', 'a country carries its first sale date');
+  near(jp.share, 1 / 7, 'and its share of units in the window');
+  eq(lib.buildView(st, { range: 'month', today: T }).countries.find((c) => c.key === 'CN').first, '2026-10-20', 'the first sale ignores the window');
+
+  st.finance.months = { '2027-01': [{ start: '2026-10-01', end: '2026-10-31', quantity: 3, amount: 180, currency: 'CNY' }] };
+  const fin = lib.buildView(st, { range: 'all', today: T }).finance[0];
+  near(fin.gross, 3 * 88, 'the payout reads against what buyers paid for the same days');
+  near(fin.rate, 180 / (3 * 88), 'as a rate');
+  assert.ok(page.renderDashboard(lib.buildView(st, { range: 'all', today: T })).includes('全期结算'), 'the lifetime payout line renders');
+  checks += 1;
+
+  // Each alert is proven to fire on a sample that should light it, and stay
+  // dark on one that should not.
+  const quiet = lib.emptyState();
+  quiet.fx = st.fx;
+  quiet.sales.rows = [];
+  for (let d = '2026-10-01'; d <= '2026-11-10'; d = lib.addDays(d, 1)) {
+    quiet.sales.dates[d] = 'ok';
+    if (d <= '2026-11-06') quiet.sales.rows.push(mk(d, 1));
+  }
+  const rules = (s0, today = '2026-11-11') => lib.buildView(s0, { today }).alerts.map((x) => x.rule);
+  eq(rules(quiet), ['连续零销量'], 'four silent days at one a day light the silence rule');
+  quiet.sales.rows.push(mk('2026-11-08', 1));
+  eq(rules(quiet), [], 'two silent days at one a day stay quiet');
+  quiet.sales.rows.push(mk('2026-11-07', -1), mk('2026-11-08', -1));
+  eq(rules(quiet), ['退款率'], 'two refunds over 20% of the week light the refund rule');
+  eq(rules(quiet, '2026-11-14'), ['退款率', '销售报表'], 'a sales report three days behind is called out');
+  quiet.store.versions = [{ platform: 'MAC_OS', version: '4.12.0', state: 'REJECTED' }];
+  assert.ok(rules(quiet).includes('审核'), 'a rejected build is called out');
+  const brief = page.renderDashboard(lib.buildView(quiet, { today: '2026-11-11' }));
+  assert.ok(brief.includes('经营简报') && brief.includes('class="alert danger"'), 'crossed rules render as one sentence');
+  assert.ok(!page.renderDashboard(lib.buildView(st, { today: T })).includes('经营简报'), 'nothing crossed, no panel');
+  checks += 3;
+}
 
 console.log(`payroom: ${checks} checks passed`);

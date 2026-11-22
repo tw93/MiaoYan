@@ -74,7 +74,7 @@ function query(req) {
   const r = url.searchParams.get('r') || savedRange || '';
   const c = url.searchParams.get('c') || savedCurrency || '';
   const view = {
-    range: /^(7d|30d|90d|all|m:\d{4}-\d{2})$/.test(r) ? r : 'all',
+    range: /^(7d|30d|90d|month|all|m:\d{4}-\d{2})$/.test(r) ? r : 'all',
     currency: c === 'CNY' ? 'CNY' : 'USD',
   };
   const cookie = url.searchParams.has('r') || url.searchParams.has('c') ? `${VIEW_COOKIE}=${encodeURIComponent(`${view.range}|${view.currency}`)}; HttpOnly; Secure; SameSite=Lax; Path=/payroom; Max-Age=${VIEW_SECONDS}` : '';
