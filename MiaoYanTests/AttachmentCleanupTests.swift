@@ -133,6 +133,92 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertTrue(names.contains("unused.png"))
     }
 
+    /// Only notes directly inside a folder with an `i/` were counted, so a
+    /// note one folder down reaching that `i/` with `../`, in a folder with
+    /// no `i/` of its own and not opened this run, lost its image.
+    @MainActor
+    func testANoteInASubfolderWithoutItsOwnImagesKeepsItsParentsImage() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: work.appendingPathComponent("2026"), withIntermediateDirectories: true)
+        try "# Q1\n\n![](../i/chart.png)\n".write(to: work.appendingPathComponent("2026/Q1.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/chart.png"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+        for folder in storage.subfolders(of: root) {
+            _ = storage.subfolders(of: folder)
+        }
+
+        let result = await orphans(in: storage)
+
+        let names = Set((result ?? []).map(\.lastPathComponent))
+        XCTAssertNotNil(result)
+        XCTAssertFalse(names.contains("chart.png"), "Work/2026/Q1.md uses it through ../i/")
+        XCTAssertTrue(names.contains("unused.png"), "an image nothing references is still found")
+    }
+
+    /// The walk below a folder follows symlinked folders, each directory
+    /// once, so a link back up the tree ends the walk instead of looping.
+    @MainActor
+    func testALinkBackUpTheTreeIsWalkedOnce() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let year = work.appendingPathComponent("2026", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: year, withIntermediateDirectories: true)
+        try manager.createSymbolicLink(at: year.appendingPathComponent("back"), withDestinationURL: work)
+        try "# Q1\n\n![](../i/chart.png)\n".write(to: year.appendingPathComponent("Q1.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/chart.png"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        _ = storage.add(project: Project(url: work, label: "Work"))
+
+        let result = await orphans(in: storage)
+
+        let names = Set((result ?? []).map(\.lastPathComponent))
+        XCTAssertNotNil(result)
+        XCTAssertFalse(names.contains("chart.png"))
+        XCTAssertTrue(names.contains("unused.png"))
+    }
+
+    /// A folder below one whose images are scanned that cannot be listed
+    /// hides its notes, so nothing is reported, as for an unreadable note.
+    @MainActor
+    func testAFolderThatCannotBeListedReportsNothing() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let locked = work.appendingPathComponent("Locked", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: locked, withIntermediateDirectories: true)
+        try "# Hidden\n\n![](../i/used.png)\n".write(to: locked.appendingPathComponent("hidden.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/used.png"))
+        try manager.setAttributes([.posixPermissions: 0o000], ofItemAtPath: locked.path)
+        defer { try? manager.setAttributes([.posixPermissions: 0o755], ofItemAtPath: locked.path) }
+
+        let storage = Storage(loadsLibrary: false)
+        _ = storage.add(project: Project(url: work, label: "Work"))
+
+        let result = await orphans(in: storage)
+        XCTAssertNil(result, "the notes in Locked could not be counted")
+    }
+
+    @MainActor
+    private func orphans(in storage: Storage) async -> [URL]? {
+        let done = expectation(description: "orphan scan")
+        var result: [URL]?
+        storage.findOrphanAttachments { urls in
+            result = urls
+            done.fulfill()
+        }
+        await fulfillment(of: [done], timeout: 10)
+        return result
+    }
+
     // MARK: - Which folders are listed
 
     /// `assets` is hidden as an image folder, but a folder of notes that

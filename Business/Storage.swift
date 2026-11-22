@@ -1420,17 +1420,31 @@ class Storage {
             // A folder can be registered (the sidebar lists its subfolders)
             // before its notes are loaded. Every folder whose attachments are
             // scanned must also have every note in it counted, listed or not.
-            let (listings, trashFiles) = await Task.detached(priority: .userInitiated) {
-                (
-                    folderURLs.map { Storage.attachmentListing(of: $0, extensions: extensions) },
-                    trashURLs.map { Storage.noteFiles(in: $0, extensions: extensions) }
-                )
+            // A note anywhere below such a folder can reach its i/ with ../,
+            // so the whole tree under it is walked, each directory once.
+            let (scanned, trashFiles) = await Task.detached(priority: .userInitiated) {
+                var walked = Set(trashURLs.map { $0.resolvingSymlinksInPath().path })
+                let listings = Result {
+                    try folderURLs.map { try Storage.attachmentListing(of: $0, extensions: extensions, walked: &walked) }
+                }
+                return (listings, trashURLs.map { Storage.noteFiles(in: $0, extensions: extensions) })
             }.value
+            let listings: [(attachmentFolders: [URL], noteFiles: [URL])]
+            switch scanned {
+            case .success(let value): listings = value
+            case .failure(let error):
+                AppDelegate.trackError(error, context: "Storage.findOrphanAttachments.list")
+                completion(nil)
+                return
+            }
             var attachmentFolders: [URL] = []
             for (project, listing) in zip(folders, listings) where !listing.attachmentFolders.isEmpty {
                 attachmentFolders += listing.attachmentFolders
-                for url in listing.noteFiles where !listed.contains(url.standardizedFileURL.path) {
-                    unloaded.append(Note(url: url, with: project))
+                for url in listing.noteFiles
+                where !listed.contains(url.standardizedFileURL.path)
+                    && !listed.contains(url.resolvingSymlinksInPath().standardizedFileURL.path)
+                {
+                    unloaded.append(Note(url: url, with: self.folderProject(of: url, below: project)))
                 }
             }
             for (project, files) in zip(trashFolders, trashFiles) {
@@ -1466,9 +1480,30 @@ class Storage {
         }
     }
 
-    /// A folder's attachment folders and the note files directly inside it,
-    /// matching the extension in any case so README.MD counts.
-    nonisolated private static func attachmentListing(of folder: URL, extensions: [String]) -> (attachmentFolders: [URL], noteFiles: [URL]) {
+    /// The folder a note found by the orphan scan sits in, as a project:
+    /// `/i/` resolves against it. A folder the sidebar has not registered
+    /// gets a project that is not added to storage.
+    private func folderProject(of note: URL, below scanned: Project) -> Project {
+        let folder = note.deletingLastPathComponent()
+        let paths = [folder.standardizedFileURL.path, folder.resolvingSymlinksInPath().standardizedFileURL.path]
+        if paths.contains(scanned.url.standardizedFileURL.path) { return scanned }
+        if let registered = projects.first(where: { !$0.isTrash && paths.contains($0.url.standardizedFileURL.path) }) {
+            return registered
+        }
+        return Project(url: folder, parent: scanned)
+    }
+
+    /// A folder's attachment folders and every note file below it, at any
+    /// depth, matching the extension in any case so README.MD counts. A note
+    /// in a subfolder reaches this folder's i/ with ../, so counting only the
+    /// notes directly inside it reported their images as unused. Hidden,
+    /// attachment and package folders are not entered, and a directory in
+    /// `walked` (the Trash, or one already walked from another folder or
+    /// through a symlink) is entered once. Throws when a folder below it
+    /// cannot be listed, since the notes in it would go uncounted.
+    nonisolated private static func attachmentListing(
+        of folder: URL, extensions: [String], walked: inout Set<String>
+    ) throws -> (attachmentFolders: [URL], noteFiles: [URL]) {
         let attachmentFolders = attachmentDirectoryNames.compactMap { name -> URL? in
             let folderURL = folder.appendingPathComponent(name)
             var isDir = ObjCBool(false)
@@ -1476,7 +1511,31 @@ class Storage {
             return folderURL
         }
         guard !attachmentFolders.isEmpty else { return ([], []) }
-        return (attachmentFolders, noteFiles(in: folder, extensions: extensions))
+        var notes: [URL] = []
+        var pending = [folder]
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isSymbolicLinkKey]
+        while let directory = pending.popLast() {
+            guard walked.insert(directory.resolvingSymlinksInPath().path).inserted else { continue }
+            let items = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: keys, options: .skipsHiddenFiles)
+            for item in items {
+                let name = item.lastPathComponent
+                guard !name.hasPrefix(".") else { continue }
+                // A linked folder is walked like any other, read through its
+                // target, and `walked` stops a link back up the tree.
+                var values = try? item.resourceValues(forKeys: Set(keys))
+                if values?.isSymbolicLink == true {
+                    values = try? item.resolvingSymlinksInPath().resourceValues(forKeys: Set(keys))
+                }
+                if values?.isDirectory == true {
+                    if values?.isPackage != true, !attachmentDirectoryNames.contains(name) {
+                        pending.append(item)
+                    }
+                } else if extensions.contains(item.pathExtension.lowercased()) {
+                    notes.append(item)
+                }
+            }
+        }
+        return (attachmentFolders, notes)
     }
 
     nonisolated private static func noteFiles(in folder: URL, extensions: [String]) -> [URL] {
