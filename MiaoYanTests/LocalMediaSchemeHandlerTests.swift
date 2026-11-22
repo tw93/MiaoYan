@@ -131,6 +131,14 @@ final class LocalMediaSchemeHandlerTests: XCTestCase {
         XCTAssertEqual(tailHeaders["Content-Range"], "bytes \(cap * 3)-\(size - 1)/\(size)")
     }
 
+    /// A file that shrinks to nothing between sizing and reading read zero
+    /// bytes, and `start + 0 - 1` underflowed and crashed the app.
+    func testAnEmptyReadIsNoRange() {
+        XCTAssertNil(LocalMediaSchemeHandler.contentRange(from: 0, count: 0, size: 100))
+        XCTAssertNil(LocalMediaSchemeHandler.contentRange(from: 40, count: 0, size: 100))
+        XCTAssertEqual(LocalMediaSchemeHandler.contentRange(from: 10, count: 10, size: 100), "bytes 10-19/100")
+    }
+
     func testRangeHeaderForms() {
         XCTAssertEqual(LocalMediaSchemeHandler.byteRange("bytes=0-1", size: 100), 0..<2)
         XCTAssertEqual(LocalMediaSchemeHandler.byteRange("bytes=90-", size: 100), 90..<100)

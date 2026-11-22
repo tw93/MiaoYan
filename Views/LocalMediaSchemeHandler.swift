@@ -93,11 +93,25 @@ final class LocalMediaSchemeHandler: NSObject, WKURLSchemeHandler {
             let data = try handle.read(upToCount: Int(bytes.count)) ?? Data()
             headers["Content-Length"] = String(data.count)
             guard requested != nil else { return .file(status: 200, headers: headers, data: data) }
-            headers["Content-Range"] = "bytes \(bytes.lowerBound)-\(bytes.lowerBound + UInt64(data.count) - 1)/\(size)"
+            guard let contentRange = contentRange(from: bytes.lowerBound, count: data.count, size: size) else {
+                // The file shrank past the range between sizing and reading.
+                headers["Content-Range"] = "bytes */\(size)"
+                headers["Content-Length"] = "0"
+                return .file(status: 416, headers: headers, data: Data())
+            }
+            headers["Content-Range"] = contentRange
             return .file(status: 206, headers: headers, data: data)
         } catch {
             return .failure(.cannotOpenFile)
         }
+    }
+
+    /// `Content-Range` for `count` bytes read from `start`, or nil when none
+    /// were: a file that shrank to nothing between sizing and reading made
+    /// `start + 0 - 1` underflow and the app crash (2026-11-22).
+    nonisolated static func contentRange(from start: UInt64, count: Int, size: UInt64) -> String? {
+        guard count > 0 else { return nil }
+        return "bytes \(start)-\(start + UInt64(count) - 1)/\(size)"
     }
 
     /// The bytes one `bytes=start-end`, `bytes=start-` or `bytes=-suffix`
