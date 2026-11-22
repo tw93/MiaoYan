@@ -242,7 +242,8 @@ class Storage {
     public func trashHasNotes() -> Bool {
         if !getAllTrash().isEmpty { return true }
         guard let trash = getDefaultTrash()?.url else { return false }
-        return Self.noteFiles(in: trash, extensions: allowedExtensions).contains {
+        let items = (try? FileManager.default.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
+        return items.filter { allowedExtensions.contains($0.pathExtension.lowercased()) }.contains {
             (try? $0.extendedAttribute(forName: AppIdentifier.removedFromTrashKey)) == nil
         }
     }
@@ -1413,16 +1414,31 @@ class Storage {
             // A note anywhere below such a folder can reach its i/ with ../,
             // so the whole tree under it is walked, each directory once.
             let (scanned, trashFiles) = await Task.detached(priority: .userInitiated) {
+                // With no i/ or files/ anywhere there is nothing to clean, and
+                // no note needs reading: one only in iCloud must not turn
+                // "nothing unused" into a failure.
+                guard folderURLs.contains(where: { !Storage.attachmentFolders(in: $0).isEmpty }) else {
+                    return (Result<[(attachmentFolders: [URL], noteFiles: [URL])], Error>.success([]), Result<[[URL]], Error>.success([]))
+                }
                 var walked = Set(trashURLs.map { $0.resolvingSymlinksInPath().path })
                 let listings = Result {
                     try folderURLs.map { try Storage.attachmentListing(of: $0, extensions: extensions, walked: &walked) }
                 }
-                return (listings, trashURLs.map { Storage.noteFiles(in: $0, extensions: extensions) })
+                // The Trash is read the same way, folders inside it included:
+                // a note there that cannot be read keeps everything.
+                var trashWalked = Set<String>()
+                let trash = Result {
+                    try trashURLs.map { try Storage.noteFiles(below: $0, extensions: extensions, walked: &trashWalked) }
+                }
+                return (listings, trash)
             }.value
             let listings: [(attachmentFolders: [URL], noteFiles: [URL])]
-            switch scanned {
-            case .success(let value): listings = value
-            case .failure(let error):
+            let trashListings: [[URL]]
+            switch (scanned, trashFiles) {
+            case (.success(let value), .success(let trash)):
+                listings = value
+                trashListings = trash
+            case (.failure(let error), _), (_, .failure(let error)):
                 AppDelegate.trackError(error, context: "Storage.findOrphanAttachments.list")
                 completion(nil)
                 return
@@ -1434,7 +1450,10 @@ class Storage {
             for project in self.projects where !project.isTrash {
                 folderProjects[project.url.standardizedFileURL.path] = project
             }
-            for (project, listing) in zip(folders, listings) where !listing.attachmentFolders.isEmpty {
+            // Every folder's notes count, with or without an i/ of its own: a
+            // note anywhere in the library may point at any folder's i/ with
+            // ../, and the link check allows that up to the library root.
+            for (project, listing) in zip(folders, listings) {
                 attachmentFolders += listing.attachmentFolders
                 for url in listing.noteFiles
                 where !listed.contains(url.standardizedFileURL.path)
@@ -1443,7 +1462,7 @@ class Storage {
                     unloaded.append(Note(url: url, with: Self.folderProject(of: url, below: project, in: &folderProjects)))
                 }
             }
-            for (project, files) in zip(trashFolders, trashFiles) {
+            for (project, files) in zip(trashFolders, trashListings) {
                 for url in files where !listed.contains(url.standardizedFileURL.path) {
                     unloaded.append(Note(url: url, with: project))
                 }
@@ -1489,24 +1508,42 @@ class Storage {
     }
 
     /// A folder's attachment folders and every note file below it, at any
-    /// depth, matching the extension in any case so README.MD counts. A note
-    /// in a subfolder reaches this folder's i/ with ../, so counting only the
-    /// notes directly inside it reported their images as unused. Hidden,
-    /// attachment and package folders are not entered, and a directory in
-    /// `walked` (the Trash, or one already walked from another folder or
-    /// through a symlink) is entered once. Throws when a folder below it
-    /// cannot be listed, since the notes in it would go uncounted.
+    /// depth. A note in a subfolder reaches this folder's i/ with ../, and a
+    /// note in a folder with no i/ of its own can reach another folder's, so
+    /// the notes are walked whether this folder has attachments or not
+    /// (2026-11-22: a note in a never-opened folder with no i/ above it went
+    /// unread, and the image it pointed at was offered for the Trash).
     nonisolated private static func attachmentListing(
         of folder: URL, extensions: [String], walked: inout Set<String>
     ) throws -> (attachmentFolders: [URL], noteFiles: [URL]) {
-        let attachmentFolders = attachmentDirectoryNames.compactMap { name -> URL? in
+        (attachmentFolders(in: folder), try noteFiles(below: folder, extensions: extensions, walked: &walked))
+    }
+
+    nonisolated private static func attachmentFolders(in folder: URL) -> [URL] {
+        attachmentDirectoryNames.compactMap { name -> URL? in
             let folderURL = folder.appendingPathComponent(name)
             var isDir = ObjCBool(false)
             guard FileManager.default.fileExists(atPath: folderURL.path, isDirectory: &isDir), isDir.boolValue else { return nil }
             return folderURL
         }
-        guard !attachmentFolders.isEmpty else { return ([], []) }
+    }
+
+    /// Every note file below `folder`, at any depth, matching the extension
+    /// in any case so README.MD counts. Hidden, attachment and package
+    /// folders are not entered, and a directory in `walked` (the Trash, or one
+    /// already walked from another folder or through a symlink) is entered
+    /// once. Throws when a folder below it cannot be listed or a note is only
+    /// in iCloud, since the notes there would go uncounted. A `folder` that is
+    /// not there holds no notes: the library's Trash is registered before the
+    /// first delete makes it, and a folder removed in Finder can still be
+    /// registered.
+    nonisolated private static func noteFiles(
+        below folder: URL, extensions: [String], walked: inout Set<String>
+    ) throws -> [URL] {
+        var isFolder = ObjCBool(false)
+        guard FileManager.default.fileExists(atPath: folder.path, isDirectory: &isFolder), isFolder.boolValue else { return [] }
         var notes: [URL] = []
+        var onlyInICloud: URL?
         var pending = [folder]
         let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isSymbolicLinkKey]
         while let directory = pending.popLast() {
@@ -1516,12 +1553,13 @@ class Storage {
                 let name = item.lastPathComponent
                 if name.hasPrefix(".") {
                     // `.Note.md.icloud`: a note iCloud keeps only online. Its
-                    // links cannot be read, so nothing is cleaned this time,
-                    // and the download it starts lets the next run read it.
+                    // links cannot be read, so nothing is cleaned this time;
+                    // every such note's download starts now, so the next run
+                    // can read them all.
                     let inner = (String(name.dropFirst()) as NSString).deletingPathExtension
                     if (name as NSString).pathExtension == "icloud", extensions.contains((inner as NSString).pathExtension.lowercased()) {
                         try? FileManager.default.startDownloadingUbiquitousItem(at: item)
-                        throw CocoaError(.fileReadUnknown, userInfo: [NSFilePathErrorKey: item.path])
+                        onlyInICloud = onlyInICloud ?? item
                     }
                     continue
                 }
@@ -1549,12 +1587,8 @@ class Storage {
                 }
             }
         }
-        return (attachmentFolders, notes)
-    }
-
-    nonisolated private static func noteFiles(in folder: URL, extensions: [String]) -> [URL] {
-        let items = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
-        return items.filter { extensions.contains($0.pathExtension.lowercased()) }
+        if let onlyInICloud { throw CocoaError(.fileReadUnknown, userInfo: [NSFilePathErrorKey: onlyInICloud.path]) }
+        return notes
     }
 
     nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {

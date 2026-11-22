@@ -248,6 +248,82 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertNil(withFolderLink, "the notes behind Archive could not be counted")
     }
 
+    /// Only folders with an `i/` of their own, and the folders below them,
+    /// had their notes read. A note in a folder never opened, with no `i/`
+    /// anywhere above it, pointing at another folder's image with `../`,
+    /// went unread, and that image was offered for the Trash (2026-11-22).
+    @MainActor
+    func testANoteUnderFoldersWithNoImagesKeepsAnotherFoldersImage() async throws {
+        let manager = FileManager.default
+        let library = tempDir.appendingPathComponent("Lib", isDirectory: true)
+        try manager.createDirectory(at: library.appendingPathComponent("A/B"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: library.appendingPathComponent("Other/i"), withIntermediateDirectories: true)
+        try "# B\n\n![](../../Other/i/x.png)\n".write(to: library.appendingPathComponent("A/B/n.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: library.appendingPathComponent("Other/i/x.png"))
+        try Data([0x89]).write(to: library.appendingPathComponent("Other/i/unused.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: library, label: "root")
+        _ = storage.add(project: root)
+        // A and Other are registered, B is never opened.
+        _ = storage.subfolders(of: root)
+
+        let names = await orphans(in: storage).map { Set($0.map(\.lastPathComponent)) }
+        XCTAssertEqual(names, ["unused.png"], "A/B/n.md uses x.png")
+    }
+
+    /// The Trash was read one level deep, skipping hidden files and any
+    /// folder it could not list, so a trashed folder's note lost its image
+    /// and an iCloud-only note there counted for nothing (2026-11-22).
+    @MainActor
+    func testTheTrashIsReadToTheBottomAndAnICloudNoteThereReportsNothing() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let trash = tempDir.appendingPathComponent(".Trash", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: trash.appendingPathComponent("Trip"), withIntermediateDirectories: true)
+        try "# Old\n\n![](/i/old.png)\n".write(to: trash.appendingPathComponent("Trip/old.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/old.png"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+        _ = storage.add(project: Project(url: trash, isTrash: true))
+        _ = storage.subfolders(of: root)
+
+        let names = await orphans(in: storage).map { Set($0.map(\.lastPathComponent)) }
+        XCTAssertEqual(names, ["unused.png"], "the note in the trashed Trip folder can come back with old.png")
+
+        try Data([0x62, 0x70]).write(to: trash.appendingPathComponent(".Q3.md.icloud"))
+        let withPlaceholder = await orphans(in: storage)
+        XCTAssertNil(withPlaceholder, "Q3.md in the Trash may use unused.png and cannot be read")
+    }
+
+    /// The library's Trash is registered before the first delete makes it,
+    /// and a library with no `i/` or `files/` has nothing to clean: neither
+    /// may turn the scan into "some notes could not be read" (2026-11-22).
+    @MainActor
+    func testAMissingTrashAndALibraryWithoutAttachmentsReportNoFailure() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("2026"), withIntermediateDirectories: true)
+        try "# Kept\n".write(to: work.appendingPathComponent("kept.md"), atomically: true, encoding: .utf8)
+        try Data([0x62, 0x70]).write(to: work.appendingPathComponent("2026/.Q2.md.icloud"))
+
+        let storage = Storage(loadsLibrary: false)
+        _ = storage.add(project: Project(url: work, label: "Work"))
+        _ = storage.add(project: Project(url: tempDir.appendingPathComponent(".Trash", isDirectory: true), isTrash: true))
+        let withoutAttachments = await orphans(in: storage)
+        XCTAssertEqual(withoutAttachments, [], "no i/ anywhere: nothing to clean, nothing to read")
+
+        try manager.removeItem(at: work.appendingPathComponent("2026/.Q2.md.icloud"))
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+        let withMissingTrash = await orphans(in: storage)
+        XCTAssertEqual(withMissingTrash.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"], "a Trash not made yet holds no notes")
+    }
+
     @MainActor
     private func orphans(in storage: Storage) async -> [URL]? {
         let done = expectation(description: "orphan scan")
