@@ -7,7 +7,10 @@ Each gate matches the code's syntax (a whole statement or a function body), neve
 that mentions the fix cannot satisfy it.
 """
 
+import json
 import re
+import shutil
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -114,6 +117,32 @@ class MarkupFontGateTests(unittest.TestCase):
         body = code_lines(function_body(source("Helpers/NotesTextProcessor.swift"), "public static var markupFont: NSFont"))
         self.assertTrue(any('CTFontCreateUIFontForLanguage(.system, size, "en" as CFString)' in line for line in body), body)
         self.assertFalse(any(line.startswith("NSFont.systemFont(") for line in body), body)
+
+
+class PieColorGateTests(unittest.TestCase):
+    def test_pie_slices_are_eight_colours_apart_from_the_panel(self):
+        """Mermaid took pie1..3 from primary, secondary and tertiary, which are the paper and its panel, so slices 1
+        and 3 matched each other and the page (2026-11-22). theme-config.js now sets eight slice colours per theme."""
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("node is needed to resolve theme-config.js")
+        program = (
+            "global.window = {};"
+            "eval(require('fs').readFileSync(process.argv[1], 'utf8'));"
+            "const out = {};"
+            "for (const k of ['light', 'dark']) out[k] = window.ThemeColors.getMermaidConfig(k === 'dark').themeVariables;"
+            "console.log(JSON.stringify(out));"
+        )
+        themes = json.loads(subprocess.run(
+            [node, "-e", program, str(ROOT / "Resources/DownView.bundle/js/theme-config.js")],
+            check=True, capture_output=True, text=True).stdout)
+        for name, v in themes.items():
+            slices = [v[f"pie{i}"].upper() for i in range(1, 9)]
+            self.assertEqual(len(set(slices)), 8, f"{name}: {slices}")
+            self.assertNotIn(v["background"].upper(), slices, name)
+            self.assertNotIn(v["primaryColor"].upper(), slices, name)
+            self.assertEqual(v["pieOpacity"], "1", name)
+
 
 if __name__ == "__main__":
     unittest.main()

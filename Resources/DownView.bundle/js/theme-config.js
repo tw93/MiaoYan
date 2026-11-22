@@ -91,6 +91,37 @@ function getThemeColors(isDark = false) {
 }
 
 /**
+ * Pie slices. Mermaid takes pie1..3 from primary, secondary and tertiary,
+ * which here are the paper and its panel, so slices 1 and 3 matched each
+ * other and the page. These are markmap's branch hues softened toward the
+ * panel (light 55%, dark 45%, the dark teal 20% so it stays apart from the
+ * green), picked from three palettes rendered on the panel (2026-11-22),
+ * with blue, rose and olive added so eight slices never repeat a colour
+ * and the green and the teal never meet; opacity 1 so a slice matches its
+ * legend swatch.
+ * @param {boolean} isDark
+ * @param {string} textColor
+ * @param {string} panel - the diagram background, used between slices
+ * @returns {object} pie theme variables
+ */
+function pieColors(isDark, textColor, panel) {
+  const slices = isDark
+    ? ['#407E68', '#604C88', '#8A7151', '#586D86', '#605E58', '#896066', '#4EB592', '#767D4A']
+    : ['#93B099', '#B1A2D3', '#CCBA82', '#9CB0C2', '#BEBCB6', '#CEA8AB', '#97C1BA', '#B7BD95'];
+  const vars = {
+    pieSectionTextColor: textColor,
+    pieTitleTextColor: textColor,
+    pieLegendTextColor: textColor,
+    pieStrokeColor: panel,
+    pieStrokeWidth: '1.5px',
+    pieOuterStrokeWidth: '0px',
+    pieOpacity: '1'
+  };
+  for (let i = 0; i < 12; i++) vars['pie' + (i + 1)] = slices[i % slices.length];
+  return vars;
+}
+
+/**
  * Get Mermaid diagram configuration
  * @param {boolean} isDark - Whether dark mode is enabled
  * @returns {object} Mermaid configuration object
@@ -130,7 +161,8 @@ function getMermaidConfig(isDark = false) {
     noteTextColor: textColor,
     arrowheadColor: lineColor,
     relationColor: lineColor,
-    lineColor
+    lineColor,
+    ...pieColors(isDark, textColor, diagramBg)
   };
   return {
     startOnLoad: false,
