@@ -207,6 +207,47 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertNil(result, "the notes in Locked could not be counted")
     }
 
+    /// A note iCloud keeps only online (`.Q2.md.icloud`) cannot be read, so
+    /// the images it may use are not offered for cleaning.
+    @MainActor
+    func testANoteKeptOnlyInICloudReportsNothing() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: work.appendingPathComponent("2026"), withIntermediateDirectories: true)
+        try Data([0x62, 0x70]).write(to: work.appendingPathComponent("2026/.Q2.md.icloud"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/chart.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        _ = storage.add(project: Project(url: work, label: "Work"))
+
+        let result = await orphans(in: storage)
+        XCTAssertNil(result, "Q2.md may use chart.png and cannot be read")
+    }
+
+    /// A linked folder whose target is gone (an unmounted drive) hides its
+    /// notes, so nothing is reported; a broken link to an image is no folder
+    /// and does not stop the scan.
+    @MainActor
+    func testABrokenFolderLinkReportsNothingAndABrokenImageLinkDoesNot() async throws {
+        let manager = FileManager.default
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+        try manager.createSymbolicLink(
+            at: work.appendingPathComponent("old.png"), withDestinationURL: tempDir.appendingPathComponent("gone.png"))
+
+        let storage = Storage(loadsLibrary: false)
+        _ = storage.add(project: Project(url: work, label: "Work"))
+        let withImageLink = await orphans(in: storage)
+        XCTAssertEqual(withImageLink.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
+
+        try manager.createSymbolicLink(
+            at: work.appendingPathComponent("Archive"), withDestinationURL: tempDir.appendingPathComponent("Volumes/Ext/Archive"))
+        let withFolderLink = await orphans(in: storage)
+        XCTAssertNil(withFolderLink, "the notes behind Archive could not be counted")
+    }
+
     @MainActor
     private func orphans(in storage: Storage) async -> [URL]? {
         let done = expectation(description: "orphan scan")

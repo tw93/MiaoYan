@@ -1428,13 +1428,19 @@ class Storage {
                 return
             }
             var attachmentFolders: [URL] = []
+            // One project per folder, looked up by path: a deep library holds
+            // thousands of unlisted notes in a few hundred folders.
+            var folderProjects: [String: Project] = [:]
+            for project in self.projects where !project.isTrash {
+                folderProjects[project.url.standardizedFileURL.path] = project
+            }
             for (project, listing) in zip(folders, listings) where !listing.attachmentFolders.isEmpty {
                 attachmentFolders += listing.attachmentFolders
                 for url in listing.noteFiles
                 where !listed.contains(url.standardizedFileURL.path)
                     && !listed.contains(url.resolvingSymlinksInPath().standardizedFileURL.path)
                 {
-                    unloaded.append(Note(url: url, with: self.folderProject(of: url, below: project)))
+                    unloaded.append(Note(url: url, with: Self.folderProject(of: url, below: project, in: &folderProjects)))
                 }
             }
             for (project, files) in zip(trashFolders, trashFiles) {
@@ -1473,14 +1479,13 @@ class Storage {
     /// The folder a note found by the orphan scan sits in, as a project:
     /// `/i/` resolves against it. A folder the sidebar has not registered
     /// gets a project that is not added to storage.
-    private func folderProject(of note: URL, below scanned: Project) -> Project {
+    private static func folderProject(of note: URL, below scanned: Project, in known: inout [String: Project]) -> Project {
         let folder = note.deletingLastPathComponent()
-        let paths = [folder.standardizedFileURL.path, folder.resolvingSymlinksInPath().standardizedFileURL.path]
-        if paths.contains(scanned.url.standardizedFileURL.path) { return scanned }
-        if let registered = projects.first(where: { !$0.isTrash && paths.contains($0.url.standardizedFileURL.path) }) {
-            return registered
-        }
-        return Project(url: folder, parent: scanned)
+        let path = folder.standardizedFileURL.path
+        if let project = known[path] { return project }
+        let project = known[folder.resolvingSymlinksInPath().standardizedFileURL.path] ?? Project(url: folder, parent: scanned)
+        known[path] = project
+        return project
     }
 
     /// A folder's attachment folders and every note file below it, at any
@@ -1506,18 +1511,37 @@ class Storage {
         let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isSymbolicLinkKey]
         while let directory = pending.popLast() {
             guard walked.insert(directory.resolvingSymlinksInPath().path).inserted else { continue }
-            let items = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: keys, options: .skipsHiddenFiles)
+            let items = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: keys, options: [])
             for item in items {
                 let name = item.lastPathComponent
-                guard !name.hasPrefix(".") else { continue }
-                // A linked folder is walked like any other, read through its
-                // target, and `walked` stops a link back up the tree.
-                var values = try? item.resourceValues(forKeys: Set(keys))
-                if values?.isSymbolicLink == true {
-                    values = try? item.resolvingSymlinksInPath().resourceValues(forKeys: Set(keys))
+                if name.hasPrefix(".") {
+                    // `.Note.md.icloud`: a note iCloud keeps only online. Its
+                    // links cannot be read, so nothing is cleaned this time,
+                    // and the download it starts lets the next run read it.
+                    let inner = (String(name.dropFirst()) as NSString).deletingPathExtension
+                    if (name as NSString).pathExtension == "icloud", extensions.contains((inner as NSString).pathExtension.lowercased()) {
+                        try? FileManager.default.startDownloadingUbiquitousItem(at: item)
+                        throw CocoaError(.fileReadUnknown, userInfo: [NSFilePathErrorKey: item.path])
+                    }
+                    continue
                 }
-                if values?.isDirectory == true {
-                    if values?.isPackage != true, !attachmentDirectoryNames.contains(name) {
+                // A linked folder is walked like any other, read through its
+                // target, and `walked` stops a link back up the tree. A link
+                // whose target cannot be reached (an unmounted drive) throws:
+                // the notes behind it would go uncounted.
+                var values = try item.resourceValues(forKeys: Set(keys))
+                if values.isSymbolicLink == true {
+                    let target = item.resolvingSymlinksInPath()
+                    if target.path == item.path {
+                        // A broken link to an image or other file is no folder.
+                        let ext = item.pathExtension.lowercased()
+                        if !ext.isEmpty, !extensions.contains(ext) { continue }
+                        throw CocoaError(.fileReadNoSuchFile, userInfo: [NSFilePathErrorKey: item.path])
+                    }
+                    values = try target.resourceValues(forKeys: Set(keys))
+                }
+                if values.isDirectory == true {
+                    if values.isPackage != true, !attachmentDirectoryNames.contains(name) {
                         pending.append(item)
                     }
                 } else if extensions.contains(item.pathExtension.lowercased()) {
