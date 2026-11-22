@@ -622,11 +622,24 @@ body.miaoyan-split-mode {
  * jumped across the column and back (maintainer's pick of three rendered,
  * 2026-11-21). The indent sits on .katex-display, in the text's em: on
  * .katex, which KaTeX sets 1.21 times larger, it ran 5px past the list.
- * Slides have no #write and keep reveal's centring; a \tag number stays at
- * the right.
+ * #write is overflow-x: hidden and KaTeX sets the formula nowrap, so a formula
+ * wider than the column was cut off with no way to read the rest; it scrolls
+ * inside its own line instead, as on the iPhone. Scrolling in one axis makes
+ * the other clip, so 0.25em of padding keeps tall glyphs (\int, \sum with
+ * limits, \tag) whole, and the margin gives back what it adds. Slides keep
+ * reveal's centring: ppt.html loads reveal's stylesheets, not this file. A
+ * \tag number stays at the right. In print the formula does not scroll.
  */
 #write .katex-display {
-  padding-left: 1.5em;
+  padding: 0.25em 0 0.25em 1.5em;
+  margin: 0.75em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+@media print {
+  #write .katex-display {
+    overflow: visible;
+  }
 }
 #write .katex-display > .katex {
   text-align: left;

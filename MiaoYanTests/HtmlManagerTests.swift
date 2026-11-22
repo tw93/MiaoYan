@@ -1557,6 +1557,57 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertEqual(math, item, accuracy: 1, "the formula starts where the list's text starts: \(offsets)")
     }
 
+    /// #write is overflow-x: hidden and KaTeX sets a formula nowrap, so a
+    /// formula wider than the page was cut off with nothing to scroll. It
+    /// scrolls inside its own line now, and the padding that lets it scroll
+    /// does not clip an ordinary tall formula.
+    @MainActor
+    func testAWideDisplayFormulaScrollsAndATallOneIsNotClipped() async throws {
+        let wide = (0..<60).map { "a_{\($0)}" }.joined(separator: " + ")
+        let markdown = "$$\n\(wide)\n$$\n\n$$\n\\sum_{i=1}^{n} \\int_0^1 \\frac{x^i}{\\sqrt{1+x}} dx \\tag{1}\n$$"
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: true))
+        let css = downViewBundleURL.appendingPathComponent("css", isDirectory: true)
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let page = try write(
+            page: """
+                <!doctype html><html><head><meta charset="utf-8">
+                <link rel="stylesheet" href="\(css.appendingPathComponent("katex.min.css").absoluteString)">
+                <link rel="stylesheet" href="\(css.appendingPathComponent("typography.css").absoluteString)">
+                <link rel="stylesheet" href="\(css.appendingPathComponent("base.css").absoluteString)">
+                <script src="\(js.appendingPathComponent("katex.min.js").absoluteString)"></script>
+                <script src="\(js.appendingPathComponent("auto-render.min.js").absoluteString)"></script>
+                </head><body><div id="write" class="heti">\(html)</div><script>
+                renderMathInElement(document.getElementById('write'), { delimiters: [{left: '$$', right: '$$', display: true}] });
+                window.__ready = true;
+                </script></body></html>
+                """, named: "display-scroll")
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(page, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(10)
+        while (try? await webView.evaluateJavaScript("window.__ready === true && document.querySelectorAll('.katex-display').length === 2") as? Bool) != true,
+            Date() < deadline
+        {
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        let result = try await webView.evaluateJavaScript(
+            """
+            (() => JSON.stringify(Array.from(document.querySelectorAll('.katex-display')).map(d => ({
+              overflowX: getComputedStyle(d).overflowX,
+              scrollWidth: d.scrollWidth, clientWidth: d.clientWidth,
+              scrollHeight: d.scrollHeight, clientHeight: d.clientHeight
+            }))))()
+            """)
+        let json = try XCTUnwrap((result as? String)?.data(using: .utf8))
+        let rows = try XCTUnwrap(try JSONSerialization.jsonObject(with: json) as? [[String: Any]])
+        XCTAssertEqual(rows.count, 2)
+        let wideRow = try XCTUnwrap(rows.first)
+        XCTAssertEqual(wideRow["overflowX"] as? String, "auto", "\(wideRow)")
+        XCTAssertGreaterThan(try XCTUnwrap(wideRow["scrollWidth"] as? Int), try XCTUnwrap(wideRow["clientWidth"] as? Int), "\(wideRow)")
+        for row in rows {
+            XCTAssertLessThanOrEqual(try XCTUnwrap(row["scrollHeight"] as? Int), try XCTUnwrap(row["clientHeight"] as? Int) + 1, "clipped: \(row)")
+        }
+    }
+
     private func writePreviewPage(markdownHTML: String) throws -> URL {
         let jsDirectory = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
         let page = """
