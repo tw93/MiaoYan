@@ -1,5 +1,6 @@
 import Cocoa
 import Darwin
+import MiaoYanCore
 import UniformTypeIdentifiers
 
 private let uploadServerURL = "http://127.0.0.1:36677/upload"
@@ -87,6 +88,12 @@ class ClipboardManager {
         return title.isEmpty ? nil : title
     }
 
+    /// Pasted HTML becomes Markdown, whose `<pre>` is a fenced block; inside a
+    /// fence that would nest a second fence in the first, so plain text goes in.
+    nonisolated static func shouldConvertHtml(caret: Int, in text: NSString) -> Bool {
+        !ListContinuation.isInFencedCode(at: caret, in: text)
+    }
+
     func handlePaste(in note: Note) -> Bool {
         guard let textView = textView else { return false }
 
@@ -96,7 +103,8 @@ class ClipboardManager {
             // HTML; convert to markdown when it carries block structure. Editor
             // syntax-highlight HTML has no such tags, so code paste stays plain.
             var content = pasteboard.string(forType: NSPasteboard.PasteboardType.string)
-            if let html = pasteboard.string(forType: NSPasteboard.PasteboardType.html),
+            if Self.shouldConvertHtml(caret: textView.selectedRange().location, in: textView.string as NSString),
+                let html = pasteboard.string(forType: NSPasteboard.PasteboardType.html),
                 let markdown = HtmlToMarkdown.convertIfStructured(html)
             {
                 content = markdown

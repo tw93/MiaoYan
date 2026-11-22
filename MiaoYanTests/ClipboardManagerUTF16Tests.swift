@@ -50,6 +50,15 @@ final class ClipboardManagerUTF16Tests: XCTestCase {
         XCTAssertEqual(copied(NSRange(location: comment.location + 2, length: 0)), "# comment", "a comment in a code block")
     }
 
+    /// Web code pasted inside a fence went in as a second fence.
+    func testHtmlPasteIsPlainInsideAFence() {
+        let text = "a\n```\ncode\n```\nb" as NSString
+        XCTAssertTrue(ClipboardManager.shouldConvertHtml(caret: 0, in: text))
+        XCTAssertTrue(ClipboardManager.shouldConvertHtml(caret: text.range(of: "a").location + 1, in: text))
+        XCTAssertFalse(ClipboardManager.shouldConvertHtml(caret: text.range(of: "code").location + 2, in: text))
+        XCTAssertTrue(ClipboardManager.shouldConvertHtml(caret: text.length, in: text))
+    }
+
     /// A CRLF note's fence is a fence: its `[[0, 1]]` is code, not a link.
     @MainActor
     func testCRLFFenceIsSeenAsCode() {
