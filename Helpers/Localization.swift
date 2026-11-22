@@ -36,6 +36,7 @@ enum I18n {
     /// from Localizable.stringsdict (`1 note`, `2 notes`); the other
     /// languages have one form and read the .strings value.
     static func count(_ key: String, _ n: Int) -> String {
-        String.localizedStringWithFormat(str(key), n)
+        let locale = bundle.preferredLocalizations.first.map(Locale.init(identifier:)) ?? .current
+        return String(format: str(key), locale: locale, n)
     }
 }
