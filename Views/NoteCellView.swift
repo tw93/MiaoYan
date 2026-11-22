@@ -33,8 +33,48 @@ class NoteCellView: NSTableCellView {
         return vc.notesTableView
     }
 
+    /// Everything the pin and the two labels are styled from. A draw redoes
+    /// that work only when one of these differs from the last draw's.
+    struct DrawState: Equatable {
+        let fontsKey: String
+        let name: String
+        let date: String
+        let appearanceType: Int
+        let customColor: NSColor?
+        let appearanceName: NSAppearance.Name
+        let backgroundStyle: NSView.BackgroundStyle
+        let noteID: ObjectIdentifier?
+        let isPinned: Bool
+        let showsIcon: Bool
+    }
+
+    private var lastDrawState: DrawState?
+    /// How many times a draw has restyled the cell, for the test that holds
+    /// repeated draws of an unchanged cell to one.
+    private(set) var drawRestyleCount = 0
+
+    private func currentDrawState() -> DrawState {
+        let note = objectValue as? Note
+        let custom = UserDefaultsManagement.appearanceType == .Custom
+        return DrawState(
+            fontsKey: Self.listFonts().key,
+            name: name.stringValue,
+            date: date.stringValue,
+            appearanceType: UserDefaultsManagement.appearanceType.rawValue,
+            customColor: custom ? UserDefaultsManagement.fontColor : nil,
+            appearanceName: effectiveAppearance.name,
+            backgroundStyle: backgroundStyle,
+            noteID: note.map { ObjectIdentifier($0) },
+            isPinned: note?.isPinned ?? false,
+            showsIcon: note?.showIconInList() ?? true)
+    }
+
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
+        let state = currentDrawState()
+        guard state != lastDrawState else { return }
+        lastDrawState = state
+        drawRestyleCount += 1
         renderPin()
         updateSelectionHighlight()
     }

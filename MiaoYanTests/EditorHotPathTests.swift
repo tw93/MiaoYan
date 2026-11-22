@@ -82,6 +82,40 @@ final class EditorHotPathTests: XCTestCase {
         _ = note.flushPendingSave(globalStorage: false)
     }
 
+    /// A draw restyles the list cell only when something it is styled from
+    /// changed; a redraw of an unchanged cell used to rebuild both labels'
+    /// attributed strings every time.
+    @MainActor
+    func testNoteCellDrawRestylesOnlyWhenItsStateChanges() {
+        let cell = NoteCellView(frame: NSRect(x: 0, y: 0, width: 240, height: 60))
+        cell.name = NSTextField(labelWithString: "Title")
+        cell.date = NSTextField(labelWithString: "Today")
+        cell.pin = NSImageView()
+        cell.addSubview(cell.name)
+        cell.addSubview(cell.date)
+        cell.addSubview(cell.pin)
+
+        for _ in 0..<20 { cell.draw(cell.bounds) }
+        XCTAssertEqual(cell.drawRestyleCount, 1)
+
+        let styled = cell.name.attributedStringValue
+        XCTAssertNotNil(styled.attribute(.kern, at: 0, effectiveRange: nil))
+        XCTAssertNotNil(styled.attribute(.foregroundColor, at: 0, effectiveRange: nil))
+
+        cell.name.stringValue = "Another title"
+        for _ in 0..<5 { cell.draw(cell.bounds) }
+        XCTAssertEqual(cell.drawRestyleCount, 2)
+        XCTAssertNotNil(cell.name.attributedStringValue.attribute(.kern, at: 0, effectiveRange: nil))
+
+        cell.appearance = NSAppearance(named: .darkAqua)
+        for _ in 0..<5 { cell.draw(cell.bounds) }
+        XCTAssertEqual(cell.drawRestyleCount, 3)
+
+        cell.backgroundStyle = .emphasized
+        for _ in 0..<5 { cell.draw(cell.bounds) }
+        XCTAssertEqual(cell.drawRestyleCount, 4)
+    }
+
     /// The note list resolves its two fonts once per face and size, not on
     /// every redraw; a size change rebuilds them.
     @MainActor
