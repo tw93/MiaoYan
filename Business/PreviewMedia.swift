@@ -222,9 +222,16 @@ final class RemoteImageSizes: @unchecked Sendable {
 
     func size(for url: String) -> (width: Int, height: Int)? {
         lock.lock()
-        defer { lock.unlock() }
-        // Width, height and since 2026-11-22 the order it was learnt in.
-        guard let size = loadedEntries()[url], size.count >= 2 else { return nil }
+        // Width, height and since 2026-11-22 the order it was last used in.
+        var current = loadedEntries()
+        guard let size = current[url], size.count >= 2 else {
+            lock.unlock()
+            return nil
+        }
+        // A read runs on every render of a note, so it orders in memory
+        // only; the next record writes the order down with its own size.
+        _ = use(url, width: size[0], height: size[1], in: &current, persist: false)
+        lock.unlock()
         return (size[0], size[1])
     }
 
@@ -234,26 +241,37 @@ final class RemoteImageSizes: @unchecked Sendable {
         else { return }
         lock.lock()
         var current = loadedEntries()
-        guard current[url].map({ Array($0.prefix(2)) }) != [width, height] else {
-            lock.unlock()
-            return
-        }
-        // Full, the oldest quarter goes. Emptying it all at once, as it did,
-        // made every image the library had shown jump into place again.
-        if current.count >= limit {
+        // Full, the least recently used quarter goes. Emptying it all at
+        // once, as it did, made every image the library had shown jump into
+        // place again, and dropping the first learnt dropped a weekly cover
+        // shown every week before images seen once since (2026-11-22).
+        if current[url] == nil, current.count >= limit {
             let oldest = current.sorted { ($0.value.count > 2 ? $0.value[2] : 0) < ($1.value.count > 2 ? $1.value[2] : 0) }
             for entry in oldest.prefix(limit / 4) { current[entry.key] = nil }
         }
-        let order = (lastOrder ?? current.values.reduce(0) { max($0, $1.count > 2 ? $1[2] : 0) }) + 1
-        lastOrder = order
-        current[url] = [width, height, order]
-        entries = current
-        let shouldSchedule = !saveScheduled && fileURL != nil
-        if shouldSchedule { saveScheduled = true }
+        let shouldSchedule = use(url, width: width, height: height, in: &current)
         lock.unlock()
-        if shouldSchedule {
-            queue.asyncAfter(deadline: .now() + 2) { [weak self] in self?.save() }
+        if shouldSchedule { scheduleSave() }
+    }
+
+    /// Stores `url`'s size as the most recently used. Caller holds the lock;
+    /// returns whether a save has to be scheduled.
+    private func use(_ url: String, width: Int, height: Int, in current: inout [String: [Int]], persist: Bool = true) -> Bool {
+        let latest = lastOrder ?? current.values.reduce(0) { max($0, $1.count > 2 ? $1[2] : 0) }
+        if let entry = current[url], entry.count > 2, entry[0] == width, entry[1] == height, entry[2] == latest {
+            lastOrder = latest
+            return false
         }
+        lastOrder = latest + 1
+        current[url] = [width, height, latest + 1]
+        entries = current
+        let shouldSchedule = persist && !saveScheduled && fileURL != nil
+        if shouldSchedule { saveScheduled = true }
+        return shouldSchedule
+    }
+
+    private func scheduleSave() {
+        queue.asyncAfter(deadline: .now() + 2) { [weak self] in self?.save() }
     }
 
     /// Caller holds the lock.

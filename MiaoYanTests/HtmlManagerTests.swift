@@ -601,6 +601,26 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertEqual(store.size(for: "https://example.com/new.png")?.width, 640)
     }
 
+    /// The first learnt went first, so a weekly cover shown every week was
+    /// dropped before images seen once since; a size read or recorded again
+    /// is now the most recently used (2026-11-22).
+    func testAFullRemoteImageSizeStoreKeepsWhatWasUsedLately() throws {
+        let store = RemoteImageSizes(fileURL: nil)
+        store.record(url: "https://example.com/cover.jpg", width: 800, height: 450)
+        store.record(url: "https://example.com/logo.png", width: 64, height: 64)
+        for index in 2..<store.limit {
+            store.record(url: "https://example.com/\(index).png", width: 10, height: index)
+            if index == store.limit / 2 {
+                XCTAssertNotNil(store.size(for: "https://example.com/cover.jpg"))
+                store.record(url: "https://example.com/logo.png", width: 64, height: 64)
+            }
+        }
+        store.record(url: "https://example.com/new.png", width: 640, height: 480)
+        XCTAssertEqual(store.size(for: "https://example.com/cover.jpg")?.width, 800, "read halfway, so not among the oldest")
+        XCTAssertEqual(store.size(for: "https://example.com/logo.png")?.width, 64, "recorded again halfway")
+        XCTAssertNil(store.size(for: "https://example.com/2.png"), "the least recently used still go")
+    }
+
     /// Sizes outlive the app: a fresh store reads what an earlier one saved.
     func testRemoteImageSizesPersistAcrossLaunches() throws {
         let file = tempDirectory.appendingPathComponent("sizes.json")
