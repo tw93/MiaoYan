@@ -30,7 +30,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// split mode leaves the right pane stuck on the pre-paste content.
     private var pendingPostLoadUpdateNote: Note?
     /// Closures queued by callers (e.g. enablePreview's makeFirstResponder
-    /// and scrollToPosition) that need the preview DOM to be ready first.
+    /// and scrollToLine) that need the preview DOM to be ready first.
     /// Drained in webView(_:didFinish:). Replaces fixed asyncAfter timers
     /// that would either fire too early on slow loads or waste time on fast
     /// ones.
