@@ -515,6 +515,43 @@ final class EditorMenuRoutingTests: XCTestCase {
         withExtendedLifetime(container) {}
     }
 
+    /// Quitting in a presentation must not leave its collapsed columns in the
+    /// autosaved split positions.
+    @MainActor
+    func testQuitInAPresentationOpensTheColumnsItHid() throws {
+        let vc = try XCTUnwrap(ViewController.shared(), "the test host opened no storyboard window")
+        let wasPresentation = vc.sessionPresentationMode
+        let wasSidebar = vc.presentationRestoresSidebar
+        let wasList = vc.presentationRestoresNoteList
+        let sidebarWasVisible = vc.isSidebarVisible
+        let listWasVisible = vc.isNotelistVisible
+        defer {
+            vc.sessionPresentationMode = wasPresentation
+            vc.presentationRestoresSidebar = wasSidebar
+            vc.presentationRestoresNoteList = wasList
+            if sidebarWasVisible { vc.showSidebar("") } else { vc.hideSidebar("") }
+            if listWasVisible { vc.showNoteList("") } else { vc.hideNoteList("") }
+        }
+        vc.showSidebar("")
+        XCTAssertTrue(vc.isSidebarVisible)
+        vc.presentationRestoresSidebar = true
+        vc.presentationRestoresNoteList = true
+        vc.sessionPresentationMode = true
+        vc.hideNoteList("")
+        XCTAssertFalse(vc.isNotelistVisible)
+        XCTAssertFalse(vc.isSidebarVisible)
+
+        vc.restoreColumnsHiddenByPresentation()
+        XCTAssertTrue(vc.isNotelistVisible)
+        XCTAssertTrue(vc.isSidebarVisible)
+
+        // Outside a presentation it does nothing.
+        vc.sessionPresentationMode = false
+        vc.hideNoteList("")
+        vc.restoreColumnsHiddenByPresentation()
+        XCTAssertFalse(vc.isNotelistVisible)
+    }
+
     @MainActor
     private func isHighlighted(_ editor: EditTextView, at index: Int) -> Bool {
         editor.layoutManager?.temporaryAttribute(.backgroundColor, atCharacterIndex: index, effectiveRange: nil) != nil

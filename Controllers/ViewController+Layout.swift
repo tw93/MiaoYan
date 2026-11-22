@@ -202,6 +202,16 @@ extension ViewController {
         }
     }
 
+    /// Quitting inside a presentation or PPT would leave the columns the
+    /// presentation collapsed in AppKit's autosaved split positions, and the next
+    /// launch opened with no sidebar or note list. Opens them again before the
+    /// quit writes anything, without animation (`setPosition` does not animate).
+    func restoreColumnsHiddenByPresentation() {
+        guard sessionPresentationMode || sessionMagicPPTMode else { return }
+        if presentationRestoresNoteList { showNoteList("") }
+        if presentationRestoresSidebar { showSidebar("") }
+    }
+
     // MARK: - Sidebar Management
 
     func hideSidebar(_ sender: Any) {

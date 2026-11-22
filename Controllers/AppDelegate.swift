@@ -187,6 +187,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     func applicationWillTerminate(_ aNotification: Notification) {
         UserDefaultsManagement.clearSingleMode()
         if let vc = resolveViewController() {
+            vc.restoreColumnsHiddenByPresentation()
             vc.persistCurrentViewState()
             // Capture the current editor buffer into the active note before
             // we drain the debounce queue, otherwise an in-flight keystroke
