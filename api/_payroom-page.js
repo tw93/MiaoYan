@@ -256,7 +256,7 @@ const sourceName = (s) => (s === '(direct)' ? '直接打开' : s === '(not set)'
 const CHANNEL_LABELS = {
   'Organic Search': '自然搜索', Direct: '直接访问', Referral: '外链', 'Organic Social': '社交', 'Organic Video': '视频',
   Email: '邮件', Unassigned: '未归因', 'Paid Search': '付费搜索', 'Paid Social': '付费社交', 'Organic Shopping': '购物',
-  Display: '展示广告', Affiliates: '联盟', 'Cross-network': '跨网络', SMS: '短信', Audio: '音频', 'Mobile Push Notifications': '推送',
+  Display: '展示广告', Affiliates: '联盟', 'Cross-network': '跨网络', SMS: '短信', Audio: '音频', 'Mobile Push Notifications': '推送', 'AI Assistant': 'AI 助手',
 };
 const regionName = (code) => (!code || code === '(not set)' ? '未知' : country(code));
 
