@@ -732,6 +732,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         // Links in this same pass: deferred, an <img> URL flashed the code colour first.
         NotesTextProcessor(storage: storage, range: NSRange(0..<storage.length)).highlightLinks()
         textStorage?.updateParagraphStyle()
+        // publishStorage took the typing attributes from the text before it
+        // had a line height, so text typed or expanded (`/video`) before the
+        // caret moved had none and its wrapped lines sat closer than the
+        // rest of the note (2026-11-22).
+        typingAttributes[.paragraphStyle] = NSTextStorage.getParagraphStyle()
         // Apply letter spacing after all formatting is complete
         if let storage = textStorage {
             storage.applyEditorLetterSpacing()

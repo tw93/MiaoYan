@@ -1,3 +1,4 @@
+import Carbon.HIToolbox
 import XCTest
 
 @testable import MiaoYan
@@ -281,5 +282,36 @@ final class EditorStorageOwnershipTests: XCTestCase {
         XCTAssertNotEqual(first, second)
         XCTAssertTrue(first.hasPrefix("![](uploading-"))
         XCTAssertTrue(first.hasSuffix("...)"))
+    }
+
+    /// A note's fill reset the typing attributes to the font alone, so text
+    /// typed or expanded before the caret moved had no line height: `/video`
+    /// and Tab put its two wrapped lines closer than the rest of the note,
+    /// and the caret drawn at the note's height looked a line up.
+    @MainActor
+    func testTextTypedOrExpandedAfterAFillKeepsTheLineHeight() async throws {
+        let body = "Line above.\n\n"
+        let note = makeNote("typing.md", body: body)
+        await note.ensureContentLoadedAsync()
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 480, height: 320))
+        editor.isShellHosted = true
+        editor.fill(note: note)
+        let height = NSTextStorage.getParagraphStyle().minimumLineHeight
+        XCTAssertGreaterThan(height, 0)
+        XCTAssertEqual((editor.typingAttributes[.paragraphStyle] as? NSParagraphStyle)?.minimumLineHeight, height)
+
+        let end = (body as NSString).length
+        editor.setSelectedRange(NSRange(location: end, length: 0))
+        editor.insertText("/video", replacementRange: editor.selectedRange())
+        let tab = try XCTUnwrap(
+            NSEvent.keyEvent(
+                with: .keyDown, location: .zero, modifierFlags: [], timestamp: 0, windowNumber: 0, context: nil,
+                characters: "\t", charactersIgnoringModifiers: "\t", isARepeat: false, keyCode: UInt16(kVK_Tab)))
+        editor.keyDown(with: tab)
+        let storage = try XCTUnwrap(editor.textStorage)
+        XCTAssertTrue(storage.string.hasSuffix("</video>"), storage.string)
+        for at in [end, storage.length - 1] {
+            XCTAssertEqual((storage.attribute(.paragraphStyle, at: at, effectiveRange: nil) as? NSParagraphStyle)?.minimumLineHeight, height, "at \(at)")
+        }
     }
 }
