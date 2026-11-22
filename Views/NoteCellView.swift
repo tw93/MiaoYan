@@ -46,6 +46,10 @@ class NoteCellView: NSTableCellView {
         let noteID: ObjectIdentifier?
         let isPinned: Bool
         let showsIcon: Bool
+        /// Whether both labels still carry the restyle's letter spacing. The
+        /// date's binding sets the same plain text again after a restyle, so
+        /// the text alone looked unchanged while the spacing was gone.
+        let labelsStyled: Bool
     }
 
     private var lastDrawState: DrawState?
@@ -66,17 +70,23 @@ class NoteCellView: NSTableCellView {
             backgroundStyle: backgroundStyle,
             noteID: note.map { ObjectIdentifier($0) },
             isPinned: note?.isPinned ?? false,
-            showsIcon: note?.showIconInList() ?? true)
+            showsIcon: note?.showIconInList() ?? true,
+            labelsStyled: Self.isStyled(name) && Self.isStyled(date))
+    }
+
+    private static func isStyled(_ field: NSTextField) -> Bool {
+        let text = field.attributedStringValue
+        return text.length == 0 || text.attribute(.kern, at: 0, effectiveRange: nil) != nil
     }
 
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        let state = currentDrawState()
-        guard state != lastDrawState else { return }
-        lastDrawState = state
+        guard currentDrawState() != lastDrawState else { return }
         drawRestyleCount += 1
         renderPin()
         updateSelectionHighlight()
+        // Read after the restyle, which is what puts the spacing on.
+        lastDrawState = currentDrawState()
     }
 
     public func configure(note: Note) {

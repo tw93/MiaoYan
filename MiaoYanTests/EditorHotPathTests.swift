@@ -114,6 +114,13 @@ final class EditorHotPathTests: XCTestCase {
         cell.backgroundStyle = .emphasized
         for _ in 0..<5 { cell.draw(cell.bounds) }
         XCTAssertEqual(cell.drawRestyleCount, 4)
+
+        // The date's binding sets the same text again, plain: the spacing
+        // comes back on the next draw (2026-11-22).
+        cell.date.stringValue = "Today"
+        for _ in 0..<5 { cell.draw(cell.bounds) }
+        XCTAssertEqual(cell.drawRestyleCount, 5)
+        XCTAssertNotNil(cell.date.attributedStringValue.attribute(.kern, at: 0, effectiveRange: nil))
     }
 
     /// The note list resolves its two fonts once per face and size, not on
