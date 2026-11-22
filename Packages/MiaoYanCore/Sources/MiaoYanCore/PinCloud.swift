@@ -40,6 +40,10 @@ public final class PinCloud: @unchecked Sendable {
     /// The pins this device brought at its merge in this launch, written
     /// again on top of iCloud's first answer should that answer replace them.
     private var pendingMerge: Set<String>?
+    /// Pins of a note or folder that left the library in this launch, by
+    /// where it went, so moving it back (an undo of a delete that fell back
+    /// to the system Trash) brings them back.
+    private var parked: [String: Set<String>] = [:]
 
     /// `store` is nil where the app has no key-value entitlement; every pin
     /// then comes from the attribute alone. `mergedKey` names the local
@@ -92,11 +96,27 @@ public final class PinCloud: @unchecked Sendable {
     }
 
     /// A note or folder moved or was renamed from `old` to `new`; the pins
-    /// at and under it move along, and leave when it left the library.
+    /// at and under it move along, and leave when it left the library. Ones
+    /// that left come back if it moves back in this launch (2026-11-22: undo
+    /// of a delete to the system Trash restored the note unpinned).
     public func moved(from old: URL, to new: URL) {
         lock.withLock {
-            guard let oldPath = path(of: old), let current = shared() else { return }
-            let next = Self.moving(current, from: oldPath, to: path(of: new))
+            guard let current = shared() else { return }
+            let newPath = path(of: new)
+            let next: Set<String>
+            if let oldPath = path(of: old) {
+                if newPath == nil {
+                    // Always written, so an unpinned note later moved to the
+                    // same outside path does not take an older note's pins.
+                    let leaving = current.filter { $0 == oldPath || $0.hasPrefix(oldPath + "/") }
+                    parked[new.standardizedFileURL.path] = leaving.isEmpty ? nil : Set(leaving.map { String($0.dropFirst(oldPath.count)) })
+                }
+                next = Self.moving(current, from: oldPath, to: newPath)
+            } else if let newPath, let suffixes = parked.removeValue(forKey: old.standardizedFileURL.path) {
+                next = current.union(suffixes.map { newPath + $0 })
+            } else {
+                return
+            }
             if next != current { write(next) }
         }
     }

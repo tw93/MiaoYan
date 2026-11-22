@@ -77,6 +77,16 @@ final class PinCloudTests: XCTestCase {
         cloud.moved(from: note(mac, "Inboxes.md"), to: URL(fileURLWithPath: "/Users/me/Desktop/Inboxes.md"))
         XCTAssertFalse((store.array(forKey: PinCloud.storeKey) as? [String] ?? []).contains("Inboxes.md"))
 
+        // Moved back, as an undo of a delete to the system Trash does, it is
+        // pinned again (2026-11-22).
+        cloud.moved(from: URL(fileURLWithPath: "/Users/me/Desktop/Inboxes.md"), to: note(mac, "Inboxes.md"))
+        XCTAssertTrue((store.array(forKey: PinCloud.storeKey) as? [String] ?? []).contains("Inboxes.md"))
+        cloud.moved(from: note(mac, "Inboxes.md"), to: URL(fileURLWithPath: "/Users/me/.Trash/Inboxes.md"))
+        // An unpinned note sent to the same place later comes back unpinned.
+        cloud.moved(from: note(mac, "Other.md"), to: URL(fileURLWithPath: "/Users/me/.Trash/Inboxes.md"))
+        cloud.moved(from: URL(fileURLWithPath: "/Users/me/.Trash/Inboxes.md"), to: note(mac, "Other.md"))
+        XCTAssertFalse((store.array(forKey: PinCloud.storeKey) as? [String] ?? []).contains("Other.md"))
+
         cloud.removed(note(mac, "Archive"))
         XCTAssertEqual(store.array(forKey: PinCloud.storeKey) as? [String], [], "a deleted folder takes its pins along")
     }
