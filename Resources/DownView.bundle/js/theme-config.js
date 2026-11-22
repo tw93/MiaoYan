@@ -96,18 +96,26 @@ function getThemeColors(isDark = false) {
  * other and the page. These are markmap's branch hues softened toward the
  * panel (light 55%, dark 45%, the dark teal 20% so it stays apart from the
  * green), picked from three palettes rendered on the panel (2026-11-22),
- * with blue, rose and olive added so eight slices never repeat a colour
- * and the green and the teal never meet; opacity 1 so a slice matches its
- * legend swatch.
+ * with blue, rose and olive added so eight slices never repeat a colour;
+ * opacity 1 so a slice matches its legend swatch. A pie is a ring, so the
+ * last slice always touches the first: purple leads because it clashes with
+ * none, the green and the teal sit apart, and slices 9 to 12 reuse colours
+ * that are neither purple nor their neighbours (2026-11-22: with green first,
+ * seven slices put the teal against it and nine repeated the green). Only
+ * the first two swapped places: the neutral theme colours gitGraph branches
+ * 1 to 7 from pie2 to pie8, so every branch but the first keeps its colour.
  * @param {boolean} isDark
  * @param {string} textColor
  * @param {string} panel - the diagram background, used between slices
  * @returns {object} pie theme variables
  */
 function pieColors(isDark, textColor, panel) {
+  // purple, green, yellow, blue, grey, rose, teal, olive
   const slices = isDark
-    ? ['#407E68', '#604C88', '#8A7151', '#586D86', '#605E58', '#896066', '#4EB592', '#767D4A']
-    : ['#93B099', '#B1A2D3', '#CCBA82', '#9CB0C2', '#BEBCB6', '#CEA8AB', '#97C1BA', '#B7BD95'];
+    ? ['#604C88', '#407E68', '#8A7151', '#586D86', '#605E58', '#896066', '#4EB592', '#767D4A']
+    : ['#B1A2D3', '#93B099', '#CCBA82', '#9CB0C2', '#BEBCB6', '#CEA8AB', '#97C1BA', '#B7BD95'];
+  // Slices 9 to 12: yellow, blue, grey, rose.
+  const order = [0, 1, 2, 3, 4, 5, 6, 7, 2, 3, 4, 5];
   const vars = {
     pieSectionTextColor: textColor,
     pieTitleTextColor: textColor,
@@ -117,7 +125,7 @@ function pieColors(isDark, textColor, panel) {
     pieOuterStrokeWidth: '0px',
     pieOpacity: '1'
   };
-  for (let i = 0; i < 12; i++) vars['pie' + (i + 1)] = slices[i % slices.length];
+  for (let i = 0; i < 12; i++) vars['pie' + (i + 1)] = slices[order[i]];
   return vars;
 }
 

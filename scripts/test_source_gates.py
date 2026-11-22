@@ -176,6 +176,17 @@ class PieColorGateTests(unittest.TestCase):
             self.assertNotIn(v["background"].upper(), slices, name)
             self.assertNotIn(v["primaryColor"].upper(), slices, name)
             self.assertEqual(v["pieOpacity"], "1", name)
+            # A pie is a ring: the last slice touches the first. With any count
+            # up to twelve, no two touching slices share a colour, and the green
+            # and the teal never touch (2026-11-22: seven slices put them
+            # together, nine repeated slice 1).
+            clash = {"light": {"#93B099", "#97C1BA"}, "dark": {"#407E68", "#4EB592"}}[name]
+            ring = [v[f"pie{i}"].upper() for i in range(1, 13)]
+            for count in range(2, 13):
+                for i in range(count):
+                    a, b = ring[i], ring[(i + 1) % count]
+                    self.assertNotEqual(a, b, f"{name}: {count} slices, {i + 1} and {(i + 1) % count + 1}")
+                    self.assertNotEqual({a, b}, clash, f"{name}: {count} slices put the green beside the teal")
 
 
 if __name__ == "__main__":
