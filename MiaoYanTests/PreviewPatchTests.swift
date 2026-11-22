@@ -334,6 +334,34 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertEqual(state["rawPu"] as? Bool, false, "\(state)")
     }
 
+    /// `\( \)` and `\[ \]` are math in a note with no `$` math, so such a note
+    /// has no `$`; the live update still has to initialize KaTeX for it.
+    func testBracketMathCountsAsMathOnALiveUpdate() {
+        XCTAssertTrue(MPreviewView.needsMathRendering("<p>\\(x\\)</p>"))
+        XCTAssertTrue(MPreviewView.needsMathRendering("<p>\\[x\\]</p>"))
+        XCTAssertTrue(MPreviewView.needsMathRendering("<p>$x$</p>"))
+        XCTAssertFalse(MPreviewView.needsMathRendering("<p>plain [1] (2)</p>"))
+    }
+
+    @MainActor
+    func testALiveUpdateRendersBracketMathInANoteWithoutDollars() async throws {
+        let updated = try await loadRenderedPage("# Chemistry\n\nIntro.")
+        let html = try XCTUnwrap(
+            MPreviewView.previewHTML(markdown: #"Intro.\n\nWater \(\ce{H2O}\)."#, useGithubLineBreak: false, imagesStorage: tempDirectory))
+        XCTAssertFalse(html.contains("$"), html)
+        _ = try await updated.evaluateJavaScript(
+            MPreviewView.buildUpdateScript(
+                html: html, initializeMath: MPreviewView.needsMathRendering(html), initializeDiagrams: false, preserveScroll: false))
+        let deadline = Date().addingTimeInterval(10)
+        var count = 0
+        while Date() < deadline {
+            count = (try? await updated.evaluateJavaScript("document.querySelectorAll('#write .katex').length") as? Int) ?? 0
+            if count == 1 { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(count, 1)
+    }
+
     /// Typing an incomplete `\ce{A \bond{} B}` in split view must not abort
     /// live KaTeX rendering for formulas that follow it.
     @MainActor

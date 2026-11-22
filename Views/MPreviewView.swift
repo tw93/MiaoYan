@@ -657,6 +657,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
         stopLoading()
     }
 
+    /// Whether a note's HTML holds any math delimiter. The bracket forms count
+    /// too: they are math only in a note with no `$` math, and such a note has
+    /// no `$`, so testing `$` alone left KaTeX uninitialized on a live update.
+    nonisolated static func needsMathRendering(_ html: String) -> Bool {
+        html.contains("$") || html.contains("\\(") || html.contains("\\[")
+    }
+
     /// The script a live update runs: `html` is the note's rendered HTML,
     /// carried in as a JSON string literal.
     static func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool, preserveScroll: Bool) -> String {
@@ -1057,7 +1064,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
 
             // Detect special content on unescaped HTML to avoid false positives
-            let needsMath = htmlString.contains("$$") || htmlString.contains("$")
+            let needsMath = Self.needsMathRendering(htmlString)
             let needsDiagrams =
                 htmlString.contains("language-mermaid")
                 || htmlString.contains("language-plantuml")
