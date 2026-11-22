@@ -144,9 +144,16 @@ public class TextFormatter {
 
     func unTab() {
         guard let pRange = getParagraphRange() else { return }
+        // Undo what Tab would add here: the content column under a numbered
+        // item above (four spaces under `10.`), otherwise up to three.
+        var limit = 3
+        if let before = getLineRangeBefore(str: storage.mutableString as NSString, lineRange: pRange) {
+            let beforeText = storage.attributedSubstring(from: before).string
+            if beforeText.isNumberList() { limit = max(limit, Self.numberedContentPadding(of: beforeText).count) }
+        }
         guard range.length > 0 else {
             let text = storage.attributedSubstring(from: pRange).string
-            let (newText, diff) = removeLeadingIndent(from: text)
+            let (newText, diff) = removeLeadingIndent(from: text, upTo: limit)
             guard let processedText = newText else { return }
 
             let replacement: String
@@ -165,7 +172,7 @@ public class TextFormatter {
         string.enumerateLines { line, _ in
             var processedLine = line
             if !processedLine.isEmpty {
-                let (newLine, _) = self.removeLeadingIndent(from: processedLine)
+                let (newLine, _) = self.removeLeadingIndent(from: processedLine, upTo: limit)
                 if let text = newLine {
                     processedLine = text
                 }
@@ -181,17 +188,12 @@ public class TextFormatter {
         setSelectedRange(finalRange)
     }
 
-    private func removeLeadingIndent(from text: String) -> (String?, Int) {
-        if text.starts(with: "   ") {
-            return (String(text.dropFirst(3)), 3)
-        } else if text.starts(with: "  ") {
-            return (String(text.dropFirst(2)), 2)
-        } else if text.starts(with: " ") {
-            return (String(text.dropFirst()), 1)
-        } else if text.starts(with: "\t") {
-            return (String(text.dropFirst()), 1)
-        }
-        return (nil, 0)
+    /// Up to `limit` leading spaces, or one tab.
+    private func removeLeadingIndent(from text: String, upTo limit: Int) -> (String?, Int) {
+        if text.starts(with: "\t") { return (String(text.dropFirst()), 1) }
+        let spaces = min(limit, text.prefix(while: { $0 == " " }).count)
+        guard spaces > 0 else { return (nil, 0) }
+        return (String(text.dropFirst(spaces)), spaces)
     }
 
     public func link() {

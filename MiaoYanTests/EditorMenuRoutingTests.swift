@@ -429,6 +429,19 @@ final class EditorMenuRoutingTests: XCTestCase {
         }
     }
 
+    /// Shift-Tab takes back what Tab gave: four spaces under `10.`, so one
+    /// press brings the line back to the margin instead of leaving a space.
+    @MainActor
+    func testShiftTabUnderANumberedItemTakesBackItsContentColumn() {
+        for (item, padding) in [("1. item", 3), ("10. item", 4)] {
+            let text = "\(item)\n\(String(repeating: " ", count: padding))next"
+            let (editor, note) = makeEditor(text)
+            editor.setSelectedRange(NSRange(location: (text as NSString).length, length: 0))
+            TextFormatter(textView: editor, note: note).unTab()
+            XCTAssertEqual(editor.string, "\(item)\nnext", item)
+        }
+    }
+
     // MARK: - Find and replace
 
     /// A shell-hosted editor in a scroll view, so the find bar has a container.
