@@ -1192,7 +1192,9 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
       refundRate: totals.sold ? totals.refunded / totals.sold : null,
     },
     byMonth,
-    series: [...points.entries()].sort().map(([key, v]) => ({ key, sold: v.sold || 0, refunded: v.refunded || 0, proceeds: v.proceeds || 0 })),
+    // A day (or month) Apple has not reported yet is pending, never a zero day:
+    // the chart breaks its line there instead of drawing it down to the axis.
+    series: [...points.entries()].sort().map(([key, v]) => ({ key, sold: v.sold || 0, refunded: v.refunded || 0, proceeds: v.proceeds || 0, pending: !latestSalesDate || (byMonth ? `${key}-01` : key) > latestSalesDate })),
     devices: toList(devices),
     countries: countryList,
     countriesEver: firstSale.size,

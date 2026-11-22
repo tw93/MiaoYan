@@ -115,7 +115,7 @@ td small{color:var(--subtle);font-size:12px}
 @media (min-width:1081px){.board>.panel[class*=" s"]{grid-column:span var(--span)}}
 @media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pace{grid-template-columns:minmax(0,1fr)}.split{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){.chart-value.dense{display:none}}
-@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}.topbar{flex-wrap:wrap;gap:8px}.switch a{padding:0 8px}.brand{display:contents}.sync{display:none}.filters{order:1;margin-left:auto;justify-content:flex-end;gap:8px}.switch.range,.month{display:none}.range-select{display:block;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 22px 0 10px;background:var(--panel) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--accent);font:inherit;font-size:16px}.range-select:focus,.range-select:focus-visible{outline:none}.board{gap:10px}.mini{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.mini article{padding:10px}.mini strong{font-size:18px}.ring{width:84px;height:84px}.chart-line{display:none}.mixes{grid-template-columns:minmax(0,1fr)}.ring svg{width:84px;height:84px}.day td:first-child{max-width:0}.day td small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}.topbar{flex-wrap:wrap;gap:8px}.switch a{padding:0 8px}.brand{display:contents}.sync{display:none}.filters{order:1;margin-left:auto;justify-content:flex-end;gap:8px}.switch.range,.month{display:none}.range-select{display:block;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 22px 0 10px;background:var(--panel) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--accent);font:inherit;font-size:16px}.range-select:focus,.range-select:focus-visible{outline:none}.board{gap:10px}.mini{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.mini>:last-child:nth-child(odd){grid-column:1/-1}.mini article{padding:10px}.mini strong{font-size:18px}.ring{width:84px;height:84px}.chart-line{display:none}.mixes{grid-template-columns:minmax(0,1fr)}.ring svg{width:84px;height:84px}.day td:first-child{max-width:0}.day td small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 `;
 
 function shell(title, body) {
@@ -319,7 +319,7 @@ function chart(view) {
     const up = p.sold ? `<i class="chart-bar" style="height:${(p.sold / maxUp * 100).toFixed(1)}%"></i>` : '';
     const down = p.refunded ? `<i class="chart-bar refund" style="height:${(p.refunded / Math.max(1, maxDown) * 100).toFixed(1)}%"></i>` : '';
     const tick = i % every === 0 ? esc(view.byMonth ? p.key.slice(2) : p.key.slice(5)) : '';
-    const title = `${p.key} 售出 ${p.sold}${p.refunded ? `，退款 ${p.refunded}` : ''}，到手 ${money(p.proceeds, view.currency)}`;
+    const title = p.pending ? `${p.key} 等 Apple 报表` : `${p.key} 售出 ${p.sold}${p.refunded ? `，退款 ${p.refunded}` : ''}，到手 ${money(p.proceeds, view.currency)}`;
     return `<div class="chart-col" title="${esc(title)}"><div class="chart-up">${up}${value}</div><div class="chart-down">${down}</div><span class="chart-tick${i % (every * 2) ? ' alt' : ''}">${tick}</span></div>`;
   }).join('');
   // Lifetime records, whatever the window, as Mole's 单日纪录 line reads.
@@ -329,7 +329,7 @@ function chart(view) {
   if (rec.units) recParts.push(`${int(rec.units.value)} 份（${esc(rec.units.date.slice(2))}）`);
   const caption = recParts.length ? `<p>单日纪录 ${recParts.join(' · ')}</p>` : '';
   // Bars count units; the line is money on its own scale, as Mole draws it.
-  const line = lineOverlay(pts.map((p) => p.proceeds), maxUp / total, 'var(--accent)');
+  const line = lineOverlay(pts.map((p) => (p.pending ? null : p.proceeds)), maxUp / total, 'var(--accent)');
   const last = [...pts].reverse().find((p) => p.sold || p.refunded);
   const readout = last ? `<span class="readout">${esc(view.byMonth ? last.key : last.key.slice(5))} · ${esc(money(last.proceeds, view.currency))} · ${int(last.sold)} 份</span>` : '';
   return `<section class="panel"><div class="head"><div><h2>收入走势</h2>${caption}</div>${readout}</div><div class="chart-frame" role="img" aria-label="售出份数和到手金额" style="--up:calc((100% - 24px) * ${(maxUp / total).toFixed(4)});--down:calc((100% - 24px) * ${(maxDown / total).toFixed(4)})">${columns}${line}</div></section>`;
@@ -522,7 +522,7 @@ function renderDashboard(view) {
   // Apple's sales report reaches the previous Pacific day at best, so the newest
   // day leads (maintainer 2026-11-14 asked for today's sales on top).
   const metrics = [
-    metric('最新入账', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date.slice(5))} 售出 ${int(latest.units)} 份` : ''),
+    metric('最新到手', latest ? money(latest.proceeds, view.currency) : '没有', latest ? `${esc(latest.date.slice(5))} 售出 ${int(latest.units)} 份` : ''),
     metric(isAll ? '累计到手' : '到手', money(t.proceeds, view.currency), p.prev ? lead(`销售额 ${money(t.net, view.currency)}`, delta(money(p.prev.proceeds, view.currency))) : `销售额 ${money(t.net, view.currency)}${isAll ? `<span class="wide-only"> · 自 ${esc(view.from.slice(2))}</span>` : ''}`),
     metric(isAll ? '累计售出' : '售出', `${int(t.sold)} 份`, p.prev ? lead(`退款 ${int(t.refunded)}`, delta(`${int(p.prev.sold)} 份`)) : (t.refunded ? `退款 ${int(t.refunded)} 份 · ${percent(t.refundRate)}` : '没有退款')),
     settledMetric(view, metric),

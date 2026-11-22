@@ -369,7 +369,21 @@ const lateRefund = lib.emptyState();
 lateRefund.fx = { rates: { USD: 1, CNY: 7 } };
 lateRefund.sales.rows = [['2026-11-05', '1F', 3, 10, 'CNY', 20, 'CNY', 'CN', 'iPhone', '', ''], ['2026-11-05', '1F', -1, 10, 'CNY', 20, 'CNY', 'CN', 'iPhone', '', '']];
 near(lib.buildView(lateRefund, { today }).latest.proceeds, 20, 'the newest income nets a same-day refund');
-assert.ok(page.renderDashboard(lib.buildView(lateRefund, { today })).includes('<div class="metrics"><article class="metric"><span>最新入账</span>'), 'the newest day leads the metrics');
+
+// Days Apple has not reported yet are pending, never zero: the chart's money
+// line stops at the last reported day instead of dropping to the axis.
+const pendingTail = lib.emptyState();
+pendingTail.fx = { rates: { USD: 1, CNY: 7 } };
+pendingTail.sales.rows = [['2026-11-05', '1F', 2, 10, 'CNY', 20, 'CNY', 'CN', 'Mac', '', ''], ['2026-11-06', '1F', 1, 10, 'CNY', 20, 'CNY', 'CN', 'Mac', '', '']];
+pendingTail.sales.dates = { '2026-11-05': 'ok', '2026-11-06': 'ok' };
+const pendingView = lib.buildView(pendingTail, { today });
+assert.ok(pendingView.series.some((p) => p.key > '2026-11-06'), 'the window reaches past the last report');
+assert.deepEqual(pendingView.series.map((p) => p.pending), pendingView.series.map((p) => p.key > '2026-11-06'), 'every day after the last report is pending, none before');
+const pendingPath = (page.renderDashboard(pendingView).match(/class="chart-line"[^>]*><path d="([^"]+)"/) || [])[1] || '';
+const lastX = Number((pendingPath.match(/[ML]([\d.]+) [\d.]+$/) || [])[1]);
+const index = pendingView.series.findIndex((p) => p.key === '2026-11-06');
+near(lastX, ((index + 0.5) / pendingView.series.length) * 100, 'the line ends on the last reported day', 0.01);
+assert.ok(page.renderDashboard(lib.buildView(lateRefund, { today })).includes('<div class="metrics"><article class="metric"><span>最新到手</span>'), 'the newest day leads the metrics');
 checks += 1;
 
 // ---- the login form, as a browser posts it ------------------------------
