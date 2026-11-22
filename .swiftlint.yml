@@ -2,6 +2,7 @@ included:
   - .
 
 excluded:
+  - build
   - .build
   - Packages/*/.build
   - .vscode
