@@ -9,7 +9,6 @@ paths:
   - "Business/Note*"
   - "Business/Project*"
   - "Business/WikilinkIndex*"
-  - "Business/CloudSync*"
   - "Packages/MiaoYanCore/**"
 ---
 

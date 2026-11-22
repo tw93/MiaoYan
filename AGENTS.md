@@ -23,7 +23,7 @@ MiaoYan is a lightweight Markdown editor built with Swift. This open-source repo
 - `Shell/` - the SwiftUI main window in progress (`-MiaoYanShell YES`), see `.claude/rules/shell.md`.
 - `MiaoYan.xcodeproj/` - Xcode project and version settings.
 - `Package.swift` - a reference list of the Swift package dependencies; no Xcode project reads it, the real package references live in `project.pbxproj`.
-- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews, list row dates, the first-run guide, the keys that edit a list or a table), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
+- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews, list row dates, the first-run guide, the keys that edit a list or a table, pins through iCloud, CJK emphasis), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
 - `scripts/` - local build, release, and project maintenance scripts.
 - `scripts/release-ci/` - release note rendering, appcast, notarization, and package helpers.
 - `skills/miaoyan/` - published Agent Skill (tracked) describing MiaoYan's Markdown, PPT, and `miao` CLI surfaces to outside agents; it restates product syntax, so it drifts when those surfaces change.
@@ -70,8 +70,10 @@ fresh unique 24-hex ID for each new object.
   `scripts/*.sh`, `scripts/release-ci/*.sh` and `scripts/miaoyan`. ShellCheck
   does not flag a helper called before its definition (the install.sh `warn`
   bug), so keep script helpers at the top.
-- Review gates: `scripts/check_incidents.py` on full history plus the unit
-  tests of it and `scripts/risk_tier.py` (`scripts/test_review_gates.py`)
+- Review gates: `scripts/check_incidents.py` on full history, plus
+  `python3 -m unittest discover -s scripts -p 'test_*.py'`, which runs every
+  `scripts/test_*.py` (the unit tests of `check_incidents.py`, `risk_tier.py`
+  and the other scripts)
 - On tag pushes (`V*`): version-triplet consistency check
   (`MARKETING_VERSION == CURRENT_PROJECT_VERSION == tag`) to prevent the
   V3.5.1 / #524 incident recurrence

@@ -72,7 +72,7 @@ large_tuple:
 custom_rules:
   no_direct_singleton_in_new_code:
     name: "Prefer AppEnvironment over raw singletons"
-    regex: '\b(?:Storage\.sharedInstance\(\)|Storage\.instance|WikilinkIndex\.shared|CloudSyncManager\.shared|NoteVersionManager\.shared|UserDataService\.instance|ViewController\.shared\(\))'
+    regex: '\b(?:Storage\.sharedInstance\(\)|Storage\.instance|WikilinkIndex\.shared|NoteVersionManager\.shared|UserDataService\.instance|ViewController\.shared\(\))'
     match_kinds:
       - identifier
     message: "Use AppEnvironment.current.<service> for new code. Existing call sites are grandfathered; do not add new ones."

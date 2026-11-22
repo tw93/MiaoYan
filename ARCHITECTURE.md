@@ -38,7 +38,7 @@ launched with `-MiaoYanShell YES`. It hosts the same `EditTextView` and
 `MPreviewView` and stays behind the flag until it reaches parity.
 
 Logic the Mac app shares with the iPhone app (frontmatter, search matching,
-note text decoding, list previews) lives in the local package
+note text decoding, list previews, pins through iCloud, CJK emphasis) lives in the local package
 `Packages/MiaoYanCore`. The iPhone and iPad app and the App Store packaging
 live in the private `tw93/MiaoYan-Pro`, which merges this repository's `main`;
 this repository is the only Mac codebase.
@@ -98,7 +98,7 @@ class and forward to coordinator objects from the action body.
 
 ```
 keystroke
-  → EditTextView (NSTextView subclass; CustomTextStorage)
+  → EditTextView (NSTextView subclass; its NSTextStorage delegate is Helpers/CustomTextStorage.swift)
   → NSTextStorage.processEditing
   → NotesTextProcessor.checkPerformanceLevel
      ├─ short text:    full Markdown highlight via MarkdownRuleHighlighter

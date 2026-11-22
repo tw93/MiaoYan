@@ -145,6 +145,7 @@
       "app.js",
       "common.js",
       "diagram-handler.js",
+      "frame-fallback.js",
       "theme-config.js",
       "theme-manager.js"
     ]
