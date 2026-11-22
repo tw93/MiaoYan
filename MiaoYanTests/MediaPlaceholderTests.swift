@@ -44,6 +44,10 @@ final class MediaPlaceholderTests: XCTestCase {
             <img id="cover" class="lazy-image" data-measure="1" width="800" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/cover.jpg" />
             <p><small>Caption.</small></p>
             <div>Text <img id="inline" class="lazy-image" data-measure="1" width="200" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/i.png"> more.</div>
+            <div align="center">
+            <img id="pairA" class="lazy-image" data-measure="1" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/a.png">
+            <img id="pairB" class="lazy-image" data-measure="1" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/b.png">
+            </div>
             </div>
             <script src="\(bundle.appendingPathComponent("js/common.js").absoluteString)"></script>
             <script>
@@ -55,7 +59,8 @@ final class MediaPlaceholderTests: XCTestCase {
                     reserved: cover.classList.contains('media-reserve'),
                     width: box.width,
                     height: box.height,
-                    inlineReserved: document.getElementById('inline').classList.contains('media-reserve')
+                    inlineReserved: document.getElementById('inline').classList.contains('media-reserve'),
+                    pairReserved: ['pairA', 'pairB'].some(function (id) { return document.getElementById(id).classList.contains('media-reserve'); })
                 };
             })();
             </script>
@@ -78,6 +83,7 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertEqual(state["width"] as? Double, 640)
         XCTAssertEqual(state["height"] as? Double, 360, "16:9, not a square")
         XCTAssertEqual(state["inlineReserved"] as? Bool, false, "an image beside text stays inline")
+        XCTAssertEqual(state["pairReserved"] as? Bool, false, "two images on consecutive lines sit side by side")
     }
 
     @MainActor

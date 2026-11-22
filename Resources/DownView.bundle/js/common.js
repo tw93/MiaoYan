@@ -301,14 +301,25 @@ const MiaoYanCommon = {
    *  `<img src=… width="800" />`), which cmark puts straight into the block
    *  around it with no paragraph. That one used to take no reserved box, and
    *  its 1px placeholder made it as tall as it is wide until the picture
-   *  arrived. One beside text or another image stays inline. */
+   *  arrived. One beside text or another image stays inline, also when only
+   *  a line break separates them: two `<img>` on consecutive lines lay out
+   *  side by side, so the neighbour looked at is the nearest one that is not
+   *  blank text or a comment. */
   standsAlone(img) {
     const parent = img.parentElement;
     if (!parent) return false;
     if (parent.tagName === 'P') return parent.children.length === 1 && !parent.textContent.trim();
+    const nearest = (node, step) => {
+      while (node && (node.nodeType === Node.COMMENT_NODE || (node.nodeType === Node.TEXT_NODE && node.textContent.trim() === ''))) node = node[step];
+      return node;
+    };
     const inline = (node) =>
       !!node && (node.nodeType === Node.TEXT_NODE ? node.textContent.trim() !== '' : node.nodeType === Node.ELEMENT_NODE && getComputedStyle(node).display.startsWith('inline'));
-    return !['SPAN', 'A', 'TD', 'TH', 'LI', 'STRONG', 'EM'].includes(parent.tagName) && !inline(img.previousSibling) && !inline(img.nextSibling);
+    return (
+      !['SPAN', 'A', 'TD', 'TH', 'LI', 'STRONG', 'EM'].includes(parent.tagName) &&
+      !inline(nearest(img.previousSibling, 'previousSibling')) &&
+      !inline(nearest(img.nextSibling, 'nextSibling'))
+    );
   },
 
   // An image keeps a tinted box until it has painted, so a slow one reads
