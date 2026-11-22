@@ -582,6 +582,25 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertFalse(both.contains("aspect-ratio"), "a note that sets both keeps its own box")
     }
 
+    /// A full store emptied itself, so every image the library had shown
+    /// jumped into place again on its next open; it now lets the oldest
+    /// quarter go and keeps reading sizes saved before they carried an order.
+    func testAFullRemoteImageSizeStoreDropsItsOldestQuarter() throws {
+        let file = tempDirectory.appendingPathComponent("old-sizes.json")
+        try JSONEncoder().encode(["https://example.com/old.png": [300, 200]]).write(to: file)
+        let store = RemoteImageSizes(fileURL: file)
+        XCTAssertEqual(store.size(for: "https://example.com/old.png")?.height, 200, "a size saved as width and height alone")
+        for index in 1..<store.limit {
+            store.record(url: "https://example.com/\(index).png", width: 10, height: index)
+        }
+        store.record(url: "https://example.com/new.png", width: 640, height: 480)
+        XCTAssertNil(store.size(for: "https://example.com/old.png"), "the oldest goes first")
+        XCTAssertNil(store.size(for: "https://example.com/\(store.limit / 4 - 1).png"))
+        XCTAssertEqual(store.size(for: "https://example.com/\(store.limit / 4).png")?.height, store.limit / 4)
+        XCTAssertEqual(store.size(for: "https://example.com/\(store.limit - 1).png")?.height, store.limit - 1)
+        XCTAssertEqual(store.size(for: "https://example.com/new.png")?.width, 640)
+    }
+
     /// Sizes outlive the app: a fresh store reads what an earlier one saved.
     func testRemoteImageSizesPersistAcrossLaunches() throws {
         let file = tempDirectory.appendingPathComponent("sizes.json")

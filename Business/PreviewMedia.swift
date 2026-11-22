@@ -207,7 +207,8 @@ final class RemoteImageSizes: @unchecked Sendable {
     private let lock = NSLock()
     private var entries: [String: [Int]]?
     private var saveScheduled = false
-    private let limit = 4000
+    private var lastOrder: Int?
+    let limit = 4000
     private let queue = DispatchQueue(label: "com.tw93.miaoyan.remote-image-sizes", qos: .utility)
     private let fileURL: URL?
 
@@ -222,7 +223,8 @@ final class RemoteImageSizes: @unchecked Sendable {
     func size(for url: String) -> (width: Int, height: Int)? {
         lock.lock()
         defer { lock.unlock() }
-        guard let size = loadedEntries()[url], size.count == 2 else { return nil }
+        // Width, height and since 2026-11-22 the order it was learnt in.
+        guard let size = loadedEntries()[url], size.count >= 2 else { return nil }
         return (size[0], size[1])
     }
 
@@ -232,12 +234,19 @@ final class RemoteImageSizes: @unchecked Sendable {
         else { return }
         lock.lock()
         var current = loadedEntries()
-        guard current[url] != [width, height] else {
+        guard current[url].map({ Array($0.prefix(2)) }) != [width, height] else {
             lock.unlock()
             return
         }
-        if current.count >= limit { current.removeAll(keepingCapacity: true) }
-        current[url] = [width, height]
+        // Full, the oldest quarter goes. Emptying it all at once, as it did,
+        // made every image the library had shown jump into place again.
+        if current.count >= limit {
+            let oldest = current.sorted { ($0.value.count > 2 ? $0.value[2] : 0) < ($1.value.count > 2 ? $1.value[2] : 0) }
+            for entry in oldest.prefix(limit / 4) { current[entry.key] = nil }
+        }
+        let order = (lastOrder ?? current.values.reduce(0) { max($0, $1.count > 2 ? $1[2] : 0) }) + 1
+        lastOrder = order
+        current[url] = [width, height, order]
         entries = current
         let shouldSchedule = !saveScheduled && fileURL != nil
         if shouldSchedule { saveScheduled = true }
