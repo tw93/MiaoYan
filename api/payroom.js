@@ -4,7 +4,7 @@
 // payroom-sync.js writes; it never calls App Store Connect on a page view.
 
 const crypto = require('node:crypto');
-const { buildView, pacificToday, readState } = require('./_payroom-lib');
+const { buildView, pacificToday, readState, salesFeed } = require('./_payroom-lib');
 const { renderDashboard, renderLogin, renderMessage } = require('./_payroom-page');
 
 const COOKIE = 'miaoyan_payroom';
@@ -81,6 +81,33 @@ function query(req) {
   return { view, cookie };
 }
 
+// Mole's Payroom reads MiaoYan's daily sales here (maintainer 2026-11-22) with
+// its own Bearer token, never the login password or CRON_SECRET, so a leak is
+// rotated alone and opens nothing else. Day totals only, no buyer or review.
+async function sendSalesFeed(req, res) {
+  const token = process.env.MIAOYAN_PAYROOM_FEED_TOKEN;
+  const auth = String(req.headers.authorization || '');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  if (!token || !auth.startsWith('Bearer ') || !safeEqual(auth.slice(7), token)) {
+    res.statusCode = 401;
+    return res.end('{"ok":false}');
+  }
+  let state;
+  try {
+    state = await readState();
+  } catch (error) {
+    console.error('payroom feed read failed', error.message);
+  }
+  if (!state) {
+    res.statusCode = 503;
+    return res.end('{"ok":false}');
+  }
+  res.statusCode = 200;
+  return res.end(JSON.stringify({ ok: true, ...salesFeed(state) }));
+}
+
 module.exports = async function handler(req, res) {
   const password = process.env.MIAOYAN_PAYROOM_PASSWORD;
   const configured = Boolean(password && process.env.MIAOYAN_PAYROOM_SESSION_SECRET);
@@ -99,6 +126,7 @@ module.exports = async function handler(req, res) {
     res.setHeader('Allow', 'GET, HEAD, POST');
     return res.end();
   }
+  if (new URL(req.url, 'https://miaoyan.app').searchParams.get('feed') === 'sales') return sendSalesFeed(req, res);
   if (!configured) return send(res, 503, renderLogin({ unconfigured: true }));
   if (!sessionValid(req)) return send(res, 200, renderLogin());
 

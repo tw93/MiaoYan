@@ -1284,6 +1284,35 @@ function buildStore(state) {
   return out;
 }
 
+// MiaoYan's paid units and buyer-paid USD cents per Apple (Pacific) day,
+// before refunds, for the product cards at the top of Mole's Payroom
+// (maintainer 2026-11-22). The same rows and conversion as buildView's totals,
+// so both pages agree; `through` is the last day Apple's report is in. A day
+// carries a third element, 1, when it is not whole: a currency with no rate
+// yet, or a day before `through` whose report this store never got (a failed
+// fetch), which this page also shows as not reported rather than as no sales.
+function salesFeed(state) {
+  const convert = converter(state.fx, 'USD');
+  const days = {};
+  for (const [date, type, units, , , price, cur] of state.sales.rows) {
+    if (units <= 0 || kindOf(type, price) !== 'sale') continue;
+    const usd = convert(price, cur);
+    const cell = (days[date] ||= [0, 0]);
+    cell[0] += units;
+    cell[1] += Math.round((usd || 0) * units * 100);
+    if (usd === null) cell[2] = 1;
+  }
+  const dates = state.sales.dates;
+  const through = Object.keys(dates).filter((d) => dates[d] === 'ok').sort().pop() || null;
+  const first = state.sales.rows[0] && state.sales.rows[0][0];
+  if (through && first) {
+    for (let d = first; d <= through; d = addDays(d, 1)) {
+      if (!dates[d]) (days[d] ||= [0, 0])[2] = 1;
+    }
+  }
+  return { product: 'miaoyan', timeZone: 'America/Los_Angeles', generatedAt: state.syncedAt || null, through, days };
+}
+
 module.exports = {
   APP_ID,
   ANALYTICS_REPORTS,
@@ -1298,6 +1327,7 @@ module.exports = {
   parseTsv,
   rangeBounds,
   quickSales,
+  salesFeed,
   readState,
   runSync,
   salesRowsFromReport,

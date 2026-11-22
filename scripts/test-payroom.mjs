@@ -518,4 +518,43 @@ eq(JSON.stringify(q('/payroom', 'miaoyan_payroom_view=bogus%7CEUR').view), JSON.
   checks += 1;
 }
 
+// ---- the daily sales Mole's Payroom reads --------------------------------
+{
+  const mk = (date, units, type = '1F', price = 88) => [date, type, units, 76.89, 'CNY', price, 'CNY', 'CN', 'iPhone', '', ''];
+  const st = lib.emptyState();
+  st.fx = { rates: { USD: 1, CNY: 7 } };
+  st.syncedAt = '2026-11-12T10:17:00.000Z';
+  st.sales.rows = [mk('2026-11-09', 2), mk('2026-11-09', -1), mk('2026-11-10', 1), mk('2026-11-10', 5, '1F', 0), mk('2026-11-10', 3, '3F')];
+  st.sales.dates = { '2026-11-09': 'ok', '2026-11-10': 'ok', '2026-11-11': 'none' };
+  const feed = lib.salesFeed(st);
+  eq(feed.days, { '2026-11-09': [2, 2514], '2026-11-10': [1, 1257] }, 'paid units and buyer-paid USD cents per Apple day, refunds, free and redownloads left out');
+  const pageView = lib.buildView(st, { range: 'all', today: '2026-11-12', currency: 'USD' });
+  eq([Object.values(feed.days).reduce((a, d) => a + d[0], 0), Math.round(pageView.totals.gross * 100)], [pageView.totals.sold, Object.values(feed.days).reduce((a, d) => a + d[1], 0)], 'the same units and gross as the page');
+  eq([feed.through, feed.timeZone, feed.generatedAt], ['2026-11-10', 'America/Los_Angeles', '2026-11-12T10:17:00.000Z'], 'through is the last day Apple reported, not a 404 day');
+  const gap = structuredClone(st);
+  delete gap.sales.dates['2026-11-09'];
+  gap.sales.dates['2026-11-08'] = 'ok';
+  gap.sales.rows.unshift(mk('2026-11-07', 1, '1F', 10), mk('2026-11-08', 1, '1F', 10));
+  gap.sales.rows[0][6] = 'XXX';
+  gap.sales.dates['2026-11-07'] = 'ok';
+  const gapFeed = lib.salesFeed(gap);
+  eq(gapFeed.days['2026-11-09'][2], 1, 'a day before through whose report never came is marked incomplete, not counted as whole');
+  eq(gapFeed.days['2026-11-07'][2], 1, 'a currency with no rate marks its day incomplete');
+  eq([gapFeed.days['2026-11-08'].length, gapFeed.days['2026-11-10'].length], [2, 2], 'whole days carry no mark');
+
+  const ask = (headers) => new Promise((resolve) => {
+    const seen = {};
+    const res = { statusCode: 200, setHeader(k, v) { seen[k.toLowerCase()] = v; }, end(body) { resolve({ status: this.statusCode, headers: seen, body: String(body || '') }); } };
+    handler({ method: 'GET', headers, url: '/payroom?feed=sales' }, res);
+  });
+  delete process.env.MIAOYAN_PAYROOM_FEED_TOKEN;
+  eq((await ask({ authorization: 'Bearer ' })).status, 401, 'no token configured, no feed');
+  process.env.MIAOYAN_PAYROOM_FEED_TOKEN = 'feed-token';
+  for (const headers of [{}, { authorization: 'Bearer wrong' }, { authorization: 'Bearer yes@!' }, { authorization: 'Bearer session' }]) {
+    const r = await ask(headers);
+    eq([r.status, r.body, r.headers['cache-control']], [401, '{"ok":false}', 'private, no-store, max-age=0'], 'the feed opens only with its own token');
+  }
+  delete process.env.MIAOYAN_PAYROOM_FEED_TOKEN;
+}
+
 console.log(`payroom: ${checks} checks passed`);
