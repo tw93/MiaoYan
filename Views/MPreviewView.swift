@@ -37,6 +37,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var postReadyCallbacks: [() -> Void] = []
     /// Closures waiting for the page to show one note (`runWhenShowing`).
     private var noteShownCallbacks: [(note: Note, block: () -> Void)] = []
+    /// The note the newest `load(note:)` is bringing in. A page that finishes
+    /// while it renders (the blank preload, on a Command-3 right after
+    /// launch) keeps the closures waiting for it.
+    private var loadingNote: Note?
     /// Whether this preview is currently rendered as the right pane of
     /// MiaoYan's split editor. Tracked locally so we can re-apply the
     /// `body.miaoyan-split-mode` class on every webView(_:didFinish:),
@@ -624,6 +628,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private func drainNoteShownCallbacks() {
         let waiting = noteShownCallbacks
         noteShownCallbacks.removeAll()
+        if let loading = loadingNote, loading !== note {
+            // Another page finished while the newest note still renders:
+            // only the closures for that note wait on.
+            noteShownCallbacks = waiting.filter { $0.note === loading }
+            return
+        }
+        loadingNote = nil
         for entry in waiting where entry.note === note {
             entry.block()
         }
@@ -678,6 +689,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         pendingPostLoadUpdateNote = nil
         postReadyCallbacks.removeAll()
         noteShownCallbacks.removeAll()
+        loadingNote = nil
         splitChromeEnabled = false
         note = nil
         stopLoading()
@@ -881,6 +893,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
     public func load(note: Note, force: Bool = false, completion: (() -> Void)? = nil) {
         self.loadCompletion = completion
+        loadingNote = note
         // Mark the template-load window. updateContent will defer until this
         // clears in webView(_:didFinish:) so split-view edits made during the
         // load don't get wiped by the bundle's DOM replacement.
@@ -932,6 +945,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 // note).
                 self.postReadyCallbacks.removeAll()
                 self.noteShownCallbacks.removeAll()
+                self.loadingNote = nil
                 self.pendingPostLoadUpdateNote = nil
                 AppDelegate.trackError(
                     NSError(
@@ -964,6 +978,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 self.isLoadingTemplate = false
                 self.postReadyCallbacks.removeAll()
                 self.noteShownCallbacks.removeAll()
+                self.loadingNote = nil
                 self.pendingPostLoadUpdateNote = nil
                 AppDelegate.trackError(error, context: "MPreviewView.load")
                 self.loadHTMLString("<html><body><p>Failed to load preview</p></body></html>", baseURL: nil)
@@ -1010,6 +1025,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let epoch = loadEpoch
         contentUpdateVersion &+= 1
         pendingPostLoadUpdateNote = nil
+        loadingNote = nil
         inPlaceNote = note
         Task { @MainActor [weak self, note] in
             guard let self else { return }

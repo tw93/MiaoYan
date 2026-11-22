@@ -731,6 +731,10 @@ final class PreviewPatchTests: XCTestCase {
         preview.load(note: second)
         preview.runWhenShowing(first) { XCTFail("the page did not show the first note again") }
         preview.runWhenShowing(second) { secondShown.fulfill() }
+        // The page that was up finishing while the second note still renders
+        // (the blank preload, on a Command-3 right after launch) dropped the
+        // closure for the second note, and it opened at the top (2026-11-22).
+        preview.webView(preview, didFinish: nil)
         await fulfillment(of: [secondShown], timeout: 20)
         XCTAssertEqual(shownWith.count, 1)
         XCTAssertTrue(shownWith.first.flatMap { $0 } === second)
