@@ -1216,7 +1216,9 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
     /// Disk events arrive in bursts (a synced folder, a git checkout); the
     /// list is listed from disk and redrawn once per burst.
-    lazy var reloadCoalescer = ShellReloadCoalescer { [weak self] note, completions in
+    lazy var reloadCoalescer = ShellReloadCoalescer(
+        select: { [weak self] note in self?.model.selectedNoteURL = note.url }
+    ) { [weak self] note, completions in
         guard let self else { return }
         self.model.reload()
         self.model.refreshNow(selecting: note?.url) {
@@ -1264,7 +1266,10 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
 /// Folds a burst of list reloads into one. The first request opens a short
 /// window; every request inside it joins that one reload, which selects the
-/// last note asked for and then runs every completion in arrival order. The
+/// last note asked for and then runs every completion in arrival order. A
+/// completion that came before that request (the welcome note selecting the
+/// first row) could move the selection, so the note is selected again after
+/// them, as it was when each request reloaded on its own (2026-11-22). The
 /// window is fixed from the first request, so a steady stream of events
 /// cannot hold the list back past it.
 @available(macOS 14, *)
@@ -1272,17 +1277,28 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 final class ShellReloadCoalescer {
     let window: TimeInterval
     private let perform: (_ selecting: Note?, _ completions: [@MainActor @Sendable () -> Void]) -> Void
+    private let select: ((Note) -> Void)?
     private var pendingSelection: Note?
+    /// How many completions came before the request that asked for
+    /// `pendingSelection`.
+    private var completionsBeforeSelection = 0
     private var pendingCompletions: [@MainActor @Sendable () -> Void] = []
     private(set) var isScheduled = false
 
-    init(window: TimeInterval = 0.15, perform: @escaping (Note?, [@MainActor @Sendable () -> Void]) -> Void) {
+    init(
+        window: TimeInterval = 0.15, select: ((Note) -> Void)? = nil,
+        perform: @escaping (Note?, [@MainActor @Sendable () -> Void]) -> Void
+    ) {
         self.window = window
+        self.select = select
         self.perform = perform
     }
 
     func request(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?) {
-        if let note { pendingSelection = note }
+        if let note {
+            pendingSelection = note
+            completionsBeforeSelection = pendingCompletions.count
+        }
         if let completion { pendingCompletions.append(completion) }
         guard !isScheduled else { return }
         isScheduled = true
@@ -1293,8 +1309,12 @@ final class ShellReloadCoalescer {
 
     private func fire() {
         let selection = pendingSelection
-        let completions = pendingCompletions
+        var completions = pendingCompletions
+        if let selection, let select, completionsBeforeSelection > 0 {
+            completions.insert({ select(selection) }, at: completionsBeforeSelection)
+        }
         pendingSelection = nil
+        completionsBeforeSelection = 0
         pendingCompletions = []
         isScheduled = false
         perform(selection, completions)

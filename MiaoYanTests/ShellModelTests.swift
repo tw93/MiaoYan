@@ -37,6 +37,19 @@ final class ShellModelTests: XCTestCase {
         XCTAssertTrue(reloads.first?.0 === last)
         XCTAssertEqual(order, Array(0..<50))
 
+        // The welcome note's completion selects the first row; a note asked
+        // for after it is selected again once that has run (2026-11-22).
+        var selected: [String] = []
+        let burst = expectation(description: "welcome then import")
+        let ordered = ShellReloadCoalescer(window: 0.01, select: { selected.append($0.url.lastPathComponent) }) { _, completions in
+            for completion in completions { completion() }
+            burst.fulfill()
+        }
+        ordered.request(selecting: nil) { selected.append("first row") }
+        ordered.request(selecting: last) { selected.append("imported done") }
+        wait(for: [burst], timeout: 2)
+        XCTAssertEqual(selected, ["first row", "b.md", "imported done"])
+
         // A later burst gets its own reload.
         let again = expectation(description: "second")
         let second = ShellReloadCoalescer(window: 0.01) { _, _ in again.fulfill() }
