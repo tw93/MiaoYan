@@ -1,4 +1,4 @@
-import Foundation
+import AppKit
 import MiaoYanCore
 
 // MARK: - Shortcut Template Structure
@@ -193,4 +193,95 @@ class ShortcutTemplateManager {
         )
     }
 
+}
+
+extension EditTextView {
+    // MARK: - Shortcut Expansion
+    func handleShortcutExpansion() -> Bool {
+        guard let storage = textStorage else { return false }
+
+        let range = selectedRange()
+        let text = storage.string as NSString
+
+        // Get the current line
+        let lineRange = text.lineRange(for: range)
+        let beforeCursor = text.substring(with: NSRange(location: lineRange.location, length: range.location - lineRange.location))
+
+        // Extract shortcut if present
+        guard let shortcut = extractShortcut(from: beforeCursor) else { return false }
+
+        return expandShortcut(shortcut, at: range)
+    }
+
+    private func extractShortcut(from text: String) -> String? {
+        // Simple suffix matching - more efficient than regex for this case
+        guard text.hasSuffix("/") == false else { return nil }
+
+        let components = text.components(separatedBy: "/")
+        guard let lastComponent = components.last,
+            !lastComponent.isEmpty,
+            lastComponent.allSatisfy({ $0.isLetter || $0.isNumber })
+        else {
+            return nil
+        }
+
+        return lastComponent
+    }
+
+    private func expandShortcut(_ shortcut: String, at range: NSRange) -> Bool {
+        guard let template = ShortcutTemplateManager.shared.getTemplate(for: shortcut),
+            let textStorage = textStorage
+        else {
+            return false
+        }
+
+        // Calculate the range to replace (including the "/" + shortcut)
+        let replaceStart = range.location - shortcut.count - 1  // -1 for "/"
+        let replaceLength = shortcut.count + 1
+
+        // Bounds checking
+        guard replaceStart >= 0,
+            replaceStart + replaceLength <= textStorage.length
+        else {
+            return false
+        }
+
+        let replaceRange = NSRange(location: replaceStart, length: replaceLength)
+
+        // Perform text replacement
+        replaceText(template.content, in: replaceRange)
+
+        // Set cursor position based on template with bounds checking
+        let newCursorPosition = replaceRange.location + template.cursorOffset
+        let finalLength = textStorage.length
+        let safeCursorPosition = min(newCursorPosition, finalLength)
+        let safeCursorLength = min(template.cursorLength, max(0, finalLength - safeCursorPosition))
+
+        let newRange = NSRange(location: safeCursorPosition, length: safeCursorLength)
+        setSelectedRange(newRange)
+
+        // Trigger syntax highlighting for the new content
+        fillHighlightLinks()
+
+        return true
+    }
+
+    // MARK: - Text Replacement Helper
+    private func replaceText(_ text: String, in range: NSRange) {
+        // shouldChangeText registers the undo for this edit; without it the
+        // typing undo kept the old range and Command-Z cut into the template.
+        guard let textStorage = textStorage, shouldChangeText(in: range, replacementString: text) else { return }
+
+        // Preserve text attributes when replacing
+        let attributes = typingAttributes
+        let attributedText = NSAttributedString(string: text, attributes: attributes)
+
+        textStorage.replaceCharacters(in: range, with: attributedText)
+
+        // Trigger layout update and change notification
+        if let tc = textContainer {
+            layoutManager?.ensureLayout(for: tc)
+        }
+        didChangeText()
+    }
 }
