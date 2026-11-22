@@ -339,9 +339,10 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
     private var frontmatterLines = 0
 
     private func lineStarts() -> [Int] {
-        let text = textView.string
-        let length = (text as NSString).length
+        // Read the length before the string: `string` copies the whole buffer.
+        let length = textView.textStorage?.length ?? (textView.string as NSString).length
         if let cached = lineStartsCache, lineStartsLength == length { return cached }
+        let text = textView.string
         let starts = ShellSplitMath.lineStarts(of: text)
         lineStartsCache = starts
         lineStartsLength = length
