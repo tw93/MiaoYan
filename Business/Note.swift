@@ -370,7 +370,8 @@ public class Note: NSObject {
         case hiddenFromMiaoYanTrash
     }
 
-    func removeFile(completely: Bool = false) -> FileRemovalResult? {
+    /// `pins` is where a note deleted from the Trash loses its pin.
+    func removeFile(completely: Bool = false, pins: PinCloud = PinSync.cloud) -> FileRemovalResult? {
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
 
         if isTrash() {
@@ -388,6 +389,9 @@ public class Note: NSObject {
                 } else {
                     try FileManager.default.trashItem(at: url, resultingItemURL: nil)
                 }
+                // Gone from the library: a later note of this name in the
+                // Trash must not come back pinned.
+                pins.removed(url)
                 NoteVersionManager.shared.removeVersions(for: self)
             } catch {
                 AppDelegate.trackError(error, context: "Note.systemTrashError")

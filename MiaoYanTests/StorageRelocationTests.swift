@@ -216,7 +216,8 @@ final class StorageRelocationTests: XCTestCase {
 
     /// Deleting a folder moved it to the Trash first and flushed its notes
     /// afterwards, so an edit typed in the last 1.5s found its file gone and
-    /// never reached the Trash copy. Both sidebars flush before the move.
+    /// never reached the Trash copy. Both sidebars delete through
+    /// `Storage.trashFolder`, which flushes before the move.
     @MainActor
     func testDeletingAFolderWritesWaitingEditsBeforeTheMove() async throws {
         try await withMoveLibrary { storage, _, source, _ in
@@ -242,10 +243,15 @@ final class StorageRelocationTests: XCTestCase {
             let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
             for path in ["Shell/ShellModel+Folders.swift", "Views/SidebarProjectView.swift"] {
                 let source = try String(contentsOf: root.appendingPathComponent(path), encoding: .utf8)
-                let flush = try XCTUnwrap(source.range(of: "storage.flushPendingSaves(inside: project)"), path)
-                let move = try XCTUnwrap(source.range(of: "FileManager.default.moveItem(at: project.url"), path)
-                XCTAssertLessThan(flush.lowerBound, move.lowerBound, "\(path) flushes before the folder moves")
+                XCTAssertNotNil(source.range(of: "try self.storage.trashFolder(project)"), "\(path) deletes through Storage.trashFolder")
+                XCTAssertNil(source.range(of: "FileManager.default.moveItem(at: project.url"), "\(path) moves no folder itself")
             }
+            let storageSource = try String(contentsOf: root.appendingPathComponent("Business/Storage.swift"), encoding: .utf8)
+            let trashFolder = try XCTUnwrap(storageSource.range(of: "func trashFolder(_ project: Project"))
+            let body = storageSource[trashFolder.upperBound...]
+            let flush = try XCTUnwrap(body.range(of: "flushPendingSaves(inside: project)"))
+            let move = try XCTUnwrap(body.range(of: "try FileManager.default.moveItem(at: project.url, to: destination)"))
+            XCTAssertLessThan(flush.lowerBound, move.lowerBound, "Storage.trashFolder flushes before the folder moves")
         }
     }
 

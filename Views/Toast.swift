@@ -1,4 +1,5 @@
 import AppKit
+import MiaoYanCore
 
 // MARK: - Toast Configuration
 struct ToastConfiguration: Sendable {
@@ -578,8 +579,11 @@ struct TrashReturn {
     }
 
     /// Moves each note back and calls `moved` after each move that succeeded.
-    /// Returns how many notes stayed in the Trash.
-    func perform(_ moved: (_ trashed: URL, _ original: URL) -> Void) -> Int {
+    /// Returns how many notes stayed in the Trash. The pins go back with the
+    /// note before `moved` reads it again: the delete moved them to the
+    /// Trash path, so a restored note came back unpinned and the Trash path
+    /// stayed pinned.
+    func perform(pins: PinCloud = PinSync.cloud, _ moved: (_ trashed: URL, _ original: URL) -> Void) -> Int {
         var failed = 0
         for entry in entries {
             do {
@@ -591,6 +595,7 @@ struct TrashReturn {
                     continue
                 }
                 try FileManager.default.moveItem(at: entry.trashed, to: entry.original)
+                pins.moved(from: entry.trashed, to: entry.original)
                 moved(entry.trashed, entry.original)
             } catch {
                 failed += 1

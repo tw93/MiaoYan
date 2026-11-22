@@ -1822,6 +1822,20 @@ class Storage {
         return Self.freeDestination(for: url, in: systemTrash)
     }
 
+    /// Moves a folder and everything in it to its volume's system Trash
+    /// (`systemTrashDestination`) once its notes' pending saves are written,
+    /// for both sidebars. The folder left the library, so its pins leave the
+    /// shared store with it. Nil when there is nowhere to move it; throws
+    /// when the move fails, leaving the pins as they were.
+    @discardableResult
+    func trashFolder(_ project: Project, pins: PinCloud = PinSync.cloud) throws -> URL? {
+        guard let destination = systemTrashDestination(for: project.url) else { return nil }
+        flushPendingSaves(inside: project)
+        try FileManager.default.moveItem(at: project.url, to: destination)
+        pins.removed(project.url)
+        return destination
+    }
+
     private static func freeDestination(for url: URL, in folder: URL) -> URL {
         let fileName = url.deletingPathExtension().lastPathComponent
         let fileExtension = url.pathExtension

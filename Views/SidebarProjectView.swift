@@ -1079,13 +1079,8 @@ class SidebarProjectView: NSOutlineView,
         ) { [weak vc, weak v] confirmed in
             guard let vc = vc, let v = v else { return }
             if confirmed {
-                guard let resultingItemUrl = self.storage.systemTrashDestination(for: project.url) else {
-                    return
-                }
-
-                self.storage.flushPendingSaves(inside: project)
                 do {
-                    try FileManager.default.moveItem(at: project.url, to: resultingItemUrl)
+                    guard try self.storage.trashFolder(project) != nil else { return }
 
                     v.removeProject(project: project)
 
