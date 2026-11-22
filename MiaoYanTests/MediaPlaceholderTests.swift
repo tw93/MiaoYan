@@ -26,6 +26,60 @@ final class MediaPlaceholderTests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    /// A weekly issue's cover is a raw `<img src=… width="800" />` on its own
+    /// lines, which cmark leaves outside any paragraph, so it took no reserved
+    /// box and its 1px placeholder held it as tall as it is wide: every cover
+    /// opened as a square and jumped to its real height (maintainer,
+    /// 2026-11-22). It now holds the 16:9 box an image alone in a paragraph
+    /// does; one beside text stays inline.
+    @MainActor
+    func testARawImageOnItsOwnLinesReservesTheBoxAParagraphImageDoes() async throws {
+        let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8">
+            <link rel="stylesheet" href="\(bundle.appendingPathComponent("css/base.css").absoluteString)">
+            <link rel="stylesheet" href="\(bundle.appendingPathComponent("css/theme-light.css").absoluteString)">
+            </head><body>
+            <div class="markdown-body heti" id="write" style="width: 640px">
+            <img id="cover" class="lazy-image" data-measure="1" width="800" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/cover.jpg" />
+            <p><small>Caption.</small></p>
+            <div>Text <img id="inline" class="lazy-image" data-measure="1" width="200" src="\(Self.placeholder)" data-src="http://127.0.0.1:9/i.png"> more.</div>
+            </div>
+            <script src="\(bundle.appendingPathComponent("js/common.js").absoluteString)"></script>
+            <script>
+            MiaoYanCommon.optimizeImages();
+            (function() {
+                var cover = document.getElementById('cover');
+                var box = cover.getBoundingClientRect();
+                window.__state = {
+                    reserved: cover.classList.contains('media-reserve'),
+                    width: box.width,
+                    height: box.height,
+                    inlineReserved: document.getElementById('inline').classList.contains('media-reserve')
+                };
+            })();
+            </script>
+            </body></html>
+            """
+        let url = directory.appendingPathComponent("cover.html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 700, height: 900))
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        var state: [String: Any] = [:]
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if let read = try? await webView.evaluateJavaScript("window.__state || null") as? [String: Any] {
+                state = read
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(state["reserved"] as? Bool, true, "\(state)")
+        XCTAssertEqual(state["width"] as? Double, 640)
+        XCTAssertEqual(state["height"] as? Double, 360, "16:9, not a square")
+        XCTAssertEqual(state["inlineReserved"] as? Bool, false, "an image beside text stays inline")
+    }
+
     @MainActor
     func testMediaHoldATintedBoxUntilTheyCanShowSomething() async throws {
         let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))

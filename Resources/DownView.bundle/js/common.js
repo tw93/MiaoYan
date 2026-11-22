@@ -163,8 +163,7 @@ const MiaoYanCommon = {
     document.querySelectorAll('img[data-measure]').forEach((img) => {
       if (img.__miaoyanMeasured) return;
       img.__miaoyanMeasured = true;
-      const parent = img.parentElement;
-      if (img.classList.contains('lazy-image') && parent && parent.tagName === 'P' && parent.children.length === 1 && !parent.textContent.trim()) {
+      if (img.classList.contains('lazy-image') && this.standsAlone(img)) {
         img.classList.add('media-reserve');
         img.addEventListener('error', () => img.classList.remove('media-reserve'), { once: true });
       }
@@ -295,6 +294,21 @@ const MiaoYanCommon = {
         if (Math.abs(missing) >= 1) window.scrollBy(0, missing);
       }
     });
+  },
+
+  /** Whether an image sits on a line of its own: alone in its paragraph, or
+   *  a raw `<img>` written on its own lines (the cover of a weekly issue,
+   *  `<img src=… width="800" />`), which cmark puts straight into the block
+   *  around it with no paragraph. That one used to take no reserved box, and
+   *  its 1px placeholder made it as tall as it is wide until the picture
+   *  arrived. One beside text or another image stays inline. */
+  standsAlone(img) {
+    const parent = img.parentElement;
+    if (!parent) return false;
+    if (parent.tagName === 'P') return parent.children.length === 1 && !parent.textContent.trim();
+    const inline = (node) =>
+      !!node && (node.nodeType === Node.TEXT_NODE ? node.textContent.trim() !== '' : node.nodeType === Node.ELEMENT_NODE && getComputedStyle(node).display.startsWith('inline'));
+    return !['SPAN', 'A', 'TD', 'TH', 'LI', 'STRONG', 'EM'].includes(parent.tagName) && !inline(img.previousSibling) && !inline(img.nextSibling);
   },
 
   // An image keeps a tinted box until it has painted, so a slow one reads
