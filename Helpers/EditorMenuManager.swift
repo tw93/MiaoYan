@@ -240,3 +240,34 @@ extension EditTextView {
         return super.validateMenuItem(menuItem)
     }
 }
+
+// MARK: - Window Undo
+
+extension EditTextView {
+    /// The undo manager Edit > Undo reaches through the window, for both the
+    /// storyboard window and the shell. Another text field keeps the list's,
+    /// and so does the list or the sidebar (`inList`) while the list holds a
+    /// delete to put back. Anywhere else, the split preview or the toolbar,
+    /// Command-Z undoes the typing of the note on screen: it went to the
+    /// list's and did nothing, so a click on the preview left the note's undo
+    /// out of reach (2026-11-22).
+    static func windowUndoManager(firstResponder: NSResponder?, inList: Bool, editor: EditTextView?, list: UndoManager) -> UndoManager {
+        if let text = firstResponder as? NSTextView, !(text is EditTextView) { return list }
+        if inList, list.canUndo || list.canRedo { return list }
+        guard let editor, editor.isEditable, let note = editor.storageNote, editor.window != nil,
+            !editor.isHiddenOrHasHiddenAncestor, editor.visibleRect.width > 1, editor.visibleRect.height > 1
+        else { return list }
+        return note.undoManager
+    }
+
+    /// Edit > Undo and Redo for a responder that sends them to `manager`
+    /// itself: enabled when there is something to undo, titled as the
+    /// manager names it. Nil for any other item.
+    static func validateUndo(_ item: NSValidatedUserInterfaceItem, undo: Selector, redo: Selector, manager: UndoManager?) -> Bool? {
+        let isUndo = item.action == undo
+        guard isUndo || item.action == redo else { return nil }
+        guard let manager else { return false }
+        (item as? NSMenuItem)?.title = isUndo ? manager.undoMenuItemTitle : manager.redoMenuItemTitle
+        return isUndo ? manager.canUndo : manager.canRedo
+    }
+}

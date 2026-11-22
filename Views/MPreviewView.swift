@@ -872,6 +872,30 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 })();
             """
     }
+    // MARK: - Undo
+
+    /// Edit > Undo with the preview focused undoes the note's typing, through
+    /// the window's routing (`EditTextView.windowUndoManager`). In the shell
+    /// the SwiftUI host above the preview took the action for an undo
+    /// manager of its own, and Command-Z did nothing (2026-11-22).
+    private var noteUndoManager: UndoManager? {
+        guard let window else { return nil }
+        return window.delegate?.windowWillReturnUndoManager?(window)
+    }
+
+    @objc func undo(_ sender: Any?) {
+        noteUndoManager?.undo()
+    }
+
+    @objc func redo(_ sender: Any?) {
+        noteUndoManager?.redo()
+    }
+
+    override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+        EditTextView.validateUndo(item, undo: #selector(undo(_:)), redo: #selector(redo(_:)), manager: noteUndoManager)
+            ?? super.validateUserInterfaceItem(item)
+    }
+
     private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         guard let url = navigationAction.request.url else {
             return .allow

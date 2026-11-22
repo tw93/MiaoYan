@@ -155,20 +155,13 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
-        guard let fr = window.firstResponder else {
-            return notesListUndoManager
-        }
-
-        if fr.isKind(of: NotesTableView.self) {
-            return notesListUndoManager
-        }
-
-        if fr.isKind(of: EditTextView.self) {
+        if window.firstResponder is EditTextView {
             guard let vc = AppContext.shared.viewController, let ev = vc.editArea, ev.isEditable else { return notesListUndoManager }
             return editorUndoManager
         }
-
-        return notesListUndoManager
+        return EditTextView.windowUndoManager(
+            firstResponder: window.firstResponder, inList: window.firstResponder is NSTableView,
+            editor: AppContext.shared.viewController?.editArea, list: notesListUndoManager)
     }
 
     // MARK: - Window Reveal Animation

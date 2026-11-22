@@ -314,4 +314,39 @@ final class EditorStorageOwnershipTests: XCTestCase {
             XCTAssertEqual((storage.attribute(.paragraphStyle, at: at, effectiveRange: nil) as? NSParagraphStyle)?.minimumLineHeight, height, "at \(at)")
         }
     }
+
+    /// Edit > Undo with the split preview focused went to the list's undo
+    /// manager and did nothing, so a click on the preview left the note's
+    /// typing out of reach until the next edit in the editor.
+    @MainActor
+    func testWindowUndoReachesTheNoteOutsideTheEditor() async throws {
+        let note = makeNote("undo.md", body: "Body")
+        await note.ensureContentLoadedAsync()
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 800, height: 400), styleMask: [.titled], backing: .buffered, defer: true)
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 400, height: 400))
+        editor.isShellHosted = true
+        let preview = NSView(frame: NSRect(x: 400, y: 0, width: 400, height: 400))
+        let table = NSTableView(frame: NSRect(x: 0, y: 0, width: 100, height: 100))
+        let field = NSTextView(frame: NSRect(x: 0, y: 0, width: 100, height: 20))
+        for view in [editor, preview, table, field] { window.contentView?.addSubview(view) }
+        editor.fill(note: note)
+        XCTAssertTrue(editor.isEditable)
+        let list = UndoManager()
+        func route(_ responder: NSResponder?) -> UndoManager {
+            EditTextView.windowUndoManager(firstResponder: responder, inList: responder === table, editor: editor, list: list)
+        }
+
+        XCTAssertTrue(route(preview) === note.undoManager)
+        XCTAssertTrue(route(window) === note.undoManager)
+        XCTAssertTrue(route(nil) === note.undoManager)
+        XCTAssertTrue(route(field) === list, "another text field keeps its own undo")
+        XCTAssertTrue(route(table) === note.undoManager, "a list with nothing to put back")
+
+        list.registerUndo(withTarget: self) { _ in }
+        XCTAssertTrue(route(table) === list, "a delete to put back stays with the list")
+        XCTAssertTrue(route(preview) === note.undoManager)
+
+        editor.isHidden = true
+        XCTAssertTrue(route(preview) === list, "hidden text is not undone")
+    }
 }

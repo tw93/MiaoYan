@@ -20,7 +20,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         // Before the model reads its stored layout and the split its widths.
         Self.adoptStoryboardColumns()
         model = ShellModel()
-        let window = NSWindow(
+        let window = ShellWindow(
             contentRect: NSRect(x: 0, y: 0, width: 1100, height: 700),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered,
@@ -763,10 +763,11 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         case kVK_ANSI_Z where flags == [.command] && responder === editor:
             model.editor.keepCursorThroughFormatUndo()
             return event
-        // Outside text, Command-Z puts deleted notes back. Left to the
-        // responder chain it could stop at a SwiftUI view or the editor's
-        // per-note manager, and the undo did nothing.
-        case kVK_ANSI_Z where flags == [.command] && !isText && model.notesUndoManager.canUndo:
+        // In the sidebar and the list, Command-Z puts deleted notes back.
+        // Left to the responder chain it could stop at a SwiftUI view or the
+        // editor's per-note manager, and the undo did nothing. Elsewhere
+        // (the preview, the window) it is the note's, as Edit > Undo says.
+        case kVK_ANSI_Z where flags == [.command] && !isText && (column == .sidebar || column == .list) && model.notesUndoManager.canUndo:
             model.notesUndoManager.undo()
             return nil
         case kVK_Delete where flags == [.command] && isText:
@@ -1238,10 +1239,14 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         note.flushPendingSave()
     }
 
-    /// The list's undo (a delete) for everything but the editor, whose text
-    /// view asks its delegate for the note's own undo manager first.
+    /// The editor's text view asks its delegate for the note's undo manager
+    /// first; everything else follows `EditTextView.windowUndoManager`, the
+    /// sidebar and the list (the first two columns) counting as the list.
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
-        model.notesUndoManager
+        let column = column(of: window.firstResponder)
+        return EditTextView.windowUndoManager(
+            firstResponder: window.firstResponder, inList: column == .sidebar || column == .list,
+            editor: model.editor.textView, list: model.notesUndoManager)
     }
 
     /// MainWindowController's rule: a Custom appearance keeps its own colours
@@ -1261,6 +1266,52 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     /// `ShellModel.flushEdits`, for the app delegate's terminate path.
     func flushEdits() {
         model.flushEdits()
+    }
+}
+
+/// Edit > Undo through the delegate's `windowWillReturnUndoManager`. With
+/// SwiftUI in the window, NSWindow's own undo went to an undo manager of
+/// SwiftUI's and never asked the delegate, so Command-Z with the list, the
+/// sidebar or the window focused reached neither the note nor a delete
+/// (2026-11-22). A text view (the editor, a field's editor) keeps NSWindow's
+/// own undo, which uses the text's undo manager: a field's typing is not on
+/// the window's.
+private final class ShellWindow: NSWindow {
+    private var routedUndoManager: UndoManager? {
+        firstResponder is NSTextView ? nil : delegate?.windowWillReturnUndoManager?(self)
+    }
+
+    override var undoManager: UndoManager? {
+        routedUndoManager ?? super.undoManager
+    }
+
+    @objc func undo(_ sender: Any?) {
+        guard let manager = routedUndoManager else { return windowAction(#selector(undo(_:)), sender) }
+        manager.undo()
+    }
+
+    @objc func redo(_ sender: Any?) {
+        guard let manager = routedUndoManager else { return windowAction(#selector(redo(_:)), sender) }
+        manager.redo()
+    }
+
+    /// NSWindow's own `undo:` or `redo:`, which Swift cannot call as super.
+    private func windowAction(_ action: Selector, _ sender: Any?) {
+        typealias Action = @convention(c) (AnyObject, Selector, Any?) -> Void
+        guard let implementation = class_getMethodImplementation(NSWindow.self, action) else { return }
+        unsafeBitCast(implementation, to: Action.self)(self, action, sender)
+    }
+
+    override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+        guard routedUndoManager != nil else { return super.validateUserInterfaceItem(item) }
+        return EditTextView.validateUndo(item, undo: #selector(undo(_:)), redo: #selector(redo(_:)), manager: routedUndoManager)
+            ?? super.validateUserInterfaceItem(item)
+    }
+
+    override func validateMenuItem(_ item: NSMenuItem) -> Bool {
+        guard routedUndoManager != nil else { return super.validateMenuItem(item) }
+        return EditTextView.validateUndo(item, undo: #selector(undo(_:)), redo: #selector(redo(_:)), manager: routedUndoManager)
+            ?? super.validateMenuItem(item)
     }
 }
 
