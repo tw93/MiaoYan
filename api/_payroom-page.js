@@ -488,7 +488,7 @@ function iso3to2(code) {
 function controls(view) {
   const link = (r, c, text, on) => `<a href="/payroom?r=${encodeURIComponent(r)}&amp;c=${c}"${on ? ' aria-current="true"' : ''}>${esc(text)}</a>`;
   // Mole's order, shortest first: 当月, then the rolling windows, then 全部.
-  const presets = [['month', '当月'], ['7d', '近7天'], ['30d', '近30天'], ['90d', '近90天'], ['all', '全部']];
+  const presets = [['month', '当月'], ['7d', '近 7 天'], ['30d', '近 30 天'], ['90d', '近 90 天'], ['all', '全部']];
   const ranges = presets.map(([r, t]) => link(r, view.currency, t, view.range === r)).join('');
   const inMonth = view.range.startsWith('m:');
   // A month reads 2611: 2026-11 did not fit the desktop select and cost the
