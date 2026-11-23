@@ -19,8 +19,10 @@ final class PinCloudTests: XCTestCase {
         super.tearDown()
     }
 
-    private func device(_ store: PinCloudStore?, library: String = "/Users/me/Library/Mobile Documents/iCloud~com~tw93~miaoyan/Documents") -> PinCloud {
-        let suite = "PinCloudTests-\(UUID().uuidString)"
+    private func device(
+        _ store: PinCloudStore?, library: String = "/Users/me/Library/Mobile Documents/iCloud~com~tw93~miaoyan/Documents", suite given: String? = nil
+    ) -> PinCloud {
+        let suite = given ?? "PinCloudTests-\(UUID().uuidString)"
         suites.append(suite)
         let cloud = PinCloud(store: store, defaults: UserDefaults(suiteName: suite)!, mergedKey: "merged")
         cloud.setLibrary(URL(fileURLWithPath: library, isDirectory: true))
@@ -104,6 +106,63 @@ final class PinCloudTests: XCTestCase {
         store.values[PinCloud.storeKey] = ["Theirs.md"]
         cloud.changedExternally(reason: PinCloud.serverChange)
         XCTAssertEqual(store.array(forKey: PinCloud.storeKey) as? [String], ["Theirs.md"])
+    }
+
+    func testAMergeWhoseFirstAnswerComesInALaterLaunchIsStillLaidOverIt() {
+        let store = MemoryStore()
+        let suite = "PinCloudTests-\(UUID().uuidString)"
+        device(store, library: mac, suite: suite).mergeLocalPins([note(mac, "Mine.md")])
+
+        // The app quit before iCloud answered; next launch the answer
+        // replaces the store, and the merge is done by then.
+        let relaunched = device(store, library: mac, suite: suite)
+        store.values[PinCloud.storeKey] = ["Theirs.md"]
+        XCTAssertTrue(relaunched.isPinned(note(mac, "Mine.md"), attribute: true), "still pinned while it waits")
+        relaunched.changedExternally(reason: PinCloud.initialSyncChange)
+        XCTAssertEqual(Set(store.array(forKey: PinCloud.storeKey) as? [String] ?? []), ["Mine.md", "Theirs.md"])
+
+        // Laid over once, then the store decides again.
+        store.values[PinCloud.storeKey] = ["Theirs.md"]
+        relaunched.changedExternally(reason: PinCloud.serverChange)
+        XCTAssertFalse(device(store, library: mac, suite: suite).isPinned(note(mac, "Mine.md"), attribute: true))
+    }
+
+    func testAPinMadeWhileAnotherDeviceWroteIsNotLost() {
+        let store = MemoryStore()
+        let macCloud = device(store, library: mac)
+        let phoneCloud = device(store, library: phone)
+        macCloud.mergeLocalPins([])
+        phoneCloud.mergeLocalPins([])
+
+        // Both change before either sees the other; the phone's write wins.
+        macCloud.setPinned(true, note(mac, "A.md"))
+        store.values[PinCloud.storeKey] = ["B.md"]
+        let change = macCloud.changedExternally(reason: PinCloud.serverChange)
+        XCTAssertEqual(Set(store.array(forKey: PinCloud.storeKey) as? [String] ?? []), ["A.md", "B.md"])
+        XCTAssertEqual(change.changedPaths, ["B.md"], "only what this Mac did not show yet reads its pin again")
+
+        // An unpin made after the phone saw the pin is not fought.
+        store.values[PinCloud.storeKey] = ["B.md"]
+        macCloud.changedExternally(reason: PinCloud.serverChange)
+        XCTAssertEqual(store.array(forKey: PinCloud.storeKey) as? [String], ["B.md"])
+
+        // An unpin here survives a write from the phone too, once.
+        macCloud.setPinned(false, note(mac, "B.md"))
+        store.values[PinCloud.storeKey] = ["B.md", "C.md"]
+        macCloud.changedExternally(reason: PinCloud.serverChange)
+        XCTAssertEqual(store.array(forKey: PinCloud.storeKey) as? [String], ["C.md"])
+    }
+
+    func testAnotherICloudAccountMergesThisDevicesPinsAgain() {
+        let store = MemoryStore()
+        let cloud = device(store, library: mac)
+        cloud.mergeLocalPins([note(mac, "Mine.md")])
+        store.values[PinCloud.storeKey] = ["Other account.md"]
+        let change = cloud.changedExternally(reason: PinCloud.accountChange)
+        XCTAssertTrue(change.needsMerge)
+        XCTAssertNil(change.changedPaths, "every note reads its pin again")
+        cloud.mergeLocalPins([note(mac, "Mine.md")])
+        XCTAssertEqual(Set(store.array(forKey: PinCloud.storeKey) as? [String] ?? []), ["Mine.md", "Other account.md"])
     }
 
     func testWithoutTheStoreOrOutsideTheLibraryTheAttributeDecides() {

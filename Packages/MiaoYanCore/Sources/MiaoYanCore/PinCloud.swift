@@ -31,15 +31,35 @@ public final class PinCloud: @unchecked Sendable {
     /// server and for iCloud's first answer after launch.
     public static let serverChange = 0
     public static let initialSyncChange = 1
+    /// ...and for a switch to another iCloud account.
+    public static let accountChange = 3
+
+    /// What a change from outside asks of the caller.
+    public struct ExternalChange: Sendable {
+        /// The iCloud account changed: this device's pins have not joined
+        /// its store yet, so the caller runs the merge again.
+        public let needsMerge: Bool
+        /// Paths whose pin may differ from before, nil when every note has
+        /// to read its pin again.
+        public let changedPaths: Set<String>?
+    }
 
     private let lock = NSLock()
     private let store: PinCloudStore?
     private let defaults: UserDefaults
     private let mergedKey: String
     private var roots: [String] = []
-    /// The pins this device brought at its merge in this launch, written
-    /// again on top of iCloud's first answer should that answer replace them.
+    /// The pins this device brought at its merge, written again on top of
+    /// iCloud's next answer should that answer replace them. Kept in the
+    /// defaults until then: iCloud drops writes made before its first
+    /// answer, which may come in a later launch (2026-11-22).
     private var pendingMerge: Set<String>?
+    /// Pins and unpins made here since the last change from outside. One
+    /// device's whole list replaces the other's, so a change made here
+    /// while another device wrote is put back once on top of its list.
+    private var unconfirmed: [String: Bool] = [:]
+    /// The shared pins as last seen, to tell which changed from outside.
+    private var lastSeen: Set<String>?
     /// Pins of a note or folder that left the library in this launch, by
     /// where it went, so moving it back (an undo of a delete that fell back
     /// to the system Trash) brings them back.
@@ -52,6 +72,7 @@ public final class PinCloud: @unchecked Sendable {
         self.store = store
         self.defaults = defaults
         self.mergedKey = mergedKey
+        if let pending = defaults.stringArray(forKey: pendingKey) { pendingMerge = Set(pending) }
     }
 
     public var isShared: Bool { store != nil }
@@ -80,7 +101,7 @@ public final class PinCloud: @unchecked Sendable {
     public func isPinned(_ url: URL, attribute: Bool) -> Bool {
         lock.withLock {
             guard let path = path(of: url), let shared = shared() else { return attribute }
-            if shared.contains(path) { return true }
+            if shared.contains(path) || pendingMerge?.contains(path) == true { return true }
             return merged ? false : attribute
         }
     }
@@ -91,6 +112,8 @@ public final class PinCloud: @unchecked Sendable {
             guard store != nil, let path = path(of: url) else { return }
             var next = shared() ?? []
             if pinned { next.insert(path) } else { next.remove(path) }
+            unconfirmed[path] = pinned
+            if !pinned, pendingMerge?.remove(path) != nil { savePending() }
             write(next)
         }
     }
@@ -117,6 +140,7 @@ public final class PinCloud: @unchecked Sendable {
             } else {
                 return
             }
+            follow(from: path(of: old), to: newPath)
             if next != current { write(next) }
         }
     }
@@ -127,6 +151,7 @@ public final class PinCloud: @unchecked Sendable {
         lock.withLock {
             guard let path = path(of: url), let current = shared() else { return }
             let next = Self.moving(current, from: path, to: nil)
+            follow(from: path, to: nil)
             if next != current { write(next) }
         }
     }
@@ -173,24 +198,77 @@ public final class PinCloud: @unchecked Sendable {
             write((shared() ?? []).union(local))
             defaults.set(true, forKey: mergedKey)
             pendingMerge = local
+            savePending()
         }
     }
 
-    /// The store changed from outside. A merge made before iCloud's first
-    /// answer is laid over that answer once, so neither side's pins are
-    /// lost; the caller then reads every note's pin again.
-    public func changedExternally(reason: Int?) {
+    /// The store changed from outside. A merge, and the pins and unpins
+    /// made here since the last such change, are laid over it once, so
+    /// neither side's are lost; a change made after this device's reached
+    /// the other one then stands. The caller reads the pins it names again.
+    @discardableResult public func changedExternally(reason: Int?) -> ExternalChange {
         lock.withLock {
-            guard let local = pendingMerge, reason == Self.serverChange || reason == Self.initialSyncChange else { return }
-            pendingMerge = nil
+            if reason == Self.accountChange {
+                defaults.removeObject(forKey: mergedKey)
+                pendingMerge = nil
+                savePending()
+                unconfirmed = [:]
+                lastSeen = shared()
+                return ExternalChange(needsMerge: true, changedPaths: nil)
+            }
+            let before = lastSeen
             let current = shared() ?? []
-            if !local.isSubset(of: current) { write(current.union(local)) }
+            guard reason == Self.serverChange || reason == Self.initialSyncChange else {
+                lastSeen = current
+                return ExternalChange(needsMerge: false, changedPaths: nil)
+            }
+            var next = current.union(pendingMerge ?? [])
+            for (path, pinned) in unconfirmed where current.contains(path) != pinned {
+                if pinned { next.insert(path) } else { next.remove(path) }
+            }
+            pendingMerge = nil
+            savePending()
+            unconfirmed = [:]
+            if next != current { write(next) } else { lastSeen = current }
+            return ExternalChange(needsMerge: false, changedPaths: before.map { $0.symmetricDifference(next) })
         }
+    }
+
+    /// `url`'s path as the shared pins name it, nil outside the library.
+    public func sharedPath(of url: URL) -> String? {
+        lock.withLock { path(of: url) }
     }
 
     // MARK: - Under the lock
 
     private var merged: Bool { defaults.bool(forKey: mergedKey) }
+    private var pendingKey: String { mergedKey + ".Pending" }
+
+    private func savePending() {
+        if let pendingMerge { defaults.set(pendingMerge.sorted(), forKey: pendingKey) } else { defaults.removeObject(forKey: pendingKey) }
+    }
+
+    /// The merge still waiting and the changes not yet confirmed follow a
+    /// move, and leave with what left the library.
+    private func follow(from old: String?, to new: String?) {
+        guard let old else { return }
+        if let pending = pendingMerge {
+            let moved = Self.moving(pending, from: old, to: new)
+            if moved != pending {
+                pendingMerge = moved
+                savePending()
+            }
+        }
+        var next: [String: Bool] = [:]
+        for (path, pinned) in unconfirmed {
+            guard path == old || path.hasPrefix(old + "/") else {
+                next[path] = pinned
+                continue
+            }
+            if let new { next[new + path.dropFirst(old.count)] = pinned }
+        }
+        unconfirmed = next
+    }
 
     private func path(of url: URL) -> String? {
         for root in roots {
@@ -208,5 +286,6 @@ public final class PinCloud: @unchecked Sendable {
     private func write(_ paths: Set<String>) {
         store?.set(paths.sorted(), forKey: Self.storeKey)
         store?.synchronize()
+        lastSeen = paths
     }
 }

@@ -81,6 +81,30 @@ final class PinSyncTests: XCTestCase {
         return dir.resolvingSymlinksInPath()
     }
 
+    /// Renamed in Finder: the store named the old path and the attribute no
+    /// longer counts once merged, so the note came back unpinned.
+    func testANoteRenamedOutsideMiaoYanKeepsItsPin() throws {
+        let library = try makeLibrary()
+        let cloud = sharedCloud(library: library)
+        let old = library.appendingPathComponent("Plan.md")
+        let renamed = library.appendingPathComponent("Plan 2026.md")
+        try "text".write(to: old, atomically: true, encoding: .utf8)
+        cloud.setPinned(true, old)
+        XCTAssertTrue(PinSync.isPinned(old, cloud: cloud))
+
+        try FileManager.default.moveItem(at: old, to: renamed)
+        PinSync.followRename(to: renamed, cloud: cloud)
+
+        XCTAssertTrue(cloud.isPinned(renamed, attribute: false))
+        XCTAssertFalse(cloud.isPinned(old, attribute: false), "a later note at the old name is not pinned")
+
+        // A new file that is not the pinned one does not take its pin.
+        let other = library.appendingPathComponent("Other.md")
+        try "text".write(to: other, atomically: true, encoding: .utf8)
+        PinSync.followRename(to: other, cloud: cloud)
+        XCTAssertFalse(cloud.isPinned(other, attribute: false))
+    }
+
     /// The delete moved the pin to the Trash path; Undo moved the file back
     /// without it, so the note came back unpinned and `Trash/x.md` stayed.
     func testUndoingADeleteBringsThePinBack() throws {

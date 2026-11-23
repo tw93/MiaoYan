@@ -252,6 +252,7 @@ class FileSystemEventManager {
 
         guard storage.getProjectBy(url: processedURL) != nil else { return }
 
+        PinSync.followRename(to: processedURL)
         guard let note = storage.initNote(url: processedURL) else { return }
         note.load()
         note.loadModifiedLocalAt()

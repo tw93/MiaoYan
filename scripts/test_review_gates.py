@@ -114,6 +114,8 @@ class RiskTierTests(unittest.TestCase):
             "Business/Note.swift": "notes",
             "Views/EditTextView.swift": "notes",
             "Helpers/UserDefaultsManagement.swift": "sync",
+            "Business/PinSync.swift": "sync",
+            "Packages/MiaoYanCore/Sources/MiaoYanCore/PinCloud.swift": "sync",
             "Resources/DownView.bundle/js/app.js": "export",
             "Packages/MiaoYanCore/Sources/MiaoYanCore/NoteText.swift": "core",
         }.items():

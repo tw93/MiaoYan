@@ -19,6 +19,10 @@ enum PinSync {
         mergedKey: "PinsMergedIntoICloud")
 
     private static var observer: NSObjectProtocol?
+    /// The files of the notes shown pinned, by file identity, so a pinned
+    /// note renamed outside MiaoYan (Finder, another Mac) keeps its pin at
+    /// its new path: the store names the old one (2026-11-22).
+    private static var pinnedFiles: [NSObject: URL] = [:]
 
     nonisolated static var hasKeyValueStore: Bool {
         guard let task = SecTaskCreateFromSelf(nil) else { return false }
@@ -36,8 +40,25 @@ enum PinSync {
     }
 
     /// Whether the note shows pinned on this Mac.
-    static func isPinned(_ url: URL) -> Bool {
-        cloud.isPinned(url, attribute: attribute(of: url))
+    static func isPinned(_ url: URL, cloud: PinCloud = PinSync.cloud) -> Bool {
+        let pinned = cloud.isPinned(url, attribute: attribute(of: url))
+        if pinned, cloud.isShared, let file = identity(of: url) { pinnedFiles[file] = url }
+        return pinned
+    }
+
+    /// A note file appeared at `url` outside MiaoYan. When it is a pinned
+    /// note's file under a new name, and that name is gone, the pin moves
+    /// with it before the note reads its pin.
+    static func followRename(to url: URL, cloud: PinCloud = PinSync.cloud) {
+        guard cloud.isShared, let file = identity(of: url), let old = pinnedFiles[file], old != url,
+            !FileManager.default.fileExists(atPath: old.path)
+        else { return }
+        cloud.moved(from: old, to: url)
+        pinnedFiles[file] = url
+    }
+
+    nonisolated private static func identity(of url: URL) -> NSObject? {
+        (try? url.resourceValues(forKeys: [.fileResourceIdentifierKey]))?.fileResourceIdentifier as? NSObject
     }
 
     /// Once at launch, before the notes load, which read their pins through
@@ -56,6 +77,10 @@ enum PinSync {
         }
         NSUbiquitousKeyValueStore.default.synchronize()
 
+        merge(library: library, storage: storage)
+    }
+
+    private static func merge(library: URL, storage: Storage) {
         let extensions = storage.allowedExtensions
         Task.detached(priority: .utility) {
             let pinned = PinCloud.downloadedNotes(in: library, extensions: extensions).filter(attribute(of:))
@@ -64,10 +89,19 @@ enum PinSync {
     }
 
     private static func changedElsewhere(reason: Int?, storage: Storage) {
-        cloud.changedExternally(reason: reason)
+        let change = cloud.changedExternally(reason: reason)
+        if change.needsMerge, let library = UserDefaultsManagement.iCloudDocumentsContainer {
+            merge(library: library, storage: storage)
+        }
+        // Only the notes another device changed read their pin again; each
+        // read touches the file, and the list can hold thousands.
         var count = 0
         for note in storage.noteList {
-            note.isPinned = isPinned(note.url)
+            if let changed = change.changedPaths {
+                if let path = cloud.sharedPath(of: note.url), changed.contains(path) { note.isPinned = isPinned(note.url) }
+            } else {
+                note.isPinned = isPinned(note.url)
+            }
             if note.isPinned { count += 1 }
         }
         storage.pinned = count
