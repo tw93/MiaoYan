@@ -214,6 +214,8 @@ public enum TableEditing {
         if let delimiter = lines.indices.dropFirst().first(where: { isDelimiter(lines[$0].cells) }) {
             start = delimiter - 1
             guard caret >= start else { return nil }
+            // GFM: a header with another number of cells than the line of dashes is no table.
+            guard lines[start].cells.count == lines[delimiter].cells.count else { return nil }
         } else {
             // No dashes yet: a row being typed. Only a line closed by pipes
             // at both ends with two cells or more is taken for one, or `|x|`
@@ -271,8 +273,7 @@ public enum TableEditing {
     /// fence of backticks or tildes (one never closed runs to the end, as
     /// the preview draws it), or between two `$$` lines.
     private static func isCode(_ header: Row, in text: NSString) -> Bool {
-        let columns = header.indent.reduce(0) { $0 + ($1 == "\t" ? 4 : 1) }
-        if columns >= 4 { return true }
+        if isIndentedCode(header, in: text) { return true }
         let limit = header.range.location
         let above = NSRange(location: 0, length: limit)
         func appears(_ mark: String) -> Bool { text.range(of: mark, options: .literal, range: above).location != NSNotFound }
@@ -287,23 +288,105 @@ public enum TableEditing {
         return state.isCode
     }
 
+    /// The start offsets of the lines of `range` that begin inside a fence
+    /// or a `$$` formula, by the same scan the table commands use, so an
+    /// editor that must not treat those lines as prose agrees with them.
+    public static func codeLineStarts(in text: NSString, covering range: NSRange) -> Set<Int> {
+        let limit = min(NSMaxRange(range), text.length)
+        let above = NSRange(location: 0, length: limit)
+        func appears(_ mark: String) -> Bool { text.range(of: mark, options: .literal, range: above).location != NSNotFound }
+        guard appears("```") || appears("~~~") || appears("$$") else { return [] }
+        var state = CodeState()
+        var starts: Set<Int> = []
+        SourceLines.forEach(in: text) { _, line in
+            guard line.location < limit else { return false }
+            if state.isCode, line.location >= range.location { starts.insert(line.location) }
+            state.take(text.substring(with: line))
+            return true
+        }
+        return starts
+    }
+
+    private static func columns(of indent: some Sequence<Character>) -> Int {
+        indent.reduce(0) { $0 + ($1 == "\t" ? 4 : 1) }
+    }
+
+    /// Whether `header` is indented four columns or more, counted from the
+    /// content column of the list item it sits in: a table nested under a
+    /// list item is part of the item, not an indented code block. The item
+    /// is the nearest list line above that starts left of the header; a
+    /// blank line followed by an unindented non-list line ends the list.
+    /// Limits: lines inside fences above are read as plain lines, and a
+    /// lazy continuation line is taken as part of the item.
+    private static func isIndentedCode(_ header: Row, in text: NSString) -> Bool {
+        let headerColumns = columns(of: header.indent)
+        guard headerColumns >= 4 else { return false }
+        var top = header.range.location
+        var sawBlank = false
+        while top > 0 {
+            var end = top - 1
+            if text.character(at: end) == 0x0A, end > 0, text.character(at: end - 1) == 0x0D { end -= 1 }
+            let span = line(at: end, in: text)
+            top = span.contents.location
+            let raw = text.substring(with: span.contents)
+            let body = raw.drop { $0 == " " || $0 == "\t" }
+            if body.isEmpty {
+                sawBlank = true
+                continue
+            }
+            let lead = columns(of: raw.prefix { $0 == " " || $0 == "\t" })
+            var rest = body
+            if let mark = rest.first, "-*+".contains(mark) {
+                rest = rest.dropFirst()
+            } else {
+                let digits = rest.prefix { $0.isASCII && $0.isNumber }
+                guard !digits.isEmpty, digits.count <= 9, let delimiter = rest.dropFirst(digits.count).first, delimiter == "." || delimiter == ")" else {
+                    if sawBlank, lead == 0 { return true }
+                    continue
+                }
+                rest = rest.dropFirst(digits.count + 1)
+            }
+            let spaces = rest.prefix { $0 == " " || $0 == "\t" }
+            guard !spaces.isEmpty else {
+                if sawBlank, lead == 0 { return true }
+                continue
+            }
+            guard lead < headerColumns else { continue }
+            let afterMarker = body.count - rest.count + (spaces.count <= 4 && !rest.dropFirst(spaces.count).isEmpty ? columns(of: spaces) : 1)
+            let content = lead + afterMarker
+            return headerColumns - content >= 4 || headerColumns < content
+        }
+        return true
+    }
+
     /// Whether the lines read so far leave a fence or a `$$` formula open.
     private struct CodeState {
-        private var fence: (mark: Character, count: Int)?
+        private struct Fence {
+            let mark: Character
+            let count: Int
+            let indent: Int
+        }
+        private var fence: Fence?
         private var inMath = false
 
         var isCode: Bool { fence != nil || inMath }
 
         mutating func take(_ raw: String) {
             let line = raw.drop { $0 == " " || $0 == "\t" }
+            let indent = TableEditing.columns(of: raw.prefix { $0 == " " || $0 == "\t" })
             if let open = fence {
+                // A closing fence sits at most three columns right of the opening one.
                 let run = line.prefix { $0 == open.mark }.count
-                if run >= open.count, line.dropFirst(run).allSatisfy({ $0 == " " || $0 == "\t" }) { fence = nil }
-            } else if let mark = line.first, mark == "`" || mark == "~", line.prefix(while: { $0 == mark }).count >= 3 {
-                fence = (mark, line.prefix { $0 == mark }.count)
-            } else if line.hasPrefix("$$") || line.hasSuffix("$$"), line.components(separatedBy: "$$").count % 2 == 0 {
-                // A line that starts or ends a formula carries one `$$`;
-                // `$$ x $$` on one line carries two and opens nothing.
+                if run >= open.count, indent - open.indent <= 3, line.dropFirst(run).allSatisfy({ $0 == " " || $0 == "\t" }) { fence = nil }
+            } else if let mark = line.first, mark == "`" || mark == "~", line.prefix(while: { $0 == mark }).count >= 3,
+                !(mark == "`" && line.drop { $0 == "`" }.contains("`"))
+            {
+                // The info string of a backtick fence holds no backtick: ```foo``` is a code span.
+                fence = Fence(mark: mark, count: line.prefix { $0 == mark }.count, indent: indent)
+            } else if line.hasPrefix("$$") || (inMath && line.hasSuffix("$$")), line.components(separatedBy: "$$").count % 2 == 0 {
+                // Only a line that starts with `$$` opens a formula (`price 5$$`
+                // opens nothing), and one that ends with it may close it;
+                // `$$ x $$` on one line carries two and changes nothing.
                 inMath.toggle()
             }
         }
@@ -344,8 +427,8 @@ public enum TableEditing {
             defer { run.removeAll(keepingCapacity: true) }
             guard let delimiter = run.indices.dropFirst().first(where: { isDelimiter(run[$0].row.cells) }) else { return }
             let rows = run[(delimiter - 1)...].map(\.row)
-            guard let header = rows.first, let last = rows.last else { return }
-            guard header.indent.reduce(0, { $0 + ($1 == "\t" ? 4 : 1) }) < 4 else { return }
+            guard let header = rows.first, let last = rows.last, header.cells.count == rows[1].cells.count else { return }
+            guard !isIndentedCode(header, in: text) else { return }
             guard !(lines == nil ? run[delimiter - 1].inCode : isCode(header, in: text)) else { return }
             let starts = rows.map { row -> [Int] in
                 let cuts = separators(in: text.substring(with: row.range)).map { row.range.location + $0 }

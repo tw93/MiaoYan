@@ -223,6 +223,36 @@ final class MarkdownTableTests: XCTestCase {
         XCTAssertTrue(TableEditing.isInTable(in: "| a | b |\n|-|-|", selection: NSRange(location: 3, length: 0)))
     }
 
+    func testHeaderAndDashesMustHaveTheSameNumberOfCells() {
+        XCTAssertNil(run(.nextCell, "| a^ | b | c |\n|---|---|"), "three header cells over two dashes is no table")
+        XCTAssertEqual(TableEditing.layouts(in: "| a | b | c |\n|---|---|" as NSString).count, 0)
+        XCTAssertNotNil(run(.nextCell, "| a^ | b |\n|---|---|"))
+    }
+
+    func testFenceAndFormulaFollowCommonMark() {
+        let table = "| a^ | b |\n|-|-|"
+        XCTAssertNotNil(run(.nextCell, "```foo``` bar\n\n" + table), "a backtick in the info string is a code span, not a fence")
+        XCTAssertNil(run(.nextCell, "``` foo\n\n" + table), "an info string without a backtick opens a fence")
+        XCTAssertNil(run(.nextCell, "~~~ a`b\n\n" + table), "tildes allow a backtick in the info string")
+        XCTAssertNil(run(.nextCell, "```\n    ```\n" + table), "four spaces in does not close a fence")
+        XCTAssertNotNil(run(.nextCell, "```\n   ```\n" + table), "three spaces in closes it")
+        XCTAssertNil(run(.nextCell, "- a\n    ```\n    x\n    ```\n    ```\n    | a^ | b |\n    |-|-|"), "a fence nested in an item closes at its own indent")
+        XCTAssertNotNil(run(.nextCell, "price 5$$\n\n" + table), "a line ending in $$ opens no formula")
+        XCTAssertNil(run(.nextCell, "$$\n" + table), "a line starting with $$ does")
+        XCTAssertNotNil(run(.nextCell, "$$ x $$\n\n" + table), "$$ x $$ on one line opens nothing")
+        XCTAssertNotNil(run(.nextCell, "$$\nx = 1 $$\n\n" + table), "a line ending in $$ closes an open formula")
+        XCTAssertEqual(TableEditing.codeLineStarts(in: "```\n- a\n```\n- b" as NSString, covering: NSRange(location: 0, length: 16)), [4, 8], "a line begins inside the fence the line before it opened")
+    }
+
+    func testATableUnderAListItemIsNotAnIndentedCodeBlock() {
+        XCTAssertNotNil(run(.nextCell, "- item\n\n    | a^ | b |\n    |-|-|"), "four spaces under a dash item is inside the item")
+        XCTAssertNotNil(run(.nextCell, "- item\n  - nested\n\n      | a^ | b |\n      |-|-|"), "inside a nested item")
+        XCTAssertNotNil(run(.nextCell, "1. item\n\n\t| a^ | b |\n\t|-|-|"), "a tab under a numbered item")
+        XCTAssertNil(run(.nextCell, "- item\n\n          | a^ | b |\n          |-|-|"), "four columns past the item's content is code")
+        XCTAssertNil(run(.nextCell, "- item\n\nplain\n\n    | a^ | b |\n    |-|-|"), "after the list ended")
+        XCTAssertEqual(TableEditing.layouts(in: "- item\n\n    | a | b |\n    |-|-|" as NSString).count, 1)
+    }
+
     func testATableWithoutOuterPipesIsReadAndGetsThem() {
         XCTAssertEqual(
             run(.nextCell, "Name^ | Price\n--- | ---\nApple | 3"),
@@ -472,8 +502,9 @@ private final class MadeUpTexts {
     func tableLike() -> String {
         let lineBreak = ["\n", "\r\n", "\r"][random(3)]
         let columns = 1 + random(4)
-        var lines = (0..<(1 + random(4))).map { _ -> String in
-            let cells = (0..<(columns + random(2))).map { _ in soup(random(4)).filter { $0 != "\n" && $0 != "\r" && $0 != "\r\n" } }
+        // The header has as many cells as the dashes, or it is no table; the rows below may differ.
+        var lines = (0..<(1 + random(4))).map { row -> String in
+            let cells = (0..<(columns + (row == 0 ? 0 : random(2)))).map { _ in soup(random(4)).filter { $0 != "\n" && $0 != "\r" && $0 != "\r\n" } }
             return (random(4) == 0 ? "" : "|") + cells.joined(separator: "|") + (random(4) == 0 ? "" : "|")
         }
         if random(5) != 0 { lines.insert("|" + (0..<columns).map { _ in [":-", "-", "-:", ":-:", "---"][random(5)] }.joined(separator: "|") + "|", at: min(1, lines.count)) }

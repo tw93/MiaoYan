@@ -105,6 +105,23 @@ final class ListHangingIndentTests: XCTestCase {
         XCTAssertEqual(editor.string, body, "not a character changes")
     }
 
+    /// Past twenty code blocks the .codeBlock attribute is missing while typing,
+    /// so the fence itself must say a dash line is code.
+    @available(macOS 14, *)
+    @MainActor
+    func testADashInsideAFenceInALongNoteIsNotAList() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        let text = (0..<30).map { _ in "```\n- \(long)\n```\n" }.joined(separator: "\n") + "\n- \(long)\n"
+        let editor = try show(text)
+        for occurrence in [0, 12, 29] {
+            let code = try edges(of: long, startingAt: "- ", in: editor, occurrence: occurrence)
+            XCTAssertEqual(code.wrapped, code.start, accuracy: 0.5, "dash \(occurrence) is inside a fence")
+        }
+        let item = try edges(of: long, startingAt: "- ", in: editor, occurrence: 30)
+        XCTAssertEqual(item.wrapped, item.text, accuracy: 1, "a dash after the last fence is a list")
+    }
+
     @available(macOS 14, *)
     @MainActor
     func testAnItemThatStopsBeingOneWrapsToTheEdgeAgain() throws {

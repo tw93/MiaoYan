@@ -1,4 +1,5 @@
 import AppKit
+import MiaoYanCore
 
 /// Wraps a long list item under its own words rather than under the dash:
 /// the paragraph's `headIndent` becomes the drawn width of its marker, the
@@ -33,9 +34,11 @@ enum ListHangingIndent {
         guard text.length > 0, let marker else { return }
         let location = min(max(range.location, 0), text.length)
         let paragraphs = text.paragraphRange(for: NSRange(location: location, length: min(range.length, text.length - location)))
+        // The .codeBlock attribute is missing in a note with many code blocks while typing, so read the fences themselves.
+        let code = TableEditing.codeLineStarts(in: text, covering: paragraphs)
         text.enumerateSubstrings(in: paragraphs, options: [.byParagraphs, .substringNotRequired]) { _, line, enclosing, _ in
             var indent: CGFloat = 0
-            if line.length > 1, storage.attribute(.codeBlock, at: line.location, effectiveRange: nil) == nil,
+            if line.length > 1, !code.contains(line.location),
                 let match = marker.firstMatch(in: text as String, range: line), match.range.length < line.length
             {
                 indent = width(of: storage.attributedSubstring(from: match.range))
