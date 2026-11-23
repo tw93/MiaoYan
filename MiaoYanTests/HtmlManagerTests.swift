@@ -1509,7 +1509,7 @@ final class MathRenderingRuntimeTests: XCTestCase {
     @MainActor
     func testAGitHubSlugLinkFindsItsHeading() async throws {
         let markdown = """
-            [a](#getting-started) [b](#api-v2--more) [c](#notes-1) [d](#Getting%20Started) [e](#missing)
+            [a](#getting-started) [b](#api-v2--more) [c](#notes-1) [d](#Getting%20Started) [e](#missing) [f](#notes-1-1)
 
             # Getting Started
 
@@ -1518,6 +1518,8 @@ final class MathRenderingRuntimeTests: XCTestCase {
             ## Notes
 
             ## Notes
+
+            ## Notes-1
             """
         let html = try XCTUnwrap(renderMarkdownHTML(markdown: markdown, useGithubLineBreak: true))
         let common = downViewBundleURL.appendingPathComponent("js/common.js").absoluteString
@@ -1545,8 +1547,10 @@ final class MathRenderingRuntimeTests: XCTestCase {
             """)
         let json = try XCTUnwrap((result as? String)?.data(using: .utf8))
         let state = try XCTUnwrap(try JSONSerialization.jsonObject(with: json) as? [String: [String]])
-        XCTAssertEqual(state["ids"], ["Getting Started", "API (v2) & More!", "Notes", "Notes-1"], "ids are the headings' text")
-        XCTAssertEqual(state["scrolled"], ["Getting Started", "API (v2) & More!", "Notes-1", "Getting Started"])
+        XCTAssertEqual(state["ids"], ["Getting Started", "API (v2) & More!", "Notes", "Notes-1", "Notes-1-1"], "ids are the headings' text")
+        XCTAssertEqual(
+            state["scrolled"], ["Getting Started", "API (v2) & More!", "Notes-1", "Getting Started", "Notes-1-1"],
+            "a heading that already reads Notes-1 takes notes-1-1, as github-slugger does")
     }
 
     /// A display formula starts 1.5em in from the text, where a bulleted

@@ -638,9 +638,12 @@ extension MPreviewView {
         let markdown = note.getPrettifiedContent()
         let css = HtmlManager.previewStyle()
         let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+        // A saved .html is opened from a file too, where YouTube shows Error
+        // 153 without a Referer, so its frames go through the same relay as
+        // the live preview (PDF, PNG and PPT export render that preview).
         let rendered =
             renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak, documentLanguage: LanguageType.current.documentLanguage)
-            ?? markdown
+            .map(PreviewMedia.relayedYouTubeFrames) ?? markdown
         let page = (try? HtmlManager.htmlFromTemplate(rendered, css: css, currentName: vc.exportTitle)) ?? rendered
         let imagesStorage = note.project.url
         let filename = note.getExportTitle()

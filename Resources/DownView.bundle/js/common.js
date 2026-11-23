@@ -443,9 +443,16 @@ const MiaoYanCommon = {
     const slugCounts = new Map();
     headings.forEach((h, index) => {
       const base = this.githubSlug(texts[index]);
-      const seen = slugCounts.get(base) || 0;
-      slugCounts.set(base, seen + 1);
-      this._slugTargets.set(seen ? `${base}-${seen}` : base, h);
+      // As github-slugger: keep counting while the candidate is taken, so
+      // Notes, Notes, Notes-1 become notes, notes-1, notes-1-1.
+      let slug = base;
+      let seen = slugCounts.get(base) || 0;
+      while (this._slugTargets.has(slug)) {
+        seen++;
+        slug = `${base}-${seen}`;
+      }
+      slugCounts.set(base, seen);
+      this._slugTargets.set(slug, h);
     });
     headings.forEach((h, index) => {
       let baseId = texts[index];
