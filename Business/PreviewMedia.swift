@@ -295,14 +295,16 @@ final class RemoteImageSizes: @unchecked Sendable {
     func size(for url: String) -> (width: Int, height: Int)? {
         lock.lock()
         // Width, height and since 2026-11-22 the order it was last used in.
-        var current = loadedEntries()
-        guard let size = current[url], size.count >= 2 else {
+        // Work on `entries` itself: a local copy would share storage with it,
+        // and the first write would copy the whole dictionary on every render.
+        loadEntries()
+        guard let size = entries?[url], size.count >= 2 else {
             lock.unlock()
             return nil
         }
         // A read runs on every render of a note, so it orders in memory
         // only; the next record writes the order down with its own size.
-        _ = use(url, width: size[0], height: size[1], in: &current, persist: false)
+        _ = use(url, width: size[0], height: size[1], persist: false)
         lock.unlock()
         return (size[0], size[1])
     }
@@ -312,31 +314,30 @@ final class RemoteImageSizes: @unchecked Sendable {
             (1...100_000).contains(width), (1...100_000).contains(height)
         else { return }
         lock.lock()
-        var current = loadedEntries()
+        loadEntries()
         // Full, the least recently used quarter goes. Emptying it all at
         // once, as it did, made every image the library had shown jump into
         // place again, and dropping the first learnt dropped a weekly cover
         // shown every week before images seen once since (2026-11-22).
-        if current[url] == nil, current.count >= limit {
-            let oldest = current.sorted { ($0.value.count > 2 ? $0.value[2] : 0) < ($1.value.count > 2 ? $1.value[2] : 0) }
-            for entry in oldest.prefix(limit / 4) { current[entry.key] = nil }
+        if let all = entries, all[url] == nil, all.count >= limit {
+            let oldest = all.sorted { ($0.value.count > 2 ? $0.value[2] : 0) < ($1.value.count > 2 ? $1.value[2] : 0) }
+            for entry in oldest.prefix(limit / 4) { entries?[entry.key] = nil }
         }
-        let shouldSchedule = use(url, width: width, height: height, in: &current)
+        let shouldSchedule = use(url, width: width, height: height)
         lock.unlock()
         if shouldSchedule { scheduleSave() }
     }
 
     /// Stores `url`'s size as the most recently used. Caller holds the lock;
     /// returns whether a save has to be scheduled.
-    private func use(_ url: String, width: Int, height: Int, in current: inout [String: [Int]], persist: Bool = true) -> Bool {
-        let latest = lastOrder ?? current.values.reduce(0) { max($0, $1.count > 2 ? $1[2] : 0) }
-        if let entry = current[url], entry.count > 2, entry[0] == width, entry[1] == height, entry[2] == latest {
+    private func use(_ url: String, width: Int, height: Int, persist: Bool = true) -> Bool {
+        let latest = lastOrder ?? (entries ?? [:]).values.reduce(0) { max($0, $1.count > 2 ? $1[2] : 0) }
+        if let entry = entries?[url], entry.count > 2, entry[0] == width, entry[1] == height, entry[2] == latest {
             lastOrder = latest
             return false
         }
         lastOrder = latest + 1
-        current[url] = [width, height, latest + 1]
-        entries = current
+        entries?[url] = [width, height, latest + 1]
         let shouldSchedule = persist && !saveScheduled && fileURL != nil
         if shouldSchedule { saveScheduled = true }
         return shouldSchedule
@@ -347,8 +348,8 @@ final class RemoteImageSizes: @unchecked Sendable {
     }
 
     /// Caller holds the lock.
-    private func loadedEntries() -> [String: [Int]] {
-        if let entries { return entries }
+    private func loadEntries() {
+        if entries != nil { return }
         var loaded: [String: [Int]] = [:]
         if let fileURL, let data = try? Data(contentsOf: fileURL),
             let decoded = try? JSONDecoder().decode([String: [Int]].self, from: data)
@@ -356,7 +357,6 @@ final class RemoteImageSizes: @unchecked Sendable {
             loaded = decoded
         }
         entries = loaded
-        return loaded
     }
 
     private func save() {
