@@ -498,7 +498,15 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertEqual(wrap.string, "cat dog cats")
         wrap.replaceNext(with: "cats")
         XCTAssertEqual(wrap.string, "cats dog cats")
-        withExtendedLifetime((container, wrapContainer)) {}
+        // A third press finds nothing outside the text Replace wrote.
+        wrap.replaceNext(with: "cats")
+        XCTAssertEqual(wrap.string, "cats dog cats")
+
+        let (three, threeContainer) = makeSearchEditor("cat dog cat")
+        three.showSearchBar(prefilledText: "cat", mode: .replace)
+        for _ in 0..<4 { three.replaceNext(with: "cats") }
+        XCTAssertEqual(three.string, "cats dog cats")
+        withExtendedLifetime((container, wrapContainer, threeContainer)) {}
     }
 
     /// Replace All searches the new text once, on the edit itself, and leaves

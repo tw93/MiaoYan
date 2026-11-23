@@ -98,7 +98,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private var editorSearchRanges: [NSRange] = []
     private var editorCurrentMatchIndex: Int = 0
     private var editorLastSearchText: String = ""
-    private var editorJustReplacedRange: NSRange?  // text the last Replace inserted (cat to cats)
+    private var editorJustReplacedRanges: [NSRange] = []  // every text Replace inserted since the search text was set (cat to cats)
     private var runtimeState: EditorSessionState? {
         viewDelegate?.sessionState ?? AppContext.shared.sessionState
     }
@@ -846,7 +846,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     override func didChangeText() {
         super.didChangeText()
-        editorJustReplacedRange = nil
+        editorJustReplacedRanges = []
         if editorSearchBar != nil, !editorLastSearchText.isEmpty {
             handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
         }
@@ -1650,17 +1650,22 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard editorSearchRanges.indices.contains(editorCurrentMatchIndex), let storage = textStorage else { return }
 
         let currentRange = editorSearchRanges[editorCurrentMatchIndex]
-        if let done = editorJustReplacedRange, NSIntersectionRange(done, currentRange).length == currentRange.length { return }
+        if editorJustReplacedRanges.contains(where: { NSIntersectionRange($0, currentRange).length == currentRange.length }) { return }
         guard shouldChangeText(in: currentRange, replacementString: replaceText) else { return }
+        // Ranges after this match move by the length change; didChangeText clears the list, so keep it aside.
+        let inserted = NSRange(location: currentRange.location, length: (replaceText as NSString).length)
+        let delta = inserted.length - currentRange.length
+        var done = editorJustReplacedRanges.map { $0.location >= NSMaxRange(currentRange) ? NSRange(location: $0.location + delta, length: $0.length) : $0 }
+        done.append(inserted)
         storage.replaceCharacters(in: currentRange, with: replaceText)
         didChangeText()  // searches again, so the ranges below belong to the new text
-        let inserted = NSRange(location: currentRange.location, length: (replaceText as NSString).length)
-        editorJustReplacedRange = inserted
+        editorJustReplacedRanges = done
         if !editorSearchRanges.isEmpty {
-            // Go on after the replacement, wrapping past a match inside it, or every Replace rewrites the same word.
+            // Go on after the replacement, skipping every match inside text Replace wrote, or each Replace rewrites it.
+            let outside: (NSRange) -> Bool = { match in done.allSatisfy { NSIntersectionRange($0, match).length == 0 } }
             editorCurrentMatchIndex =
-                editorSearchRanges.firstIndex { $0.location >= NSMaxRange(inserted) }
-                ?? editorSearchRanges.firstIndex { NSIntersectionRange(inserted, $0).length == 0 } ?? 0
+                editorSearchRanges.firstIndex { $0.location >= NSMaxRange(inserted) && outside($0) }
+                ?? editorSearchRanges.firstIndex(where: outside) ?? 0
             focusSearchResult(at: editorCurrentMatchIndex)
             editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
         }
@@ -1680,7 +1685,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func handleSearchInput(_ text: String, jumpToFirstMatch: Bool) {
-        if text != editorLastSearchText { editorJustReplacedRange = nil }
+        if text != editorLastSearchText { editorJustReplacedRanges = [] }
         editorLastSearchText = text
         clearEditorSearchHighlights()
         guard let storage = textStorage, !text.isEmpty else {
