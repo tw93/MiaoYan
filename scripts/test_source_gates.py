@@ -8,6 +8,7 @@ that mentions the fix cannot satisfy it.
 """
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -176,6 +177,9 @@ class PieColorGateTests(unittest.TestCase):
         and 3 matched each other and the page (2026-11-22). theme-config.js now sets eight slice colours per theme."""
         node = shutil.which("node")
         if node is None:
+            # A skip here lets CI pass without checking anything.
+            if os.environ.get("CI"):
+                self.fail("node is missing on CI, so the pie colour gate cannot run")
             self.skipTest("node is needed to resolve theme-config.js")
         program = (
             "global.window = {};"

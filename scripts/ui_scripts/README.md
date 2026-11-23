@@ -13,6 +13,7 @@ python3 scripts/ui_script.py compare <old MiaoYan.app> <new MiaoYan.app> scripts
 - `shot` draws the window into a PNG and lays each preview web view's own snapshot over its spot, since a web view draws in another process and a cached bitmap holds it blank.
 - `compare` runs one script on two builds and compares every capture pixel by pixel. A change that should not alter the look, such as a refactor or moving the storyboard window's code, must report every capture `identical`. Diffs go to `diff-<name>.png`. The same build run twice was identical on 2026-11-21. A capture that shows the note list's times can still differ when the clock passes a minute between the two runs.
 - A run never opens the maintainer's library: it copies `scripts/ui_scripts/library` (or `--library`) into a temporary folder and passes it as `-storageUrl`. Version history goes to a temporary folder as in unit tests, since a Debug build otherwise shares the release app's `Application Support/com.tw93.miaoyan/Versions`.
+- `run` and `compare` refuse any app whose `CFBundleIdentifier` is not `com.tw93.miaoyan.qa`: a plain Debug build shares `com.tw93.miaoyan` with the daily app, and a scripted run would rewrite its settings. `compare` also fails when either run exits non-zero or captures no PNG.
 - The window stays behind the front app, and nothing touches the real clipboard. A script must not use commands that open a panel, a browser or Finder.
 - Release builds hold none of this: the code sits behind `#if DEBUG || MIAOYAN_SCRIPT`.
 

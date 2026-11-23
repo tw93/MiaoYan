@@ -18,6 +18,7 @@ whose preview files differ.
 """
 
 import argparse
+import plistlib
 import shutil
 import subprocess
 import sys
@@ -29,7 +30,24 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_LIBRARY = ROOT / "scripts" / "ui_scripts" / "library"
 
 
+SCRIPT_BUNDLE_ID = "com.tw93.miaoyan.qa"
+
+
+def bundle_id(app: Path) -> str | None:
+    try:
+        return plistlib.loads((app / "Contents" / "Info.plist").read_bytes()).get("CFBundleIdentifier")
+    except (OSError, plistlib.InvalidFileException, ValueError):
+        return None
+
+
 def run_once(app: Path, script: Path, library: Path, out: Path, shell: bool, timeout: int) -> int:
+    # The daily app is com.tw93.miaoyan and a plain Debug build shares it; a
+    # scripted run would then write that build's settings over the maintainer's.
+    found = bundle_id(app)
+    if found != SCRIPT_BUNDLE_ID:
+        print(f"refusing {app}: bundle id is {found}, a scripted run needs {SCRIPT_BUNDLE_ID} "
+              f"(build with PRODUCT_BUNDLE_IDENTIFIER={SCRIPT_BUNDLE_ID})", file=sys.stderr)
+        return 1
     scratch = Path(tempfile.mkdtemp(prefix="miaoyan-ui-"))
     notes = scratch / "library"
     shutil.copytree(library, notes)
@@ -67,6 +85,11 @@ def run_once(app: Path, script: Path, library: Path, out: Path, shell: bool, tim
 
 
 def compare(old: Path, new: Path, out: Path) -> int:
+    # Two runs that captured nothing would otherwise compare as "no change".
+    for label, folder in (("old", old), ("new", new)):
+        if not any(folder.glob("*.png")):
+            print(f"no captures in the {label} run ({folder}): the script has no `shot` or the run failed", file=sys.stderr)
+            return 1
     try:
         from PIL import Image, ImageChops
     except ImportError:
@@ -121,8 +144,9 @@ def main() -> int:
     old_out, new_out = a.out / "old", a.out / "new"
     for app, out in ((old_app, old_out), (new_app, new_out)):
         print(f"== {app}")
-        if run_once(app, script, a.library, out, a.shell, a.timeout) == 2:
-            return 2
+        code = run_once(app, script, a.library, out, a.shell, a.timeout)
+        if code != 0:
+            return code
     print("== compare")
     return compare(old_out, new_out, a.out)
 
