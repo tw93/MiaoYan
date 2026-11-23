@@ -1380,7 +1380,8 @@ class Storage {
     /// Attachments no note refers to. Most bodies are not loaded, so those
     /// are read from disk first; if any note cannot be read the result is
     /// nil, because its images would otherwise count as unused.
-    public func findOrphanAttachments(completion: @escaping @MainActor ([URL]?) -> Void) {
+    /// Only files last changed before `cutoff` (a day ago) are offered.
+    public func findOrphanAttachments(changedBefore cutoff: Date = Date().addingTimeInterval(-86_400), completion: @escaping @MainActor ([URL]?) -> Void) {
         var referenced = Set<String>()
         var unloaded: [Note] = []
         // Images referenced from the Trash are kept by file name: those notes
@@ -1391,7 +1392,7 @@ class Storage {
         for note in noteList {
             listed.insert(note.url.standardizedFileURL.path)
             if note.project.isTrash, note.isContentLoaded {
-                trashNames.formUnion(note.getReferencedAttachmentPaths().map { ($0 as NSString).lastPathComponent })
+                trashNames.formUnion(note.referencedAttachmentNames(in: note.content.string))
                 continue
             }
             if note.isContentLoaded {
@@ -1478,17 +1479,16 @@ class Storage {
                     completion(nil)
                     return
                 }
-                let paths = note.getReferencedAttachmentPaths(in: text)
                 if note.project.isTrash {
-                    trashNames.formUnion(paths.map { ($0 as NSString).lastPathComponent })
+                    trashNames.formUnion(note.referencedAttachmentNames(in: text))
                 } else {
-                    referenced.formUnion(paths)
+                    referenced.formUnion(note.getReferencedAttachmentPaths(in: text))
                 }
             }
             let paths = referenced
             let names = trashNames
             let orphaned = await Task.detached(priority: .userInitiated) {
-                Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: paths)
+                Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: paths, changedBefore: cutoff)
                     .filter { !names.contains($0.lastPathComponent) }
             }.value
             completion(orphaned)
@@ -1591,7 +1591,7 @@ class Storage {
         return notes
     }
 
-    nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {
+    nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>, changedBefore cutoff: Date) -> [URL] {
         var orphaned = [URL]()
         let manager = FileManager.default
         // A note resolves /i/ against its folder as stored, while the folder
@@ -1600,12 +1600,22 @@ class Storage {
         let canonical = Set(referenced.map { ($0 as NSString).resolvingSymlinksInPath })
 
         for folderURL in folders {
-            guard let enumerator = manager.enumerator(at: folderURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles]) else {
+            let keys: [URLResourceKey] = [.isDirectoryKey, .creationDateKey, .contentModificationDateKey]
+            guard let enumerator = manager.enumerator(at: folderURL, includingPropertiesForKeys: keys, options: [.skipsHiddenFiles]) else {
                 continue
             }
 
             for case let fileURL as URL in enumerator {
                 if shouldSkipAttachmentCandidate(fileURL) {
+                    continue
+                }
+                // A file changed in the last day is not offered: an image
+                // pasted while the scan or its confirmation ran, or one that
+                // reached this Mac from iCloud before the note linking it,
+                // would otherwise go to the Trash (2026-11-22).
+                let dates = try? fileURL.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey])
+                let changed = [dates?.creationDate, dates?.contentModificationDate].compactMap { $0 }.max() ?? .distantFuture
+                if changed >= cutoff {
                     continue
                 }
 

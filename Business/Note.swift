@@ -957,6 +957,22 @@ public class Note: NSObject {
         return referenced
     }
 
+    /// The file names every attachment link in `text` ends in, wherever it
+    /// points. A note in the Trash resolves its links against the Trash, so
+    /// a `../files/a.pdf` there resolves to nothing; its files are kept by
+    /// name instead (2026-11-22).
+    func referencedAttachmentNames(in text: String) -> Set<String> {
+        var names = Set(getReferencedAttachmentPaths(in: text).map { ($0 as NSString).lastPathComponent })
+        let nsString = text as NSString
+        Note.attachmentPathRegex.enumerateMatches(in: text, options: [], range: NSRange(location: 0, length: nsString.length)) { result, _, _ in
+            guard let range = result?.range else { return }
+            let raw = nsString.substring(with: range)
+            names.insert((raw as NSString).lastPathComponent)
+            if let decoded = raw.removingPercentEncoding { names.insert((decoded as NSString).lastPathComponent) }
+        }
+        return names
+    }
+
     private func resolveAttachmentAbsolutePaths(for rawPath: String) -> [String] {
         var variants = Set<String>()
         variants.insert(rawPath)

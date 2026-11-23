@@ -42,7 +42,7 @@ final class AttachmentCleanupTests: XCTestCase {
 
         let done = expectation(description: "orphan scan")
         var result: [URL]?
-        storage.findOrphanAttachments { urls in
+        storage.findOrphanAttachments(changedBefore: .distantFuture) { urls in
             result = urls
             done.fulfill()
         }
@@ -78,7 +78,7 @@ final class AttachmentCleanupTests: XCTestCase {
 
         let done = expectation(description: "orphan scan")
         var result: [URL]?
-        storage.findOrphanAttachments { urls in
+        storage.findOrphanAttachments(changedBefore: .distantFuture) { urls in
             result = urls
             done.fulfill()
         }
@@ -122,7 +122,7 @@ final class AttachmentCleanupTests: XCTestCase {
 
         let done = expectation(description: "orphan scan")
         var result: [URL]?
-        storage.findOrphanAttachments { urls in
+        storage.findOrphanAttachments(changedBefore: .distantFuture) { urls in
             result = urls
             done.fulfill()
         }
@@ -324,11 +324,79 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual(withMissingTrash.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"], "a Trash not made yet holds no notes")
     }
 
+    /// A file is offered only once it is a day old: an image pasted while
+    /// the scan or its confirmation ran, or one that arrived from iCloud
+    /// before the note linking it, was offered and trashed (2026-11-22).
     @MainActor
-    private func orphans(in storage: Storage) async -> [URL]? {
+    func testARecentAttachmentIsNotOfferedYet() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try "# Note\n".write(to: work.appendingPathComponent("n.md"), atomically: true, encoding: .utf8)
+        let old = work.appendingPathComponent("i/old.png")
+        try Data([0x89]).write(to: old)
+        let lastWeek = Date().addingTimeInterval(-7 * 86_400)
+        try FileManager.default.setAttributes([.creationDate: lastWeek, .modificationDate: lastWeek], ofItemAtPath: old.path)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/new.png"))
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+
+        _ = storage.subfolders(of: root)
+        let found = await orphans(in: storage, changedBefore: Date().addingTimeInterval(-86_400))
+        XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["old.png"])
+    }
+
+    /// The disk ignores case, so `Photo.PNG` shows `photo.png`, and the link
+    /// keeps it in every form a note writes (a review on 2026-11-22 thought
+    /// the path compare missed this; it does not).
+    @MainActor
+    func testALinkThatDiffersOnlyInCaseKeepsItsImage() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try "# Note\n\n![](/i/Photo.PNG)\n\n<img src=\"i/Chart.PNG\"> [plan](files/Plan.PDF)\n".write(to: work.appendingPathComponent("n.md"), atomically: true, encoding: .utf8)
+        try Data([0x89]).write(to: work.appendingPathComponent("i/photo.png"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/chart.png"))
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        try Data([0x25]).write(to: work.appendingPathComponent("files/plan.pdf"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+
+        _ = storage.subfolders(of: root)
+        let found = await orphans(in: storage)
+        XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
+    }
+
+    /// A trashed note's `../` link resolves outside the Trash, so its file
+    /// was not kept by name and the note came back without it.
+    @MainActor
+    func testATrashedNotesRelativeLinksKeepTheirFiles() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let trash = tempDir.appendingPathComponent(".Trash", isDirectory: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: trash, withIntermediateDirectories: true)
+        try "# Kept\n".write(to: work.appendingPathComponent("kept.md"), atomically: true, encoding: .utf8)
+        try "# Old\n\n[a](../files/a.pdf) <img src=\"../i/x.png\">\n".write(to: trash.appendingPathComponent("old.md"), atomically: true, encoding: .utf8)
+        try Data([0x25]).write(to: work.appendingPathComponent("files/a.pdf"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/x.png"))
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+        _ = storage.add(project: Project(url: trash, isTrash: true))
+
+        _ = storage.subfolders(of: root)
+        let found = await orphans(in: storage)
+        XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
+    }
+
+    @MainActor
+    private func orphans(in storage: Storage, changedBefore cutoff: Date = .distantFuture) async -> [URL]? {
         let done = expectation(description: "orphan scan")
         var result: [URL]?
-        storage.findOrphanAttachments { urls in
+        storage.findOrphanAttachments(changedBefore: cutoff) { urls in
             result = urls
             done.fulfill()
         }
