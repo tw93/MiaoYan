@@ -299,7 +299,7 @@ final class ShellModelTests: XCTestCase {
     /// The folders give way to a narrow window and to the split preview,
     /// come back once there is room, and leave a choice made by hand alone.
     @MainActor
-    func testTheFoldersGiveWayToANarrowWindowAndTheSplitPreview() {
+    func testTheFoldersGiveWayToTheSplitPreview() {
         let defaults = UserDefaults.standard
         let previousLayout = defaults.string(forKey: "ShellLayout")
         let previousPreview = UserDefaultsManagement.preview
@@ -314,24 +314,18 @@ final class ShellModelTests: XCTestCase {
         UserDefaultsManagement.splitViewMode = false
         let model = ShellModel()
 
-        model.windowWidthChanged(1200)
         XCTAssertEqual(model.layout, .all)
-        model.windowWidthChanged(800)
-        XCTAssertEqual(model.layout, .listAndNote)
-        XCTAssertEqual(defaults.string(forKey: "ShellLayout"), "all", "giving way is not the saved layout")
-        model.windowWidthChanged(1200)
-        XCTAssertEqual(model.layout, .all)
-
-        // Shown again by hand while narrow, the folders stay.
-        model.windowWidthChanged(800)
-        model.toggleSidebar()
-        model.windowWidthChanged(760)
-        XCTAssertEqual(model.layout, .all)
-        model.windowWidthChanged(1200)
-
         model.toggleSplit()
         XCTAssertEqual(model.editorMode, .split)
         XCTAssertEqual(model.layout, .listAndNote)
+        XCTAssertEqual(defaults.string(forKey: "ShellLayout"), "all", "giving way is not the saved layout")
+        model.toggleSplit()
+        XCTAssertEqual(model.layout, .all)
+
+        // Shown again by hand in split, the folders stay.
+        model.toggleSplit()
+        model.toggleSidebar()
+        XCTAssertEqual(model.layout, .all)
         model.toggleSplit()
         XCTAssertEqual(model.layout, .all)
 
@@ -340,6 +334,38 @@ final class ShellModelTests: XCTestCase {
         model.toggleSplit()
         model.toggleSplit()
         XCTAssertEqual(model.layout, .listAndNote)
+    }
+
+    /// A presentation started from split saved the layout split had hidden
+    /// the folders in, so they never came back, not after split nor on the
+    /// next launch (2026-11-22).
+    @MainActor
+    func testAPresentationFromSplitGivesTheFoldersBackAfterSplit() async throws {
+        try await withShellLibrary(["deck"]) { model, _, notes in
+            let previousPreview = UserDefaultsManagement.preview
+            let previousSplit = UserDefaultsManagement.splitViewMode
+            let previousPresentation = UserDefaultsManagement.presentation
+            defer {
+                UserDefaultsManagement.preview = previousPreview
+                UserDefaultsManagement.splitViewMode = previousSplit
+                UserDefaultsManagement.presentation = previousPresentation
+            }
+            UserDefaults.standard.set("all", forKey: "ShellLayout")
+            model.clickNote(notes[0], modifiers: [])
+            if model.layout != .all { model.toggleSidebar() }
+            if model.editorMode == .split { model.toggleSplit() }
+
+            model.toggleSplit()
+            XCTAssertEqual(model.layout, .listAndNote)
+            model.setPresenting(true)
+            model.setPresenting(false)
+            XCTAssertEqual(model.editorMode, .split)
+            XCTAssertEqual(model.layout, .listAndNote, "split still holds the folders back")
+            XCTAssertEqual(UserDefaults.standard.string(forKey: "ShellLayout"), "all", "the hidden layout is not saved")
+
+            model.toggleSplit()
+            XCTAssertEqual(model.layout, .all)
+        }
     }
 
     private func urls(_ count: Int) -> [URL] {

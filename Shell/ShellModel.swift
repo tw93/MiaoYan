@@ -514,27 +514,22 @@ final class ShellModel {
         }
     }
 
-    /// Below this window width the folders column gives way: at the default
-    /// widths (folders 180, list 280) the note would keep under 500pt.
-    static let roomyWindowWidth: CGFloat = 960
-    @ObservationIgnored private var windowWidth: CGFloat = 0
     @ObservationIgnored private var wasCrowded = false
     @ObservationIgnored private var sidebarGaveWay = false
     @ObservationIgnored private var isFittingSidebar = false
+    /// Set while a presentation switches the column to preview, which is not
+    /// leaving split as far as the folders are concerned.
+    @ObservationIgnored private var isEnteringPresentation = false
 
-    func windowWidthChanged(_ width: CGFloat) {
-        windowWidth = width
-        fitSidebar()
-    }
-
-    /// The folders column hides when the split preview opens or the window
-    /// gets narrow, and comes back when neither holds any more, unless the
-    /// person moved a column meanwhile (maintainer 2026-11-21, no setting).
-    /// It acts only when the window turns crowded or roomy, so showing the
-    /// folders again by hand keeps them.
+    /// The folders column hides when the split preview opens and comes back
+    /// when it closes, unless the person moved a column meanwhile
+    /// (maintainer 2026-11-21, no setting). It acts only when split opens or
+    /// closes, so showing the folders again by hand keeps them. The window
+    /// cannot get narrower than 960pt (the storyboard window's minimum), so
+    /// its width plays no part.
     private func fitSidebar() {
-        guard !isPresenting else { return }
-        let crowded = editorMode == .split || (windowWidth > 0 && windowWidth < Self.roomyWindowWidth)
+        guard !isPresenting, !isEnteringPresentation else { return }
+        let crowded = editorMode == .split
         guard crowded != wasCrowded else { return }
         wasCrowded = crowded
         isFittingSidebar = true
@@ -740,7 +735,9 @@ final class ShellModel {
             // Preview, presentation and PPT are one stored mode, and switching
             // the column to preview writes "preview"; set the presentation
             // mode after it or the preview write replaces it.
+            isEnteringPresentation = true
             editorMode = .preview
+            isEnteringPresentation = false
             if ppt {
                 UserDefaultsManagement.magicPPT = true
             } else {
@@ -765,7 +762,11 @@ final class ShellModel {
             UserDefaultsManagement.magicPPT = false
             isPresenting = false
             isPPT = false
+            // Back to the columns from before, without saving them: with
+            // split on, the folders were hidden by split, not by the person.
+            isFittingSidebar = true
             layout = layoutBeforePresenting
+            isFittingSidebar = false
             // The keyboard goes back to the editor, or to the preview when
             // that was the mode before.
             if modeBeforePresenting == .preview {
