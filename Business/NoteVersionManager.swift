@@ -7,6 +7,10 @@ final class NoteVersionManager: @unchecked Sendable {
     private let maxVersions = 20
     private let minInterval: TimeInterval = 300
     private var lastSaved: [String: Date] = [:]
+    /// The history's size as of the last walk plus what was written since,
+    /// never under the real size: the ceiling walks every version folder,
+    /// so it runs once per launch and again only when this passes it.
+    private var historySize: Int64?
     private let queue = DispatchQueue(label: "com.tw93.miaoyan.versions")
 
     private init() {
@@ -67,7 +71,12 @@ final class NoteVersionManager: @unchecked Sendable {
 
             self.lastSaved[key] = Date()
             self.prune(dir: dir)
-            Self.keepWithinBudget(root: self.versionsRoot, budget: Self.libraryBudget)
+            let written = Int64(text.utf8.count)
+            if let size = self.historySize, size + written <= Self.libraryBudget {
+                self.historySize = size + written
+            } else {
+                self.historySize = Self.keepWithinBudget(root: self.versionsRoot, budget: Self.libraryBudget)
+            }
         }
     }
 
@@ -90,11 +99,13 @@ final class NoteVersionManager: @unchecked Sendable {
     /// Removes the oldest versions across all notes until the history fits
     /// in `budget`, never a note's newest one, so each note keeps the
     /// version it can always go back to. Version files are named by their
-    /// UTC time, so names sort oldest first in every folder alike.
-    static func keepWithinBudget(root: URL, budget: Int64) {
+    /// UTC time, so names sort oldest first in every folder alike. Returns
+    /// the size left.
+    @discardableResult
+    static func keepWithinBudget(root: URL, budget: Int64) -> Int64 {
         let manager = FileManager.default
         let keys: [URLResourceKey] = [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
-        guard let folders = try? manager.contentsOfDirectory(at: root, includingPropertiesForKeys: keys) else { return }
+        guard let folders = try? manager.contentsOfDirectory(at: root, includingPropertiesForKeys: keys) else { return 0 }
         var total: Int64 = 0
         var removable: [(url: URL, size: Int64)] = []
         // Only real folders and files named as a version are counted or
@@ -115,11 +126,12 @@ final class NoteVersionManager: @unchecked Sendable {
                 if index > 0 { removable.append((file, size)) }
             }
         }
-        guard total > budget else { return }
+        guard total > budget else { return total }
         for file in removable.sorted(by: { $0.url.lastPathComponent < $1.url.lastPathComponent }) {
             guard total > budget else { break }
             if (try? manager.removeItem(at: file.url)) != nil { total -= file.size }
         }
+        return total
     }
 
     /// `2026-11-21T10-00-00Z.md`, the name `saveVersion` gives a version.

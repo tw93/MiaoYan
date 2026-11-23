@@ -151,7 +151,7 @@ final class VersionChangesTests: XCTestCase {
         // Six files of 1 KiB under a 3.5 KiB ceiling: the three oldest that
         // are not a note's newest go, oldest first, and c-3's only version,
         // older than all of them, stays.
-        NoteVersionManager.keepWithinBudget(root: root, budget: 3584)
+        XCTAssertEqual(NoteVersionManager.keepWithinBudget(root: root, budget: 3584), 3072, "the size left, which later saves add to")
         func left(_ folder: String) -> [String] {
             let names = (try? FileManager.default.contentsOfDirectory(atPath: root.appendingPathComponent(folder).path)) ?? []
             return names.sorted()
@@ -162,7 +162,7 @@ final class VersionChangesTests: XCTestCase {
         XCTAssertEqual(left("c-3"), ["2026-10-01T10-00-00Z.md"])
 
         // Under the ceiling nothing is touched.
-        NoteVersionManager.keepWithinBudget(root: root, budget: 1 << 20)
+        XCTAssertEqual(NoteVersionManager.keepWithinBudget(root: root, budget: 1 << 20), 3072)
         XCTAssertEqual(left("a-1").count + left("b-2").count + left("c-3").count, 5)
     }
 }
