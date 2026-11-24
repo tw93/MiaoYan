@@ -1,7 +1,5 @@
 import Foundation
 
-typealias PreferencesCategory = PrefsSection
-
 // MARK: - Preferences Category Model
 enum PrefsSection: CaseIterable, Sendable {
     case general, editor, typography
@@ -16,21 +14,9 @@ enum PrefsSection: CaseIterable, Sendable {
     }
 }
 
-// MARK: - Settings Configuration Protocol
-@MainActor
-protocol SettingsConfigurable {
-    var category: PreferencesCategory { get }
-    var title: String { get }
-
-    func applyChanges()
-}
-
 // MARK: - General Settings Model
 @MainActor
-struct GeneralSettings: SettingsConfigurable {
-    let category: PreferencesCategory = .general
-    let title: String = I18n.str("Interface")
-
+struct GeneralSettings {
     var appearanceType: AppearanceType {
         get { UserDefaultsManagement.appearanceType }
         set { UserDefaultsManagement.appearanceType = newValue }
@@ -50,21 +36,11 @@ struct GeneralSettings: SettingsConfigurable {
         get { UserDefaultsManagement.buttonShow }
         set { UserDefaultsManagement.buttonShow = newValue }
     }
-
-    var defaultPicUpload: String {
-        get { UserDefaultsManagement.defaultPicUpload }
-        set { UserDefaultsManagement.defaultPicUpload = newValue }
-    }
-
-    func applyChanges() {}
 }
 
 // MARK: - Editor Settings Model
 @MainActor
-struct EditorSettings: SettingsConfigurable {
-    let category: PreferencesCategory = .editor
-    let title: String = I18n.str("Experience")
-
+struct EditorSettings {
     var editorFontName: String {
         get { UserDefaultsManagement.fontName }
         set { UserDefaultsManagement.fontName = newValue }
