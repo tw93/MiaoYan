@@ -413,7 +413,7 @@ const DiagramHandler = {
 
   isDarkMode() {
     // Delegate to ThemeConfig for consistent dark mode detection
-    return window.ThemeConfig?.isDarkMode?.() || 'CUSTOM_CSS' === 'darkmode';
+    return !!window.ThemeConfig?.isDarkMode?.();
   }
 };
 

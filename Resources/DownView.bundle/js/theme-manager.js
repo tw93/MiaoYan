@@ -8,12 +8,8 @@ const ThemeConfig = {
     return window.ThemeColors.getThemeColors(isDark);
   },
 
-  get colors() {
-    return window.ThemeColors.THEME_COLORS;
-  },
-
   isDarkMode() {
-    return document.documentElement.classList.contains('darkmode') || 'CUSTOM_CSS' === 'darkmode';
+    return document.documentElement.classList.contains('darkmode');
   },
 
   getMermaidConfig(isDark = false) {
@@ -73,10 +69,6 @@ const ThemeConfig = {
     return window.ThemeColors.getPlantUMLSkinparams(isDark);
   },
 
-  getMarkmapColors(isDark = false) {
-    return window.ThemeColors.getMarkmapColors(isDark);
-  },
-
   // Switches the page between light and dark in place, as the system
   // appearance changes: every element the template marks (html, body and
   // #write), the diagram variables, and diagrams drawn in the old palette,
@@ -87,21 +79,6 @@ const ThemeConfig = {
     });
     this.applyCSSVariables(isDark);
     window.DiagramHandler?.retheme?.();
-  },
-
-  applyDarkModeStyles() {
-    // Ensure the root elements receive the dark-mode class
-    document.documentElement.classList.add('darkmode');
-    document.body.classList.add('darkmode');
-
-    const markdownRoot = document.querySelector('.markdown-body');
-    if (markdownRoot) {
-      markdownRoot.classList.add('darkmode');
-    }
-
-    // Apply CSS variables
-    const isDark = true;
-    this.applyCSSVariables(isDark);
   }
 };
 

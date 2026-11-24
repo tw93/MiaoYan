@@ -5,7 +5,7 @@
 const MiaoYanCommon = {
   isDarkMode() {
     // Delegate to ThemeConfig for consistent dark mode detection
-    return window.ThemeConfig?.isDarkMode?.() || 'CUSTOM_CSS' === 'darkmode';
+    return !!window.ThemeConfig?.isDarkMode?.();
   },
 
   // The selection as plain text and HTML for the clipboard. A selection that
