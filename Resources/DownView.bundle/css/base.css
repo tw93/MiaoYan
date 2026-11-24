@@ -470,11 +470,24 @@ img.border {
    loads (common.js holdImageBox), a video behind its first frame
    (prepareVideos), which also starts out player-shaped instead of
    300 by 150. A remote image never measured before holds a 16:9 box at
-   the width the note gave it, or the full column. */
-#write img.lazy-image,
-#write img.media-pending,
+   the width the note gave it, or the full column. An image takes the tint
+   only once it has not painted after 0.2s: one already seen still comes
+   through `load` a few frames after the page, from WebKit's cache, and a
+   tint at once flashed grey on every open, as on the iPhone reader
+   (maintainer 2026-11-24). */
 #write video {
   background-color: var(--code-bg);
+}
+
+#write img.lazy-image,
+#write img.media-pending {
+  animation: media-tint 0.01s step-end 0.2s forwards;
+}
+
+@keyframes media-tint {
+  to {
+    background-color: var(--code-bg);
+  }
 }
 
 #write video {
@@ -503,6 +516,7 @@ img.border {
     background-repeat: no-repeat;
     background-size: 0 0;
     animation:
+      media-tint 0.01s step-end 0.2s forwards,
       media-pulse 0.9s ease-out 0.45s infinite alternate,
       media-spinner 0.01s step-end 0.45s forwards;
   }

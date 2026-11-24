@@ -132,6 +132,8 @@ final class MediaPlaceholderTests: XCTestCase {
                     width: box.width,
                     height: box.height,
                     tint: getComputedStyle(img).backgroundColor,
+                    tintAnimation: getComputedStyle(img).animationName,
+                    tintDelay: getComputedStyle(img).animationDelay,
                     videoTint: getComputedStyle(document.querySelector('video')).backgroundColor
                 };
                 // The answer lands while the reader is further down. A test
@@ -198,7 +200,11 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertEqual(before["reserved"] as? Bool, true, "an unmeasured image alone in its paragraph reserves a box")
         XCTAssertEqual(before["width"] as? Double, 640)
         XCTAssertEqual(before["height"] as? Double, 360)
-        XCTAssertNotEqual(before["tint"] as? String, transparent, "a lazy image shows a tinted box")
+        // The tint waits 0.2s, so an image WebKit's cache hands over a few
+        // frames after the page never flashes grey (maintainer 2026-11-24).
+        XCTAssertEqual(before["tint"] as? String, transparent, "no tint at once: \(before)")
+        XCTAssertEqual(before["tintAnimation"] as? String, "media-tint", "a lazy image takes the tint later")
+        XCTAssertEqual(before["tintDelay"] as? String, "0.2s")
         XCTAssertNotEqual(before["videoTint"] as? String, transparent, "a video shows a tinted box")
         XCTAssertEqual(before["sizedWidth"] as? Double, 400)
         XCTAssertEqual(try XCTUnwrap(before["sizedHeight"] as? Double), 533.33, accuracy: 0.5, "the header's size gives it the picture's ratio")
@@ -212,8 +218,9 @@ final class MediaPlaceholderTests: XCTestCase {
         // Under Reduce Motion the pulse is off by design.
         if !NSWorkspace.shared.accessibilityDisplayShouldReduceMotion {
             XCTAssertEqual(
-                before["pulse"] as? String, "media-pulse, media-spinner", "a loading image breathes its tint and shows a turning arc")
-            XCTAssertEqual(before["pulseDelay"] as? String, "0.45s, 0.45s", "after a moment, so a quick one never flashes either")
+                before["pulse"] as? String, "media-tint, media-pulse, media-spinner",
+                "a loading image takes the tint, breathes it and shows a turning arc")
+            XCTAssertEqual(before["pulseDelay"] as? String, "0.2s, 0.45s, 0.45s", "after a moment, so a quick one never flashes either")
             XCTAssertTrue((before["spinner"] as? String)?.contains("animateTransform") == true, "the arc turns: \(before)")
         }
 
