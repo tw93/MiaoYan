@@ -1126,6 +1126,9 @@ extension ViewController {
         var copyNumber = 1
 
         while true {
+            // Read before the copy: a copy that fails partway can leave a
+            // partial file, which is not a name someone else took.
+            let existed = manager.fileExists(atPath: destination.path)
             do {
                 try manager.copyItem(at: url, to: destination)
                 return destination
@@ -1134,7 +1137,7 @@ extension ViewController {
                 // locked file there fails as a permission error. Each try is
                 // a new name, so the search ends at the first name that is
                 // free yet cannot be written.
-                let taken = (error as? CocoaError)?.code == .fileWriteFileExists || manager.fileExists(atPath: destination.path)
+                let taken = (error as? CocoaError)?.code == .fileWriteFileExists || existed
                 guard taken else {
                     AppDelegate.trackError(error, context: "ViewController.importCopy")
                     return nil
