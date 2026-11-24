@@ -1,27 +1,35 @@
-# V4.11.0 Kirin 🦄
+# V4.12.0 Tigrex 🐅
 
-1. Mac：从访达打开的 Markdown 文件，旁边文件夹里的图片也能显示了，App Store 版第一次会请你允许读取这个文件夹，之后都会记住
-2. Mac：简体中文界面下输入链接时方括号不再消失，把整篇笔记误贴进标题时只取第一行，应用不会再卡住
-3. Mac：光标停在标题上复制只带走文字，不带 `#`，中文菜单和提示的用词改得更直白，和 iPhone 保持一致
-4. Mac：图标换成更浅的暖白底色，侧栏顶部的妙言标志重新排过，笔记之间的分隔线更清楚，标题栏按钮之间更宽松，过长的文件夹名以省略号收尾
-5. 第一次使用会放一份妙言指南，演示表格、待办、Mermaid 图和公式，看完可以一键收起
-6. 笔记列表的日期和 iPhone 自带的一样，今天的显示时间，昨天的显示昨天，今年的显示月日，更早的显示完整日期
-7. 待办清单里没有勾选框的项目也有圆点，用空行隔开的清单里勾选框和文字回到同一行
-8. iPhone 和 iPad：笔记或选中的一段可以分享成图片，可以选纸色和字体，做成一张长图或一张张 3:4 卡片
-9. iPhone 和 iPad：搜索一打开就能直接输入，下面列着最近搜过的词和最近改过的笔记，笔记列表跟着你选的字体走
-10. iPhone 和 iPad：主屏幕和锁定屏幕可以放最近笔记的小组件，锁定屏幕和控制中心可以直接新建笔记，快捷指令和 Siri 可以新建、打开、搜索和追加笔记，系统搜索也能找到笔记
-11. iPhone 和 iPad：界面新增繁体中文、日文、韩文、德文、法文和西班牙文，图标换成白底，新建笔记的光标换成妙言的绿色
+1. Mac：表格按列对齐显示，竖线淡下去，表格菜单可以增删行和列
+2. Mac：版本历史显示每个版本改了几行，并把这一版改动的地方标出来
+3. Mac：很长的列表项换行后和自己的文字对齐，不再缩到短横下面
+4. Mac：分栏时预览跟着编辑器一起滚到底，笔记以图片或表格结尾时也能看到最后
+5. Mac：进出预览都停在刚才那一行，退出演示或 PPT 后收起的栏会回来
+6. Mac：清理未使用的附件更稳妥，子文件夹和废纸篓里的笔记用到的附件、只存在 iCloud 里的笔记和刚放进来的文件都不会被清掉
+7. Mac：在编辑器外按 Command-Z 也能撤销当前笔记，连着按替换不会再替换自己刚写进去的文字，斜杠模板的占位文字跟着界面语言
+8. Mac：YouTube 视频在预览和导出的 HTML 里都能直接播放
+9. 编辑表格时 Tab 和回车在单元格之间移动
+10. 置顶会通过 iCloud 跟着笔记同步到其他设备
+11. 预览和幻灯片支持化学式，没有 `$` 的笔记里 `\(` `\)` 和 `\[` `\]` 也按公式显示，很宽的公式可以左右滚动
+12. 按 GitHub 写法的标题链接能跳到对应标题，饼图换成八种柔和的颜色，相邻扇区不会撞色
+13. 笔记列表的日期跟着系统的地区和 12 或 24 小时制
+14. iPhone 和 iPad：在 Safari 或其他 App 里把网页和文字分享到妙言，直接存成一篇笔记
+15. iPhone 和 iPad：设置里可以选单个回车算不算换行，iPhone 也能横过来阅读和编辑
 
 ---
 
-1. Mac: Images in the folder beside a Markdown file opened from Finder now show, and the App Store version asks once to read that folder and remembers it
-2. Mac: Link brackets no longer vanish as you type with a Simplified Chinese interface, and pasting a whole note into the title by mistake keeps only its first line instead of freezing the app
-3. Mac: Copying with the caret on a heading takes the words without the `#`, and the Simplified Chinese menus and prompts read more plainly, matching iPhone
-4. Mac: The icon sits on a lighter warm white, the MiaoYan mark at the top of the sidebar is laid out afresh, the lines between notes are easier to see, the title bar buttons have more room, and long folder names end with an ellipsis
-5. The first time you use MiaoYan it adds a MiaoYan guide that shows a table, a to-do list, a Mermaid diagram and a formula, and one tap puts it away
-6. Dates in the note list read the way iPhone shows them: the time for today, Yesterday, the day for this year and the full date before that
-7. Items without a checkbox in a to-do list keep their bullet, and in a list spaced with blank lines each checkbox sits on the same line as its text
-8. iPhone and iPad: Share a note, or a passage you select, as an image: pick a paper and a font, and make one long image or 3:4 cards
-9. iPhone and iPad: Search opens ready to type, with your recent searches and recently edited notes below, and note lists follow the font you choose
-10. iPhone and iPad: Recent Notes widgets for the Home Screen and Lock Screen, a New Note button on the Lock Screen and in Control Center, Shortcuts and Siri actions to create, open, search and append to notes, and notes in system search
-11. iPhone and iPad: The interface now speaks Traditional Chinese, Japanese, Korean, German, French and Spanish, the icon is white, and the new note cursor is MiaoYan green
+1. Mac: Tables line up in columns with quieter pipes, and a Table menu adds and removes rows and columns
+2. Mac: Version history shows how many lines each version changed and highlights what it changed
+3. Mac: A long list item wraps under its own words instead of under the dash
+4. Mac: In split view the preview reaches the end together with the editor, even when a note ends in images or tables
+5. Mac: Going into and out of the preview keeps the line you were on, and leaving a presentation or PPT brings back the columns it hid
+6. Mac: Cleaning unused attachments is safer: files used by notes in subfolders or the Trash, notes still only in iCloud, and files you just added are never removed
+7. Mac: Command-Z outside the editor undoes the note on screen, pressing Replace again no longer replaces text it just wrote, and the slash templates write their placeholders in your interface language
+8. Mac: YouTube videos play right in the preview and in exported HTML
+9. Tab and Return move between cells as you edit a table
+10. Pins follow your notes to your other devices through iCloud
+11. The preview and slides show chemistry formulas, `\(` `\)` and `\[` `\]` read as math in a note without `$`, and a wide formula scrolls sideways
+12. Links written for GitHub reach their heading, and pie charts use eight soft colours so touching slices never match
+13. Note list dates follow your system's region and 12 or 24-hour clock
+14. iPhone and iPad: Share a web page or text from Safari or any app to MiaoYan, and it becomes a note
+15. iPhone and iPad: Settings lets you choose whether a single Return starts a new line, and iPhone turns to landscape for reading and editing
