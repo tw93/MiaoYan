@@ -251,4 +251,47 @@ final class EditorHotPathTests: XCTestCase {
         XCTAssertGreaterThan(indent(at: "- an item after the last fence"), 0, "a list item below the fences hangs")
         XCTAssertEqual(indent(at: "- a dash inside a fence"), 0, "a list line inside a fence does not")
     }
+
+    /// Every mouse move over the editor ran both image patterns over the
+    /// whole note, on a fresh copy of it. An image link sits inside one
+    /// block, so only the lines around the pointer are read; images at the
+    /// start and end of a line, of the note, and an `<img>` tag broken over
+    /// lines are all still found.
+    func testImageHoverReadsTheLinesAroundThePointer() {
+        let markdown = "![start](start.png)"
+        let html = "<img src=\"end.png\" alt=\"at the end\">"
+        let broken = "<img\n  src=\"broken.png\"\n  width=\"300\">"
+        let middle = "![middle](middle.png)"
+        let body = Self.chapters(1700)
+        let text =
+            "![first](first.png) opens the note\n" + body + "\n" + markdown + " starts a line\n" + "a line ends with " + html + "\n\n" + broken
+            + "\n\nprose with " + middle + " inside\n" + body + "\nthe note ends with ![last](last.png)"
+        let ns = text as NSString
+        XCTAssertGreaterThan(ns.length, 2_000_000)
+
+        func check(_ literal: String, src: String, type: ImageLinkType, file: StaticString = #filePath, line: UInt = #line) {
+            let range = ns.range(of: literal)
+            XCTAssertNotEqual(range.location, NSNotFound, file: file, line: line)
+            for location in [range.location, range.location + range.length / 2, NSMaxRange(range) - 1] {
+                let info = ImageLinkParser.detectImageLink(in: text, at: location)
+                XCTAssertEqual(info?.src, src, "at \(location - range.location) of \(literal)", file: file, line: line)
+                XCTAssertEqual(info?.type, type, file: file, line: line)
+                XCTAssertEqual(info?.range, range, file: file, line: line)
+            }
+        }
+        check("![first](first.png)", src: "first.png", type: .markdown)
+        check(markdown, src: "start.png", type: .markdown)
+        check(html, src: "end.png", type: .html)
+        XCTAssertEqual(ImageLinkParser.detectImageLink(in: text, at: ns.range(of: html).location)?.alt, "at the end")
+        check(broken, src: "broken.png", type: .html)
+        check(middle, src: "middle.png", type: .markdown)
+        check("![last](last.png)", src: "last.png", type: .markdown)
+        XCTAssertNil(ImageLinkParser.detectImageLink(in: text, at: ns.range(of: "prose with").location))
+        XCTAssertNil(ImageLinkParser.detectImageLink(in: text, at: ns.length))
+
+        let pointer = ns.range(of: middle).location + 3
+        let perMove = Self.milliseconds(20) { _ = ImageLinkParser.detectImageLink(in: text, at: pointer) }
+        print("ImageLinkParser hover in the middle of a 2M-character note: \(String(format: "%.3f", perMove)) ms per mouse move")
+        XCTAssertLessThan(perMove, 0.5, "a mouse move reads the lines around the pointer, not the note")
+    }
 }

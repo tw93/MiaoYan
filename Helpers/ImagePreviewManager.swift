@@ -35,9 +35,8 @@ class ImagePreviewManager {
             return
         }
 
-        let text = storage.string
-
-        if let imageInfo = ImageLinkParser.detectImageLink(in: text, at: index) {
+        // The storage's own string: `storage.string` copies the whole note on every mouse move.
+        if let imageInfo = ImageLinkParser.detectImageLink(in: storage.mutableString, at: index) {
             let isSameImage = lastHoveredImageInfo?.src == imageInfo.src && lastHoveredImageInfo?.range.location == imageInfo.range.location && lastHoveredImageInfo?.range.length == imageInfo.range.length
 
             if !isSameImage {

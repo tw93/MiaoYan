@@ -30,18 +30,55 @@ class ImageLinkParser {
     }()
 
     static func detectImageLink(in text: String, at location: Int) -> ImageLinkInfo? {
-        let nsText = text as NSString
-        let fullRange = NSRange(location: 0, length: nsText.length)
+        detectImageLink(in: text as NSString, at: location)
+    }
 
-        if let markdownInfo = detectMarkdownImage(in: nsText, at: location, fullRange: fullRange) {
-            return markdownInfo
+    /// Runs on every mouse move over the editor, so it reads only the block
+    /// around `location`, never the whole note. Both patterns can cross a
+    /// line break (an `<img>` with its attributes on lines of their own, alt
+    /// text wrapped onto a second line), but neither Markdown nor HTML lets
+    /// an image run past a blank line, so the window is the lines up to the
+    /// nearest blank line on each side, at most `hoverLineReach` lines each
+    /// way. An image spread over more lines than that is not found.
+    static func detectImageLink(in text: NSString, at location: Int) -> ImageLinkInfo? {
+        let window = hoverWindow(around: location, in: text)
+        let local = text.substring(with: window) as NSString
+        let localRange = NSRange(location: 0, length: local.length)
+        let localLocation = location - window.location
+
+        let found =
+            detectMarkdownImage(in: local, at: localLocation, fullRange: localRange)
+            ?? detectHtmlImage(in: local, at: localLocation, fullRange: localRange)
+        guard let found else { return nil }
+        func shifted(_ range: NSRange) -> NSRange { NSRange(location: range.location + window.location, length: range.length) }
+        return ImageLinkInfo(type: found.type, src: found.src, alt: found.alt, range: shifted(found.range), srcRange: shifted(found.srcRange))
+    }
+
+    static let hoverLineReach = 32
+    private static let visible = CharacterSet.whitespacesAndNewlines.inverted
+
+    static func hoverWindow(around location: Int, in text: NSString) -> NSRange {
+        let length = text.length
+        let at = min(max(location, 0), length)
+        func isBlank(_ line: NSRange) -> Bool {
+            text.rangeOfCharacter(from: visible, options: [], range: line).location == NSNotFound
         }
-
-        if let htmlInfo = detectHtmlImage(in: nsText, at: location, fullRange: fullRange) {
-            return htmlInfo
+        var window = text.paragraphRange(for: NSRange(location: at, length: 0))
+        var steps = 0
+        while window.location > 0, steps < hoverLineReach {
+            let above = text.paragraphRange(for: NSRange(location: window.location - 1, length: 0))
+            if isBlank(above) { break }
+            window = NSUnionRange(above, window)
+            steps += 1
         }
-
-        return nil
+        steps = 0
+        while NSMaxRange(window) < length, steps < hoverLineReach {
+            let below = text.paragraphRange(for: NSRange(location: NSMaxRange(window), length: 0))
+            if isBlank(below) { break }
+            window = NSUnionRange(window, below)
+            steps += 1
+        }
+        return window
     }
 
     private static func detectMarkdownImage(in text: NSString, at location: Int, fullRange: NSRange) -> ImageLinkInfo? {
