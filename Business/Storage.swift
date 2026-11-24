@@ -1469,20 +1469,26 @@ class Storage {
                 }
             }
             let urls = unloaded.map(\.url)
-            let texts = await Task.detached(priority: .userInitiated) {
-                urls.map { (try? Data(contentsOf: $0)).flatMap(NoteText.decode) }
+            // Each note's links are found here with its read, off the main
+            // actor; only the image pattern and resolving against the note's
+            // folder are left for the loop below.
+            let reads = await Task.detached(priority: .userInitiated) {
+                urls.map { url -> (text: String, links: Set<String>)? in
+                    guard let text = (try? Data(contentsOf: url)).flatMap(NoteText.decode) else { return nil }
+                    return (text, Note.attachmentLinks(in: text))
+                }
             }.value
-            for (note, text) in zip(unloaded, texts) {
-                guard let text else {
+            for (note, read) in zip(unloaded, reads) {
+                guard let read else {
                     let error = CocoaError(.fileReadUnknown, userInfo: [NSFilePathErrorKey: note.url.path])
                     AppDelegate.trackError(error, context: "Storage.findOrphanAttachments.read")
                     completion(nil)
                     return
                 }
                 if note.project.isTrash {
-                    trashNames.formUnion(note.referencedAttachmentNames(in: text))
+                    trashNames.formUnion(note.referencedAttachmentNames(in: read.text, links: read.links))
                 } else {
-                    referenced.formUnion(note.getReferencedAttachmentPaths(in: text))
+                    referenced.formUnion(note.getReferencedAttachmentPaths(in: read.text, links: read.links))
                 }
             }
             let paths = referenced

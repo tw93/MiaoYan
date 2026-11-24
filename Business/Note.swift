@@ -931,8 +931,10 @@ public class Note: NSObject {
         return res
     }
 
-    /// `text` stands in for a body that is not loaded.
-    public func getReferencedAttachmentPaths(in text: String? = nil) -> Set<String> {
+    /// `text` stands in for a body that is not loaded; `links` is
+    /// `Note.attachmentLinks(in: text)` when the caller already has it, as
+    /// the orphan scan does after reading notes off the main actor.
+    public func getReferencedAttachmentPaths(in text: String? = nil, links: Set<String>? = nil) -> Set<String> {
         var referenced = Set<String>()
 
         for image in getAllImages(content: text.map { NSMutableAttributedString(string: $0) }) {
@@ -942,8 +944,8 @@ public class Note: NSObject {
         let noteString = text ?? content.string
         guard !noteString.isEmpty else { return referenced }
 
-        for rawPath in Note.rawAttachmentLinks(in: noteString) {
-            for absolutePath in resolveAttachmentAbsolutePaths(for: rawPath) {
+        for link in links ?? Note.attachmentLinks(in: noteString) {
+            if let absolutePath = resolveAttachmentAbsolutePath(forNormalizedPath: link) {
                 referenced.insert(absolutePath)
             }
         }
@@ -955,12 +957,11 @@ public class Note: NSObject {
     /// points. A note in the Trash resolves its links against the Trash, so
     /// a `../files/a.pdf` there resolves to nothing; its files are kept by
     /// name instead (2026-11-22).
-    func referencedAttachmentNames(in text: String) -> Set<String> {
-        var names = Set(getReferencedAttachmentPaths(in: text).map { ($0 as NSString).lastPathComponent })
-        for raw in Note.rawAttachmentLinks(in: text) {
-            for variant in Note.linkVariants(raw) {
-                names.insert((variant as NSString).lastPathComponent)
-            }
+    func referencedAttachmentNames(in text: String, links: Set<String>? = nil) -> Set<String> {
+        let links = links ?? Note.attachmentLinks(in: text)
+        var names = Set(getReferencedAttachmentPaths(in: text, links: links).map { ($0 as NSString).lastPathComponent })
+        for link in links {
+            names.insert((link as NSString).lastPathComponent)
         }
         return names
     }
@@ -983,28 +984,36 @@ public class Note: NSObject {
         return variants
     }
 
-    /// Every attachment link in `text` as written. A link target is read
-    /// whole where the text marks its ends: a `<…>` destination, which may
-    /// hold spaces (`![](<i/my photo.png>)`), and a quoted `src` or `href`
-    /// value (`<img src="i/my photo.png">`). Elsewhere `attachmentPathRegex`
-    /// stops at a space or an angle bracket. Cut at the space (`i/my`), or
-    /// keeping the closing `>`, the link named no file, and Clean Unused
-    /// Attachments offered an image the preview still showed. Extra entries
-    /// only keep files, so anything unsure is included.
-    private static func rawAttachmentLinks(in text: String) -> [String] {
+    /// Every attachment link in `text`, in each form `linkVariants` gives,
+    /// once: the two patterns find the same `src` value, and a note repeats
+    /// its links. A link target is read whole where the text marks its
+    /// ends: a `<…>` destination, which may hold spaces
+    /// (`![](<i/my photo.png>)`), a quoted `src` or `href` value
+    /// (`<img src="i/my photo.png">`), and a `](…)` with balanced
+    /// parentheses. Elsewhere `attachmentPathRegex` stops at a space or an
+    /// angle bracket. Cut at the space (`i/my`), or keeping the closing
+    /// `>`, the link named no file, and Clean Unused Attachments offered an
+    /// image the preview still showed. Extra entries only keep files, so
+    /// anything unsure is included. Text only, so the orphan scan runs it
+    /// off the main actor.
+    nonisolated static func attachmentLinks(in text: String) -> Set<String> {
         let nsString = text as NSString
         let range = NSRange(location: 0, length: nsString.length)
-        var links: [String] = []
+        var raw = Set<String>()
         attachmentPathRegex.enumerateMatches(in: text, options: [], range: range) { result, _, _ in
             guard let match = result?.range else { return }
-            links.append(nsString.substring(with: match))
+            raw.insert(nsString.substring(with: match))
         }
         wholeLinkTargetRegex.enumerateMatches(in: text, options: [], range: range) { result, _, _ in
             guard let result else { return }
             for group in 1..<result.numberOfRanges where result.range(at: group).location != NSNotFound {
                 let target = nsString.substring(with: result.range(at: group)).trimmingCharacters(in: .whitespaces)
-                if !target.isEmpty, !target.contains("://"), !target.hasPrefix("data:") { links.append(target) }
+                if !target.isEmpty, !target.contains("://"), !target.hasPrefix("data:") { raw.insert(target) }
             }
+        }
+        var links = Set<String>()
+        for link in raw {
+            links.formUnion(linkVariants(link))
         }
         return links
     }
@@ -1032,7 +1041,7 @@ public class Note: NSObject {
     /// `src`/`href` value, and a plain `](target)` with balanced parentheses
     /// (`files/report(1).pdf`, `files/Tom's.pdf`), which ends at a space
     /// before a title; the target is whichever group matched.
-    private static let wholeLinkTargetRegex: NSRegularExpression = {
+    nonisolated private static let wholeLinkTargetRegex: NSRegularExpression = {
         let pattern =
             #"\]\(\s*<([^<>\n]+)>|\]:[ \t]*<([^<>\n]+)>|\b(?:src|href)\s*=\s*(?:"([^"\n]*)"|'([^'\n]*)')|\]\(\s*(?!<)((?:[^()\s]|\([^()\s]*\))+)"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
@@ -1040,18 +1049,6 @@ public class Note: NSObject {
         }
         return regex
     }()
-
-    private func resolveAttachmentAbsolutePaths(for rawPath: String) -> [String] {
-        var results = [String]()
-
-        for variant in Note.linkVariants(rawPath) {
-            if let absolute = resolveAttachmentAbsolutePath(forNormalizedPath: variant) {
-                results.append(absolute)
-            }
-        }
-
-        return results
-    }
 
     private func resolveAttachmentAbsolutePath(forNormalizedPath path: String) -> String? {
         guard !path.isEmpty else { return nil }
@@ -1087,7 +1084,7 @@ public class Note: NSObject {
         return standardized
     }
 
-    private static let attachmentPathRegex: NSRegularExpression = {
+    nonisolated private static let attachmentPathRegex: NSRegularExpression = {
         let pattern = #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"<>]+"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
             preconditionFailure("Note.attachmentPathRegex literal is invalid: \(pattern)")
