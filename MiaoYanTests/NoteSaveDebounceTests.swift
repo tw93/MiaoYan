@@ -540,6 +540,76 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(try Data(contentsOf: newFolder.appendingPathComponent(".DS_Store")), Data([2]), "the new folder's own file is left")
     }
 
+    /// The old folder used to go recursively once its versions left, taking
+    /// a file someone put there with it; only Finder's `.DS_Store` goes now.
+    @MainActor
+    func testTheOldHistoryFolderKeepsAFileThatIsNoVersion() throws {
+        let fixture = try clashingHistories(moving: "the moving note", staying: "the note already there")
+        let manager = NoteVersionManager.shared
+        let oldFolder = try XCTUnwrap(manager.versions(for: fixture.moving).first?.url.deletingLastPathComponent())
+        defer {
+            manager.removeVersions(for: fixture.moving)
+            manager.removeVersions(for: fixture.staying)
+            manager.waitForPendingWork()
+            try? FileManager.default.removeItem(at: oldFolder)
+        }
+        try "mine".write(to: oldFolder.appendingPathComponent("notes.txt"), atomically: true, encoding: .utf8)
+
+        manager.moveVersions(from: fixture.oldURL, to: fixture.newURL)
+        manager.waitForPendingWork()
+
+        XCTAssertEqual(Set(versionTexts(of: fixture.staying)), ["the moving note", "the note already there"])
+        XCTAssertEqual(try? String(contentsOf: oldFolder.appendingPathComponent("notes.txt"), encoding: .utf8), "mine")
+    }
+
+    /// A version merged in from a rename can sit on the coming seconds; a
+    /// save in one of them wrote over it, and pruning counted and removed
+    /// `.DS_Store` as if it were a version.
+    @MainActor
+    func testASaveTakesTheNextFreeSecondAndPruningKeepsOtherFiles() throws {
+        let url = tempDir.appendingPathComponent("busy-\(UUID().uuidString).md")
+        try "first".write(to: url, atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: Project(url: tempDir, label: "test", isRoot: true))
+        note.load()
+        let manager = NoteVersionManager.shared
+        defer {
+            manager.removeVersions(for: note)
+            manager.waitForPendingWork()
+        }
+        manager.saveVersionIfNeeded(for: note, force: true)
+        manager.waitForPendingWork()
+        let folder = try XCTUnwrap(manager.versions(for: note).first?.url.deletingLastPathComponent())
+        let fmt = DateFormatter()
+        fmt.dateFormat = "yyyy-MM-dd'T'HH-mm-ss'Z'"
+        fmt.timeZone = TimeZone(secondsFromGMT: 0)
+        fmt.locale = Locale(identifier: "en_US_POSIX")
+        let now = Date()
+        var merged: [URL: String] = [:]
+        for second in 0..<5 {
+            let file = folder.appendingPathComponent(fmt.string(from: now.addingTimeInterval(Double(second))) + ".md")
+            try? FileManager.default.removeItem(at: file)
+            try "merged \(second)".write(to: file, atomically: true, encoding: .utf8)
+            merged[file] = "merged \(second)"
+        }
+        for older in 1...16 {
+            try "older \(older)".write(
+                to: folder.appendingPathComponent(fmt.string(from: now.addingTimeInterval(Double(-3600 * older))) + ".md"),
+                atomically: true, encoding: .utf8)
+        }
+        try Data([1]).write(to: folder.appendingPathComponent(".DS_Store"))
+
+        note.content = NSMutableAttributedString(string: "second")
+        manager.saveVersionIfNeeded(for: note, force: true)
+        manager.waitForPendingWork()
+
+        for (file, text) in merged {
+            XCTAssertEqual(try? String(contentsOf: file, encoding: .utf8), text, "\(file.lastPathComponent) was written over")
+        }
+        XCTAssertTrue(versionTexts(of: note).contains("second"))
+        XCTAssertEqual(manager.versions(for: note).count, 20)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: folder.appendingPathComponent(".DS_Store").path), "pruning removed .DS_Store")
+    }
+
     /// Undoing a delete dropped the note from storage before moving it back,
     /// so a move that failed hid it from the Trash list until a reload.
     @MainActor

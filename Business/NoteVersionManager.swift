@@ -58,8 +58,15 @@ final class NoteVersionManager: @unchecked Sendable {
             fmt.dateFormat = "yyyy-MM-dd'T'HH-mm-ss'Z'"
             fmt.timeZone = TimeZone(secondsFromGMT: 0)
             fmt.locale = Locale(identifier: "en_US_POSIX")
-            let name = fmt.string(from: Date())
-            let dest = dir.appendingPathComponent(name + ".md")
+            // A version merged in from a rename can already hold this second
+            // (it moved to the next free one); the save takes the next free
+            // second too rather than writing over it.
+            var date = Date()
+            var dest = dir.appendingPathComponent(fmt.string(from: date) + ".md")
+            while FileManager.default.fileExists(atPath: dest.path) {
+                date.addTimeInterval(1)
+                dest = dir.appendingPathComponent(fmt.string(from: date) + ".md")
+            }
             do {
                 try text.write(to: dest, atomically: true, encoding: .utf8)
             } catch {
@@ -211,8 +218,13 @@ final class NoteVersionManager: @unchecked Sendable {
                     allMoved = false
                     DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.moveVersions.list") }
                 }
+                // Finder's `.DS_Store` goes with it; anything else someone
+                // put there keeps the folder, which is removed only empty.
                 if allMoved {
-                    try? manager.removeItem(at: source)
+                    try? manager.removeItem(at: source.appendingPathComponent(".DS_Store"))
+                    if (try? manager.contentsOfDirectory(atPath: source.path))?.isEmpty == true {
+                        try? manager.removeItem(at: source)
+                    }
                 }
                 self?.prune(dir: target)
             }
@@ -267,8 +279,12 @@ final class NoteVersionManager: @unchecked Sendable {
             .joined(separator: "\n")
     }
 
+    /// Keeps the newest `maxVersions` versions; files that are no version
+    /// (`.DS_Store`) are neither counted nor removed.
     private func prune(dir: URL) {
-        guard let all = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil),
+        guard
+            let all = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
+                .filter({ Self.isVersionFileName($0.lastPathComponent) }),
             all.count > maxVersions
         else { return }
         all.sorted { $0.lastPathComponent > $1.lastPathComponent }
