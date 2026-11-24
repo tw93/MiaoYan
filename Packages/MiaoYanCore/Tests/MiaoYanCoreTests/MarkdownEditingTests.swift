@@ -246,4 +246,113 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(toggle("> - a"), "> - [ ] a")
         XCTAssertEqual(toggle("> 1. a"), "> 1. [ ] a")
     }
+
+    // MARK: Insert panel
+
+    /// The text and selection after `edit`, with the caret written as `|`
+    /// and a selection as `[...]`.
+    private func shown(_ edit: LineEdits.Edit?, on text: String) -> String? {
+        guard let edit else { return nil }
+        let new = (text as NSString).replacingCharacters(in: edit.range, with: edit.replacement) as NSString
+        let end = NSMaxRange(edit.selection)
+        if edit.selection.length == 0 { return new.replacingCharacters(in: edit.selection, with: "|") }
+        return new.substring(to: edit.selection.location) + "[" + new.substring(with: edit.selection) + "]" + new.substring(from: end)
+    }
+
+    /// `kind` toggled at the `|` in `marked`, or over the `[...]` selection.
+    private func toggled(_ kind: LineEdits.LineKind, _ marked: String) -> String? {
+        let (text, selection) = unmark(marked)
+        return shown(LineEdits.toggle(kind, in: text as NSString, selection: selection), on: text)
+    }
+
+    private func unmark(_ marked: String) -> (String, NSRange) {
+        let ns = marked as NSString
+        let open = ns.range(of: "[")
+        let caret = ns.range(of: "|")
+        if caret.location != NSNotFound {
+            return (ns.replacingCharacters(in: caret, with: ""), NSRange(location: caret.location, length: 0))
+        }
+        let close = ns.range(of: "]", options: .backwards)
+        let inner = ns.substring(with: NSRange(location: open.location + 1, length: close.location - open.location - 1))
+        let text = ns.substring(to: open.location) + inner + ns.substring(from: close.location + 1)
+        return (text, NSRange(location: open.location, length: (inner as NSString).length))
+    }
+
+    func testAHeadingTakesTheLineSwapsALevelAndComesOffOnTheSameLevel() {
+        XCTAssertEqual(toggled(.heading(2), "|"), "## |")
+        XCTAssertEqual(toggled(.heading(2), "abc|"), "## abc|")
+        XCTAssertEqual(toggled(.heading(2), "a|bc"), "## a|bc")
+        XCTAssertEqual(toggled(.heading(2), "# abc|"), "## abc|")
+        XCTAssertEqual(toggled(.heading(2), "## abc|"), "abc|")
+        XCTAssertEqual(toggled(.heading(1), "- [ ] abc|"), "# abc|")
+        XCTAssertEqual(toggled(.heading(3), "> abc|"), "> ### abc|")
+        XCTAssertEqual(toggled(.heading(1), "x\n|\ny"), "x\n# |\ny")
+    }
+
+    func testAListTakesTheLineSwitchesKindAndComesOffOnTheSameKind() {
+        XCTAssertEqual(toggled(.bullet, "abc|"), "- abc|")
+        XCTAssertEqual(toggled(.bullet, "- abc|"), "abc|")
+        XCTAssertEqual(toggled(.bullet, "1. abc|"), "- abc|")
+        XCTAssertEqual(toggled(.bullet, "- [x] abc|"), "- abc|")
+        XCTAssertEqual(toggled(.bullet, "## abc|"), "- abc|")
+        XCTAssertEqual(toggled(.bullet, "  abc|"), "  - abc|")
+        XCTAssertEqual(toggled(.task, "abc|"), "- [ ] abc|")
+        XCTAssertEqual(toggled(.task, "- [x] abc|"), "abc|")
+        XCTAssertEqual(toggled(.task, "* abc|"), "- [ ] abc|")
+        XCTAssertEqual(toggled(.numbered, "|"), "1. |")
+        XCTAssertEqual(toggled(.numbered, "- abc|"), "1. abc|")
+        XCTAssertEqual(toggled(.numbered, "3) abc|"), "abc|")
+    }
+
+    func testSeveralLinesFollowTheFirstWithWordsAndSkipEmptyOnes() {
+        XCTAssertEqual(toggled(.numbered, "[a\n\nb\nc]"), "[1. a\n\n2. b\n3. c]")
+        XCTAssertEqual(toggled(.bullet, "[- a\nb]"), "[a\nb]")
+        XCTAssertEqual(toggled(.bullet, "[\n- a\nb]"), "[\na\nb]")
+        XCTAssertEqual(toggled(.quote, "[a\n\nb]"), "[> a\n\n> b]")
+    }
+
+    func testAQuoteStaysInFrontOfTheLinesKind() {
+        XCTAssertEqual(toggled(.quote, "abc|"), "> abc|")
+        XCTAssertEqual(toggled(.quote, "> abc|"), "abc|")
+        XCTAssertEqual(toggled(.quote, ">abc|"), "abc|")
+        XCTAssertEqual(toggled(.quote, "- abc|"), "> - abc|")
+        XCTAssertEqual(toggled(.bullet, "> - abc|"), "> abc|")
+        XCTAssertEqual(toggled(.task, "> abc|"), "> - [ ] abc|")
+    }
+
+    func testLineKindsKeepAWindowsLineEnding() {
+        XCTAssertEqual(toggled(.bullet, "a\r\nb|\r\nc"), "a\r\n- b|\r\nc")
+    }
+
+    func testADividerStandsOnItsOwnLineApartFromTheWordsAboveIt() {
+        let divide: (String) -> String? = { marked in
+            let (text, selection) = self.unmark(marked)
+            return self.shown(BlockInsert.divider(in: text as NSString, selection: selection), on: text)
+        }
+        XCTAssertEqual(divide("|"), "---\n|")
+        // Right under a line of words, `---` would make that line a heading.
+        XCTAssertEqual(divide("abc|"), "abc\n\n---\n|")
+        XCTAssertEqual(divide("a|bc\ndef"), "abc\n\n---\n|\ndef")
+        XCTAssertEqual(divide("abc\n|\ndef"), "abc\n\n---\n|\ndef")
+        XCTAssertEqual(divide("abc\n\n|"), "abc\n\n---\n|")
+    }
+
+    func testACodeBlockOpensOnAnEmptyLineOrWrapsTheSelectedLines() {
+        let code: (String) -> String? = { marked in
+            let (text, selection) = self.unmark(marked)
+            return self.shown(BlockInsert.codeBlock(in: text as NSString, selection: selection), on: text)
+        }
+        XCTAssertEqual(code("|"), "```\n|\n```")
+        XCTAssertEqual(code("abc|\ndef"), "abc\n\n```\n|\n```\n\ndef")
+        XCTAssertEqual(code("x\n[a\nb]\ny"), "x\n\n```|\na\nb\n```\n\ny")
+        XCTAssertEqual(code("abc\r\n|"), "abc\r\n\r\n```\r\n|\r\n```")
+    }
+
+    func testATableIsTheTemplateWithItsFirstHeaderSelected() {
+        let (text, selection) = unmark("Notes|")
+        let result = shown(BlockInsert.table(headers: ["A", "B"], in: text as NSString, selection: selection), on: text)
+        XCTAssertEqual(result, "Notes\n\n| [A]   | B   |\n| --- | --- |\n|     |     |\n|     |     |")
+        let template = TableEditing.template(headers: ["Column 1", "Column 2"])
+        XCTAssertEqual((template.text as NSString).substring(with: template.selection), "Column 1")
+    }
 }

@@ -315,7 +315,201 @@ public enum LineEdits {
         return Edit(range: block, replacement: new, selection: NSRange(location: block.location, length: newLength))
     }
 
+    // MARK: Line kinds
+
+    /// What the iPhone and iPad insert panel turns lines into.
+    public enum LineKind: Equatable, Sendable {
+        case heading(Int), bullet, numbered, task, quote
+    }
+
+    /// Turns the lines the selection touches into `kind`, or back into plain
+    /// text when the first one with words already is that kind, as Joplin's
+    /// toolbar does: a heading of another level, or another kind of list
+    /// item, keeps its words and takes the new marker. Lines without words
+    /// are left alone unless no line has any, so an empty line takes the
+    /// marker with the caret after it. `>` quote markers stay in front and do
+    /// not count as the line's kind, except for `quote` itself.
+    public static func toggle(_ kind: LineKind, in text: NSString, selection: NSRange) -> Edit? {
+        guard selection.location >= 0, NSMaxRange(selection) <= text.length else { return nil }
+        var start = 0
+        var end = 0
+        var contentsEnd = 0
+        text.getLineStart(&start, end: &end, contentsEnd: &contentsEnd, for: selection)
+        let lines = text.substring(with: NSRange(location: start, length: contentsEnd - start))
+            .components(separatedBy: "\n").map { $0.hasSuffix("\r") ? String($0.dropLast()) : $0 }
+        let worded = lines.filter { !Line($0).words.trimmingCharacters(in: .whitespaces).isEmpty }
+        let removing = worded.first.map { Line($0).is(kind) } ?? false
+        let touchesEmpty = worded.isEmpty
+        var number = 0
+        return rewrite(in: text, selection: selection) { raw in
+            let line = Line(raw)
+            if !touchesEmpty, line.words.trimmingCharacters(in: .whitespaces).isEmpty { return raw }
+            if removing { return line.indent + (kind == .quote ? line.dequoted : line.quote + line.words) }
+            switch kind {
+            case .quote:
+                return line.indent + "> " + line.quote + line.marker + line.words
+            case .heading(let level):
+                return line.quote + String(repeating: "#", count: min(max(level, 1), 6)) + " " + line.words
+            case .bullet:
+                return line.indent + line.quote + "- " + line.words
+            case .task:
+                return line.indent + line.quote + "- [ ] " + line.words
+            case .numbered:
+                number += 1
+                return line.indent + line.quote + "\(number). " + line.words
+            }
+        }
+    }
+
+    /// One line cut into its indent, `>` markers, block marker and words.
+    private struct Line {
+        var indent = ""
+        var quote = ""
+        var marker = ""
+        var words = ""
+        var heading = 0
+        var item: LineKind?
+
+        init(_ line: String) {
+            let ns = line as NSString
+            guard let match = Self.shape.firstMatch(in: line, range: NSRange(location: 0, length: ns.length)) else {
+                words = line
+                return
+            }
+            func part(_ index: Int) -> String {
+                let range = match.range(at: index)
+                return range.location == NSNotFound ? "" : ns.substring(with: range)
+            }
+            indent = part(1)
+            quote = part(2)
+            marker = part(3)
+            words = part(4)
+            let trimmed = marker.trimmingCharacters(in: .whitespaces)
+            if trimmed.hasPrefix("#") {
+                heading = trimmed.count
+            } else if trimmed.hasSuffix("]") {
+                item = .task
+            } else if let first = trimmed.first, first.isNumber {
+                item = .numbered
+            } else if !trimmed.isEmpty {
+                item = .bullet
+            }
+        }
+
+        /// The line without its first `>` marker.
+        var dequoted: String {
+            let ns = quote as NSString
+            guard let match = Self.oneQuote.firstMatch(in: quote, range: NSRange(location: 0, length: ns.length)) else {
+                return quote + marker + words
+            }
+            return ns.replacingCharacters(in: match.range, with: "") + marker + words
+        }
+
+        func `is`(_ kind: LineKind) -> Bool {
+            switch kind {
+            case .heading(let level): return heading == level
+            case .quote: return !quote.isEmpty
+            default: return item == kind
+            }
+        }
+
+        private static let shape = try! NSRegularExpression(
+            pattern: #"^([ \t]*)((?:>[ \t]?)*)(#{1,6}[ \t]+|(?:[-*+]|\d{1,9}[.)])[ \t]+\[[ xX]\][ \t]+|(?:[-*+]|\d{1,9}[.)])[ \t]+)?(.*)$"#,
+            options: [.dotMatchesLineSeparators])
+        private static let oneQuote = try! NSRegularExpression(pattern: #"^>[ \t]?"#)
+    }
+
     private static let taskRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]"#)
     private static let itemRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+"#)
     private static let orderedRegex = try! NSRegularExpression(pattern: #"^([ \t]*)(\d{1,9}[.)])([ \t]+|$)(.?)"#)
+}
+
+/// Blocks the iPhone and iPad insert panel puts on lines of their own: a code
+/// block, a divider and a table. A block never joins the paragraph around it:
+/// `---` right under a line of text makes that line a heading, and a line
+/// right under a table becomes one of its rows, so a blank line goes between
+/// the block and any words above or below it.
+public enum BlockInsert {
+    public typealias Edit = LineEdits.Edit
+
+    /// A fenced code block with the caret on its empty middle line, or
+    /// around the selected lines.
+    public static func codeBlock(in text: NSString, selection: NSRange) -> Edit? {
+        let lineBreak = ListContinuation.lineBreak(in: text)
+        if selection.length > 0 {
+            var start = 0
+            var end = 0
+            var contentsEnd = 0
+            text.getLineStart(&start, end: &end, contentsEnd: &contentsEnd, for: selection)
+            let body = text.substring(with: NSRange(location: start, length: contentsEnd - start))
+            let block = "```" + lineBreak + body + lineBreak + "```"
+            return place(block, caret: NSRange(location: 3, length: 0), in: text, selection: selection, replacingLines: true)
+        }
+        let block = "```" + lineBreak + lineBreak + "```"
+        return place(block, caret: NSRange(location: 3 + (lineBreak as NSString).length, length: 0), in: text, selection: selection)
+    }
+
+    /// `---` with the caret on the line after it.
+    public static func divider(in text: NSString, selection: NSRange) -> Edit? {
+        let lineBreak = ListContinuation.lineBreak(in: text)
+        let block = "---" + lineBreak
+        return place(block, caret: NSRange(location: (block as NSString).length, length: 0), in: text, selection: selection, endsWithLine: true)
+    }
+
+    /// `TableEditing.template(headers:)` with its first header selected.
+    public static func table(headers: [String], in text: NSString, selection: NSRange) -> Edit? {
+        let lineBreak = ListContinuation.lineBreak(in: text)
+        let template = TableEditing.template(headers: headers)
+        let block = template.text.replacingOccurrences(of: "\n", with: lineBreak)
+        return place(block, caret: template.selection, in: text, selection: selection)
+    }
+
+    /// Puts `block` on the caret's line when that line is empty (or in place
+    /// of the selected lines), otherwise on new lines after it, with a blank
+    /// line between it and words above or below. `caret` is relative to the
+    /// block. A block that `endsWithLine` already brings the line after it.
+    private static func place(
+        _ block: String, caret: NSRange, in text: NSString, selection: NSRange,
+        replacingLines: Bool = false, endsWithLine: Bool = false
+    ) -> Edit? {
+        guard selection.location >= 0, NSMaxRange(selection) <= text.length else { return nil }
+        let lineBreak = ListContinuation.lineBreak(in: text)
+        var start = 0
+        var end = 0
+        var contentsEnd = 0
+        text.getLineStart(&start, end: &end, contentsEnd: &contentsEnd, for: selection)
+        let range: NSRange
+        let before: String
+        if replacingLines || !hasWords(text, from: start, to: contentsEnd) {
+            range = NSRange(location: start, length: contentsEnd - start)
+            before = start > 0 && hasWords(lineBefore: start, in: text) ? lineBreak : ""
+        } else {
+            range = NSRange(location: contentsEnd, length: 0)
+            before = lineBreak + lineBreak
+        }
+        var after = ""
+        if !endsWithLine, end < text.length {
+            var nextStart = 0
+            var nextEnd = 0
+            var nextContentsEnd = 0
+            text.getLineStart(&nextStart, end: &nextEnd, contentsEnd: &nextContentsEnd, for: NSRange(location: end, length: 0))
+            if hasWords(text, from: nextStart, to: nextContentsEnd) { after = lineBreak }
+        }
+        let offset = range.location + (before as NSString).length
+        return Edit(
+            range: range, replacement: before + block + after,
+            selection: NSRange(location: offset + caret.location, length: caret.length))
+    }
+
+    private static func hasWords(_ text: NSString, from start: Int, to end: Int) -> Bool {
+        !text.substring(with: NSRange(location: start, length: end - start)).trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    private static func hasWords(lineBefore start: Int, in text: NSString) -> Bool {
+        var aboveStart = 0
+        var aboveEnd = 0
+        var aboveContentsEnd = 0
+        text.getLineStart(&aboveStart, end: &aboveEnd, contentsEnd: &aboveContentsEnd, for: NSRange(location: start - 1, length: 0))
+        return hasWords(text, from: aboveStart, to: aboveContentsEnd)
+    }
 }

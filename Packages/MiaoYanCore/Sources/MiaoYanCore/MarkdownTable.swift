@@ -34,6 +34,21 @@ public enum TableEditing {
         public let selection: NSRange
     }
 
+    /// A new table: `headers`, its line of dashes and two empty rows, written
+    /// the way the table keys and Format write one, with the first header
+    /// selected. A word wider than three columns makes the rows under it as
+    /// wide. The Mac's `/table` template and the iPhone and iPad insert
+    /// panel both write this.
+    public static func template(headers: [String]) -> (text: String, selection: NSRange) {
+        let empty = "|" + String(repeating: "  |", count: headers.count)
+        let dashes = "|" + String(repeating: " --- |", count: headers.count)
+        let rough = (["| " + headers.joined(separator: " | ") + " |", dashes, empty, empty].joined(separator: "\n")) as NSString
+        guard let edit = edit(.align(.none), in: rough, selection: NSRange(location: 2, length: 0)) else {
+            return (rough as String, NSRange(location: 2, length: (headers.first ?? "").utf16.count))
+        }
+        return (rough.replacingCharacters(in: edit.range, with: edit.replacement), edit.selection)
+    }
+
     /// Whether the selection sits in a table these commands can edit.
     public static func isInTable(in text: NSString, selection: NSRange) -> Bool {
         locate(in: text, selection: selection) != nil

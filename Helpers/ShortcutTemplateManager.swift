@@ -156,19 +156,11 @@ class ShortcutTemplateManager {
         }
     }
 
-    /// A header, its line of dashes and two empty rows, written the way
-    /// the table keys and Format write a table, with the first header
-    /// selected: a word wider than three columns needs wider rows under it.
+    /// A header, its line of dashes and two empty rows with the first header
+    /// selected (`TableEditing.template`, which the iPhone and iPad write too).
     private func tableTemplate(_ headers: [String]) -> ShortcutTemplate {
-        let empty = "|" + String(repeating: "  |", count: headers.count)
-        let dashes = "|" + String(repeating: " --- |", count: headers.count)
-        let rough = (["| " + headers.joined(separator: " | ") + " |", dashes, empty, empty].joined(separator: "\n")) as NSString
-        guard let edit = TableEditing.edit(.align(.none), in: rough, selection: NSRange(location: 2, length: 0)) else {
-            return ShortcutTemplate(content: rough as String, cursorOffset: 2, cursorLength: (headers.first ?? "").utf16.count)
-        }
-        return ShortcutTemplate(
-            content: rough.replacingCharacters(in: edit.range, with: edit.replacement),
-            cursorOffset: edit.selection.location, cursorLength: edit.selection.length)
+        let table = TableEditing.template(headers: headers)
+        return ShortcutTemplate(content: table.text, cursorOffset: table.selection.location, cursorLength: table.selection.length)
     }
 
     func getTemplate(for key: String) -> ShortcutTemplate? {
