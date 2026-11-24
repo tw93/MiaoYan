@@ -1109,36 +1109,41 @@ extension ViewController {
     }
 
     // MARK: - File Operations
-    public func copy(project: Project, url: URL) -> URL {
-        Self.copyFile(url, into: project)
+    @discardableResult
+    public func copy(project: Project, url: URL) -> URL? {
+        Self.importCopy(of: url, into: project)
+    }
+
+    /// The SwiftUI shell's import entry, unchanged in shape: it returns the
+    /// would-be name even when the copy failed. Its callers should move to
+    /// `importCopy(of:into:)`, which returns nil then.
+    static func copyFile(_ url: URL, into project: Project) -> URL {
+        importCopy(of: url, into: project) ?? project.url.appendingPathComponent(url.lastPathComponent)
     }
 
     /// Copies an imported file into `project`, naming it "Copy", "Copy 2"
-    /// and so on when the name is taken. Shared with the SwiftUI shell.
-    static func copyFile(_ url: URL, into project: Project) -> URL {
-        let fileName = url.lastPathComponent
+    /// and so on when the name is taken. Nil, and reported, when the copy
+    /// failed for any other reason: the URL it used to return anyway named
+    /// no file, and the import focused or listed a note that was not there.
+    static func importCopy(of url: URL, into project: Project) -> URL? {
+        let manager = FileManager.default
+        let baseName = url.deletingPathExtension().lastPathComponent
+        let ext = url.pathExtension
+        var destination = project.url.appendingPathComponent(url.lastPathComponent)
+        var copyNumber = 1
 
-        do {
-            let destination = project.url.appendingPathComponent(fileName)
-            try FileManager.default.copyItem(at: url, to: destination)
-            return destination
-        } catch {
-            // If file already exists, create a copy with "Copy" suffix
-            let baseName = url.deletingPathExtension().lastPathComponent
-            let ext = url.pathExtension
-
-            var copyName = baseName + " Copy"
-            var copyNumber = 2
-
-            while FileManager.default.fileExists(atPath: project.url.appendingPathComponent(copyName).appendingPathExtension(ext).path) {
-                copyName = baseName + " Copy \(copyNumber)"
+        while true {
+            do {
+                try manager.copyItem(at: url, to: destination)
+                return destination
+            } catch CocoaError.fileWriteFileExists {
+                let copyName = copyNumber == 1 ? baseName + " Copy" : baseName + " Copy \(copyNumber)"
+                destination = project.url.appendingPathComponent(copyName).appendingPathExtension(ext)
                 copyNumber += 1
+            } catch {
+                AppDelegate.trackError(error, context: "ViewController.importCopy")
+                return nil
             }
-
-            let baseUrl = project.url.appendingPathComponent(copyName).appendingPathExtension(ext)
-            try? FileManager.default.copyItem(at: url, to: baseUrl)
-
-            return baseUrl
         }
     }
 

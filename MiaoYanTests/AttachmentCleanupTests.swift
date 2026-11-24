@@ -474,6 +474,26 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: images.path), [])
     }
 
+    /// An import whose copy failed still returned a URL, and the import
+    /// focused a note that was not there.
+    @MainActor
+    func testAnImportThatCannotBeCopiedReturnsNothing() throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        let project = Project(url: work, label: "Work")
+        let source = tempDir.appendingPathComponent("plan.md")
+        try "# Plan\n".write(to: source, atomically: true, encoding: .utf8)
+
+        XCTAssertEqual(ViewController.importCopy(of: source, into: project)?.lastPathComponent, "plan.md")
+        XCTAssertEqual(ViewController.importCopy(of: source, into: project)?.lastPathComponent, "plan Copy.md", "a taken name gets Copy")
+        XCTAssertEqual(ViewController.importCopy(of: source, into: project)?.lastPathComponent, "plan Copy 2.md")
+
+        let missing = tempDir.appendingPathComponent("gone.md")
+        XCTAssertNil(ViewController.importCopy(of: missing, into: project), "nothing was copied")
+        XCTAssertEqual(
+            Set(try FileManager.default.contentsOfDirectory(atPath: work.path)), ["plan.md", "plan Copy.md", "plan Copy 2.md"])
+    }
+
     @MainActor
     private func orphans(in storage: Storage, changedBefore cutoff: Date = .distantFuture) async -> [URL]? {
         let done = expectation(description: "orphan scan")
