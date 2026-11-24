@@ -318,3 +318,59 @@ delete order and error handling in both sidebars after `Storage.trashFolder`; th
 new menu item and `I18n` key in all four languages; 792 quoted tokens in the guides, 7 stale; no size logs left in
 `Shell/`; UserDefaults keys all read.
 
+
+## 2026-11-24 (after V4.12.0, whole tree, Mac, iPhone and iPad)
+
+- Audited: MiaoYan `87bcf33d`, MiaoYan-Pro `d308ac78`. Five Opus agents, read-only, then fix agents in detached
+  worktrees; the attachment, version and import fixes went through two independent reviews, the second round's
+  findings landed by the main session.
+- Mechanical: `check_incidents.py` 93 rows before, 97 after, 0 problems; SwiftLint and swift-format `--strict`
+  clean; full `xcodebuild test` 581 tests, 0 failures, 1 skipped.
+- Next window from: `f4e47e3f` (the last fix of this run).
+
+### Fixed
+
+- Behaviour: Clean Unused Attachments reads link targets with spaces, angle brackets, `#` or `?`, balanced
+  parentheses, apostrophes, escapes, reference definitions and unquoted `href` whole (`c7344a6b`, `2eaaeb41`,
+  `a83ba770`, `4e394430`, I-95); a paste skips a name iCloud has not downloaded and gets no link when unwritten
+  (`dd9be6a2`, I-96); merging two version histories keeps every version and any file that is no version, pruning
+  ignores `.DS_Store`, a save never writes over a merged version (`a9d59bf8`, `262dabd5`, `76c4436b`); a failed
+  import copy adds no note, in the storyboard window and the shell (`44d35094`, `b5c8c57b`, `b35ef2b2`,
+  `f4e47e3f`); a presentation started on top of another keeps the first layout capture (`53de5491`).
+- Preview: Mermaid in Magic PPT and its PDF draws from its source in light and dark, PlantUML slides draw, and the
+  page loads `common.js` in place of the `js/index.js` removed in a4599830 (`c9198b3b`, `8e3d7378`, I-97); YouTube
+  frames in slides go through the relay (`2a0d1ad8`); the shell's preview opens the next note in place, renders the
+  first once and puts the editor back on its line (`13961c08`, `e2e44384`).
+- Performance: list indent scans for fences only when an edited line is a list item, 37 ms to 3 ms per key on the
+  1M-character note (`9544d952`, I-94); image hover reads the block around the pointer, 2.7 ms to 0.003 ms
+  (`47a3e69e`); `/table` templates lay out what they insert, 66 ms to 0.65 ms (`e18d61ef`); the attachment scan
+  finds each note's links once, off the main actor (`37da9fc9`).
+- Stale: guide sentences and a test comment (`c2d19e9d`); the unused settings protocol, alias and two strings
+  (`46a0a361`); dead preview theme helpers (`7ed9c7c2`); the unused `noteType` key (`00df9b56`).
+- iPhone and iPad (MiaoYan-Pro `1f542fee`): the reader's top-right pair keeps its look and each button takes its
+  half of the capsule, 44pt wide with no dead gap; Done in a new note waits for an image still being inserted and
+  for a title still composing; the insert bar inserts while composing and closes on rotation; the save pill keeps
+  one width; share, widget dates, pins and the new-note sheet's draft fixes; guides brought in line with the code.
+
+### Refuted
+
+- Case-insensitive paths in attachment cleanup: already resolved through `resolvingSymlinksInPath`, with a test.
+- The presentation double capture did not reproduce; the guard in `53de5491` was kept as a cheap defence.
+- An async load for imports (a fix agent's commit) was not landed: text typed before the read lands could be
+  replaced.
+
+### Decided, do not re-report
+
+- The reader's top-right pair stays one capsule (option A of three rendered, 2026-11-24); system spacing (B) left a
+  16pt gap and two glass circles (C) changed the look.
+- Cmd-Opt-P during a plain presentation does nothing, as in the shell.
+
+### Open
+
+- Maintainer calls in `decide`: the Custom appearance, the Heti-based typography CSS, the insert bar's todo against
+  Cmd-T, releasing closed notes' memory, literal source gates in MiaoYan-Pro.
+- PPT PDF export waits a fixed 1.2 s after its reload; its readiness check could also wait on
+  `HtmlManager.pendingDiagramsExpression`, which slide diagrams now carry.
+- No test fixture for a copy that fails partway (`f4e47e3f`).
+- Real-app checks: Magic PPT with a Mermaid slide in light and dark and its PDF; the shell's preview switching notes;
+  on iPhone, the reader's Edit and More taps and a new note with a photo inserted just before Done.
