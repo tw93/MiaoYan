@@ -966,11 +966,15 @@ public class Note: NSObject {
     }
 
     /// The forms a link as written may name its file by: itself, percent
-    /// decoded, and cut at the first `#` or `?`, since a query or fragment
+    /// decoded, with Markdown's backslash escapes removed (`i/a\_b.png`),
+    /// and cut at the first `#` or `?`, since a query or fragment
     /// (`files/spec.pdf#page=3`, `i/a.png?v=2`) is no part of the name.
     nonisolated static func linkVariants(_ raw: String) -> Set<String> {
         var variants: Set<String> = [raw]
         if let decoded = raw.removingPercentEncoding { variants.insert(decoded) }
+        for variant in variants where variant.contains("\\") {
+            variants.insert(removingBackslashEscapes(variant))
+        }
         for variant in variants {
             if let cut = variant.firstIndex(where: { $0 == "#" || $0 == "?" }), cut != variant.startIndex {
                 variants.insert(String(variant[..<cut]))
@@ -1005,10 +1009,32 @@ public class Note: NSObject {
         return links
     }
 
-    /// `](<target>)`, a reference definition `]: <target>`, and a quoted
-    /// `src`/`href` value; the target is whichever group matched.
+    /// A backslash before ASCII punctuation is Markdown's escape for it.
+    nonisolated private static func removingBackslashEscapes(_ text: String) -> String {
+        var result = ""
+        var escaping = false
+        for character in text {
+            if escaping {
+                if !(character.isASCII && (character.isPunctuation || character.isSymbol)) { result.append("\\") }
+                result.append(character)
+                escaping = false
+            } else if character == "\\" {
+                escaping = true
+            } else {
+                result.append(character)
+            }
+        }
+        if escaping { result.append("\\") }
+        return result
+    }
+
+    /// `](<target>)`, a reference definition `]: <target>`, a quoted
+    /// `src`/`href` value, and a plain `](target)` with balanced parentheses
+    /// (`files/report(1).pdf`, `files/Tom's.pdf`), which ends at a space
+    /// before a title; the target is whichever group matched.
     private static let wholeLinkTargetRegex: NSRegularExpression = {
-        let pattern = #"\]\(\s*<([^<>\n]+)>|\]:[ \t]*<([^<>\n]+)>|\b(?:src|href)\s*=\s*(?:"([^"\n]*)"|'([^'\n]*)')"#
+        let pattern =
+            #"\]\(\s*<([^<>\n]+)>|\]:[ \t]*<([^<>\n]+)>|\b(?:src|href)\s*=\s*(?:"([^"\n]*)"|'([^'\n]*)')|\]\(\s*(?!<)((?:[^()\s]|\([^()\s]*\))+)"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
             preconditionFailure("Note.wholeLinkTargetRegex literal is invalid: \(pattern)")
         }

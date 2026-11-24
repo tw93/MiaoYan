@@ -468,6 +468,44 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertTrue(names.isSuperset(of: ["spec.pdf", "a.png"]), "\(names)")
     }
 
+    /// The fallback pattern stops at `(` and `'` and keeps a backslash, so
+    /// `files/report(1).pdf` read as `files/report(1`, `files/Tom's.pdf` as
+    /// `files/Tom`, and `i/a\_b.png` named no file.
+    @MainActor
+    func testALinkWithParenthesesAnApostropheOrAnEscapeKeepsItsFile() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let manager = FileManager.default
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        let shapes: [(link: String, file: String)] = [
+            ("[r](files/report(1).pdf)", "files/report(1).pdf"),
+            ("[q](files/Tom's.pdf)", "files/Tom's.pdf"),
+            ("![](i/a\\_b.png)", "i/a_b.png"),
+            ("![](/i/shot(2).png \"title\")", "i/shot(2).png"),
+        ]
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+        for shape in shapes {
+            let expected = work.appendingPathComponent(shape.file).path
+            XCTAssertTrue(note.getReferencedAttachmentPaths(in: shape.link).contains(expected), "\(shape.link) refers to \(shape.file)")
+            try Data([0x89]).write(to: work.appendingPathComponent(shape.file))
+        }
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+        try ("# Note\n\n" + shapes.map(\.link).joined(separator: "\n\n") + "\n").write(
+            to: work.appendingPathComponent("n.md"), atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+
+        _ = storage.subfolders(of: root)
+        let found = await orphans(in: storage)
+        XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
+
+        let trash = Project(url: tempDir.appendingPathComponent(".Trash", isDirectory: true), isTrash: true)
+        let trashed = Note(url: trash.url.appendingPathComponent("old.md"), with: trash)
+        let names = trashed.referencedAttachmentNames(in: "[r](../files/report(1).pdf) [q](../files/Tom's.pdf) ![](../i/a\\_b.png)")
+        XCTAssertTrue(names.isSuperset(of: ["report(1).pdf", "Tom's.pdf", "a_b.png"]), "\(names)")
+    }
+
     /// A trashed note keeps its files by name; the names came from the same
     /// cut links, so `<../i/my photo.png>` kept a file called `my`.
     @MainActor
