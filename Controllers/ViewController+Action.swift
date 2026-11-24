@@ -1136,13 +1136,19 @@ extension ViewController {
             do {
                 try manager.copyItem(at: url, to: destination)
                 return destination
-            } catch CocoaError.fileWriteFileExists {
+            } catch {
+                // A taken name does not always fail as "file exists": a
+                // locked file there fails as a permission error. Each try is
+                // a new name, so the search ends at the first name that is
+                // free yet cannot be written.
+                let taken = (error as? CocoaError)?.code == .fileWriteFileExists || manager.fileExists(atPath: destination.path)
+                guard taken else {
+                    AppDelegate.trackError(error, context: "ViewController.importCopy")
+                    return nil
+                }
                 let copyName = copyNumber == 1 ? baseName + " Copy" : baseName + " Copy \(copyNumber)"
                 destination = project.url.appendingPathComponent(copyName).appendingPathExtension(ext)
                 copyNumber += 1
-            } catch {
-                AppDelegate.trackError(error, context: "ViewController.importCopy")
-                return nil
             }
         }
     }

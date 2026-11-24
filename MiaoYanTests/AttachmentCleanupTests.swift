@@ -569,6 +569,45 @@ final class AttachmentCleanupTests: XCTestCase {
             Set(try FileManager.default.contentsOfDirectory(atPath: work.path)), ["plan.md", "plan Copy.md", "plan Copy 2.md"])
     }
 
+    /// A taken name does not always fail as "file exists": a locked file
+    /// there fails as a permission error, and the import gave up instead
+    /// of trying the next "Copy" name.
+    @MainActor
+    func testAnImportOverALockedFileTakesTheNextName() throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        let source = tempDir.appendingPathComponent("plan.md")
+        try "# Plan\n".write(to: source, atomically: true, encoding: .utf8)
+        let locked = work.appendingPathComponent("plan.md")
+        try "# Old plan\n".write(to: locked, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.immutable: true], ofItemAtPath: locked.path)
+        defer { try? FileManager.default.setAttributes([.immutable: false], ofItemAtPath: locked.path) }
+
+        let copy = ViewController.importCopy(of: source, into: Project(url: work, label: "Work"))
+        XCTAssertEqual(copy?.lastPathComponent, "plan Copy.md")
+        XCTAssertEqual(try String(contentsOf: locked, encoding: .utf8), "# Old plan\n", "the locked file is untouched")
+    }
+
+    /// A folder that cannot be written takes no copy under any name, and
+    /// the search for a free name ends.
+    @MainActor
+    func testAnImportIntoAFolderThatCannotBeWrittenReturnsNothing() throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        let source = tempDir.appendingPathComponent("plan.md")
+        try "# Plan\n".write(to: source, atomically: true, encoding: .utf8)
+        try "# Old plan\n".write(to: work.appendingPathComponent("plan.md"), atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: work.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: work.path) }
+        let project = Project(url: work, label: "Work")
+
+        XCTAssertNil(ViewController.importCopy(of: source, into: project), "plan.md is taken and plan Copy.md cannot be made")
+        let fresh = tempDir.appendingPathComponent("fresh.md")
+        try "# Fresh\n".write(to: fresh, atomically: true, encoding: .utf8)
+        XCTAssertNil(ViewController.importCopy(of: fresh, into: project))
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: work.path), ["plan.md"])
+    }
+
     @MainActor
     private func orphans(in storage: Storage, changedBefore cutoff: Date = .distantFuture) async -> [URL]? {
         let done = expectation(description: "orphan scan")
