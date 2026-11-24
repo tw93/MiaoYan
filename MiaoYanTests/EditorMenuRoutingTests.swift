@@ -589,6 +589,48 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertTrue(vc.isNotelistVisible)
     }
 
+    /// A presentation started on top of one (a PPT started inside it, or
+    /// Settings changing the presentation size by leaving and entering again)
+    /// captured the layout a second time, with the columns already collapsed,
+    /// so the restore no longer reopened them itself; only the split views
+    /// re-reading their autosave brought them back.
+    @MainActor
+    func testASecondPresentationOnTopKeepsTheFirstOnesColumns() throws {
+        let vc = try XCTUnwrap(ViewController.shared(), "the test host opened no storyboard window")
+        let sidebarWasVisible = vc.isSidebarVisible
+        let listWasVisible = vc.isNotelistVisible
+        let wasSidebar = vc.presentationRestoresSidebar
+        let wasList = vc.presentationRestoresNoteList
+        defer {
+            vc.resumeColumnAutosave()
+            vc.presentationRestoresSidebar = wasSidebar
+            vc.presentationRestoresNoteList = wasList
+            if sidebarWasVisible { vc.showSidebar("") } else { vc.hideSidebar("") }
+            if listWasVisible { vc.showNoteList("") } else { vc.hideNoteList("") }
+        }
+        vc.showNoteList("")
+        vc.showSidebar("")
+        XCTAssertTrue(vc.isSidebarVisible)
+        XCTAssertTrue(vc.isNotelistVisible)
+        XCTAssertFalse(vc.isPresentationLayoutSaved)
+
+        vc.savePresentationLayout()
+        vc.hideNoteList("")
+        XCTAssertFalse(vc.isNotelistVisible)
+        XCTAssertFalse(vc.isSidebarVisible)
+        XCTAssertTrue(vc.isPresentationLayoutSaved)
+
+        vc.savePresentationLayout()
+        XCTAssertTrue(vc.presentationRestoresSidebar, "the second capture recorded the collapsed sidebar")
+        XCTAssertTrue(vc.presentationRestoresNoteList, "the second capture recorded the collapsed note list")
+
+        vc.restorePresentationLayout()
+        XCTAssertFalse(vc.isPresentationLayoutSaved)
+        XCTAssertEqual(vc.sidebarSplitView.autosaveName, ViewController.sidebarSplitAutosaveName)
+        XCTAssertTrue(vc.isSidebarVisible)
+        XCTAssertTrue(vc.isNotelistVisible)
+    }
+
     @MainActor
     private func isHighlighted(_ editor: EditTextView, at index: Int) -> Bool {
         editor.layoutManager?.temporaryAttribute(.backgroundColor, atCharacterIndex: index, effectiveRange: nil) != nil

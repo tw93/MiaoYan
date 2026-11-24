@@ -513,7 +513,22 @@ extension ViewController {
 
     // MARK: - Presentation Mode
 
+    /// A presentation's layout is captured from savePresentationLayout, which
+    /// pauses the column autosave, until restorePresentationLayout resumes it.
+    /// Leaving a full-screen presentation only queues that restore until the
+    /// window is out of full screen, so the capture can still be in force after
+    /// the presentation flag is off.
+    var isPresentationLayoutSaved: Bool {
+        guard let sidebarSplitView else { return false }
+        return sidebarSplitView.autosaveName?.isEmpty ?? true
+    }
+
     func savePresentationLayout() {
+        // A second capture inside a presentation (a PPT started on top, or one
+        // started again before the last one's restore ran) recorded the
+        // collapsed columns as the ones to reopen, leaving the restore to rely
+        // on the split views re-reading their autosave alone (I-68, I-92).
+        guard !isPresentationLayoutSaved else { return }
         let currentSidebarWidth = sidebarWidth
         let currentNotelistWidth = notelistWidth
         presentationRestoresSidebar = isSidebarVisible
@@ -665,6 +680,9 @@ extension ViewController {
         if sessionMagicPPTMode {
             disableMiaoYanPPT()
         } else {
+            // A presentation is already on screen; the shell ignores this key
+            // there too (ShellModel.setPresenting).
+            if sessionPresentationMode { return }
             if !isMiaoYanPPT() {
                 return
             }
@@ -1322,15 +1340,7 @@ extension ViewController {
     }
 
     @IBAction func toggleMagicPPT(_ sender: Any) {
-        saveTitleSafely()
-        if sessionMagicPPTMode {
-            disableMiaoYanPPT()
-        } else {
-            if !isMiaoYanPPT() {
-                return
-            }
-            enableMiaoYanPPT()
-        }
+        toggleMagicPPT()
     }
 
     @IBAction func formatText(_ sender: NSButton) {

@@ -230,9 +230,12 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         settings.presentationFontSize = item.tag
         // Only a running presentation needs redrawing at the new size; outside
         // it the value is just stored, and opening a presentation picks it up.
+        // Redraw in place: leaving and entering again queued the first exit's
+        // layout restore behind the full-screen animation, toggled full screen
+        // again in the middle of it, and recorded the collapsed columns as the
+        // layout to restore.
         if let vc = ViewController.shared(), vc.sessionPresentationMode {
-            vc.disablePresentation()
-            vc.enablePresentation()
+            vc.refillEditArea(previewOnly: true, force: true)
         } else if #available(macOS 14, *),
             let shell = (NSApp.delegate as? AppDelegate)?.shellWindowController as? ShellWindowController,
             shell.model.isPresenting
