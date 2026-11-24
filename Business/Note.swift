@@ -1038,12 +1038,13 @@ public class Note: NSObject {
     }
 
     /// `](<target>)`, a reference definition `]: <target>`, a quoted
-    /// `src`/`href` value, and a plain `](target)` with balanced parentheses
+    /// `src`/`href` value, an unquoted one up to a space or `>`, and a plain
+    /// `](target)` or `]: target` with balanced parentheses
     /// (`files/report(1).pdf`, `files/Tom's.pdf`), which ends at a space
     /// before a title; the target is whichever group matched.
     nonisolated private static let wholeLinkTargetRegex: NSRegularExpression = {
         let pattern =
-            #"\]\(\s*<([^<>\n]+)>|\]:[ \t]*<([^<>\n]+)>|\b(?:src|href)\s*=\s*(?:"([^"\n]*)"|'([^'\n]*)')|\]\(\s*(?!<)((?:[^()\s]|\([^()\s]*\))+)"#
+            #"\]\(\s*<([^<>\n]+)>|\]:[ \t]*<([^<>\n]+)>|\b(?:src|href)\s*=\s*(?:"([^"\n]*)"|'([^'\n]*)'|([^\s"'>][^\s">]*))|\](?:\(\s*|:[ \t]*)(?!<)((?:[^()\s]|\([^()\s]*\))+)"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
             preconditionFailure("Note.wholeLinkTargetRegex literal is invalid: \(pattern)")
         }

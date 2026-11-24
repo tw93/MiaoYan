@@ -482,6 +482,9 @@ final class AttachmentCleanupTests: XCTestCase {
             ("[q](files/Tom's.pdf)", "files/Tom's.pdf"),
             ("![](i/a\\_b.png)", "i/a_b.png"),
             ("![](/i/shot(2).png \"title\")", "i/shot(2).png"),
+            ("[1]: files/ref(2).pdf", "files/ref(2).pdf"),
+            ("[2]: files/Ann's.pdf \"title\"", "files/Ann's.pdf"),
+            ("<a href=files/Bo's.pdf>b</a>", "files/Bo's.pdf"),
         ]
         let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
         for shape in shapes {
