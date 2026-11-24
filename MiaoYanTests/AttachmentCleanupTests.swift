@@ -442,6 +442,38 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertTrue(names.contains("our trip.png"), "\(names)")
     }
 
+    /// iCloud keeps a file it has not downloaded as `.photo.png.icloud`;
+    /// the check looked for `photo.png.icloud`, so a pasted image could take
+    /// the name of one still arriving.
+    @MainActor
+    func testAPastedImageDoesNotTakeTheNameOfAFileStillInICloud() throws {
+        let images = tempDir.appendingPathComponent("i", isDirectory: true)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        let source = tempDir.appendingPathComponent("photo.png")
+        XCTAssertEqual(ImagesProcessor.getFileName(from: source, to: images), "photo.png", "a free name is kept")
+
+        try Data([0x62, 0x70]).write(to: images.appendingPathComponent(".photo.png.icloud"))
+        let name = try XCTUnwrap(ImagesProcessor.getFileName(from: source, to: images))
+        XCTAssertNotEqual(name, "photo.png", "photo.png is taken by a file iCloud has not downloaded yet")
+        XCTAssertEqual((name as NSString).pathExtension, "png")
+    }
+
+    /// A paste whose image could not be written still got its link, a
+    /// broken image in the note.
+    @MainActor
+    func testAnImageThatCannotBeWrittenGetsNoLink() throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let images = work.appendingPathComponent("i", isDirectory: true)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: images.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: images.path) }
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+
+        let link = ImagesProcessor.writeFile(data: Data([0x89]), note: note, ext: "png")
+        XCTAssertNil(link, "no file was written, so there is nothing to link")
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: images.path), [])
+    }
+
     @MainActor
     private func orphans(in storage: Storage, changedBefore cutoff: Date = .distantFuture) async -> [URL]? {
         let done = expectation(description: "orphan scan")

@@ -162,7 +162,9 @@ public class ImagesProcessor {
 
             while name == nil {
                 let destination = to.appendingPathComponent(pathComponent)
-                let icloud = destination.appendingPathExtension("icloud")
+                // iCloud keeps a file not downloaded yet as `.name.icloud`
+                // beside it; taking its name would overwrite it on arrival.
+                let icloud = to.appendingPathComponent(".\(pathComponent).icloud")
 
                 if FileManager.default.fileExists(atPath: destination.path) || FileManager.default.fileExists(atPath: icloud.path) {
                     pathComponent = NSUUID().uuidString.lowercased() + ".\(ext)"
@@ -221,7 +223,14 @@ public class ImagesProcessor {
         guard let fileName = ImagesProcessor.getFileName(from: url, to: destination, ext: ext) else { return nil }
 
         let to = destination.appendingPathComponent(fileName)
-        try? data.write(to: to, options: .atomic)
+        // No file, no link: a link to a file that was never written showed
+        // a broken image where the paste or drop seemed to have worked.
+        do {
+            try data.write(to: to, options: .atomic)
+        } catch {
+            AppDelegate.trackError(error, context: "ImagesProcessor.writeFile")
+            return nil
+        }
 
         return "\(prefix)\(fileName)"
     }
