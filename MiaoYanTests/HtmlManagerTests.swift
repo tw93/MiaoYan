@@ -1205,6 +1205,56 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertLessThan(mhchemIdx, autoRenderIdx)
     }
 
+    /// Slides and the PPT export render the raw markdown in the page, so
+    /// `PreviewMedia.relayedYouTubeFrames` never saw their frames and a
+    /// YouTube embed showed Error 153. Every real frame, also one reveal
+    /// loads from `data-src` later, now points at the relay; a frame written
+    /// in a code fence stays text.
+    @MainActor
+    func testPPTSendsYouTubeFramesThroughTheRelay() async throws {
+        let markdown = #"""
+            <iframe src="https://www.youtube.com/watch?v=FCKJL-mTncY&t=90s" width="800" height="450"></iframe>
+
+            ---
+
+            <iframe data-src="https://youtu.be/FCKJL-mTncY" width="800" height="450"></iframe>
+
+            <iframe src="https://player.bilibili.com/player.html?bvid=BV1"></iframe>
+
+            ```html
+            <iframe src="https://youtu.be/FCKJL-mTncY"></iframe>
+            ```
+            """#
+        let url = try writePPTPage(markdown: markdown, named: "youtube-ppt")
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(url, allowingReadAccessTo: tempDirectory)
+        let probe = """
+            (() => ({
+                frames: Array.from(document.querySelectorAll('.slides iframe'), (f) => f.getAttribute('src') || f.getAttribute('data-src') || ''),
+                code: Array.from(document.querySelectorAll('.slides pre code'), (c) => c.textContent).join('\\n')
+            }))()
+            """
+        var state: [String: Any] = [:]
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if (try? await webView.evaluateJavaScript("window.__miaoyanMathDone === true") as? Bool) == true {
+                state = (try? await webView.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
+                if (state["frames"] as? [String])?.count == 3 { break }
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        let relay = PreviewMedia.youTubeRelay
+        XCTAssertEqual(
+            state["frames"] as? [String], ["\(relay)?v=FCKJL-mTncY&start=90", "\(relay)?v=FCKJL-mTncY", "https://player.bilibili.com/player.html?bvid=BV1"],
+            "\(state)")
+        XCTAssertTrue((state["code"] as? String)?.contains(#"<iframe src="https://youtu.be/FCKJL-mTncY"></iframe>"#) == true, "\(state)")
+
+        // Reveal sets `src` again as a slide comes back into view.
+        _ = try await webView.evaluateJavaScript("document.querySelector('.slides iframe').setAttribute('src', 'https://youtu.be/FCKJL-mTncY?t=5'); true")
+        let reloaded = try await webView.evaluateJavaScript("document.querySelector('.slides iframe').getAttribute('src')")
+        XCTAssertEqual(reloaded as? String, "\(relay)?v=FCKJL-mTncY&start=5")
+    }
+
     /// Malformed mhchem inputs such as `\ce{A \bond{} B}` (`MhchemBugT`) or
     /// `\ce{A ->[\}] B}` (`ExtraCloseMissingOpen`) throw raw arrays instead of
     /// `katex.ParseError`. Both preview and slides must keep those formulas as

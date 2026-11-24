@@ -286,4 +286,41 @@ final class MediaPlaceholderTests: XCTestCase {
         XCTAssertTrue(PreviewMedia.youTubeRelay.hasSuffix("/DownView.bundle/youtube.html"))
         XCTAssertTrue(relay.contains("https://www.youtube-nocookie.com/embed/"))
     }
+
+    /// Slides render the raw markdown in the page, so their frames go through
+    /// the relay from `js/youtube-relay.js`, which must read an address the
+    /// way `PreviewMedia.youTubeVideo` does or a slide and the preview of the
+    /// same note play different things.
+    @MainActor
+    func testTheSlidesRelayReadsAddressesAsThePreviewDoes() async throws {
+        let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
+        let script = try String(contentsOf: bundle.appendingPathComponent("js/youtube-relay.js"), encoding: .utf8)
+        let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 200, height: 200))
+        webView.loadHTMLString("<html><body><script>\(script)</script></body></html>", baseURL: nil)
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline, (try? await webView.evaluateJavaScript("typeof MiaoYanYouTubeRelay === 'object'") as? Bool) != true {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+
+        let addresses = [
+            "https://www.youtube.com/watch?v=FCKJL-mTncY&t=90s", "https://youtu.be/FCKJL-mTncY?t=1m5s",
+            "//www.youtube-nocookie.com/embed/FCKJL-mTncY?start=12", "https://m.youtube.com/shorts/FCKJL-mTncY",
+            "https://www.youtube.com/watch?feature=share&amp;v=FCKJL-mTncY", "https://www.youtube.com/live/FCKJL-mTncY?t=1h2m3s",
+            "https://youtube.com/v/FCKJL-mTncY?start=0", "https://youtu.be/FCKJL-mTncY?t=-5", "https://youtu.be/FCKJL-mTncY?t=90x",
+            "https://youtu.be/FCKJL-mTncY?t=9999999999999999h", "https://www.youtube.com/watch?v=short",
+            "https://player.bilibili.com/player.html?bvid=BV1", "https://example.com/embed/FCKJL-mTncY",
+            "https://www.youtube.com/embed/videoseries?list=PL1", "https://www.youtube.com/embed/live_stream?channel=UC1",
+            "youtube.com/embed/FCKJL-mTncY", "  https://www.youtube.com/embed/FCKJL-mTncY  ", "",
+        ]
+        for address in addresses {
+            let expected = PreviewMedia.youTubeVideo(address).map { video in
+                "\(PreviewMedia.youTubeRelay)?v=\(video.id)" + (video.start.map { "&start=\($0)" } ?? "")
+            }
+            let call = "MiaoYanYouTubeRelay.relayed(\(HtmlManager.jsStringLiteral(address)))"
+            let actual = try await webView.evaluateJavaScript("\(call) || ''") as? String
+            XCTAssertEqual(actual, expected ?? "", address)
+        }
+        let relay = try await webView.evaluateJavaScript("MiaoYanYouTubeRelay.relay") as? String
+        XCTAssertEqual(relay, PreviewMedia.youTubeRelay)
+    }
 }

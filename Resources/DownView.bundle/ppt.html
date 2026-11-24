@@ -8,6 +8,12 @@
   DOWN_THEME
   <link rel="stylesheet" href="themes/mermaid.css" />
   <script src="js/theme-config.js"></script>
+  <script src="js/youtube-relay.js"></script>
+  <script>
+    // Reveal renders the markdown here, after the app's relay pass would
+    // have run, so YouTube frames are sent through the relay in the page.
+    MiaoYanYouTubeRelay.observe(document.documentElement);
+  </script>
   <script src="js/markmap.min.js"></script>
   <script src="js/index.js"></script>
 
