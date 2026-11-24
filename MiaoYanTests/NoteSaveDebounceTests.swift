@@ -437,6 +437,45 @@ final class NoteSaveDebounceTests: XCTestCase {
         manager.waitForPendingWork()
     }
 
+    /// Moving a history onto a path that has one merges the two; a version
+    /// whose file name was already taken there failed to move, and the
+    /// source folder was then deleted with it inside (audit 2026-11-24).
+    @MainActor
+    func testAVersionThatCannotJoinTheOtherHistoryIsKept() throws {
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let oldURL = tempDir.appendingPathComponent("old-\(UUID().uuidString).md")
+        let newURL = tempDir.appendingPathComponent("new-\(UUID().uuidString).md")
+        try "the moving note".write(to: oldURL, atomically: true, encoding: .utf8)
+        try "the note already there".write(to: newURL, atomically: true, encoding: .utf8)
+        let moving = Note(url: oldURL, with: project)
+        let staying = Note(url: newURL, with: project)
+        moving.load()
+        staying.load()
+        let manager = NoteVersionManager.shared
+        manager.saveVersionIfNeeded(for: moving, force: true)
+        manager.saveVersionIfNeeded(for: staying, force: true)
+        manager.waitForPendingWork()
+        defer {
+            manager.removeVersions(for: moving)
+            manager.removeVersions(for: staying)
+            manager.waitForPendingWork()
+        }
+        // Two saves in the same second get the same file name.
+        let movingFile = try XCTUnwrap(manager.versions(for: moving).first?.url)
+        let stayingFile = try XCTUnwrap(manager.versions(for: staying).first?.url)
+        let clash = stayingFile.deletingLastPathComponent().appendingPathComponent(movingFile.lastPathComponent)
+        if clash != stayingFile { try FileManager.default.moveItem(at: stayingFile, to: clash) }
+
+        manager.moveVersions(from: oldURL, to: newURL)
+        manager.waitForPendingWork()
+
+        let texts = (manager.versions(for: moving) + manager.versions(for: staying)).compactMap {
+            try? String(contentsOf: $0.url, encoding: .utf8)
+        }
+        XCTAssertTrue(texts.contains("the moving note"), "the version that could not move is still on disk: \(texts)")
+        XCTAssertTrue(texts.contains("the note already there"), "\(texts)")
+    }
+
     /// Undoing a delete dropped the note from storage before moving it back,
     /// so a move that failed hid it from the Trash list until a reload.
     @MainActor

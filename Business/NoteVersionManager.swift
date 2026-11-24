@@ -186,12 +186,32 @@ final class NoteVersionManager: @unchecked Sendable {
             let manager = FileManager.default
             guard manager.fileExists(atPath: source.path) else { return }
             if !manager.fileExists(atPath: target.path) {
-                try? manager.moveItem(at: source, to: target)
-            } else {
-                for file in (try? manager.contentsOfDirectory(at: source, includingPropertiesForKeys: nil)) ?? [] {
-                    try? manager.moveItem(at: file, to: target.appendingPathComponent(file.lastPathComponent))
+                do {
+                    try manager.moveItem(at: source, to: target)
+                } catch {
+                    DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.moveVersions") }
                 }
-                try? manager.removeItem(at: source)
+            } else {
+                // The source folder goes only once every version left it: a
+                // move that failed (a name already taken there, a permission
+                // error) used to be followed by deleting that version.
+                var allMoved = true
+                do {
+                    for file in try manager.contentsOfDirectory(at: source, includingPropertiesForKeys: nil) {
+                        do {
+                            try manager.moveItem(at: file, to: target.appendingPathComponent(file.lastPathComponent))
+                        } catch {
+                            allMoved = false
+                            DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.moveVersions.merge") }
+                        }
+                    }
+                } catch {
+                    allMoved = false
+                    DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.moveVersions.list") }
+                }
+                if allMoved {
+                    try? manager.removeItem(at: source)
+                }
                 self?.prune(dir: target)
             }
             if let last = self?.lastSaved.removeValue(forKey: oldKey) {
