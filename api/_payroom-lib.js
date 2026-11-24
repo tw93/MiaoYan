@@ -26,6 +26,9 @@ const PARTS = {
   fx: { label: '汇率', every: 6 * HOUR, stale: 48 * HOUR },
   traffic: { label: '官网流量', every: 0, stale: 6 * HOUR },
   analytics: { label: '渠道报告', every: 0, stale: 24 * HOUR },
+  // Search Console never fails the page: a read that does not land keeps the
+  // last panel (or none) and is kept in state.search.error, not in the warnings.
+  search: { label: '搜索表现', every: 6 * HOUR, stale: 48 * HOUR },
 };
 // GA restates its last few days, so each run replaces those; the whole history
 // is pulled once a day, since that query is the one that timed out.
@@ -443,7 +446,9 @@ async function googleToken() {
   const now = Math.floor(Date.now() / 1000);
   const unsigned = `${b64({ alg: 'RS256', typ: 'JWT' })}.${b64({
     iss: c.client_email,
-    scope: 'https://www.googleapis.com/auth/analytics.readonly',
+    // One token serves GA and Search Console; the service account holds read
+    // access on both, so asking for both scopes here is all the grant needs.
+    scope: 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/webmasters.readonly',
     aud: 'https://oauth2.googleapis.com/token',
     iat: now,
     exp: now + 3000,
@@ -581,6 +586,146 @@ async function syncTraffic(state, today, problems, now = new Date()) {
   });
 }
 
+// ---- search performance (Search Console) -----------------------------------
+// Mirrors Mole's 搜索表现: two windows (近 7 天, 近 30 天) with totals against
+// the window before, the top queries, and the top pages over 28 days. Search
+// Console trails by about three days, so every window ends three days back.
+// Failure is soft: a window that does not land keeps its last good copy marked
+// stale, and with nothing to keep the panel is simply absent.
+const SEARCH_SITE = process.env.MIAOYAN_SEARCH_CONSOLE_SITE || 'sc-domain:miaoyan.app';
+const SEARCH_LAG_DAYS = 3;
+const SEARCH_WINDOWS = [{ key: 'd7', days: 7 }, { key: 'd30', days: 30 }];
+const SEARCH_PAGE_DAYS = 28;
+const SEARCH_QUERY_LIMIT = 1000;
+const SEARCH_KEEP_QUERIES = 25;
+const SEARCH_KEEP_PAGES = 30;
+
+function searchRange(today, days, back = 0) {
+  const to = addDays(today, -SEARCH_LAG_DAYS - back * days);
+  return { from: addDays(to, -(days - 1)), to };
+}
+
+function searchPath(raw) {
+  try {
+    const u = new URL(String(raw));
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return String(raw);
+    return `${u.pathname || '/'}${u.search || ''}`;
+  } catch {
+    return String(raw || '');
+  }
+}
+
+const searchNumbers = (r) => ({
+  clicks: Math.max(0, Number(r.clicks) || 0),
+  impressions: Math.max(0, Number(r.impressions) || 0),
+  ctr: Number.isFinite(Number(r.ctr)) ? Number(r.ctr) : null,
+  position: Number.isFinite(Number(r.position)) ? Number(r.position) : null,
+});
+
+async function searchQuery(token, range, dimension, rowLimit) {
+  const res = await fetch(`https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(SEARCH_SITE)}/searchAnalytics/query`, {
+    method: 'POST',
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ startDate: range.from, endDate: range.to, dimensions: dimension ? [dimension] : [], rowLimit, dataState: 'final' }),
+    signal: AbortSignal.timeout(30000),
+  });
+  if (!res.ok) throw new Error(`search ${res.status}`);
+  const json = await res.json();
+  return Array.isArray(json.rows) ? json.rows : [];
+}
+
+async function loadSearchWindow(token, today, spec) {
+  const cur = searchRange(today, spec.days);
+  const prev = searchRange(today, spec.days, 1);
+  const [queryRows, curTotal, prevTotal] = await Promise.all([
+    searchQuery(token, cur, 'query', SEARCH_QUERY_LIMIT),
+    searchQuery(token, cur, null, 1),
+    searchQuery(token, prev, null, 1),
+  ]);
+  const queries = queryRows
+    .map((r) => ({ query: String(r.keys?.[0] ?? ''), ...searchNumbers(r) }))
+    .filter((r) => r.query && r.impressions > 0);
+  const totals = curTotal[0] ? searchNumbers(curTotal[0]) : null;
+  return {
+    known: totals !== null || queries.length > 0,
+    days: spec.days,
+    from: cur.from,
+    to: cur.to,
+    previousFrom: prev.from,
+    previousTo: prev.to,
+    totals,
+    previousTotals: prevTotal[0] ? searchNumbers(prevTotal[0]) : null,
+    keywordCount: queries.length,
+    keywordCapped: queryRows.length >= SEARCH_QUERY_LIMIT,
+    queries: queries.sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions).slice(0, SEARCH_KEEP_QUERIES),
+    stale: false,
+    syncedAt: new Date().toISOString(),
+  };
+}
+
+async function syncSearch(state, today, now = new Date()) {
+  const old = state.search && state.search.v === 1 ? state.search : null;
+  const next = { v: 1, site: SEARCH_SITE, windows: {}, pages: old ? old.pages || null : null, error: null, syncedAt: old ? old.syncedAt || null : null };
+  const keep = (key, error) => {
+    const was = old && old.windows && old.windows[key];
+    if (was && was.known) next.windows[key] = { ...was, stale: true };
+    next.error = error;
+  };
+  try {
+    if (!process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON) throw new Error('no credentials');
+    const token = await googleToken();
+    for (const spec of SEARCH_WINDOWS) {
+      try {
+        const win = await loadSearchWindow(token, today, spec);
+        if (win.known) next.windows[spec.key] = win;
+        else keep(spec.key, 'empty');
+      } catch (error) {
+        keep(spec.key, error.message);
+      }
+    }
+    try {
+      const range = searchRange(today, SEARCH_PAGE_DAYS);
+      const rows = await searchQuery(token, range, 'page', 500);
+      const pages = rows
+        .map((r) => ({ page: searchPath(r.keys?.[0]), ...searchNumbers(r) }))
+        .filter((r) => r.impressions > 0)
+        .sort((a, b) => b.clicks - a.clicks || b.impressions - a.impressions);
+      if (pages.length) {
+        next.pages = { from: range.from, to: range.to, count: pages.length, rows: pages.slice(0, SEARCH_KEEP_PAGES), stale: false };
+      } else if (next.pages) {
+        next.pages = { ...next.pages, stale: true };
+      }
+    } catch (error) {
+      if (next.pages) next.pages = { ...next.pages, stale: true };
+      next.error = next.error || error.message;
+    }
+    if (!next.error) next.syncedAt = now.toISOString();
+  } catch (error) {
+    for (const spec of SEARCH_WINDOWS) keep(spec.key, error.message);
+    if (next.pages) next.pages = { ...next.pages, stale: true };
+  }
+  // An outage with nothing to keep leaves no snapshot rather than an empty one.
+  if (!Object.keys(next.windows).length && !next.pages && !old) {
+    state.search = { v: 1, site: SEARCH_SITE, windows: {}, pages: null, error: next.error, syncedAt: null };
+    return;
+  }
+  state.search = next;
+}
+
+function buildSearch(state) {
+  const s = state.search;
+  if (!s || s.v !== 1) return null;
+  const labels = { d7: '近 7 天', d30: '近 30 天' };
+  const windows = SEARCH_WINDOWS
+    .map(({ key }) => ({ key, label: labels[key], win: s.windows && s.windows[key] }))
+    .filter(({ win }) => win && win.known && (win.totals || (win.queries && win.queries.length)))
+    .map(({ key, label, win }) => ({ key, label, ...win, queries: win.queries || [] }));
+  const pages = s.pages && Array.isArray(s.pages.rows) && s.pages.rows.length ? s.pages : null;
+  // Nothing readable means nothing to draw, never a card of zeros.
+  if (!windows.length) return null;
+  return { windows, pages, partial: Boolean(s.error) };
+}
+
 // Each part keeps its last good data when it fails; only the failed part's
 // error reaches the page.
 // The quick run fires every ten minutes around the hour Apple publishes the
@@ -639,6 +784,9 @@ async function runSync({ budgetMs = 200000, now = new Date() } = {}) {
   await part('store', () => syncStore(state));
   await part('fx', () => syncFx(state));
   await part('traffic', (p) => syncTraffic(state, today, p, now));
+  await part('search', () => syncSearch(state, today, now));
+  // A soft failure is not a success: drop the stamp so the next hourly run asks again.
+  if (state.search && state.search.error && health.search) delete health.search.ok;
   // A first run that got nothing must not create the store: a read that wrongly
   // answered "absent" would otherwise replace the history with an empty one.
   if (!stored && !state.sales.rows.length) {
@@ -1201,6 +1349,7 @@ function buildView(state, { range = 'all', currency = 'CNY', today = pacificToda
     refunds: refunds.sort((a, b) => (a.date < b.date ? 1 : -1)),
     analytics,
     traffic: buildTraffic(state, range === 'all' ? TRAFFIC_START : from, to),
+    search: buildSearch(state),
     recent: buildRecent(state, convert, { from, to, today, latestSalesDate }),
     pulse,
     latest: latestIncome(state, convert),
@@ -1319,6 +1468,7 @@ module.exports = {
   APP_ID,
   ANALYTICS_REPORTS,
   addDays,
+  buildSearch,
   buildView,
   compactAnalyticsRows,
   emptyState,
@@ -1333,4 +1483,5 @@ module.exports = {
   readState,
   runSync,
   salesRowsFromReport,
+  syncSearch,
 };

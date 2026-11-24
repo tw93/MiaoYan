@@ -89,6 +89,15 @@ td small{color:var(--subtle);font-size:12px}
 .chart-frame{position:relative}
 .chart-line{position:absolute;top:36px;left:8px;right:8px;width:calc(100% - 16px);pointer-events:none;overflow:visible}
 .chart-frame.visits .chart-bar{background:color-mix(in srgb,#3C6B52 20%,transparent)}
+.switch button{display:flex;align-items:center;min-height:28px;padding:0 10px;border:0;background:none;color:var(--muted);font:inherit;font-size:11px;font-weight:650;letter-spacing:.02em;white-space:nowrap;cursor:pointer;transition:background-color .12s ease-out,color .12s ease-out}
+.switch button+button{border-left:1px solid var(--line)}
+.switch button:hover{color:var(--accent)}
+.switch button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent);font-weight:750}
+.switch button:focus,.switch button:focus-visible{outline:none}
+.search[data-win="d7"] [data-w="d30"],.search[data-win="d30"] [data-w="d7"]{display:none}
+.search .mini{margin-bottom:4px}
+.search-split{grid-template-columns:repeat(2,minmax(0,1fr))}
+.search-split td:first-child{overflow-wrap:anywhere;word-break:break-word}
 .split{display:grid;grid-template-columns:minmax(240px,1fr) minmax(0,2fr);gap:18px 28px;align-items:start;border-top:1px solid var(--line);padding-top:14px}
 .split h3{font-size:13px;font-weight:650;color:var(--muted);margin-bottom:6px}
 .mixes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
@@ -113,7 +122,7 @@ td small{color:var(--subtle);font-size:12px}
 .login-card input:focus,.login-card input:focus-visible{outline:none}
 .login-card button{background:var(--ink);border-color:var(--ink);color:#fffdf7;font-weight:650;cursor:pointer}
 @media (min-width:1081px){.board>.panel[class*=" s"]{grid-column:span var(--span)}}
-@media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pace{grid-template-columns:minmax(0,1fr)}.split{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pace{grid-template-columns:minmax(0,1fr)}.split,.search-split{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){.chart-value.dense{display:none}}
 @media (max-width:640px){h1{font-size:22px;margin-top:3px}.topbar{padding:14px 12px 2px}main{padding:8px 12px 28px;gap:10px}.metrics{gap:8px}.metric{min-height:74px;padding:10px 12px;gap:4px}.metric strong{font-size:22px}.metric>span,.metric>em{font-size:12px}.panel{padding:14px;gap:14px}table{font-size:12px}th,td{min-width:48px;padding:6px 0 6px 12px}.filters{margin-left:0;justify-content:flex-start}.month select{width:76px;font-size:16px;font-weight:400}.month select[data-active=true]{width:108px}.chart-value,.chart-tick.alt,.wide-only{display:none}.login-card{padding:28px 22px}.topbar{flex-wrap:wrap;gap:8px}.switch a{padding:0 8px}.brand{display:contents}.sync{display:none}.filters{order:1;margin-left:auto;justify-content:flex-end;gap:8px}.switch.range,.month{display:none}.range-select{display:block;appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--line);border-radius:8px;padding:0 22px 0 10px;background:var(--panel) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6a64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;color:var(--accent);font:inherit;font-size:16px}.range-select:focus,.range-select:focus-visible{outline:none}.board{gap:10px}.mini{gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}.mini>:last-child:nth-child(odd){grid-column:1/-1}.mini article{padding:10px}.mini strong{font-size:18px}.ring{width:84px;height:84px}.chart-line{display:none}.mixes{grid-template-columns:minmax(0,1fr)}.ring svg{width:84px;height:84px}.day td:first-child{max-width:0}.day td small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 `;
@@ -182,7 +191,7 @@ const updatedAt = (iso) => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Sh
 
 // A long list shows its first rows and opens the rest in place, so no panel
 // scrolls inside the page.
-const FOLD = { day: 14, review: 3, refund: 5, finance: 6, traffic: 10, country: 12 };
+const FOLD = { day: 14, review: 3, refund: 5, finance: 6, traffic: 10, country: 12, search: 10 };
 const fold = (kind, i) => (i >= FOLD[kind] ? ' class="more"' : '');
 const moreButton = (kind, n, unit) => (n > FOLD[kind] ? `<button type="button" class="more-btn" onclick="this.closest('.panel').classList.add('open')">展开全部 ${int(n)} ${unit}</button>` : '');
 
@@ -303,6 +312,43 @@ function visitorsSection(view) {
   ].join('');
   const split = sources || mixes ? `<div class="split">${sources}${mixes ? `<div class="mixes">${mixes}</div>` : ''}</div>` : '';
   return `<section class="panel"><div class="head"><div><h2>访客来源</h2></div>${readout}</div>${frame}<div class="mini">${cards}</div>${split}</section>`;
+}
+
+// Mole's 搜索表现 in this page's own cards and tables: four cards and the top
+// queries for a window you can switch, then the top pages over 28 days. Search
+// Console not answering draws nothing.
+function searchSection(view) {
+  const s = view.search;
+  if (!s) return '';
+  const day = (d) => (d ? d.slice(5) : '');
+  const pct = (v) => (v === null || v === undefined ? '--' : percent(v));
+  const ctrOf = (t) => (t && t.impressions > 0 ? t.clicks / t.impressions : null);
+  const card = (label, value, note) => `<article><span>${esc(label)}</span><strong>${value}</strong><em>${note}</em></article>`;
+  const was = (v) => (v === null || v === undefined ? '' : `上期 ${v}`);
+  const blocks = s.windows.map((w) => {
+    const t = w.totals;
+    const p = w.previousTotals;
+    const cards = t ? [
+      card('总曝光', int(t.impressions), was(p ? int(p.impressions) : null)),
+      card('总点击', int(t.clicks), was(p ? int(p.clicks) : null)),
+      card('平均点击率', pct(ctrOf(t)), was(p && ctrOf(p) !== null ? percent(ctrOf(p)) : null)),
+      card('平均排名', t.position === null ? '--' : t.position.toFixed(1), was(p && p.position !== null ? p.position.toFixed(1) : null)),
+    ].join('') : '';
+    const note = `${w.label} · ${day(w.from)} 至 ${day(w.to)}${w.stale ? ' · 上次成功同步的结果' : ''}`;
+    const rows = w.queries.map((q, i) => `<tr${fold('search', i)}><td>${esc(q.query)}</td><td>${int(q.clicks)}</td><td>${int(q.impressions)}</td><td>${pct(q.ctr === null ? ctrOf(q) : q.ctr)}</td><td>${q.position === null ? '' : q.position.toFixed(1)}</td></tr>`).join('');
+    const count = `共 ${int(w.keywordCount)}${w.keywordCapped ? '+' : ''} 个`;
+    const queries = rows ? `<div><h3>关键词 · ${count}</h3><div class="scroll"><table><thead><tr><th scope="col">关键词</th><th scope="col">点击</th><th scope="col">曝光</th><th scope="col">点击率</th><th scope="col">排名</th></tr></thead><tbody>${rows}</tbody></table></div>${moreButton('search', w.queries.length, '个')}</div>` : '';
+    return { key: w.key, note, cards, queries };
+  });
+  const pg = s.pages;
+  const pageRows = pg ? pg.rows.map((r, i) => `<tr${fold('search', i)}><td>${esc(r.page)}</td><td>${int(r.clicks)}</td><td>${int(r.impressions)}</td><td>${pct(r.ctr === null ? ctrOf(r) : r.ctr)}</td><td>${r.position === null ? '' : r.position.toFixed(1)}</td></tr>`).join('') : '';
+  const pages = pg ? `<div><h3>页面 · ${day(pg.from)} 至 ${day(pg.to)}${pg.stale ? ' · 上次成功同步的结果' : ''}</h3><div class="scroll"><table><thead><tr><th scope="col">页面</th><th scope="col">点击</th><th scope="col">曝光</th><th scope="col">点击率</th><th scope="col">排名</th></tr></thead><tbody>${pageRows}</tbody></table></div>${moreButton('search', pg.rows.length, '页')}</div>` : '';
+  const first = blocks[0].key;
+  const switcher = blocks.length > 1
+    ? `<div class="switch" role="group" aria-label="搜索表现窗口">${s.windows.map((w) => `<button type="button" aria-pressed="${w.key === first}" onclick="var p=this.closest('.panel');p.dataset.win='${w.key}';p.querySelectorAll('.switch button').forEach(function(b){b.setAttribute('aria-pressed',b===this?'true':'false')},this)">${esc(w.label)}</button>`).join('')}</div>`
+    : '';
+  const windows = blocks.map((b) => `<div data-w="${b.key}"><p class="line">${esc(b.note)}</p>${b.cards ? `<div class="mini">${b.cards}</div>` : ''}${b.queries || pages ? `<div class="split search-split">${b.queries}${pages}</div>` : ''}</div>`).join('');
+  return `<section class="panel search" data-win="${first}"><div class="head"><div><h2>搜索表现</h2></div>${switcher}</div>${windows}</section>`;
 }
 
 function chart(view) {
@@ -540,6 +586,7 @@ function renderDashboard(view) {
     pair(recentSection(view), countryTable(view)),
     pair(channels(view), splitTable(view, '设备', view.devices, (k) => k, '设备', 's5')),
     visitorsSection(view),
+    searchSection(view),
     pair(financeSection(view), refundsSection(view)),
     pair(storeSection(view), otherDownloadsSection(view)),
     pair(reviewsSection(view), ''),

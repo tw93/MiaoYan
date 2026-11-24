@@ -571,4 +571,81 @@ eq(JSON.stringify(q('/payroom', 'miaoyan_payroom_view=bogus%7CEUR').view), JSON.
   delete process.env.MIAOYAN_PAYROOM_FEED_TOKEN;
 }
 
+// ---- search performance: Search Console, soft on every failure ------------
+{
+  const { privateKey: gaKey } = crypto.generateKeyPairSync('rsa', { modulusLength: 2048 });
+  process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = JSON.stringify({ client_email: 'a@b.c', private_key: gaKey.export({ type: 'pkcs8', format: 'pem' }) });
+  const scBodies = [];
+  const scopes = [];
+  let scMode = 'ok';
+  const sc = (u, init) => {
+    if (u.includes('oauth2')) {
+      scopes.push(new URLSearchParams(String(init.body)).get('assertion'));
+      return answer(200, JSON.stringify({ access_token: 't' }));
+    }
+    if (u.includes('searchconsole.googleapis.com')) {
+      assert.ok(u.includes(encodeURIComponent('sc-domain:miaoyan.app')), 'the domain property is the one asked');
+      if (scMode === 'down') return answer(403, '{}');
+      const body = JSON.parse(init.body);
+      scBodies.push(body);
+      const dim = body.dimensions[0];
+      if (scMode === 'empty') return answer(200, '{}');
+      if (!dim) return answer(200, JSON.stringify({ rows: [{ clicks: 12, impressions: 600, ctr: 0.02, position: 8.4 }] }));
+      if (dim === 'page') return answer(200, JSON.stringify({ rows: [{ keys: ['https://miaoyan.app/zh/blog/a'], clicks: 9, impressions: 300, ctr: 0.03, position: 6 }, { keys: ['https://miaoyan.app/'], clicks: 3, impressions: 900, ctr: 0.0033, position: 12 }] }));
+      return answer(200, JSON.stringify({ rows: [{ keys: ['markdown 编辑器'], clicks: 7, impressions: 200, ctr: 0.035, position: 5 }, { keys: ['ghost'], clicks: 0, impressions: 0, ctr: 0, position: 0 }] }));
+    }
+    return answer(500);
+  };
+  const jwtScope = () => JSON.parse(Buffer.from(scopes[0].split('.')[1], 'base64url').toString()).scope;
+  const warmSearch = lib.emptyState();
+  warmSearch.sales.rows = seeded.sales.rows;
+  warmSearch.traffic = { v: 2, fullAt: SYNC_NOW.toISOString(), days: {}, sources: [] };
+  warmSearch.health = { traffic: { ok: SYNC_NOW.toISOString() }, fx: { ok: SYNC_NOW.toISOString() } };
+
+  writes = stub({ blob: stored(warmSearch), sales: () => answer(404), json: sc });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+  const got = writes[writes.length - 1];
+  eq(jwtScope().split(' ').sort(), ['https://www.googleapis.com/auth/analytics.readonly', 'https://www.googleapis.com/auth/webmasters.readonly'], 'the token asks for GA and Search Console read');
+  eq(scBodies.length, 7, 'two windows of three reads, plus the page read');
+  eq([got.search.windows.d7.from, got.search.windows.d7.to, got.search.windows.d7.previousTo], ['2026-10-30', '2026-11-05', '2026-10-29'], 'a window ends three days back and the previous one sits right before it');
+  eq(got.search.windows.d7.queries.map((q) => q.query), ['markdown 编辑器'], 'a zero-impression query is dropped');
+  eq(got.search.pages.rows[0].page, '/zh/blog/a', 'pages keep the path only');
+  const sv = lib.buildView(got, { today });
+  const html = page.renderDashboard(sv);
+  assert.ok(html.includes('<h2>搜索表现</h2>') && html.includes('markdown 编辑器') && html.includes('/zh/blog/a') && html.includes('近 30 天'), 'the panel draws windows, queries and pages');
+  checks += 1;
+
+  // Unreachable, empty, and unconfigured reads draw nothing and keep the rest.
+  for (const mode of ['down', 'empty']) {
+    scMode = mode;
+    writes = stub({ blob: stored(warmSearch), sales: () => answer(404), json: sc });
+    await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+    const bad = writes[writes.length - 1];
+    assert.ok(!bad.errors.some((e) => e.includes('搜索')), `${mode}: no warning on the page`);
+    const out = page.renderDashboard(lib.buildView(bad, { today }));
+    assert.ok(!out.includes('搜索表现') && out.includes('<h1>Payroom</h1>'), `${mode}: no panel, page intact`);
+    checks += 2;
+  }
+  // A failure after a success keeps the last panel and marks it stale.
+  scMode = 'ok';
+  writes = stub({ blob: stored(warmSearch), sales: () => answer(404), json: sc });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+  const good = writes[writes.length - 1];
+  scMode = 'down';
+  const later = JSON.parse(JSON.stringify(good));
+  later.health.search = {};
+  writes = stub({ blob: stored(later), sales: () => answer(404), json: sc });
+  await lib.runSync({ now: new Date(SYNC_NOW.getTime() + 7 * 3600e3), budgetMs: 1000 });
+  const kept = writes[writes.length - 1];
+  assert.ok(page.renderDashboard(lib.buildView(kept, { today })).includes('上次成功同步的结果'), 'an outage keeps the last panel marked');
+  assert.ok(!kept.health.search.ok, 'a soft failure is retried on the next run');
+  checks += 2;
+  process.env.MIAOYAN_GA_SERVICE_ACCOUNT_JSON = '{bad';
+  scMode = 'ok';
+  writes = stub({ blob: stored(warmSearch), sales: () => answer(404), json: sc });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: 1000 });
+  assert.ok(!page.renderDashboard(lib.buildView(writes[writes.length - 1], { today })).includes('搜索表现'), 'bad credentials draw no panel');
+  checks += 1;
+}
+
 console.log(`payroom: ${checks} checks passed`);
