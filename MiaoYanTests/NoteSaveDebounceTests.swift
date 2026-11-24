@@ -437,43 +437,107 @@ final class NoteSaveDebounceTests: XCTestCase {
         manager.waitForPendingWork()
     }
 
-    /// Moving a history onto a path that has one merges the two; a version
-    /// whose file name was already taken there failed to move, and the
-    /// source folder was then deleted with it inside (audit 2026-11-24).
+    /// Two notes' histories, one at each path, with one version each whose
+    /// file names are made to clash, as two saves in the same second do.
+    private struct ClashingHistories {
+        let oldURL: URL
+        let newURL: URL
+        let moving: Note
+        let staying: Note
+    }
+
     @MainActor
-    func testAVersionThatCannotJoinTheOtherHistoryIsKept() throws {
+    private func clashingHistories(moving: String, staying: String) throws -> ClashingHistories {
         let project = Project(url: tempDir, label: "test", isRoot: true)
         let oldURL = tempDir.appendingPathComponent("old-\(UUID().uuidString).md")
         let newURL = tempDir.appendingPathComponent("new-\(UUID().uuidString).md")
-        try "the moving note".write(to: oldURL, atomically: true, encoding: .utf8)
-        try "the note already there".write(to: newURL, atomically: true, encoding: .utf8)
-        let moving = Note(url: oldURL, with: project)
-        let staying = Note(url: newURL, with: project)
-        moving.load()
-        staying.load()
+        try moving.write(to: oldURL, atomically: true, encoding: .utf8)
+        try staying.write(to: newURL, atomically: true, encoding: .utf8)
+        let movingNote = Note(url: oldURL, with: project)
+        let stayingNote = Note(url: newURL, with: project)
+        movingNote.load()
+        stayingNote.load()
         let manager = NoteVersionManager.shared
-        manager.saveVersionIfNeeded(for: moving, force: true)
-        manager.saveVersionIfNeeded(for: staying, force: true)
+        manager.saveVersionIfNeeded(for: movingNote, force: true)
+        manager.saveVersionIfNeeded(for: stayingNote, force: true)
         manager.waitForPendingWork()
-        defer {
-            manager.removeVersions(for: moving)
-            manager.removeVersions(for: staying)
-            manager.waitForPendingWork()
-        }
-        // Two saves in the same second get the same file name.
-        let movingFile = try XCTUnwrap(manager.versions(for: moving).first?.url)
-        let stayingFile = try XCTUnwrap(manager.versions(for: staying).first?.url)
+        let movingFile = try XCTUnwrap(manager.versions(for: movingNote).first?.url)
+        let stayingFile = try XCTUnwrap(manager.versions(for: stayingNote).first?.url)
         let clash = stayingFile.deletingLastPathComponent().appendingPathComponent(movingFile.lastPathComponent)
         if clash != stayingFile { try FileManager.default.moveItem(at: stayingFile, to: clash) }
+        return ClashingHistories(oldURL: oldURL, newURL: newURL, moving: movingNote, staying: stayingNote)
+    }
 
-        manager.moveVersions(from: oldURL, to: newURL)
+    @MainActor
+    private func versionTexts(of note: Note) -> [String] {
+        NoteVersionManager.shared.versions(for: note).compactMap { try? String(contentsOf: $0.url, encoding: .utf8) }
+    }
+
+    /// Moving a history onto a path that has one merges the two. A version
+    /// whose file name was taken there was deleted with the source folder,
+    /// then (audit 2026-11-24) left under the old path, where the next note
+    /// made there would inherit it. It joins the new history under the
+    /// next free name instead.
+    @MainActor
+    func testAVersionWhoseNameIsTakenJoinsTheNewHistory() throws {
+        let fixture = try clashingHistories(moving: "the moving note", staying: "the note already there")
+        let manager = NoteVersionManager.shared
+        defer {
+            manager.removeVersions(for: fixture.moving)
+            manager.removeVersions(for: fixture.staying)
+            manager.waitForPendingWork()
+        }
+
+        manager.moveVersions(from: fixture.oldURL, to: fixture.newURL)
         manager.waitForPendingWork()
 
-        let texts = (manager.versions(for: moving) + manager.versions(for: staying)).compactMap {
-            try? String(contentsOf: $0.url, encoding: .utf8)
+        let texts = versionTexts(of: fixture.staying)
+        XCTAssertEqual(Set(texts), ["the moving note", "the note already there"], "both versions are in the new history")
+        XCTAssertTrue(manager.versions(for: fixture.staying).allSatisfy { NoteVersionManager.isVersionFileName($0.url.lastPathComponent) })
+        XCTAssertFalse(manager.hasVersions(for: fixture.moving), "nothing is left for a new note at the old path")
+    }
+
+    /// A version already in the new history byte for byte is a duplicate,
+    /// so the source copy goes and the old folder with it.
+    @MainActor
+    func testAnIdenticalVersionIsNotKeptTwice() throws {
+        let fixture = try clashingHistories(moving: "the same text", staying: "the same text")
+        let manager = NoteVersionManager.shared
+        defer {
+            manager.removeVersions(for: fixture.moving)
+            manager.removeVersions(for: fixture.staying)
+            manager.waitForPendingWork()
         }
-        XCTAssertTrue(texts.contains("the moving note"), "the version that could not move is still on disk: \(texts)")
-        XCTAssertTrue(texts.contains("the note already there"), "\(texts)")
+
+        manager.moveVersions(from: fixture.oldURL, to: fixture.newURL)
+        manager.waitForPendingWork()
+
+        XCTAssertEqual(versionTexts(of: fixture.staying), ["the same text"])
+        XCTAssertFalse(manager.hasVersions(for: fixture.moving), "the old folder is gone")
+    }
+
+    /// A file that is no version (Finder's `.DS_Store`) in both folders
+    /// could not move, and kept the old folder forever.
+    @MainActor
+    func testAFileThatIsNoVersionDoesNotHoldTheOldHistoryBack() throws {
+        let fixture = try clashingHistories(moving: "the moving note", staying: "the note already there")
+        let manager = NoteVersionManager.shared
+        defer {
+            manager.removeVersions(for: fixture.moving)
+            manager.removeVersions(for: fixture.staying)
+            manager.waitForPendingWork()
+        }
+        let oldFolder = try XCTUnwrap(manager.versions(for: fixture.moving).first?.url.deletingLastPathComponent())
+        let newFolder = try XCTUnwrap(manager.versions(for: fixture.staying).first?.url.deletingLastPathComponent())
+        try Data([1]).write(to: oldFolder.appendingPathComponent(".DS_Store"))
+        try Data([2]).write(to: newFolder.appendingPathComponent(".DS_Store"))
+
+        manager.moveVersions(from: fixture.oldURL, to: fixture.newURL)
+        manager.waitForPendingWork()
+
+        XCTAssertEqual(Set(versionTexts(of: fixture.staying)), ["the moving note", "the note already there"])
+        XCTAssertFalse(FileManager.default.fileExists(atPath: oldFolder.path), "the old folder is gone")
+        XCTAssertEqual(try Data(contentsOf: newFolder.appendingPathComponent(".DS_Store")), Data([2]), "the new folder's own file is left")
     }
 
     /// Undoing a delete dropped the note from storage before moving it back,

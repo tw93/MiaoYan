@@ -193,13 +193,15 @@ final class NoteVersionManager: @unchecked Sendable {
                 }
             } else {
                 // The source folder goes only once every version left it: a
-                // move that failed (a name already taken there, a permission
-                // error) used to be followed by deleting that version.
+                // move that failed used to be followed by deleting that
+                // version. A file that is no version (`.DS_Store`) is not
+                // carried and does not hold the folder back.
                 var allMoved = true
                 do {
-                    for file in try manager.contentsOfDirectory(at: source, includingPropertiesForKeys: nil) {
+                    for file in try manager.contentsOfDirectory(at: source, includingPropertiesForKeys: nil)
+                    where Self.isVersionFileName(file.lastPathComponent) {
                         do {
-                            try manager.moveItem(at: file, to: target.appendingPathComponent(file.lastPathComponent))
+                            try Self.merge(version: file, into: target)
                         } catch {
                             allMoved = false
                             DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.moveVersions.merge") }
@@ -218,6 +220,33 @@ final class NoteVersionManager: @unchecked Sendable {
                 self?.lastSaved[newKey] = last
             }
         }
+    }
+
+    /// Moves one version into `folder`. Two saves in the same second share
+    /// a name: the same bytes there make this copy a duplicate, which goes;
+    /// other bytes move under the next free second, so the name still
+    /// reads as a version and the history keeps its order.
+    private static func merge(version file: URL, into folder: URL) throws {
+        let manager = FileManager.default
+        var destination = folder.appendingPathComponent(file.lastPathComponent)
+        if manager.fileExists(atPath: destination.path) {
+            if manager.contentsEqual(atPath: file.path, andPath: destination.path) {
+                try manager.removeItem(at: file)
+                return
+            }
+            let fmt = DateFormatter()
+            fmt.dateFormat = "yyyy-MM-dd'T'HH-mm-ss'Z'"
+            fmt.timeZone = TimeZone(secondsFromGMT: 0)
+            fmt.locale = Locale(identifier: "en_US_POSIX")
+            guard var date = fmt.date(from: file.deletingPathExtension().lastPathComponent) else {
+                throw CocoaError(.fileWriteFileExists, userInfo: [NSFilePathErrorKey: destination.path])
+            }
+            repeat {
+                date.addTimeInterval(1)
+                destination = folder.appendingPathComponent(fmt.string(from: date) + ".md")
+            } while manager.fileExists(atPath: destination.path)
+        }
+        try manager.moveItem(at: file, to: destination)
     }
 
     /// Returns once queued version work has run; tests use it to read the result.
