@@ -37,9 +37,8 @@ A SwiftUI main window under `Shell/` (`ShellWindowController`, `ShellModel`,
 launched with `-MiaoYanShell YES`. It hosts the same `EditTextView` and
 `MPreviewView` and stays behind the flag until it reaches parity.
 
-Logic the Mac app shares with the iPhone app (frontmatter, search matching,
-note text decoding, list previews, pins through iCloud, CJK emphasis) lives in the local package
-`Packages/MiaoYanCore`. The iPhone and iPad app and the App Store packaging
+Logic the Mac app shares with the iPhone app lives in the local package
+`Packages/MiaoYanCore` (what it holds is listed in `AGENTS.md`). The iPhone and iPad app and the App Store packaging
 live in the private `tw93/MiaoYan-Pro`, which merges this repository's `main`;
 this repository is the only Mac codebase.
 

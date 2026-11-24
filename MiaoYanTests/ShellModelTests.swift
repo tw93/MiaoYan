@@ -296,8 +296,8 @@ final class ShellModelTests: XCTestCase {
         XCTAssertEqual(model.editorMode, mode)
     }
 
-    /// The folders give way to a narrow window and to the split preview,
-    /// come back once there is room, and leave a choice made by hand alone.
+    /// The folders give way to the split preview, come back once it closes,
+    /// and leave a choice made by hand alone.
     @MainActor
     func testTheFoldersGiveWayToTheSplitPreview() {
         let defaults = UserDefaults.standard

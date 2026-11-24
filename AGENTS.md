@@ -23,13 +23,13 @@ MiaoYan is a lightweight Markdown editor built with Swift. This open-source repo
 - `Shell/` - the SwiftUI main window in progress (`-MiaoYanShell YES`), see `.claude/rules/shell.md`.
 - `MiaoYan.xcodeproj/` - Xcode project and version settings.
 - `Package.swift` - a reference list of the Swift package dependencies; no Xcode project reads it, the real package references live in `project.pbxproj`.
-- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews, list row dates, the first-run guide, the keys that edit a list or a table, pins through iCloud, CJK emphasis), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
+- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews, list row dates, the first-run guide, the keys that edit a list or a table, line kinds and block inserts for the iPhone insert bar, pins through iCloud, CJK emphasis), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
 - `scripts/` - local build, release, and project maintenance scripts.
 - `scripts/release-ci/` - release note rendering, appcast, notarization, and package helpers.
 - `skills/miaoyan/` - published Agent Skill (tracked) describing MiaoYan's Markdown, PPT, and `miao` CLI surfaces to outside agents; it restates product syntax, so it drifts when those surfaces change.
 - `.github/RELEASE_NOTES.md` - public release note source for GitHub release and appcast body generation.
 - `.github/workflows/` - holds `ci.yml` only; release builds are not driven by a tracked release workflow.
-- `vercel.json` - `main` is also deployed as static files to `cdn.miaoyan.app` (Vercel project `miao-yan`, team Faberon), because exported HTML sets `<base href>` to `https://cdn.miaoyan.app/Resources/DownView.bundle/` (`HtmlManager.cdnBaseURL`); keep those paths stable. The file only adds `X-Robots-Tag: noindex`, since search engines were indexing that host's listing of this repository.
+- `vercel.json` - `main` is also deployed as static files to `cdn.miaoyan.app` (Vercel project `miao-yan`, team Faberon), because exported HTML sets `<base href>` to `https://cdn.miaoyan.app/Resources/DownView.bundle/` (`HtmlManager.cdnBaseURL`), and YouTube frames in the live preview load `PreviewMedia.youTubeRelay` (`DownView.bundle/youtube.html`) from the same host; keep those paths stable. The file only adds `X-Robots-Tag: noindex`, since search engines were indexing that host's listing of this repository.
 
 ## Commands
 

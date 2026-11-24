@@ -64,8 +64,8 @@ Updating versions:
 # Resolve latest within the declared constraints
 xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -resolvePackageDependencies
 
-# Show the resolved dependency tree
-swift package show-dependencies
+# Show the resolved versions the app builds with (the root Package.swift is only a reference list)
+cat MiaoYan.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 ```
 
 Remove a dependency by deleting it from the Xcode project's package references

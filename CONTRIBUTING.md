@@ -60,7 +60,7 @@ Build artifacts land in `.vscode/DerivedData/` (VS Code) or your default Derived
 - Start commit subjects with a lowercase type such as `fix:`, `feat:`, `test:` or `docs:`, as the history does.
 - Squash unrelated changes into separate commits/PRs.
 - Ensure your branch is rebased on the latest `main` before requesting review.
-- Fill in the PR template and describe testing steps (manual or automated).
+- Describe what the change does and why, and the testing steps (manual or automated).
 
 ## Issues & Feature Ideas
 
