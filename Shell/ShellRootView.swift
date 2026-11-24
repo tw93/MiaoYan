@@ -818,7 +818,7 @@ struct ShellDetail: View {
                 case .preview:
                     ShellPreview(
                         note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision,
-                        onMake: { model.preview = $0 }, onLoad: { model.previewDidLoad($0) })
+                        switchesNotesInPlace: true, onMake: { model.preview = $0 }, onLoad: { model.previewDidLoad($0) })
                 case .split:
                     ShellEditorSplit(
                         controller: model.editor, note: note,
@@ -1115,6 +1115,9 @@ struct ShellPreview: NSViewRepresentable {
     var revision = 0
     /// A change reloads the page, for stylesheet changes (font size).
     var styleRevision = 0
+    /// Another note opens in the page on screen rather than a new load,
+    /// as the storyboard window does in preview mode (not in split).
+    var switchesNotesInPlace = false
     /// Hands the view to whoever runs commands on it (the TOC toggle).
     var onMake: ((MPreviewView) -> Void)?
     /// Called once the note has started loading into the page.
@@ -1129,9 +1132,12 @@ struct ShellPreview: NSViewRepresentable {
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeNSView(context: Context) -> MPreviewView {
+        // The view's init already loads the note; loading it here as well
+        // rendered every Command-3 and split entry twice.
         let view = MPreviewView(frame: .zero, note: note, closure: nil)
         onMake?(view)
-        load(note, into: view, context: context)
+        record(note, in: context.coordinator)
+        onLoad?(view)
         return view
     }
 
@@ -1139,20 +1145,31 @@ struct ShellPreview: NSViewRepresentable {
     /// change from outside bumps `revision`; a save alone renders nothing.
     func updateNSView(_ view: MPreviewView, context: Context) {
         let coordinator = context.coordinator
-        if coordinator.loadedURL != note.url || coordinator.styleRevision != styleRevision {
-            // NotesTableView: switching notes closes the preview's find bar.
+        if coordinator.styleRevision != styleRevision {
             if coordinator.loadedURL != note.url, view.isSearchBarVisible { view.hideSearchBar() }
             load(note, into: view, context: context)
+        } else if coordinator.loadedURL != note.url {
+            // NotesTableView: switching notes closes the preview's find bar.
+            if view.isSearchBarVisible { view.hideSearchBar() }
+            if switchesNotesInPlace, view.canShowNoteInPlace, view.displayedNote != nil {
+                show(note, inPlaceOf: view, context: context)
+            } else {
+                load(note, into: view, context: context)
+            }
         } else if coordinator.revision != revision {
             coordinator.revision = revision
             view.updateContent(note: note)
         }
     }
 
+    private func record(_ note: Note, in coordinator: Coordinator) {
+        coordinator.loadedURL = note.url
+        coordinator.revision = revision
+        coordinator.styleRevision = styleRevision
+    }
+
     private func load(_ note: Note, into view: MPreviewView, context: Context) {
-        context.coordinator.loadedURL = note.url
-        context.coordinator.revision = revision
-        context.coordinator.styleRevision = styleRevision
+        record(note, in: context.coordinator)
         let coordinator = context.coordinator
         let onLoad = onLoad
         Task { @MainActor in
@@ -1161,6 +1178,24 @@ struct ShellPreview: NSViewRepresentable {
             guard coordinator.loadedURL == note.url else { return }
             view.load(note: note, force: true)
             onLoad?(view)
+        }
+    }
+
+    /// The storyboard window's way from note to note in preview: the next
+    /// one replaces the body of the page on screen, so there is no blank
+    /// frame between them. `onLoad` waits until it lands, since the page is
+    /// ready the whole time and a scroll run at once would hit the old note.
+    private func show(_ note: Note, inPlaceOf view: MPreviewView, context: Context) {
+        record(note, in: context.coordinator)
+        let coordinator = context.coordinator
+        let onLoad = onLoad
+        Task { @MainActor [weak view] in
+            await note.ensureContentLoadedAsync()
+            guard let view, coordinator.loadedURL == note.url else { return }
+            view.showNoteInPlace(note) { [weak view] in
+                guard let view, coordinator.loadedURL == note.url else { return }
+                onLoad?(view)
+            }
         }
     }
 }

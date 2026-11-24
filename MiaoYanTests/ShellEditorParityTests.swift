@@ -1,3 +1,4 @@
+import SwiftUI
 import XCTest
 
 @testable import MiaoYan
@@ -769,6 +770,50 @@ final class ShellEditorParityTests: XCTestCase {
         root.layoutSubtreeIfNeeded()
         XCTAssertEqual(controller.container.frame, pane.bounds)
         XCTAssertEqual(controller.scrollView.frame, controller.container.bounds)
+    }
+
+    /// The shell's preview loaded the page again for every note, the blank
+    /// frame between notes the storyboard window removed with
+    /// `showNoteInPlace`, and on Command-3 rendered the note twice: once in
+    /// `MPreviewView.init` and again from `makeNSView`. The next note now
+    /// opens in the page on screen, and the first render is the only one.
+    @available(macOS 14, *)
+    @MainActor
+    func testTheShellPreviewRendersOnceAndOpensTheNextNoteInPlace() async throws {
+        let first = makeLoadedNote("first.md", body: "# First\n\nOne.")
+        let second = makeLoadedNote("second.md", body: "# Second\n\nTwo.")
+        var made: MPreviewView?
+        var loads: [Note?] = []
+        func preview(_ note: Note) -> ShellPreview {
+            ShellPreview(note: note, switchesNotesInPlace: true, onMake: { made = $0 }, onLoad: { loads.append($0.displayedNote) })
+        }
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 700, height: 500), styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        defer { window.close() }
+        let host = NSHostingView(rootView: preview(first))
+        window.contentView = host
+        host.layoutSubtreeIfNeeded()
+        let view = try XCTUnwrap(made)
+
+        let firstShown = expectation(description: "first note shown")
+        view.runWhenShowing(first) { firstShown.fulfill() }
+        await fulfillment(of: [firstShown], timeout: 20)
+        XCTAssertEqual(view.loadEpoch, 1, "the note is rendered once, by MPreviewView.init")
+        XCTAssertEqual(loads.count, 1)
+        _ = try await view.evaluateJavaScript("window.__miaoyanSamePage = true")
+
+        host.rootView = preview(second)
+        host.layoutSubtreeIfNeeded()
+        let secondShown = expectation(description: "second note shown")
+        view.runWhenShowing(second) { secondShown.fulfill() }
+        await fulfillment(of: [secondShown], timeout: 20)
+        let samePage = try await view.evaluateJavaScript("window.__miaoyanSamePage === true") as? Bool
+        XCTAssertEqual(samePage, true, "the second note opened in the page already on screen")
+        let text = try await view.evaluateJavaScript("document.getElementById('write').innerText") as? String
+        XCTAssertTrue(text?.contains("Two.") == true, text ?? "")
+        for _ in 0..<100 where loads.count < 2 { await Task.yield() }
+        XCTAssertEqual(loads.count, 2)
+        XCTAssertTrue(loads.last.flatMap { $0 } === second, "onLoad runs once the page shows the note")
     }
 }
 

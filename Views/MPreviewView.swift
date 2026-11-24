@@ -94,7 +94,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     private lazy var navigationProxy = NavigationDelegateProxy(owner: self)
     private weak var note: Note?
-    private var loadEpoch = 0
+    /// Bumped by every load and in-place switch; only the newest may land.
+    private(set) var loadEpoch = 0
     private var closure: MPreviewViewClosure?
     public static var template: String?
     private static var bundleInitialized = false
