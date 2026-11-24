@@ -11,7 +11,9 @@ bench 100 key return
 bench 100 scroll 40
 open Large
 wait 4000
-select 400 0
+# The last prose line, 34,000 lines below the first fence: a keystroke
+# here pays for anything that reads the note from the top.
+select 999931 0
 bench 100 type x
 bench 100 key backspace
 bench 100 key return

@@ -41,3 +41,13 @@ python3 scripts/ui_script.py run build/dd-bench/Build/Products/Release/MiaoYan.a
 | Scroll 40 pt | 0.10 / 0.11 | 0.10 / 0.11 | 0.10 / 0.11 | 0.10 / 0.10 |
 
 A 120 Hz display gives each frame 8.3 ms. Compare a change against a run of the build before it on the same machine, not against this table: the p95 moves by a few milliseconds between runs.
+
+Since 2026-11-24 `Large` types into its last prose line, 34,000 lines below the first fence, instead of at offset 400, which sat in a table above every fence and so never paid for a scan from the top of the note. The same machine and window, p50 / p95 in ms, `Medium` unchanged:
+
+| Step in `Large`, 100 times | 23ca09fa | With the list indent read lazily |
+|---|---|---|
+| Type a letter | 37.12 / 39.49 | 2.97 / 4.32 |
+| Backspace | 37.44 / 40.51 | 2.88 / 2.96 |
+| Return | 51.44 / 55.18 | 16.17 / 16.66 |
+
+Return there still costs about 16 ms, outside the list indent; it is the next one to look at.

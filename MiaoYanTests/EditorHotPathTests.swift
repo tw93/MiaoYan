@@ -194,4 +194,61 @@ final class EditorHotPathTests: XCTestCase {
         XCTAssertNotNil(storage.attribute(.link, at: near, effectiveRange: nil), "the line Return ended")
         XCTAssertNil(storage.attribute(.link, at: 0, effectiveRange: nil), "a line far from the caret")
     }
+
+    // MARK: - Large notes
+
+    /// The chapters of `scripts/ui_scripts/gen_bench_library.py`: prose,
+    /// lists, tasks, a table, a quote and a fenced block, each about 600
+    /// characters, so 1,700 of them make a note the size of the bench's
+    /// `Large`.
+    private static func chapters(_ count: Int) -> String {
+        let prose =
+            "Writing in Markdown keeps the text plain and the structure visible, so a note opened years later still reads the same. "
+            + "用 Markdown 写东西\u{FF0C}文字保持纯文本\u{FF0C}结构一眼就能看到\u{FF0C}过了很多年再打开也还是一样。"
+        return (1...count).map { n in
+            [
+                "## Chapter \(n)", "", prose + " (part \(n))", "",
+                "- point one of chapter \(n) with **bold** and *italic* words",
+                "- point two with `inline code` and a [link](https://miaoyan.app)",
+                "  - a nested point", "- [ ] task \(n)", "- [x] done \(n)", "",
+                "| Item | Count | Note |", "| ---- | ----: | ---- |", "| apples | \(n) | fresh |", "",
+                "> " + String(prose.prefix(120)), "",
+                "```swift", "let chapter = \(n)", "```", "",
+            ].joined(separator: "\n")
+        }.joined(separator: "\n")
+    }
+
+    private static func milliseconds(_ runs: Int, _ body: () -> Void) -> Double {
+        let start = CFAbsoluteTimeGetCurrent()
+        for _ in 0..<runs { body() }
+        return (CFAbsoluteTimeGetCurrent() - start) * 1000 / Double(runs)
+    }
+
+    /// The hanging indent asked the fence scan on every keystroke, and since
+    /// 4a2ef16c that scan reads every line from the top of the note whenever
+    /// a fence sits above the edit: typing prose near the end of a note of a
+    /// million characters with a fence on line 1 rescanned all of it. Only a
+    /// list item needs the scan now, and a list line inside a fence still
+    /// gets no indent.
+    @MainActor
+    func testTypingProseBelowAFenceDoesNotRescanTheNote() {
+        let tail = "\n\n- an item after the last fence\n\n```\n- a dash inside a fence\n```\n\nThe last words of the note."
+        let storage = NSTextStorage(string: "```\nfence on line 1\n```\n\n" + Self.chapters(1700) + tail)
+        let text = storage.mutableString
+        let prose = text.range(of: "The last words")
+        XCTAssertGreaterThan(text.length, 1_000_000)
+
+        let perKey = Self.milliseconds(20) { ListHangingIndent.apply(in: NSRange(location: prose.location + 4, length: 1), of: storage) }
+        print("ListHangingIndent, prose at the end of a 1M-character note under a fence: \(String(format: "%.3f", perKey)) ms per keystroke")
+        XCTAssertLessThan(perKey, 1, "a keystroke in prose does not scan the note for fences")
+
+        let tailRange = text.range(of: tail)
+        ListHangingIndent.apply(in: tailRange, of: storage)
+        func indent(at needle: String) -> CGFloat {
+            let at = text.range(of: needle, options: .backwards).location
+            return (storage.attribute(.paragraphStyle, at: at, effectiveRange: nil) as? NSParagraphStyle)?.headIndent ?? 0
+        }
+        XCTAssertGreaterThan(indent(at: "- an item after the last fence"), 0, "a list item below the fences hangs")
+        XCTAssertEqual(indent(at: "- a dash inside a fence"), 0, "a list line inside a fence does not")
+    }
 }

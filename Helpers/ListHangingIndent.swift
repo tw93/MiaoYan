@@ -35,13 +35,17 @@ enum ListHangingIndent {
         let location = min(max(range.location, 0), text.length)
         let paragraphs = text.paragraphRange(for: NSRange(location: location, length: min(range.length, text.length - location)))
         // The .codeBlock attribute is missing in a note with many code blocks while typing, so read the fences themselves.
-        let code = TableEditing.codeLineStarts(in: text, covering: paragraphs)
+        // The scan reads every line from the top once a fence sits above, so it waits for a list item: prose pays nothing.
+        var code: Set<Int>?
         text.enumerateSubstrings(in: paragraphs, options: [.byParagraphs, .substringNotRequired]) { _, line, enclosing, _ in
             var indent: CGFloat = 0
-            if line.length > 1, !code.contains(line.location),
+            if line.length > 1,
                 let match = marker.firstMatch(in: text as String, range: line), match.range.length < line.length
             {
-                indent = width(of: storage.attributedSubstring(from: match.range))
+                if code == nil { code = TableEditing.codeLineStarts(in: text, covering: paragraphs) }
+                if code?.contains(line.location) == false {
+                    indent = width(of: storage.attributedSubstring(from: match.range))
+                }
             }
             set(indent, on: enclosing, of: storage)
         }
