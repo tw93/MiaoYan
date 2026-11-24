@@ -1255,6 +1255,81 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertEqual(reloaded as? String, "\(relay)?v=FCKJL-mTncY&start=5")
     }
 
+    /// `ppt.html` loaded `js/index.js`, which a4599830 removed (2025-10-10,
+    /// before V2.1.2) when its code moved to `js/common.js`. With no
+    /// `MiaoYanCommon` the page's three setup scripts threw, and the
+    /// DOMContentLoaded one stopped at `optimizeImages`, before the diagram
+    /// setup after it. Slides now load `common.js`, and the markmap that
+    /// another path already drew is still drawn once.
+    @MainActor
+    func testPPTLoadsItsCommonScript() async throws {
+        let markdown = """
+            # Tasks
+
+            - [x] done
+            - [ ] open
+
+            ![](data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)
+
+            ---
+
+            ```markmap
+            # Root
+            - one
+            - two
+            ```
+            """
+        let url = try writePPTPage(markdown: markdown, named: "common-ppt")
+        // Every error the page meets, a script that failed to load included,
+        // recorded before any of its own scripts run.
+        let capture = """
+            <script>
+            window.__miaoyanErrors = [];
+            window.addEventListener('error', function (event) {
+              var target = event.target;
+              if (target && target !== window && (target.src || target.href)) {
+                window.__miaoyanErrors.push('load ' + (target.src || target.href));
+              } else {
+                window.__miaoyanErrors.push((event.filename || '') + ': ' + event.message);
+              }
+            }, true);
+            var miaoyanConsoleError = console.error;
+            console.error = function () {
+              window.__miaoyanErrors.push('console ' + Array.prototype.join.call(arguments, ' '));
+              return miaoyanConsoleError.apply(console, arguments);
+            };
+            </script>
+            """
+        let page = try String(contentsOf: url, encoding: .utf8)
+        try page.replacingOccurrences(of: "<head>", with: "<head>" + capture).write(to: url, atomically: true, encoding: .utf8)
+        let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+        webView.loadFileURL(url, allowingReadAccessTo: tempDirectory)
+        let probe = """
+            (() => ({
+                common: typeof MiaoYanCommon,
+                eagerImages: document.querySelectorAll('.slides img[loading=eager]').length,
+                markmaps: document.querySelectorAll('.slides svg.markmap').length,
+                errors: window.__miaoyanErrors
+            }))()
+            """
+        var state: [String: Any] = [:]
+        let deadline = Date().addingTimeInterval(10)
+        while Date() < deadline {
+            if (try? await webView.evaluateJavaScript("window.__miaoyanMathDone === true") as? Bool) == true {
+                state = (try? await webView.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
+                if state["common"] as? String == "object", (state["markmaps"] as? Int ?? 0) > 0 { break }
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        XCTAssertEqual(state["common"] as? String, "object", "\(state)")
+        XCTAssertEqual(state["eagerImages"] as? Int, 1, "optimizeImages ran: \(state)")
+        XCTAssertEqual(state["markmaps"] as? Int, 1, "\(state)")
+        // `themes/mermaid.css` has never been in the repository; a stylesheet
+        // that fails to load stops no script.
+        let scriptErrors = (state["errors"] as? [String])?.filter { !$0.hasSuffix(".css") }
+        XCTAssertEqual(scriptErrors, [], "\(state)")
+    }
+
     /// Malformed mhchem inputs such as `\ce{A \bond{} B}` (`MhchemBugT`) or
     /// `\ce{A ->[\}] B}` (`ExtraCloseMissingOpen`) throw raw arrays instead of
     /// `katex.ParseError`. Both preview and slides must keep those formulas as
