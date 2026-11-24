@@ -861,7 +861,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </header>
 <main class="legal">
   <h1>Privacy Policy</h1>
-  <p class="date">Effective November 8, 2026</p>
+  <p class="date">Effective November 24, 2026</p>
 
   <h2>Overview</h2>
   <p>MiaoYan is a Markdown note app for Mac, iPhone and iPad. Your notes are plain files in a folder you choose, and they stay there.</p>
@@ -873,7 +873,9 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <p>The app only goes online in these cases:</p>
   <ul>
     <li>When a note contains a PlantUML diagram, the diagram's source text is sent to <a href="https://www.plantuml.com/">plantuml.com</a> to draw the image. Nothing else from the note is sent, and notes without PlantUML send nothing.</li>
-    <li>Images and links you put in a note load from the addresses written in it, as in any Markdown preview.</li>
+    <li>Images and links you put in a note load from the addresses written in it, as in any Markdown preview. A YouTube video in a note plays through a small page on <code>cdn.miaoyan.app</code>, which gets only the video's ID and start time and then loads the video from YouTube.</li>
+    <li>A note exported as HTML loads its styles and scripts from <code>cdn.miaoyan.app</code> when the exported file is opened.</li>
+    <li>On iPhone and iPad, choosing the Tsanger JinKai font downloads it once from <a href="https://tsanger.cn/">tsanger.cn</a>, the foundry's own site, and choosing Kaiti or Rounded downloads Apple's font from Apple.</li>
     <li>The Mac version downloaded from GitHub checks <code>miaoyan.app/appcast.xml</code> for updates. The App Store version is updated by the App Store instead.</li>
     <li>If you turn on image upload, pasted images go to the uPic, PicGo, Picsee, or PicList app running on your own Mac at <code>127.0.0.1</code>, and from there to the image host you set up in it.</li>
   </ul>
