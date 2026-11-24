@@ -294,4 +294,52 @@ final class EditorHotPathTests: XCTestCase {
         print("ImageLinkParser hover in the middle of a 2M-character note: \(String(format: "%.3f", perMove)) ms per mouse move")
         XCTAssertLessThan(perMove, 0.5, "a mouse move reads the lines around the pointer, not the note")
     }
+
+    /// `/table` plus Tab laid out the whole note and marked links over all
+    /// of it on every expansion. It lays out and marks what it inserted: a
+    /// URL far below is left as it was.
+    @MainActor
+    func testTemplateExpansionTouchesOnlyWhatItInserted() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanHotPath-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let body = "intro\n/table\n\n" + Self.chapters(600) + "\n\nhttps://far.example\n"
+        let url = dir.appendingPathComponent("template.md")
+        try body.write(to: url, atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: Project(url: dir, label: "test", isRoot: true))
+        note.content = NSMutableAttributedString(string: body)
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = note
+        let editor = EditTextView(frame: NSRect(x: 0, y: 0, width: 480, height: 320))
+        editor.isShellHosted = true
+        editor.publishStorage(NSAttributedString(string: body), owner: note)
+        let manager = try XCTUnwrap(editor.layoutManager)
+        manager.ensureLayout(for: try XCTUnwrap(editor.textContainer))
+        editor.setSelectedRange(NSRange(location: (body as NSString).range(of: "/table").upperBound, length: 0))
+
+        let start = CFAbsoluteTimeGetCurrent()
+        XCTAssertTrue(editor.handleShortcutExpansion())
+        let elapsed = (CFAbsoluteTimeGetCurrent() - start) * 1000
+        print("/table expansion at the top of a \((body as NSString).length)-character note: \(String(format: "%.2f", elapsed)) ms")
+        RunLoop.current.run(until: Date().addingTimeInterval(0.2))
+
+        let storage = try XCTUnwrap(editor.textStorage)
+        XCTAssertFalse(storage.string.contains("/table"))
+        XCTAssertTrue(storage.string.hasPrefix("intro\n|"), "the table took the shortcut's place")
+        let far = storage.mutableString.range(of: "https://far.example").location
+        XCTAssertNil(storage.attribute(.link, at: far, effectiveRange: nil), "a URL far from the template is not marked again")
+        XCTAssertFalse(manager.hasUnlaidCharacters(before: storage.mutableString.range(of: "\n\n## Chapter 1").location), "the inserted table is laid out")
+        XCTAssertLessThan(elapsed, 30, "the expansion does not lay out the whole note")
+    }
+}
+
+extension NSLayoutManager {
+    /// Whether some character before `location` has not been laid out yet.
+    fileprivate func hasUnlaidCharacters(before location: Int) -> Bool {
+        var glyphIndex = 0
+        var characterIndex = 0
+        getFirstUnlaidCharacterIndex(&characterIndex, glyphIndex: &glyphIndex)
+        return characterIndex < location
+    }
 }

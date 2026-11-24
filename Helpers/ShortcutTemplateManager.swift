@@ -252,8 +252,9 @@ extension EditTextView {
         let newRange = NSRange(location: safeCursorPosition, length: safeCursorLength)
         setSelectedRange(newRange)
 
-        // Trigger syntax highlighting for the new content
-        fillHighlightLinks()
+        // Links in the lines the template now covers; the rest of the note did not change.
+        let inserted = NSRange(location: replaceRange.location, length: min(template.content.utf16.count, finalLength - replaceRange.location))
+        fillHighlightLinks(range: textStorage.mutableString.paragraphRange(for: inserted))
 
         return true
     }
@@ -270,10 +271,8 @@ extension EditTextView {
 
         textStorage.replaceCharacters(in: range, with: attributedText)
 
-        // Trigger layout update and change notification
-        if let tc = textContainer {
-            layoutManager?.ensureLayout(for: tc)
-        }
+        // Lays out the inserted text only; the whole container laid out every line below it again.
+        layoutManager?.ensureLayout(forCharacterRange: NSRange(location: range.location, length: attributedText.length))
         didChangeText()
     }
 }
