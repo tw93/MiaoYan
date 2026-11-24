@@ -202,10 +202,28 @@ extension ViewController {
         }
     }
 
-    /// Quitting inside a presentation or PPT would leave the columns the
-    /// presentation collapsed in AppKit's autosaved split positions, and the next
-    /// launch opened with no sidebar or note list. Opens them again before the
-    /// quit writes anything, without animation (`setPosition` does not animate).
+    static let sidebarSplitAutosaveName = "SidebarSplitView"
+    static let noteListSplitAutosaveName = "EditorSplitView"
+
+    /// A presentation or PPT collapses the sidebar and the note list, and
+    /// AppKit autosaves split positions after the change, on a later turn of
+    /// the run loop. Quitting inside one opened the next launch with no
+    /// sidebar or note list (I-68), and opening the columns again on quit did
+    /// not help: the process exits before AppKit writes the open positions.
+    /// So the two split views stop autosaving while the presentation holds
+    /// the columns, and the saved positions stay the ones from before it.
+    func pauseColumnAutosave() {
+        sidebarSplitView?.autosaveName = nil
+        splitView?.autosaveName = nil
+    }
+
+    func resumeColumnAutosave() {
+        sidebarSplitView?.autosaveName = Self.sidebarSplitAutosaveName
+        splitView?.autosaveName = Self.noteListSplitAutosaveName
+    }
+
+    /// Opens the columns a presentation hid when the app quits inside it, so
+    /// the window state the quit records matches them.
     func restoreColumnsHiddenByPresentation() {
         guard sessionPresentationMode || sessionMagicPPTMode else { return }
         if presentationRestoresNoteList { showNoteList("") }

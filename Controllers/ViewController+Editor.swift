@@ -513,7 +513,7 @@ extension ViewController {
 
     // MARK: - Presentation Mode
 
-    private func savePresentationLayout() {
+    func savePresentationLayout() {
         let currentSidebarWidth = sidebarWidth
         let currentNotelistWidth = notelistWidth
         presentationRestoresSidebar = isSidebarVisible
@@ -528,9 +528,10 @@ extension ViewController {
         if let clipView = notesTableView.superview as? NSClipView {
             savedPresentationScrollPosition = clipView.bounds.origin
         }
+        pauseColumnAutosave()
     }
 
-    private func restorePresentationLayout() {
+    func restorePresentationLayout() {
         formatButton.isHidden = false
         previewButton.isHidden = false
         toggleListButton?.isHidden = false
@@ -538,6 +539,7 @@ extension ViewController {
 
         if presentationRestoresNoteList { showNoteList("") }
         if presentationRestoresSidebar { showSidebar("") }
+        resumeColumnAutosave()
         checkTitlebarTopConstraint()
 
         if let savedPosition = savedPresentationScrollPosition {

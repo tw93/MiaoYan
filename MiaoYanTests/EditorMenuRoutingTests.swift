@@ -560,6 +560,35 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertFalse(vc.isNotelistVisible)
     }
 
+    /// I-68 on a real quit: opening the columns in applicationWillTerminate
+    /// changed the window but not the saved positions, since AppKit writes
+    /// them on a later turn of the run loop the quitting app never reaches.
+    /// The presentation must keep its collapsed columns out of the autosave.
+    @MainActor
+    func testAPresentationKeepsItsCollapsedColumnsOutOfTheSavedLayout() throws {
+        let vc = try XCTUnwrap(ViewController.shared(), "the test host opened no storyboard window")
+        let sidebarWasVisible = vc.isSidebarVisible
+        let listWasVisible = vc.isNotelistVisible
+        defer {
+            vc.resumeColumnAutosave()
+            if sidebarWasVisible { vc.showSidebar("") } else { vc.hideSidebar("") }
+            if listWasVisible { vc.showNoteList("") } else { vc.hideNoteList("") }
+        }
+        vc.showSidebar("")
+        XCTAssertEqual(vc.sidebarSplitView.autosaveName, ViewController.sidebarSplitAutosaveName)
+        XCTAssertEqual(vc.splitView.autosaveName, ViewController.noteListSplitAutosaveName)
+
+        vc.savePresentationLayout()
+        XCTAssertTrue(vc.sidebarSplitView.autosaveName?.isEmpty ?? true, "the sidebar split still autosaves inside a presentation")
+        XCTAssertTrue(vc.splitView.autosaveName?.isEmpty ?? true, "the note list split still autosaves inside a presentation")
+
+        vc.restorePresentationLayout()
+        XCTAssertEqual(vc.sidebarSplitView.autosaveName, ViewController.sidebarSplitAutosaveName)
+        XCTAssertEqual(vc.splitView.autosaveName, ViewController.noteListSplitAutosaveName)
+        XCTAssertTrue(vc.isSidebarVisible)
+        XCTAssertTrue(vc.isNotelistVisible)
+    }
+
     @MainActor
     private func isHighlighted(_ editor: EditTextView, at index: Int) -> Bool {
         editor.layoutManager?.temporaryAttribute(.backgroundColor, atCharacterIndex: index, effectiveRange: nil) != nil

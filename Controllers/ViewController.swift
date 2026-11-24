@@ -1069,8 +1069,7 @@ class ViewController:
         storageOutlineView.selectionHighlightStyle = .none
         // Ensure proper display after data is set
         storageOutlineView.needsDisplay = true
-        sidebarSplitView.autosaveName = "SidebarSplitView"
-        splitView.autosaveName = "EditorSplitView"
+        resumeColumnAutosave()
         // Assign an autosave name so the sidebar outline view keeps its expansion state
         storageOutlineView.autosaveExpandedItems = true
         storageOutlineView.autosaveName = "SidebarOutlineView"
