@@ -431,6 +431,43 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
     }
 
+    /// A query or fragment is not part of the file name: `spec.pdf#page=3`
+    /// and `a.png?v=2` named no file, so both were offered as unused.
+    @MainActor
+    func testALinkWithAQueryOrFragmentKeepsItsFile() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let manager = FileManager.default
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        let shapes: [(link: String, file: String)] = [
+            ("[spec](files/spec.pdf#page=3)", "files/spec.pdf"),
+            ("<img src=\"i/a.png?v=2\">", "i/a.png"),
+            ("![](/i/b.png#center)", "i/b.png"),
+            ("![](<i/my c.png?x=1>)", "i/my c.png"),
+        ]
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+        for shape in shapes {
+            let expected = work.appendingPathComponent(shape.file).path
+            XCTAssertTrue(note.getReferencedAttachmentPaths(in: shape.link).contains(expected), "\(shape.link) refers to \(shape.file)")
+            try Data([0x89]).write(to: work.appendingPathComponent(shape.file))
+        }
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+        try ("# Note\n\n" + shapes.map(\.link).joined(separator: "\n\n") + "\n").write(
+            to: work.appendingPathComponent("n.md"), atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+
+        _ = storage.subfolders(of: root)
+        let found = await orphans(in: storage)
+        XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
+
+        let trash = Project(url: tempDir.appendingPathComponent(".Trash", isDirectory: true), isTrash: true)
+        let trashed = Note(url: trash.url.appendingPathComponent("old.md"), with: trash)
+        let names = trashed.referencedAttachmentNames(in: "[s](../files/spec.pdf#page=3) <img src=\"../i/a.png?v=2\">")
+        XCTAssertTrue(names.isSuperset(of: ["spec.pdf", "a.png"]), "\(names)")
+    }
+
     /// A trashed note keeps its files by name; the names came from the same
     /// cut links, so `<../i/my photo.png>` kept a file called `my`.
     @MainActor

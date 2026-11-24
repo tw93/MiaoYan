@@ -958,10 +958,25 @@ public class Note: NSObject {
     func referencedAttachmentNames(in text: String) -> Set<String> {
         var names = Set(getReferencedAttachmentPaths(in: text).map { ($0 as NSString).lastPathComponent })
         for raw in Note.rawAttachmentLinks(in: text) {
-            names.insert((raw as NSString).lastPathComponent)
-            if let decoded = raw.removingPercentEncoding { names.insert((decoded as NSString).lastPathComponent) }
+            for variant in Note.linkVariants(raw) {
+                names.insert((variant as NSString).lastPathComponent)
+            }
         }
         return names
+    }
+
+    /// The forms a link as written may name its file by: itself, percent
+    /// decoded, and cut at the first `#` or `?`, since a query or fragment
+    /// (`files/spec.pdf#page=3`, `i/a.png?v=2`) is no part of the name.
+    nonisolated static func linkVariants(_ raw: String) -> Set<String> {
+        var variants: Set<String> = [raw]
+        if let decoded = raw.removingPercentEncoding { variants.insert(decoded) }
+        for variant in variants {
+            if let cut = variant.firstIndex(where: { $0 == "#" || $0 == "?" }), cut != variant.startIndex {
+                variants.insert(String(variant[..<cut]))
+            }
+        }
+        return variants
     }
 
     /// Every attachment link in `text` as written. A link target is read
@@ -1001,16 +1016,9 @@ public class Note: NSObject {
     }()
 
     private func resolveAttachmentAbsolutePaths(for rawPath: String) -> [String] {
-        var variants = Set<String>()
-        variants.insert(rawPath)
-
-        if let decoded = rawPath.removingPercentEncoding {
-            variants.insert(decoded)
-        }
-
         var results = [String]()
 
-        for variant in variants {
+        for variant in Note.linkVariants(rawPath) {
             if let absolute = resolveAttachmentAbsolutePath(forNormalizedPath: variant) {
                 results.append(absolute)
             }
