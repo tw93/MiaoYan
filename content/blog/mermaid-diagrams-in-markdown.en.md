@@ -25,7 +25,7 @@ flowchart TD
 ```
 ````
 
-The Mermaid documentation warns that a node whose text is the lowercase word `end` breaks the chart. Write `End` or `END` instead.
+The Mermaid documentation warns that a node whose text is the lowercase word `end` breaks the chart. Write `End` or `END` instead. Node shapes, edge styles and subgraph direction are in [Mermaid flowchart syntax](/blog/mermaid-flowchart/).
 
 ## Sequence diagrams
 
@@ -40,7 +40,7 @@ sequenceDiagram
 ```
 ````
 
-`->>` is a solid line with an arrowhead and `-->>` is a dotted one, which is the usual way to show a reply. `participant X as Name` gives a short id a readable label. Notes are placed with `Note right of`, `left of` or `over`, as in the Mermaid sequence-diagram documentation.
+`->>` is a solid line with an arrowhead and `-->>` is a dotted one, which is the usual way to show a reply. `participant X as Name` gives a short id a readable label. Notes are placed with `Note right of`, `left of` or `over`, as in the Mermaid sequence-diagram documentation. Activation bars, `alt` and `loop` blocks and a full login example are in [Mermaid sequence diagrams](/blog/mermaid-sequence-diagram/).
 
 ## Gantt charts
 
@@ -54,7 +54,7 @@ gantt
 ```
 ````
 
-`dateFormat` specifies how dates in task lines are formatted, and the Mermaid documentation gives `YYYY-MM-DD` as the default. Each `section` groups tasks. A task line is a title, a colon, then metadata such as an id, a start date or `after <id>`, and a duration. Dates in the example are illustrative.
+`dateFormat` specifies how dates in task lines are formatted, and the Mermaid documentation gives `YYYY-MM-DD` as the default. Each `section` groups tasks. A task line is a title, a colon, then metadata such as an id, a start date or `after <id>`, and a duration. Dates in the example are illustrative. Task syntax and excluding weekends are in [Mermaid gantt charts](/blog/mermaid-gantt-chart/).
 
 ## Timelines
 
@@ -71,11 +71,11 @@ timeline
 ```
 ````
 
-Each line is a time period, a colon and an event. More events for the same period take more colons, or go on the next lines starting with a colon. Periods are plain text rather than dates, so `Q1`, `Week 3` or `Draft` work as well as years. `section` groups periods so they share one colour, and `title` sits above the chart. Periods run left to right in the order you write them; `timeline TD` stacks them top to bottom instead, which reads better on a phone or with a long list. `TD` arrived in Mermaid 11.14.0, the version MiaoYan V4.11.0 bundles, and older Mermaid versions do not accept it. Reach for a timeline when only the order of events matters, and for the Gantt chart above when dates and durations do.
+Each line is a time period, a colon and an event. More events for the same period take more colons, or go on the next lines starting with a colon. Periods are plain text rather than dates, so `Q1`, `Week 3` or `Draft` work as well as years. `section` groups periods so they share one colour, and `title` sits above the chart. Periods run left to right in the order you write them; `timeline TD` stacks them top to bottom instead, which reads better on a phone or with a long list. `TD` arrived in Mermaid 11.14.0, the version MiaoYan V4.11.0 bundles, and older Mermaid versions do not accept it. Reach for a timeline when only the order of events matters, and for the Gantt chart above when dates and durations do. The full syntax and more examples are in [Mermaid timeline in Markdown](/blog/mermaid-timeline/).
 
 ## PlantUML and Markmap as alternatives
 
-Mermaid covers flowcharts, sequence diagrams, Gantt charts, class diagrams and more, with concise syntax. PlantUML has a longer history with UML, and its syntax is more verbose. Choose it when you already have PlantUML sources or need a UML construct Mermaid draws poorly.
+Mermaid covers flowcharts, sequence diagrams, Gantt charts, class diagrams and more, with concise syntax. Class diagrams and ER diagrams have their own guides: [class diagrams](/blog/mermaid-class-diagram/) and [ER diagrams](/blog/mermaid-er-diagram/). PlantUML has a longer history with UML, and its syntax is more verbose. Choose it when you already have PlantUML sources or need a UML construct Mermaid draws poorly.
 
 ````markdown
 ```plantuml

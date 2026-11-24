@@ -25,7 +25,7 @@ flowchart TD
 ```
 ````
 
-Mermaid 文档提醒，节点文字如果是小写的 `end` 会让整张图出错，要写成 `End` 或 `END`。
+Mermaid 文档提醒，节点文字如果是小写的 `end` 会让整张图出错，要写成 `End` 或 `END`。节点形状、连线样式和子图方向见 [Mermaid 流程图写法](/zh/blog/mermaid-flowchart/)。
 
 ## 时序图
 
@@ -40,7 +40,7 @@ sequenceDiagram
 ```
 ````
 
-`->>` 是带箭头的实线，`-->>` 是带箭头的虚线，通常用来表示回复。`participant X as Name` 给简短的 id 配一个好读的名字，备注用 `Note right of`、`left of` 或 `over` 放置，写法见 Mermaid 的时序图文档。
+`->>` 是带箭头的实线，`-->>` 是带箭头的虚线，通常用来表示回复。`participant X as Name` 给简短的 id 配一个好读的名字，备注用 `Note right of`、`left of` 或 `over` 放置，写法见 Mermaid 的时序图文档。激活条、`alt` 和 `loop` 分支块和完整的登录示例见 [Mermaid 时序图写法](/zh/blog/mermaid-sequence-diagram/)。
 
 ## 甘特图
 
@@ -54,7 +54,7 @@ gantt
 ```
 ````
 
-`dateFormat` 说明任务行里日期的写法，Mermaid 文档给出的默认值是 `YYYY-MM-DD`，每个 `section` 把任务分组，任务行是标题、冒号，再接 id、起始日期或 `after <id>`、时长这样的元数据，示例里的日期只是示意。
+`dateFormat` 说明任务行里日期的写法，Mermaid 文档给出的默认值是 `YYYY-MM-DD`，每个 `section` 把任务分组，任务行是标题、冒号，再接 id、起始日期或 `after <id>`、时长这样的元数据，示例里的日期只是示意。任务写法和排除周末见 [Mermaid 甘特图写法](/zh/blog/mermaid-gantt-chart/)。
 
 ## 时间线
 
@@ -71,11 +71,11 @@ timeline
 ```
 ````
 
-每行是一个时间段、一个冒号和一个事件，同一时间段有多个事件就继续加冒号，或者换行后以冒号开头接着写，时间段只是普通文字，不一定是日期，写 `Q1`、`第三周`、`草稿` 和写年份一样可以。`section` 把几个时间段归成一组，同组共用一种颜色，`title` 是图上方的标题。时间段按书写顺序从左往右排，写成 `timeline TD` 就改成从上往下排，在手机上或条目很多时更好读，这个写法是 Mermaid 11.14.0 才加的，妙言 V4.11.0 自带的就是这个版本，更旧的 Mermaid 不认。只在乎事情的先后时用时间线，要日期和时长就用上面的甘特图。
+每行是一个时间段、一个冒号和一个事件，同一时间段有多个事件就继续加冒号，或者换行后以冒号开头接着写，时间段只是普通文字，不一定是日期，写 `Q1`、`第三周`、`草稿` 和写年份一样可以。`section` 把几个时间段归成一组，同组共用一种颜色，`title` 是图上方的标题。时间段按书写顺序从左往右排，写成 `timeline TD` 就改成从上往下排，在手机上或条目很多时更好读，这个写法是 Mermaid 11.14.0 才加的，妙言 V4.11.0 自带的就是这个版本，更旧的 Mermaid 不认。只在乎事情的先后时用时间线，要日期和时长就用上面的甘特图。完整写法和更多示例见 [Markdown 里的 Mermaid 时间线](/zh/blog/mermaid-timeline/)。
 
 ## PlantUML 和 Markmap 作为补充
 
-Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时选它。
+Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。类图和 ER 图各有一篇单独的写法，见 [类图](/zh/blog/mermaid-class-diagram/) 和 [ER 图](/zh/blog/mermaid-er-diagram/)。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时选它。
 
 ````markdown
 ```plantuml
