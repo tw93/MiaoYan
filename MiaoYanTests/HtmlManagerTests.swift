@@ -1280,28 +1280,7 @@ final class MathRenderingRuntimeTests: XCTestCase {
             ```
             """
         let url = try writePPTPage(markdown: markdown, named: "common-ppt")
-        // Every error the page meets, a script that failed to load included,
-        // recorded before any of its own scripts run.
-        let capture = """
-            <script>
-            window.__miaoyanErrors = [];
-            window.addEventListener('error', function (event) {
-              var target = event.target;
-              if (target && target !== window && (target.src || target.href)) {
-                window.__miaoyanErrors.push('load ' + (target.src || target.href));
-              } else {
-                window.__miaoyanErrors.push((event.filename || '') + ': ' + event.message);
-              }
-            }, true);
-            var miaoyanConsoleError = console.error;
-            console.error = function () {
-              window.__miaoyanErrors.push('console ' + Array.prototype.join.call(arguments, ' '));
-              return miaoyanConsoleError.apply(console, arguments);
-            };
-            </script>
-            """
-        let page = try String(contentsOf: url, encoding: .utf8)
-        try page.replacingOccurrences(of: "<head>", with: "<head>" + capture).write(to: url, atomically: true, encoding: .utf8)
+        try capturePageErrors(in: url)
         let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
         webView.loadFileURL(url, allowingReadAccessTo: tempDirectory)
         let probe = """
@@ -1324,10 +1303,120 @@ final class MathRenderingRuntimeTests: XCTestCase {
         XCTAssertEqual(state["common"] as? String, "object", "\(state)")
         XCTAssertEqual(state["eagerImages"] as? Int, 1, "optimizeImages ran: \(state)")
         XCTAssertEqual(state["markmaps"] as? Int, 1, "\(state)")
-        // `themes/mermaid.css` has never been in the repository; a stylesheet
-        // that fails to load stops no script.
-        let scriptErrors = (state["errors"] as? [String])?.filter { !$0.hasSuffix(".css") }
-        XCTAssertEqual(scriptErrors, [], "\(state)")
+        XCTAssertEqual(state["errors"] as? [String], [], "\(state)")
+    }
+
+    /// A ```mermaid slide showed Mermaid's "Syntax error in text": reveal
+    /// writes the block as `code.mermaid`, which DiagramHandler's
+    /// `.language-mermaid` never matched, so Mermaid's own start-on-load drew
+    /// it from the markup highlight.js had split into spans, in its default
+    /// palette. The slide now draws from the source in the preview's palette,
+    /// light and dark and in the print layout the PDF export reloads into,
+    /// and a PlantUML block gets its image address (the image itself comes
+    /// from the PlantUML server, so it is not loaded here).
+    @MainActor
+    func testPPTDrawsMermaidFromItsSource() async throws {
+        let markdown = """
+            ```mermaid
+            graph TD
+              A[Start] --> B[End]
+            ```
+
+            ---
+
+            ```plantuml
+            @startuml
+            Alice -> Bob: hello
+            @enduml
+            ```
+
+            ---
+
+            ```markmap
+            # Root
+            - one
+            ```
+            """
+        var fills: [String] = []
+        for (theme, exporting) in [("lightmode", false), ("darkmode", false), ("lightmode", true)] {
+            let url = try writePPTPage(markdown: markdown, named: "mermaid-ppt-\(theme)-\(exporting)")
+            var page = try String(contentsOf: url, encoding: .utf8).replacingOccurrences(of: "CUSTOM_CSS", with: theme)
+            if exporting { page = page.replacingOccurrences(of: "var exportType = '';", with: "var exportType = 'ppt';") }
+            try page.write(to: url, atomically: true, encoding: .utf8)
+            try capturePageErrors(in: url)
+            let webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 900, height: 700), configuration: WKWebViewConfiguration())
+            webView.loadFileURL(url, allowingReadAccessTo: tempDirectory)
+            let probe = """
+                (() => {
+                    const code = document.querySelector('.slides pre code.mermaid');
+                    const svg = code && code.querySelector('svg');
+                    const node = svg && svg.querySelector('.node rect');
+                    const plantuml = document.querySelector('.slides img.plantuml-image');
+                    return {
+                        svg: !!svg,
+                        role: svg ? (svg.getAttribute('aria-roledescription') || '') : '',
+                        syntaxError: document.querySelector('.slides').textContent.includes('Syntax error'),
+                        highlighted: Array.from(document.querySelectorAll('.slides pre code.hljs'), (c) => c.className),
+                        nodeFill: node ? getComputedStyle(node).fill : '',
+                        dark: document.documentElement.classList.contains('darkmode'),
+                        plantuml: plantuml ? plantuml.getAttribute('src') : '',
+                        markmaps: document.querySelectorAll('.slides svg.markmap').length,
+                        printing: location.search.includes('print-pdf'),
+                        errors: window.__miaoyanErrors
+                    };
+                })()
+                """
+            var state: [String: Any] = [:]
+            let deadline = Date().addingTimeInterval(10)
+            while Date() < deadline {
+                if (try? await webView.evaluateJavaScript("window.__miaoyanMathDone === true") as? Bool) == true {
+                    state = (try? await webView.evaluateJavaScript(probe) as? [String: Any]) ?? [:]
+                    if state["svg"] as? Bool == true, !(state["nodeFill"] as? String ?? "").isEmpty { break }
+                }
+                try await Task.sleep(nanoseconds: 50_000_000)
+            }
+            XCTAssertEqual(state["svg"] as? Bool, true, "\(theme): \(state)")
+            XCTAssertNotEqual(state["role"] as? String, "error", "\(theme): \(state)")
+            XCTAssertEqual(state["syntaxError"] as? Bool, false, "\(theme): \(state)")
+            XCTAssertEqual(state["highlighted"] as? [String], [], "diagram sources are not highlighted: \(state)")
+            XCTAssertEqual(state["dark"] as? Bool, theme == "darkmode", "\(state)")
+            XCTAssertEqual(state["printing"] as? Bool, exporting, "\(state)")
+            XCTAssertTrue((state["plantuml"] as? String)?.hasPrefix("https://www.plantuml.com/plantuml/svg/~1") == true, "\(theme): \(state)")
+            XCTAssertEqual(state["markmaps"] as? Int, 1, "\(theme): \(state)")
+            let scriptErrors = (state["errors"] as? [String])?.filter { !$0.hasPrefix("load https://www.plantuml.com/") }
+            XCTAssertEqual(scriptErrors, [], "\(theme): \(state)")
+            fills.append(state["nodeFill"] as? String ?? "")
+        }
+        // Mermaid's own default node fill is #ECECFF; the slides take the
+        // preview's warm palette, a different one in dark, the same in print.
+        XCTAssertFalse(fills.contains("rgb(236, 236, 255)"), "\(fills)")
+        XCTAssertNotEqual(fills[0], fills[1], "\(fills)")
+        XCTAssertEqual(fills[0], fills[2], "\(fills)")
+    }
+
+    /// Records every error the page meets, a script or stylesheet that failed
+    /// to load included, before any of its own scripts run.
+    private func capturePageErrors(in url: URL) throws {
+        let capture = """
+            <script>
+            window.__miaoyanErrors = [];
+            window.addEventListener('error', function (event) {
+              var target = event.target;
+              if (target && target !== window && (target.src || target.href)) {
+                window.__miaoyanErrors.push('load ' + (target.src || target.href));
+              } else {
+                window.__miaoyanErrors.push((event.filename || '') + ': ' + event.message);
+              }
+            }, true);
+            var miaoyanConsoleError = console.error;
+            console.error = function () {
+              window.__miaoyanErrors.push('console ' + Array.prototype.join.call(arguments, ' '));
+              return miaoyanConsoleError.apply(console, arguments);
+            };
+            </script>
+            """
+        let page = try String(contentsOf: url, encoding: .utf8)
+        try page.replacingOccurrences(of: "<head>", with: "<head>" + capture).write(to: url, atomically: true, encoding: .utf8)
     }
 
     /// Malformed mhchem inputs such as `\ce{A \bond{} B}` (`MhchemBugT`) or

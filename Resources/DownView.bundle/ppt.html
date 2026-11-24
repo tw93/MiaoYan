@@ -6,8 +6,13 @@
   <meta name="viewport" content="initial-scale=1.0" />
   <link rel="stylesheet" href="ppt/dist/reveal.css" />
   DOWN_THEME
-  <link rel="stylesheet" href="themes/mermaid.css" />
   <script src="js/theme-config.js"></script>
+  <script src="js/theme-manager.js"></script>
+  <script>
+    // The app writes darkmode or lightmode here, as in index.html; the
+    // diagram palette (ThemeConfig.isDarkMode) reads it from <html>.
+    if ('CUSTOM_CSS' === 'darkmode') document.documentElement.classList.add('darkmode');
+  </script>
   <script src="js/youtube-relay.js"></script>
   <script>
     // Reveal renders the markdown here, after the app's relay pass would
@@ -19,6 +24,12 @@
 
   <!-- Added for diagram support in PPT -->
   <script src="js/mermaid.min.js"></script>
+  <script>
+    // Reveal writes a ```mermaid block as code.mermaid, the class Mermaid
+    // draws by itself at load, from markup highlight.js had already split
+    // into spans ("Syntax error in text"). DiagramHandler draws it instead.
+    mermaid.startOnLoad = false;
+  </script>
   <script src="js/plantuml-encoder.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/markmap-view.min.js"></script>
@@ -252,6 +263,10 @@
       highlight: {
         highlightOnLoad: true,
         lineNumbers: true,
+        // Diagram sources stay plain text for DiagramHandler to draw.
+        beforeHighlight: function (hljs) {
+          hljs.configure({ noHighlightRe: /^(no-?highlight|mermaid|plantuml|markmap)$/i });
+        },
       },
       slideNumber: false,
       showSlideNumber: 'all',
@@ -297,12 +312,10 @@
       // Optimize images using common module
       MiaoYanCommon.optimizeImages();
 
-      // Initialize Markmap for PPT mode using diagram handler
-      DiagramHandler.initializeMarkmapForPPT();
-
-      // Initialize other diagrams
-      DiagramHandler.initializeMermaid();
-      DiagramHandler.initializePlantUML();
+      // Diagrams are drawn once reveal has written the slides and
+      // highlight.js has passed over them.
+      if (Reveal.isReady()) DiagramHandler.initializeForPPT();
+      else Reveal.on('ready', function () { DiagramHandler.initializeForPPT(); });
     });
   </script>
   <script>

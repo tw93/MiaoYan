@@ -348,6 +348,18 @@ const DiagramHandler = {
     });
   },
 
+  // Slides: reveal's markdown names a fenced block by its bare language
+  // (code.mermaid), where the preview's renderer writes language-mermaid,
+  // so the slide blocks take the preview's class and are drawn the same way.
+  initializeForPPT() {
+    document.querySelectorAll('.reveal pre code.mermaid, .reveal pre code.plantuml').forEach((code) => {
+      code.classList.add(code.classList.contains('mermaid') ? 'language-mermaid' : 'language-plantuml');
+    });
+    this.initializeMarkmapForPPT();
+    this.initializeMermaid();
+    this.initializePlantUML();
+  },
+
   initializeMarkmapForPPT() {
     let markMapList = document.querySelectorAll('.language-markmap');
 
