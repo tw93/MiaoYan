@@ -120,7 +120,6 @@ public enum UserDefaultsManagement {
         static let CodeFontNameKey = "codeFont"
         static let FontSizeKey = "fontsize"
         static let FontColorKey = "fontColorKeyed"
-        static let NoteType = "noteType"
         static let ImagesWidthKey = "imagesWidthKey"
         static let DefaultLanguageKey = "defaultLanguage"
         static let DefaultPicUpload = "defaultPicUpload"
@@ -979,7 +978,7 @@ public enum UserDefaultsManagement {
     }
     static var sort: SortBy {
         get {
-            guard let raw = UserDefaults.standard.object(forKey: "sortBy") as? String,
+            guard let raw = UserDefaults.standard.object(forKey: Constants.SortBy) as? String,
                 let sortBy = SortBy(rawValue: raw)
             else {
                 return .creationDate
@@ -987,7 +986,7 @@ public enum UserDefaultsManagement {
             return sortBy
         }
         set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: "sortBy")
+            UserDefaults.standard.set(newValue.rawValue, forKey: Constants.SortBy)
         }
     }
     static var lastSelectedURL: URL? {
