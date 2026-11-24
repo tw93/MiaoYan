@@ -392,6 +392,56 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
     }
 
+    /// A `<…>` destination may hold spaces and a quoted `src` value is read
+    /// whole, but the links were cut at the space (`i/my`) or kept the
+    /// closing `>` (`i/a.png>`), so those images were offered as unused
+    /// while the preview still showed them (audit 2026-11-24).
+    @MainActor
+    func testLinkTargetsWithSpacesOrAngleBracketsKeepTheirFiles() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let manager = FileManager.default
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        let shapes: [(link: String, file: String)] = [
+            ("![](<i/my photo.png>)", "i/my photo.png"),
+            ("![](<i/a.png>)", "i/a.png"),
+            ("![]( <i/padded.png> \"title\")", "i/padded.png"),
+            ("<img src=\"i/double quoted.png\">", "i/double quoted.png"),
+            ("<img src='i/single quoted.png'>", "i/single quoted.png"),
+            ("<img src=i/bare.png>", "i/bare.png"),
+            ("[doc](<files/My Doc.pdf>)", "files/My Doc.pdf"),
+            ("<a href=\"files/Plan B.pdf\">plan</a>", "files/Plan B.pdf"),
+            ("![pic][ref]\n\n[ref]: <i/ref pic.png>", "i/ref pic.png"),
+        ]
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+        for shape in shapes {
+            let expected = work.appendingPathComponent(shape.file).path
+            XCTAssertTrue(note.getReferencedAttachmentPaths(in: shape.link).contains(expected), "\(shape.link) refers to \(shape.file)")
+            try Data([0x89]).write(to: work.appendingPathComponent(shape.file))
+        }
+        try Data([0x89]).write(to: work.appendingPathComponent("i/unused.png"))
+        try ("# Note\n\n" + shapes.map(\.link).joined(separator: "\n\n") + "\n").write(
+            to: work.appendingPathComponent("n.md"), atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+
+        _ = storage.subfolders(of: root)
+        let found = await orphans(in: storage)
+        XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, ["unused.png"])
+    }
+
+    /// A trashed note keeps its files by name; the names came from the same
+    /// cut links, so `<../i/my photo.png>` kept a file called `my`.
+    @MainActor
+    func testATrashedNotesLinkWithASpaceKeepsItsFileByName() {
+        let trash = Project(url: tempDir.appendingPathComponent(".Trash", isDirectory: true), isTrash: true)
+        let note = Note(url: trash.url.appendingPathComponent("old.md"), with: trash)
+        let names = note.referencedAttachmentNames(in: "![](<../i/my photo.png>) <img src=\"../i/our trip.png\">")
+        XCTAssertTrue(names.contains("my photo.png"), "\(names)")
+        XCTAssertTrue(names.contains("our trip.png"), "\(names)")
+    }
+
     @MainActor
     private func orphans(in storage: Storage, changedBefore cutoff: Date = .distantFuture) async -> [URL]? {
         let done = expectation(description: "orphan scan")

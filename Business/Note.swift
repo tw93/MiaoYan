@@ -942,13 +942,7 @@ public class Note: NSObject {
         let noteString = text ?? content.string
         guard !noteString.isEmpty else { return referenced }
 
-        let nsString = noteString as NSString
-        let noteRange = NSRange(location: 0, length: nsString.length)
-
-        Note.attachmentPathRegex.enumerateMatches(in: noteString, options: [], range: noteRange) { result, _, _ in
-            guard let range = result?.range else { return }
-
-            let rawPath = nsString.substring(with: range)
+        for rawPath in Note.rawAttachmentLinks(in: noteString) {
             for absolutePath in resolveAttachmentAbsolutePaths(for: rawPath) {
                 referenced.insert(absolutePath)
             }
@@ -963,15 +957,48 @@ public class Note: NSObject {
     /// name instead (2026-11-22).
     func referencedAttachmentNames(in text: String) -> Set<String> {
         var names = Set(getReferencedAttachmentPaths(in: text).map { ($0 as NSString).lastPathComponent })
-        let nsString = text as NSString
-        Note.attachmentPathRegex.enumerateMatches(in: text, options: [], range: NSRange(location: 0, length: nsString.length)) { result, _, _ in
-            guard let range = result?.range else { return }
-            let raw = nsString.substring(with: range)
+        for raw in Note.rawAttachmentLinks(in: text) {
             names.insert((raw as NSString).lastPathComponent)
             if let decoded = raw.removingPercentEncoding { names.insert((decoded as NSString).lastPathComponent) }
         }
         return names
     }
+
+    /// Every attachment link in `text` as written. A link target is read
+    /// whole where the text marks its ends: a `<…>` destination, which may
+    /// hold spaces (`![](<i/my photo.png>)`), and a quoted `src` or `href`
+    /// value (`<img src="i/my photo.png">`). Elsewhere `attachmentPathRegex`
+    /// stops at a space or an angle bracket. Cut at the space (`i/my`), or
+    /// keeping the closing `>`, the link named no file, and Clean Unused
+    /// Attachments offered an image the preview still showed. Extra entries
+    /// only keep files, so anything unsure is included.
+    private static func rawAttachmentLinks(in text: String) -> [String] {
+        let nsString = text as NSString
+        let range = NSRange(location: 0, length: nsString.length)
+        var links: [String] = []
+        attachmentPathRegex.enumerateMatches(in: text, options: [], range: range) { result, _, _ in
+            guard let match = result?.range else { return }
+            links.append(nsString.substring(with: match))
+        }
+        wholeLinkTargetRegex.enumerateMatches(in: text, options: [], range: range) { result, _, _ in
+            guard let result else { return }
+            for group in 1..<result.numberOfRanges where result.range(at: group).location != NSNotFound {
+                let target = nsString.substring(with: result.range(at: group)).trimmingCharacters(in: .whitespaces)
+                if !target.isEmpty, !target.contains("://"), !target.hasPrefix("data:") { links.append(target) }
+            }
+        }
+        return links
+    }
+
+    /// `](<target>)`, a reference definition `]: <target>`, and a quoted
+    /// `src`/`href` value; the target is whichever group matched.
+    private static let wholeLinkTargetRegex: NSRegularExpression = {
+        let pattern = #"\]\(\s*<([^<>\n]+)>|\]:[ \t]*<([^<>\n]+)>|\b(?:src|href)\s*=\s*(?:"([^"\n]*)"|'([^'\n]*)')"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+            preconditionFailure("Note.wholeLinkTargetRegex literal is invalid: \(pattern)")
+        }
+        return regex
+    }()
 
     private func resolveAttachmentAbsolutePaths(for rawPath: String) -> [String] {
         var variants = Set<String>()
@@ -1027,7 +1054,7 @@ public class Note: NSObject {
     }
 
     private static let attachmentPathRegex: NSRegularExpression = {
-        let pattern = #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"]+"#
+        let pattern = #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"<>]+"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
             preconditionFailure("Note.attachmentPathRegex literal is invalid: \(pattern)")
         }
