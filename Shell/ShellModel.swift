@@ -1211,8 +1211,9 @@ final class ShellModel {
                 existing = note
                 continue
             }
-            let copy = ViewController.copyFile(url, into: project ?? storage.getMainProject())
-            guard storage.getBy(url: copy) == nil, let note = storage.initNote(url: copy) else { continue }
+            guard let copy = ViewController.importCopy(of: url, into: project ?? storage.getMainProject()),
+                storage.getBy(url: copy) == nil, let note = storage.initNote(url: copy)
+            else { continue }
             note.load()
             note.loadModifiedLocalAt()
             storage.add(note)
@@ -1280,8 +1281,9 @@ final class ShellModel {
         folder.create()
         _ = storage.add(project: folder)
         for item in storage.readDirectory(url) {
-            let copy = ViewController.copyFile(item.url, into: folder)
-            guard storage.getBy(url: copy) == nil, let note = storage.initNote(url: copy) else { continue }
+            guard let copy = ViewController.importCopy(of: item.url, into: folder),
+                storage.getBy(url: copy) == nil, let note = storage.initNote(url: copy)
+            else { continue }
             note.load()
             note.loadModifiedLocalAt()
             storage.add(note)

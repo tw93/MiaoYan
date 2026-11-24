@@ -1114,13 +1114,6 @@ extension ViewController {
         Self.importCopy(of: url, into: project)
     }
 
-    /// The SwiftUI shell's import entry, unchanged in shape: it returns the
-    /// would-be name even when the copy failed. Its callers should move to
-    /// `importCopy(of:into:)`, which returns nil then.
-    static func copyFile(_ url: URL, into project: Project) -> URL {
-        importCopy(of: url, into: project) ?? project.url.appendingPathComponent(url.lastPathComponent)
-    }
-
     /// Copies an imported file into `project`, naming it "Copy", "Copy 2"
     /// and so on when the name is taken. Nil, and reported, when the copy
     /// failed for any other reason: the URL it used to return anyway named
