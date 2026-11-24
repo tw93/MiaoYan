@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=a928435e9267" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=98a3ea55b05e" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -46,6 +46,9 @@
   --stone: #6b6a64;
   --line: #e4e1d6;
   --line-faint: #efede5;
+  /* The panel MiaoYan's preview draws a Mermaid diagram on (theme-config.js
+     diagramBg), so a diagram here sits on the ground it has in a note. */
+  --diagram: #f5f4ed;
   --night: #1e1d1b;
   --night-ink: #f2f0ea;
   --night-dim: #b5b1a7;
@@ -106,14 +109,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=a928435e9267") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=98a3ea55b05e") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -253,7 +256,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* Inner pages keep mole.fit's 47px of ink from the pill to the page title, 32
    on phones; the home hero takes 64 / 40, about 74 / 46 of ink above the wordmark
    like the rest of the family (maintainer 2026-11-02: a little more air on top). */
-.nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 48px; }
+.nav:has(+ main:is(.blog-index, .blog-post, .legal, .tool-page)) { margin-bottom: 48px; }
 .nav:has(+ main:not([class])) { margin-bottom: 64px; }
 /* Nav links jump straight to their section, with no glide, as on mole.fit
    (maintainer 2026-11-02: the glide looked worse than the instant jump). */
@@ -660,6 +663,73 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .blog-body img { border-radius: 10px; }
 .blog-figure { margin: 32px 0; }
 .blog-figure figcaption { font-size: var(--text-meta); line-height: 1.5; color: var(--stone); margin-top: 10px; }
+/* A Mermaid example's diagram, drawn ahead by scripts/render-mermaid.mjs, under
+   its source on the app's diagram panel, with the way into the editor below. */
+.mermaid-figure { margin: -8px 0 28px; padding: 20px; background: var(--diagram); border-radius: 10px; }
+.mermaid-figure img { margin: 0 auto; border-radius: 0; }
+.mermaid-figure figcaption { font-size: var(--text-meta); line-height: 1.5; margin-top: 14px; text-align: center; }
+
+/* Free tools (scripts/build-tools.py): the tool first, at page width, then the
+   way into the app, then the prose in the blog's reading type. */
+.tool-page { padding-bottom: var(--gap); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.tool-templates { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.tool-chip {
+  font: inherit; font-size: var(--text-meta); line-height: 1.4; color: var(--olive);
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 14px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.tool-chip:hover { background: var(--warm-sand); }
+.tool-chip[aria-pressed="true"] { background: var(--warm-sand); border-color: var(--warm-sand); color: var(--near-black); }
+.tool-chip:focus { outline: none; }
+.tool-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-code {
+  display: block; width: 100%; height: 440px; min-height: 240px; resize: vertical; margin: 0;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65; tab-size: 4;
+  color: var(--dark-warm); caret-color: var(--brand); background: var(--ivory);
+  border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; white-space: pre; overflow: auto;
+}
+/* No focus ring on inputs, the caret is enough (family rule). */
+.tool-code:focus { outline: none; }
+.tool-preview {
+  display: flex; align-items: center; justify-content: center; min-height: 440px; padding: 24px;
+  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px; overflow: auto;
+}
+.tool-preview > :is(svg, img) { display: block; max-width: 100%; height: auto; transition: opacity 0.2s; }
+.tool-preview.is-stale > :is(svg, img) { opacity: 0.35; }
+.tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
+.tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
+.tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
+.tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
+.tool-undo:focus { outline: none; }
+.tool-syntax { color: var(--brand); margin-left: auto; white-space: nowrap; }
+.tool-undo:hover, .tool-syntax:hover { color: var(--brand-light); }
+.tool-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0 0; }
+.tool-actions .btn { cursor: pointer; font-family: inherit; }
+.tool-actions .btn:focus { outline: none; }
+.tool-app { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: 48px; margin: 72px 0 0; }
+.tool-app-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 12px; }
+.tool-app-text p { font-size: var(--text-lede); line-height: 1.75; color: var(--olive); margin: 0 0 24px; }
+.tool-app-shot { margin: 0; }
+.tool-app-shot img { border-radius: 14px; }
+.tool-body { margin-top: 72px; }
+@media (max-width: 880px) {
+  .tool-grid { grid-template-columns: minmax(0, 1fr); }
+  .tool-code { height: 300px; font-size: 16px; }
+  .tool-preview { min-height: 300px; }
+  .tool-app { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 56px; }
+  .tool-body { margin-top: 56px; }
+}
+/* iOS zooms the page into a text field set under 16px. */
+@media (hover: none) and (pointer: coarse) {
+  .tool-code { font-size: 16px; }
+}
+@media (max-width: 560px) {
+  .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tool-actions .btn { min-width: 0; padding: 13px 12px; }
+  .tool-preview { padding: 16px; }
+  .mermaid-figure { padding: 14px; }
+}
 
 .blog-related { margin-top: 64px; }
 .blog-related-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 20px; }
@@ -705,7 +775,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 @media (max-width: 880px) {
   :root { --inset: 24px; --gap: 72px; --anchor-clear: 105px; }
   .nav { --nav-outset: 6px; margin-bottom: 40px; }
-  .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
+  .nav:has(+ main:is(.blog-index, .blog-post, .legal, .tool-page)) { margin-bottom: 32px; }
   .nav:has(+ main:not([class])) { margin-bottom: 44px; }
   /* 64px with -1px tracking under 880, as on pake.run, hina.day and yado.house
      (maintainer 2026-11-04: one lockup size across the product sites). */
@@ -873,7 +943,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/mermaid-diagrams-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>在 Markdown 里画图，做法是把图的文字描述放进语言名为 <code>mermaid</code> 的围栏代码块，支持 Mermaid 的预览会把它渲染成 SVG 图片，PlantUML 和 Markmap 的思路一样，各自用自己的语言名。妙言里 Mermaid 和 Markmap 跑的是随应用打包的 JavaScript，所以离线也能用，PlantUML 不行，它会把图的文字发到公共的 plantuml.com 服务器去渲染，图如果是私密的，这一点要先想清楚。</p>
+<p>在 Markdown 里画图，做法是把图的文字描述放进语言名为 <code>mermaid</code> 的围栏代码块，支持 Mermaid 的预览会把它渲染成 SVG 图片，PlantUML 和 Markmap 的思路一样，各自用自己的语言名。妙言里 Mermaid 和 Markmap 跑的是随应用打包的 JavaScript，所以离线也能用，PlantUML 不行，它会把图的文字发到公共的 plantuml.com 服务器去渲染，图如果是私密的，这一点要先想清楚。下面每个 Mermaid 示例都能在 <a href="/zh/tools/mermaid-editor/">Mermaid 在线编辑器</a> 里打开，改完可以下载成 SVG 或 PNG。</p>
 <h2 id="流程图">流程图</h2>
 <pre><code class="language-markdown">```mermaid
 flowchart LR
@@ -882,6 +952,7 @@ flowchart LR
     Review --&gt;|no| Draft
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/7dd334ef91db.svg" width="709" height="171" alt="这段代码画出的流程图" loading="lazy" decoding="async"><figcaption><a href="/zh/tools/mermaid-editor/#m=S8vJL0_OSCwqUfAJ4lIAApeixLQSBV1dO4Wg1LLM1PJqx4KCovyy1BT7WrA8RBSkoKYytbhGIaA0KSezOANdLi-_BmIUAA">在 Mermaid 编辑器里打开</a></figcaption></figure>
 <p>第一行指定图的类型和方向，<code>TD</code> 或 <code>TB</code> 是从上到下，<code>LR</code> 是从左到右，<code>BT</code> 和 <code>RL</code> 是反方向，<code>graph</code> 可以当 <code>flowchart</code> 的同义词。单独一个词就是一个方框节点，<code>Review{Approved?}</code> 会画成菱形，圆角框、圆形、圆柱等其他形状各有括号写法，列在 Mermaid 的流程图文档里，<code>--&gt;|yes|</code> 是给连线加标签。</p>
 <p>用 <code>subgraph</code> 块把节点分组，以 <code>end</code> 结尾。</p>
 <pre><code class="language-markdown">```mermaid
@@ -892,6 +963,7 @@ flowchart TD
     B --&gt; C[Export]
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/c684858e2643.svg" width="293" height="488" alt="这段代码画出的流程图" loading="lazy" decoding="async"><figcaption><a href="/zh/tools/mermaid-editor/#m=S8vJL0_OSCwqUQhx4VIAguLSpPSixIIMBdeUzJL8IrAYCDhGhxdllqTGKujq2ik4RQcUpZZlppbHguVT81LAtBNY0jnataIgv6gkFgA">在 Mermaid 编辑器里打开</a></figcaption></figure>
 <p>Mermaid 文档提醒，节点文字如果是小写的 <code>end</code> 会让整张图出错，要写成 <code>End</code> 或 <code>END</code>。节点形状、连线样式和子图方向见 <a href="/zh/blog/mermaid-flowchart/">Mermaid 流程图写法</a>。</p>
 <h2 id="时序图">时序图</h2>
 <pre><code class="language-markdown">```mermaid
@@ -903,6 +975,7 @@ sequenceDiagram
     B--&gt;&gt;A: Hi Alice
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/260d62e008b3.svg" width="451" height="306" alt="这段代码画出的时序图" loading="lazy" decoding="async"><figcaption><a href="/zh/tools/mermaid-editor/#m=ZYwxDoAgEAR7X7Ef8AMWJhALK_9wkhMuQVE4_y9qYuOWO5MpfJy8OR6EfKa1Qd1OWcXJTpvCgApMFMc_ZG9k0_wA0_a97TByjOk7p6SMLD4o0gLTvSEUrZUCDQwXSB_VtjVQjVFe6QI">在 Mermaid 编辑器里打开</a></figcaption></figure>
 <p><code>-&gt;&gt;</code> 是带箭头的实线，<code>--&gt;&gt;</code> 是带箭头的虚线，通常用来表示回复。<code>participant X as Name</code> 给简短的 id 配一个好读的名字，备注用 <code>Note right of</code>、<code>left of</code> 或 <code>over</code> 放置，写法见 Mermaid 的时序图文档。激活条、<code>alt</code> 和 <code>loop</code> 分支块和完整的登录示例见 <a href="/zh/blog/mermaid-sequence-diagram/">Mermaid 时序图写法</a>。</p>
 <h2 id="甘特图">甘特图</h2>
 <pre><code class="language-markdown">```mermaid
@@ -913,6 +986,7 @@ gantt
     Develop :after a1, 5d
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/d5b0276eb141.svg" width="1264" height="148" alt="这段代码画出的甘特图" loading="lazy" decoding="async"><figcaption><a href="/zh/tools/mermaid-editor/#m=S0_MKynhUgCClMSSVLf8otzEEoVIIND19dV1cQHLFKcml2Tm5yk4lWbmpIBFXFKLM9PzFBSsEg11FIwMjMx0DQ11DYx0FIxh8mWpOfkFQPm0ktQiBZAq0xQA">在 Mermaid 编辑器里打开</a></figcaption></figure>
 <p><code>dateFormat</code> 说明任务行里日期的写法，Mermaid 文档给出的默认值是 <code>YYYY-MM-DD</code>，每个 <code>section</code> 把任务分组，任务行是标题、冒号，再接 id、起始日期或 <code>after &lt;id&gt;</code>、时长这样的元数据，示例里的日期只是示意。任务写法和排除周末见 <a href="/zh/blog/mermaid-gantt-chart/">Mermaid 甘特图写法</a>。</p>
 <h2 id="时间线">时间线</h2>
 <pre><code class="language-markdown">```mermaid
@@ -926,6 +1000,7 @@ timeline
         April : Copy edit
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/4f34aac17f0c.svg" width="1190" height="642" alt="这段代码画出的时间线" loading="lazy" decoding="async"><figcaption><a href="/zh/tools/mermaid-editor/#m=VY1BCsIwEEX3nuKfoztRuhBEqAvX02S0gzEJk6nQ25sGUfqW_w1vTF4cJPIOFRMLjJuKSXyAMKb0bKKwM0kRR6W7tWXlRHEmXdDhMtsvstLzqF_VixaDmygba6nDwIVJ3QRTyZv6wG8p_8i5XXW4skvRw29-77NKqPKQ8gL2Yh8">在 Mermaid 编辑器里打开</a></figcaption></figure>
 <p>每行是一个时间段、一个冒号和一个事件，同一时间段有多个事件就继续加冒号，或者换行后以冒号开头接着写，时间段只是普通文字，不一定是日期，写 <code>Q1</code>、<code>第三周</code>、<code>草稿</code> 和写年份一样可以。<code>section</code> 把几个时间段归成一组，同组共用一种颜色，<code>title</code> 是图上方的标题。时间段按书写顺序从左往右排，写成 <code>timeline TD</code> 就改成从上往下排，在手机上或条目很多时更好读，这个写法是 Mermaid 11.14.0 才加的，妙言 V4.11.0 自带的就是这个版本，更旧的 Mermaid 不认。只在乎事情的先后时用时间线，要日期和时长就用上面的甘特图。完整写法和更多示例见 <a href="/zh/blog/mermaid-timeline/">Markdown 里的 Mermaid 时间线</a>。</p>
 <h2 id="plantuml-和-markmap-作为补充">PlantUML 和 Markmap 作为补充</h2>
 <p>Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。类图和 ER 图各有一篇单独的写法，见 <a href="/zh/blog/mermaid-class-diagram/">类图</a> 和 <a href="/zh/blog/mermaid-er-diagram/">ER 图</a>。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时选它。</p>
@@ -987,7 +1062,7 @@ A -&gt; B: message
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">轻灵的原生 Markdown 笔记本</p>
       </div>
-      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>
@@ -1045,6 +1120,6 @@ A -&gt; B: message
   });
 })();
 </script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}(function(){if(/^(1366x1366|1280x1200)$/.test(screen.width+'x'+screen.height))return;document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-store]'))gtag('event','store_click')});function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true});var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}(function(){if(/^(1366x1366|1280x1200)$/.test(screen.width+'x'+screen.height))return;document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-store]'))gtag('event','store_click')});function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true,page_location:location.href.split('#')[0]});var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>
 </body>
 </html>

@@ -35,8 +35,9 @@ FONT_CACHE = ROOT / ".fontcache"
 
 # (script, weight, source font, pages). Weights 500 to 700 all map to SemiBold.
 # Pages are glob patterns: the Chinese blog (scripts/build-blog.py) sets the SC
-# face too, its index and every article.
-SC_PAGES = ["zh/index.html", "zh/blog/**/index.html", "zh/releases/index.html"]
+# face too, its index and every article, and so do the Chinese tool pages
+# (scripts/build-tools.py), whose page data carries their labels.
+SC_PAGES = ["zh/index.html", "zh/blog/**/index.html", "zh/releases/index.html", "zh/tools/**/index.html"]
 SUBSETS = [
     ("sc", "regular", "ClearHanSerif-Regular.ttf", SC_PAGES),
     ("sc", "semibold", "SourceHanSerifSC-SemiBold.otf", SC_PAGES),

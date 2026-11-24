@@ -1,4 +1,4 @@
-To draw a diagram in Markdown, put its text description inside a fenced code block tagged `mermaid`, and a Mermaid-aware preview renders it as an SVG image. The same approach works for PlantUML and Markmap, each with its own language tag. Mermaid and Markmap run from JavaScript bundled in MiaoYan, so they work offline. PlantUML does not: MiaoYan sends the diagram text to the public plantuml.com server, which matters if the diagram is private.
+To draw a diagram in Markdown, put its text description inside a fenced code block tagged `mermaid`, and a Mermaid-aware preview renders it as an SVG image. The same approach works for PlantUML and Markmap, each with its own language tag. Mermaid and Markmap run from JavaScript bundled in MiaoYan, so they work offline. PlantUML does not: MiaoYan sends the diagram text to the public plantuml.com server, which matters if the diagram is private. Every Mermaid example below opens in the [Mermaid live editor](/tools/mermaid-editor/), where you can change it and download the diagram as SVG or PNG.
 
 ## Flowcharts
 

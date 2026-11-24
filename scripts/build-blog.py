@@ -47,6 +47,8 @@ SRC = ROOT / "content" / "blog"
 _spec = importlib.util.spec_from_file_location("build_site", ROOT / "scripts" / "build-site.py")
 site = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(site)
+sys.path.insert(0, str(ROOT / "scripts"))
+import mermaid_assets  # noqa: E402
 SITE = site.SITE
 esc = site.esc
 
@@ -77,6 +79,8 @@ UI = {
         "read": "{n} min read",
         "related": "Keep reading",
         "faq": "FAQ",
+        "open_editor": "Open in the Mermaid editor",
+        "diagram_alt": "The {kind} this code draws",
     },
     "zh": {
         "home_name": "妙言",
@@ -87,6 +91,8 @@ UI = {
         "read": "约 {n} 分钟",
         "related": "继续阅读",
         "faq": "常见问题",
+        "open_editor": "在 Mermaid 编辑器里打开",
+        "diagram_alt": "这段代码画出的{kind}",
     },
 }
 
@@ -218,14 +224,38 @@ def figure_html(m, where):
     return f'<figure class="blog-figure">{img}<figcaption>{esc(caption)}</figcaption></figure>'
 
 
+def mermaid_figure(h, code, lang, where):
+    """The diagram a ````markdown example draws, under its source, with a link
+    that opens the same code in the editor (scripts/mermaid_assets.py)."""
+    if not mermaid_assets.svg_path(h).exists():
+        raise BuildError(f"{where}: img/mermaid/{h}.svg is missing; run node scripts/render-mermaid.mjs")
+    w, hh = mermaid_assets.svg_size(h)
+    alt = UI[lang]["diagram_alt"].format(kind=mermaid_assets.kind(code, lang))
+    editor = site.tool_path(lang) + "#m=" + mermaid_assets.payload(code)
+    return (
+        f'<figure class="mermaid-figure"><img src="/img/mermaid/{h}.svg" width="{w}" height="{hh}" '
+        f'alt="{esc(alt)}" loading="lazy" decoding="async">'
+        f'<figcaption><a href="{editor}">{esc(UI[lang]["open_editor"])}</a></figcaption></figure>'
+    )
+
+
 def render_body(slug, lang):
     where = f"content/blog/{slug}.{lang}.md"
-    text = FIGURE_RE.sub(lambda m: figure_html(m, where), source(slug, lang))
+    diagrams = {}
+
+    def mark(m):
+        h = mermaid_assets.digest(m.group(1))
+        diagrams[h] = m.group(1)
+        return f"{m.group(0)}\n\n[[mermaid:{h}]]"
+
+    text = mermaid_assets.WRAPPED_RE.sub(mark, source(slug, lang))
+    text = FIGURE_RE.sub(lambda m: figure_html(m, where), text)
     md = markdown.Markdown(
         extensions=["extra", "toc", "sane_lists"],
         extension_configs={"toc": {"slugify": slugify_unicode, "permalink": False}},
     )
     out = md.convert(text)
+    out = re.sub(r"<p>\[\[mermaid:([0-9a-f]{12})\]\]</p>", lambda m: mermaid_figure(m.group(1), diagrams[m.group(1)], lang, where), out)
     out = re.sub(r'<a href="(https?://(?!miaoyan\.app)[^"]+)">', r'<a href="\1" target="_blank" rel="noopener">', out)
     if DOWNLOAD_RE.search(out):
         raise BuildError(f"{where}: links to a download; the site links only to the App Store and GitHub")

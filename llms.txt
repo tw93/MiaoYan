@@ -181,3 +181,10 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Mermaid 类图语法：类、成员、关系和泛型怎么写](https://miaoyan.app/zh/blog/mermaid-class-diagram/): 在 Markdown 里写 Mermaid classDiagram，成员可见性、泛型、八种关系箭头、数量关系、注解和命名空间，附一个笔记应用例子。
 - [LaTeX 数学符号速查：希腊字母、箭头、运算符](https://miaoyan.app/zh/blog/latex-math-symbols/): 按类别列出 KaTeX 支持的 LaTeX 数学符号命令，包括上下限、括号和间距，并说明妙言里公式的常见问题，复制命令就能直接用。
 <!-- blog:end -->
+
+<!-- tools:start -->
+## Tools
+
+- [Mermaid Live Editor](https://miaoyan.app/tools/mermaid-editor/): A free Mermaid live editor in your browser: flowcharts, sequence diagrams, timelines, Gantt charts and more, with SVG and PNG export and links that carry the diagram.
+- [Mermaid 在线编辑器](https://miaoyan.app/zh/tools/mermaid-editor/): 免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。
+<!-- tools:end -->

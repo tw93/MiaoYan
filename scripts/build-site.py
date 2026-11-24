@@ -664,6 +664,9 @@ def contact_html(key):
 BLOG_LABEL = {"en": "Blog", "zh": "博客", "tw": "部落格", "ja": "ブログ", "ko": "블로그", "de": "Blog", "fr": "Blog", "es": "Blog"}
 BLOG_NAV_LANGS = ("en", "zh")
 UPDATES_LABEL = {"en": "Free updates", "zh": "持续更新", "tw": "持續更新", "ja": "無料アップデート", "ko": "무료 업데이트", "de": "Kostenlose Updates", "fr": "Mises à jour gratuites", "es": "Actualizaciones gratuitas"}
+# The Mermaid editor (scripts/build-tools.py) is written in English and Chinese;
+# the other languages link the English page.
+TOOL_LABEL = {"en": "Mermaid Editor", "zh": "Mermaid 编辑器", "tw": "Mermaid 編輯器", "ja": "Mermaid エディタ", "ko": "Mermaid 편집기", "de": "Mermaid-Editor", "fr": "Éditeur Mermaid", "es": "Editor de Mermaid"}
 RELEASES_LABEL = {"en": "Release Notes", "zh": "更新日志", "tw": "更新日誌", "ja": "リリースノート", "ko": "릴리스 노트", "de": "Versionshinweise", "fr": "Notes de version", "es": "Notas de versión"}
 
 ICONS = (
@@ -679,12 +682,13 @@ ICONS = (
 # the reader did not make. Two screen sizes that send zero-second, zero-engagement
 # visits and no real device reports are left out, as on mole.fit. store_click is
 # sent here because the Mac link is macappstore://, which GA's outbound click
-# measurement does not see.
+# measurement does not see. page_location leaves out the fragment: the Mermaid
+# editor's #m= carries a whole diagram, which stays in the reader's browser.
 ANALYTICS = (
     "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}"
     "(function(){if(/^(1366x1366|1280x1200)$/.test(screen.width+'x'+screen.height))return;"
     "document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-store]'))gtag('event','store_click')});"
-    "function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true});"
+    "function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true,page_location:location.href.split('#')[0]});"
     "var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}"
     "function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}"
     "function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}"
@@ -771,6 +775,10 @@ def store_url(key):
 
 def blog_path(key):
     return "/zh/blog/" if key in ("zh", "tw") else "/blog/"
+
+
+def tool_path(key):
+    return "/zh/tools/mermaid-editor/" if key in ("zh", "tw") else "/tools/mermaid-editor/"
 
 
 def releases_path(key):
@@ -862,6 +870,7 @@ def footer_html(key, *, faq_href="#faq"):
         f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
         f'<a href="{faq_href}">{esc(faq_label)}</a><a href="{blog_path(key)}">{esc(BLOG_LABEL[key])}</a>'
+        f'<a href="{tool_path(key)}">{esc(TOOL_LABEL[key])}</a>'
         f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
         f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'

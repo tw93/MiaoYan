@@ -579,4 +579,14 @@
     <lastmod>2026-11-21</lastmod>
   </url>
   <!-- blog:end -->
+  <!-- tools:start -->
+  <url>
+    <loc>https://miaoyan.app/tools/mermaid-editor/</loc>
+    <lastmod>2026-11-24</lastmod>
+  </url>
+  <url>
+    <loc>https://miaoyan.app/zh/tools/mermaid-editor/</loc>
+    <lastmod>2026-11-24</lastmod>
+  </url>
+  <!-- tools:end -->
 </urlset>

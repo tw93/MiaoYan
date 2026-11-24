@@ -1,4 +1,4 @@
-在 Markdown 里画图，做法是把图的文字描述放进语言名为 `mermaid` 的围栏代码块，支持 Mermaid 的预览会把它渲染成 SVG 图片，PlantUML 和 Markmap 的思路一样，各自用自己的语言名。妙言里 Mermaid 和 Markmap 跑的是随应用打包的 JavaScript，所以离线也能用，PlantUML 不行，它会把图的文字发到公共的 plantuml.com 服务器去渲染，图如果是私密的，这一点要先想清楚。
+在 Markdown 里画图，做法是把图的文字描述放进语言名为 `mermaid` 的围栏代码块，支持 Mermaid 的预览会把它渲染成 SVG 图片，PlantUML 和 Markmap 的思路一样，各自用自己的语言名。妙言里 Mermaid 和 Markmap 跑的是随应用打包的 JavaScript，所以离线也能用，PlantUML 不行，它会把图的文字发到公共的 plantuml.com 服务器去渲染，图如果是私密的，这一点要先想清楚。下面每个 Mermaid 示例都能在 [Mermaid 在线编辑器](/zh/tools/mermaid-editor/) 里打开，改完可以下载成 SVG 或 PNG。
 
 ## 流程图
 

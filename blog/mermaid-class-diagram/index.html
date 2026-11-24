@@ -44,6 +44,9 @@
   --stone: #6b6a64;
   --line: #e4e1d6;
   --line-faint: #efede5;
+  /* The panel MiaoYan's preview draws a Mermaid diagram on (theme-config.js
+     diagramBg), so a diagram here sits on the ground it has in a note. */
+  --diagram: #f5f4ed;
   --night: #1e1d1b;
   --night-ink: #f2f0ea;
   --night-dim: #b5b1a7;
@@ -104,14 +107,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=5d56bfb41260") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=a928435e9267") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=8b18311f9bf8") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=98a3ea55b05e") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -251,7 +254,7 @@ img { display: block; max-width: 100%; height: auto; }
 /* Inner pages keep mole.fit's 47px of ink from the pill to the page title, 32
    on phones; the home hero takes 64 / 40, about 74 / 46 of ink above the wordmark
    like the rest of the family (maintainer 2026-11-02: a little more air on top). */
-.nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 48px; }
+.nav:has(+ main:is(.blog-index, .blog-post, .legal, .tool-page)) { margin-bottom: 48px; }
 .nav:has(+ main:not([class])) { margin-bottom: 64px; }
 /* Nav links jump straight to their section, with no glide, as on mole.fit
    (maintainer 2026-11-02: the glide looked worse than the instant jump). */
@@ -658,6 +661,73 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .blog-body img { border-radius: 10px; }
 .blog-figure { margin: 32px 0; }
 .blog-figure figcaption { font-size: var(--text-meta); line-height: 1.5; color: var(--stone); margin-top: 10px; }
+/* A Mermaid example's diagram, drawn ahead by scripts/render-mermaid.mjs, under
+   its source on the app's diagram panel, with the way into the editor below. */
+.mermaid-figure { margin: -8px 0 28px; padding: 20px; background: var(--diagram); border-radius: 10px; }
+.mermaid-figure img { margin: 0 auto; border-radius: 0; }
+.mermaid-figure figcaption { font-size: var(--text-meta); line-height: 1.5; margin-top: 14px; text-align: center; }
+
+/* Free tools (scripts/build-tools.py): the tool first, at page width, then the
+   way into the app, then the prose in the blog's reading type. */
+.tool-page { padding-bottom: var(--gap); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.tool-templates { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.tool-chip {
+  font: inherit; font-size: var(--text-meta); line-height: 1.4; color: var(--olive);
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 14px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.tool-chip:hover { background: var(--warm-sand); }
+.tool-chip[aria-pressed="true"] { background: var(--warm-sand); border-color: var(--warm-sand); color: var(--near-black); }
+.tool-chip:focus { outline: none; }
+.tool-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-code {
+  display: block; width: 100%; height: 440px; min-height: 240px; resize: vertical; margin: 0;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65; tab-size: 4;
+  color: var(--dark-warm); caret-color: var(--brand); background: var(--ivory);
+  border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; white-space: pre; overflow: auto;
+}
+/* No focus ring on inputs, the caret is enough (family rule). */
+.tool-code:focus { outline: none; }
+.tool-preview {
+  display: flex; align-items: center; justify-content: center; min-height: 440px; padding: 24px;
+  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px; overflow: auto;
+}
+.tool-preview > :is(svg, img) { display: block; max-width: 100%; height: auto; transition: opacity 0.2s; }
+.tool-preview.is-stale > :is(svg, img) { opacity: 0.35; }
+.tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
+.tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
+.tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
+.tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
+.tool-undo:focus { outline: none; }
+.tool-syntax { color: var(--brand); margin-left: auto; white-space: nowrap; }
+.tool-undo:hover, .tool-syntax:hover { color: var(--brand-light); }
+.tool-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0 0; }
+.tool-actions .btn { cursor: pointer; font-family: inherit; }
+.tool-actions .btn:focus { outline: none; }
+.tool-app { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: 48px; margin: 72px 0 0; }
+.tool-app-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 12px; }
+.tool-app-text p { font-size: var(--text-lede); line-height: 1.75; color: var(--olive); margin: 0 0 24px; }
+.tool-app-shot { margin: 0; }
+.tool-app-shot img { border-radius: 14px; }
+.tool-body { margin-top: 72px; }
+@media (max-width: 880px) {
+  .tool-grid { grid-template-columns: minmax(0, 1fr); }
+  .tool-code { height: 300px; font-size: 16px; }
+  .tool-preview { min-height: 300px; }
+  .tool-app { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 56px; }
+  .tool-body { margin-top: 56px; }
+}
+/* iOS zooms the page into a text field set under 16px. */
+@media (hover: none) and (pointer: coarse) {
+  .tool-code { font-size: 16px; }
+}
+@media (max-width: 560px) {
+  .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tool-actions .btn { min-width: 0; padding: 13px 12px; }
+  .tool-preview { padding: 16px; }
+  .mermaid-figure { padding: 14px; }
+}
 
 .blog-related { margin-top: 64px; }
 .blog-related-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 20px; }
@@ -703,7 +773,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 @media (max-width: 880px) {
   :root { --inset: 24px; --gap: 72px; --anchor-clear: 105px; }
   .nav { --nav-outset: 6px; margin-bottom: 40px; }
-  .nav:has(+ main:is(.blog-index, .blog-post, .legal)) { margin-bottom: 32px; }
+  .nav:has(+ main:is(.blog-index, .blog-post, .legal, .tool-page)) { margin-bottom: 32px; }
   .nav:has(+ main:not([class])) { margin-bottom: 44px; }
   /* 64px with -1px tracking under 880, as on pake.run, hina.day and yado.house
      (maintainer 2026-11-04: one lockup size across the product sites). */
@@ -879,6 +949,7 @@ classDiagram
     Folder &lt;|-- Notebook
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/68ce544cf9b3.svg" width="241" height="250" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=S85JLC52yUxML0rM5VIAgmSQgIJffkkqmOuWn5OSWqRgU6OrCxZMys_PBgA">Open in the Mermaid editor</a></figcaption></figure>
 <p>A class exists as soon as you name it, either with <code>class Note</code> or by appearing in a relationship such as <code>Folder &lt;|-- Notebook</code>. The Mermaid documentation says a class name should use only letters, digits, underscores and dashes. For a name with spaces or punctuation, either give the class a label with <code>class Note["Note with a label"]</code> or wrap the name in backticks.</p>
 <h2 id="members-and-methods">Members and methods</h2>
 <p>There are two ways to add members, and the result is the same. One is a colon after the class name, one member per line. The other is a block in curly brackets.</p>
@@ -896,6 +967,7 @@ classDiagram
     Note : +rename(newTitle String)
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/9a23dc3d00f4.svg" width="261" height="262" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=RY5NCgIxDIX3nqKgi1bxAu6EwaUbvUCcxjHQn6GNIyJ6dts6tlkk8L3k5fUGYuwIhgB2IVL1GYijZxSvAnJtThzIDYKJDVa6nenF62eFyw7S6X3Uaeg9V_4hxyLgRJG8a8YRJpQqWXjTYECnMUi1Fr8PTbkGbw9kUI7At1lVqxK3LL1LL-l3xQcsSoePcw7-3_8C">Open in the Mermaid editor</a></figcaption></figure>
 <p>Mermaid decides whether a line is an attribute or a method by looking for parentheses. A line with <code>()</code> is a method, and anything else is an attribute. The four visibility marks go in front of the name:</p>
 <table>
 <thead>
@@ -938,6 +1010,7 @@ classDiagram
     Repository~T~ &lt;|-- NoteRepository
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/319146596236.svg" width="224" height="338" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=S85JLC52yUxML0rM5VIAgmSQgEJQakF-cWZJflFlXUidQjVYBgS0fTKLS0BCmSWpucUI4cSUFA2QkEKIJkIwLTMPKJqiEFxSlJmXrqkQgqQ-J0dDUwFqGFi4Fsl2v_ySVIQLwBKoDrKp0dVFUwUA">Open in the Mermaid editor</a></figcaption></figure>
 <p>Nested generics such as <code>List~List~int~~</code> work. The documentation says a generic that contains a comma, such as <code>Map~K, V~</code>, is not supported, so avoid it even though 11.14.0 draws a simple case. The type parameter is not part of the class name, so <code>Repository</code> and <code>Repository~T~</code> name the same class, and two classes with the same name and different parameters cannot coexist in one diagram.</p>
 <h2 id="relationships">Relationships</h2>
 <p>The syntax is <code>ClassA &lt;arrow&gt; ClassB</code>, and the arrow can point the other way, so <code>A &lt;|-- B</code> and <code>B --|&gt; A</code> mean the same thing.</p>
@@ -1004,6 +1077,7 @@ classDiagram
     Gamma .. Delta
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/b2ff977a061d.svg" width="1189" height="273" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=Rc5BCsJADAXQvafIWqgHEClUirpwId4gnYYxODMpybioeHjTLjTL_PdDQkKznjEq5g34dIUzJjh8mgZ6ibAHLg9SrrbGF3kZwdbDu0j2NEiexLiylBVceVDUGcTJUeTpBGNUivgjN1KTAk3TQjeOSmYLMpPAf3SnSbTCbtfCTblUUkcjTVRGKmFeTf8KTxefFk5pxiGREyVM_P7f6dL0QFieoYrr5ow5o9egp1TxCw">Open in the Mermaid editor</a></figcaption></figure>
 <p>Text after a colon becomes a label on the line. Two-way relations combine a head, a link and another head, for example <code>Animal &lt;|--|&gt; Zebra</code>. The last column is UML convention, not something Mermaid checks: it only draws the arrow you wrote, and picking the right one is yours.</p>
 <h2 id="cardinality">Cardinality</h2>
 <p>Put the count in double quotes next to the class, on the side of the arrow it belongs to.</p>
@@ -1014,6 +1088,7 @@ classDiagram
     Note &quot;*&quot; --&gt; &quot;1..*&quot; Tag : tagged with
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/ded3ad7acc31.svg" width="258" height="450" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=TcoxCoAwDIXh3VOEjgWLrg5Ozk69QNRai9ZIE_D6FhH1TT-Pb9yQuQvoE8YC8noSNxCtoGoFZdmC0uo-oYGRdsGw8ws_VBmT07p4bHhbFkzCMCeKP64fXhuT06LPUtB7N8EZZLkA">Open in the Mermaid editor</a></figcaption></figure>
 <p>The documentation lists <code>1</code>, <code>0..1</code>, <code>1..*</code>, <code>*</code>, <code>n</code>, <code>0..n</code> and <code>1..n</code>, and any quoted text is accepted, such as <code>"many"</code>.</p>
 <h2 id="annotations">Annotations</h2>
 <p>An annotation is a marker in double angle brackets that says what kind of class this is. The documentation lists <code>&lt;&lt;Interface&gt;&gt;</code>, <code>&lt;&lt;Abstract&gt;&gt;</code>, <code>&lt;&lt;Service&gt;&gt;</code> and <code>&lt;&lt;Enumeration&gt;&gt;</code> as common ones, but any text works.</p>
@@ -1034,6 +1109,7 @@ classDiagram
     PdfExporter --&gt; ExportFormat
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/222412badeb8.svg" width="253" height="546" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=S85JLC52yUxML0rM5VIAgmSQgIJrRUF-UUlqkUI1WBAEbGwy84AiaYnJqXZ2cFHtVLBKjbz8klQFPyChqeCWmZMKlq_FMNAtvyg3sQTF0NS80tzUosSSzPw8JGMDXNzgbI8QXx84Jzy_KAXD8ICUNJiDwaJw19vU6OlhyCLxFXR17VCcBgA">Open in the Mermaid editor</a></figcaption></figure>
 <p>You can also write the annotation on its own line after the class, as in <code>&lt;&lt;interface&gt;&gt; Exporter</code>, or inline, as in <code>class Exporter &lt;&lt;interface&gt;&gt;</code>.</p>
 <h2 id="namespaces-notes-and-direction">Namespaces, notes and direction</h2>
 <p><code>namespace</code> groups classes into a labelled box.</p>
@@ -1055,6 +1131,7 @@ classDiagram
     VersionStore ..&gt; FileStore
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/0b3732b603c6.svg" width="670" height="663" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=ZU_NCsIwDL7vKcJOirhH8KSePMgE76HNtuDWjrRMhvjutlW2qd8lkO8n-VSLzu0Za8EugwDNQsqzNXAq08JgR65HRXDxVrAmeKR9hIpuOHJLkVsyERsh1KsefROswqZef-akev4kXUlcOJ3Cslkwv1CS0RQj_p44Cw1Md5Klz3qC_DCQjL6JptBKs7sBO0DoW2QDRaehCgXy2VFZWXTKy9Bia007AipFzr2V0z0oit0sT9yyxjf9Ag">Open in the Mermaid editor</a></figcaption></figure>
 <p><code>note "text"</code> puts a free note on the diagram and <code>note for ClassName "text"</code> attaches one to a class. The documentation uses <code>\n</code> for a line break inside a note, but 11.14.0 prints it as is, so use <code>&lt;br&gt;</code> instead. <code>direction</code> takes <code>TB</code>, <code>BT</code>, <code>LR</code> or <code>RL</code> on its own line, usually right after <code>classDiagram</code>. Comments start with <code>%%</code> and must sit on their own line. Namespaces and notes cannot be styled one by one, though they follow the theme.</p>
 <h2 id="a-worked-example-a-small-note-app">A worked example: a small note app</h2>
 <p>The classes below model a note app's domain. A notebook owns its notes, a note refers to tags and keeps versions, and exporters implement one interface.</p>
@@ -1094,6 +1171,7 @@ classDiagram
     HtmlExporter ..&gt; Note : reads
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/mermaid/032ec2b9c26d.svg" width="724" height="862" alt="The class diagram this code draws" loading="lazy" decoding="async"><figcaption><a href="/tools/mermaid-editor/#m=fZFRT4MwFIXf_RU3PMEMJL4SQqKZxgdjTFx87-gdawYttp1zme6325YBBRb70uT0u-fce1tURKklI6Uk9Q2YQ5nEQjPBYfXghMIS8Co0roXYwcmJ9ty-a8l4CZzUOIiE0pAb2FVEg66QyGIbfu5RHqGtjOCFKX224NmBv5PAK2Ga6WpIiy_qWtDjgC6JKd031Fz0XnstkC8MIwOLahb3gVLZoU8TG1szMpkm-iYrUv63Hx99_G6E1Cg9PssYN8qGFJjngws60tspPLFqbvhGN52npz7ruhrJ_T8GdwEs4hiCRdDuOgVx4KqHRkC3nRR2iI0PmUdxgez0KWhSlkjhwPTWYf2g2U-SzLocv8669XBIkrxrVCKhbRN-xYz4Aw">Open in the Mermaid editor</a></figcaption></figure>
 <p>Version uses composition because a version has no meaning without its note. Tag uses aggregation because a tag outlives any one note. Exporters depend on Note briefly and do not hold it, so they get a dashed arrow.</p>
 <h2 id="how-it-renders-in-miaoyan">How it renders in MiaoYan</h2>
 <p>A fenced block with the <code>mermaid</code> tag reaches the preview as a code element with a <code>language-mermaid</code> class. A script in the preview finds those elements and calls the bundled Mermaid library, which turns the text into SVG and replaces the code. The preview configures Mermaid's theme colors for light or dark appearance and caches the SVG for each pair of appearance and source text. For the other diagram types and the offline behavior, see <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid diagrams in Markdown</a>.</p>
@@ -1127,7 +1205,7 @@ classDiagram
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">A light, native Markdown notebook</p>
       </div>
-      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>
@@ -1185,6 +1263,6 @@ classDiagram
   });
 })();
 </script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}(function(){if(/^(1366x1366|1280x1200)$/.test(screen.width+'x'+screen.height))return;document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-store]'))gtag('event','store_click')});function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true});var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}(function(){if(/^(1366x1366|1280x1200)$/.test(screen.width+'x'+screen.height))return;document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('[data-store]'))gtag('event','store_click')});function load(){gtag('js',new Date());gtag('config','G-5M47BM3L9Y',{anonymize_ip:true,page_location:location.href.split('#')[0]});var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y';document.head.appendChild(s)}function idle(){window.requestIdleCallback?requestIdleCallback(load,{timeout:3000}):setTimeout(load,1)}function arm(){document.readyState==='complete'?idle():addEventListener('load',idle,{once:true})}document.prerendering?document.addEventListener('prerenderingchange',arm,{once:true}):arm()})()</script>
 </body>
 </html>

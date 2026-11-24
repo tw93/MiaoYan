@@ -1,0 +1,20 @@
+{
+ "tools": [
+  {
+   "slug": "mermaid-editor",
+   "date": "2026-11-24",
+   "en": {
+    "title": "Mermaid Live Editor",
+    "head_title": "Mermaid Live Editor: draw diagrams online, export SVG and PNG",
+    "lede": "Write Mermaid and the diagram draws as you type, then download it or copy it into a note.",
+    "description": "A free Mermaid live editor in your browser: flowcharts, sequence diagrams, timelines, Gantt charts and more, with SVG and PNG export and links that carry the diagram."
+   },
+   "zh": {
+    "title": "Mermaid 在线编辑器",
+    "head_title": "Mermaid 在线编辑器：在线画流程图、时序图，导出 SVG 和 PNG",
+    "lede": "写 Mermaid 代码，图跟着实时画出来，画好了下载下来，或者复制进笔记里。",
+    "description": "免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。"
+   }
+  }
+ ]
+}
