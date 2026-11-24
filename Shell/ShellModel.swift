@@ -616,6 +616,9 @@ final class ShellModel {
         let url: URL
         let selection: NSRange
         let ratio: CGFloat
+        /// The source line at the top and how far down it; the ratio is the
+        /// fallback when there is none.
+        let top: (line: Int, fraction: CGFloat)?
     }
 
     @ObservationIgnored private var pendingPreviewEntry: PreviewEntry?
@@ -636,7 +639,8 @@ final class ShellModel {
             if let note = selectedNote, editor.textView.storageNote === note, editor.textView.window != nil {
                 entry.line = editor.topBodyLine()
                 entry.ratio = editor.scrollRatio
-                editorPlaceBeforePreview = EditorPlace(url: note.url, selection: editor.textView.selectedRange(), ratio: editor.scrollRatio)
+                editorPlaceBeforePreview = EditorPlace(
+                    url: note.url, selection: editor.textView.selectedRange(), ratio: editor.scrollRatio, top: editor.topPlace)
             } else {
                 editorPlaceBeforePreview = nil
             }
@@ -658,7 +662,11 @@ final class ShellModel {
             let length = (textView.string as NSString).length
             let location = min(max(place.selection.location, 0), length)
             textView.setSelectedRange(NSRange(location: location, length: min(place.selection.length, length - location)))
-            editor.setScrollRatio(place.ratio)
+            if let top = place.top {
+                editor.scroll(toTopPlace: top)
+            } else {
+                editor.setScrollRatio(place.ratio)
+            }
         } else if restoreCursor {
             textView.restoreCursorPosition()
         }

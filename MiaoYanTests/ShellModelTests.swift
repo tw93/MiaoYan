@@ -368,6 +368,65 @@ final class ShellModelTests: XCTestCase {
         }
     }
 
+    /// Leaving preview put the editor back by a ratio of its scroll range,
+    /// which first laid out the whole note (about 250 ms on a 1 MB note).
+    /// It now goes back to the source line that was at the top, as the
+    /// storyboard window does since 4ffec20d, laying out only as far as that
+    /// line and one screen below it.
+    @MainActor
+    func testLeavingPreviewPutsTheEditorBackOnItsLineWithoutLayingOutTheNote() async throws {
+        try await withShellLibrary(["long"]) { model, _, notes in
+            let previousPreview = UserDefaultsManagement.preview
+            let previousSplit = UserDefaultsManagement.splitViewMode
+            defer {
+                UserDefaultsManagement.preview = previousPreview
+                UserDefaultsManagement.splitViewMode = previousSplit
+            }
+            let note = notes[0]
+            let body = (1...3000).map { "Paragraph \($0) of a note long enough that laying all of it out shows." }.joined(separator: "\n\n")
+            try body.write(to: note.url, atomically: true, encoding: .utf8)
+            note.forceReload()
+            note.loadModifiedLocalAt()
+            model.clickNote(note, modifiers: [])
+            if model.editorMode != .edit { model.setMode(.edit) }
+
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 800, height: 600), styleMask: [.titled], backing: .buffered, defer: false)
+            window.isReleasedWhenClosed = false
+            defer { window.close() }
+            let editor = model.editor
+            editor.container.frame = window.contentLayoutRect
+            window.contentView = editor.container
+            editor.show(note)
+            for _ in 0..<200 where editor.textView.storageNote !== note { await Task.yield() }
+            XCTAssertTrue(editor.textView.storageNote === note)
+            window.contentView?.layoutSubtreeIfNeeded()
+            let textView = editor.textView
+            let starts = ShellSplitMath.lineStarts(of: textView.string)
+            let line = 400
+            // Laid out to a few screens past the line, as a reader scrolling there would.
+            let layout = try XCTUnwrap(textView.layoutManager)
+            layout.ensureLayout(forCharacterRange: NSRange(location: 0, length: starts[line + 200]))
+            let y = try XCTUnwrap(textView.documentY(ofSourceLine: line, fraction: 0, lineStarts: starts))
+            editor.scrollView.contentView.setBoundsOrigin(NSPoint(x: 0, y: y))
+            editor.scrollView.reflectScrolledClipView(editor.scrollView.contentView)
+            let before = try XCTUnwrap(textView.sourceLine(atDocumentY: editor.scrollView.contentView.bounds.origin.y, lineStarts: starts))
+            XCTAssertEqual(before.line, line)
+
+            model.setMode(.preview)
+            // Away from the window the editor's layout is thrown out (a new
+            // width, a font change), as after any change made in preview.
+            let length = (textView.string as NSString).length
+            layout.invalidateLayout(forCharacterRange: NSRange(location: 0, length: length), actualCharacterRange: nil)
+            model.setMode(.edit)
+            model.editorDidAppear()
+
+            let after = try XCTUnwrap(textView.sourceLine(atDocumentY: editor.scrollView.contentView.bounds.origin.y, lineStarts: starts))
+            XCTAssertEqual(after.line, before.line, "the editor opens on the line it showed")
+            XCTAssertEqual(after.fraction, before.fraction, accuracy: 0.01)
+            XCTAssertLessThan(layout.firstUnlaidCharacterIndex(), length / 2, "only the part above the line and one screen is laid out")
+        }
+    }
+
     private func urls(_ count: Int) -> [URL] {
         (0..<count).map { URL(fileURLWithPath: "/tmp/note-\($0).md") }
     }

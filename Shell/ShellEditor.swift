@@ -317,6 +317,29 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         document.scroll(NSPoint(x: 0, y: range * min(ratio, 1)))
     }
 
+    /// The buffer line at the top of the editor and how far down it the view
+    /// starts, kept on the way into preview.
+    var topPlace: (line: Int, fraction: CGFloat)? {
+        textView.sourceLine(atDocumentY: scrollView.contentView.bounds.origin.y, lineStarts: lineStarts())
+    }
+
+    /// Back from preview, the line kept on entry goes to the top again, as
+    /// the storyboard window does since 4ffec20d. A ratio of the scroll range
+    /// laid out the whole note first (about 250 ms on a 1 MB note), and taken
+    /// while the height was still an estimate it put the editor elsewhere.
+    /// Laying out the one screen below the line is enough for the scroll
+    /// range to reach it.
+    func scroll(toTopPlace place: (line: Int, fraction: CGFloat)) {
+        scrollView.layoutSubtreeIfNeeded()
+        guard let layout = textView.layoutManager, let container = textView.textContainer,
+            let y = textView.documentY(ofSourceLine: place.line, fraction: place.fraction, lineStarts: lineStarts())
+        else { return }
+        let screen = NSRect(x: 0, y: y - textView.textContainerOrigin.y, width: container.size.width, height: scrollView.contentSize.height)
+        layout.ensureLayout(forBoundingRect: screen, in: container)
+        scrollView.contentView.setBoundsOrigin(NSPoint(x: 0, y: max(0, min(y, maxScrollOffset))))
+        scrollView.reflectScrolledClipView(scrollView.contentView)
+    }
+
     /// The body line at the top of the editor, for the preview to scroll to.
     func topBodyLine() -> CGFloat {
         previewLine(atDocumentY: scrollView.contentView.bounds.origin.y)
