@@ -722,7 +722,9 @@ class HtmlManager {
             guard match.numberOfRanges >= 3 else { continue }
 
             let alt = nsMarkdown.substring(with: match.range(at: 1))
-            let srcPath = nsMarkdown.substring(with: match.range(at: 2))
+            // A title, `![](/files/a.pdf "Q3")`, is no part of the path: left
+            // in, the link and the player pointed at `/files/a.pdf "Q3"`.
+            let (srcPath, title) = linkDestination(nsMarkdown.substring(with: match.range(at: 2)))
             let isRemote = srcPath.starts(with: "http://") || srcPath.starts(with: "https://")
             let cleanPath = cleanImagePath(srcPath)
             let bare = cleanPath.split(whereSeparator: { $0 == "?" || $0 == "#" }).first.map(String.init) ?? cleanPath
@@ -750,7 +752,7 @@ class HtmlManager {
             }
             guard FileManager.default.fileExists(atPath: fileURL.path) else { continue }
             let source = localMediaURL(forPath: fileURL.path)
-            replacements.append((match.range, kind == .video ? slideVideoTag(source: source) : "![\(alt)](\(source))"))
+            replacements.append((match.range, kind == .video ? slideVideoTag(source: source) : "![\(alt)](\(source)\(title))"))
         }
 
         // Apply replacements in reverse order to preserve earlier ranges
@@ -760,6 +762,19 @@ class HtmlManager {
         }
 
         return mutable as String
+    }
+
+    /// The target of an image's `(…)` as written and the title after it:
+    /// `/files/a.pdf "Q3"` is `/files/a.pdf` and ` "Q3"`, and `<a b.pdf>`
+    /// is `a b.pdf`. Only a quoted title at the end is taken off, so a path
+    /// written with a bare space (`/i/CleanShot image.png`) stays whole.
+    static func linkDestination(_ inner: String) -> (path: String, title: String) {
+        let trimmed = inner.trimmingCharacters(in: .whitespaces)
+        if trimmed.hasPrefix("<"), let close = trimmed.firstIndex(of: ">") {
+            return (String(trimmed[trimmed.index(after: trimmed.startIndex)..<close]), String(trimmed[trimmed.index(after: close)...]))
+        }
+        guard let title = trimmed.range(of: #"\s+("[^"]*"|'[^']*')$"#, options: .regularExpression) else { return (trimmed, "") }
+        return (String(trimmed[..<title.lowerBound]), String(trimmed[title]))
     }
 
     /// A player that loads nothing until it is played, as the preview's

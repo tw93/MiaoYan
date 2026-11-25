@@ -382,6 +382,14 @@ final class MediaPlaceholderTests: XCTestCase {
             ![](https://example.com/talk.mp4)
 
             ![](/i/shot.png)
+
+            ![](/files/report.pdf "Q3")
+
+            ![](/files/clip.mov 'clip')
+
+            ![](https://example.com/talk.mp4 "Talk")
+
+            ![](/i/shot.png "Shot")
             """
         let lines = HtmlManager.processImagesInMarkdown(markdown, imagesStorage: directory)
             .components(separatedBy: "\n").filter { !$0.isEmpty }
@@ -393,6 +401,11 @@ final class MediaPlaceholderTests: XCTestCase {
                 "<a href=\"files/report.pdf\">Q3 &lt;draft&gt;</a>",
                 "<video src=\"https://example.com/talk.mp4\" controls preload=\"none\"></video>",
                 "![](\(HtmlManager.localMediaURL(forPath: shot.path)))",
+                // A title is no part of the path (a dead link before).
+                "<a href=\"/files/report.pdf\">report.pdf</a>",
+                "<video src=\"\(HtmlManager.localMediaURL(forPath: clip.path))\" controls preload=\"none\"></video>",
+                "<video src=\"https://example.com/talk.mp4\" controls preload=\"none\"></video>",
+                "![](\(HtmlManager.localMediaURL(forPath: shot.path)) \"Shot\")",
             ])
     }
 }
