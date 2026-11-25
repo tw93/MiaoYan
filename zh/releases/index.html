@@ -1025,13 +1025,30 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .blog-latest-date { flex: none; font-size: var(--text-meta); color: var(--stone); font-variant-numeric: tabular-nums; }
 @media (hover: hover) { .blog-latest .section-title a:hover, .blog-latest-list a:hover .blog-latest-title { color: var(--brand); } }
 footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62%, transparent); padding: 60px 0 48px; font-size: var(--text-meta); }
-.foot { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.foot { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
 .foot-mark { max-width: 26em; }
 .foot-name { margin: 0 0 8px; color: #fff; font-family: var(--serif); font-size: var(--text-title); font-weight: 500; line-height: 1.1; }
 .foot-name .cn { font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif; font-weight: 400; }
 .foot-mark p.foot-about { margin: 10px 0 0; font-size: var(--text-meta); line-height: 1.5; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
-.foot-cols { display: flex; gap: 44px; }
-.foot-col { display: grid; gap: 12px; align-content: start; }
+/* The brand sits on top and the five groups share the full width, as on
+   mole.fit. Where the brand fits beside them with every gap at least 40px
+   (Chinese and Korean from 1100; English needs 1036 at the page's 1000, so
+   it and the longer languages stay stacked, as they already wrapped), the
+   brand and the groups take the spare width as equal gaps, an empty first
+   cell making the brand's gap one of them: 53px in Chinese at full width
+   (maintainer 2026-11-25: 间隔开一点; measured on one line in all eight
+   languages). Below 960 the tools take a row of their own, then two across. */
+.foot-cols { display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; gap: 40px 24px; align-self: stretch; }
+@media (min-width: 1100px) {
+  :is(:lang(zh), :lang(ko)) .foot { flex-direction: row; gap: 0; }
+  :is(:lang(zh), :lang(ko)) .foot-cols { grid-template-columns: repeat(6, auto); column-gap: 40px; flex: 1 1 auto; align-self: auto; }
+  :is(:lang(zh), :lang(ko)) .foot-cols::before { content: ""; }
+}
+@media (max-width: 960px) {
+  .foot-cols { grid-template-columns: repeat(4, auto); }
+  .foot-tools { grid-column: 1 / -1; order: 1; }
+}
+.foot-col { display: grid; gap: 14px; align-content: start; }
 .foot-col-title { margin: 0 0 2px; color: color-mix(in srgb, #fff 92%, transparent); font-size: var(--text-meta); font-weight: 600; letter-spacing: 0.2px; }
 .foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
 @media (hover: hover) { .foot-col a:hover { color: #fff; } }
@@ -1039,7 +1056,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 /* Ten tools read as two columns of five under one head, filled down then
    across, so the column is no taller than its neighbours (maintainer
    2026-11-25: one ten-row column read unbalanced). */
-.foot-tools { grid-template-columns: repeat(2, auto); grid-template-rows: repeat(6, auto); grid-auto-flow: column; column-gap: 44px; }
+.foot-tools { grid-template-columns: repeat(2, auto); grid-template-rows: repeat(6, auto); grid-auto-flow: column; column-gap: 40px; }
 .foot-tools .foot-col-title { grid-row: 1; grid-column: 1 / -1; }
 
 /* Tablets keep the links that fit in every language with Android's Noto Serif
@@ -1068,10 +1085,6 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .devices { gap: 32px; }
   .device.pad { width: min(460px, 62%); }
   .device.phone { width: min(230px, 32%); }
-  .foot { flex-direction: column; }
-  /* Stacked under the brand, the columns share the full width as on mole.fit;
-     at their natural widths they huddled left of an empty half (OPPO Pad mini). */
-  .foot-cols { display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; gap: 32px 16px; align-self: stretch; }
 }
 @media (max-width: 640px) {
   .nav:has(+ main:not([class])) { margin-bottom: 40px; }
@@ -1079,7 +1092,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
      (2026-11-14). Tools, its own group since 2026-11-25, takes a full row with
      its links in two columns, so no group is left alone and no name wraps. */
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
-  .foot-tools { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
+  .foot-tools { order: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
   .hero h1 { font-size: 66px; margin-bottom: calc(24px - 0.115em); }
   /* The bar lands on a half pixel here, which rounds the name up by one. */
   .brand b { top: 1.9px; }
