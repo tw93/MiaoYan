@@ -351,7 +351,7 @@ class ClipboardManager {
                         return error
                     }
                 }.value
-                ImagesProcessor.finishCopy(destination, copied: failure == nil)
+                ImagesProcessor.releaseAttachment(destination)
                 guard let failure else { return }
                 AppDelegate.trackError(failure, context: "ClipboardManager.copyFile")
                 Self.removeLink(link, of: note, in: textView)

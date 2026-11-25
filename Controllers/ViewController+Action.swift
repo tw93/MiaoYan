@@ -798,9 +798,9 @@ extension ViewController {
                 continue
             }
 
-            // Note.move refuses a read-only note (with its own toast) and can
-            // fail on disk; such a note stays where it is, in the list and
-            // in the editor.
+            // Note.move refuses a read-only note or one a file is still being
+            // copied into (with its own toast) and can fail on disk; such a
+            // note stays where it is, in the list and in the editor.
             let previousURL = note.url
             note.move(toProject: project)
             guard note.url != previousURL else { continue }

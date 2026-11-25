@@ -281,6 +281,7 @@
 "This note could not be read, so it was left as it is" = "这篇笔记读取失败，已保持原样避免内容丢失";
 "This note's text encoding could not be determined, so it opened read-only" = "这篇笔记的文本编码无法确定，已用只读方式打开";
 "This note is read-only, so it was not moved" = "这篇笔记是只读的，没有移动";
+"A file is still being copied into this note, so it was not moved" = "这篇笔记还有文件在复制，没有移动";
 "This note no longer exists on disk, so edits are not saved" = "这篇笔记已不在磁盘上，修改不会保存";
 "Version" = "版本";
 "Show Info" = "显示简介";

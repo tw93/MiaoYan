@@ -215,7 +215,7 @@ public class ImagesProcessor {
 
     /// Takes the name `url` gets in its note's folder for its kind (the same
     /// name dedupe and `.icloud` check `writeFile` uses) and holds it until
-    /// `finishCopy`, so two files dropped with one name while the
+    /// `releaseAttachment`, so two files dropped with one name while the
     /// first is still copying do not get the same one. Returns the link path
     /// (`/files/Report-v2.pdf`) and where the file goes.
     @MainActor
@@ -226,61 +226,31 @@ public class ImagesProcessor {
         guard let fileName = getFileName(from: url, to: folder, ext: url.pathExtension, reserved: reservedAttachments) else { return nil }
         let destination = folder.appendingPathComponent(fileName)
         reservedAttachments.insert(destination.path)
+        copyingNotes[destination.path] = ObjectIdentifier(note)
         return ("\(prefix)\(fileName)", destination)
     }
 
-    /// Where a copy still under way goes once it lands, when the note that
-    /// links it moved meanwhile (`forwardCopy`), by the path it is headed for.
-    @MainActor private static var forwardedAttachments: [String: URL] = [:]
+    /// The note each copy under way is for, by the path it is headed for.
+    @MainActor private static var copyingNotes: [String: ObjectIdentifier] = [:]
 
-    /// The note linking a copy still under way at `url` moved into `folder`:
-    /// a name is taken there now (the same name when it is free), and the
-    /// copy is moved on to it once it lands (`finishCopy`). Moving the note
-    /// found no file to carry yet, so the copy landed in the old folder and
-    /// the moved note's link pointed nowhere. Nil when `url` is no copy
-    /// under way or no name can be had.
+    /// Whether a file dropped into `note` is still being copied into its
+    /// folder. Moving the note then would leave the copy behind in the old
+    /// folder and the moved note's link pointing nowhere, so the move waits.
     @MainActor
-    static func forwardCopy(at url: URL, into folder: URL) -> URL? {
-        let path = url.standardizedFileURL.path
-        guard let key = reservedAttachments.first(where: { URL(fileURLWithPath: $0).standardizedFileURL.path == path }),
-            forwardedAttachments[key] == nil
-        else { return nil }
-        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)
-        guard let fileName = getFileName(from: url, to: folder, ext: url.pathExtension, reserved: reservedAttachments) else { return nil }
-        let target = folder.appendingPathComponent(fileName)
-        reservedAttachments.insert(target.path)
-        forwardedAttachments[key] = target
-        return target
+    static func isCopying(into note: Note) -> Bool {
+        copyingNotes.values.contains(ObjectIdentifier(note))
     }
 
-    /// A copy to `destination` ended, `copied` or not: its name is free
-    /// again, and a landed file is moved on along every `forwardCopy` its
-    /// note's moves made. Returns where the file is.
+    /// The copy to `destination` ended, landed or not: its name is free again.
     @MainActor
-    @discardableResult
-    static func finishCopy(_ destination: URL, copied: Bool) -> URL {
+    static func releaseAttachment(_ destination: URL) {
         reservedAttachments.remove(destination.path)
-        var landed = destination
-        var movable = copied
-        var key = destination.path
-        while let next = forwardedAttachments.removeValue(forKey: key) {
-            reservedAttachments.remove(next.path)
-            key = next.path
-            guard movable else { continue }
-            do {
-                try FileManager.default.moveItem(at: landed, to: next)
-                landed = next
-            } catch {
-                AppDelegate.trackError(error, context: "ImagesProcessor.finishCopy")
-                movable = false
-            }
-        }
+        copyingNotes.removeValue(forKey: destination.path)
         if reservedAttachments.isEmpty {
             let waiters = copyWaiters.values
             copyWaiters.removeAll()
             for waiter in waiters { waiter() }
         }
-        return landed
     }
 
     /// Callers waiting for every copy to end, by a key of their own.

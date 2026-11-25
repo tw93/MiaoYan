@@ -603,11 +603,11 @@ final class AttachmentCleanupTests: XCTestCase {
         let copying = try XCTUnwrap(ImagesProcessor.reserveAttachment(for: URL(fileURLWithPath: "/tmp/Plan.pdf"), note: note))
         XCTAssertEqual(AppDelegate.terminationReply(storage: storage) { replies += 1 }, .terminateLater)
         XCTAssertEqual(replies, 0, "the copy is still under way")
-        ImagesProcessor.finishCopy(copying.destination, copied: false)
+        ImagesProcessor.releaseAttachment(copying.destination)
         XCTAssertEqual(replies, 1, "the quit goes on once the copy ends")
 
         let stuck = try XCTUnwrap(ImagesProcessor.reserveAttachment(for: URL(fileURLWithPath: "/tmp/clip.mov"), note: note))
-        defer { ImagesProcessor.finishCopy(stuck.destination, copied: false) }
+        defer { ImagesProcessor.releaseAttachment(stuck.destination) }
         let capped = expectation(description: "the quit goes on after the cap")
         XCTAssertEqual(AppDelegate.terminationReply(storage: storage, copyCap: 0.2) { capped.fulfill() }, .terminateLater)
         await fulfillment(of: [capped], timeout: 5)
@@ -642,7 +642,7 @@ final class AttachmentCleanupTests: XCTestCase {
 
         let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
         let copying = try XCTUnwrap(ImagesProcessor.reserveAttachment(for: URL(fileURLWithPath: "/tmp/Report.pdf"), note: note))
-        defer { ImagesProcessor.finishCopy(copying.destination, copied: false) }
+        defer { ImagesProcessor.releaseAttachment(copying.destination) }
         let whileCopying = await orphans(in: storage)
         XCTAssertEqual(
             whileCopying.map { Set($0.map(\.lastPathComponent)) }, [(partials[2] as NSString).lastPathComponent],

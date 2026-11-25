@@ -172,6 +172,9 @@ extension ShellModel {
         for note in moving where note.project != project {
             let oldURL = note.url
             note.move(toProject: project)
+            // Note.move refuses a read-only note or one a file is still being
+            // copied into (with its own toast); it stays as it was.
+            guard note.url != oldURL else { continue }
             note.invalidateCache()
             if oldURL == open { openAfter = note.url }
             if !Self.isInScope(note, projects: projects, type: type) { gone.insert(oldURL) }
