@@ -154,17 +154,34 @@ final class PdfExportController: NSObject {
         });
         """
 
-    /// A map is fitted to the width this view draws it at, and the print sheet
+    /// A map is fitted to the width it was drawn at, and the print sheet
     /// takes away the page's side padding, so on paper its SVG is wider than
     /// the box the map was centred in and the map sat to the left. A viewBox
-    /// of the drawn size lets the paper scale and centre it, and a narrower
-    /// page would shrink it rather than cut its right side.
+    /// lets the paper scale and centre it, and a narrower page would shrink
+    /// it rather than cut its right side. The viewBox is fitted around the
+    /// drawn map as markmap's own `fit()` would fit it in this box (0.92 of
+    /// the box, at most twice its natural size): a map already drawn in the
+    /// live preview arrives with the transform of that column, up to 1000px
+    /// wide, and a viewBox of the A4 box left it off to one side and past
+    /// the paper's edge. A map drawn fresh here comes out as before.
     static let markmapPaperScript = """
         document.querySelectorAll('.language-markmap svg').forEach(function(svg) {
             var box = svg.getBoundingClientRect();
-            if (box.width > 0 && box.height > 0 && !svg.hasAttribute('viewBox')) {
-                svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
+            if (!(box.width > 0 && box.height > 0) || svg.hasAttribute('viewBox')) return;
+            var viewBox = [0, 0, box.width, box.height];
+            var g = svg.querySelector(':scope > g');
+            var map = g && g.getBoundingClientRect();
+            if (map && map.width > 0 && map.height > 0) {
+                var drawn = g.transform && g.transform.baseVal.consolidate();
+                var scale = drawn && drawn.matrix.a > 0 ? drawn.matrix.a : 1;
+                var fit = Math.min(box.width * 0.92 / map.width, box.height * 0.92 / map.height, 2 / scale);
+                var width = box.width / fit;
+                var height = box.height / fit;
+                var x = map.left - box.left + map.width / 2 - width / 2;
+                var y = map.top - box.top + map.height / 2 - height / 2;
+                viewBox = [x, y, width, height];
             }
+            svg.setAttribute('viewBox', viewBox.join(' '));
         });
         """
 

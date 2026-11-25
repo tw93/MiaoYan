@@ -223,6 +223,80 @@ final class PrintExportScriptTests: XCTestCase {
         XCTAssertLessThan(abs(box[1] - box[2]), 6, "the map is centred in its box on paper, \(box)")
     }
 
+    /// The PDF prints the live preview's HTML, so a map arrives drawn and
+    /// is not drawn again: its d3 transform is the one fitted to the
+    /// preview's column, up to 1000px wide, while its box on paper is A4's.
+    /// The viewBox came from that box, and the map sat off to one side and
+    /// ran past the paper. It is fitted from the drawn map's own bounds.
+    @MainActor
+    func testAMarkmapDrawnInAWidePreviewPrintsCentredInItsBox() async throws {
+        let body = """
+            <pre><code class="language-markmap"># 项目计划 Project plan
+            ## 需求整理与用户访谈记录 Requirements
+            ### 访谈十位长期付费用户并整理反馈
+            ## 发布与回访 Release and follow up
+            ### 写更新说明并同步十一种语言</code></pre>
+            """
+        let page = try HtmlManager.htmlFromTemplate(body, css: HtmlManager.previewStyle(), currentName: "print")
+        let index = try XCTUnwrap(HtmlManager.createTemporaryBundle(pageHTMLString: page))
+        let folder = index.deletingLastPathComponent()
+        let live = WKWebView(frame: NSRect(x: 0, y: 0, width: 1200, height: 900))
+        let liveWindow = PdfExportController.makeOffscreenWindow(contentRect: live.frame)
+        liveWindow.contentView = live
+        liveWindow.orderFrontRegardless()
+        defer { liveWindow.orderOut(nil) }
+        live.loadFileURL(index, allowingReadAccessTo: folder)
+        let shown = "document.querySelector('code.language-markmap')?.dataset.markmapShown === 'true'"
+        var deadline = Date().addingTimeInterval(15)
+        while Date() < deadline, (try? await live.evaluateJavaScript(shown) as? Bool) != true {
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        let liveWidth = try await live.evaluateJavaScript("document.querySelector('.language-markmap svg').getBoundingClientRect().width") as? Double
+        XCTAssertGreaterThan(try XCTUnwrap(liveWidth), 700, "the map was drawn in a wide column")
+        let outer = try await live.evaluateJavaScript("document.documentElement.outerHTML") as? String
+        let html = try XCTUnwrap(outer)
+
+        // As PdfExportController prints it: the page's HTML beside the bundle,
+        // in an A4-wide view in a composited window.
+        let url = folder.appendingPathComponent("pdf-export-\(UUID().uuidString).html")
+        try html.write(to: url, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: url) }
+        let frame = NSRect(x: 0, y: 0, width: 595.2, height: 841.8)
+        let webView = WKWebView(frame: frame)
+        let window = PdfExportController.makeOffscreenWindow(contentRect: frame)
+        window.contentView = webView
+        window.orderFrontRegardless()
+        defer { window.orderOut(nil) }
+        webView.loadFileURL(url, allowingReadAccessTo: folder)
+        deadline = Date().addingTimeInterval(15)
+        while Date() < deadline, (try? await webView.evaluateJavaScript("document.readyState === 'complete' && \(shown)") as? Bool) != true {
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        _ = try await webView.evaluateJavaScript(
+            PdfExportController.printSetupScript(css: HtmlManager.paginatedPrintCSS(), title: "Print"))
+        deadline = Date().addingTimeInterval(15)
+        while Date() < deadline, (try? await webView.evaluateJavaScript(PdfExportController.mediaReadyScript) as? Bool) != true {
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        _ = try await webView.evaluateJavaScript(PdfExportController.hideUndrawnVideosScript + PdfExportController.markmapPaperScript + "; true")
+        webView.mediaType = "print"
+
+        let found = try await webView.evaluateJavaScript(
+            """
+            (() => {
+              const svg = document.querySelector('.language-markmap svg').getBoundingClientRect();
+              const map = document.querySelector('.language-markmap svg > g').getBoundingClientRect();
+              return [map.left - svg.left, svg.right - map.right, map.top - svg.top, svg.bottom - map.bottom];
+            })()
+            """)
+        let box = try XCTUnwrap(found as? [Double])
+        XCTAssertGreaterThan(box[0], 0, "the map starts inside its box, \(box)")
+        XCTAssertGreaterThan(box[1], 0, "the map ends inside its box, \(box)")
+        XCTAssertLessThan(abs(box[0] - box[1]), 6, "the map is centred across its box, \(box)")
+        XCTAssertGreaterThanOrEqual(box[2], 0, "\(box)")
+        XCTAssertGreaterThanOrEqual(box[3], 0, "\(box)")
+    }
+
     /// A caption is its own paragraph, as Weekly writes one under its cover.
     /// The preview's -1.2em pull suits its wide paragraph gaps; against print's
     /// 0.6em it laid the caption over the image.
