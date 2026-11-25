@@ -667,6 +667,7 @@ UPDATES_LABEL = {"en": "Free updates", "zh": "持续更新", "tw": "持續更新
 # The Mermaid editor (scripts/build-tools.py) is written in English and Chinese;
 # the other languages link the English page.
 TOOL_LABEL = {"en": "Mermaid Editor", "zh": "Mermaid 编辑器", "tw": "Mermaid 編輯器", "ja": "Mermaid エディタ", "ko": "Mermaid 편집기", "de": "Mermaid-Editor", "fr": "Éditeur Mermaid", "es": "Editor de Mermaid"}
+TABLE_LABEL = {"en": "Table Generator", "zh": "表格生成器", "tw": "表格產生器", "ja": "表ジェネレーター", "ko": "표 생성기", "de": "Tabellengenerator", "fr": "Générateur de tableaux", "es": "Generador de tablas"}
 RELEASES_LABEL = {"en": "Release Notes", "zh": "更新日志", "tw": "更新日誌", "ja": "リリースノート", "ko": "릴리스 노트", "de": "Versionshinweise", "fr": "Notes de version", "es": "Notas de versión"}
 
 ICONS = (
@@ -777,8 +778,8 @@ def blog_path(key):
     return "/zh/blog/" if key in ("zh", "tw") else "/blog/"
 
 
-def tool_path(key):
-    return "/zh/tools/mermaid-editor/" if key in ("zh", "tw") else "/tools/mermaid-editor/"
+def tool_path(key, slug="mermaid-editor"):
+    return f"/zh/tools/{slug}/" if key in ("zh", "tw") else f"/tools/{slug}/"
 
 
 def releases_path(key):
@@ -871,6 +872,7 @@ def footer_html(key, *, faq_href="#faq"):
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
         f'<a href="{faq_href}">{esc(faq_label)}</a><a href="{blog_path(key)}">{esc(BLOG_LABEL[key])}</a>'
         f'<a href="{tool_path(key)}">{esc(TOOL_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "markdown-table-generator")}">{esc(TABLE_LABEL[key])}</a>'
         f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
         f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'

@@ -17,7 +17,7 @@ The same page describes the options that change the result:
 - Markdown cannot merge cells. When the page imports HTML or Markdown, merged cells are split, and it points to its HTML table generator for the merged case.
 - **Compact mode** leaves out the spaces that line up the columns.
 
-For a confidential sheet, a local tool is the safer default.
+For a confidential sheet, a local tool is the safer default. MiaoYan's [Markdown table generator](/tools/markdown-table-generator/) converts in your browser without sending the data anywhere, takes cells copied from Excel or Google Sheets as well as CSV and TSV files, and lines up columns that hold Chinese or Japanese.
 
 ## Option 2: Pandoc
 

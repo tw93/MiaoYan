@@ -15,6 +15,22 @@
     "lede": "写 Mermaid 代码，图跟着实时画出来，画好了下载下来，或者复制进笔记里。",
     "description": "免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。"
    }
+  },
+  {
+   "slug": "markdown-table-generator",
+   "date": "2026-11-25",
+   "en": {
+    "title": "Markdown Table Generator",
+    "head_title": "Markdown Table Generator: paste from Excel, CSV or Google Sheets",
+    "lede": "Edit a table, or paste cells from Excel, Google Sheets, a CSV or a Markdown table, and copy the Markdown with its columns lined up.",
+    "description": "A free Markdown table generator in your browser: paste from Excel, Google Sheets, CSV or TSV, set each column's alignment, and copy a pipe table with its columns lined up, Chinese and Japanese included."
+   },
+   "zh": {
+    "title": "Markdown 表格生成器",
+    "head_title": "Markdown 表格生成器：Excel、CSV、Google Sheets 转 Markdown 表格",
+    "lede": "在网格里编辑表格，或者直接粘贴 Excel、Google Sheets、CSV 和已有的 Markdown 表格，复制出来就是各列对齐的 Markdown。",
+    "description": "免费的 Markdown 表格生成器，在浏览器里把 Excel、Google Sheets、CSV 或 TSV 转成 Markdown 表格，可以按列设置对齐，中文按两个字符宽对齐各列。"
+   }
   }
  ]
 }

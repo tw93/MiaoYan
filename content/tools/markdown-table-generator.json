@@ -1,0 +1,20 @@
+{
+ "en": {
+  "rows": [
+   ["Task", "Owner", "Hours", "Status"],
+   ["Write the outline", "Ana", "3", "Done"],
+   ["Draft the chapters", "Ben", "12", "In progress"],
+   ["Copy edit", "Chloe", "5", "Next"]
+  ],
+  "align": ["", "", "right", "center"]
+ },
+ "zh": {
+  "rows": [
+   ["任务", "负责人", "工时", "状态"],
+   ["写提纲", "小林", "3", "已完成"],
+   ["写初稿", "阿杰", "12", "进行中"],
+   ["校对", "晓雯", "5", "待开始"]
+  ],
+  "align": ["", "", "right", "center"]
+ }
+}

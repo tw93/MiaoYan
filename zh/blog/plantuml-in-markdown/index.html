@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=a928435e9267" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=98a3ea55b05e" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=7f1f60076f7c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=fb21d1592cac" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -109,14 +109,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=a928435e9267") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=7f1f60076f7c") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=98a3ea55b05e") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fb21d1592cac") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -682,7 +682,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-chip:hover { background: var(--warm-sand); }
 .tool-chip[aria-pressed="true"] { background: var(--warm-sand); border-color: var(--warm-sand); color: var(--near-black); }
 .tool-chip:focus { outline: none; }
-.tool-grid { --tool-h: clamp(460px, calc(100svh - 300px), 780px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-grid { --tool-h: clamp(460px, calc(100vh - 300px), 780px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
 .tool-editor {
   display: flex; height: var(--tool-h); overflow: hidden;
   background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
@@ -717,6 +717,13 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-zoom-btn svg { width: 16px; height: 16px; }
 .tool-zoom-btn:hover { background: var(--warm-sand); color: var(--near-black); }
 .tool-zoom-btn:focus { outline: none; }
+.tool-zoom-btn:focus-visible { background: var(--warm-sand); color: var(--near-black); }
+.tool-preview.is-zoomed .tool-canvas { user-select: none; -webkit-user-select: none; }
+/* svh keeps the panes still while a phone's toolbar slides; older browsers that
+   reject it keep the vh value above instead of losing the height. */
+@supports (height: 100svh) {
+  .tool-grid { --tool-h: clamp(460px, calc(100svh - 300px), 780px); }
+}
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
@@ -733,6 +740,64 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The Markdown table generator: a grid of plain text fields over the Markdown
+   it writes. Column controls sit above each column; a row's delete button at
+   its end shows on hover, always on touch. */
+.table-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.table-clear { margin-left: auto; }
+.table-wrap {
+  max-height: clamp(360px, calc(100vh - 420px), 640px); overflow: auto;
+  padding: 8px 4px 16px 16px; background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  overscroll-behavior: contain;
+}
+@supports (height: 100svh) {
+  .table-wrap { max-height: clamp(360px, calc(100svh - 420px), 640px); }
+}
+.table-tool.is-drop .table-wrap { border-color: var(--brand); background: var(--brand-tint); }
+.table-grid { border-collapse: separate; border-spacing: 0; font-size: var(--text-button); line-height: 1.5; }
+.table-grid td { padding: 0; vertical-align: middle; }
+.table-grid tbody td:not(.table-end) { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--ivory); }
+.table-grid tbody tr:first-child td:not(.table-end) { border-top: 1px solid var(--line); }
+.table-grid tbody td:first-child { border-left: 1px solid var(--line); }
+.table-grid tbody tr:first-child td:first-child { border-top-left-radius: 8px; }
+.table-grid tbody tr:first-child td:nth-last-child(2) { border-top-right-radius: 8px; }
+.table-grid tbody tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+.table-grid tbody tr:last-child td:nth-last-child(2) { border-bottom-right-radius: 8px; }
+.table-grid tbody tr.is-head td:not(.table-end) { background: var(--parchment); }
+.table-cell {
+  display: block; box-sizing: content-box; width: 9em; min-width: 6em; max-width: 26em; field-sizing: content;
+  margin: 0; padding: 9px 12px; border: 0; background: transparent;
+  font: inherit; color: var(--dark-warm); caret-color: var(--brand);
+}
+.is-head .table-cell { font-weight: 600; color: var(--near-black); }
+.table-cell:focus { outline: none; background: var(--brand-tint); }
+td[data-align="center"] .table-cell { text-align: center; }
+td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: tabular-nums; }
+.table-col-ctrl { display: flex; align-items: center; gap: 2px; padding: 0 0 6px; }
+.table-align { display: flex; gap: 2px; }
+.table-btn { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--stone); cursor: pointer; }
+.table-btn svg { width: 16px; height: 16px; }
+.table-btn:hover { background: var(--warm-sand); color: var(--near-black); }
+.table-btn[aria-pressed="true"] { background: var(--warm-sand); color: var(--near-black); }
+.table-btn:focus { outline: none; }
+.table-btn:focus-visible { background: var(--warm-sand); color: var(--near-black); }
+.table-col-ctrl .table-x { margin-left: auto; }
+.table-end { padding-left: 4px !important; }
+.table-end .table-x { opacity: 0; }
+.table-grid tr:hover .table-end .table-x, .table-end .table-x:focus-visible { opacity: 1; }
+.table-out { margin: 16px 0 0; }
+.table-out-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 8px; font-size: var(--text-meta); color: var(--stone); }
+.table-pad { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.table-pad input { width: 16px; height: 16px; margin: 0; accent-color: var(--brand); cursor: pointer; }
+.table-pad input:focus { outline: none; }
+.table-md {
+  margin: 0; min-height: 160px; max-height: 420px; overflow: auto; padding: 16px 18px;
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65; color: var(--dark-warm);
+  white-space: pre; tab-size: 4;
+}
+.table-md:focus { outline: none; }
+.table-md .w { display: inline-block; width: 2ch; text-align: center; }
 @media (max-width: 880px) {
   .tool-grid { grid-template-columns: minmax(0, 1fr); }
   .tool-editor { height: 320px; font-size: 16px; }
@@ -742,7 +807,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 }
 /* iOS zooms the page into a text field set under 16px. */
 @media (hover: none) and (pointer: coarse) {
-  .tool-editor { font-size: 16px; }
+  .tool-editor, .table-grid { font-size: 16px; }
+  .table-end .table-x { opacity: 1; }
 }
 @media (max-width: 560px) {
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -750,6 +816,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
   .tool-actions .btn-primary { grid-column: 1 / -1; }
   .tool-preview { padding: 16px; }
   .mermaid-figure { padding: 14px; }
+  .table-wrap { padding: 8px 4px 12px 12px; }
+  .table-md { padding: 14px; }
 }
 
 .blog-related { margin-top: 64px; }
@@ -1054,7 +1122,7 @@ cat diagram.puml | java -jar plantuml.jar --svg -pipe &gt; diagram.svg
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">轻灵的原生 Markdown 笔记本</p>
       </div>
-      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>

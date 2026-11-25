@@ -24,8 +24,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=a928435e9267" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=98a3ea55b05e" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=7f1f60076f7c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=fb21d1592cac" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=a928435e9267") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=7f1f60076f7c") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=98a3ea55b05e") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fb21d1592cac") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -678,7 +678,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-chip:hover { background: var(--warm-sand); }
 .tool-chip[aria-pressed="true"] { background: var(--warm-sand); border-color: var(--warm-sand); color: var(--near-black); }
 .tool-chip:focus { outline: none; }
-.tool-grid { --tool-h: clamp(460px, calc(100svh - 300px), 780px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-grid { --tool-h: clamp(460px, calc(100vh - 300px), 780px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
 .tool-editor {
   display: flex; height: var(--tool-h); overflow: hidden;
   background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
@@ -713,6 +713,13 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-zoom-btn svg { width: 16px; height: 16px; }
 .tool-zoom-btn:hover { background: var(--warm-sand); color: var(--near-black); }
 .tool-zoom-btn:focus { outline: none; }
+.tool-zoom-btn:focus-visible { background: var(--warm-sand); color: var(--near-black); }
+.tool-preview.is-zoomed .tool-canvas { user-select: none; -webkit-user-select: none; }
+/* svh keeps the panes still while a phone's toolbar slides; older browsers that
+   reject it keep the vh value above instead of losing the height. */
+@supports (height: 100svh) {
+  .tool-grid { --tool-h: clamp(460px, calc(100svh - 300px), 780px); }
+}
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
@@ -729,6 +736,64 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The Markdown table generator: a grid of plain text fields over the Markdown
+   it writes. Column controls sit above each column; a row's delete button at
+   its end shows on hover, always on touch. */
+.table-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.table-clear { margin-left: auto; }
+.table-wrap {
+  max-height: clamp(360px, calc(100vh - 420px), 640px); overflow: auto;
+  padding: 8px 4px 16px 16px; background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  overscroll-behavior: contain;
+}
+@supports (height: 100svh) {
+  .table-wrap { max-height: clamp(360px, calc(100svh - 420px), 640px); }
+}
+.table-tool.is-drop .table-wrap { border-color: var(--brand); background: var(--brand-tint); }
+.table-grid { border-collapse: separate; border-spacing: 0; font-size: var(--text-button); line-height: 1.5; }
+.table-grid td { padding: 0; vertical-align: middle; }
+.table-grid tbody td:not(.table-end) { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--ivory); }
+.table-grid tbody tr:first-child td:not(.table-end) { border-top: 1px solid var(--line); }
+.table-grid tbody td:first-child { border-left: 1px solid var(--line); }
+.table-grid tbody tr:first-child td:first-child { border-top-left-radius: 8px; }
+.table-grid tbody tr:first-child td:nth-last-child(2) { border-top-right-radius: 8px; }
+.table-grid tbody tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+.table-grid tbody tr:last-child td:nth-last-child(2) { border-bottom-right-radius: 8px; }
+.table-grid tbody tr.is-head td:not(.table-end) { background: var(--parchment); }
+.table-cell {
+  display: block; box-sizing: content-box; width: 9em; min-width: 6em; max-width: 26em; field-sizing: content;
+  margin: 0; padding: 9px 12px; border: 0; background: transparent;
+  font: inherit; color: var(--dark-warm); caret-color: var(--brand);
+}
+.is-head .table-cell { font-weight: 600; color: var(--near-black); }
+.table-cell:focus { outline: none; background: var(--brand-tint); }
+td[data-align="center"] .table-cell { text-align: center; }
+td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: tabular-nums; }
+.table-col-ctrl { display: flex; align-items: center; gap: 2px; padding: 0 0 6px; }
+.table-align { display: flex; gap: 2px; }
+.table-btn { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--stone); cursor: pointer; }
+.table-btn svg { width: 16px; height: 16px; }
+.table-btn:hover { background: var(--warm-sand); color: var(--near-black); }
+.table-btn[aria-pressed="true"] { background: var(--warm-sand); color: var(--near-black); }
+.table-btn:focus { outline: none; }
+.table-btn:focus-visible { background: var(--warm-sand); color: var(--near-black); }
+.table-col-ctrl .table-x { margin-left: auto; }
+.table-end { padding-left: 4px !important; }
+.table-end .table-x { opacity: 0; }
+.table-grid tr:hover .table-end .table-x, .table-end .table-x:focus-visible { opacity: 1; }
+.table-out { margin: 16px 0 0; }
+.table-out-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 8px; font-size: var(--text-meta); color: var(--stone); }
+.table-pad { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.table-pad input { width: 16px; height: 16px; margin: 0; accent-color: var(--brand); cursor: pointer; }
+.table-pad input:focus { outline: none; }
+.table-md {
+  margin: 0; min-height: 160px; max-height: 420px; overflow: auto; padding: 16px 18px;
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65; color: var(--dark-warm);
+  white-space: pre; tab-size: 4;
+}
+.table-md:focus { outline: none; }
+.table-md .w { display: inline-block; width: 2ch; text-align: center; }
 @media (max-width: 880px) {
   .tool-grid { grid-template-columns: minmax(0, 1fr); }
   .tool-editor { height: 320px; font-size: 16px; }
@@ -738,7 +803,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 }
 /* iOS zooms the page into a text field set under 16px. */
 @media (hover: none) and (pointer: coarse) {
-  .tool-editor { font-size: 16px; }
+  .tool-editor, .table-grid { font-size: 16px; }
+  .table-end .table-x { opacity: 1; }
 }
 @media (max-width: 560px) {
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -746,6 +812,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
   .tool-actions .btn-primary { grid-column: 1 / -1; }
   .tool-preview { padding: 16px; }
   .mermaid-figure { padding: 14px; }
+  .table-wrap { padding: 8px 4px 12px 12px; }
+  .table-md { padding: 14px; }
 }
 
 .blog-related { margin-top: 64px; }
@@ -970,7 +1038,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
       </div>
       <div class="tool-preview" id="mermaid-frame">
         <div class="tool-canvas" id="mermaid-preview" role="img" aria-label="流程图预览"><img src="/img/mermaid/6283e98ec5e4.svg" width="657" height="250" alt="" fetchpriority="high"></div>
-        <div class="tool-zoom" role="group"><button type="button" class="tool-zoom-btn" data-zoom="out" aria-label="缩小" title="缩小"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="in" aria-label="放大" title="放大"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9M8 3.5v9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="fit" aria-label="适应窗口" title="适应窗口"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button></div>
+        <div class="tool-zoom" role="group" aria-label="缩放"><button type="button" class="tool-zoom-btn" data-zoom="out" aria-label="缩小" title="缩小"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="in" aria-label="放大" title="放大"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9M8 3.5v9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="fit" aria-label="适应窗口" title="适应窗口"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button></div>
       </div>
     </div>
     <div class="tool-foot">
@@ -1022,12 +1090,12 @@ flowchart LR
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">轻灵的原生 Markdown 笔记本</p>
       </div>
-      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>
 <script type="application/json" id="mermaid-data">{"lang":"zh","default":"flowchart","templates":[{"id":"flowchart","label":"流程图","kind":"流程图","code":"flowchart LR\n    A[写笔记] --> B{写好了吗}\n    B -->|是| C[发布]\n    B -->|否| D[修改]\n    D --> B","svg":"/img/mermaid/6283e98ec5e4.svg","width":657,"height":250,"syntax":"/zh/blog/mermaid-flowchart/","syntaxLabel":"流程图写法"},{"id":"sequence","label":"时序图","kind":"时序图","code":"sequenceDiagram\n    participant U as 用户\n    participant A as 应用\n    participant S as 服务器\n    U->>A: 登录\n    A->>S: 校验密码\n    S-->>A: 返回令牌\n    A-->>U: 欢迎回来","svg":"/img/mermaid/caa45cb7f61c.svg","width":650,"height":347,"syntax":"/zh/blog/mermaid-sequence-diagram/","syntaxLabel":"时序图写法"},{"id":"timeline","label":"时间线","kind":"时间线","code":"timeline\n    title 写一本书\n    section 初稿\n        一月 : 列提纲\n        二月 : 写前几章 : 外出调研\n    section 修改\n        三月 : 第二稿\n        四月 : 校对","svg":"/img/mermaid/ca5365823d47.svg","width":1190,"height":642,"syntax":"/zh/blog/mermaid-timeline/","syntaxLabel":"时间线写法"},{"id":"gantt","label":"甘特图","kind":"甘特图","code":"gantt\n    title 发布计划\n    dateFormat YYYY-MM-DD\n    section 开发\n        设计 :a1, 2026-12-01, 4d\n        编码 :a2, after a1, 6d\n    section 上线\n        测试 :a3, after a2, 3d\n        发布 :milestone, after a3, 0d","svg":"/img/mermaid/c4bc04b8a0ba.svg","width":1264,"height":196,"syntax":"/zh/blog/mermaid-gantt-chart/","syntaxLabel":"甘特图写法"},{"id":"class","label":"类图","kind":"类图","code":"classDiagram\n    class Folder {\n        +String name\n        +notes() List~Note~\n    }\n    class Note {\n        +String title\n        +Date modified\n        +save()\n    }\n    Folder \"1\" --> \"*\" Note : 包含","svg":"/img/mermaid/966f6d48a281.svg","width":215,"height":385,"syntax":"/zh/blog/mermaid-class-diagram/","syntaxLabel":"类图写法"},{"id":"state","label":"状态图","kind":"状态图","code":"stateDiagram-v2\n    state \"草稿\" as Draft\n    state \"审阅\" as Review\n    state \"已发布\" as Published\n    [*] --> Draft\n    Draft --> Review : 提交\n    Review --> Draft : 要求修改\n    Review --> Published : 通过\n    Published --> [*]","svg":"/img/mermaid/e2c7f27acec8.svg","width":140,"height":505,"syntax":null,"syntaxLabel":"状态图写法"},{"id":"er","label":"ER 图","kind":"ER 图","code":"erDiagram\n    AUTHOR ||--o{ NOTE : 撰写\n    NOTE }o--o{ TAG : 标记\n    AUTHOR {\n        string name\n        string email\n    }\n    NOTE {\n        string title\n        date created\n    }","svg":"/img/mermaid/baea98ef8f39.svg","width":171,"height":511,"syntax":"/zh/blog/mermaid-er-diagram/","syntaxLabel":"ER 图写法"},{"id":"pie","label":"饼图","kind":"饼图","code":"pie title 写作时间都花在哪\n    \"写作\" : 45\n    \"修改\" : 30\n    \"查资料\" : 25","svg":"/img/mermaid/51ae00406d4a.svg","width":563,"height":450,"syntax":null,"syntaxLabel":"饼图写法"},{"id":"mindmap","label":"思维导图","kind":"思维导图","code":"mindmap\n  root((笔记))\n    写作\n      草稿\n      想法\n    阅读\n      书\n      文章\n    工作\n      会议","svg":"/img/mermaid/fe42d07845af.svg","width":529,"height":359,"syntax":null,"syntaxLabel":"思维导图写法"},{"id":"xychart","label":"XY 图表","kind":"XY 图表","code":"xychart-beta\n    title \"每月写的笔记\"\n    x-axis [\"1月\", \"2月\", \"3月\", \"4月\", \"5月\", \"6月\"]\n    y-axis \"篇数\" 0 --> 40\n    bar [12, 18, 25, 22, 30, 36]\n    line [12, 18, 25, 22, 30, 36]","svg":"/img/mermaid/b54554d6aa4e.svg","width":700,"height":500,"syntax":null,"syntaxLabel":"XY 图表写法"}],"config":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"vendor":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"preview":"{kind}预览","strings":{"loading":"正在加载 Mermaid…","loadFailed":"Mermaid 没加载上，检查网络后刷新页面。","replaced":"已换成这个模板。","copiedMarkdown":"已复制成 Markdown 代码块。","copiedImage":"图片已复制，可以直接粘贴。","copiedLink":"链接已复制，打开就是这张图。","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这张图。","empty":"写一段 Mermaid 就能画出图。","oldBrowser":"这个浏览器打不开图表链接，更新一下或者换个浏览器打开。"}}</script>
-<script src="/assets/tools/mermaid-editor.js?v=74cf0cdcd0cf" defer></script>
+<script src="/assets/tools/mermaid-editor.js?v=5dcf4f2903ab" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

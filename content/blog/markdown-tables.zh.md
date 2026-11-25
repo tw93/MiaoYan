@@ -56,7 +56,7 @@ PDF 和图片导出没法滚动，所以导出样式会撤掉这一层。滚动�
 
 妙言没有 CSV 或 TSV 导入，也不会在粘贴时把制表符分隔的文字变成竖线表格。它转换的是 HTML，粘贴带 `<table>` 的富文本，比如网页上的表格，会写成竖线表格。没有 `<th>` 时第一行当表头，单元格里的竖线转义成 `\|`，单元格内部的换行变成空格。如果来源应用只在剪贴板里放了制表符分隔的纯文本，粘贴出来的是制表符，不是竖线。
 
-对于 CSV 或 TSV 文件，Pandoc 的输入格式里有 `csv` 和 `tsv`，输出格式里有 `gfm`，所以转换大致是 `pandoc -f csv -t gfm data.csv`，得到的竖线表格可以贴进笔记，只是单元格长了源码会参差不齐。用命令行创建笔记见[在终端里使用 Markdown 笔记：miao 命令行](/zh/blog/markdown-notes-from-terminal/)。
+对于 CSV 或 TSV 文件，Pandoc 的输入格式里有 `csv` 和 `tsv`，输出格式里有 `gfm`，所以转换大致是 `pandoc -f csv -t gfm data.csv`，得到的竖线表格可以贴进笔记，只是单元格长了源码会参差不齐。刚复制的一小块数据，粘贴到 [Markdown 表格生成器](/zh/tools/markdown-table-generator/) 里就能复制出各列对齐的表格。用命令行创建笔记见[在终端里使用 Markdown 笔记：miao 命令行](/zh/blog/markdown-notes-from-terminal/)。
 
 ## 常见问题
 

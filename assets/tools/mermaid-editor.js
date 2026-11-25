@@ -78,6 +78,7 @@
     var pad = window.matchMedia("(max-width: 560px)").matches ? 16 : 24;
     var fw = frame.clientWidth;
     var fh = frame.clientHeight;
+    if (fw <= 0 || fh <= 0) return;
     // A small diagram grows a little to fill the larger frame, as far as 1.4x.
     view.scale = Math.min(1.4, (fw - pad * 2) / size.w, (fh - pad * 2) / size.h);
     view.x = (fw - size.w * view.scale) / 2;
@@ -469,6 +470,7 @@
   var tabLeaves = false;
   code.addEventListener("keydown", function (e) {
     if (e.key === "Escape") { tabLeaves = true; return; }
+    if (e.key === "Shift" || e.key === "Control" || e.key === "Alt" || e.key === "Meta") return;
     if (e.key !== "Tab" || e.altKey || e.ctrlKey || e.metaKey) { tabLeaves = false; return; }
     if (tabLeaves) { tabLeaves = false; return; }
     e.preventDefault();
@@ -480,14 +482,24 @@
       insert(start, end, "    ");
       return;
     }
-    var block = value.slice(lineStart, end);
+    // Whole lines, as code editors do: a selection that ends at the start of a
+    // line leaves that line alone, and Shift+Tab with no selection outdents the
+    // line the caret is on.
+    var last = end > start && value.charAt(end - 1) === "\n" ? end - 1 : end;
+    var lineEnd = value.indexOf("\n", last);
+    if (lineEnd < 0) lineEnd = value.length;
+    var block = value.slice(lineStart, lineEnd);
     var changed = e.shiftKey
       ? block.replace(/^( {1,4}|\t)/gm, "")
-      : block.replace(/^/gm, "    ");
+      : block.replace(/^(?=.)/gm, "    ");
     if (changed === block) return;
-    code.setSelectionRange(lineStart, end);
-    insert(lineStart, end, changed);
-    code.setSelectionRange(lineStart, lineStart + changed.length);
+    insert(lineStart, lineEnd, changed);
+    if (start === end) {
+      var caret = Math.max(lineStart, start - (block.length - changed.length));
+      code.setSelectionRange(caret, caret);
+    } else {
+      code.setSelectionRange(lineStart, lineStart + changed.length);
+    }
   });
 
   // execCommand keeps the browser's own undo stack; setRangeText is the fallback.

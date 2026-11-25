@@ -56,7 +56,7 @@ PDF and image export cannot scroll, so the export styles undo that. The scroll w
 
 MiaoYan has no CSV or TSV import and does not turn tab-separated text into a pipe table on paste. What it does convert is HTML: when you paste rich text that contains a `<table>`, from a web page for example, it writes a pipe table. The first row becomes the header when there are no `<th>` cells, pipes in cells are escaped as `\|`, and line breaks inside a cell become spaces. Pasting from an app that puts only plain tab-separated text on the clipboard gives you tabs, not pipes.
 
-For CSV or TSV files, Pandoc lists `csv` and `tsv` among its input formats and `gfm` among its output formats, so a conversion looks like `pandoc -f csv -t gfm data.csv`. The result is a pipe table you can paste into the note, though long cells make the source ragged. [Markdown notes from the terminal](/blog/markdown-notes-from-terminal/) covers the `miao` command-line tool for creating notes.
+For CSV or TSV files, Pandoc lists `csv` and `tsv` among its input formats and `gfm` among its output formats, so a conversion looks like `pandoc -f csv -t gfm data.csv`. The result is a pipe table you can paste into the note, though long cells make the source ragged. For a range you just copied, paste it into the [Markdown table generator](/tools/markdown-table-generator/) and copy the table back with its columns lined up. [Markdown notes from the terminal](/blog/markdown-notes-from-terminal/) covers the `miao` command-line tool for creating notes.
 
 ## FAQ
 

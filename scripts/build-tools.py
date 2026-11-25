@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Build the free tool pages: /tools/<slug>/ in English and /zh/tools/<slug>/ in
-Simplified Chinese. Today there is one, the Mermaid live editor.
+Simplified Chinese: the Mermaid live editor and the Markdown table generator.
 
 Sources:
   content/tools/index.json            titles, ledes and descriptions per language
   content/tools/<slug>.en.md, .zh.md  the prose under the tool (an FAQ h2 with h3
                                       questions becomes FAQPage data, as on the blog)
   content/tools/mermaid-templates.json  the editor's templates
+  content/tools/markdown-table-generator.json  the table the generator opens with
 
-The editor runs in the browser (assets/tools/mermaid-editor.js) with the
+Each tool runs in the browser (assets/tools/<slug>.js). The editor runs with the
 vendored Mermaid and MiaoYan theme. Its first paint needs no script: the default
 template's SVG, drawn ahead by scripts/render-mermaid.mjs, is already in the
 preview. Header, footer and scripts come from scripts/build-site.py.
@@ -49,6 +50,36 @@ UI = {
         "home_name": "MiaoYan",
         "faq": "FAQ",
         "app_cta": "View in App Store",
+        "table": {
+            "add_row": "Add row",
+            "add_col": "Add column",
+            "clear": "Clear",
+            "cell": "Row {row}, column {col}",
+            "align_group": "Column {col} alignment",
+            "align_left": "Align left",
+            "align_center": "Align center",
+            "align_right": "Align right",
+            "del_col": "Delete column {col}",
+            "del_row": "Delete row {row}",
+            "output": "Markdown",
+            "pad": "Line up columns",
+            "copy": "Copy Markdown",
+            "undo": "Undo",
+            "app_title": "Paste the table into a note",
+            "app_text": "In MiaoYan, a Markdown notebook for Mac, iPhone and iPad, the note's preview shows this Markdown as a table. On the Mac, a table copied from a web page is written as Markdown when you paste it.",
+            "app_alt": "MiaoYan on a Mac, with Markdown on the left and its preview on the right",
+            "app_shot": "split",
+            "strings": {
+                "copied": "Copied. Paste it into a Markdown file or a note.",
+                "copyFailed": "This browser did not allow copying.",
+                "pasted": "Pasted a table of {rows} by {cols}.",
+                "trimmed": "The grid holds {rows} rows and {cols} columns, so the rest was left out.",
+                "noTable": "There is no table in this file.",
+                "fileType": "Drop a CSV, TSV, Markdown or text file under 4 MB.",
+                "cleared": "Cleared the table.",
+                "deleted": "Deleted.",
+            },
+        },
         "mermaid": {
             "templates": "Templates",
             "code": "Mermaid code",
@@ -60,6 +91,7 @@ UI = {
             "markdown": "Copy Markdown",
             "link": "Copy link",
             "undo": "Undo",
+            "zoom": "Zoom",
             "zoom_out": "Zoom out",
             "zoom_in": "Zoom in",
             "fit": "Fit",
@@ -85,6 +117,36 @@ UI = {
         "home_name": "妙言",
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
+        "table": {
+            "add_row": "加一行",
+            "add_col": "加一列",
+            "clear": "清空",
+            "cell": "第 {row} 行第 {col} 列",
+            "align_group": "第 {col} 列对齐",
+            "align_left": "左对齐",
+            "align_center": "居中",
+            "align_right": "右对齐",
+            "del_col": "删除第 {col} 列",
+            "del_row": "删除第 {row} 行",
+            "output": "Markdown",
+            "pad": "对齐各列",
+            "copy": "复制 Markdown",
+            "undo": "撤销",
+            "app_title": "把表格贴进笔记",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，这段 Markdown 贴进笔记，预览里就是一张表，在 Mac 上从网页复制表格直接粘贴，也会写成 Markdown。",
+            "app_alt": "Mac 上的妙言，左边是 Markdown，右边是它的预览",
+            "app_shot": "split",
+            "strings": {
+                "copied": "已复制，贴进 Markdown 文件或者笔记里就行。",
+                "copyFailed": "这个浏览器不允许复制。",
+                "pasted": "已粘贴 {rows} 行 {cols} 列。",
+                "trimmed": "网格最多放 {rows} 行 {cols} 列，多出的部分没有放进来。",
+                "noTable": "这个文件里没有表格。",
+                "fileType": "拖进来的需要是 4 MB 以内的 CSV、TSV、Markdown 或文本文件。",
+                "cleared": "已清空表格。",
+                "deleted": "已删除。",
+            },
+        },
         "mermaid": {
             "templates": "模板",
             "code": "Mermaid 代码",
@@ -96,6 +158,7 @@ UI = {
             "markdown": "复制 Markdown",
             "link": "复制链接",
             "undo": "撤销",
+            "zoom": "缩放",
             "zoom_out": "缩小",
             "zoom_in": "放大",
             "fit": "适应窗口",
@@ -355,7 +418,7 @@ def mermaid_page(tool, lang):
       </div>
       <div class="tool-preview" id="mermaid-frame">
         <div class="tool-canvas" id="mermaid-preview" role="img" aria-label="{esc(ui["preview"].format(kind=first["kind"]))}"><img src="{first["svg"]}" width="{first["width"]}" height="{first["height"]}" alt="" fetchpriority="high"></div>
-        <div class="tool-zoom" role="group">{zoom}</div>
+        <div class="tool-zoom" role="group" aria-label="{esc(ui["zoom"])}">{zoom}</div>
       </div>
     </div>
     <div class="tool-foot">
@@ -373,6 +436,151 @@ def mermaid_page(tool, lang):
   </div>"""
     return tool_page(tool, lang, category="DesignApplication", tool_html=tool_html,
                      data_id="mermaid-data", data=data, script="assets/tools/mermaid-editor.js")
+
+
+# The table generator's Markdown, the same as assets/tools/markdown-table-generator.js
+# writes it, so the page arrives with the right output before any script runs.
+WIDE = (
+    (0x1100, 0x115F), (0x231A, 0x231B), (0x23E9, 0x23EC), (0x23F0, 0x23F0), (0x23F3, 0x23F3),
+    (0x25FD, 0x25FE), (0x2614, 0x2615), (0x2648, 0x2653), (0x267F, 0x267F), (0x2693, 0x2693),
+    (0x26A1, 0x26A1), (0x26AA, 0x26AB), (0x26BD, 0x26BE), (0x26C4, 0x26C5), (0x26CE, 0x26CE),
+    (0x26D4, 0x26D4), (0x26EA, 0x26EA), (0x26F2, 0x26F3), (0x26F5, 0x26F5), (0x26FA, 0x26FA),
+    (0x26FD, 0x26FD), (0x2705, 0x2705), (0x270A, 0x270B), (0x2728, 0x2728), (0x274C, 0x274C),
+    (0x274E, 0x274E), (0x2753, 0x2755), (0x2757, 0x2757), (0x2795, 0x2797), (0x27B0, 0x27B0),
+    (0x27BF, 0x27BF), (0x2B1B, 0x2B1C), (0x2B50, 0x2B50), (0x2B55, 0x2B55),
+    (0x2E80, 0x303E), (0x3041, 0x33FF), (0x3400, 0x4DBF), (0x4E00, 0x9FFF),
+    (0xA000, 0xA4CF), (0xA960, 0xA97F), (0xAC00, 0xD7A3), (0xF900, 0xFAFF), (0xFE30, 0xFE4F),
+    (0xFF00, 0xFF60), (0xFFE0, 0xFFE6), (0x1F004, 0x1F004), (0x1F0CF, 0x1F0CF), (0x1F18E, 0x1F18E),
+    (0x1F191, 0x1F19A), (0x1F200, 0x1F202), (0x1F210, 0x1F23B), (0x1F240, 0x1F248), (0x1F250, 0x1F251),
+    (0x1F300, 0x1F64F), (0x1F680, 0x1F6FF), (0x1F7E0, 0x1F7EB), (0x1F90C, 0x1F9FF), (0x1FA70, 0x1FAFF),
+    (0x20000, 0x3FFFD),
+)
+ZERO = ((0x0300, 0x036F), (0x200B, 0x200F), (0x20D0, 0x20FF), (0xFE00, 0xFE0F), (0x1F3FB, 0x1F3FF), (0xE0020, 0xE007F))
+# String.prototype.trim()'s set, so a cell trims the same in both places.
+JS_SPACE = "\t\n\v\f\r \u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff"
+
+
+def char_width(ch):
+    cp = ord(ch)
+    if cp < 0x300:
+        return 1
+    if any(a <= cp <= b for a, b in ZERO):
+        return 0
+    return 2 if any(a <= cp <= b for a, b in WIDE) else 1
+
+
+def text_width(s):
+    return sum(char_width(c) for c in s)
+
+
+def table_cell(s):
+    return re.sub(r"\\?\|", r"\\|", s.strip(JS_SPACE))
+
+
+def table_markdown(rows, align, pad=True):
+    cells = [[table_cell(c) for c in r] for r in rows]
+    marks = {"left": (":", ""), "center": (":", ":"), "right": ("", ":")}
+    if not pad:
+        rule = [{"left": ":---", "center": ":---:", "right": "---:"}.get(a, "---") for a in align]
+        lines = [cells[0], rule] + cells[1:]
+        return "\n".join("| " + " | ".join(r) + " |" for r in lines)
+    widths = [max([3] + [text_width(r[c]) for r in cells]) for c in range(len(align))]
+
+    def fit(s, c):
+        gap = widths[c] - text_width(s)
+        if align[c] == "right":
+            return " " * gap + s
+        if align[c] == "center":
+            return " " * (gap // 2) + s + " " * (gap - gap // 2)
+        return s + " " * gap
+
+    rule = []
+    for c, a in enumerate(align):
+        head, tail = marks.get(a, ("", ""))
+        rule.append(head + "-" * (widths[c] - len(head) - len(tail)) + tail)
+    out = ["| " + " | ".join(fit(s, c) for c, s in enumerate(cells[0])) + " |", "| " + " | ".join(rule) + " |"]
+    out += ["| " + " | ".join(fit(s, c) for c, s in enumerate(r)) + " |" for r in cells[1:]]
+    return "\n".join(out)
+
+
+def table_markdown_html(text):
+    """The output as shown on the page: wide characters sit in a two-column box,
+    so the columns line up in a monospace font whose CJK fallback is narrower."""
+    return "".join(f'<span class="w">{esc(c)}</span>' if char_width(c) == 2 else esc(c) for c in text)
+
+
+ICON_ALIGN = {
+    "left": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg>',
+    "center": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg>',
+    "right": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg>',
+}
+ICON_X = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>'
+
+
+def table_grid_html(rows, align, ui):
+    """The grid, built the way the script builds it, so its first render changes nothing."""
+    def fmt(key, **kw):
+        return esc(ui[key].format(**kw))
+
+    ctrl = ""
+    for c, a in enumerate(align):
+        buttons = "".join(
+            f'<button type="button" class="table-btn" data-align="{k}" aria-pressed="{"true" if a == k else "false"}" aria-label="{esc(ui["align_" + k])}" title="{esc(ui["align_" + k])}">{ICON_ALIGN[k]}</button>'
+            for k in ("left", "center", "right")
+        )
+        ctrl += (
+            f'<td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="{fmt("align_group", col=c + 1)}">{buttons}</div>'
+            f'<button type="button" class="table-btn table-x" data-del-col="{c}" aria-label="{fmt("del_col", col=c + 1)}" title="{fmt("del_col", col=c + 1)}">{ICON_X}</button></div></td>'
+        )
+    body = ""
+    for r, row in enumerate(rows):
+        cells = "".join(
+            f'<td data-align="{align[c] or "none"}"><input class="table-cell" type="text" value="{esc(v)}" aria-label="{fmt("cell", row=r + 1, col=c + 1)}" spellcheck="false" autocomplete="off" autocapitalize="off"></td>'
+            for c, v in enumerate(row)
+        )
+        body += (
+            f'<tr{" class=\"is-head\"" if r == 0 else ""}>{cells}<td class="table-end">'
+            f'<button type="button" class="table-btn table-x" data-del-row="{r}" aria-label="{fmt("del_row", row=r + 1)}" title="{fmt("del_row", row=r + 1)}">{ICON_X}</button></td></tr>'
+        )
+    return f'<table class="table-grid" id="table-grid"><thead><tr class="table-ctrl">{ctrl}<td class="table-end"></td></tr></thead><tbody>{body}</tbody></table>'
+
+
+def table_page(tool, lang):
+    ui = UI[lang]["table"]
+    start = json.loads((SRC / "markdown-table-generator.json").read_text(encoding="utf-8"))[lang]
+    rows, align = start["rows"], start["align"]
+    md = table_markdown(rows, align)
+    data = {
+        "lang": lang,
+        "start": start,
+        "ui": {k: ui[k] for k in ("cell", "align_group", "align_left", "align_center", "align_right", "del_col", "del_row")},
+        "icons": {"x": ICON_X, **ICON_ALIGN},
+        "strings": ui["strings"],
+    }
+    tool_html = f"""  <div class="tool table-tool" id="table-tool">
+    <div class="table-bar">
+      <button type="button" class="tool-chip" data-op="row">{esc(ui["add_row"])}</button>
+      <button type="button" class="tool-chip" data-op="col">{esc(ui["add_col"])}</button>
+      <button type="button" class="tool-chip table-clear" data-op="clear">{esc(ui["clear"])}</button>
+    </div>
+    <div class="table-wrap" id="table-wrap">{table_grid_html(rows, align, ui)}</div>
+    <div class="table-out">
+      <div class="table-out-head">
+        <span class="table-out-title">{esc(ui["output"])}</span>
+        <label class="table-pad"><input type="checkbox" id="table-pad" checked>{esc(ui["pad"])}</label>
+      </div>
+      <pre class="table-md" id="table-md" tabindex="0">{table_markdown_html(md)}</pre>
+    </div>
+    <div class="tool-foot">
+      <p class="tool-status" id="table-status" role="status" aria-live="polite"></p>
+      <button type="button" class="tool-undo" id="table-undo" hidden>{esc(ui["undo"])}</button>
+    </div>
+    <div class="tool-actions">
+      <button type="button" class="btn btn-primary" data-action="copy">{esc(ui["copy"])}</button>
+    </div>
+  </div>"""
+    return tool_page(tool, lang, category="DeveloperApplication", tool_html=tool_html,
+                     data_id="table-data", data=data, script="assets/tools/markdown-table-generator.js")
 
 
 def replace_block(text, inner, name):
@@ -396,8 +604,8 @@ def llms_block(tools):
     return "\n" + "\n".join(lines) + "\n"
 
 
-PAGES = {"mermaid-editor": mermaid_page}
-PAGE_KEY = {"mermaid-editor": "mermaid"}
+PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page}
+PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table"}
 
 
 def outputs(tools):

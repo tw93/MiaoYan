@@ -187,4 +187,6 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 
 - [Mermaid Live Editor](https://miaoyan.app/tools/mermaid-editor/): A free Mermaid live editor in your browser: flowcharts, sequence diagrams, timelines, Gantt charts and more, with SVG and PNG export and links that carry the diagram.
 - [Mermaid 在线编辑器](https://miaoyan.app/zh/tools/mermaid-editor/): 免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。
+- [Markdown Table Generator](https://miaoyan.app/tools/markdown-table-generator/): A free Markdown table generator in your browser: paste from Excel, Google Sheets, CSV or TSV, set each column's alignment, and copy a pipe table with its columns lined up, Chinese and Japanese included.
+- [Markdown 表格生成器](https://miaoyan.app/zh/tools/markdown-table-generator/): 免费的 Markdown 表格生成器，在浏览器里把 Excel、Google Sheets、CSV 或 TSV 转成 Markdown 表格，可以按列设置对齐，中文按两个字符宽对齐各列。
 <!-- tools:end -->

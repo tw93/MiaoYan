@@ -17,7 +17,7 @@ tablesgenerator.com 的 Markdown 表格页面写明，可以从 Excel、Google S
 - Markdown 不能合并单元格，页面导入 HTML 或 Markdown 时会把合并的单元格拆开，要保留合并就用它的 HTML 表格生成器。
 - **Compact mode** 会省掉用来对齐各列的空格。
 
-表格内容比较敏感时，本地工具更稳妥。
+表格内容比较敏感时，本地工具更稳妥。妙言的 [Markdown 表格生成器](/zh/tools/markdown-table-generator/) 在浏览器里转换，数据不发到服务器，Excel 或 Google Sheets 复制的单元格、CSV 和 TSV 文件都能直接粘贴或拖进去，中文列按两个字符宽对齐。
 
 ## 方法二，Pandoc
 
