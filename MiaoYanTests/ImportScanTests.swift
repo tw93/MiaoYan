@@ -84,5 +84,16 @@ final class ImportScanTests: XCTestCase {
 
         XCTAssertNil(ViewController.importCopy(of: bundle, into: Project(url: work, label: "Work")), "the copy failed")
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: work.path), [], "no part of it is left")
+
+        // What is cleared went to the Trash: `existed` is read before the
+        // copy, and a file another writer put there meanwhile must stay
+        // recoverable. That race cannot be staged here, so the source holds it.
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("Controllers/ViewController+Action.swift"), encoding: .utf8)
+        let start = try XCTUnwrap(source.range(of: "static func importCopy(of url: URL, into project: Project) -> URL? {"))
+        let end = try XCTUnwrap(source.range(of: "\n    }\n", range: start.upperBound..<source.endIndex))
+        let body = source[start.upperBound..<end.lowerBound]
+        XCTAssertTrue(body.contains("try manager.trashItem(at: destination, resultingItemURL: nil)"), "the partial copy goes to the Trash")
+        XCTAssertFalse(body.contains("removeItem("), "nothing is removed for good")
     }
 }

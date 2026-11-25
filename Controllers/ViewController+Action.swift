@@ -1140,10 +1140,12 @@ extension ViewController {
                 guard taken else {
                     // The name was free, so what is there now is this copy's
                     // part: a folder (a text bundle) copied up to the file it
-                    // could not read, which the library listed as a note.
+                    // could not read, which the library listed as a note. It
+                    // goes to the Trash rather than away: `existed` was read
+                    // before the copy, so nothing here is deleted for good.
                     if (try? destination.checkResourceIsReachable()) == true {
                         do {
-                            try manager.removeItem(at: destination)
+                            try manager.trashItem(at: destination, resultingItemURL: nil)
                         } catch let removal {
                             AppDelegate.trackError(removal, context: "ViewController.importCopy partial")
                         }
