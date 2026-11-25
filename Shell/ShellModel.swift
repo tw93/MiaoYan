@@ -1480,9 +1480,7 @@ final class ShellModel {
             let copy = Note(name: name, project: note.project, type: note.type)
             copy.content = NSMutableAttributedString(attributedString: note.content)
             if note.type == .markdown, note.container == .none {
-                for image in note.getAllImages() {
-                    copy.relocateAttachment(from: image.url, imagePath: image.path, to: note.project)
-                }
+                copy.relocateAttachments(note.getAllImages(), to: note.project)
             }
             // A successful save adds the copy to storage.
             copy.save()

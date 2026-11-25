@@ -1237,9 +1237,7 @@ public class Note: NSObject {
                 return
             }
             let attachments = getAllAttachments()
-            for attachment in attachments {
-                relocateAttachment(from: attachment.url, imagePath: attachment.path, to: project)
-            }
+            relocateAttachments(attachments, to: project)
 
             if !attachments.isEmpty {
                 save()
@@ -1249,31 +1247,46 @@ public class Note: NSObject {
         _ = move(to: destination, project: project)
     }
 
+    /// Copies each attachment into `project` (`relocateAttachment`), then
+    /// points the links at where the copies landed, every rewrite found in
+    /// the text as it was before any of them. Run one after another, a later
+    /// rewrite took over a link an earlier one had just written: `assets/b.png`
+    /// landed as `/i/b.png`, the note's own `/i/b.png` then clashed and got a
+    /// new name, and both links went to it.
+    func relocateAttachments(_ attachments: [(url: URL, path: String)], to project: Project) {
+        var rewrites: [String: String] = [:]
+        for attachment in attachments {
+            if let newPath = relocateAttachment(from: attachment.url, imagePath: attachment.path, to: project) {
+                rewrites[attachment.path] = newPath
+            }
+        }
+        rewriteAttachmentLinks(rewrites)
+    }
+
     /// Copies one attachment into `project`'s attachment folder under its own
     /// name. Moving a note copies rather than moves, because another note may
     /// share the image; the original is left for Clean Unused Attachments. On a
-    /// name clash with a different file the copy gets a fresh name, and when
-    /// the copy lands under another path than the link names (a fresh name, a
-    /// PSD an older build kept in `i/` that the shared rule puts in `files/`,
-    /// an image linked from another folder), the note's links, written encoded
-    /// or not, follow it.
-    func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project) {
+    /// name clash with a different file the copy gets a fresh name. Returns the
+    /// path the note's links must take when the copy landed under another path
+    /// than the link names (a fresh name, an image linked from another
+    /// folder); `relocateAttachments` rewrites them.
+    private func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project) -> String? {
         let manager = FileManager.default
         let dstPrefix = NotesTextProcessor.getAttachPrefix(url: imageURL)
         let folder = project.url.appendingPathComponent(dstPrefix)
-        guard manager.fileExists(atPath: imageURL.path) else { return }
+        guard manager.fileExists(atPath: imageURL.path) else { return nil }
 
         if !manager.fileExists(atPath: folder.path) {
             try? manager.createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)
         }
 
         var target = folder.appendingPathComponent(imageURL.lastPathComponent)
-        if target.standardizedFileURL.path == imageURL.standardizedFileURL.path { return }
+        if target.standardizedFileURL.path == imageURL.standardizedFileURL.path { return nil }
         var copied = false
         if manager.fileExists(atPath: target.path) {
             copied = manager.contentsEqual(atPath: target.path, andPath: imageURL.path)
             if !copied {
-                guard let fileName = ImagesProcessor.getFileName(from: imageURL, to: folder, ext: imageURL.pathExtension) else { return }
+                guard let fileName = ImagesProcessor.getFileName(from: imageURL, to: folder, ext: imageURL.pathExtension) else { return nil }
                 target = folder.appendingPathComponent(fileName)
             }
         }
@@ -1283,29 +1296,37 @@ public class Note: NSObject {
                 try manager.copyItem(at: imageURL, to: target)
             } catch {
                 AppDelegate.trackError(error, context: "Note.relocateAttachment")
-                return
+                return nil
             }
         }
 
         let newPath = dstPrefix + target.lastPathComponent
-        guard newPath != imagePath else { return }
-        rewriteAttachmentLinks(from: imagePath, to: newPath)
+        return newPath == imagePath ? nil : newPath
     }
 
-    /// Points every link to `oldPath` in the body, written plain or
+    /// Points every link to each old path in the body, written plain or
     /// percent-encoded, as Markdown (`](/files/a.pdf "title")`, `](<…>)`) or
-    /// as `src="…"`, at `newPath`.
-    private func rewriteAttachmentLinks(from oldPath: String, to newPath: String) {
+    /// as `src="…"`, at its new path. Every link is found in the text before
+    /// any is changed, and all are replaced in one pass.
+    private func rewriteAttachmentLinks(_ rewrites: [String: String]) {
+        guard !rewrites.isEmpty else { return }
         let encode = { (path: String) in path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? path }
-        let replacement = encode(newPath)
-        for old in Set([oldPath, encode(oldPath)]) {
-            let pattern = #"(\]\(\s*<?|src=["'])"# + NSRegularExpression.escapedPattern(for: old) + #"(?=[)\s"'>])"#
-            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
-            let text = content.string as NSString
-            for match in regex.matches(in: content.string, range: NSRange(location: 0, length: text.length)).reversed() {
-                let opening = text.substring(with: match.range(at: 1))
-                content.replaceCharacters(in: match.range, with: opening + replacement)
+        let string = content.string
+        let text = string as NSString
+        // By start: a link matches one old path only, written plain or encoded.
+        var edits: [Int: (range: NSRange, text: String)] = [:]
+        for (oldPath, newPath) in rewrites {
+            let replacement = encode(newPath)
+            for old in Set([oldPath, encode(oldPath)]) {
+                let pattern = #"(\]\(\s*<?|src=["'])"# + NSRegularExpression.escapedPattern(for: old) + #"(?=[)\s"'>])"#
+                guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+                for match in regex.matches(in: string, range: NSRange(location: 0, length: text.length)) {
+                    edits[match.range.location] = (match.range, text.substring(with: match.range(at: 1)) + replacement)
+                }
             }
+        }
+        for edit in edits.values.sorted(by: { $0.range.location > $1.range.location }) {
+            content.replaceCharacters(in: edit.range, with: edit.text)
         }
     }
 

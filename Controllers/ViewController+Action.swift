@@ -578,10 +578,7 @@ extension ViewController {
 
                 // Clone images
                 if note.type == .markdown, note.container == .none {
-                    let images = note.getAllImages()
-                    for image in images {
-                        noteDupe.relocateAttachment(from: image.url, imagePath: image.path, to: note.project)
-                    }
+                    noteDupe.relocateAttachments(note.getAllImages(), to: note.project)
                 }
 
                 noteDupe.save()

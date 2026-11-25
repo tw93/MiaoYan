@@ -837,4 +837,29 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertNotEqual(name, "memo.txt")
         XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("files").appendingPathComponent(name)), Data([3]))
     }
+
+    /// The links were rewritten one after another over the text: `assets/b.png`
+    /// landed as `/i/b.png`, the note's own `/i/b.png` then clashed with it and
+    /// got a new name, and both links were pointed at that one file.
+    @MainActor
+    func testTwoLinksThatLandOnOneNameKeepTheirOwnFiles() throws {
+        let folders = try makeFolders()
+        let (from, to, noteURL) = (folders.from, folders.to, folders.noteURL)
+        let manager = FileManager.default
+        try manager.createDirectory(at: from.url.appendingPathComponent("assets"), withIntermediateDirectories: true)
+        try Data([1]).write(to: from.url.appendingPathComponent("assets/b.png"))
+        try Data([2]).write(to: from.url.appendingPathComponent("i/b.png"))
+        try "# Trip\n\n![](assets/b.png)\n\n![](/i/b.png)\n".write(to: noteURL, atomically: true, encoding: .utf8)
+        let note = Note(url: noteURL, with: from)
+
+        note.move(toProject: to)
+
+        let text = try String(contentsOf: to.url.appendingPathComponent("trip.md"), encoding: .utf8)
+        let regex = try NSRegularExpression(pattern: #"\]\((/i/[^)]+)\)"#)
+        let links = regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).map { (text as NSString).substring(with: $0.range(at: 1)) }
+        XCTAssertEqual(links.count, 2, text)
+        XCTAssertEqual(Set(links).count, 2, "each link keeps a file of its own: \(text)")
+        let files = try links.map { try Data(contentsOf: to.url.appendingPathComponent($0)) }
+        XCTAssertEqual(files, [Data([1]), Data([2])], "in order, the assets image and the note's own")
+    }
 }
