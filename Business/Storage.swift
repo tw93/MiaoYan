@@ -1653,12 +1653,22 @@ class Storage {
         return [dates?.creationDate, dates?.contentModificationDate].compactMap { $0 }.max() ?? .distantFuture
     }
 
+    /// A partial copy in a folder a copy is writing into now is skipped,
+    /// neither removed nor failed: the scan read the busy folders once before
+    /// the confirmation, and a file dropped while it was up would lose its
+    /// copy to the Trash.
     public func removeAttachments(urls: [URL]) -> (removed: [URL], failed: [URL]) {
         var removed = [URL]()
         var failed = [URL]()
         let manager = FileManager.default
+        let busy = ImagesProcessor.foldersWithCopiesUnderWay
 
         for url in urls {
+            if ImagesProcessor.isPartialCopyName(url.lastPathComponent),
+                busy.contains(url.deletingLastPathComponent().resolvingSymlinksInPath().path)
+            {
+                continue
+            }
             do {
                 var resultingItemUrl: NSURL?
                 try manager.trashItem(at: url, resultingItemURL: &resultingItemUrl)

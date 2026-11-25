@@ -649,6 +649,26 @@ final class AttachmentCleanupTests: XCTestCase {
             "files/ is being copied into, so its partial copies stay")
     }
 
+    /// The scan reads which folders a copy is writing into once, before the
+    /// confirmation; a file dropped while the confirmation was up writes its
+    /// partial copy into a folder the scan saw idle. Removing checks again.
+    @MainActor
+    func testRemovingLeavesThePartialCopyOfACopyStartedAfterTheScan() throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        let partial = work.appendingPathComponent("files/.\(UUID().uuidString).partial")
+        try Data([0]).write(to: partial)
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+        let copying = try XCTUnwrap(ImagesProcessor.reserveAttachment(for: URL(fileURLWithPath: "/tmp/Report.pdf"), note: note))
+        defer { ImagesProcessor.releaseAttachment(copying.destination) }
+
+        let result = Storage(loadsLibrary: false).removeAttachments(urls: [partial])
+
+        XCTAssertEqual(result.removed, [])
+        XCTAssertEqual(result.failed, [], "skipped, not a failure")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: partial.path), "the running copy keeps its file")
+    }
+
     @MainActor
     func testAnImageThatCannotBeWrittenGetsNoLink() throws {
         let work = tempDir.appendingPathComponent("Work", isDirectory: true)
