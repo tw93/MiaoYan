@@ -81,6 +81,22 @@
    }
   },
   {
+   "slug": "html-to-markdown",
+   "date": "2026-11-25",
+   "en": {
+    "title": "HTML and Word to Markdown",
+    "head_title": "HTML to Markdown: convert a web page, Word or Google Docs to Markdown",
+    "lede": "Paste a web page, a Word document or a Google Doc, or open a .docx, and get Markdown with its headings, lists, tables, links and code.",
+    "description": "A free online converter that turns pasted rich text, .docx and .html files into Markdown in the browser, the way MiaoYan's Mac app converts a paste, keeping headings, lists, tables, links, code blocks and their languages."
+   },
+   "zh": {
+    "title": "网页和 Word 转 Markdown",
+    "head_title": "网页转 Markdown：把网页、Word 和 Google 文档转成 Markdown",
+    "lede": "粘贴网页、Word 或 Google 文档，或者打开一个 .docx，标题、列表、表格、链接和代码都会变成 Markdown。",
+    "description": "免费的在线 HTML 转 Markdown 工具，把粘贴的网页、Word、Google 文档和 .docx、.html 文件在浏览器里转成 Markdown，规则和妙言 Mac 版粘贴时的转换一样，标题、列表、表格、链接和代码块连语言都保留。"
+   }
+  },
+  {
    "slug": "netnewswire-theme",
    "date": "2026-11-25",
    "en": {

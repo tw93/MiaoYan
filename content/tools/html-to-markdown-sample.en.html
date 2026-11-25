@@ -1,0 +1,18 @@
+<h2>Install Homebrew on a Mac</h2>
+<p>Homebrew is a <strong>package manager</strong> for the Mac. Once it is in, one command installs an app; the details are on <a href="https://brew.sh/">its site</a>.</p>
+<ol>
+<li>Open Terminal and paste the command below</li>
+<li>Type your login password when asked</li>
+<li>Run <code>brew doctor</code> when it finishes</li>
+</ol>
+<pre><code class="language-bash">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+<h3>Everyday commands</h3>
+<table>
+<thead><tr><th>Command</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>brew install</code></td><td>Install an app</td></tr>
+<tr><td><code>brew upgrade</code></td><td>Upgrade everything</td></tr>
+<tr><td><code>brew cleanup</code></td><td>Remove old versions</td></tr>
+</tbody>
+</table>
+<blockquote><p>On a Mac with Apple silicon, Homebrew lives in <em>/opt/homebrew</em>.</p></blockquote>

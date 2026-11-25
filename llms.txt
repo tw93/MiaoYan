@@ -185,8 +185,8 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 <!-- tools:start -->
 ## Tools
 
-- [Markdown Tools](https://miaoyan.app/tools/): Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer and a Chinese typography cleaner.
-- [Markdown 在线工具](https://miaoyan.app/zh/tools/): 妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览和中英文排版整理。
+- [Markdown Tools](https://miaoyan.app/tools/): Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, an HTML and Word to Markdown converter and a Chinese typography cleaner.
+- [Markdown 在线工具](https://miaoyan.app/zh/tools/): 妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、网页和 Word 转 Markdown，以及中英文排版整理。
 - [Mermaid Live Editor](https://miaoyan.app/tools/mermaid-editor/): A free Mermaid live editor in your browser: flowcharts, sequence diagrams, timelines, Gantt charts and more, with SVG and PNG export and links that carry the diagram.
 - [Mermaid 在线编辑器](https://miaoyan.app/zh/tools/mermaid-editor/): 免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。
 - [Markdown Table Generator](https://miaoyan.app/tools/markdown-table-generator/): A free Markdown table generator in your browser: paste from Excel, Google Sheets, CSV or TSV, set each column's alignment, and copy a pipe table with its columns lined up, Chinese and Japanese included.
@@ -197,6 +197,8 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markmap 思维导图](https://miaoyan.app/zh/tools/markmap-editor/): 免费的 Markmap 在线编辑器，Markdown 标题和列表边写边变成思维导图，用妙言的配色，可以收起、缩放，下载 PNG 和 SVG。
 - [Chinese Typography Cleaner](https://miaoyan.app/tools/chinese-typography-cleaner/): A free online tool that adds spaces between Chinese characters and English letters or digits, turns half-width punctuation after Chinese into full-width and tidies ellipses and dashes, using the rules of MiaoYan's Clean Typography, without touching code, math or links.
 - [中英文排版整理](https://miaoyan.app/zh/tools/chinese-typography-cleaner/): 免费的中英文排版整理工具，在浏览器里给中文和英文、数字之间加空格，把中文后面的半角标点换成全角，整理省略号和破折号，规则和妙言的清理排版一样，代码、公式和链接保持原样。
+- [HTML and Word to Markdown](https://miaoyan.app/tools/html-to-markdown/): A free online converter that turns pasted rich text, .docx and .html files into Markdown in the browser, the way MiaoYan's Mac app converts a paste, keeping headings, lists, tables, links, code blocks and their languages.
+- [网页和 Word 转 Markdown](https://miaoyan.app/zh/tools/html-to-markdown/): 免费的在线 HTML 转 Markdown 工具，把粘贴的网页、Word、Google 文档和 .docx、.html 文件在浏览器里转成 Markdown，规则和妙言 Mac 版粘贴时的转换一样，标题、列表、表格、链接和代码块连语言都保留。
 - [MiaoYan Theme for NetNewsWire](https://miaoyan.app/tools/netnewswire-theme/): A free, open source theme for NetNewsWire on Mac, iPhone and iPad that sets Chinese and English articles at a 1.7 line height with 0.5px tracking, keeps blue links and a green accent, follows the system's light and dark appearance and installs with one click.
 - [NetNewsWire 妙言主题](https://miaoyan.app/zh/tools/netnewswire-theme/): 免费开源的 NetNewsWire 主题，Mac、iPhone 和 iPad 上都能用，正文行高 1.7、字距 0.5px，中文文章读起来不挤，链接蓝色、点缀绿色，跟着系统切换浅色和深色，一键安装。
 <!-- tools:end -->

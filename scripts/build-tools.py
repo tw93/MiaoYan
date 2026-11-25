@@ -53,7 +53,7 @@ UI = {
             "title": "Markdown Tools",
             "head_title": "Free Markdown Tools: Mermaid, Markmap, tables and preview",
             "lede": "Small tools for writing Markdown, free and in your browser.",
-            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer and a Chinese typography cleaner.",
+            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, an HTML and Word to Markdown converter and a Chinese typography cleaner.",
         },
         "faq": "FAQ",
         "app_cta": "View in App Store",
@@ -103,6 +103,30 @@ UI = {
                 "exportFailed": "This browser could not save the image.",
                 "empty": "Write an outline to draw a mind map.",
                 "oldBrowser": "This browser cannot open mind map links. Update it, or open the link in another browser.",
+            },
+        },
+        "h2m": {
+            "open": "Open file",
+            "source": "Pasted content",
+            "code": "Markdown",
+            "placeholder": "Paste a web page, a Word document or a Google Doc here",
+            "copy": "Copy Markdown",
+            "download": "Download .md",
+            "app_title": "Paste straight into MiaoYan",
+            "app_text": "MiaoYan is a Markdown notebook for Mac, iPhone and iPad. Paste a web page or a document into a note in the Mac app and it arrives as Markdown the same way, headings, lists, tables and code included.",
+            "app_alt": "MiaoYan on a Mac, with Markdown on the left and its preview on the right",
+            "app_shot": "split",
+            "strings": {
+                "converted": "Converted to Markdown.",
+                "opened": "Opened {name}.",
+                "reading": "Reading the Word file.",
+                "fileType": "Open a .docx or .html file under 20 MB.",
+                "docxFailed": "This Word file could not be read. Save it again as .docx and try once more.",
+                "imageLost": "1 embedded image was left out, as Markdown keeps only an image's address.",
+                "imagesLost": "{n} embedded images were left out, as Markdown keeps only an image's address.",
+                "copied": "Copied.",
+                "copyFailed": "This browser does not allow copying.",
+                "exportFailed": "This browser cannot save the file.",
             },
         },
         "nnw": {
@@ -216,7 +240,7 @@ UI = {
             "title": "Markdown 在线工具",
             "head_title": "Markdown 在线工具：Mermaid、Markmap 思维导图、表格和预览",
             "lede": "写 Markdown 时顺手用的几个小工具，免费，打开浏览器就能用。",
-            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览和中英文排版整理。",
+            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、网页和 Word 转 Markdown，以及中英文排版整理。",
         },
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
@@ -263,6 +287,30 @@ UI = {
                 "opened": "已打开 {name}。",
                 "fileType": "打开的需要是 5 MB 以内的 Markdown 或文本文件。",
                 "copied": "已复制，贴回原来的地方就行。",
+                "copyFailed": "这个浏览器不允许复制。",
+                "exportFailed": "这个浏览器存不了这个文件。",
+            },
+        },
+        "h2m": {
+            "open": "打开文件",
+            "source": "粘贴的内容",
+            "code": "Markdown",
+            "placeholder": "把网页、Word 或 Google 文档的内容粘贴到这里",
+            "copy": "复制 Markdown",
+            "download": "下载 .md",
+            "app_title": "直接粘贴进妙言",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，在 Mac 版里把网页或文档粘贴进笔记，会按同样的方式写成 Markdown，标题、列表、表格和代码都在。",
+            "app_alt": "Mac 上的妙言，左边是 Markdown，右边是它的预览",
+            "app_shot": "split",
+            "strings": {
+                "converted": "已转成 Markdown。",
+                "opened": "已打开 {name}。",
+                "reading": "正在读取 Word 文件。",
+                "fileType": "打开的需要是 20 MB 以内的 .docx 或 .html 文件。",
+                "docxFailed": "这个 Word 文件读不出来，重新另存为 .docx 再试一次。",
+                "imageLost": "有 1 张内嵌图片没有带过来，Markdown 里只能放图片的地址。",
+                "imagesLost": "有 {n} 张内嵌图片没有带过来，Markdown 里只能放图片的地址。",
+                "copied": "已复制。",
                 "copyFailed": "这个浏览器不允许复制。",
                 "exportFailed": "这个浏览器存不了这个文件。",
             },
@@ -941,6 +989,40 @@ def typography_page(tool, lang):
                      before=("assets/tools/md-highlight.js", "assets/tools/typography-cleaner.js"))
 
 
+def h2m_page(tool, lang):
+    """HTML to Markdown: rich text pasted or opened shows on the left as it
+    looked, and the right holds the Markdown MiaoYan's paste would write."""
+    ui = UI[lang]["h2m"]
+    sample = (SRC / f"html-to-markdown-sample.{lang}.html").read_text(encoding="utf-8").strip()
+    data = {"strings": ui["strings"], "mammoth": versioned("assets/vendor/mammoth-1.13.0.browser.min.js")}
+    tool_html = f"""  <div class="tool h2m-tool" id="h2m-tool">
+    <div class="table-bar">
+      <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="h2m-file" accept=".docx,.html,.htm,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/html" class="visually-hidden"></label>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-editor h2m-pane">
+        <div class="h2m-source" id="h2m-source" contenteditable="true" role="textbox" aria-multiline="true" aria-label="{esc(ui["source"])}" data-placeholder="{esc(ui["placeholder"])}" spellcheck="false">
+{sample}
+        </div>
+      </div>
+      <div class="tool-editor">
+        <label class="visually-hidden" for="h2m-code">{esc(ui["code"])}</label>
+        <textarea id="h2m-code" class="tool-code viewer-code" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft"></textarea>
+      </div>
+    </div>
+    <div class="tool-foot">
+      <p class="tool-status" id="h2m-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="tool-actions">
+      <button type="button" class="btn btn-primary" data-action="copy">{esc(ui["copy"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="download">{esc(ui["download"])}</button>
+    </div>
+  </div>"""
+    return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
+                     data_id="h2m-data", data=data, script="assets/tools/html-to-markdown.js",
+                     before=("assets/tools/md-highlight.js", "assets/tools/html-to-markdown-core.js"))
+
+
 NNW_REPO = "https://github.com/tw93/MiaoYan-NetNewsWire-Theme"
 NNW_ZIP = NNW_REPO + "/releases/latest/download/MiaoYan.nnwtheme.zip"
 
@@ -1056,8 +1138,8 @@ def llms_block(tools):
     return "\n" + "\n".join(lines) + "\n"
 
 
-PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "netnewswire-theme": nnw_page}
-PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "netnewswire-theme": "nnw"}
+PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "html-to-markdown": h2m_page, "netnewswire-theme": nnw_page}
+PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "html-to-markdown": "h2m", "netnewswire-theme": "nnw"}
 
 
 def outputs(tools):

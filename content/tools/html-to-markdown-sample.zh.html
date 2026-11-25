@@ -1,0 +1,18 @@
+<h2>在 Mac 上装 Homebrew</h2>
+<p>Homebrew 是 Mac 上的<strong>包管理器</strong>，装好以后用一行命令就能装软件，详细说明见<a href="https://brew.sh/zh-cn/">官网</a>。</p>
+<ol>
+<li>打开终端，粘贴下面这行命令</li>
+<li>按提示输入开机密码</li>
+<li>装完运行 <code>brew doctor</code> 检查一遍</li>
+</ol>
+<pre><code class="language-bash">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+<h3>常用命令</h3>
+<table>
+<thead><tr><th>命令</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td><code>brew install</code></td><td>安装软件</td></tr>
+<tr><td><code>brew upgrade</code></td><td>升级全部软件</td></tr>
+<tr><td><code>brew cleanup</code></td><td>清理旧版本</td></tr>
+</tbody>
+</table>
+<blockquote><p>装在 Apple 芯片的 Mac 上时，Homebrew 的位置是 <em>/opt/homebrew</em>。</p></blockquote>
