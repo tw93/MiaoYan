@@ -578,6 +578,48 @@ final class MermaidExportTests: XCTestCase {
         XCTAssertGreaterThan(code[0], code[1] * 3, "one line of code is drawn as one line, not a letter per line, \(code)")
     }
 
+    /// markmap's KaTeX plugin loads KaTeX by itself when a node holds a
+    /// formula and `window.katex` is not there yet, from its own
+    /// `preloadScripts`: jsdelivr's katex.min.js, which the shim's filter of
+    /// the plugins' assets never saw. It loads the bundled copy, and the
+    /// formula is still drawn.
+    @MainActor
+    func testAMarkmapFormulaLoadsKaTeXFromTheBundle() async throws {
+        let remote = """
+            [...document.querySelectorAll('link[href], script[src]')]
+              .map((e) => e.getAttribute('href') || e.getAttribute('src'))
+              .filter((u) => /^(https?:)?\\/\\//i.test(u))
+            """
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let index = try String(contentsOf: downViewBundleURL.appendingPathComponent("index.html"), encoding: .utf8)
+        let loaderSettings = index.components(separatedBy: "\n").filter { $0.contains("<script>window.markmap") }.joined(separator: "\n")
+        let scripts = ["frame-fallback.js", "d3.min.js", "markmap.min.js", "markmap-view.min.js", "theme-config.js", "diagram-handler.js"]
+            .map { "<script src=\"\(js.appendingPathComponent($0).absoluteString)\"></script>" }
+            .joined()
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8">
+            <base href="\(downViewBundleURL.absoluteString)">
+            <script>
+            window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);
+            window.ThemeConfig = { isDarkMode: () => false };
+            </script>
+            \(loaderSettings)
+            \(scripts)
+            </head><body><pre><code class="language-markmap"># Root
+            ## Two $x^2$</code></pre>
+            <script>window.addEventListener('load', () => DiagramHandler.initializeMarkmap());</script>
+            </body></html>
+            """
+        let url = tempDirectory.appendingPathComponent("markmap-no-katex.html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+        let webView = makeWebView()
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        try await waitFor(webView, "document.querySelector('.language-markmap')?.dataset.markmapShown === 'true'")
+        let pageRemote = try await webView.evaluateJavaScript(remote) as? [String]
+        XCTAssertEqual(pageRemote, [], "a page without KaTeX")
+        try await waitFor(webView, "document.querySelectorAll('.language-markmap svg foreignObject .katex').length === 1")
+    }
+
     /// A video written as an image (`![](/files/clip.mov)`) drew as a
     /// broken image on its slide: reveal's markdown makes every `![](…)` an
     /// `<img>`. The slide shows a player.
