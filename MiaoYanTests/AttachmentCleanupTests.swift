@@ -788,22 +788,63 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual(png, "/i/Shot.png")
     }
 
-    /// A PSD an older build kept in `i/` goes to `files/` when its note moves,
-    /// and the link follows it there instead of pointing at an `i/` the
-    /// destination does not have.
+    /// Moving a note re-sorted every file by kind, so `![](/i/logo.ico)`,
+    /// drawn as an image, became `/files/logo.ico`, shown as a link, and a
+    /// PSD an older build kept in `i/` went to `files/`. A link that names
+    /// `i/` or `files/` keeps that folder (maintainer, 2026-11-25); only a
+    /// link outside them, `assets/b.png`, is sorted by the shared rule.
     @MainActor
-    func testMovingANoteTakesAnOlderImageFolderFileToFilesAndTheLinkFollows() throws {
+    func testMovingANoteKeepsTheFolderItsLinkNames() throws {
         let folders = try makeFolders()
         let (from, to, noteURL) = (folders.from, folders.to, folders.noteURL)
+        let manager = FileManager.default
+        for folder in ["files", "assets"] {
+            try manager.createDirectory(at: from.url.appendingPathComponent(folder), withIntermediateDirectories: true)
+        }
         try Data([7, 7]).write(to: from.url.appendingPathComponent("i/Layers.psd"))
-        try "# Trip\n\n![](/i/Shot%201.png)\n\n![](/i/Layers.psd)\n".write(to: noteURL, atomically: true, encoding: .utf8)
+        try Data([5]).write(to: from.url.appendingPathComponent("i/logo.ico"))
+        try Data([6]).write(to: from.url.appendingPathComponent("files/cover.png"))
+        try Data([8]).write(to: from.url.appendingPathComponent("assets/b.png"))
+        try """
+        # Trip
+
+        ![](/i/Shot%201.png)
+
+        ![](/i/Layers.psd)
+
+        ![](i/logo.ico)
+
+        ![](/files/cover.png)
+
+        ![](assets/b.png)
+
+        """.write(to: noteURL, atomically: true, encoding: .utf8)
         let note = Note(url: noteURL, with: from)
 
         note.move(toProject: to)
 
-        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("files/Layers.psd")), Data([7, 7]))
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("i/Layers.psd")), Data([7, 7]))
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("i/logo.ico")), Data([5]))
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("files/cover.png")), Data([6]))
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("i/b.png")), Data([8]), "outside i/ and files/, sorted by kind")
+        XCTAssertFalse(manager.fileExists(atPath: to.url.appendingPathComponent("files").appendingPathComponent("Layers.psd").path))
         let text = try String(contentsOf: to.url.appendingPathComponent("trip.md"), encoding: .utf8)
-        XCTAssertEqual(text, "# Trip\n\n![](/i/Shot%201.png)\n\n![](/files/Layers.psd)\n")
+        XCTAssertEqual(
+            text,
+            """
+            # Trip
+
+            ![](/i/Shot%201.png)
+
+            ![](/i/Layers.psd)
+
+            ![](/i/logo.ico)
+
+            ![](/files/cover.png)
+
+            ![](/i/b.png)
+
+            """)
     }
 
     /// A dropped file is written as a link, `[Report v2.pdf](/files/Report-v2.pdf)`,

@@ -1266,13 +1266,18 @@ public class Note: NSObject {
     /// Copies one attachment into `project`'s attachment folder under its own
     /// name. Moving a note copies rather than moves, because another note may
     /// share the image; the original is left for Clean Unused Attachments. On a
-    /// name clash with a different file the copy gets a fresh name. Returns the
-    /// path the note's links must take when the copy landed under another path
-    /// than the link names (a fresh name, an image linked from another
+    /// name clash with a different file the copy gets a fresh name. A link
+    /// that names an `i/` or `files/` folder keeps that folder, so moving a
+    /// note never changes how it renders: `![](/i/logo.ico)` stays an image
+    /// rather than becoming a `/files/` link, and a PSD an older build kept
+    /// in `i/` stays there (maintainer, 2026-11-25). Only a link outside
+    /// those folders (`assets/b.png`) is sorted by the shared rule. Returns
+    /// the path the note's links must take when the copy landed under another
+    /// path than the link names (a fresh name, an image linked from another
     /// folder); `relocateAttachments` rewrites them.
     private func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project) -> String? {
         let manager = FileManager.default
-        let dstPrefix = NotesTextProcessor.getAttachPrefix(url: imageURL)
+        let dstPrefix = Self.attachmentPrefix(namedBy: imagePath) ?? NotesTextProcessor.getAttachPrefix(url: imageURL)
         let folder = project.url.appendingPathComponent(dstPrefix)
         guard manager.fileExists(atPath: imageURL.path) else { return nil }
 
@@ -1302,6 +1307,14 @@ public class Note: NSObject {
 
         let newPath = dstPrefix + target.lastPathComponent
         return newPath == imagePath ? nil : newPath
+    }
+
+    /// `/i/` or `/files/` when the folder a link names is one of them,
+    /// root-relative or relative (`/i/a.png`, `i/a.png`, `../files/a.pdf`).
+    nonisolated static func attachmentPrefix(namedBy path: String) -> String? {
+        let folder = ((path as NSString).deletingLastPathComponent as NSString).lastPathComponent
+        let attachmentFolders = [AttachmentFile.folder(for: .image), AttachmentFile.folder(for: .file)]
+        return attachmentFolders.contains(folder) ? "/\(folder)/" : nil
     }
 
     /// Points every link to each old path in the body, written plain or
