@@ -695,6 +695,38 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertTrue(source.contains("guard let note = inPlaceNote ?? note else { return }\n        load(note: note, force: true)"), "app reactivation")
     }
 
+    /// A second deck export while already in PPT mode reloads the page, but
+    /// the page from the first export, already `?print-pdf` and laid out,
+    /// went on answering the readiness check until the reload landed, so the
+    /// old page could be printed. The shell waits for a page loaded after the
+    /// one on screen when it asked for the reload.
+    @available(macOS 14, *)
+    @MainActor
+    func testADeckExportWaitsForThePageItsReloadBrings() async throws {
+        let url = tempDirectory.appendingPathComponent("deck.md")
+        try "# One\n\n---\n\n# Two\n".write(to: url, atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: Project(url: tempDirectory, label: "test", isRoot: true))
+        note.content = NSMutableAttributedString(string: "# One\n\n---\n\n# Two\n")
+        note.markContentAsLoaded()
+        let preview = MPreviewView(frame: NSRect(x: 0, y: 0, width: 400, height: 300), note: note, closure: nil)
+        let shown = expectation(description: "first page shown")
+        preview.load(note: note)
+        preview.runWhenShowing(note) { shown.fulfill() }
+        await fulfillment(of: [shown], timeout: 20)
+        XCTAssertEqual(preview.shownLoadEpoch, preview.loadEpoch, "the page on screen is the latest load's")
+        XCTAssertTrue(ShellModel.deckPageIsFresh(preview, after: nil), "nothing to wait out")
+
+        let stale = preview.loadEpoch
+        XCTAssertFalse(ShellModel.deckPageIsFresh(preview, after: stale), "the page on screen is the one before the reload")
+        preview.load(note: note)
+        XCTAssertFalse(ShellModel.deckPageIsFresh(preview, after: stale), "the reload has not landed")
+        let deadline = Date().addingTimeInterval(20)
+        while Date() < deadline, !ShellModel.deckPageIsFresh(preview, after: stale) {
+            try await Task.sleep(nanoseconds: 25_000_000)
+        }
+        XCTAssertTrue(ShellModel.deckPageIsFresh(preview, after: stale), "the reloaded page is up")
+    }
+
     /// The first Command-3 on a long note showed its top, and so did the split
     /// pane back from preview: the scroll to the editor's line ran on a page
     /// that was ready but still held another note (the blank one preloaded

@@ -65,7 +65,11 @@ extension ShellModel {
         // ppt.html lays the deck out one slide a page only when it is rendered
         // with this set; the export clears it once the PDF is made.
         UserDefaultsManagement.isOnExportPPT = true
+        var stalePage: Int?
         if wasPPT {
+            // The page on screen goes on answering until the reload lands; after
+            // an earlier export it is already `?print-pdf` and read ready.
+            stalePage = preview?.loadEpoch
             previewStyleRevision &+= 1
         } else {
             setPresenting(true, ppt: true)
@@ -77,15 +81,24 @@ extension ShellModel {
         }
         isExporting = true
         leavePPTAfterExport = !wasPPT
-        printDeckWhenShown()
+        printDeckWhenShown(after: stalePage)
+    }
+
+    /// Whether `preview` shows a page loaded after the load `stalePage`
+    /// names; any page will do when there is none to wait out.
+    static func deckPageIsFresh(_ preview: MPreviewView, after stalePage: Int?) -> Bool {
+        stalePage.map { preview.shownLoadEpoch > $0 } ?? true
     }
 
     /// Hands the deck to the preview that shows it. Entering PPT from the
     /// editor or split view makes a new preview on SwiftUI's next pass, so
     /// the export waits for one showing slides; the preview then waits for
     /// the deck itself (`MPreviewView.deckReadyScript`), where a fixed 1.2s
-    /// printed Mermaid slides before they were drawn.
-    private func printDeckWhenShown(attempt: Int = 0) {
+    /// printed Mermaid slides before they were drawn. A second export while
+    /// already in PPT mode ran that check on the `?print-pdf` page of the
+    /// first, before the reload its `previewStyleRevision` bump starts had
+    /// landed, so it waits for a page newer than `stalePage` first.
+    private func printDeckWhenShown(after stalePage: Int?, attempt: Int = 0) {
         // Leaving full screen ends the slides; the preview then left is
         // not the deck, so it is not printed as one.
         guard isPPT, attempt < 50 else {
@@ -95,9 +108,9 @@ extension ShellModel {
             finishExport()
             return
         }
-        guard let preview, preview.window != nil, preview.pageIsSlides else {
+        guard let preview, preview.window != nil, preview.pageIsSlides, Self.deckPageIsFresh(preview, after: stalePage) else {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-                self?.printDeckWhenShown(attempt: attempt + 1)
+                self?.printDeckWhenShown(after: stalePage, attempt: attempt + 1)
             }
             return
         }

@@ -96,6 +96,12 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private weak var note: Note?
     /// Bumped by every load and in-place switch; only the newest may land.
     private(set) var loadEpoch = 0
+    /// The `loadEpoch` of the load whose page last finished loading, and of
+    /// the one whose page was handed to WebKit. A caller that starts a load
+    /// waits for `shownLoadEpoch` to pass the epoch it saw, since until then
+    /// the page on screen is the one before.
+    private(set) var shownLoadEpoch = 0
+    private var pageLoadEpoch = 0
     private var closure: MPreviewViewClosure?
     public static var template: String?
     private static var bundleInitialized = false
@@ -559,6 +565,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        shownLoadEpoch = pageLoadEpoch
         scrollObserverInjected = false
         Self.hasCompletedInitialLoad = true
         isLoadingTemplate = false
@@ -999,6 +1006,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 // access to `/`, a sandboxed build's network process was
                 // refused the page itself and every note came out blank (#578).
                 self.loadFileURL(indexURL, allowingReadAccessTo: indexURL.deletingLastPathComponent())
+                self.pageLoadEpoch = epoch
                 self.hasLoadedTemplate = true
                 self.pageIsDark = UserDataService.instance.isDark
                 self.note = note
