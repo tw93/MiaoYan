@@ -514,6 +514,70 @@ final class MermaidExportTests: XCTestCase {
         XCTAssertEqual(ink([svg[0], svg[1], 80, 60]), 0, "nothing is drawn in the map's top-left corner")
     }
 
+    /// markmap's plugins carry jsdelivr URLs: a formula in a node added
+    /// KaTeX 0.16.0's stylesheet and webfontloader, and code in a node loaded
+    /// prism-core, its autoloader and then each language's grammar, script
+    /// run in the preview. The preview loads nothing from the network, and
+    /// code in a node is highlighted by the bundled highlight.js.
+    @MainActor
+    func testMarkmapLoadsNothingFromTheNetwork() async throws {
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let css = downViewBundleURL.appendingPathComponent("css", isDirectory: true)
+        let index = try String(contentsOf: downViewBundleURL.appendingPathComponent("index.html"), encoding: .utf8)
+        let loaderSettings = index.components(separatedBy: "\n")
+            .filter { $0.contains("<script>window.markmap") }
+            .joined(separator: "\n")
+        let styles = ["typography.css", "katex.min.css", "diagrams.css"]
+            .map { "<link rel=\"stylesheet\" href=\"\(css.appendingPathComponent($0).absoluteString)\">" }
+            .joined()
+        let scripts = ["katex.min.js", "highlight.min.js", "frame-fallback.js", "d3.min.js", "markmap.min.js", "markmap-view.min.js", "theme-config.js", "diagram-handler.js"]
+            .map { "<script src=\"\(js.appendingPathComponent($0).absoluteString)\"></script>" }
+            .joined()
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8">
+            <base href="\(downViewBundleURL.absoluteString)">
+            \(styles)
+            <script>
+            window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);
+            window.ThemeConfig = { isDarkMode: () => false };
+            </script>
+            \(loaderSettings)
+            \(scripts)
+            </head><body><pre><code class="language-markmap"># Root
+            ## Two $x^2$
+            ## Code
+            ```js
+            const answer = 42
+            ```</code></pre>
+            <script>window.addEventListener('load', () => DiagramHandler.initializeMarkmap());</script>
+            </body></html>
+            """
+        let url = tempDirectory.appendingPathComponent("markmap-offline.html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+
+        let webView = makeWebView()
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        try await waitFor(webView, "document.querySelector('.language-markmap')?.dataset.markmapShown === 'true'")
+
+        let found = try await webView.evaluateJavaScript(
+            """
+            (() => ({
+              remote: [...document.querySelectorAll('link[href], script[src]')]
+                .map((e) => e.getAttribute('href') || e.getAttribute('src'))
+                .filter((u) => /^(https?:)?\\/\\//i.test(u)),
+              keywords: document.querySelectorAll('.language-markmap svg foreignObject .hljs-keyword').length,
+              code: (() => { const b = document.querySelector('.language-markmap svg foreignObject pre').getBoundingClientRect(); return [b.width, b.height]; })(),
+              formulas: document.querySelectorAll('.language-markmap svg foreignObject .katex').length
+            }))()
+            """)
+        let result = try XCTUnwrap(found as? [String: Any])
+        XCTAssertEqual(result["remote"] as? [String], [], "\(result)")
+        XCTAssertEqual(result["formulas"] as? Int, 1, "\(result)")
+        XCTAssertGreaterThan(result["keywords"] as? Int ?? 0, 0, "code in a node is highlighted, \(result)")
+        let code = try XCTUnwrap(result["code"] as? [Double])
+        XCTAssertGreaterThan(code[0], code[1] * 3, "one line of code is drawn as one line, not a letter per line, \(code)")
+    }
+
     private func rgb(_ color: NSColor?) -> String? {
         guard let srgb = color?.usingColorSpace(.sRGB) else { return nil }
         return String(format: "%.3f %.3f %.3f", srgb.redComponent, srgb.greenComponent, srgb.blueComponent)
