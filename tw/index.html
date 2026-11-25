@@ -116,14 +116,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -752,9 +752,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }

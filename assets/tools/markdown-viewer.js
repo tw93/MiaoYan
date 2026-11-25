@@ -609,11 +609,13 @@
     if (Math.abs(el.scrollTop - y) < 1) return;
     echo.preview = y;
     el.scrollTop = y;
+    seenTop = el.scrollTop;
   });
 
   function onPreviewScroll() {
     var el = scroller();
     if (!el) return;
+    seenTop = el.scrollTop;
     if (echo.preview >= 0 && Math.abs(el.scrollTop - echo.preview) < 2) { echo.preview = -1; return; }
     echo.preview = -1;
     if (!(anchors = anchors || buildAnchors())) return;
@@ -622,6 +624,27 @@
     echo.code = y;
     code.scrollTop = y;
   }
+
+  // Safari runs no listener inside a frame whose sandbox has no allow-scripts,
+  // the frame's scroll listener included, so while the pointer is over the
+  // preview, the preview has focus, or for a second after the pointer leaves
+  // (a trackpad's glide), this page reads the preview's scroll position each
+  // frame and hands a change to onPreviewScroll. In Chrome the listener has
+  // already seen it and the two agree.
+  var seenTop = 0;
+  var watching = 0;
+  var hovering = false;
+  var glideUntil = 0;
+
+  function watch() {
+    var el = scroller();
+    if (el && el.scrollTop !== seenTop) onPreviewScroll();
+    watching = hovering || document.activeElement === frame || Date.now() < glideUntil ? requestAnimationFrame(watch) : 0;
+  }
+  function startWatch() { if (!watching) watching = requestAnimationFrame(watch); }
+  frame.addEventListener("pointerenter", function () { hovering = true; startWatch(); });
+  frame.addEventListener("pointerleave", function () { hovering = false; glideUntil = Date.now() + 1000; });
+  window.addEventListener("blur", function () { setTimeout(function () { if (document.activeElement === frame) startWatch(); }); });
 
   function stale() { anchors = null; }
   window.addEventListener("resize", stale);

@@ -6,9 +6,9 @@ Markdown tables have limits of their own, so a line break inside a cell becomes 
 
 ## FAQ
 
-### Is it free?
+### How large can a table be?
 
-Yes, and there is no account. The table is converted in your browser, so pasted data is never sent to a server, and your last table stays in this browser for the next visit.
+The grid holds up to 500 rows and 30 columns. When a paste from Excel or a CSV file is larger, the extra rows and columns are left out and the status line says so.
 
 ### Why do Chinese and Japanese characters count as two?
 
@@ -17,3 +17,7 @@ Terminals and Prettier count a CJK character as two columns wide, and the paddin
 ### Can I merge cells?
 
 Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML `<table>` in the note and use `colspan` and `rowspan`.
+
+### Is my table saved?
+
+Your last table stays in this browser for the next visit, until you switch browsers or clear the site's data. Pasted data is converted in your browser and never sent to a server.

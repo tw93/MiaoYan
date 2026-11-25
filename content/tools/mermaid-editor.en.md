@@ -13,18 +13,18 @@ Paste that into a note and a Mermaid-aware preview draws it: MiaoYan, GitHub, Gi
 
 ## FAQ
 
-### Is it free?
+### Which diagrams can I draw?
 
-Yes, and there is no account. The diagram is drawn in your browser, and a copied link carries the whole diagram inside the link itself.
+The templates cover flowcharts, sequence diagrams, timelines, Gantt charts, class, state and ER diagrams, pie charts, mind maps and XY charts; picking one and editing its example is the quickest start, and any other type Mermaid knows can be written by hand. It runs Mermaid 11.14.0, the same file and colours the MiaoYan app bundles, so a diagram drawn here looks the same in a note.
 
-### Which Mermaid version does it use?
+### Is the downloaded image sharp enough?
 
-Mermaid 11.14.0 with MiaoYan's diagram colours, the same file the MiaoYan app bundles, so a diagram drawn here looks the same in a note. Labels are drawn as SVG text so that a downloaded file reads the same on every computer.
+PNG is exported at twice the size on MiaoYan's light diagram background, scaled down a little for a very large diagram so the image stays within 16 million pixels, and Copy image puts that same PNG on the clipboard for pasting into a chat or a document. For something you can enlarge without blur, download the SVG, whose labels are SVG text that other apps display as it is.
+
+### How do I send a diagram to someone?
+
+Copy link compresses the code into the link itself, so whoever opens it sees the same diagram. Nothing is stored on a server, and neither of you needs an account.
 
 ### Why did the diagram stop updating?
 
 When the code has a mistake, the last working diagram stays, faded, Mermaid's message appears under the editor, and the line it stopped at is marked beside the code. Common causes are a lowercase `end` as a flowchart node, a missing colon in a timeline, and a diagram type that Mermaid 11.14.0 does not know.
-
-### Where is my diagram kept?
-
-The editor keeps your last diagram in this browser, so it is still there when you come back. Copy link puts the code into the link, so whoever opens it sees the same diagram.

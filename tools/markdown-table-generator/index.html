@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -741,9 +741,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1174,7 +1176,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown Table Generator", "item": "https://miaoyan.app/tools/markdown-table-generator/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/markdown-table-generator/#app", "name": "Markdown Table Generator", "description": "A free Markdown table generator in your browser: paste from Excel, Google Sheets, CSV or TSV, set each column's alignment, and copy a pipe table with its columns lined up, Chinese and Japanese included.", "url": "https://miaoyan.app/tools/markdown-table-generator/", "inLanguage": "en", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and there is no account. The table is converted in your browser, so pasted data is never sent to a server, and your last table stays in this browser for the next visit."}}, {"@type": "Question", "name": "Why do Chinese and Japanese characters count as two?", "acceptedAnswer": {"@type": "Answer", "text": "Terminals and Prettier count a CJK character as two columns wide, and the padding here does the same, so the pipes line up in a font where a CJK character is exactly two Latin characters wide. Turn off Line up columns for the compact form without padding."}}, {"@type": "Question", "name": "Can I merge cells?", "acceptedAnswer": {"@type": "Answer", "text": "Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML <table> in the note and use colspan and rowspan."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown Table Generator", "item": "https://miaoyan.app/tools/markdown-table-generator/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/markdown-table-generator/#app", "name": "Markdown Table Generator", "description": "A free Markdown table generator in your browser: paste from Excel, Google Sheets, CSV or TSV, set each column's alignment, and copy a pipe table with its columns lined up, Chinese and Japanese included.", "url": "https://miaoyan.app/tools/markdown-table-generator/", "inLanguage": "en", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How large can a table be?", "acceptedAnswer": {"@type": "Answer", "text": "The grid holds up to 500 rows and 30 columns. When a paste from Excel or a CSV file is larger, the extra rows and columns are left out and the status line says so."}}, {"@type": "Question", "name": "Why do Chinese and Japanese characters count as two?", "acceptedAnswer": {"@type": "Answer", "text": "Terminals and Prettier count a CJK character as two columns wide, and the padding here does the same, so the pipes line up in a font where a CJK character is exactly two Latin characters wide. Turn off Line up columns for the compact form without padding."}}, {"@type": "Question", "name": "Can I merge cells?", "acceptedAnswer": {"@type": "Answer", "text": "Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML <table> in the note and use colspan and rowspan."}}, {"@type": "Question", "name": "Is my table saved?", "acceptedAnswer": {"@type": "Answer", "text": "Your last table stays in this browser for the next visit, until you switch browsers or clear the site's data. Pasted data is converted in your browser and never sent to a server."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1225,12 +1227,14 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>Copy cells in Excel, Numbers or Google Sheets, click the first cell of the grid and paste, and the whole table becomes what you copied. Paste into a cell further in and it fills right and down from there, adding rows and columns as needed, and Undo takes it back. CSV and TSV files can be dropped onto the grid, and an existing Markdown table pasted in brings its column alignment with it.</p>
 <p>Markdown tables have limits of their own, so a line break inside a cell becomes <code>&lt;br&gt;</code>, a pipe is escaped as <code>\|</code>, and a merged cell is split, with its content in the first cell. The first row is always the header. The syntax is covered in <a href="/blog/markdown-tables/">Markdown tables: alignment, pipes and line breaks</a>, and other ways to convert a sheet in <a href="/blog/excel-to-markdown-table/">Excel to Markdown table: paste, convert and check</a>.</p>
 <h2 id="faq">FAQ</h2>
-<h3 id="is-it-free">Is it free?</h3>
-<p>Yes, and there is no account. The table is converted in your browser, so pasted data is never sent to a server, and your last table stays in this browser for the next visit.</p>
+<h3 id="how-large-can-a-table-be">How large can a table be?</h3>
+<p>The grid holds up to 500 rows and 30 columns. When a paste from Excel or a CSV file is larger, the extra rows and columns are left out and the status line says so.</p>
 <h3 id="why-do-chinese-and-japanese-characters-count-as-two">Why do Chinese and Japanese characters count as two?</h3>
 <p>Terminals and Prettier count a CJK character as two columns wide, and the padding here does the same, so the pipes line up in a font where a CJK character is exactly two Latin characters wide. Turn off Line up columns for the compact form without padding.</p>
 <h3 id="can-i-merge-cells">Can I merge cells?</h3>
 <p>Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML <code>&lt;table&gt;</code> in the note and use <code>colspan</code> and <code>rowspan</code>.</p>
+<h3 id="is-my-table-saved">Is my table saved?</h3>
+<p>Your last table stays in this browser for the next visit, until you switch browsers or clear the site's data. Pasted data is converted in your browser and never sent to a server.</p>
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

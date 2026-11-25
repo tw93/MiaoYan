@@ -1,6 +1,6 @@
 ## Copy with styles
 
-Copy formatted puts the note on the clipboard with each element's style written onto the element itself, since documents, mail and CMS editors drop stylesheets and classes, so headings, quotes, lists, tables and code keep MiaoYan's look where you paste them. The quote bar becomes a left border, task boxes become ☐ and ☑, code keeps its indentation and line breaks, Mermaid diagrams become images, and formulas are copied as their `$...$` source for now.
+Copy formatted puts the note on the clipboard with each element's style written onto the element itself, since documents, mail and CMS editors drop stylesheets and classes, so headings, quotes, lists, tables and code keep MiaoYan's look where you paste them. The quote bar becomes a left border, task boxes become ☐ and ☑, code keeps its indentation and line breaks, and Mermaid diagrams become images.
 
 For someone who works in Word, Download Word saves a .docx laid out in the same styles, with formulas as Word equations; [Markdown to Word](/tools/markdown-to-word/) has the details.
 
@@ -14,14 +14,18 @@ The preview uses the stylesheets of MiaoYan's own preview, and its code highligh
 
 ## FAQ
 
-### Is it free, and is my file uploaded?
+### Why are formulas copied as `$...$`?
 
-It is free, with no account. A file you open is read in your browser and never sent to a server, and your last text stays in this browser for the next visit.
-
-### What syntax does it support?
-
-Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with `$...$` and `$$...$$`, and diagrams in mermaid code blocks. The Mermaid syntax is in [Mermaid in Markdown](/blog/mermaid-diagrams-in-markdown/).
+A typeset formula needs KaTeX's fonts, which a paste cannot carry, so Copy formatted puts the formula's source on the clipboard. For a document with formulas, Download Word turns them into Word equations, or save it as PDF.
 
 ### Why does an image not show?
 
 A web page cannot read files on your computer, so an image with a local path such as `images/a.png` does not show; images with an `https://` address do. Opened in MiaoYan, the same file shows its local images.
+
+### Is what I write saved?
+
+Your last text stays in this browser for the next visit, until you switch browsers, use a private window or clear the site's data, so press `⌘S` to keep anything that matters as a .md file. A file you open is read in your browser and never sent to a server.
+
+### What syntax does it support?
+
+Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with `$...$` and `$$...$$`, and diagrams in mermaid code blocks. The Mermaid syntax is in [Mermaid in Markdown](/blog/mermaid-diagrams-in-markdown/).

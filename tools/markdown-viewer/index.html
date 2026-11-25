@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -741,9 +741,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1174,7 +1176,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown Viewer", "item": "https://miaoyan.app/tools/markdown-viewer/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/markdown-viewer/#app", "name": "Markdown Viewer", "description": "A free online Markdown viewer and editor: open a .md file or paste text and read it with MiaoYan's preview styling, tables, task lists, math, code highlighting and Mermaid included, then copy it with inline styles or save as Word, PDF, HTML or Markdown.", "url": "https://miaoyan.app/tools/markdown-viewer/", "inLanguage": "en", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it free, and is my file uploaded?", "acceptedAnswer": {"@type": "Answer", "text": "It is free, with no account. A file you open is read in your browser and never sent to a server, and your last text stays in this browser for the next visit."}}, {"@type": "Question", "name": "What syntax does it support?", "acceptedAnswer": {"@type": "Answer", "text": "Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with $...$ and $$...$$, and diagrams in mermaid code blocks. The Mermaid syntax is in Mermaid in Markdown."}}, {"@type": "Question", "name": "Why does an image not show?", "acceptedAnswer": {"@type": "Answer", "text": "A web page cannot read files on your computer, so an image with a local path such as images/a.png does not show; images with an https:// address do. Opened in MiaoYan, the same file shows its local images."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown Viewer", "item": "https://miaoyan.app/tools/markdown-viewer/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/markdown-viewer/#app", "name": "Markdown Viewer", "description": "A free online Markdown viewer and editor: open a .md file or paste text and read it with MiaoYan's preview styling, tables, task lists, math, code highlighting and Mermaid included, then copy it with inline styles or save as Word, PDF, HTML or Markdown.", "url": "https://miaoyan.app/tools/markdown-viewer/", "inLanguage": "en", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why are formulas copied as $...$?", "acceptedAnswer": {"@type": "Answer", "text": "A typeset formula needs KaTeX's fonts, which a paste cannot carry, so Copy formatted puts the formula's source on the clipboard. For a document with formulas, Download Word turns them into Word equations, or save it as PDF."}}, {"@type": "Question", "name": "Why does an image not show?", "acceptedAnswer": {"@type": "Answer", "text": "A web page cannot read files on your computer, so an image with a local path such as images/a.png does not show; images with an https:// address do. Opened in MiaoYan, the same file shows its local images."}}, {"@type": "Question", "name": "Is what I write saved?", "acceptedAnswer": {"@type": "Answer", "text": "Your last text stays in this browser for the next visit, until you switch browsers, use a private window or clear the site's data, so press ⌘S to keep anything that matters as a .md file. A file you open is read in your browser and never sent to a server."}}, {"@type": "Question", "name": "What syntax does it support?", "acceptedAnswer": {"@type": "Answer", "text": "Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with $...$ and $$...$$, and diagrams in mermaid code blocks. The Mermaid syntax is in Mermaid in Markdown."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1261,19 +1263,21 @@ flowchart LR
   </div>
   <div class="blog-body tool-body">
 <h2 id="copy-with-styles">Copy with styles</h2>
-<p>Copy formatted puts the note on the clipboard with each element's style written onto the element itself, since documents, mail and CMS editors drop stylesheets and classes, so headings, quotes, lists, tables and code keep MiaoYan's look where you paste them. The quote bar becomes a left border, task boxes become ☐ and ☑, code keeps its indentation and line breaks, Mermaid diagrams become images, and formulas are copied as their <code>$...$</code> source for now.</p>
+<p>Copy formatted puts the note on the clipboard with each element's style written onto the element itself, since documents, mail and CMS editors drop stylesheets and classes, so headings, quotes, lists, tables and code keep MiaoYan's look where you paste them. The quote bar becomes a left border, task boxes become ☐ and ☑, code keeps its indentation and line breaks, and Mermaid diagrams become images.</p>
 <p>For someone who works in Word, Download Word saves a .docx laid out in the same styles, with formulas as Word equations; <a href="/tools/markdown-to-word/">Markdown to Word</a> has the details.</p>
 <h2 id="writing-in-it">Writing in it</h2>
 <p>The shortcuts are MiaoYan's: <code>⌘B</code> bold, <code>⌘I</code> italic, <code>⌘K</code> link, <code>⌘E</code> inline code, <code>⇧⌘E</code> code block, and <code>⌘S</code> saves the Markdown as a file, with Ctrl in place of ⌘ on Windows. Return in a list or quote starts the next item, and Return on an empty one ends it. The two panes scroll together paragraph by paragraph, whichever one you scroll. Phone width lays the preview out at 375 pixels, the button at the end of the toolbar gives the editor the whole screen, and the word count follows MiaoYan's, one for each CJK character and one for each word of other text.</p>
 <h2 id="how-close-it-is-to-miaoyans-preview">How close it is to MiaoYan's preview</h2>
 <p>The preview uses the stylesheets of MiaoYan's own preview, and its code highlighting, math and Mermaid come from the same files the app ships, so fonts, spacing, tables and code blocks look as they do in a note. The difference is the parser: this page reads Markdown with markdown-it and the app with cmark-gfm. Both follow CommonMark plus GitHub's tables, strikethrough and task lists, so only rare edge cases come out differently.</p>
 <h2 id="faq">FAQ</h2>
-<h3 id="is-it-free-and-is-my-file-uploaded">Is it free, and is my file uploaded?</h3>
-<p>It is free, with no account. A file you open is read in your browser and never sent to a server, and your last text stays in this browser for the next visit.</p>
-<h3 id="what-syntax-does-it-support">What syntax does it support?</h3>
-<p>Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with <code>$...$</code> and <code>$$...$$</code>, and diagrams in mermaid code blocks. The Mermaid syntax is in <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid in Markdown</a>.</p>
+<h3 id="why-are-formulas-copied-as">Why are formulas copied as <code>$...$</code>?</h3>
+<p>A typeset formula needs KaTeX's fonts, which a paste cannot carry, so Copy formatted puts the formula's source on the clipboard. For a document with formulas, Download Word turns them into Word equations, or save it as PDF.</p>
 <h3 id="why-does-an-image-not-show">Why does an image not show?</h3>
 <p>A web page cannot read files on your computer, so an image with a local path such as <code>images/a.png</code> does not show; images with an <code>https://</code> address do. Opened in MiaoYan, the same file shows its local images.</p>
+<h3 id="is-what-i-write-saved">Is what I write saved?</h3>
+<p>Your last text stays in this browser for the next visit, until you switch browsers, use a private window or clear the site's data, so press <code>⌘S</code> to keep anything that matters as a .md file. A file you open is read in your browser and never sent to a server.</p>
+<h3 id="what-syntax-does-it-support">What syntax does it support?</h3>
+<p>Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with <code>$...$</code> and <code>$$...$$</code>, and diagrams in mermaid code blocks. The Mermaid syntax is in <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid in Markdown</a>.</p>
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">
@@ -1299,7 +1303,7 @@ flowchart LR
 <script type="application/json" id="viewer-data">{"lang":"en","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","site":"https://miaoyan.app","wechat":false,"strings":{"opened":"Opened {name}.","fileType":"Open a Markdown or text file under 5 MB.","copied":"Copied with its styles, ready to paste into a document or an email.","copiedMath":" Formulas are copied as their TeX source.","word":"{n} word","words":"{n} words","copyFailed":"This browser did not allow copying.","exportFailed":"This browser could not save the file.","loadFailed":"Part of the preview did not load. Check the connection and reload the page.","wordImage":"Saved. 1 picture stayed out, as its site does not let a page read it or its path is relative.","wordImages":"Saved. {n} pictures stayed out, as their sites do not let a page read them or their paths are relative."},"docx":["/assets/vendor/docx-9.15.3.js?v=32706f12e03a"]}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
-<script src="/assets/tools/markdown-viewer.js?v=ef1da254b976" defer></script>
+<script src="/assets/tools/markdown-viewer.js?v=9942822a741d" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

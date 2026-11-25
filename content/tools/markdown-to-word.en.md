@@ -4,20 +4,24 @@ Write or paste Markdown on the left, the right lays it out in MiaoYan's preview 
 
 You can also open a .md file or drop one on the page. The shortcuts are MiaoYan's, `⌘B` bold, `⌘I` italic, `⌘K` link and `⌘S` to save the Markdown, and the last text you wrote stays in this browser.
 
-## Pictures
-
-Pictures from the web are downloaded by your browser and put in the document. A site that does not let other pages read its pictures, and a relative path to a local picture, cannot be included; the status line says how many were left out, so you can insert them in Word.
-
 ## FAQ
 
-### Is it free, and is my document uploaded?
+### Can Word build a table of contents from it?
 
-It is free with no sign-up. The .docx is made in your browser and nothing is sent to a server; only the web pictures in the text are downloaded from their sites.
+Yes. Headings use Word's own Heading 1 to Heading 6 styles, so Insert Table of Contents works straight away and the navigation pane lists them.
+
+### Can I edit the formulas in Word?
+
+Yes. They are Word's own equations, not pictures, so you can click into one and change it. A formula on its own line is centred, and an inline one runs with the text.
+
+### Why are some pictures missing?
+
+Pictures from the web are downloaded by your browser and put in the document. A site that does not let other pages read its pictures, and a local path such as `images/a.png`, cannot be included; the status line says how many were left out, so you can insert them in Word.
+
+### Is my document uploaded?
+
+No. The .docx is made in your browser and nothing is sent to a server; only the web pictures in the text are downloaded from their sites.
 
 ### Will it open in apps other than Word?
 
 Yes, it is a standard .docx, and its headings, lists, tables, checkboxes and formulas were checked in LibreOffice. Some apps handle equations and checkboxes less fully than Word.
-
-### What if I want a PDF?
-
-Use Save as PDF, which prints the preview to a PDF file through your browser, laid out as you see it. The [Markdown Viewer](/tools/markdown-viewer/) is the same editor and can download Word as well.

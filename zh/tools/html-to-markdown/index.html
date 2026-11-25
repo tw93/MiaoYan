@@ -24,8 +24,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -107,14 +107,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -743,9 +743,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1176,7 +1178,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "网页和 Word 转 Markdown", "item": "https://miaoyan.app/zh/tools/html-to-markdown/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/html-to-markdown/#app", "name": "网页和 Word 转 Markdown", "description": "免费的在线 HTML 转 Markdown 工具，把粘贴的网页、Word、Google 文档和 .docx、.html 文件在浏览器里转成 Markdown，规则和妙言 Mac 版粘贴时的转换一样，标题、列表、表格、链接和代码块连语言都保留。", "url": "https://miaoyan.app/zh/tools/html-to-markdown/", "inLanguage": "zh-CN", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "要收费吗，内容会上传吗？", "acceptedAnswer": {"@type": "Answer", "text": "不收费，也不用注册，转换在浏览器里完成，粘贴的内容和打开的文件都不会发到服务器，左边显示的网页图片会从它原来的网站加载。"}}, {"@type": "Question", "name": "和妙言里粘贴的效果一样吗？", "acceptedAnswer": {"@type": "Answer", "text": "一样，这里用的是妙言 Mac 版粘贴网页内容时的同一套转换，逐行照着它的源码写成网页版，同一段网页两边转出来一字不差。妙言只在内容里有标题、列表、表格、引用或代码块时才转，普通的一句话照原文粘贴；这个页面每次都转，另外还多认了 Google 文档的整段加粗、Word 的列表和图片下面的图注。"}}, {"@type": "Question", "name": "转出来的 Markdown 能直接用吗？", "acceptedAnswer": {"@type": "Answer", "text": "能，复制以后贴进妙言、GitHub、Obsidian 这类支持 Markdown 的地方就行，也可以下载成 .md 文件，文件名取自打开的文件或者第一个标题。想先看看排出来的样子，可以贴到 Markdown 在线预览里。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "网页和 Word 转 Markdown", "item": "https://miaoyan.app/zh/tools/html-to-markdown/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/html-to-markdown/#app", "name": "网页和 Word 转 Markdown", "description": "免费的在线 HTML 转 Markdown 工具，把粘贴的网页、Word、Google 文档和 .docx、.html 文件在浏览器里转成 Markdown，规则和妙言 Mac 版粘贴时的转换一样，标题、列表、表格、链接和代码块连语言都保留。", "url": "https://miaoyan.app/zh/tools/html-to-markdown/", "inLanguage": "zh-CN", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "和妙言里粘贴的效果一样吗？", "acceptedAnswer": {"@type": "Answer", "text": "一样，这里用的是妙言 Mac 版粘贴网页内容时的同一套转换，逐行照着它的源码写成网页版，同一段网页两边转出来一字不差。妙言只在内容里有标题、列表、表格、引用或代码块时才转，普通的一句话照原文粘贴，这个页面每次都转，另外还多认了 Google 文档的整段加粗、Word 的列表和图片下面的图注。"}}, {"@type": "Question", "name": "能转 PDF 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能直接打开 PDF，PDF 里只有排好的文字，没有标题和列表的结构，在 PDF 阅读器里选中文字复制过来，得到的是一段段的正文，标题和列表要自己补上。"}}, {"@type": "Question", "name": "粘贴的内容会上传吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会，转换在浏览器里完成，粘贴的内容和打开的文件都不会发到服务器，只有左边显示的网页图片会从它原来的网站加载，公司文档也可以放心贴。"}}, {"@type": "Question", "name": "转出来的 Markdown 怎么用？", "acceptedAnswer": {"@type": "Answer", "text": "复制以后贴进妙言、GitHub、Obsidian 这类支持 Markdown 的地方就行，也可以下载成 .md 文件，文件名取自打开的文件或者第一个标题，想先看看排出来的样子，可以贴到 Markdown 在线预览里。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1246,12 +1248,14 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="哪些转不过来">哪些转不过来</h2>
 <p>Markdown 里只能放图片的地址，所以 Word 里插入的图片、截图粘贴进文档的图片带不过来，网页上的图片会保留原来的网址。字号、颜色、字体、居中这类排版信息会去掉，合并过的单元格只占一格，公式只保留能复制出来的文字，转完扫一眼表格和公式最稳妥。</p>
 <h2 id="常见问题">常见问题</h2>
-<h3 id="要收费吗内容会上传吗">要收费吗，内容会上传吗？</h3>
-<p>不收费，也不用注册，转换在浏览器里完成，粘贴的内容和打开的文件都不会发到服务器，左边显示的网页图片会从它原来的网站加载。</p>
 <h3 id="和妙言里粘贴的效果一样吗">和妙言里粘贴的效果一样吗？</h3>
-<p>一样，这里用的是妙言 Mac 版粘贴网页内容时的同一套转换，逐行照着它的源码写成网页版，同一段网页两边转出来一字不差。妙言只在内容里有标题、列表、表格、引用或代码块时才转，普通的一句话照原文粘贴；这个页面每次都转，另外还多认了 Google 文档的整段加粗、Word 的列表和图片下面的图注。</p>
-<h3 id="转出来的-markdown-能直接用吗">转出来的 Markdown 能直接用吗？</h3>
-<p>能，复制以后贴进妙言、GitHub、Obsidian 这类支持 Markdown 的地方就行，也可以下载成 .md 文件，文件名取自打开的文件或者第一个标题。想先看看排出来的样子，可以贴到 <a href="/zh/tools/markdown-viewer/">Markdown 在线预览</a>里。</p>
+<p>一样，这里用的是妙言 Mac 版粘贴网页内容时的同一套转换，逐行照着它的源码写成网页版，同一段网页两边转出来一字不差。妙言只在内容里有标题、列表、表格、引用或代码块时才转，普通的一句话照原文粘贴，这个页面每次都转，另外还多认了 Google 文档的整段加粗、Word 的列表和图片下面的图注。</p>
+<h3 id="能转-pdf-吗">能转 PDF 吗？</h3>
+<p>不能直接打开 PDF，PDF 里只有排好的文字，没有标题和列表的结构，在 PDF 阅读器里选中文字复制过来，得到的是一段段的正文，标题和列表要自己补上。</p>
+<h3 id="粘贴的内容会上传吗">粘贴的内容会上传吗？</h3>
+<p>不会，转换在浏览器里完成，粘贴的内容和打开的文件都不会发到服务器，只有左边显示的网页图片会从它原来的网站加载，公司文档也可以放心贴。</p>
+<h3 id="转出来的-markdown-怎么用">转出来的 Markdown 怎么用？</h3>
+<p>复制以后贴进妙言、GitHub、Obsidian 这类支持 Markdown 的地方就行，也可以下载成 .md 文件，文件名取自打开的文件或者第一个标题，想先看看排出来的样子，可以贴到 <a href="/zh/tools/markdown-viewer/">Markdown 在线预览</a>里。</p>
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

@@ -24,8 +24,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -107,14 +107,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -743,9 +743,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1176,7 +1178,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markmap 思维导图", "item": "https://miaoyan.app/zh/tools/markmap-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/markmap-editor/#app", "name": "Markmap 思维导图", "description": "免费的 Markmap 在线编辑器，Markdown 标题和列表边写边变成思维导图，用妙言的配色，可以收起、缩放，下载 PNG 和 SVG。", "url": "https://miaoyan.app/zh/tools/markmap-editor/", "inLanguage": "zh-CN", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "要收费吗，大纲会上传吗？", "acceptedAnswer": {"@type": "Answer", "text": "不收费，也不用注册，导图在浏览器里画出来，大纲不会发到服务器，最后一次的内容存在这个浏览器里，下次打开还在。"}}, {"@type": "Question", "name": "导出的图片和网页上看到的一样吗？", "acceptedAnswer": {"@type": "Answer", "text": "一样的布局和颜色，导出的是当前展开的样子，收起的分支不会出现在图里。SVG 里的节点文字是普通的 SVG 文字，没有嵌着网页内容，放进别的软件里也能正常显示和改字。"}}, {"@type": "Question", "name": "和妙言里的导图有什么不同？", "acceptedAnswer": {"@type": "Answer", "text": "用的是妙言同一版本的 Markmap 和配色，妙言的预览里导图大小固定、不能点击收起，这里可以收起、缩放和拖动，方便看一份很长的大纲。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markmap 思维导图", "item": "https://miaoyan.app/zh/tools/markmap-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/markmap-editor/#app", "name": "Markmap 思维导图", "description": "免费的 Markmap 在线编辑器，Markdown 标题和列表边写边变成思维导图，用妙言的配色，可以收起、缩放，下载 PNG 和 SVG。", "url": "https://miaoyan.app/zh/tools/markmap-editor/", "inLanguage": "zh-CN", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "和 Mermaid 的思维导图有什么不同？", "acceptedAnswer": {"@type": "Answer", "text": "Markmap 直接读 Markdown 的标题和列表，平时写的大纲不用改就能画，分支还能点开收起，Mermaid 的 mindmap 要按缩进写它自己的一套写法，节点形状用括号标出来，好处是能和流程图、时序图写在同一个地方。手上已经有一份大纲就用 Markmap，想和别的图放在一起就用 Mermaid 在线编辑。"}}, {"@type": "Question", "name": "导出的图片和网页上看到的一样吗？", "acceptedAnswer": {"@type": "Answer", "text": "一样的布局和颜色，导出的是当前展开的样子，收起的分支不会出现在图里。PNG 按两倍大小导出，SVG 里的节点文字是普通的 SVG 文本，放进别的软件里也能正常显示和改字。"}}, {"@type": "Question", "name": "和妙言里的导图有什么不同？", "acceptedAnswer": {"@type": "Answer", "text": "用的是妙言同一版本的 Markmap 和配色，妙言的预览里导图大小固定、不能点击收起，这里可以收起、缩放和拖动，方便看一份很长的大纲。"}}, {"@type": "Question", "name": "大纲会保存吗？", "acceptedAnswer": {"@type": "Answer", "text": "最后一次的大纲存在这个浏览器里，下次打开还在，换了浏览器或者清掉网站数据就没了，大纲只在浏览器里画，不会发到服务器。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1240,12 +1242,14 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>第一个 <code>#</code> 标题是中心节点，<code>##</code> 标题是它的分支，列表项挂在最近的标题下面，按缩进一层层往下长，习惯每层两个空格，在左边按 <code>Tab</code> 加一层，<code>Shift + Tab</code> 退一层。节点里可以写<strong>加粗</strong>、<em>斜体</em>、<code>代码</code> 和链接，公式用 <code>$...$</code>。点节点前面的圆点能收起或展开它下面的分支，拖动可以移动画布，双指捏合或者按住 <code>Ctrl</code> 滚动可以缩放。</p>
 <p>画好以后点“复制 Markdown”，会得到一个 markmap 代码块，贴进妙言的笔记里，预览会用同一份 Markmap 画出来。更多写法和它跟 Mermaid 思维导图的区别，可以看这篇<a href="/zh/blog/markmap-mind-maps/">用 Markdown 大纲画 Markmap 思维导图</a>。</p>
 <h2 id="常见问题">常见问题</h2>
-<h3 id="要收费吗大纲会上传吗">要收费吗，大纲会上传吗？</h3>
-<p>不收费，也不用注册，导图在浏览器里画出来，大纲不会发到服务器，最后一次的内容存在这个浏览器里，下次打开还在。</p>
+<h3 id="和-mermaid-的思维导图有什么不同">和 Mermaid 的思维导图有什么不同？</h3>
+<p>Markmap 直接读 Markdown 的标题和列表，平时写的大纲不用改就能画，分支还能点开收起，Mermaid 的 mindmap 要按缩进写它自己的一套写法，节点形状用括号标出来，好处是能和流程图、时序图写在同一个地方。手上已经有一份大纲就用 Markmap，想和别的图放在一起就用 <a href="/zh/tools/mermaid-editor/">Mermaid 在线编辑</a>。</p>
 <h3 id="导出的图片和网页上看到的一样吗">导出的图片和网页上看到的一样吗？</h3>
-<p>一样的布局和颜色，导出的是当前展开的样子，收起的分支不会出现在图里。SVG 里的节点文字是普通的 SVG 文字，没有嵌着网页内容，放进别的软件里也能正常显示和改字。</p>
+<p>一样的布局和颜色，导出的是当前展开的样子，收起的分支不会出现在图里。PNG 按两倍大小导出，SVG 里的节点文字是普通的 SVG 文本，放进别的软件里也能正常显示和改字。</p>
 <h3 id="和妙言里的导图有什么不同">和妙言里的导图有什么不同？</h3>
 <p>用的是妙言同一版本的 Markmap 和配色，妙言的预览里导图大小固定、不能点击收起，这里可以收起、缩放和拖动，方便看一份很长的大纲。</p>
+<h3 id="大纲会保存吗">大纲会保存吗？</h3>
+<p>最后一次的大纲存在这个浏览器里，下次打开还在，换了浏览器或者清掉网站数据就没了，大纲只在浏览器里画，不会发到服务器。</p>
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

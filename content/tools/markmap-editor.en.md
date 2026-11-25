@@ -6,14 +6,18 @@ When the map is ready, Copy Markdown gives you a markmap code block. Paste it in
 
 ## FAQ
 
-### Is it free, and is my outline uploaded?
+### How is it different from a Mermaid mind map?
 
-It is free, with no account. The map is drawn in your browser and the outline never reaches a server; your last outline stays in this browser for the next visit.
+Markmap reads the headings and lists of plain Markdown, so an outline you already have draws as it is and its branches fold on click. A Mermaid mindmap has its own indented syntax with brackets for node shapes, which pays off when it lives beside flowcharts and sequence diagrams. With an outline in hand, use Markmap; to keep it with other diagrams, use the [Mermaid Editor](/tools/mermaid-editor/).
 
 ### Does the exported image match what I see?
 
-It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. Node labels in the SVG are plain SVG text with no embedded web content, so other apps show them and can edit the words.
+It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. PNG is exported at twice the size, and node labels in the SVG are plain SVG text, so other apps show them and can edit the words.
 
 ### How is it different from the map in MiaoYan?
 
 It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline.
+
+### Is my outline saved?
+
+Your last outline stays in this browser for the next visit, until you switch browsers or clear the site's data. The map is drawn in your browser and the outline never reaches a server.

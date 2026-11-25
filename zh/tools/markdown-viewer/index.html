@@ -24,8 +24,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -107,14 +107,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -743,9 +743,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1176,7 +1178,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 在线预览", "item": "https://miaoyan.app/zh/tools/markdown-viewer/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/markdown-viewer/#app", "name": "Markdown 在线预览", "description": "免费的 Markdown 在线预览和编辑，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，带样式一键复制到公众号，也能存成 Word、PDF、HTML 和 Markdown。", "url": "https://miaoyan.app/zh/tools/markdown-viewer/", "inLanguage": "zh-CN", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "要收费吗，文件会上传吗？", "acceptedAnswer": {"@type": "Answer", "text": "不收费，也不用注册，打开的文件只在浏览器里读，不会发到服务器，最后一次的内容存在这个浏览器里，下次打开还在。"}}, {"@type": "Question", "name": "支持哪些写法？", "acceptedAnswer": {"@type": "Answer", "text": "标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 $...$ 和 $$...$$，写在 mermaid 代码块里的图会画出来。Mermaid 的写法见 Markdown 里画 Mermaid 图。"}}, {"@type": "Question", "name": "图片为什么显示不出来？", "acceptedAnswer": {"@type": "Answer", "text": "网页读不到电脑上的文件，images/a.png 这种本地路径的图片不会显示，只有以 https:// 开头的网络图片能显示。在妙言里打开同一个文件，本地图片照常显示。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 在线预览", "item": "https://miaoyan.app/zh/tools/markdown-viewer/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/markdown-viewer/#app", "name": "Markdown 在线预览", "description": "免费的 Markdown 在线预览和编辑，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，带样式一键复制到公众号，也能存成 Word、PDF、HTML 和 Markdown。", "url": "https://miaoyan.app/zh/tools/markdown-viewer/", "inLanguage": "zh-CN", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "公式能复制到公众号吗？", "acceptedAnswer": {"@type": "Answer", "text": "现在不行，公式会按 $...$ 的源码复制过去，排好的公式要靠 KaTeX 的字体，粘贴时带不过去。文章里公式多的话可以下载 Word，公式会变成 Word 公式，或者存成 PDF。"}}, {"@type": "Question", "name": "外部链接为什么变成了文末的编号？", "acceptedAnswer": {"@type": "Answer", "text": "公众号正文里指向其他网站的链接点不开，复制时就把它们换成右上角的编号，地址统一列在文末的参考链接里，读者至少能看到地址，公众号自己的文章链接保持原样。"}}, {"@type": "Question", "name": "图片为什么显示不出来？", "acceptedAnswer": {"@type": "Answer", "text": "网页读不到电脑上的文件，images/a.png 这种本地路径的图片不会显示，只有以 https:// 开头的网络图片能显示，在妙言里打开同一个文件，本地图片照常显示。"}}, {"@type": "Question", "name": "写的内容会保存吗？", "acceptedAnswer": {"@type": "Answer", "text": "最后一次的内容存在这个浏览器里，下次打开还在，换了浏览器、用了无痕窗口或者清掉网站数据就没了，要留着的文章按 ⌘S 存成 .md 文件。打开的文件只在浏览器里读，不会发到服务器。"}}, {"@type": "Question", "name": "支持哪些写法？", "acceptedAnswer": {"@type": "Answer", "text": "标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 $...$ 和 $$...$$，写在 mermaid 代码块里的图会画出来，Mermaid 的写法见 Markdown 里画 Mermaid 图。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1263,19 +1265,23 @@ flowchart LR
   </div>
   <div class="blog-body tool-body">
 <h2 id="复制到公众号">复制到公众号</h2>
-<p>写完点复制到公众号，到公众号后台的图文编辑器里粘贴，标题、引用、列表、表格和代码块会带着妙言的样式过去。公众号会丢掉样式表和 class，所以复制时把每个元素的样式都写在了它自己身上，引用的竖条改成左边框，任务列表的勾选框换成 ☐ 和 ☑，代码保留缩进和换行，Mermaid 图转成图片。公众号正文里指向其他网站的链接点不开，这些链接会变成右上角的编号，地址统一列在文末的参考链接里，公众号自己的文章链接保持原样，公式目前按 <code>$...$</code> 的源码复制过去。</p>
+<p>写完点复制到公众号，到公众号后台的图文编辑器里粘贴，标题、引用、列表、表格和代码块会带着妙言的样式过去。公众号会丢掉样式表和 class，所以复制时把每个元素的样式都写在了它自己身上，引用的竖条改成左边框，任务列表的勾选框换成 ☐ 和 ☑，代码保留缩进和换行，Mermaid 图转成图片。Mermaid 图转成图片。</p>
 <p>要交给用 Word 的人，点下载 Word，得到一份按同样样式排好的 .docx，公式变成 Word 公式，详细的说明在 <a href="/zh/tools/markdown-to-word/">Markdown 转 Word</a>。</p>
 <h2 id="写起来顺手的地方">写起来顺手的地方</h2>
 <p>快捷键和妙言一样，<code>⌘B</code> 加粗、<code>⌘I</code> 斜体、<code>⌘K</code> 链接、<code>⌘E</code> 行内代码、<code>⇧⌘E</code> 代码块，<code>⌘S</code> 把 Markdown 存成文件，Windows 上把 ⌘ 换成 Ctrl。列表和引用里按回车会接着写下一项，空着再按一次就结束。两边按段落对齐滚动，左边滚到哪一段，右边就停在哪一段，反过来也一样。手机宽度按 375 像素排版，和公众号文章在手机上的宽度差不多，工具栏最右边的按钮可以全屏写，底部的字数和妙言的算法一样，每个汉字算一个，英文按词算。</p>
 <h2 id="和妙言的预览有多像">和妙言的预览有多像</h2>
 <p>右边用的是妙言预览同一套样式表，代码高亮、公式和 Mermaid 也是 App 里那几份文件，所以字体、行距、表格和代码块都和笔记里看到的一样。不同的是这里用 markdown-it 解析 Markdown，App 里用的是 cmark-gfm，两者都遵循 CommonMark 和 GitHub 的表格、删除线、任务列表写法，只有很少见的写法结果会有差别。</p>
 <h2 id="常见问题">常见问题</h2>
-<h3 id="要收费吗文件会上传吗">要收费吗，文件会上传吗？</h3>
-<p>不收费，也不用注册，打开的文件只在浏览器里读，不会发到服务器，最后一次的内容存在这个浏览器里，下次打开还在。</p>
-<h3 id="支持哪些写法">支持哪些写法？</h3>
-<p>标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 <code>$...$</code> 和 <code>$$...$$</code>，写在 mermaid 代码块里的图会画出来。Mermaid 的写法见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
+<h3 id="公式能复制到公众号吗">公式能复制到公众号吗？</h3>
+<p>现在不行，公式会按 <code>$...$</code> 的源码复制过去，排好的公式要靠 KaTeX 的字体，粘贴时带不过去。文章里公式多的话可以下载 Word，公式会变成 Word 公式，或者存成 PDF。</p>
+<h3 id="外部链接为什么变成了文末的编号">外部链接为什么变成了文末的编号？</h3>
+<p>公众号正文里指向其他网站的链接点不开，复制时就把它们换成右上角的编号，地址统一列在文末的参考链接里，读者至少能看到地址，公众号自己的文章链接保持原样。</p>
 <h3 id="图片为什么显示不出来">图片为什么显示不出来？</h3>
-<p>网页读不到电脑上的文件，<code>images/a.png</code> 这种本地路径的图片不会显示，只有以 <code>https://</code> 开头的网络图片能显示。在妙言里打开同一个文件，本地图片照常显示。</p>
+<p>网页读不到电脑上的文件，<code>images/a.png</code> 这种本地路径的图片不会显示，只有以 <code>https://</code> 开头的网络图片能显示，在妙言里打开同一个文件，本地图片照常显示。</p>
+<h3 id="写的内容会保存吗">写的内容会保存吗？</h3>
+<p>最后一次的内容存在这个浏览器里，下次打开还在，换了浏览器、用了无痕窗口或者清掉网站数据就没了，要留着的文章按 <code>⌘S</code> 存成 .md 文件。打开的文件只在浏览器里读，不会发到服务器。</p>
+<h3 id="支持哪些写法">支持哪些写法？</h3>
+<p>标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 <code>$...$</code> 和 <code>$$...$$</code>，写在 mermaid 代码块里的图会画出来，Mermaid 的写法见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">
@@ -1301,7 +1307,7 @@ flowchart LR
 <script type="application/json" id="viewer-data">{"lang":"zh","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","site":"https://miaoyan.app","wechat":true,"strings":{"opened":"已打开 {name}。","fileType":"打开的需要是 5 MB 以内的 Markdown 或文本文件。","copied":"已复制，到公众号编辑器里粘贴就行，样式会跟着过去。","copiedLinks":"已复制，文中 {n} 个外部链接改成了文末的参考链接，公众号正文里的外链点不开。","copiedMath":"公式按源码复制，公众号里不会排成公式。","references":"参考链接","word":"{n} 字","words":"{n} 字","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这个文件。","loadFailed":"预览有一部分没加载上，检查网络后刷新页面。","wordImage":"已保存，有 1 张图片没放进去，它所在的网站不让网页读取，或者用的是相对路径。","wordImages":"已保存，有 {n} 张图片没放进去，它们所在的网站不让网页读取，或者用的是相对路径。"},"docx":["/assets/vendor/docx-9.15.3.js?v=32706f12e03a"]}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
-<script src="/assets/tools/markdown-viewer.js?v=ef1da254b976" defer></script>
+<script src="/assets/tools/markdown-viewer.js?v=9942822a741d" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

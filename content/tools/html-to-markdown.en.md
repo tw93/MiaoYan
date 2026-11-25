@@ -10,14 +10,18 @@ Markdown holds only an image's address, so pictures inserted into a Word file or
 
 ## FAQ
 
-### Is it free, and is my content uploaded?
-
-It is free with no sign-up, and the conversion runs in your browser: what you paste and the files you open are never sent to a server. Images from a pasted web page load from the site they came from.
-
 ### Is this what MiaoYan does when I paste?
 
-Yes. This is the conversion MiaoYan's Mac app runs when you paste from a web page, written line for line from its source, so the same page gives the same Markdown in both. MiaoYan converts only when the paste has headings, lists, tables, quotes or code blocks and pastes a plain sentence as it is; this page always converts, and it also reads Google Docs' bold wrapper, Word's lists and the caption under a picture.
+Yes. This is the conversion MiaoYan's Mac app runs when you paste from a web page, written line for line from its source, so the same page gives the same Markdown in both. MiaoYan converts only when the paste has headings, lists, tables, quotes or code blocks and pastes a plain sentence as it is, while this page always converts, and it also reads Google Docs' bold wrapper, Word's lists and the caption under a picture.
 
-### Can I use the Markdown straight away?
+### Can it convert a PDF?
 
-Yes. Copy it into MiaoYan, GitHub, Obsidian or anywhere else that takes Markdown, or download it as a .md file named after the file you opened or the first heading. To see it laid out first, paste it into the [Markdown Viewer](/tools/markdown-viewer/).
+It cannot open a PDF, which holds laid-out text without the structure of headings and lists. Text copied from a PDF reader and pasted here comes out as plain paragraphs, and the headings and lists are yours to add.
+
+### Is what I paste uploaded?
+
+No. The conversion runs in your browser, so what you paste and the files you open are never sent to a server; only the images shown on the left load from the sites they came from.
+
+### How do I use the Markdown?
+
+Copy it into MiaoYan, GitHub, Obsidian or anywhere else that takes Markdown, or download it as a .md file named after the file you opened or the first heading. To see it laid out first, paste it into the [Markdown Viewer](/tools/markdown-viewer/).

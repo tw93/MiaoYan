@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -741,9 +741,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1174,7 +1176,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Chinese Typography Cleaner", "item": "https://miaoyan.app/tools/chinese-typography-cleaner/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/chinese-typography-cleaner/#app", "name": "Chinese Typography Cleaner", "description": "A free online tool that adds spaces between Chinese characters and English letters or digits, turns half-width punctuation after Chinese into full-width and tidies ellipses and dashes, using the rules of MiaoYan's Clean Typography, without touching code, math or links.", "url": "https://miaoyan.app/tools/chinese-typography-cleaner/", "inLanguage": "en", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it free, and is my text uploaded?", "acceptedAnswer": {"@type": "Answer", "text": "It is free and needs no sign-up. The cleaning runs in your browser and the text is not sent to a server. Your last text stays in this browser for next time."}}, {"@type": "Question", "name": "Is it the same as Clean Typography in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It runs the same rules as Clean Typography in MiaoYan for Mac, written line by line from its source, so the same text comes out identical in both. In MiaoYan it cleans the open note in one step, and ⌘Z undoes it."}}, {"@type": "Question", "name": "Does it add a space between a number and its unit?", "acceptedAnswer": {"@type": "Answer", "text": "No. 10Gbps stays 10Gbps, and 90° and 15% do not change, because unit symbols are not letters or digits. Add the space yourself where a unit takes one."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Chinese Typography Cleaner", "item": "https://miaoyan.app/tools/chinese-typography-cleaner/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/chinese-typography-cleaner/#app", "name": "Chinese Typography Cleaner", "description": "A free online tool that adds spaces between Chinese characters and English letters or digits, turns half-width punctuation after Chinese into full-width and tidies ellipses and dashes, using the rules of MiaoYan's Clean Typography, without touching code, math or links.", "url": "https://miaoyan.app/tools/chinese-typography-cleaner/", "inLanguage": "en", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it the same as Clean Typography in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. It runs the same rules as Clean Typography in MiaoYan for Mac, written line by line from its source, so the same text comes out identical in both. In MiaoYan it cleans the open note in one step, and ⌘Z undoes it."}}, {"@type": "Question", "name": "Does it change quotation marks?", "acceptedAnswer": {"@type": "Answer", "text": "No. Corner brackets, curly quotes and straight quotes each have their own users, so it leaves them as they are; the only punctuation it changes is a half-width comma, semicolon, colon, exclamation mark, question mark or full stop after a Chinese character."}}, {"@type": "Question", "name": "Does it add a space between a number and its unit?", "acceptedAnswer": {"@type": "Answer", "text": "No. 10Gbps stays 10Gbps, and 90° and 15% do not change, because unit symbols are not letters or digits. Add the space yourself where a unit takes one."}}, {"@type": "Question", "name": "A product name got a space. What now?", "acceptedAnswer": {"@type": "Answer", "text": "It does not know product names, so a brand written without a space, like 豆瓣FM, gets one. Every change is marked on the right, so look over the marks and put the name back in your text after copying. The cleaning runs in your browser and the text is not sent to a server."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1240,15 +1242,17 @@ const msg = &quot;中文English混排&quot;
 <p>Where a Han character or kana touches a Latin letter or a digit, it adds one space between them, so <code>使用Swift开发</code> becomes <code>使用 Swift 开发</code> and <code>第3章</code> becomes <code>第 3 章</code>; spaces already there stay. A half-width <code>,;:!?.</code> that ends a clause after a Han character becomes full-width, so <code>你好,世界</code> becomes <code>你好，世界</code>, while the dot and colon inside numbers like 3.5 and 10:00 stay. Spaces around full-width punctuation are removed, full-width letters and digits become half-width, three dots after Chinese become an ellipsis, a single em dash between Han characters becomes a comma while the doubled Chinese dash stays, and runs of blank lines fold into one.</p>
 <p>The right side shows the result with every added or replaced character marked, and a thin line where a space or a blank line was removed. Copy it and paste it back where it came from.</p>
 <h2 id="what-it-leaves-alone">What it leaves alone</h2>
-<p>Fenced and inline code are never changed, though inline code gets a space on each side, so <code>运行`git status`确认</code> becomes <code>运行 `git status` 确认</code>. Math in <code>$...$</code> and <code>$$</code>, link and image targets, <code>[[wikilinks]]</code>, bare URLs, reference definitions and front matter stay as they are, while link text is cleaned. It does not know product names, so a brand written without a space, like <code>豆瓣FM</code>, gets one, and it is worth a look afterwards.</p>
+<p>Fenced and inline code are never changed, though inline code gets a space on each side, so <code>运行`git status`确认</code> becomes <code>运行 `git status` 确认</code>. Math in <code>$...$</code> and <code>$$</code>, link and image targets, <code>[[wikilinks]]</code>, bare URLs, reference definitions and front matter stay as they are, while link text is cleaned.</p>
 <p>Why Chinese writers add this space, and the usual exceptions, are in <a href="/blog/chinese-english-spacing/">Chinese-English spacing in Markdown notes</a>.</p>
 <h2 id="faq">FAQ</h2>
-<h3 id="is-it-free-and-is-my-text-uploaded">Is it free, and is my text uploaded?</h3>
-<p>It is free and needs no sign-up. The cleaning runs in your browser and the text is not sent to a server. Your last text stays in this browser for next time.</p>
 <h3 id="is-it-the-same-as-clean-typography-in-miaoyan">Is it the same as Clean Typography in MiaoYan?</h3>
 <p>Yes. It runs the same rules as Clean Typography in MiaoYan for Mac, written line by line from its source, so the same text comes out identical in both. In MiaoYan it cleans the open note in one step, and <code>⌘Z</code> undoes it.</p>
+<h3 id="does-it-change-quotation-marks">Does it change quotation marks?</h3>
+<p>No. Corner brackets, curly quotes and straight quotes each have their own users, so it leaves them as they are; the only punctuation it changes is a half-width comma, semicolon, colon, exclamation mark, question mark or full stop after a Chinese character.</p>
 <h3 id="does-it-add-a-space-between-a-number-and-its-unit">Does it add a space between a number and its unit?</h3>
 <p>No. <code>10Gbps</code> stays <code>10Gbps</code>, and <code>90°</code> and <code>15%</code> do not change, because unit symbols are not letters or digits. Add the space yourself where a unit takes one.</p>
+<h3 id="a-product-name-got-a-space-what-now">A product name got a space. What now?</h3>
+<p>It does not know product names, so a brand written without a space, like <code>豆瓣FM</code>, gets one. Every change is marked on the right, so look over the marks and put the name back in your text after copying. The cleaning runs in your browser and the text is not sent to a server.</p>
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

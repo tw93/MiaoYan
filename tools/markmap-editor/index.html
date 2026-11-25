@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=c42ba49135b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=a2e1c4932014") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -741,9 +741,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column. */
+   and the way into MiaoYan below keep the reading column's width on that same
+   left edge (centred, it started 190px in from the title above it; maintainer
+   2026-11-25). */
 .wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1174,7 +1176,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markmap Editor", "item": "https://miaoyan.app/tools/markmap-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/markmap-editor/#app", "name": "Markmap Editor", "description": "A free online Markmap editor: headings and nested lists become a mind map as you type, in MiaoYan's colours, with folding, zoom, and PNG or SVG download.", "url": "https://miaoyan.app/tools/markmap-editor/", "inLanguage": "en", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it free, and is my outline uploaded?", "acceptedAnswer": {"@type": "Answer", "text": "It is free, with no account. The map is drawn in your browser and the outline never reaches a server; your last outline stays in this browser for the next visit."}}, {"@type": "Question", "name": "Does the exported image match what I see?", "acceptedAnswer": {"@type": "Answer", "text": "It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. Node labels in the SVG are plain SVG text with no embedded web content, so other apps show them and can edit the words."}}, {"@type": "Question", "name": "How is it different from the map in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Markdown Tools", "item": "https://miaoyan.app/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markmap Editor", "item": "https://miaoyan.app/tools/markmap-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/markmap-editor/#app", "name": "Markmap Editor", "description": "A free online Markmap editor: headings and nested lists become a mind map as you type, in MiaoYan's colours, with folding, zoom, and PNG or SVG download.", "url": "https://miaoyan.app/tools/markmap-editor/", "inLanguage": "en", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How is it different from a Mermaid mind map?", "acceptedAnswer": {"@type": "Answer", "text": "Markmap reads the headings and lists of plain Markdown, so an outline you already have draws as it is and its branches fold on click. A Mermaid mindmap has its own indented syntax with brackets for node shapes, which pays off when it lives beside flowcharts and sequence diagrams. With an outline in hand, use Markmap; to keep it with other diagrams, use the Mermaid Editor."}}, {"@type": "Question", "name": "Does the exported image match what I see?", "acceptedAnswer": {"@type": "Answer", "text": "It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. PNG is exported at twice the size, and node labels in the SVG are plain SVG text, so other apps show them and can edit the words."}}, {"@type": "Question", "name": "How is it different from the map in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline."}}, {"@type": "Question", "name": "Is my outline saved?", "acceptedAnswer": {"@type": "Answer", "text": "Your last outline stays in this browser for the next visit, until you switch browsers or clear the site's data. The map is drawn in your browser and the outline never reaches a server."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1238,12 +1240,14 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>The first <code>#</code> heading is the centre, <code>##</code> headings are its branches, and list items hang under the nearest heading, nesting one level per indent; two spaces a level is the habit, and <code>Tab</code> and <code>Shift + Tab</code> in the editor add or remove one. Nodes can hold <strong>bold</strong>, <em>italic</em>, <code>code</code>, links and math in <code>$...$</code>. Click the dot on a node to fold or unfold its branch, drag to move the map, and pinch or hold <code>Ctrl</code> while scrolling to zoom.</p>
 <p>When the map is ready, Copy Markdown gives you a markmap code block. Paste it into a MiaoYan note and the preview draws it with the same Markmap. More syntax, and how it compares with Mermaid's mind maps, is in <a href="/blog/markmap-mind-maps/">Markmap: turn a Markdown outline into a mind map</a>.</p>
 <h2 id="faq">FAQ</h2>
-<h3 id="is-it-free-and-is-my-outline-uploaded">Is it free, and is my outline uploaded?</h3>
-<p>It is free, with no account. The map is drawn in your browser and the outline never reaches a server; your last outline stays in this browser for the next visit.</p>
+<h3 id="how-is-it-different-from-a-mermaid-mind-map">How is it different from a Mermaid mind map?</h3>
+<p>Markmap reads the headings and lists of plain Markdown, so an outline you already have draws as it is and its branches fold on click. A Mermaid mindmap has its own indented syntax with brackets for node shapes, which pays off when it lives beside flowcharts and sequence diagrams. With an outline in hand, use Markmap; to keep it with other diagrams, use the <a href="/tools/mermaid-editor/">Mermaid Editor</a>.</p>
 <h3 id="does-the-exported-image-match-what-i-see">Does the exported image match what I see?</h3>
-<p>It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. Node labels in the SVG are plain SVG text with no embedded web content, so other apps show them and can edit the words.</p>
+<p>It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. PNG is exported at twice the size, and node labels in the SVG are plain SVG text, so other apps show them and can edit the words.</p>
 <h3 id="how-is-it-different-from-the-map-in-miaoyan">How is it different from the map in MiaoYan?</h3>
 <p>It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline.</p>
+<h3 id="is-my-outline-saved">Is my outline saved?</h3>
+<p>Your last outline stays in this browser for the next visit, until you switch browsers or clear the site's data. The map is drawn in your browser and the outline never reaches a server.</p>
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">
