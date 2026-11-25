@@ -340,10 +340,9 @@ class ClipboardManager {
                 string: AttachmentFile.markdown(path: path, kind: path.hasPrefix("/i/") ? .image : kind, title: url?.lastPathComponent ?? ""))
             let imagePath = "\(note.project.url.path)\(path)"
             let tempPath = URL(fileURLWithPath: imagePath)
-            let picType = UserDefaultsManagement.defaultPicUpload
 
-            // Only Support PicGo and PicList via HTTP
-            if picType == "PicGo" || picType == "PicList" {
+            switch Self.uploadHost(forAttachmentAt: path, setting: UserDefaultsManagement.defaultPicUpload) {
+            case .http:
                 host?.toast(message: I18n.str("Uploading image…"))
                 // The local link holds the spot until the upload finishes:
                 // inserting the link at the cursor afterwards dropped it wherever
@@ -373,7 +372,7 @@ class ClipboardManager {
                         }
                     }
                 }
-            } else if picType == "uPic" || picType == "Picsee" {
+            case .app(let picType):
                 // Restore uPic/Picsee support via Shell Command
                 let placeholderText = Self.makeUploadPlaceholder()
                 let uploadingPlaceholder = NSAttributedString(string: placeholderText)
@@ -389,11 +388,31 @@ class ClipboardManager {
                     placeholder: placeholderText
                 )
                 uploadToCloudAsync(parameters: uploadParams)
-            } else {
+            case nil:
                 // Default local storage
                 textView.breakUndoCoalescing()
                 textView.insertText(defaultImage, replacementRange: textView.selectedRange())
             }
+        }
+    }
+
+    enum UploadHost: Equatable {
+        /// PicGo or PicList, over their local HTTP endpoint.
+        case http
+        /// uPic or Picsee, run as a command.
+        case app(String)
+    }
+
+    /// The image host that takes the attachment just written at `path`
+    /// (`/i/shot.png`), if the setting names one. Only images go up: a PDF
+    /// or a video went to the host as well, came back as `![](https://….pdf)`
+    /// and its local file was trashed; anything outside `i/` stays local.
+    static func uploadHost(forAttachmentAt path: String, setting: String) -> UploadHost? {
+        guard path.hasPrefix("/i/") else { return nil }
+        switch setting {
+        case "PicGo", "PicList": return .http
+        case "uPic", "Picsee": return .app(setting)
+        default: return nil
         }
     }
 

@@ -344,6 +344,51 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("files/Report-v2.pdf").path))
     }
 
+    /// With an image host set, every dropped file went up to it whatever its
+    /// kind: a PDF came back as `![](https://….pdf)` and its local file was
+    /// trashed, the toast saying an image was uploading. Only `i/` images go
+    /// up; a PDF stays a local link and nothing is started. Picsee is not
+    /// installed on the test Macs, so the old code's attempt reached no host.
+    @available(macOS 14, *)
+    @MainActor
+    func testWithAnImageHostSetADroppedPDFStaysALocalLink() throws {
+        XCTAssertEqual(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "PicGo"), .http)
+        XCTAssertEqual(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "PicList"), .http)
+        XCTAssertEqual(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "uPic"), .app("uPic"))
+        XCTAssertNil(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "None"))
+        for host in ["PicGo", "PicList", "uPic", "Picsee"] {
+            XCTAssertNil(ClipboardManager.uploadHost(forAttachmentAt: "/files/Report-v2.pdf", setting: host), host)
+            XCTAssertNil(ClipboardManager.uploadHost(forAttachmentAt: "/files/clip.mov", setting: host), host)
+        }
+
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "Picsee"
+        let note = makeLoadedNote("drop-pdf-host.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDrop-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let file = source.appendingPathComponent("Report v2.pdf")
+        try Data("%PDF-1.4".utf8).write(to: file)
+
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-pdf-host-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+
+        XCTAssertEqual(controller.textView.string, "before [Report v2.pdf](/files/Report-v2.pdf)after")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("files/Report-v2.pdf").path))
+    }
+
     /// Picture data dragged with no file beside it, as from a browser, was
     /// left to NSTextView and became an inline attachment never written to
     /// the note's folder (#578). It is saved and linked like a paste; a text
