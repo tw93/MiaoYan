@@ -536,7 +536,6 @@ img.border {
 }
 
 @media print {
-  #write img.lazy-image,
   #write img.media-pending,
   #write video {
     background-color: transparent;

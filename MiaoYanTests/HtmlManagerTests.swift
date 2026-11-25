@@ -547,7 +547,7 @@ final class HtmlManagerTests: XCTestCase {
     func testExportsDoNotPrintAVideoAsAGreyBox() throws {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let css = try String(contentsOf: root.appendingPathComponent("Resources/DownView.bundle/css/base.css"), encoding: .utf8)
-        let print = try XCTUnwrap(css.range(of: "@media print {\n  #write img.lazy-image,\n  #write img.media-pending,\n  #write video {\n    background-color: transparent;"))
+        let print = try XCTUnwrap(css.range(of: "@media print {\n  #write img.media-pending,\n  #write video {\n    background-color: transparent;"))
         XCTAssertFalse(print.isEmpty)
         XCTAssertTrue(HtmlManager.checkImagesScript.contains("if (video.readyState < 2) video.style.backgroundColor = 'transparent';"))
     }
