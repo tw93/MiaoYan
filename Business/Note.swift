@@ -931,6 +931,24 @@ public class Note: NSObject {
         return res
     }
 
+    /// Every local file the body links, each once: the images
+    /// `getAllImages` finds (relative paths too) and every `i/` and `files/`
+    /// reference `AttachmentFile.references` reads, which the iPhone uses,
+    /// a dropped file's `[Report v2.pdf](/files/Report-v2.pdf)` included.
+    /// Moving a note carried only the images, so a linked PDF stayed behind
+    /// and the moved note's link pointed nowhere.
+    func getAllAttachments() -> [(url: URL, path: String)] {
+        var attachments = getAllImages()
+        var seen = Set(attachments.map { $0.url.standardizedFileURL.path })
+        for reference in AttachmentFile.references(in: content.string) {
+            let name = reference.name.removingPercentEncoding ?? reference.name
+            let url = project.url.appendingPathComponent(reference.folder).appendingPathComponent(name)
+            guard seen.insert(url.standardizedFileURL.path).inserted else { continue }
+            attachments.append((url: url, path: "/\(reference.folder)/\(name)"))
+        }
+        return attachments
+    }
+
     /// `text` stands in for a body that is not loaded; `links` is
     /// `Note.attachmentLinks(in: text)` when the caller already has it, as
     /// the orphan scan does after reading notes off the main actor.
@@ -1218,12 +1236,12 @@ public class Note: NSObject {
                 _ = Self.showFailure(I18n.str("This note is read-only, so it was not moved"))
                 return
             }
-            let imagesMeta = getAllImages()
-            for imageMeta in imagesMeta {
-                relocateAttachment(from: imageMeta.url, imagePath: imageMeta.path, to: project)
+            let attachments = getAllAttachments()
+            for attachment in attachments {
+                relocateAttachment(from: attachment.url, imagePath: attachment.path, to: project)
             }
 
-            if !imagesMeta.isEmpty {
+            if !attachments.isEmpty {
                 save()
             }
         }

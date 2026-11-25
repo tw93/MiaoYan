@@ -805,4 +805,36 @@ final class AttachmentCleanupTests: XCTestCase {
         let text = try String(contentsOf: to.url.appendingPathComponent("trip.md"), encoding: .utf8)
         XCTAssertEqual(text, "# Trip\n\n![](/i/Shot%201.png)\n\n![](/files/Layers.psd)\n")
     }
+
+    /// A dropped file is written as a link, `[Report v2.pdf](/files/Report-v2.pdf)`,
+    /// and moving its note carried only what reads as an image: the PDF stayed
+    /// in the old folder and the moved note's link pointed nowhere. A file
+    /// whose name is taken in the destination gets a fresh one and the link,
+    /// its title kept, follows.
+    @MainActor
+    func testMovingANoteCarriesTheFilesItLinks() throws {
+        let folders = try makeFolders()
+        let (from, to, noteURL) = (folders.from, folders.to, folders.noteURL)
+        let manager = FileManager.default
+        try manager.createDirectory(at: from.url.appendingPathComponent("files"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: to.url.appendingPathComponent("files"), withIntermediateDirectories: true)
+        try Data([1, 2]).write(to: from.url.appendingPathComponent("files/Report-v2.pdf"))
+        try Data([3]).write(to: from.url.appendingPathComponent("files/memo.txt"))
+        try Data([9]).write(to: to.url.appendingPathComponent("files/memo.txt"))
+        try "# Trip\n\n[Report v2.pdf](/files/Report-v2.pdf)\n\n[memo.txt](/files/memo.txt \"memo\")\n"
+            .write(to: noteURL, atomically: true, encoding: .utf8)
+        let note = Note(url: noteURL, with: from)
+
+        note.move(toProject: to)
+
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("files/Report-v2.pdf")), Data([1, 2]))
+        XCTAssertTrue(manager.fileExists(atPath: from.url.appendingPathComponent("files/Report-v2.pdf").path), "the original stays")
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("files/memo.txt")), Data([9]), "the other file is left alone")
+        let text = try String(contentsOf: to.url.appendingPathComponent("trip.md"), encoding: .utf8)
+        XCTAssertTrue(text.contains("[Report v2.pdf](/files/Report-v2.pdf)"), text)
+        let memo = try XCTUnwrap(text.range(of: #"\[memo\.txt\]\(/files/([^ )]+) "memo"\)"#, options: .regularExpression), text)
+        let name = String(text[memo].dropFirst("[memo.txt](/files/".count).prefix { $0 != " " })
+        XCTAssertNotEqual(name, "memo.txt")
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("files").appendingPathComponent(name)), Data([3]))
+    }
 }
