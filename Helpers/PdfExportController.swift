@@ -154,6 +154,20 @@ final class PdfExportController: NSObject {
         });
         """
 
+    /// A map is fitted to the width this view draws it at, and the print sheet
+    /// takes away the page's side padding, so on paper its SVG is wider than
+    /// the box the map was centred in and the map sat to the left. A viewBox
+    /// of the drawn size lets the paper scale and centre it, and a narrower
+    /// page would shrink it rather than cut its right side.
+    static let markmapPaperScript = """
+        document.querySelectorAll('.language-markmap svg').forEach(function(svg) {
+            var box = svg.getBoundingClientRect();
+            if (box.width > 0 && box.height > 0 && !svg.hasAttribute('viewBox')) {
+                svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
+            }
+        });
+        """
+
     /// Adds the print sheet and the title, and swaps lazy images back to their
     /// real files: the offscreen print view never scrolls, so a placeholder
     /// would print as a blank box. The sheet and the title go in as JSON
@@ -262,7 +276,7 @@ final class PdfExportController: NSObject {
             guard let self else { return }
             let ready = (result as? Bool) ?? false
             if ready || self.mediaWaitAttempts >= Self.mediaWaitMaxAttempts {
-                web.evaluateJavaScript(Self.hideUndrawnVideosScript) { [weak self] _, _ in
+                web.evaluateJavaScript(Self.hideUndrawnVideosScript + Self.markmapPaperScript) { [weak self] _, _ in
                     self?.extractHeadings()
                 }
             } else {

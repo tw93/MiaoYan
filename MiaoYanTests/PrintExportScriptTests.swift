@@ -170,6 +170,59 @@ final class PrintExportScriptTests: XCTestCase {
         return webView
     }
 
+    /// A map is fitted to the width the export view draws it at, and the
+    /// print sheet takes away the page's side padding, so on paper its SVG was
+    /// wider than the box the map was centred in and the map sat to the left,
+    /// 17pt from the box on one side and 95pt on the other.
+    @MainActor
+    func testAMarkmapPrintsCentredInItsBox() async throws {
+        let body = """
+            <pre><code class="language-markmap"># 项目计划 Project plan
+            ## 需求整理与用户访谈记录 Requirements
+            ### 访谈十位长期付费用户并整理反馈
+            ## 发布与回访 Release and follow up
+            ### 写更新说明并同步十一种语言</code></pre>
+            """
+        let page = try HtmlManager.htmlFromTemplate(body, css: HtmlManager.previewStyle(), currentName: "print")
+        let index = try XCTUnwrap(HtmlManager.createTemporaryBundle(pageHTMLString: page))
+        let url = index.deletingLastPathComponent().appendingPathComponent("print-\(UUID().uuidString).html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+        addTeardownBlock { try? FileManager.default.removeItem(at: url) }
+        // As PdfExportController draws it: an A4-wide view in a composited window.
+        let frame = NSRect(x: 0, y: 0, width: 595.2, height: 841.8)
+        let webView = WKWebView(frame: frame)
+        let window = PdfExportController.makeOffscreenWindow(contentRect: frame)
+        window.contentView = webView
+        window.orderFrontRegardless()
+        defer { window.orderOut(nil) }
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        let deadline = Date().addingTimeInterval(15)
+        while Date() < deadline,
+            (try? await webView.evaluateJavaScript("document.querySelector('code.language-markmap')?.dataset.markmapShown === 'true'") as? Bool) != true
+        {
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        _ = try await webView.evaluateJavaScript(
+            PdfExportController.printSetupScript(css: HtmlManager.paginatedPrintCSS(), title: "Print"))
+        let drawn = try await webView.evaluateJavaScript("document.querySelector('.language-markmap svg').getBoundingClientRect().width") as? Double
+        _ = try await webView.evaluateJavaScript(PdfExportController.hideUndrawnVideosScript + PdfExportController.markmapPaperScript + "; true")
+        webView.mediaType = "print"
+
+        let found = try await webView.evaluateJavaScript(
+            """
+            (() => {
+              const svg = document.querySelector('.language-markmap svg').getBoundingClientRect();
+              const map = document.querySelector('.language-markmap svg > g').getBoundingClientRect();
+              return [svg.width, map.left - svg.left, svg.right - map.right];
+            })()
+            """)
+        let box = try XCTUnwrap(found as? [Double])
+        XCTAssertGreaterThan(box[0], try XCTUnwrap(drawn) + 20, "on paper the map's box is wider than it was drawn at, \(box)")
+        XCTAssertGreaterThan(box[1], 0, "\(box)")
+        XCTAssertGreaterThan(box[2], 0, "\(box)")
+        XCTAssertLessThan(abs(box[1] - box[2]), 6, "the map is centred in its box on paper, \(box)")
+    }
+
     /// A caption is its own paragraph, as Weekly writes one under its cover.
     /// The preview's -1.2em pull suits its wide paragraph gaps; against print's
     /// 0.6em it laid the caption over the image.
