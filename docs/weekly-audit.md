@@ -361,7 +361,7 @@ new menu item and `I18n` key in all four languages; 792 quoted tokens in the gui
 
 ### Decided, do not re-report
 
-- The reader's top-right pair stays one capsule (option A of three rendered, 2026-11-24); system spacing (B) left a
+- Superseded 2026-11-25: the reader's Edit and More are a glass circle each on iOS 26, and bars and menus follow Apple's HIG (MiaoYan-Pro `mobile.md`). Was: the reader's top-right pair stays one capsule (option A of three rendered, 2026-11-24); system spacing (B) left a
   16pt gap and two glass circles (C) changed the look.
 - Cmd-Opt-P during a plain presentation does nothing, as in the shell.
 
@@ -374,3 +374,60 @@ new menu item and `I18n` key in all four languages; 792 quoted tokens in the gui
 - No test fixture for a copy that fails partway (`f4e47e3f`).
 - Real-app checks: Magic PPT with a Mermaid slide in light and dark and its PDF; the shell's preview switching notes;
   on iPhone, the reader's Edit and More taps and a new note with a photo inserted just before Done.
+
+## 2026-11-25 (window f4e47e3f..cc0de018, Mac, iPhone and iPad)
+
+- Audited: MiaoYan `cc0de018` (12 commits), MiaoYan-Pro `1135bdf5` (28 commits). Five Opus agents, read-only;
+  three fix agents in detached worktrees, then two independent review rounds per repository, the third round
+  landed after the main session read its diff.
+- Mechanical: `check_incidents.py` 101 rows before, 110 after, 0 problems; SwiftLint and swift-format `--strict`
+  clean; full `xcodebuild test` 609 tests, 0 failures, 1 skipped; MiaoYanCore 125 tests.
+- Next window from: `4a614b3a` (the last fix of this run); MiaoYan-Pro `430ad510`.
+
+### Fixed
+
+- Behaviour: moving a note carries every file it links (`[Report.pdf](/files/Report.pdf)` too), rewrites links in
+  one pass over the old text and keeps the `i/` or `files/` folder a link names (`526818a3`, `a9504eea`,
+  `b9c7c324`); new files sort into `i/` and `files/` by the shared `AttachmentFile` rule, so PSD, ICO, ICNS and RAW
+  go to `files/` as on the iPhone (`e1f3f490`, maintainer 2026-11-25); an image host uploads only images
+  (`ba945de7`, I-102); a note is not moved while a file is still being copied into it, quitting waits up to 30 s
+  for such copies, and Clean Unused offers a `.partial` a crash left (`29c2a27f`, `b7295b71`, `0b5af6b8`); a failed
+  import leaves nothing and goes to the Trash (`fcc0e54b`, `ff5f2b79`, I-109); a Finder note that links only a file
+  asks for its folder (`083c9da2`, I-110).
+- Preview and export: slides play a video written as an image and link other files, titles included (`29291add`,
+  `64c76b78`, I-105); a deck PDF waits for its print page, Reveal's PDF pages and every diagram instead of 1.2 s,
+  with the reload on its own budget in the shell (`ad8f716e`, `d704b5af`, `10f59158`, I-106); a Markmap the live
+  preview drew prints centred (`e12fbd35`); markmap's KaTeX plugin loads the bundled KaTeX (`949a5398`, I-107); a
+  relative `files/` or `i/` link opens beside the note (`4d08ebe7`); each `:has()` selector has its own rule for
+  macOS 12.0 to 12.2 (`21e73ec0`, I-108).
+- Performance: dropped videos and files are cloned off the main thread through a short hidden name (`44ba7d81`,
+  `36b164ec`, I-103); the hover preview skips videos and files (`d9a9d92d`, I-104).
+- Stale: the dead `img.lazy-image` print rule (`3d94c8bc`); KaTeX version and lazy-image sentence in
+  `.claude/rules/preview.md`; `skills/miaoyan` describes `files/` beside `i/`.
+- iPhone and iPad (MiaoYan-Pro `430ad510`): an attachment picked just before Done, Back or a More action keeps its
+  link (Done waits up to 5 s, Back never waits, a late link goes to the open reader or the file, list and folder
+  actions refuse while one is pending, the camera no longer counts as leaving); moving or restoring carries
+  attachments iCloud has not downloaded, never overwrites a placeholder at the target, links a fresh name encoded
+  and undoes its copies when it fails; a camera video survives a failed copy; a camera photo is encoded once off
+  the main thread; folder pages reuse the notes already found and skip packages.
+
+### Refuted
+
+- Duplicate note dropping file links: the copy stays in the same folder, so `relocateAttachment` returns early and
+  the links already resolve.
+- Slide Markmap formulas fetching KaTeX: slides escape every `$`, so markmap never sees a formula there; the real
+  gap was the plugin's preload path.
+
+### Decided, do not re-report
+
+- HTML export links videos and files to the CDN, where they 404: a known limitation until someone asks
+  (maintainer 2026-11-25).
+- A note is refused a move while its copy runs; forwarding the file was tried and dropped (it moved a file a
+  duplicate shared).
+
+### Open
+
+- `decide 1125-22`: save a camera video to Photos when its copy fails.
+- Real-app checks: a full-window Magic PPT PDF from both windows with Mermaid and Markmap slides; a large video
+  dropped, then ⌘Q during the copy; hovering a video link; on iPhone, the camera inside a note, New Note Done and
+  Discard during an insert, and Move after Back while a video is still copying.

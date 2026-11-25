@@ -56,13 +56,13 @@ Keep the target text aligned with the note title so MiaoYan can build backlinks.
 
 ### Add local images
 
-Keep local attachments in an `i/` folder under the note's current MiaoYan folder and use the shared root-relative form:
+Keep local images in an `i/` folder under the note's current MiaoYan folder and use the shared root-relative form:
 
 ```markdown
 ![Architecture](/i/architecture.png)
 ```
 
-Prefer `/i/<filename>` over `file://` URLs or machine-specific absolute paths. Keep remote images as normal `https://` URLs.
+Prefer `/i/<filename>` over `file://` URLs or machine-specific absolute paths. Keep remote images as normal `https://` URLs. Videos and every other file go in a `files/` folder beside `i/`: a video as `![](/files/<filename>)`, which plays in place, and any other file as a link, `[report.pdf](/files/<filename>)`.
 
 When writing raw HTML for media, tables, or iframes, keep it responsive and avoid horizontal scrolling:
 
@@ -244,7 +244,7 @@ If the CLI cannot detect the library, use the user's configured MiaoYan folder t
 
 - Keep note content as plain Markdown unless a supported extension is needed.
 - Match wikilinks to real note titles.
-- Keep local attachments under `i/` and reference them as `/i/<filename>`.
+- Keep local images under `i/` as `/i/<filename>`, and videos and other files under `files/` as `/files/<filename>`.
 - Keep diagram and code fences balanced.
 - Keep PPT `---` separators on their own lines.
 - Avoid machine-specific paths and unsupported CLI commands.
