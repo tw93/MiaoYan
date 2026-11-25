@@ -20,8 +20,8 @@
   var countEl = document.getElementById("viewer-count");
   var frameBox = frame.parentNode;
 
-  // The Markdown viewer and the Markdown to Word page run this same tool,
-  // each with its own draft.
+  // The Markdown viewer, Markdown to Word and Markdown to image pages run
+  // this same tool, each with its own draft.
   var TOOL = data.tool || "viewer";
   var DRAFT_KEY = data.draftKey || "miaoyan.markdown-viewer.draft";
   var MAX_BYTES = 5e6;
@@ -624,13 +624,7 @@
   var cssText = null;
 
   function exportHtml() {
-    if (!cssText) {
-      cssText = Promise.all(data.css.map(function (href) {
-        return fetch(href).then(function (r) { if (!r.ok) throw new Error("css"); return r.text(); });
-      }));
-      cssText.catch(function () { cssText = null; });
-    }
-    return cssText.then(function (sheets) {
+    return sheets().then(function (sheets) {
       var math = write.querySelector(".katex") ? '<link rel="stylesheet" href="' + data.site + data.katexCss + '">' : "";
       var title = "<title>" + esc(frame.contentDocument.title) + "</title>";
       // The preview runs none of the note's script, and the file does not either.
@@ -1013,8 +1007,210 @@
     });
   }
 
-  var actions = { pdf: exportPdf, html: exportHtml, md: saveMarkdown, copy: copyFormatted, docx: exportDocx };
-  var failures = { pdf: S.exportFailed, html: S.exportFailed, md: S.exportFailed, copy: S.copyFailed, docx: S.exportFailed };
+  // ---- Long image ----------------------------------------------------------------
+  // The preview as one PNG, as MiaoYan's Export > Image snapshots its preview
+  // at twice its size with the note's title on top when the text has no
+  // heading of its own. A page cannot photograph itself, so the preview is
+  // laid out again in a hidden frame with every stylesheet inline, written
+  // into an SVG foreignObject and drawn onto a canvas: as a data URL, since a
+  // blob URL taints the canvas in both Chrome and Safari. Nothing inside such
+  // an image may load from outside, so KaTeX's fonts go in as data URLs and
+  // so do the note's web pictures, fetched as Word does; one a site will not
+  // hand over stays out and the status line says so. It is drawn at the width
+  // shown, a phone's 375px at three times (1125px) or the export's 760px
+  // column at twice, smaller only when a canvas that size would not fit the
+  // browser's limits.
+  var IMAGE = { phone: { width: 375, pad: "24px 20px 28px", scale: 3 }, desk: { width: 840, pad: "40px 40px 44px", scale: 2 } };
+  var IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+  var MAX_SIDE = 32767;
+  var MAX_AREA = IOS ? 16777216 : 268435456;
+  var katexInline = null;
+  var imaging = false;
+
+  function sheets() {
+    if (!cssText) {
+      cssText = Promise.all(data.css.map(function (href) {
+        return fetch(href).then(function (r) { if (!r.ok) throw new Error("css"); return r.text(); });
+      }));
+      cssText.catch(function () { cssText = null; });
+    }
+    return cssText;
+  }
+
+  function asDataUrl(blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  function fetchData(url) {
+    return fetch(url, { mode: "cors", credentials: "omit", referrerPolicy: "no-referrer" }).then(function (r) {
+      if (!r.ok) throw new Error("fetch");
+      return r.blob();
+    }).then(asDataUrl);
+  }
+
+  // KaTeX's stylesheet with its woff2 fonts written in and the older formats left out.
+  function katexCss() {
+    if (!katexInline) {
+      var base = new URL(data.katexCss, location.href);
+      katexInline = fetch(base).then(function (r) { if (!r.ok) throw new Error("css"); return r.text(); }).then(function (css) {
+        css = css.replace(/,\s*url\([^)]*\.(woff|ttf)\)\s*format\("[^"]*"\)/g, "");
+        var files = [];
+        css.replace(/url\(([^)]+\.woff2)\)/g, function (m, f) { if (files.indexOf(f) < 0) files.push(f); return m; });
+        return Promise.all(files.map(function (f) { return fetchData(new URL(f, base).href); })).then(function (urls) {
+          files.forEach(function (f, i) { css = css.split("url(" + f + ")").join("url(" + urls[i] + ")"); });
+          return css;
+        });
+      });
+      katexInline.catch(function () { katexInline = null; });
+    }
+    return katexInline;
+  }
+
+  function longImage() {
+    if (imaging) return Promise.reject(new Error("busy"));
+    imaging = true;
+    var size = frameBox.classList.contains("is-phone") ? IMAGE.phone : IMAGE.desk;
+    var win = frame.contentWindow;
+    var dark = !!(win && win.matchMedia && win.matchMedia("(prefers-color-scheme: dark)").matches);
+    var box = write.cloneNode(true);
+    var doc = box.ownerDocument;
+    // The title on top, as the app adds it: the opened file's name, when the
+    // text does not start with a heading of its own.
+    var first = box.firstElementChild;
+    var named = fileName.replace(/\.[^.]+$/, "").trim();
+    if (named && (!first || first.tagName !== "H1")) {
+      var h1 = doc.createElement("h1");
+      h1.textContent = named;
+      h1.style.cssText = "font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;";
+      box.insertBefore(h1, first);
+    }
+    each(box, "[data-line]", function (el) { el.removeAttribute("data-line"); });
+    var missed = 0;
+    var pictures = Promise.all(Array.prototype.map.call(box.querySelectorAll("img"), function (img) {
+      // Resolved as the preview resolves it, so a path on this site comes along.
+      var src = img.getAttribute("src") ? img.src : "";
+      img.removeAttribute("srcset");
+      img.removeAttribute("loading");
+      if (/^data:image\//i.test(src)) return null;
+      if (!/^https?:/i.test(src)) { missed++; img.remove(); return null; }
+      return fetchData(src).then(function (url) { img.setAttribute("src", url); }, function () { missed++; img.remove(); });
+    }));
+    var math = !!box.querySelector(".katex");
+    var measure = null;
+    var done = function () { imaging = false; if (measure) measure.remove(); };
+    return Promise.all([sheets(), math ? katexCss() : "", pictures]).then(function (r) {
+      var css = (r[0].join("\n") + "\n" + r[1] + "\n" + data.pageCss +
+        " html { padding: " + size.pad + "; overflow: visible; } body { overflow: visible; }" +
+        // The page ends where the text does, the bottom margin matching the top.
+        " #write { margin-bottom: 0; padding-bottom: 0; } #write > :last-child { margin-bottom: 0 !important; }")
+        // In an SVG image :root is the <svg>, so the preview's variables go on <html>.
+        .replace(/:root/g, "html")
+        // The image keeps the scheme the preview shows.
+        .replace(/\(prefers-color-scheme:\s*dark\)/g, dark ? "(min-width: 0px)" : "(max-width: 0px)")
+        .replace(/<\/style/gi, "<\\/style");
+      measure = document.createElement("iframe");
+      measure.setAttribute("sandbox", "allow-same-origin");
+      measure.setAttribute("aria-hidden", "true");
+      measure.tabIndex = -1;
+      measure.style.cssText = "position: fixed; left: 0; top: 0; width: " + size.width + "px; height: 100px; border: 0; opacity: 0; pointer-events: none; z-index: -1;";
+      return new Promise(function (resolve) {
+        measure.addEventListener("load", resolve, { once: true });
+        measure.srcdoc = "<!doctype html><html lang=\"" + (data.lang === "zh" ? "zh-CN" : "en") + "\"><head><meta charset=\"utf-8\"><style>" + css +
+          "</style></head><body><div class=\"markdown-body heti\" id=\"write\"></div></body></html>";
+        document.body.appendChild(measure);
+      }).then(function () {
+        var mdoc = measure.contentDocument;
+        var target = mdoc.getElementById("write");
+        target.innerHTML = box.innerHTML;
+        var waits = Array.prototype.map.call(mdoc.images, function (img) { return img.decode ? img.decode().catch(function () {}) : null; });
+        if (mdoc.fonts && mdoc.fonts.ready) waits.push(mdoc.fonts.ready);
+        return Promise.all(waits).then(function () { return mdoc; });
+      });
+    }).then(function (mdoc) {
+      var root = mdoc.documentElement;
+      var width = size.width;
+      var height = Math.ceil(root.scrollHeight);
+      var scale = size.scale;
+      while (scale > 1 && (height * scale > MAX_SIDE || width * scale * height * scale > MAX_AREA)) scale -= 0.5;
+      if (height * scale > MAX_SIDE || width * scale * height * scale > MAX_AREA) throw new Error("long");
+      var background = mdoc.defaultView.getComputedStyle(mdoc.body).backgroundColor;
+      var xhtml = new XMLSerializer().serializeToString(root);
+      var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '"><foreignObject x="0" y="0" width="' + width + '" height="' + height + '">' + xhtml + "</foreignObject></svg>";
+      return new Promise(function (resolve, reject) {
+        var img = new Image();
+        img.onload = function () { resolve(img); };
+        img.onerror = function () { reject(new Error("image")); };
+        img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      }).then(function (img) {
+        return (img.decode ? img.decode().catch(function () {}) : Promise.resolve()).then(function () { return img; });
+      }).then(function (img) {
+        var canvas = document.createElement("canvas");
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+        var g = canvas.getContext("2d");
+        if (!g) throw new Error("long");
+        function paint() {
+          g.fillStyle = background && background !== "rgba(0, 0, 0, 0)" ? background : "#FDFCF9";
+          g.fillRect(0, 0, canvas.width, canvas.height);
+          g.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+        // Safari leaves the pictures inside an SVG image blank on its first
+        // draw and paints them on a draw that comes a moment later.
+        paint();
+        return new Promise(function (resolve) { setTimeout(resolve, 150); }).then(function () {
+          paint();
+          return new Promise(function (resolve, reject) {
+            canvas.toBlob(function (blob) { blob ? resolve({ blob: blob, missed: missed }) : reject(new Error("long")); }, "image/png");
+          });
+        });
+      });
+    }).then(function (out) { done(); return out; }, function (err) { done(); throw err; });
+  }
+
+  // "Saved." stands alone only to say a picture stayed out; a plain save says nothing.
+  function imageSaid(missed, lead) {
+    if (!missed) return lead;
+    var more = fill(missed === 1 ? S.imageMissed : S.imagesMissed, { n: missed });
+    return lead + (data.lang === "zh" ? "" : " ") + more;
+  }
+
+  function imageFailed(err) {
+    say(err && err.message === "long" ? S.imageTooLong : err && err.message === "busy" ? S.imageMaking : S.imageFailed);
+  }
+
+  function exportImage() {
+    say(S.imageMaking);
+    return longImage().then(function (out) {
+      download(out.blob, baseName() + ".png");
+      say(out.missed ? imageSaid(out.missed, S.imageSaved) : "");
+      track("tool_export", { tool: TOOL, format: "png" });
+    }, imageFailed);
+  }
+
+  // Safari copies an image only when the clipboard is asked inside the click,
+  // so the picture goes in as a promise the click already holds.
+  var canCopyImage = !!(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write && window.isSecureContext &&
+    (typeof ClipboardItem.supports !== "function" || ClipboardItem.supports("image/png")));
+  function copyImage() {
+    say(S.imageMaking);
+    var missed = 0;
+    var made = longImage().then(function (out) { missed = out.missed; return out.blob; });
+    return navigator.clipboard.write([new ClipboardItem({ "image/png": made })]).then(function () {
+      say(imageSaid(missed, S.imageCopied));
+      track("tool_copy", { tool: TOOL, kind: "image" });
+    }, function () {
+      return made.then(function () { say(S.copyFailed); }, imageFailed);
+    });
+  }
+  each(tool, '[data-action="copyimage"]', function (button) { button.hidden = !canCopyImage; });
+
+  var actions = { pdf: exportPdf, html: exportHtml, md: saveMarkdown, copy: copyFormatted, docx: exportDocx, png: exportImage, copyimage: copyImage };
+  var failures = { pdf: S.exportFailed, html: S.exportFailed, md: S.exportFailed, copy: S.copyFailed, docx: S.exportFailed, png: S.imageFailed, copyimage: S.copyFailed };
   tool.querySelector(".tool-actions").addEventListener("click", function (e) {
     var button = e.target.closest("[data-action]");
     if (!button || !write) return;

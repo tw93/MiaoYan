@@ -185,8 +185,8 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 <!-- tools:start -->
 ## Tools
 
-- [Markdown Tools](https://miaoyan.app/tools/): Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, Markdown slides, Markdown to Word and HTML to Markdown converters and a Chinese typography cleaner.
-- [Markdown 在线工具](https://miaoyan.app/zh/tools/): 妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、妙言 PPT、Markdown 转 Word、网页转 Markdown，以及中英文排版整理。
+- [Markdown Tools](https://miaoyan.app/tools/): Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, Markdown slides, Markdown to Word, Markdown to image and HTML to Markdown converters and a Chinese typography cleaner.
+- [Markdown 在线工具](https://miaoyan.app/zh/tools/): 妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、妙言 PPT、Markdown 转 Word、Markdown 转长图、网页转 Markdown，以及中英文排版整理。
 - [Mermaid Live Editor](https://miaoyan.app/tools/mermaid-editor/): A free Mermaid live editor in your browser: flowcharts, sequence diagrams, timelines, Gantt charts and more, with SVG and PNG export and links that carry the diagram.
 - [Mermaid 在线编辑器](https://miaoyan.app/zh/tools/mermaid-editor/): 免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。
 - [Markdown Table Generator](https://miaoyan.app/tools/markdown-table-generator/): A free Markdown table generator in your browser: paste from Excel, Google Sheets, CSV or TSV, set each column's alignment, and copy a pipe table with its columns lined up, Chinese and Japanese included.
@@ -201,6 +201,8 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [网页和 Word 转 Markdown](https://miaoyan.app/zh/tools/html-to-markdown/): 免费的在线 HTML 转 Markdown 工具，把粘贴的网页、Word、Google 文档和 .docx、.html 文件在浏览器里转成 Markdown，规则和妙言 Mac 版粘贴时的转换一样，标题、列表、表格、链接和代码块连语言都保留。
 - [Markdown to Word](https://miaoyan.app/tools/markdown-to-word/): A free online Markdown to Word converter that saves a .docx in the browser, laid out with MiaoYan's preview styles, keeping headings, nested lists, tables, code blocks, checkboxes, links, formulas as editable Word equations and Mermaid diagrams as images.
 - [Markdown 转 Word](https://miaoyan.app/zh/tools/markdown-to-word/): 免费的 Markdown 转 Word 在线工具，在浏览器里生成 .docx，用妙言的预览样式排版，标题、多级列表、表格、代码块、复选框和链接都保留，公式转成可以编辑的 Word 公式，Mermaid 图表转成图片。
+- [Markdown to Image](https://miaoyan.app/tools/markdown-to-image/): A free online Markdown to image converter that turns Markdown into one long PNG in the browser, laid out with MiaoYan's preview styles at phone or desktop width, keeping headings, lists, tables, highlighted code, formulas and Mermaid diagrams, ready to share or copy.
+- [Markdown 转长图](https://miaoyan.app/zh/tools/markdown-to-image/): 免费的 Markdown 转长图在线工具，在浏览器里把 Markdown 生成一张 PNG 长图，用妙言的预览样式排版，可选手机或电脑宽度，标题、列表、表格、代码高亮、公式和 Mermaid 图表都保留，可以直接下载或复制去分享。
 - [Markdown Slides](https://miaoyan.app/tools/markdown-slides/): A free online Markdown to slides tool: --- splits the slides, with code highlighting that steps through lines, LaTeX math, backgrounds and step-by-step items from reveal.js, full-screen presenting and PDF export, in MiaoYan's light and dark themes.
 - [妙言 PPT](https://miaoyan.app/zh/tools/markdown-slides/): 免费的 Markdown 转 PPT 在线工具，--- 分页，代码可以逐行高亮，支持 LaTeX 公式、背景色和分步出现，能全屏演示、存成 PDF，用的是妙言 PPT 模式的浅色和深色主题。
 - [MiaoYan Theme for NetNewsWire](https://miaoyan.app/tools/netnewswire-theme/): A free, open source theme for NetNewsWire on Mac, iPhone and iPad that sets Chinese and English articles at a 1.7 line height with 0.5px tracking, keeps blue links and a green accent, follows the system's light and dark appearance and installs with one click.

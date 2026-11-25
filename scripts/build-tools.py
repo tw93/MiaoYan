@@ -53,7 +53,7 @@ UI = {
             "title": "Markdown Tools",
             "head_title": "Free Markdown Tools: Mermaid, Markmap, tables and preview",
             "lede": "Small tools for writing Markdown, free and in your browser.",
-            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, Markdown slides, Markdown to Word and HTML to Markdown converters and a Chinese typography cleaner.",
+            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, Markdown slides, Markdown to Word, Markdown to image and HTML to Markdown converters and a Chinese typography cleaner.",
         },
         "faq": "FAQ",
         "app_cta": "View in App Store",
@@ -179,6 +179,8 @@ UI = {
             "html": "Download HTML",
             "md": "Download Markdown",
             "docx": "Download Word",
+            "png": "Download image",
+            "copy_image": "Copy image",
             "copy": "Copy formatted",
             "app_title": "Read and write it in MiaoYan",
             "app_text": "MiaoYan, a Markdown notebook for Mac, iPhone and iPad, keeps every note as a plain .md file, and this preview is drawn with its stylesheets.",
@@ -196,7 +198,20 @@ UI = {
                 "loadFailed": "Part of the preview did not load. Check the connection and reload the page.",
                 "wordImage": "Saved. 1 picture stayed out, as its site does not let a page read it or its path is relative.",
                 "wordImages": "Saved. {n} pictures stayed out, as their sites do not let a page read them or their paths are relative.",
+                "imageMaking": "Making the image.",
+                "imageSaved": "Saved the image.",
+                "imageCopied": "Copied the image, ready to paste into a chat or a document.",
+                "imageMissed": "1 picture stayed out, as its site does not let a page read it or its path is relative.",
+                "imagesMissed": "{n} pictures stayed out, as their sites do not let a page read them or their paths are relative.",
+                "imageTooLong": "This is too long for one image. Split the text and make an image of each part.",
+                "imageFailed": "This browser could not make the image.",
             },
+        },
+        "image": {
+            "app_title": "Write it in MiaoYan",
+            "app_text": "MiaoYan is a Markdown notebook for Mac, iPhone and iPad that keeps every note as a plain .md file, and on the Mac, Export > Image saves a note as this same kind of long picture.",
+            "app_alt": "MiaoYan on a Mac, with the note list on the left and a note in its preview on the right",
+            "app_shot": "preview",
         },
         "word": {
             "app_title": "Write it in MiaoYan",
@@ -273,7 +288,7 @@ UI = {
             "title": "Markdown 在线工具",
             "head_title": "Markdown 在线工具：Mermaid、Markmap 思维导图、表格和预览",
             "lede": "写 Markdown 时顺手用的几个小工具，免费，打开浏览器就能用。",
-            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、妙言 PPT、Markdown 转 Word、网页转 Markdown，以及中英文排版整理。",
+            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、妙言 PPT、Markdown 转 Word、Markdown 转长图、网页转 Markdown，以及中英文排版整理。",
         },
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
@@ -398,6 +413,8 @@ UI = {
             "html": "下载 HTML",
             "md": "下载 Markdown",
             "docx": "下载 Word",
+            "png": "下载长图",
+            "copy_image": "复制长图",
             "copy": "复制到公众号",
             "app_title": "在妙言里读和写",
             "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，每篇笔记都是一个普通的 .md 文件，这里的预览用的就是它的样式表。",
@@ -417,7 +434,20 @@ UI = {
                 "loadFailed": "预览有一部分没加载上，检查网络后刷新页面。",
                 "wordImage": "已保存，有 1 张图片没放进去，它所在的网站不让网页读取，或者用的是相对路径。",
                 "wordImages": "已保存，有 {n} 张图片没放进去，它们所在的网站不让网页读取，或者用的是相对路径。",
+                "imageMaking": "正在生成长图。",
+                "imageSaved": "已保存长图，",
+                "imageCopied": "已复制长图，到微信或别的地方粘贴就行。",
+                "imageMissed": "有 1 张图片没放进去，它所在的网站不让网页读取，或者用的是相对路径。",
+                "imagesMissed": "有 {n} 张图片没放进去，它们所在的网站不让网页读取，或者用的是相对路径。",
+                "imageTooLong": "这篇太长，一张图放不下，分成几段分别生成。",
+                "imageFailed": "这个浏览器生成不了这张图片。",
             },
+        },
+        "image": {
+            "app_title": "在妙言里写",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，每篇笔记都是一个普通的 .md 文件，在 Mac 上用导出里的图片，也能把一篇笔记存成这样的长图。",
+            "app_alt": "Mac 上的妙言，左边是笔记列表，右边是一篇笔记的预览",
+            "app_shot": "preview",
         },
         "word": {
             "app_title": "在妙言里写",
@@ -948,9 +978,10 @@ PREVIEW_PAGE_CSS = (
 
 
 def viewer_page(tool, lang):
-    """The Markdown viewer, and with tool markdown-to-word the same tool led by
-    its Word download."""
+    """The Markdown viewer, and with tool markdown-to-word or markdown-to-image
+    the same tool led by its Word download or its long image."""
     word = tool["slug"] == "markdown-to-word"
+    image = tool["slug"] == "markdown-to-image"
     ui = UI[lang]["viewer"]
     sample = (SRC / f"markdown-viewer-sample.{lang}.md").read_text(encoding="utf-8").rstrip("\n")
     data = {
@@ -968,7 +999,15 @@ def viewer_page(tool, lang):
         "strings": ui["strings"],
         "docx": [versioned("assets/vendor/docx-9.15.3.js")],
     }
-    if word:
+    if image:
+        data["tool"] = "markdown-to-image"
+        data["draftKey"] = "miaoyan.markdown-to-image.draft"
+        actions = (
+            f'<button type="button" class="btn btn-primary" data-action="png">{esc(ui["png"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="copyimage" hidden>{esc(ui["copy_image"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="md">{esc(ui["md"])}</button>'
+        )
+    elif word:
         data["tool"] = "markdown-to-word"
         data["draftKey"] = "miaoyan.markdown-to-word.draft"
         actions = (
@@ -988,14 +1027,14 @@ def viewer_page(tool, lang):
     <div class="table-bar">
       <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="viewer-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
       <button type="button" class="tool-chip" id="viewer-only" aria-pressed="false">{esc(ui["preview_only"])}</button>
-      <button type="button" class="tool-chip" id="viewer-phone" aria-pressed="false">{esc(ui["phone"])}</button>
+      <button type="button" class="tool-chip" id="viewer-phone" aria-pressed="{str(image).lower()}">{esc(ui["phone"])}</button>
     </div>
     <div class="tool-grid viewer-grid" id="viewer-grid">
       <div class="tool-editor">
         <label class="visually-hidden" for="viewer-code">{esc(ui["code"])}</label>
         <textarea id="viewer-code" class="tool-code viewer-code" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
       </div>
-      <div class="viewer-frame"><iframe id="viewer-preview" title="{esc(ui["preview"])}" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
+      <div class="viewer-frame{' is-phone' if image else ''}"><iframe id="viewer-preview" title="{esc(ui["preview"])}" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="viewer-status" role="status" aria-live="polite"></p>
@@ -1343,8 +1382,8 @@ def llms_block(tools):
     return "\n" + "\n".join(lines) + "\n"
 
 
-PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "html-to-markdown": h2m_page, "markdown-to-word": viewer_page, "markdown-slides": ppt_page, "netnewswire-theme": nnw_page}
-PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "html-to-markdown": "h2m", "markdown-to-word": "word", "markdown-slides": "ppt", "netnewswire-theme": "nnw"}
+PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "html-to-markdown": h2m_page, "markdown-to-word": viewer_page, "markdown-to-image": viewer_page, "markdown-slides": ppt_page, "netnewswire-theme": nnw_page}
+PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "html-to-markdown": "h2m", "markdown-to-word": "word", "markdown-to-image": "image", "markdown-slides": "ppt", "netnewswire-theme": "nnw"}
 
 
 def outputs(tools):

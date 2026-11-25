@@ -113,6 +113,22 @@
    }
   },
   {
+   "slug": "markdown-to-image",
+   "date": "2026-11-25",
+   "en": {
+    "title": "Markdown to Image",
+    "head_title": "Markdown to Image: turn Markdown into a long picture online",
+    "lede": "Write or paste Markdown and save it as one long picture in MiaoYan's preview style, at a phone's width or a page's, with code, tables, formulas and Mermaid diagrams drawn in.",
+    "description": "A free online Markdown to image converter that turns Markdown into one long PNG in the browser, laid out with MiaoYan's preview styles at phone or desktop width, keeping headings, lists, tables, highlighted code, formulas and Mermaid diagrams, ready to share or copy."
+   },
+   "zh": {
+    "title": "Markdown 转长图",
+    "head_title": "Markdown 转长图：在线把 Markdown 生成分享长图",
+    "lede": "写或粘贴 Markdown，按妙言的预览样式存成一张长图，手机宽度或电脑宽度都行，代码、表格、公式和 Mermaid 图都画在里面。",
+    "description": "免费的 Markdown 转长图在线工具，在浏览器里把 Markdown 生成一张 PNG 长图，用妙言的预览样式排版，可选手机或电脑宽度，标题、列表、表格、代码高亮、公式和 Mermaid 图表都保留，可以直接下载或复制去分享。"
+   }
+  },
+  {
    "slug": "markdown-slides",
    "date": "2026-11-25",
    "en": {
