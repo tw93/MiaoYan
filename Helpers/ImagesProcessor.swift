@@ -236,13 +236,14 @@ public class ImagesProcessor {
 
     /// Clones `source` to `destination` without reading it into memory,
     /// through a hidden name beside it, so a copy cut short by a quit leaves
-    /// no half-written file under the name the note links. Fails rather than
-    /// overwrite a file that appeared at `destination` meanwhile. Call it off
-    /// the main thread.
+    /// no half-written file under the name the note links. The hidden name is
+    /// `.<UUID>.partial` alone: with the file's name in it too, 46 characters
+    /// longer, a name past about 209 characters failed as too long against
+    /// APFS's 255 where writing the file itself worked. Fails rather than overwrite a file
+    /// that appeared at `destination` meanwhile. Call it off the main thread.
     nonisolated static func copyAttachment(from source: URL, to destination: URL) throws {
         let manager = FileManager.default
-        let partial = destination.deletingLastPathComponent()
-            .appendingPathComponent(".\(destination.lastPathComponent).\(UUID().uuidString).partial")
+        let partial = destination.deletingLastPathComponent().appendingPathComponent(".\(UUID().uuidString).partial")
         try manager.copyItem(at: source, to: partial)
         do {
             try manager.moveItem(at: partial, to: destination)

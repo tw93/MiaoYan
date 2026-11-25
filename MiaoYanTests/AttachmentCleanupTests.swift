@@ -569,6 +569,25 @@ final class AttachmentCleanupTests: XCTestCase {
 
     /// A paste whose image could not be written still got its link, a
     /// broken image in the note.
+    /// The hidden name a copy runs under carried the file's own name plus
+    /// a UUID, 46 characters more, so a name near APFS's 255 characters (a
+    /// 224-character CJK name here) failed as too long where the file itself
+    /// fits. APFS counts characters, not UTF-8 bytes: 80 CJK characters, 244
+    /// bytes, copied fine through the old name too.
+    func testAFileWithALongCJKNameIsCopied() throws {
+        let source = tempDir.appendingPathComponent("source.pdf")
+        try Data("%PDF-1.4".utf8).write(to: source)
+        let files = tempDir.appendingPathComponent("files", isDirectory: true)
+        try FileManager.default.createDirectory(at: files, withIntermediateDirectories: true)
+        let name = String(repeating: "\u{5408}", count: 220) + ".pdf"
+        XCTAssertEqual(name.count, 224, "a name APFS takes")
+        let destination = files.appendingPathComponent(name)
+
+        XCTAssertNoThrow(try ImagesProcessor.copyAttachment(from: source, to: destination))
+        XCTAssertEqual(try Data(contentsOf: destination), Data("%PDF-1.4".utf8))
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: files.path), [name], "no partial copy is left")
+    }
+
     @MainActor
     func testAnImageThatCannotBeWrittenGetsNoLink() throws {
         let work = tempDir.appendingPathComponent("Work", isDirectory: true)
