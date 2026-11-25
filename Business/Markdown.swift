@@ -509,7 +509,45 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool, documentLang
     newRes = newRes.replacingOccurrences(of: #"(<li\b[^>]*>)(<input type="checkbox"[^>]*/>)\s*(<p\b[^>]*>)"#, with: "$1$3$2 ", options: .regularExpression)
 
     let hanLanguage = documentLanguage.flatMap { lang in ["zh", "ja", "ko"].contains(where: lang.hasPrefix) ? lang : nil } ?? "zh"
-    return Emphasis.markCJK(in: renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes)), hanLanguage: hanLanguage)
+    return Emphasis.markCJK(
+        in: renderAttachmentMedia(in: renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes))), hanLanguage: hanLanguage)
+}
+
+private let attachmentImageRegex = try? NSRegularExpression(pattern: #"<img src="([^"]*)" alt="([^"]*)"(?: title="[^"]*")? />"#)
+
+/// An image whose file is a video plays in place, as Obsidian and Logseq
+/// draw `![](clip.mov)`, and a file the Mac put in `files/` that is no
+/// picture (`![](/files/report.pdf)`, how it has written a dropped PDF) is a
+/// link to it, where it used to be an image that never loaded. The iPhone
+/// and iPad reader shares this function, so a video taken on the phone
+/// plays on the Mac too.
+func renderAttachmentMedia(in html: String) -> String {
+    guard html.contains("<img"), let regex = attachmentImageRegex else { return html }
+    let source = html as NSString
+    let result = NSMutableString(string: html)
+    for match in regex.matches(in: html, range: NSRange(location: 0, length: source.length)).reversed() {
+        let src = source.substring(with: match.range(at: 1))
+        let path = src.split(whereSeparator: { $0 == "?" || $0 == "#" }).first.map(String.init) ?? src
+        let unescaped = path.replacingOccurrences(of: "&amp;", with: "&")
+        let decoded = unescaped.removingPercentEncoding ?? unescaped
+        let replacement: String
+        switch AttachmentFile.kind(ofExtension: (decoded as NSString).pathExtension) {
+        case .video:
+            replacement = "<video src=\"\(src)\" controls></video>"
+        case .file where decoded.hasPrefix("/files/") || decoded.hasPrefix("files/"):
+            let alt = source.substring(with: match.range(at: 2))
+            let name =
+                alt.isEmpty
+                ? (decoded as NSString).lastPathComponent.replacingOccurrences(of: "&", with: "&amp;")
+                    .replacingOccurrences(of: "<", with: "&lt;").replacingOccurrences(of: ">", with: "&gt;")
+                : alt
+            replacement = "<a href=\"\(src)\">\(name)</a>"
+        default:
+            continue
+        }
+        result.replaceCharacters(in: match.range, with: replacement)
+    }
+    return result as String
 }
 
 private let emptyTaskItemRegex = try? NSRegularExpression(

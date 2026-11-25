@@ -333,7 +333,11 @@ class ClipboardManager {
         let host = textView.window?.contentViewController
 
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
-            let defaultImage = NSAttributedString(string: "![](\(path))")
+            // A video or an image is drawn in place; any other file is a
+            // link named as it was dropped, the Markdown the iPhone writes.
+            let kind = url.map { AttachmentFile.kind(ofExtension: $0.pathExtension) } ?? .image
+            let defaultImage = NSAttributedString(
+                string: AttachmentFile.markdown(path: path, kind: path.hasPrefix("/i/") ? .image : kind, title: url?.lastPathComponent ?? ""))
             let imagePath = "\(note.project.url.path)\(path)"
             let tempPath = URL(fileURLWithPath: imagePath)
             let picType = UserDefaultsManagement.defaultPicUpload

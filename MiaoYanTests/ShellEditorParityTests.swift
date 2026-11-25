@@ -310,6 +310,40 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(note.content.string, text)
     }
 
+    /// A PDF dragged in went to `files/` linked as an image, `![](/files/x.pdf)`,
+    /// which the preview drew as an image that never loads. It is a link
+    /// named as it was dropped, the Markdown the iPhone writes too.
+    @available(macOS 14, *)
+    @MainActor
+    func testADroppedPDFIsALinkNamedAsTheFile() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let note = makeLoadedNote("drop-pdf.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDrop-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let file = source.appendingPathComponent("Report v2.pdf")
+        try Data("%PDF-1.4".utf8).write(to: file)
+
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-pdf-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+
+        XCTAssertEqual(controller.textView.string, "before [Report v2.pdf](/files/Report-v2.pdf)after")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("files/Report-v2.pdf").path))
+    }
+
     /// Picture data dragged with no file beside it, as from a browser, was
     /// left to NSTextView and became an inline attachment never written to
     /// the note's folder (#578). It is saved and linked like a paste; a text

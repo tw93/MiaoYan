@@ -536,6 +536,36 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual((name as NSString).pathExtension, "png")
     }
 
+    /// The Mac has put a dropped video or PDF in `files/` and linked it as an
+    /// image since it first took files; the preview read `/files/` from the
+    /// disk's root and drew "image not found" for both. A video now plays and
+    /// any other file is a link that opens the file beside the note.
+    func testAVideoInFilesPlaysAndAnotherFileIsALinkToIt() throws {
+        let files = tempDir.appendingPathComponent("files", isDirectory: true)
+        try FileManager.default.createDirectory(at: files, withIntermediateDirectories: true)
+        try Data([0]).write(to: files.appendingPathComponent("clip.mov"))
+        try Data([0]).write(to: files.appendingPathComponent("合同-v2.pdf"))
+        try Data([0]).write(to: files.appendingPathComponent("shot.png"))
+
+        let html = try XCTUnwrap(
+            renderMarkdownHTML(
+                markdown: "![](/files/clip.mov)\n\n![](/files/合同-v2.pdf)\n\n[合同 v2.pdf](/files/合同-v2.pdf)\n\n![](/files/shot.png)",
+                useGithubLineBreak: false))
+        XCTAssertTrue(html.contains("<video src=\"/files/clip.mov\" controls></video>"), html)
+        XCTAssertTrue(html.contains("<a href=\"/files/%E5%90%88%E5%90%8C-v2.pdf\">合同-v2.pdf</a>"), html)
+
+        let processed = HtmlManager.processImages(in: html, imagesStorage: tempDir)
+        XCTAssertFalse(processed.contains("Image Not Found"), processed)
+        XCTAssertNotNil(processed.range(of: #"<video [^>]*src="miaoyan-file://[^"]*/files/clip\.mov""#, options: .regularExpression), processed)
+        XCTAssertNotNil(processed.range(of: #"<img [^>]*src="miaoyan-file://[^"]*/files/shot\.png""#, options: .regularExpression), processed)
+
+        let clicked = try XCTUnwrap(URL(string: "file:///files/%E5%90%88%E5%90%8C-v2.pdf"))
+        XCTAssertEqual(
+            HtmlManager.noteAttachmentURL(for: clicked, noteFolder: tempDir)?.lastPathComponent, "合同-v2.pdf")
+        XCTAssertNil(HtmlManager.noteAttachmentURL(for: URL(fileURLWithPath: "/files/../../etc/hosts"), noteFolder: tempDir))
+        XCTAssertNil(HtmlManager.noteAttachmentURL(for: URL(fileURLWithPath: "/files/missing.pdf"), noteFolder: tempDir))
+    }
+
     /// A paste whose image could not be written still got its link, a
     /// broken image in the note.
     @MainActor

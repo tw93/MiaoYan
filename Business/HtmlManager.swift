@@ -407,8 +407,24 @@ class HtmlManager {
         return cleaned
     }
 
+    /// `/i/` and `/files/` are the note's own folders, not the disk's root:
+    /// read as absolute, a video or file the Mac put in `files/` was looked
+    /// for at `/files/clip.mov` and the preview drew "image not found".
     private static func isAbsolutePath(_ path: String) -> Bool {
-        return path.starts(with: "/") && !path.starts(with: "/i/")
+        return path.starts(with: "/") && !path.starts(with: "/i/") && !path.starts(with: "/files/")
+    }
+
+    /// A link the preview opens, `href="/files/report.pdf"`, arrives as
+    /// `file:///files/report.pdf`; it names the file beside the note.
+    static func noteAttachmentURL(for url: URL, noteFolder: URL) -> URL? {
+        guard url.isFileURL else { return nil }
+        let path = url.path
+        guard path.hasPrefix("/files/") || path.hasPrefix("/i/") else { return nil }
+        let resolved = noteFolder.appendingPathComponent(String(path.dropFirst())).standardizedFileURL
+        guard resolved.path.hasPrefix(noteFolder.standardizedFileURL.path + "/"),
+            FileManager.default.fileExists(atPath: resolved.path)
+        else { return nil }
+        return resolved
     }
 
     private static func copyImageIfNeeded(from source: URL, to destination: URL) {

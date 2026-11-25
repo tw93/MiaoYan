@@ -1,5 +1,6 @@
 import Cocoa
 import Foundation
+import MiaoYanCore
 
 public class ImagesProcessor {
     typealias Size = NSSize
@@ -156,7 +157,7 @@ public class ImagesProcessor {
             var pathComponent = NSUUID().uuidString.lowercased() + "." + ext
 
             if let from = from {
-                pathComponent = normalizedAttachmentFileName(from.lastPathComponent, fallbackExtension: ext)
+                pathComponent = AttachmentFile.normalizedName(from.lastPathComponent, fallbackExtension: ext)
                 ext = from.pathExtension
             }
 
@@ -176,33 +177,6 @@ public class ImagesProcessor {
         }
 
         return name
-    }
-
-    private static func normalizedAttachmentFileName(_ fileName: String, fallbackExtension: String) -> String {
-        let url = URL(fileURLWithPath: fileName)
-        let ext = url.pathExtension.isEmpty ? fallbackExtension : url.pathExtension
-        let baseName = url.deletingPathExtension().lastPathComponent
-        let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_"))
-
-        var normalized = ""
-        var lastWasSeparator = false
-
-        for scalar in baseName.unicodeScalars {
-            if allowed.contains(scalar) {
-                normalized.unicodeScalars.append(scalar)
-                lastWasSeparator = false
-            } else if !lastWasSeparator {
-                normalized.append("-")
-                lastWasSeparator = true
-            }
-        }
-
-        normalized = normalized.trimmingCharacters(in: CharacterSet(charactersIn: "-_"))
-        if normalized.isEmpty {
-            normalized = NSUUID().uuidString.lowercased()
-        }
-
-        return ext.isEmpty ? normalized : "\(normalized).\(ext)"
     }
 
     // Access note.project (@MainActor)

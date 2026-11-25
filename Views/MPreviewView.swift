@@ -910,6 +910,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             if AppDelegate.openGuideLinkInProcess(url) {
                 return .cancel
             }
+            if let note, let file = HtmlManager.noteAttachmentURL(for: url, noteFolder: note.project.url) {
+                NSWorkspace.shared.open(file)
+                return .cancel
+            }
             NSWorkspace.shared.open(url)
             return .cancel
         default:
