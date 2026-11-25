@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1364,7 +1362,7 @@ flowchart LR
 <p>The shortcuts are MiaoYan's: <code>⌘B</code> bold, <code>⌘I</code> italic, <code>⌘K</code> link, <code>⌘E</code> inline code, <code>⇧⌘E</code> code block, and <code>⌘S</code> saves the Markdown as a file, with Ctrl in place of ⌘ on Windows. Return in a list or quote starts the next item, and Return on an empty one ends it. The two panes scroll together paragraph by paragraph, whichever one you scroll. Phone width lays the preview out at 375 pixels, the button at the end of the toolbar gives the editor the whole screen, and the word count follows MiaoYan's, one for each CJK character and one for each word of other text.</p>
 <h2 id="how-close-it-is-to-miaoyans-preview">How close it is to MiaoYan's preview</h2>
 <p>The preview uses the stylesheets of MiaoYan's own preview, and its code highlighting, math and Mermaid come from the same files the app ships, so fonts, spacing, tables and code blocks look as they do in a note. The difference is the parser: this page reads Markdown with markdown-it and the app with cmark-gfm. Both follow CommonMark plus GitHub's tables, strikethrough and task lists, so only rare edge cases come out differently.</p>
-<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Why are formulas copied as <code>$...$</code>?</summary><p>A typeset formula needs KaTeX's fonts, which a paste cannot carry, so Copy formatted puts the formula's source on the clipboard. For a document with formulas, Download Word turns them into Word equations, or save it as PDF.</p></details><details><summary>Why does an image not show?</summary><p>A web page cannot read files on your computer, so an image with a local path such as <code>images/a.png</code> does not show; images with an <code>https://</code> address do. Opened in MiaoYan, the same file shows its local images.</p></details><details><summary>Is what I write saved?</summary><p>Your last text stays in this browser for the next visit, until you switch browsers, use a private window or clear the site's data, so press <code>⌘S</code> to keep anything that matters as a .md file. A file you open is read in your browser and never sent to a server.</p></details><details><summary>What syntax does it support?</summary><p>Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with <code>$...$</code> and <code>$$...$$</code>, and diagrams in mermaid code blocks. The Mermaid syntax is in <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid in Markdown</a>.</p></details></section>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary><span>Why are formulas copied as <code>$...$</code>?</span></summary><p>A typeset formula needs KaTeX's fonts, which a paste cannot carry, so Copy formatted puts the formula's source on the clipboard. For a document with formulas, Download Word turns them into Word equations, or save it as PDF.</p></details><details><summary><span>Why does an image not show?</span></summary><p>A web page cannot read files on your computer, so an image with a local path such as <code>images/a.png</code> does not show; images with an <code>https://</code> address do. Opened in MiaoYan, the same file shows its local images.</p></details><details><summary><span>Is what I write saved?</span></summary><p>Your last text stays in this browser for the next visit, until you switch browsers, use a private window or clear the site's data, so press <code>⌘S</code> to keep anything that matters as a .md file. A file you open is read in your browser and never sent to a server.</p></details><details><summary><span>What syntax does it support?</span></summary><p>Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with <code>$...$</code> and <code>$$...$$</code>, and diagrams in mermaid code blocks. The Mermaid syntax is in <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid in Markdown</a>.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1313,7 +1311,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>Install <a href="https://netnewswire.com/" target="_blank" rel="noopener">NetNewsWire</a> first, then click Install in NetNewsWire above. The browser asks to open NetNewsWire, and NetNewsWire then asks to Install Theme. Once it is in, choose MiaoYan under Article Theme in the Appearance settings.</p>
 <h2 id="what-it-changes">What it changes</h2>
 <p>Body text sits at a 1.7 line height with 0.5px tracking, so Chinese paragraphs no longer feel cramped. Links stay a classic blue, feed names take a green accent, feed avatars are round and code is set in SF Mono. Light mode is #444444 text on #FDFDFD and dark mode is #DCDCDC on #1A1A1A, following the system. The article in the preview above is a post from the <a href="/blog/">MiaoYan blog</a>, and this is how it reads in NetNewsWire. Its feed is <code>https://miaoyan.app/blog/feed.xml</code>.</p>
-<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Nothing happens when I click Install. What now?</summary><p>NetNewsWire is probably not installed on this device yet; install it and click again. You can also download MiaoYan.nnwtheme.zip, unzip it and double-click MiaoYan.nnwtheme.</p></details><details><summary>Does it work on iPhone and iPad?</summary><p>Yes. NetNewsWire for iPhone and iPad reads the same theme and the same install link, so tapping Install in NetNewsWire on the phone puts it there.</p></details><details><summary>Which font does the body use?</summary><p>The theme asks for TsangerJinKai first, but NetNewsWire loads an article with the article's own address as its base, so the font file inside the theme cannot be read. It is used only when TsangerJinKai is installed in the system; otherwise the text is set in PingFang SC, which is what the preview shows.</p></details><details><summary>Can I change how it looks?</summary><p>Yes. The theme is free and open source on <a href="https://github.com/tw93/MiaoYan-NetNewsWire-Theme" target="_blank" rel="noopener">GitHub</a>, its stylesheet and template under the MIT licence; in the unzipped download, colours, sizes and line height are in the stylesheet.css inside MiaoYan.nnwtheme, and double-clicking MiaoYan.nnwtheme again installs your edit.</p></details></section>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary><span>Nothing happens when I click Install. What now?</span></summary><p>NetNewsWire is probably not installed on this device yet; install it and click again. You can also download MiaoYan.nnwtheme.zip, unzip it and double-click MiaoYan.nnwtheme.</p></details><details><summary><span>Does it work on iPhone and iPad?</span></summary><p>Yes. NetNewsWire for iPhone and iPad reads the same theme and the same install link, so tapping Install in NetNewsWire on the phone puts it there.</p></details><details><summary><span>Which font does the body use?</span></summary><p>The theme asks for TsangerJinKai first, but NetNewsWire loads an article with the article's own address as its base, so the font file inside the theme cannot be read. It is used only when TsangerJinKai is installed in the system; otherwise the text is set in PingFang SC, which is what the preview shows.</p></details><details><summary><span>Can I change how it looks?</span></summary><p>Yes. The theme is free and open source on <a href="https://github.com/tw93/MiaoYan-NetNewsWire-Theme" target="_blank" rel="noopener">GitHub</a>, its stylesheet and template under the MIT licence; in the unzipped download, colours, sizes and line height are in the stylesheet.css inside MiaoYan.nnwtheme, and double-clicking MiaoYan.nnwtheme again installs your edit.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

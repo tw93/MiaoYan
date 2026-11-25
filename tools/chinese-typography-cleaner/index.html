@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1339,7 +1337,7 @@ const msg = &quot;中文English混排&quot;
 <h2 id="what-it-leaves-alone">What it leaves alone</h2>
 <p>Fenced and inline code are never changed, though inline code gets a space on each side, so <code>运行`git status`确认</code> becomes <code>运行 `git status` 确认</code>. Math in <code>$...$</code> and <code>$$</code>, link and image targets, <code>[[wikilinks]]</code>, bare URLs, reference definitions and front matter stay as they are, while link text is cleaned.</p>
 <p>Why Chinese writers add this space, and the usual exceptions, are in <a href="/blog/chinese-english-spacing/">Chinese-English spacing in Markdown notes</a>.</p>
-<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Is it the same as Clean Typography in MiaoYan?</summary><p>Yes. It runs the same rules as Clean Typography in MiaoYan for Mac, written line by line from its source, so the same text comes out identical in both. In MiaoYan it cleans the open note in one step, and <code>⌘Z</code> undoes it.</p></details><details><summary>Does it change quotation marks?</summary><p>No. Corner brackets, curly quotes and straight quotes each have their own users, so it leaves them as they are; the only punctuation it changes is a half-width comma, semicolon, colon, exclamation mark, question mark or full stop after a Chinese character.</p></details><details><summary>Does it add a space between a number and its unit?</summary><p>No. <code>10Gbps</code> stays <code>10Gbps</code>, and <code>90°</code> and <code>15%</code> do not change, because unit symbols are not letters or digits. Add the space yourself where a unit takes one.</p></details><details><summary>A product name got a space. What now?</summary><p>It does not know product names, so a brand written without a space, like <code>豆瓣FM</code>, gets one. Every change is marked on the right, so look over the marks and put the name back in your text after copying. The cleaning runs in your browser and the text is not sent to a server.</p></details></section>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary><span>Is it the same as Clean Typography in MiaoYan?</span></summary><p>Yes. It runs the same rules as Clean Typography in MiaoYan for Mac, written line by line from its source, so the same text comes out identical in both. In MiaoYan it cleans the open note in one step, and <code>⌘Z</code> undoes it.</p></details><details><summary><span>Does it change quotation marks?</span></summary><p>No. Corner brackets, curly quotes and straight quotes each have their own users, so it leaves them as they are; the only punctuation it changes is a half-width comma, semicolon, colon, exclamation mark, question mark or full stop after a Chinese character.</p></details><details><summary><span>Does it add a space between a number and its unit?</span></summary><p>No. <code>10Gbps</code> stays <code>10Gbps</code>, and <code>90°</code> and <code>15%</code> do not change, because unit symbols are not letters or digits. Add the space yourself where a unit takes one.</p></details><details><summary><span>A product name got a space. What now?</span></summary><p>It does not know product names, so a brand written without a space, like <code>豆瓣FM</code>, gets one. Every change is marked on the right, so look over the marks and put the name back in your text after copying. The cleaning runs in your browser and the text is not sent to a server.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

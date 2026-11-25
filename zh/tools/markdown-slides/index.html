@@ -757,17 +757,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1440,7 +1438,7 @@ $$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$
 <p>左边写 Markdown，单独一行 <code>---</code> 分开一页，右边实时画出幻灯片，用的就是妙言 PPT 模式那套 reveal.js 和它的浅色、深色主题，光标停在哪一页右边就翻到哪一页。标题、列表、表格、图片和链接照 Markdown 的写法来，代码块按语言高亮，在语言后面写上 <code>[1|2-4]</code> 这样的行号，放映时会一步步高亮这几行，<code>$...$</code> 和 <code>$$...$$</code> 里的公式用 KaTeX 排出来，一页里只有一样东西时居中放，内容太长的一页会收窄留白、可以往下滚。</p>
 <p>想换切换动画或者显示页码，在文档开头写一段 <code>&lt;!-- transition: fade --&gt;</code> 这样的注释，键名和 reveal.js 的配置一样；某一页要背景色，在那页写 <code>&lt;!-- .slide: data-background="#F8CB9E" --&gt;</code>，某一行要分步出现，在行尾写 <code>&lt;!-- .element: class="fragment" --&gt;</code>。</p>
 <p>点演示就全屏放映，方向键或空格翻页，Esc 退出，存成 PDF 时一张幻灯片占一页纸。也可以打开一个 .md 文件或者直接拖进来，快捷键和妙言一样，<code>⌘B</code> 加粗、<code>⌘I</code> 斜体、<code>⌘S</code> 把 Markdown 存成文件，字体可以在系统字体、宋体、楷体这几种里换，列出来的都是这台电脑本来就有的。写的内容、深色和字体都会留在这个浏览器里，下次打开还在，换了浏览器或者清掉网站数据就没了，想长期留着就下载 Markdown。</p>
-<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary>怎么分页？</summary><p>单独一行写 <code>---</code> 就是新的一页，前后空不空行都行。代码块里单独一行的 <code>---</code> 也会分页，这和妙言 App 里一样，代码里要这一行时可以写成 <code>- - -</code>。</p></details><details><summary>能存成 PowerPoint 吗？</summary><p>不能直接存成 .pptx，这里做的是网页幻灯片，可以存成 PDF，PDF 在预览或 Acrobat 里也能全屏一页页放，要改成 .pptx 得在 PowerPoint 里重新排。</p></details><details><summary>和妙言 App 里放映有什么不一样？</summary><p>排版和主题是同一套，有三处不一样，这里的幻灯片固定按 16:9 排、跟着屏幕等比缩放，App 里铺满窗口；字体这里只能从电脑自带的几种里挑，App 用设置里选的预览字体，装了什么都能用；App 里能画的 Mermaid 图这里还画不出来，会显示成代码。</p></details><details><summary>文稿会上传吗？</summary><p>不会，幻灯片在浏览器里生成和放映，内容不会发到服务器，只有文中的网络图片会从它所在的网站加载。</p></details></section>
+<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary><span>怎么分页？</span></summary><p>单独一行写 <code>---</code> 就是新的一页，前后空不空行都行。代码块里单独一行的 <code>---</code> 也会分页，这和妙言 App 里一样，代码里要这一行时可以写成 <code>- - -</code>。</p></details><details><summary><span>能存成 PowerPoint 吗？</span></summary><p>不能直接存成 .pptx，这里做的是网页幻灯片，可以存成 PDF，PDF 在预览或 Acrobat 里也能全屏一页页放，要改成 .pptx 得在 PowerPoint 里重新排。</p></details><details><summary><span>和妙言 App 里放映有什么不一样？</span></summary><p>排版和主题是同一套，有三处不一样，这里的幻灯片固定按 16:9 排、跟着屏幕等比缩放，App 里铺满窗口；字体这里只能从电脑自带的几种里挑，App 用设置里选的预览字体，装了什么都能用；App 里能画的 Mermaid 图这里还画不出来，会显示成代码。</p></details><details><summary><span>文稿会上传吗？</span></summary><p>不会，幻灯片在浏览器里生成和放映，内容不会发到服务器，只有文中的网络图片会从它所在的网站加载。</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

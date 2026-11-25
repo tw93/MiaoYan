@@ -757,17 +757,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1335,7 +1333,7 @@ flowchart LR
 ```
 </code></pre>
 <p>把它贴进笔记，支持 Mermaid 的预览就会把图画出来，妙言、GitHub、GitLab、Obsidian 和 Typora 都认这种代码块。每种图的写法不一样，<a href="/zh/blog/mermaid-flowchart/">流程图</a>、<a href="/zh/blog/mermaid-sequence-diagram/">时序图</a>、<a href="/zh/blog/mermaid-timeline/">时间线</a>、<a href="/zh/blog/mermaid-gantt-chart/">甘特图</a>、<a href="/zh/blog/mermaid-class-diagram/">类图</a> 和 <a href="/zh/blog/mermaid-er-diagram/">ER 图</a> 各有一篇带示例的写法，总的介绍在 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
-<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary>能画哪些图？</summary><p>模板里有流程图、时序图、时间线、甘特图、类图、状态图、ER 图、饼图、思维导图和 XY 图表，点一个换成它的示例再改最快，模板里没有的类型照着 Mermaid 的写法直接写也能画。用的是 Mermaid 11.14.0，和妙言 App 自带的是同一个文件，配色也一样，这里画好的图放进笔记里就是同一张。</p></details><details><summary>下载的图片够清楚吗？</summary><p>PNG 按两倍大小导出，底色是妙言图表的浅色背景，特别大的图会把倍数往下调一点，整张控制在 1600 万像素以内，复制图片拿到的也是这张 PNG，可以直接粘贴到聊天和文档里。要放大也不糊就下载 SVG，文字是 SVG 自己的文本，放进别的软件里也能正常显示。</p></details><details><summary>怎么把图发给别人？</summary><p>点复制链接，代码会压缩后写进链接里，对方打开就是这张图，图不存在服务器上，你和对方都不用注册。</p></details><details><summary>图为什么不更新了？</summary><p>代码写错时，上一张能画出来的图会留着并变淡，编辑器下面显示 Mermaid 的报错，出错的那一行在行号上标了出来。常见的原因是流程图里用了小写的 <code>end</code> 当节点名、时间线里少了冒号，或者用了 Mermaid 11.14.0 还不认识的图类型。</p></details></section>
+<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary><span>能画哪些图？</span></summary><p>模板里有流程图、时序图、时间线、甘特图、类图、状态图、ER 图、饼图、思维导图和 XY 图表，点一个换成它的示例再改最快，模板里没有的类型照着 Mermaid 的写法直接写也能画。用的是 Mermaid 11.14.0，和妙言 App 自带的是同一个文件，配色也一样，这里画好的图放进笔记里就是同一张。</p></details><details><summary><span>下载的图片够清楚吗？</span></summary><p>PNG 按两倍大小导出，底色是妙言图表的浅色背景，特别大的图会把倍数往下调一点，整张控制在 1600 万像素以内，复制图片拿到的也是这张 PNG，可以直接粘贴到聊天和文档里。要放大也不糊就下载 SVG，文字是 SVG 自己的文本，放进别的软件里也能正常显示。</p></details><details><summary><span>怎么把图发给别人？</span></summary><p>点复制链接，代码会压缩后写进链接里，对方打开就是这张图，图不存在服务器上，你和对方都不用注册。</p></details><details><summary><span>图为什么不更新了？</span></summary><p>代码写错时，上一张能画出来的图会留着并变淡，编辑器下面显示 Mermaid 的报错，出错的那一行在行号上标了出来。常见的原因是流程图里用了小写的 <code>end</code> 当节点名、时间线里少了冒号，或者用了 Mermaid 11.14.0 还不认识的图类型。</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

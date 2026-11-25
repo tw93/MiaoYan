@@ -757,17 +757,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1362,7 +1360,7 @@ flowchart LR
 <h2 id="下载下来是什么样">下载下来是什么样</h2>
 <p>左边写或粘贴 Markdown，右边按妙言的预览样式实时排版，点下载 Word 得到一个 .docx，排版和右边看到的一样：标题、加粗、斜体和删除线照原样，多级列表还是 Word 的列表，表格带着边框，代码块保留缩进和高亮的颜色，任务列表变成 Word 里能点的复选框，链接点得开。公式会转成 Word 自己的公式，打开以后可以接着改，Mermaid 图转成两倍清晰度的图片。中文页面用 A4 纸、四边各留一英寸，正文字体是 Helvetica Neue 和苹方，在没有这两个字体的 Windows 上 Word 会换成自己的字体。</p>
 <p>也可以打开一个 .md 文件或者直接拖进来，快捷键和妙言一样，<code>⌘B</code> 加粗、<code>⌘I</code> 斜体、<code>⌘K</code> 链接，<code>⌘S</code> 把 Markdown 存成文件，最后写的内容会留在这个浏览器里。</p>
-<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary>能生成目录吗？</summary><p>能，标题用的是 Word 自带的标题 1 到标题 6，在 Word 里插入目录就能直接生成，导航窗格里也能按标题跳转。</p></details><details><summary>公式在 Word 里还能改吗？</summary><p>能，公式转成了 Word 自己的公式，不是图片，点进去就能改，独立成行的公式居中，行内的公式跟着文字走。</p></details><details><summary>图片为什么少了几张？</summary><p>网上的图片由浏览器下载后放进文档，有的网站不允许别的网页读取它的图片，这类图片和 <code>images/a.png</code> 这种本地路径的图片放不进去，下载完状态栏会说少了几张，在 Word 里自己插入就行。</p></details><details><summary>文档会上传吗？</summary><p>不会，.docx 是在浏览器里生成的，内容不会发到服务器，只有文中的网络图片会从它所在的网站下载。</p></details><details><summary>用 Word 以外的软件能打开吗？</summary><p>能，下载的是标准的 .docx，标题、列表、表格、复选框和公式的排版在 LibreOffice 里核对过，有的软件对公式和复选框支持得不如 Word 完整。</p></details></section>
+<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary><span>能生成目录吗？</span></summary><p>能，标题用的是 Word 自带的标题 1 到标题 6，在 Word 里插入目录就能直接生成，导航窗格里也能按标题跳转。</p></details><details><summary><span>公式在 Word 里还能改吗？</span></summary><p>能，公式转成了 Word 自己的公式，不是图片，点进去就能改，独立成行的公式居中，行内的公式跟着文字走。</p></details><details><summary><span>图片为什么少了几张？</span></summary><p>网上的图片由浏览器下载后放进文档，有的网站不允许别的网页读取它的图片，这类图片和 <code>images/a.png</code> 这种本地路径的图片放不进去，下载完状态栏会说少了几张，在 Word 里自己插入就行。</p></details><details><summary><span>文档会上传吗？</span></summary><p>不会，.docx 是在浏览器里生成的，内容不会发到服务器，只有文中的网络图片会从它所在的网站下载。</p></details><details><summary><span>用 Word 以外的软件能打开吗？</span></summary><p>能，下载的是标准的 .docx，标题、列表、表格、复选框和公式的排版在 LibreOffice 里核对过，有的软件对公式和复选框支持得不如 Word 完整。</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

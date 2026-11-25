@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1360,7 +1358,7 @@ flowchart LR
 <h2 id="what-you-get">What you get</h2>
 <p>Write or paste Markdown on the left, the right lays it out in MiaoYan's preview styling as you type, and Download Word saves a .docx that looks like it: headings, bold, italic and strikethrough as they are, nested lists as Word lists, tables with their borders, code blocks with their indentation and highlight colours, task lists as checkboxes you can tick in Word, and links you can click. Formulas become Word's own equations, still editable once the file is open, and Mermaid diagrams become pictures at twice their size. The English page uses US Letter with one-inch margins and sets the text in Helvetica Neue, which Word replaces with one of its own fonts on Windows.</p>
 <p>You can also open a .md file or drop one on the page. The shortcuts are MiaoYan's, <code>⌘B</code> bold, <code>⌘I</code> italic, <code>⌘K</code> link and <code>⌘S</code> to save the Markdown, and the last text you wrote stays in this browser.</p>
-<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Can Word build a table of contents from it?</summary><p>Yes. Headings use Word's own Heading 1 to Heading 6 styles, so Insert Table of Contents works straight away and the navigation pane lists them.</p></details><details><summary>Can I edit the formulas in Word?</summary><p>Yes. They are Word's own equations, not pictures, so you can click into one and change it. A formula on its own line is centred, and an inline one runs with the text.</p></details><details><summary>Why are some pictures missing?</summary><p>Pictures from the web are downloaded by your browser and put in the document. A site that does not let other pages read its pictures, and a local path such as <code>images/a.png</code>, cannot be included; the status line says how many were left out, so you can insert them in Word.</p></details><details><summary>Is my document uploaded?</summary><p>No. The .docx is made in your browser and nothing is sent to a server; only the web pictures in the text are downloaded from their sites.</p></details><details><summary>Will it open in apps other than Word?</summary><p>Yes, it is a standard .docx, and its headings, lists, tables, checkboxes and formulas were checked in LibreOffice. Some apps handle equations and checkboxes less fully than Word.</p></details></section>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary><span>Can Word build a table of contents from it?</span></summary><p>Yes. Headings use Word's own Heading 1 to Heading 6 styles, so Insert Table of Contents works straight away and the navigation pane lists them.</p></details><details><summary><span>Can I edit the formulas in Word?</span></summary><p>Yes. They are Word's own equations, not pictures, so you can click into one and change it. A formula on its own line is centred, and an inline one runs with the text.</p></details><details><summary><span>Why are some pictures missing?</span></summary><p>Pictures from the web are downloaded by your browser and put in the document. A site that does not let other pages read its pictures, and a local path such as <code>images/a.png</code>, cannot be included; the status line says how many were left out, so you can insert them in Word.</p></details><details><summary><span>Is my document uploaded?</span></summary><p>No. The .docx is made in your browser and nothing is sent to a server; only the web pictures in the text are downloaded from their sites.</p></details><details><summary><span>Will it open in apps other than Word?</span></summary><p>Yes, it is a standard .docx, and its headings, lists, tables, checkboxes and formulas were checked in LibreOffice. Some apps handle equations and checkboxes less fully than Word.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

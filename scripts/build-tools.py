@@ -571,7 +571,9 @@ def fold_faq(body, lang):
     if not section:
         return body
     items = "".join(
-        f"<details><summary>{q.strip()}</summary>{a.strip()}</details>"
+        # One span, so a question with inline code stays one flex item
+        # beside the +, rather than its words, code and "?" spreading apart.
+        f"<details><summary><span>{q.strip()}</span></summary>{a.strip()}</details>"
         for q, a in re.findall(r"<h3[^>]*>(.*?)</h3>(.*?)(?=<h3[ >]|\Z)", section.group(2), re.S)
     )
     folded = f'<section class="faq tool-faq">{section.group(1)}{items}</section>\n'

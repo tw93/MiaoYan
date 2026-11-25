@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1321,7 +1319,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="what-happens-when-you-paste">What happens when you paste</h2>
 <p>Copy cells in Excel, Numbers or Google Sheets, click the first cell of the grid and paste, and the whole table becomes what you copied. Paste into a cell further in and it fills right and down from there, adding rows and columns as needed, and Undo takes it back. CSV and TSV files can be dropped onto the grid, and an existing Markdown table pasted in brings its column alignment with it.</p>
 <p>Markdown tables have limits of their own, so a line break inside a cell becomes <code>&lt;br&gt;</code>, a pipe is escaped as <code>\|</code>, and a merged cell is split, with its content in the first cell. The first row is always the header. The syntax is covered in <a href="/blog/markdown-tables/">Markdown tables: alignment, pipes and line breaks</a>, and other ways to convert a sheet in <a href="/blog/excel-to-markdown-table/">Excel to Markdown table: paste, convert and check</a>.</p>
-<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>How large can a table be?</summary><p>The grid holds up to 500 rows and 30 columns. When a paste from Excel or a CSV file is larger, the extra rows and columns are left out and the status line says so.</p></details><details><summary>Why do Chinese and Japanese characters count as two?</summary><p>Terminals and Prettier count a CJK character as two columns wide, and the padding here does the same, so the pipes line up in a font where a CJK character is exactly two Latin characters wide. Turn off Line up columns for the compact form without padding.</p></details><details><summary>Can I merge cells?</summary><p>Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML <code>&lt;table&gt;</code> in the note and use <code>colspan</code> and <code>rowspan</code>.</p></details><details><summary>Is my table saved?</summary><p>Your last table stays in this browser for the next visit, until you switch browsers or clear the site's data. Pasted data is converted in your browser and never sent to a server.</p></details></section>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary><span>How large can a table be?</span></summary><p>The grid holds up to 500 rows and 30 columns. When a paste from Excel or a CSV file is larger, the extra rows and columns are left out and the status line says so.</p></details><details><summary><span>Why do Chinese and Japanese characters count as two?</span></summary><p>Terminals and Prettier count a CJK character as two columns wide, and the padding here does the same, so the pipes line up in a font where a CJK character is exactly two Latin characters wide. Turn off Line up columns for the compact form without padding.</p></details><details><summary><span>Can I merge cells?</span></summary><p>Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML <code>&lt;table&gt;</code> in the note and use <code>colspan</code> and <code>rowspan</code>.</p></details><details><summary><span>Is my table saved?</span></summary><p>Your last table stays in this browser for the next visit, until you switch browsers or clear the site's data. Pasted data is converted in your browser and never sent to a server.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

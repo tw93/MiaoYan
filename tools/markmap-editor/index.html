@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1334,7 +1332,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="writing-the-outline">Writing the outline</h2>
 <p>The first <code>#</code> heading is the centre, <code>##</code> headings are its branches, and list items hang under the nearest heading, nesting one level per indent; two spaces a level is the habit, and <code>Tab</code> and <code>Shift + Tab</code> in the editor add or remove one. Nodes can hold <strong>bold</strong>, <em>italic</em>, <code>code</code>, links and math in <code>$...$</code>. Click the dot on a node to fold or unfold its branch, drag to move the map, and pinch or hold <code>Ctrl</code> while scrolling to zoom.</p>
 <p>When the map is ready, Copy Markdown gives you a markmap code block. Paste it into a MiaoYan note and the preview draws it with the same Markmap. More syntax, and how it compares with Mermaid's mind maps, is in <a href="/blog/markmap-mind-maps/">Markmap: turn a Markdown outline into a mind map</a>.</p>
-<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>How is it different from a Mermaid mind map?</summary><p>Markmap reads the headings and lists of plain Markdown, so an outline you already have draws as it is and its branches fold on click. A Mermaid mindmap has its own indented syntax with brackets for node shapes, which pays off when it lives beside flowcharts and sequence diagrams. With an outline in hand, use Markmap; to keep it with other diagrams, use the <a href="/tools/mermaid-editor/">Mermaid Editor</a>.</p></details><details><summary>Does the exported image match what I see?</summary><p>It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. PNG is exported at twice the size, and node labels in the SVG are plain SVG text, so other apps show them and can edit the words.</p></details><details><summary>How is it different from the map in MiaoYan?</summary><p>It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline.</p></details><details><summary>Is my outline saved?</summary><p>Your last outline stays in this browser for the next visit, until you switch browsers or clear the site's data. The map is drawn in your browser and the outline never reaches a server.</p></details></section>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary><span>How is it different from a Mermaid mind map?</span></summary><p>Markmap reads the headings and lists of plain Markdown, so an outline you already have draws as it is and its branches fold on click. A Mermaid mindmap has its own indented syntax with brackets for node shapes, which pays off when it lives beside flowcharts and sequence diagrams. With an outline in hand, use Markmap; to keep it with other diagrams, use the <a href="/tools/mermaid-editor/">Mermaid Editor</a>.</p></details><details><summary><span>Does the exported image match what I see?</span></summary><p>It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. PNG is exported at twice the size, and node labels in the SVG are plain SVG text, so other apps show them and can edit the words.</p></details><details><summary><span>How is it different from the map in MiaoYan?</span></summary><p>It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline.</p></details><details><summary><span>Is my outline saved?</span></summary><p>Your last outline stays in this browser for the next visit, until you switch browsers or clear the site's data. The map is drawn in your browser and the outline never reaches a server.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

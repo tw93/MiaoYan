@@ -757,17 +757,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1336,7 +1334,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="大纲怎么写">大纲怎么写</h2>
 <p>第一个 <code>#</code> 标题是中心节点，<code>##</code> 标题是它的分支，列表项挂在最近的标题下面，按缩进一层层往下长，习惯每层两个空格，在左边按 <code>Tab</code> 加一层，<code>Shift + Tab</code> 退一层。节点里可以写<strong>加粗</strong>、<em>斜体</em>、<code>代码</code> 和链接，公式用 <code>$...$</code>。点节点前面的圆点能收起或展开它下面的分支，拖动可以移动画布，双指捏合或者按住 <code>Ctrl</code> 滚动可以缩放。</p>
 <p>画好以后点“复制 Markdown”，会得到一个 markmap 代码块，贴进妙言的笔记里，预览会用同一份 Markmap 画出来。更多写法和它跟 Mermaid 思维导图的区别，可以看这篇<a href="/zh/blog/markmap-mind-maps/">用 Markdown 大纲画 Markmap 思维导图</a>。</p>
-<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary>和 Mermaid 的思维导图有什么不同？</summary><p>Markmap 直接读 Markdown 的标题和列表，平时写的大纲不用改就能画，分支还能点开收起，Mermaid 的 mindmap 要按缩进写它自己的一套写法，节点形状用括号标出来，好处是能和流程图、时序图写在同一个地方。手上已经有一份大纲就用 Markmap，想和别的图放在一起就用 <a href="/zh/tools/mermaid-editor/">Mermaid 在线编辑</a>。</p></details><details><summary>导出的图片和网页上看到的一样吗？</summary><p>一样的布局和颜色，导出的是当前展开的样子，收起的分支不会出现在图里。PNG 按两倍大小导出，SVG 里的节点文字是普通的 SVG 文本，放进别的软件里也能正常显示和改字。</p></details><details><summary>和妙言里的导图有什么不同？</summary><p>用的是妙言同一版本的 Markmap 和配色，妙言的预览里导图大小固定、不能点击收起，这里可以收起、缩放和拖动，方便看一份很长的大纲。</p></details><details><summary>大纲会保存吗？</summary><p>最后一次的大纲存在这个浏览器里，下次打开还在，换了浏览器或者清掉网站数据就没了，大纲只在浏览器里画，不会发到服务器。</p></details></section>
+<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary><span>和 Mermaid 的思维导图有什么不同？</span></summary><p>Markmap 直接读 Markdown 的标题和列表，平时写的大纲不用改就能画，分支还能点开收起，Mermaid 的 mindmap 要按缩进写它自己的一套写法，节点形状用括号标出来，好处是能和流程图、时序图写在同一个地方。手上已经有一份大纲就用 Markmap，想和别的图放在一起就用 <a href="/zh/tools/mermaid-editor/">Mermaid 在线编辑</a>。</p></details><details><summary><span>导出的图片和网页上看到的一样吗？</span></summary><p>一样的布局和颜色，导出的是当前展开的样子，收起的分支不会出现在图里。PNG 按两倍大小导出，SVG 里的节点文字是普通的 SVG 文本，放进别的软件里也能正常显示和改字。</p></details><details><summary><span>和妙言里的导图有什么不同？</span></summary><p>用的是妙言同一版本的 Markmap 和配色，妙言的预览里导图大小固定、不能点击收起，这里可以收起、缩放和拖动，方便看一份很长的大纲。</p></details><details><summary><span>大纲会保存吗？</span></summary><p>最后一次的大纲存在这个浏览器里，下次打开还在，换了浏览器或者清掉网站数据就没了，大纲只在浏览器里画，不会发到服务器。</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

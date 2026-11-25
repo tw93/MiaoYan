@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1438,7 +1436,7 @@ $$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$
 <p>Write Markdown on the left with <code>---</code> on a line of its own between slides, and the right draws the deck as you type, with the same reveal.js and light and dark themes as MiaoYan's PPT mode, turning to whichever slide the cursor is on. Headings, lists, tables, pictures and links are written as Markdown, code blocks are highlighted by language, line numbers such as <code>[1|2-4]</code> after the language light those lines up a step at a time when you present, and math in <code>$...$</code> and <code>$$...$$</code> is set by KaTeX. A slide holding a single thing is centred, and a slide too long for the page gets narrower margins and scrolls.</p>
 <p>To change the transition or show slide numbers, put a comment such as <code>&lt;!-- transition: fade --&gt;</code> at the top of the text, its keys the same as reveal.js config options. A slide takes a background with <code>&lt;!-- .slide: data-background="#F8CB9E" --&gt;</code>, and a line appears on its own step with <code>&lt;!-- .element: class="fragment" --&gt;</code> at its end.</p>
 <p>Present plays the deck full screen, the arrow keys or Space turn the page and Esc leaves, and Save as PDF puts one slide on each page. You can also open a .md file or drop one on the page. The shortcuts are MiaoYan's, <code>⌘B</code> bold, <code>⌘I</code> italic and <code>⌘S</code> to save the Markdown, The font picker offers the system font, Songti, Kaiti and Georgia, listing only the ones this computer already has. Your text, the dark switch and the font stay in this browser, so they are there next time, until you switch browsers or clear the site's data; download the Markdown to keep it for good.</p>
-<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>How do I start a new slide?</summary><p>A line holding only <code>---</code> starts the next slide, with or without blank lines around it. A <code>---</code> line inside a code block splits the slide too, as it does in the MiaoYan app; write it as <code>- - -</code> where code needs that line.</p></details><details><summary>Can I save it as PowerPoint?</summary><p>Not as a .pptx. This is a web deck, and it saves as a PDF, which Preview or Acrobat can also play full screen a page at a time; a .pptx would have to be laid out again in PowerPoint.</p></details><details><summary>How is it different from presenting in the MiaoYan app?</summary><p>The layout and themes are the same, with three differences: here the deck is a fixed 16:9 that scales to the screen, where the app fills its window; here the font comes from the few your computer ships with, where the app uses whatever preview font you chose in its settings; and Mermaid diagrams, which the app draws, show here as code.</p></details><details><summary>Is my text uploaded?</summary><p>No. The deck is built and played in your browser and nothing is sent to a server; only the web pictures in the text load from their sites.</p></details></section>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary><span>How do I start a new slide?</span></summary><p>A line holding only <code>---</code> starts the next slide, with or without blank lines around it. A <code>---</code> line inside a code block splits the slide too, as it does in the MiaoYan app; write it as <code>- - -</code> where code needs that line.</p></details><details><summary><span>Can I save it as PowerPoint?</span></summary><p>Not as a .pptx. This is a web deck, and it saves as a PDF, which Preview or Acrobat can also play full screen a page at a time; a .pptx would have to be laid out again in PowerPoint.</p></details><details><summary><span>How is it different from presenting in the MiaoYan app?</span></summary><p>The layout and themes are the same, with three differences: here the deck is a fixed 16:9 that scales to the screen, where the app fills its window; here the font comes from the few your computer ships with, where the app uses whatever preview font you chose in its settings; and Mermaid diagrams, which the app draws, show here as code.</p></details><details><summary><span>Is my text uploaded?</span></summary><p>No. The deck is built and played in your browser and nothing is sent to a server; only the web pictures in the text load from their sites.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

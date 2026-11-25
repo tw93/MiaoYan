@@ -755,17 +755,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1337,7 +1335,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>They start with the everyday marks, headings, bold and lists, go on to tasks, quotes, tables and code blocks, and end with what MiaoYan draws for you, formulas and Mermaid diagrams. Each level teaches one way of writing, each chapter closes with a review that puts it together, and the last level lays out a whole note. Here is every level's Markdown, for when you forget one.</p>
 <table><thead><tr><th>Markdown</th><th>For</th></tr></thead><tbody><tr><td><code># Heading</code></td><td>Headings</td></tr><tr><td><code>## Subheading</code></td><td>Subheadings</td></tr><tr><td>A blank line between paragraphs</td><td>Paragraphs</td></tr><tr><td><code>**bold**</code></td><td>Bold</td></tr><tr><td><code>*italics*</code></td><td>Italics</td></tr><tr><td><code>~~struck~~</code></td><td>Strikethrough</td></tr><tr><td><code>`code`</code></td><td>Inline code</td></tr><tr><td><code>[text](https://…)</code></td><td>Links</td></tr><tr><td><code>- Item</code></td><td>Lists</td></tr><tr><td><code>1. Step</code></td><td>Numbered lists</td></tr><tr><td><code>  - Sub-item</code></td><td>Nested lists</td></tr><tr><td><code>- [ ] Task</code></td><td>Task lists</td></tr><tr><td><code>&gt; Quote</code></td><td>Quotes</td></tr><tr><td><code>---</code></td><td>Dividers</td></tr><tr><td><code>```python</code></td><td>Code blocks</td></tr><tr><td><code>| A | B |</code></td><td>Tables</td></tr><tr><td><code>| :---: | ---: |</code></td><td>Column alignment</td></tr><tr><td><code>![caption](address)</code></td><td>Images</td></tr><tr><td><code>\*</code></td><td>Escaping</td></tr><tr><td><code>$a^2$</code></td><td>Formulas</td></tr><tr><td><code>$$</code></td><td>Display formulas</td></tr><tr><td><code>```mermaid</code></td><td>Diagrams</td></tr></tbody></table>
 
-<section class="faq tool-faq"><h2>FAQ</h2><details><summary>When is a level done?</summary><p>When your preview draws the same as the goal. The result is compared, not the text, so <code>*italics*</code> and <code>_italics_</code>, or lists started with <code>-</code> and <code>*</code>, both count; the words have to match the goal.</p></details><details><summary>Is my progress saved?</summary><p>Yes. The levels you finished and what you wrote in each stay in this browser, so you can pick up where you left off. Another browser, or clearing the site's data, starts from the beginning.</p></details><details><summary>What if I get stuck?</summary><p>Try the hint first. The tinted blocks in the preview are the ones that still differ from the goal. If you still cannot see it, show the answer, then start over and write it yourself.</p></details><details><summary>Does this Markdown work in MiaoYan?</summary><p>Yes. The preview is MiaoYan's own, formulas and Mermaid diagrams are drawn in the app the same way, and in MiaoYan's slides <code>---</code> also starts the next slide.</p></details></section>
+<section class="faq tool-faq"><h2>FAQ</h2><details><summary><span>When is a level done?</span></summary><p>When your preview draws the same as the goal. The result is compared, not the text, so <code>*italics*</code> and <code>_italics_</code>, or lists started with <code>-</code> and <code>*</code>, both count; the words have to match the goal.</p></details><details><summary><span>Is my progress saved?</span></summary><p>Yes. The levels you finished and what you wrote in each stay in this browser, so you can pick up where you left off. Another browser, or clearing the site's data, starts from the beginning.</p></details><details><summary><span>What if I get stuck?</span></summary><p>Try the hint first. The tinted blocks in the preview are the ones that still differ from the goal. If you still cannot see it, show the answer, then start over and write it yourself.</p></details><details><summary><span>Does this Markdown work in MiaoYan?</span></summary><p>Yes. The preview is MiaoYan's own, formulas and Mermaid diagrams are drawn in the app the same way, and in MiaoYan's slides <code>---</code> also starts the next slide.</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">

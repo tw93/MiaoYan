@@ -757,17 +757,15 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
-   and the way into MiaoYan below keep the reading column's width on that same
-   left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   and the way into MiaoYan below take the tool's width too (maintainer
+   2026-11-25: a 1000px column under the wider tool read lopsided; centred, it
+   had started 190px in from the title). On a wide display the page stops at 1440px and centres, and
    the footer takes the same width so its brand sits on that edge (maintainer
    2026-11-25, of three candidates at 2333px: the prose hugged the left while
-   the footer sat centred 635px in). Narrower windows are unchanged. */
-.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
-@media (min-width: 1505px) {
-  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
-}
-.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
+   the footer sat centred 635px in). The footer keeps that width and side at
+   every size, or the 1000px column sat 108px in from the prose at 1280. */
+.wrap:has(> main.tool-page),
+body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
   .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
@@ -1342,7 +1340,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>手上是文件的话，点打开文件或者直接拖进来，.docx 会在浏览器里读出标题、列表、表格和加粗，.html 按网页处理。Google 文档复制出来的内容整段包在一个加粗里，加粗和斜体写在样式上，Word 的列表复制出来是一行行前面带着圆点的段落，这几种都会还原成正常的 Markdown。</p>
 <h2 id="哪些转不过来">哪些转不过来</h2>
 <p>Markdown 里只能放图片的地址，所以 Word 里插入的图片、截图粘贴进文档的图片带不过来，网页上的图片会保留原来的网址。字号、颜色、字体、居中这类排版信息会去掉，合并过的单元格只占一格，公式只保留能复制出来的文字，转完扫一眼表格和公式最稳妥。</p>
-<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary>和妙言里粘贴的效果一样吗？</summary><p>一样，这里用的是妙言 Mac 版粘贴网页内容时的同一套转换，逐行照着它的源码写成网页版，同一段网页两边转出来一字不差。妙言只在内容里有标题、列表、表格、引用或代码块时才转，普通的一句话照原文粘贴，这个页面每次都转，另外还多认了 Google 文档的整段加粗、Word 的列表和图片下面的图注。</p></details><details><summary>能转 PDF 吗？</summary><p>不能直接打开 PDF，PDF 里只有排好的文字，没有标题和列表的结构，在 PDF 阅读器里选中文字复制过来，得到的是一段段的正文，标题和列表要自己补上。</p></details><details><summary>粘贴的内容会上传吗？</summary><p>不会，转换在浏览器里完成，粘贴的内容和打开的文件都不会发到服务器，只有左边显示的网页图片会从它原来的网站加载，公司文档也可以放心贴。</p></details><details><summary>转出来的 Markdown 怎么用？</summary><p>复制以后贴进妙言、GitHub、Obsidian 这类支持 Markdown 的地方就行，也可以下载成 .md 文件，文件名取自打开的文件或者第一个标题，想先看看排出来的样子，可以贴到 <a href="/zh/tools/markdown-viewer/">Markdown 在线预览</a>里。</p></details></section>
+<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary><span>和妙言里粘贴的效果一样吗？</span></summary><p>一样，这里用的是妙言 Mac 版粘贴网页内容时的同一套转换，逐行照着它的源码写成网页版，同一段网页两边转出来一字不差。妙言只在内容里有标题、列表、表格、引用或代码块时才转，普通的一句话照原文粘贴，这个页面每次都转，另外还多认了 Google 文档的整段加粗、Word 的列表和图片下面的图注。</p></details><details><summary><span>能转 PDF 吗？</span></summary><p>不能直接打开 PDF，PDF 里只有排好的文字，没有标题和列表的结构，在 PDF 阅读器里选中文字复制过来，得到的是一段段的正文，标题和列表要自己补上。</p></details><details><summary><span>粘贴的内容会上传吗？</span></summary><p>不会，转换在浏览器里完成，粘贴的内容和打开的文件都不会发到服务器，只有左边显示的网页图片会从它原来的网站加载，公司文档也可以放心贴。</p></details><details><summary><span>转出来的 Markdown 怎么用？</span></summary><p>复制以后贴进妙言、GitHub、Obsidian 这类支持 Markdown 的地方就行，也可以下载成 .md 文件，文件名取自打开的文件或者第一个标题，想先看看排出来的样子，可以贴到 <a href="/zh/tools/markdown-viewer/">Markdown 在线预览</a>里。</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
