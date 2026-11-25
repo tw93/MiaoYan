@@ -77,30 +77,30 @@
     },
     {
       "name": "katex.min.js",
-      "version": "0.16.0",
+      "version": "0.16.47",
       "source_url": "https://github.com/KaTeX/KaTeX/releases",
       "license": "MIT",
-      "sha256": "eb18207487161674e717087c317db14ac1a62dadaecccb802499ce173bfeb739",
+      "sha256": "a29d2961d3146de5949d78ac7c1a9d93ae54955bad22a6db4fbe836e88e8bf48",
       "purpose": "LaTeX math rendering in preview. Its 20 woff2 fonts sit in css/fonts/, byte-identical to the copies katex.min.css used to fetch from gw.alipayobjects.com, so formulas typeset offline.",
-      "version_source": "no banner; the bundle's own `version:\"0.16.0\"`. Pair with mhchem.min.js and auto-render.min.js."
+      "version_source": "no banner; the bundle's own `version:\"0.16.47\"`. Pair with mhchem.min.js and auto-render.min.js."
     },
     {
       "name": "mhchem.min.js",
-      "version": "0.16.0",
-      "source_url": "https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/mhchem.min.js",
+      "version": "0.16.47",
+      "source_url": "https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/contrib/mhchem.min.js",
       "license": "MIT AND Apache-2.0",
-      "sha256": "5c0a121a8b490afc85860a522347aeb34fb508c6b23044e5d29f6b2194227b51",
-      "purpose": "KaTeX mhchem extension (`\\ce` and `\\pu`) for chemical formulas and equations in preview and slides. Must stay version-locked with katex.min.js (0.16.0) when upgrading KaTeX.",
-      "version_source": "KaTeX v0.16.0 release contrib/mhchem.min.js (mhchem 3.3.0); SRI sha384-RTN08a0AXIioPBcVosEqPUfKK+rPp+h1x/izR7xMkdMyuwkcZCWdxO+RSwIFtJXN. Upgrade in lockstep with katex.min.js and re-check the array-error guards in js/common.js (guardKaTeXRender) and ppt/plugin/math/math.js."
+      "sha256": "aaf20145c0b8ecd450ccf6eb0cebece2f77d8e6a02c30d291f28c1167b57b2df",
+      "purpose": "KaTeX mhchem extension (`\\ce` and `\\pu`) for chemical formulas and equations in preview and slides. Must stay version-locked with katex.min.js (0.16.47) when upgrading KaTeX.",
+      "version_source": "KaTeX v0.16.47 release contrib/mhchem.min.js (mhchem 3.3.0); SRI sha384-fB8BH//9nBzROkMUsu/Dr35jWHIbnKesUo9rW0hfEgw8mZGnkAyBAjKX9F98OVuo. Upgrade in lockstep with katex.min.js and re-check the array-error guards in js/common.js (guardKaTeXRender) and ppt/plugin/math/math.js."
     },
     {
       "name": "auto-render.min.js",
-      "version": "unknown",
-      "source_url": "https://github.com/KaTeX/KaTeX/tree/main/contrib/auto-render",
+      "version": "0.16.47",
+      "source_url": "https://cdn.jsdelivr.net/npm/katex@0.16.47/dist/contrib/auto-render.min.js",
       "license": "MIT",
-      "sha256": "cb7f4ca60ed5dc3e258415f8c7a3b46d4a93578a52adf83011f18a7f190e7602",
+      "sha256": "e5372d199bcdae8b4de71d0f7ceba72a4ba12774a27c60a6f1f77d03b3228ee4",
       "purpose": "KaTeX `renderMathInElement` helper that walks the DOM and renders.",
-      "version_source": "no banner."
+      "version_source": "KaTeX v0.16.47 release contrib/auto-render.min.js; upgrade in lockstep with katex.min.js."
     },
     {
       "name": "tocbot.min.js",

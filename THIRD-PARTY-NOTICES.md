@@ -13,7 +13,7 @@ other diagram, formula and slide is rendered locally.
 These files ship in `DownView.bundle`, the page MiaoYan uses for the preview,
 the presentation mode, the slides and HTML, PDF and image export.
 
-### KaTeX 0.16.0
+### KaTeX 0.16.47
 
 - **Source:** <https://github.com/KaTeX/KaTeX>
 - **Copyright:** Copyright (c) 2013-2020 Khan Academy and other contributors
