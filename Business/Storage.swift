@@ -1757,12 +1757,12 @@ class Storage {
         openedFolderScopes.append(scoped)
     }
 
-    /// The folder of a note opened from Finder that shows local images the
-    /// app cannot read, which only the user can grant by picking it in an
+    /// The folder of a note opened from Finder that shows local images, or
+    /// links videos or files (`[Report.pdf](/files/Report.pdf)`), the app cannot read, which only the user can grant by picking it in an
     /// open panel. Nil for a library note, a readable folder or a note with
-    /// no local images.
+    /// no local attachments.
     func folderNeedingAccess(for note: Note) -> URL? {
-        guard note.project.isExternal, !note.getAllImages().isEmpty else { return nil }
+        guard note.project.isExternal, !note.getAllAttachments().isEmpty else { return nil }
         let folder = note.project.url
         guard (try? FileManager.default.contentsOfDirectory(atPath: folder.path)) == nil else { return nil }
         return folder

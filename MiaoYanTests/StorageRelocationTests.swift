@@ -702,6 +702,8 @@ final class StorageRelocationTests: XCTestCase {
         let lessonFile = courseURL.appendingPathComponent("Lesson.md")
         let plainFile = courseURL.appendingPathComponent("Plain.md")
         let insideFile = rootURL.appendingPathComponent("Inside.md")
+        let clipFile = courseURL.appendingPathComponent("Clip.md")
+        try "# Clip\n\n[Report.pdf](/files/Report.pdf)\n".write(to: clipFile, atomically: true, encoding: .utf8)
         try "# Lesson\n\n![shot](images/shot.png)\n".write(to: lessonFile, atomically: true, encoding: .utf8)
         try "# Plain\n\nNo pictures.\n".write(to: plainFile, atomically: true, encoding: .utf8)
         try "![shot](images/shot.png)\n".write(to: insideFile, atomically: true, encoding: .utf8)
@@ -720,10 +722,12 @@ final class StorageRelocationTests: XCTestCase {
         let lesson = try XCTUnwrap(storage.openFromFinder(lessonFile))
         let plain = try XCTUnwrap(storage.openFromFinder(plainFile))
         let inside = try XCTUnwrap(storage.openFromFinder(insideFile))
+        let clip = try XCTUnwrap(storage.openFromFinder(clipFile))
         XCTAssertNil(storage.folderNeedingAccess(for: lesson), "a readable folder, as in the GitHub build, asks nothing")
 
         try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: courseURL.path)
         XCTAssertEqual(storage.folderNeedingAccess(for: lesson)?.path, lesson.project.url.path)
+        XCTAssertEqual(storage.folderNeedingAccess(for: clip)?.path, clip.project.url.path, "a linked file with no image needs the folder too")
         XCTAssertNil(storage.folderNeedingAccess(for: plain), "a note with no local images asks nothing")
         XCTAssertNil(storage.folderNeedingAccess(for: inside), "a library note is read through the library's access")
     }
