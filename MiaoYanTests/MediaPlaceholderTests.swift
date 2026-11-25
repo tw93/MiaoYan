@@ -203,8 +203,12 @@ final class MediaPlaceholderTests: XCTestCase {
         // The tint waits 0.2s, so an image WebKit's cache hands over a few
         // frames after the page never flashes grey (maintainer 2026-11-24).
         XCTAssertEqual(before["tint"] as? String, transparent, "no tint at once: \(before)")
-        XCTAssertEqual(before["tintAnimation"] as? String, "media-tint", "a lazy image takes the tint later")
-        XCTAssertEqual(before["tintDelay"] as? String, "0.2s")
+        // A lazy image is held only after window load and the observer; a
+        // tint counted from first style was already showing by then, so the
+        // clock starts when the image is held (2026-11-25 review).
+        XCTAssertEqual(before["tintAnimation"] as? String, "none", "a lazy image not yet held takes no tint: \(before)")
+        XCTAssertTrue((before["pulse"] as? String)?.hasPrefix("media-tint") == true, "a held image takes the tint: \(before)")
+        XCTAssertTrue((before["pulseDelay"] as? String)?.hasPrefix("0.2s") == true, "after 0.2s: \(before)")
         XCTAssertNotEqual(before["videoTint"] as? String, transparent, "a video shows a tinted box")
         XCTAssertEqual(before["sizedWidth"] as? Double, 400)
         XCTAssertEqual(try XCTUnwrap(before["sizedHeight"] as? Double), 533.33, accuracy: 0.5, "the header's size gives it the picture's ratio")

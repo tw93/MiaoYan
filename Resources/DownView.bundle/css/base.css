@@ -474,12 +474,13 @@ img.border {
    only once it has not painted after 0.2s: one already seen still comes
    through `load` a few frames after the page, from WebKit's cache, and a
    tint at once flashed grey on every open, as on the iPhone reader
-   (maintainer 2026-11-24). */
+   (maintainer 2026-11-24). Only a held image (`media-pending`) runs that
+   clock: a remote `lazy-image` waits for window load and the observer before
+   it is held, and a tint counted from first style already showed by then. */
 #write video {
   background-color: var(--code-bg);
 }
 
-#write img.lazy-image,
 #write img.media-pending {
   animation: media-tint 0.01s step-end 0.2s forwards;
 }
