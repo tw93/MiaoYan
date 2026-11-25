@@ -870,11 +870,15 @@ MORE_APPS = (
 )
 
 
-def footer_html(key, *, faq_href="#faq"):
+def footer_html(key, *, faq_href="#faq", tools_new_tab=False):
     c = COPY[key]
     store = store_url(key)
     (col_get, col_help, col_connect), (faq_label, privacy_label) = c["foot"]
     ext = ' target="_blank" rel="noopener"'
+    # From the homepage a tool opens in its own tab, so the page someone was
+    # reading stays where it was (maintainer 2026-11-25); elsewhere in the
+    # site the tools open in place, as every other internal link does.
+    tab = ext if tools_new_tab else ""
     foot = (
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_get)}</p>'
         f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
@@ -883,12 +887,12 @@ def footer_html(key, *, faq_href="#faq"):
         f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
         f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
         f'<div class="foot-col foot-tools"><p class="foot-col-title">{esc(TOOLS_TITLE[key])}</p>'
-        f'<a href="{tool_path(key)}">{esc(TOOL_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "markdown-table-generator")}">{esc(TABLE_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "markdown-viewer")}">{esc(VIEWER_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "markmap-editor")}">{esc(MARKMAP_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "chinese-typography-cleaner")}">{esc(TYPOGRAPHY_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "netnewswire-theme")}">{esc(NNW_LABEL[key])}</a></div>'
+        f'<a href="{tool_path(key)}"{tab}>{esc(TOOL_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "markdown-table-generator")}"{tab}>{esc(TABLE_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "markdown-viewer")}"{tab}>{esc(VIEWER_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "markmap-editor")}"{tab}>{esc(MARKMAP_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "chinese-typography-cleaner")}"{tab}>{esc(TYPOGRAPHY_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "netnewswire-theme")}"{tab}>{esc(NNW_LABEL[key])}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
         f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(MORE_APPS_TITLE[key])}</p>'
@@ -1105,7 +1109,7 @@ def page(key):
   </section>
 {blog_latest_html(key)}</main>
 </div>
-{footer_html(key)}
+{footer_html(key, tools_new_tab=True)}
 {page_script(gallery_js, STORE_JS, HIDE_CTA_JS, LANG_JS, CONTACT_JS)}
 {ANALYTICS}
 </body>
