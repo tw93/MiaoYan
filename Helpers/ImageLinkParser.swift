@@ -1,4 +1,5 @@
 import Foundation
+import MiaoYanCore
 
 class ImageLinkParser {
 
@@ -39,7 +40,8 @@ class ImageLinkParser {
     /// text wrapped onto a second line), but neither Markdown nor HTML lets
     /// an image run past a blank line, so the window is the lines up to the
     /// nearest blank line on each side, at most `hoverLineReach` lines each
-    /// way. An image spread over more lines than that is not found.
+    /// way. An image spread over more lines than that is not found. A video
+    /// or a file written as an image is not one (`isPreviewableImage`).
     static func detectImageLink(in text: NSString, at location: Int) -> ImageLinkInfo? {
         let window = hoverWindow(around: location, in: text)
         let local = text.substring(with: window) as NSString
@@ -49,9 +51,35 @@ class ImageLinkParser {
         let found =
             detectMarkdownImage(in: local, at: localLocation, fullRange: localRange)
             ?? detectHtmlImage(in: local, at: localLocation, fullRange: localRange)
-        guard let found else { return nil }
+        guard let found, isPreviewableImage(src: found.src) else { return nil }
         func shifted(_ range: NSRange) -> NSRange { NSRange(location: range.location + window.location, length: range.length) }
         return ImageLinkInfo(type: found.type, src: found.src, alt: found.alt, range: shifted(found.range), srcRange: shifted(found.srcRange))
+    }
+
+    /// Whether the hover preview should load `src` as an image. A video
+    /// written as one, `![](/files/clip.mov)`, was read with NSImage on the
+    /// main thread after every 0.3s hover and, never drawing, read again on
+    /// the next; the same for any other file. The kind comes from the shared
+    /// `AttachmentFile` rule. A name with no extension and a `data:` URI still
+    /// go, and so does a remote address that is not a video, since an image
+    /// endpoint can end in anything (`avatar.php?u=1`).
+    static func isPreviewableImage(src: String) -> Bool {
+        var path = src.trimmingCharacters(in: .whitespacesAndNewlines)
+        if path.hasPrefix("<"), let end = path.firstIndex(of: ">") {
+            path = String(path[path.index(after: path.startIndex)..<end])
+        } else {
+            path = String(path.prefix { !$0.isWhitespace })
+        }
+        let lower = path.lowercased()
+        if lower.hasPrefix("data:") { return true }
+        let bare = path.split(whereSeparator: { $0 == "?" || $0 == "#" }).first.map(String.init) ?? path
+        let ext = (bare as NSString).pathExtension
+        guard !ext.isEmpty else { return true }
+        switch AttachmentFile.kind(ofExtension: ext) {
+        case .image: return true
+        case .video: return false
+        case .file: return lower.hasPrefix("http://") || lower.hasPrefix("https://")
+        }
     }
 
     static let hoverLineReach = 32

@@ -73,4 +73,29 @@ final class ImageLinkParserTests: XCTestCase {
         XCTAssertNotNil(ImageLinkParser.markdownImageRegex)
         XCTAssertNotNil(ImageLinkParser.htmlImageRegex)
     }
+
+    /// Hovering `![](/files/clip.mov)` loaded the video as an image on the
+    /// main thread, and again on every hover since a failure is not kept.
+    /// Videos and linked files are not images to the hover preview; images,
+    /// names with no extension, `data:` URIs and remote image endpoints are.
+    func testTheHoverPreviewSkipsVideosAndFiles() {
+        func found(_ text: String) -> Bool {
+            ImageLinkParser.detectImageLink(in: text, at: 3) != nil
+        }
+        XCTAssertFalse(found("![](/files/clip.mov)"))
+        XCTAssertFalse(found("![](/files/clip.MP4)"))
+        XCTAssertFalse(found("<img src=\"/files/clip.m4v\">"))
+        XCTAssertFalse(found("![](/files/Report-v2.pdf)"))
+        XCTAssertFalse(found("![](/i/Layers.psd)"))
+        XCTAssertFalse(found("![](https://example.com/talk.mp4)"))
+
+        XCTAssertTrue(found("![](/i/shot.png)"))
+        XCTAssertTrue(found("![](/i/IMG_1.HEIC \"title\")"))
+        XCTAssertTrue(found("![](</i/a b.jpg>)"))
+        XCTAssertTrue(found("<img src=\"/i/shot.webp\">"))
+        XCTAssertTrue(found("![](/i/no-extension)"))
+        XCTAssertTrue(found("![](https://example.com/avatar.php?u=1)"))
+        XCTAssertTrue(found("![](https://example.com/a.png?raw=true)"))
+        XCTAssertTrue(found("![](data:image/png;base64,iVBORw0KGgo=)"))
+    }
 }
