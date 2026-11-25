@@ -67,10 +67,7 @@ extension ShellModel {
         UserDefaultsManagement.isOnExportPPT = true
         var stalePage: Int?
         if wasPPT {
-            // The page on screen goes on answering until the reload lands; after
-            // an earlier export it is already `?print-pdf` and read ready.
-            stalePage = preview?.loadEpoch
-            previewStyleRevision &+= 1
+            stalePage = reloadDeckForExport()
         } else {
             setPresenting(true, ppt: true)
             // Without a --- separator setPresenting has said so and stayed put.
@@ -82,6 +79,16 @@ extension ShellModel {
         isExporting = true
         leavePPTAfterExport = !wasPPT
         printDeckWhenShown(after: stalePage)
+    }
+
+    /// Reloads the slides with the print layout and returns the load whose
+    /// page is up before it: that page goes on answering until the reload
+    /// lands, and after an earlier export it is already `?print-pdf` and
+    /// reads ready, so the export waits it out (`deckPageIsFresh`).
+    func reloadDeckForExport() -> Int? {
+        let stalePage = preview?.loadEpoch
+        previewStyleRevision &+= 1
+        return stalePage
     }
 
     /// Whether `preview` shows a page loaded after the load `stalePage`

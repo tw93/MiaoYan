@@ -725,6 +725,24 @@ final class PreviewPatchTests: XCTestCase {
             try await Task.sleep(nanoseconds: 25_000_000)
         }
         XCTAssertTrue(ShellModel.deckPageIsFresh(preview, after: stale), "the reloaded page is up")
+
+        // The export itself: the reload it asks for hands back the page up
+        // before it, which is not fresh, and that is what the wait is given.
+        let model = ShellModel()
+        model.preview = preview
+        let revision = model.previewStyleRevision
+        let before = preview.loadEpoch
+        let waitedOut = model.reloadDeckForExport()
+        XCTAssertEqual(waitedOut, before, "the page on screen when the reload was asked for")
+        XCTAssertEqual(model.previewStyleRevision, revision &+ 1, "the reload was asked for")
+        XCTAssertFalse(ShellModel.deckPageIsFresh(preview, after: waitedOut))
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("Shell/ShellModel+Export.swift"), encoding: .utf8)
+        let start = try XCTUnwrap(source.range(of: "private func exportDeck() {"))
+        let end = try XCTUnwrap(source.range(of: "\n    }\n", range: start.upperBound..<source.endIndex))
+        let body = String(source[start.upperBound..<end.lowerBound])
+        XCTAssertTrue(body.contains("stalePage = reloadDeckForExport()"), "a deck already shown is reloaded through it")
+        XCTAssertTrue(body.contains("printDeckWhenShown(after: stalePage)"), "and the wait gets the page it returned")
     }
 
     /// The wait for the reload ate the 50 polls (5s) the slides get, so a
