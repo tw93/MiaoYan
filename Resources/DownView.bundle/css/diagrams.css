@@ -5,7 +5,17 @@
 /* ==================== Diagram Containers ==================== */
 .mermaid-image-container,
 .markmap-image-container,
-.plantuml-image-container,
+.plantuml-image-container {
+  background: var(--diagram-bg);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 12px;
+  margin: 8px 0;
+  box-shadow: none;
+}
+
+/* :has() is a rule of its own: WebKit before 15.4 (macOS 12.0 to 12.2)
+   cannot parse it and drops every selector listed with it. */
 pre:has(.language-mermaid) {
   background: var(--diagram-bg);
   border: none;
@@ -20,11 +30,14 @@ pre:has(.language-mermaid) {
 .darkmode .plantuml-image-container,
 .darkmode .plantuml-container,
 .darkmode .plantuml-image,
-.darkmode pre:has(.language-mermaid),
 .darkmode .mermaid,
 .darkmode .mermaid svg,
 .darkmode .markmap,
 .darkmode .markmap svg {
+  background-color: var(--diagram-bg) !important;
+}
+
+.darkmode pre:has(.language-mermaid) {
   background-color: var(--diagram-bg) !important;
 }
 

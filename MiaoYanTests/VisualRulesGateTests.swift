@@ -121,6 +121,45 @@ final class VisualRulesGateTests: XCTestCase {
         XCTAssertFalse(try source("Business/HtmlManager.swift").lowercased().contains("#fd8258"))
     }
 
+    /// WebKit before 15.4 (macOS 12.0 to 12.2, under the 12.0 deployment
+    /// target) cannot parse `:has()`, and one selector it cannot parse drops
+    /// the whole rule: `pre:has(.language-mermaid)` in a shared list took the
+    /// diagram boxes' background and padding with it. A `:has()` selector is
+    /// a rule of its own.
+    func testAHasSelectorIsARuleOfItsOwn() throws {
+        let folder = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Resources/DownView.bundle/css")
+        let names = try FileManager.default.contentsOfDirectory(atPath: folder.path)
+            .filter { $0.hasSuffix(".css") && !$0.hasSuffix(".min.css") }
+            .sorted()
+        XCTAssertTrue(names.contains("diagrams.css"), "\(names)")
+        let prelude = try NSRegularExpression(pattern: #"([^{};]+)\{"#)
+        var checked = 0
+        var shared: [String] = []
+        for name in names {
+            let text = try css(name).replacingOccurrences(of: #"/\*[\s\S]*?\*/"#, with: "", options: .regularExpression)
+            for match in prelude.matches(in: text, range: NSRange(text.startIndex..., in: text)) {
+                let selectors = (text as NSString).substring(with: match.range(at: 1)).trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !selectors.hasPrefix("@"), selectors.contains(":has(") else { continue }
+                checked += 1
+                var depth = 0
+                var count = 1
+                for character in selectors {
+                    if character == "(" {
+                        depth += 1
+                    } else if character == ")" {
+                        depth -= 1
+                    } else if character == ",", depth == 0 {
+                        count += 1
+                    }
+                }
+                if count > 1 { shared.append("\(name): \(selectors)") }
+            }
+        }
+        XCTAssertGreaterThan(checked, 0, "the sheets still hold :has() rules, so the check reads real ones")
+        XCTAssertEqual(shared, [])
+    }
+
     func testNothingGlows() throws {
         for name in sheets {
             let text = try css(name)

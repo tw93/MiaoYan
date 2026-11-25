@@ -572,7 +572,12 @@ img.border {
   .heti pre,
   .mermaid-image-container,
   .markmap-image-container,
-  .plantuml-image-container,
+  .plantuml-image-container {
+    background-color: var(--diagram-bg);
+  }
+
+  /* Its own rule, as in diagrams.css: before WebKit 15.4 :has() drops the
+     whole list it sits in. */
   pre:has(.language-mermaid) {
     background-color: var(--diagram-bg);
   }
