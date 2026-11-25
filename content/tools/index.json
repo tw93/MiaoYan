@@ -31,6 +31,54 @@
     "lede": "在网格里编辑表格，或者直接粘贴 Excel、Google Sheets、CSV 和已有的 Markdown 表格，复制出来就是各列对齐的 Markdown。",
     "description": "免费的 Markdown 表格生成器，在浏览器里把 Excel、Google Sheets、CSV 或 TSV 转成 Markdown 表格，可以按列设置对齐，中文按两个字符宽对齐各列。"
    }
+  },
+  {
+   "slug": "markdown-viewer",
+   "date": "2026-11-25",
+   "en": {
+    "title": "Markdown Viewer",
+    "head_title": "Markdown Viewer Online: open .md files, save as PDF or HTML",
+    "lede": "Open or paste Markdown and read it in MiaoYan's preview styling as you type, with math, code highlighting and Mermaid diagrams, then save it as a PDF or HTML.",
+    "description": "A free online Markdown viewer: open a .md file or paste text and read it with MiaoYan's preview styling, tables, task lists, math, code highlighting and Mermaid included, then save as PDF or HTML."
+   },
+   "zh": {
+    "title": "Markdown 在线预览",
+    "head_title": "Markdown 在线预览：打开 .md 文件，存成 PDF 和 HTML",
+    "lede": "打开或粘贴 Markdown，按妙言的预览样式实时显示，公式、代码和 Mermaid 图都会画出来，还能存成 PDF 和 HTML。",
+    "description": "免费的 Markdown 在线预览，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，可以存成 PDF 和 HTML。"
+   }
+  },
+  {
+   "slug": "markmap-editor",
+   "date": "2026-11-25",
+   "en": {
+    "title": "Markmap Editor",
+    "head_title": "Markmap Editor Online: Markdown outline to mind map, PNG and SVG",
+    "lede": "Write a Markdown outline and watch it grow into a mind map in MiaoYan's colours, fold and zoom it, then download it as PNG or SVG.",
+    "description": "A free online Markmap editor: headings and nested lists become a mind map as you type, in MiaoYan's colours, with folding, zoom, and PNG or SVG download."
+   },
+   "zh": {
+    "title": "Markmap 思维导图",
+    "head_title": "Markmap 在线编辑：Markdown 大纲生成思维导图，下载 PNG 和 SVG",
+    "lede": "写一份 Markdown 大纲，右边按妙言的配色长成思维导图，可以收起分支和缩放，画好下载成 PNG 或 SVG。",
+    "description": "免费的 Markmap 在线编辑器，Markdown 标题和列表边写边变成思维导图，用妙言的配色，可以收起、缩放，下载 PNG 和 SVG。"
+   }
+  },
+  {
+   "slug": "chinese-typography-cleaner",
+   "date": "2026-11-25",
+   "en": {
+    "title": "Chinese Typography Cleaner",
+    "head_title": "Chinese Typography Cleaner: add spaces between Chinese and English",
+    "lede": "Paste Chinese text or Markdown to add a space between Chinese and English or digits and fix half-width punctuation, with every change marked and code and links left alone.",
+    "description": "A free online tool that adds spaces between Chinese characters and English letters or digits, turns half-width punctuation after Chinese into full-width and tidies ellipses and dashes, using the rules of MiaoYan's Clean Typography, without touching code, math or links."
+   },
+   "zh": {
+    "title": "中英文排版整理",
+    "head_title": "中英文排版整理：中英文之间自动加空格，修正中文标点",
+    "lede": "粘贴中文或 Markdown，自动在中英文、数字之间加空格，把中文后面的半角标点换成全角，改了哪里都会标出来，代码和链接不动。",
+    "description": "免费的中英文排版整理工具，在浏览器里给中文和英文、数字之间加空格，把中文后面的半角标点换成全角，整理省略号和破折号，规则和妙言的清理排版一样，代码、公式和链接保持原样。"
+   }
   }
  ]
 }

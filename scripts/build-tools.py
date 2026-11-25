@@ -50,6 +50,72 @@ UI = {
         "home_name": "MiaoYan",
         "faq": "FAQ",
         "app_cta": "View in App Store",
+        "typography": {
+            "open": "Open file",
+            "code": "Original",
+            "result": "Cleaned",
+            "copy": "Copy result",
+            "download": "Download .md",
+            "app_title": "Clean a whole note in MiaoYan",
+            "app_text": "MiaoYan is a Markdown notebook for Mac, iPhone and iPad. Clean Typography in the Mac app's Edit menu runs these same rules over the open note, and ⌘Z undoes it.",
+            "app_alt": "MiaoYan on a Mac, with Markdown on the left and its preview on the right",
+            "app_shot": "split",
+            "strings": {
+                "changed": "{n} changes.",
+                "changedOne": "1 change.",
+                "clean": "Typography is already clean.",
+                "opened": "Opened {name}.",
+                "fileType": "Open a Markdown or text file under 5 MB.",
+                "copied": "Copied, paste it back where it came from.",
+                "copyFailed": "This browser does not allow copying.",
+                "exportFailed": "This browser cannot save the file.",
+            },
+        },
+        "markmap": {
+            "code": "Markdown outline",
+            "preview": "Mind map",
+            "png": "Download PNG",
+            "copy_image": "Copy image",
+            "svg": "Download SVG",
+            "markdown": "Copy Markdown",
+            "zoom": "Zoom",
+            "zoom_out": "Zoom out",
+            "zoom_in": "Zoom in",
+            "fit": "Fit",
+            "app_title": "Mind maps inside your notes",
+            "app_text": "MiaoYan, a Markdown notebook for Mac, iPhone and iPad, draws Markmap with these same files. Put the outline in a markmap block and the note's preview shows the map.",
+            "app_alt": "MiaoYan on a Mac, with a note on the left and its preview on the right",
+            "app_shot": "preview",
+            "strings": {
+                "loadFailed": "Markmap did not load. Check the connection and reload the page.",
+                "copiedMarkdown": "Copied as a Markdown code block.",
+                "copiedImage": "Image copied, ready to paste.",
+                "copyFailed": "This browser did not allow copying.",
+                "exportFailed": "This browser could not save the image.",
+                "empty": "Write an outline to draw a mind map.",
+            },
+        },
+        "viewer": {
+            "open": "Open file",
+            "preview_only": "Preview only",
+            "code": "Markdown",
+            "preview": "Preview",
+            "pdf": "Save as PDF",
+            "html": "Download HTML",
+            "copy": "Copy formatted",
+            "app_title": "Read and write it in MiaoYan",
+            "app_text": "MiaoYan, a Markdown notebook for Mac, iPhone and iPad, keeps every note as a plain .md file, and this preview is drawn with its stylesheets.",
+            "app_alt": "MiaoYan on a Mac, with the note list on the left and a note in its preview on the right",
+            "app_shot": "preview",
+            "strings": {
+                "opened": "Opened {name}.",
+                "fileType": "Open a Markdown or text file under 5 MB.",
+                "copied": "Copied with its formatting, ready to paste into a document or an email.",
+                "copyFailed": "This browser did not allow copying.",
+                "exportFailed": "This browser could not save the file.",
+                "loadFailed": "Part of the preview did not load. Check the connection and reload the page.",
+            },
+        },
         "table": {
             "add_row": "Add row",
             "add_col": "Add column",
@@ -117,6 +183,71 @@ UI = {
         "home_name": "妙言",
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
+        "markmap": {
+            "code": "Markdown 大纲",
+            "preview": "思维导图",
+            "png": "下载 PNG",
+            "copy_image": "复制图片",
+            "svg": "下载 SVG",
+            "markdown": "复制 Markdown",
+            "zoom": "缩放",
+            "zoom_out": "缩小",
+            "zoom_in": "放大",
+            "fit": "适应画布",
+            "app_title": "在笔记里画导图",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，画 Markmap 用的就是这几份文件，把大纲放进 markmap 代码块，笔记的预览里就是这张导图。",
+            "app_alt": "Mac 上的妙言，左边是笔记，右边是它的预览",
+            "app_shot": "preview",
+            "strings": {
+                "loadFailed": "Markmap 没加载上，检查网络后刷新页面。",
+                "copiedMarkdown": "已复制成 Markdown 代码块。",
+                "copiedImage": "图片已复制，可以直接粘贴。",
+                "copyFailed": "这个浏览器不允许复制。",
+                "exportFailed": "这个浏览器存不了这张图。",
+                "empty": "写一份大纲就能画出导图。",
+            },
+        },
+        "typography": {
+            "open": "打开文件",
+            "code": "原文",
+            "result": "整理后",
+            "copy": "复制结果",
+            "download": "下载 .md",
+            "app_title": "在妙言里整理整篇笔记",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，Mac 版编辑菜单里的清理排版用的就是这套规则，整篇笔记一次整理好，不满意按 ⌘Z 就能退回。",
+            "app_alt": "Mac 上的妙言，左边是 Markdown，右边是它的预览",
+            "app_shot": "split",
+            "strings": {
+                "changed": "改了 {n} 处。",
+                "clean": "排版无需清理。",
+                "opened": "已打开 {name}。",
+                "fileType": "打开的需要是 5 MB 以内的 Markdown 或文本文件。",
+                "copied": "已复制，贴回原来的地方就行。",
+                "copyFailed": "这个浏览器不允许复制。",
+                "exportFailed": "这个浏览器存不了这个文件。",
+            },
+        },
+        "viewer": {
+            "open": "打开文件",
+            "preview_only": "只看预览",
+            "code": "Markdown",
+            "preview": "预览",
+            "pdf": "存成 PDF",
+            "html": "下载 HTML",
+            "copy": "复制带格式的内容",
+            "app_title": "在妙言里读和写",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，每篇笔记都是一个普通的 .md 文件，这里的预览用的就是它的样式表。",
+            "app_alt": "Mac 上的妙言，左边是笔记列表，右边是一篇笔记的预览",
+            "app_shot": "preview",
+            "strings": {
+                "opened": "已打开 {name}。",
+                "fileType": "打开的需要是 5 MB 以内的 Markdown 或文本文件。",
+                "copied": "已复制，贴进文档或邮件里会带着格式。",
+                "copyFailed": "这个浏览器不允许复制。",
+                "exportFailed": "这个浏览器存不了这个文件。",
+                "loadFailed": "预览有一部分没加载上，检查网络后刷新页面。",
+            },
+        },
         "table": {
             "add_row": "加一行",
             "add_col": "加一列",
@@ -311,7 +442,7 @@ ICON = {
 }
 
 
-def tool_page(tool, lang, *, category, tool_html, data_id, data, script):
+def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=()):
     """One tool page: title and lede, the tool, the prose with its FAQ, then the
     one quiet way into MiaoYan at the end, above the footer."""
     ui = UI[lang]
@@ -377,7 +508,8 @@ def tool_page(tool, lang, *, category, tool_html, data_id, data, script):
 </main>"""
     tail = (
         f'<script type="application/json" id="{data_id}">{script_json(data)}</script>\n'
-        f'<script src="{versioned(script)}" defer></script>'
+        + "".join(f'<script src="{versioned(s)}" defer></script>\n' for s in before)
+        + f'<script src="{versioned(script)}" defer></script>'
     )
     return out + shell(lang, slug, main, tail)
 
@@ -583,6 +715,132 @@ def table_page(tool, lang):
                      data_id="table-data", data=data, script="assets/tools/markdown-table-generator.js")
 
 
+PREVIEW_CSS = ("typography", "theme-light", "base", "diagrams")
+# What MiaoYan's HTML export sets on top of the stylesheets (HtmlManager.previewStyle
+# with the default 16px size and the export width), and its code font stack.
+PREVIEW_PAGE_CSS = (
+    ':root { --code-text-font: SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace; } '
+    "html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }"
+)
+
+
+def viewer_page(tool, lang):
+    ui = UI[lang]["viewer"]
+    sample = (SRC / f"markdown-viewer-sample.{lang}.md").read_text(encoding="utf-8").rstrip("\n")
+    data = {
+        "lang": lang,
+        "parser": [versioned("assets/vendor/markdown-it-14.1.0.min.js"), versioned("assets/vendor/highlight-11.5.1.min.js")],
+        "katex": [versioned("assets/vendor/katex-0.16.47.min.js")],
+        "katexCss": versioned("assets/vendor/katex/katex.min.css"),
+        "mermaid": [versioned(p) for p in sorted(mermaid_assets.VENDOR, key=lambda p: "mermaid-" in p)],
+        "mermaidConfig": mermaid_assets.CONFIG,
+        "css": [versioned(f"assets/vendor/preview/{c}.css") for c in PREVIEW_CSS],
+        "pageCss": PREVIEW_PAGE_CSS,
+        "site": SITE,
+        "strings": ui["strings"],
+    }
+    tool_html = f"""  <div class="tool viewer-tool" id="viewer-tool">
+    <div class="table-bar">
+      <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="viewer-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
+      <button type="button" class="tool-chip viewer-only" id="viewer-only" aria-pressed="false">{esc(ui["preview_only"])}</button>
+    </div>
+    <div class="tool-grid viewer-grid" id="viewer-grid">
+      <div class="tool-editor">
+        <label class="visually-hidden" for="viewer-code">{esc(ui["code"])}</label>
+        <textarea id="viewer-code" class="tool-code viewer-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
+      </div>
+      <div class="viewer-frame"><iframe id="viewer-preview" title="{esc(ui["preview"])}" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
+    </div>
+    <div class="tool-foot">
+      <p class="tool-status" id="viewer-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="tool-actions">
+      <button type="button" class="btn btn-primary" data-action="pdf">{esc(ui["pdf"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="html">{esc(ui["html"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="copy">{esc(ui["copy"])}</button>
+    </div>
+  </div>"""
+    return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
+                     data_id="viewer-data", data=data, script="assets/tools/markdown-viewer.js")
+
+
+APP_TEXT_FONT = "-apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif"
+APP_CODE_FONT = 'SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace'
+
+
+def markmap_page(tool, lang):
+    ui = UI[lang]["markmap"]
+    sample = (SRC / f"markmap-editor-sample.{lang}.md").read_text(encoding="utf-8").rstrip("\n")
+    data = {
+        "vendor": [versioned(p) for p in ("assets/vendor/d3-6.7.0.min.js", "assets/vendor/markmap-0.14.min.js", "assets/vendor/miaoyan-theme-config.js")],
+        "katex": [versioned("assets/vendor/katex-0.16.47.min.js")],
+        "katexCss": versioned("assets/vendor/katex/katex.min.css"),
+        # MiaoYan's preview text, code and link colours and font stacks (theme-light.css).
+        "font": APP_TEXT_FONT,
+        "codeFont": APP_CODE_FONT,
+        "ink": "#262626",
+        "link": "#1C5D33",
+        "strings": ui["strings"],
+    }
+    zoom = "".join(
+        f'<button type="button" class="tool-zoom-btn" data-zoom="{k}" aria-label="{esc(ui[label])}" title="{esc(ui[label])}">{ICON[icon]}</button>'
+        for k, label, icon in (("out", "zoom_out", "minus"), ("in", "zoom_in", "plus"), ("fit", "fit", "fit"))
+    )
+    tool_html = f"""  <div class="tool markmap-tool" id="markmap-tool">
+    <div class="tool-grid">
+      <div class="tool-editor">
+        <label class="visually-hidden" for="markmap-code">{esc(ui["code"])}</label>
+        <textarea id="markmap-code" class="tool-code viewer-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
+      </div>
+      <div class="tool-preview markmap-frame" id="markmap-frame">
+        <svg id="markmap-svg" class="markmap-svg" role="img" aria-label="{esc(ui["preview"])}"></svg>
+        <div class="tool-zoom" role="group" aria-label="{esc(ui["zoom"])}">{zoom}</div>
+      </div>
+    </div>
+    <div class="tool-foot">
+      <p class="tool-status" id="markmap-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="tool-actions">
+      <button type="button" class="btn btn-primary" data-action="png">{esc(ui["png"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="image" hidden>{esc(ui["copy_image"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="svg">{esc(ui["svg"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="markdown">{esc(ui["markdown"])}</button>
+    </div>
+  </div>"""
+    return tool_page(tool, lang, category="DesignApplication", tool_html=tool_html,
+                     data_id="markmap-data", data=data, script="assets/tools/markmap-editor.js")
+
+
+def typography_page(tool, lang):
+    ui = UI[lang]["typography"]
+    sample = (SRC / f"chinese-typography-cleaner-sample.{lang}.md").read_text(encoding="utf-8").rstrip("\n")
+    data = {"strings": ui["strings"]}
+    tool_html = f"""  <div class="tool typography-tool" id="typography-tool">
+    <div class="table-bar">
+      <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="typography-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-editor">
+        <label class="visually-hidden" for="typography-code">{esc(ui["code"])}</label>
+        <textarea id="typography-code" class="tool-code viewer-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
+      </div>
+      <div class="tool-editor tc-pane">
+        <div class="tool-code viewer-code tc-result" id="typography-result" role="region" tabindex="0" aria-label="{esc(ui["result"])}"></div>
+      </div>
+    </div>
+    <div class="tool-foot">
+      <p class="tool-status" id="typography-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="tool-actions">
+      <button type="button" class="btn btn-primary" data-action="copy">{esc(ui["copy"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="download">{esc(ui["download"])}</button>
+    </div>
+  </div>"""
+    return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
+                     data_id="typography-data", data=data, script="assets/tools/chinese-typography-cleaner.js",
+                     before=("assets/tools/typography-cleaner.js",))
+
+
 def replace_block(text, inner, name):
     start, end = "<!-- tools:start -->", "<!-- tools:end -->"
     pattern = re.compile(re.escape(start) + ".*?" + re.escape(end), re.S)
@@ -604,8 +862,8 @@ def llms_block(tools):
     return "\n" + "\n".join(lines) + "\n"
 
 
-PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page}
-PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table"}
+PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page}
+PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography"}
 
 
 def outputs(tools):

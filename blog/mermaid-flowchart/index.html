@@ -107,28 +107,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=7f1f60076f7c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fb21d1592cac") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=28e9f4c72020") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=a00c95f35ebb") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=73cf25f2f1b5") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=8b81539537e4") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -796,10 +796,42 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 }
 .table-md:focus { outline: none; }
 .table-md .w { display: inline-block; width: 2ch; text-align: center; }
+/* The Markdown viewer: the editor beside an iframe that holds MiaoYan's
+   preview stylesheets on its paper, so neither page's styles reach the other. */
+.viewer-only { margin-left: auto; }
+/* Prose wraps here; line numbers serve the diagram editor's error line. */
+.viewer-code { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 18px; }
+.viewer-open { position: relative; }
+.viewer-open:focus-within { background: var(--warm-sand); }
+.viewer-frame { height: var(--tool-h); overflow: hidden; background: #FDFCF9; border: 1px solid var(--line); border-radius: 14px; }
+.viewer-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+.viewer-grid.is-preview-only { grid-template-columns: minmax(0, 1fr); }
+.viewer-grid.is-preview-only .tool-editor { display: none; }
+.markmap-frame { padding: 0; display: block; }
+.markmap-svg { display: block; width: 100%; height: 100%; cursor: grab; }
+.markmap-svg:active { cursor: grabbing; }
+.markmap-svg .markmap-foreign { font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif; font-weight: 400; color: #262626; }
+/* As MiaoYan's diagrams.css: a label is one line, measured at that width. */
+.markmap-svg .markmap-foreign div { white-space: nowrap; }
+.markmap-svg .markmap-foreign code { font-family: SFMono-Regular, Menlo, Consolas, monospace; background: rgba(0, 0, 0, 0.05); color: #262626; }
+.markmap-svg .markmap-foreign a { color: #1C5D33; }
+.viewer-tool.is-drop .viewer-frame, .viewer-tool.is-drop .tool-editor { border-color: var(--brand); }
+/* The typography cleaner: the result wraps exactly as the text beside it, new
+   characters tinted, a removed space or blank line a hairline that takes no width. */
+/* Prose, so the system's text face: a code face shrinks …… and spaces CJK
+   punctuation unevenly. */
+.typography-tool .tool-editor { font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif; }
+.tc-result { user-select: text; cursor: text; }
+.tc-result:focus { outline: none; }
+.tc-add { color: var(--near-black); background: var(--brand-tint); border-radius: 3px; }
+.tc-del { display: inline-block; width: 2px; height: 1.15em; margin: 0 -1px; vertical-align: -0.2em; background: var(--brand); opacity: 0.45; border-radius: 1px; }
+.tc-del-line { margin-left: 2px; }
+.typography-tool.is-drop .tool-editor { border-color: var(--brand); }
 @media (max-width: 880px) {
   .tool-grid { grid-template-columns: minmax(0, 1fr); }
   .tool-editor { height: 320px; font-size: 16px; }
   .tool-preview { height: 380px; }
+  .viewer-frame { height: 520px; }
   .tool-app { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 56px; }
   .tool-body { margin-top: 56px; }
 }
@@ -1246,7 +1278,7 @@ flowchart LR
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">A light, native Markdown notebook</p>
       </div>
-      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/tools/markdown-viewer/">Markdown Viewer</a><a href="/tools/markmap-editor/">Markmap Editor</a><a href="/tools/chinese-typography-cleaner/">Chinese Typography</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>

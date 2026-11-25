@@ -189,4 +189,10 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Mermaid 在线编辑器](https://miaoyan.app/zh/tools/mermaid-editor/): 免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。
 - [Markdown Table Generator](https://miaoyan.app/tools/markdown-table-generator/): A free Markdown table generator in your browser: paste from Excel, Google Sheets, CSV or TSV, set each column's alignment, and copy a pipe table with its columns lined up, Chinese and Japanese included.
 - [Markdown 表格生成器](https://miaoyan.app/zh/tools/markdown-table-generator/): 免费的 Markdown 表格生成器，在浏览器里把 Excel、Google Sheets、CSV 或 TSV 转成 Markdown 表格，可以按列设置对齐，中文按两个字符宽对齐各列。
+- [Markdown Viewer](https://miaoyan.app/tools/markdown-viewer/): A free online Markdown viewer: open a .md file or paste text and read it with MiaoYan's preview styling, tables, task lists, math, code highlighting and Mermaid included, then save as PDF or HTML.
+- [Markdown 在线预览](https://miaoyan.app/zh/tools/markdown-viewer/): 免费的 Markdown 在线预览，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，可以存成 PDF 和 HTML。
+- [Markmap Editor](https://miaoyan.app/tools/markmap-editor/): A free online Markmap editor: headings and nested lists become a mind map as you type, in MiaoYan's colours, with folding, zoom, and PNG or SVG download.
+- [Markmap 思维导图](https://miaoyan.app/zh/tools/markmap-editor/): 免费的 Markmap 在线编辑器，Markdown 标题和列表边写边变成思维导图，用妙言的配色，可以收起、缩放，下载 PNG 和 SVG。
+- [Chinese Typography Cleaner](https://miaoyan.app/tools/chinese-typography-cleaner/): A free online tool that adds spaces between Chinese characters and English letters or digits, turns half-width punctuation after Chinese into full-width and tidies ellipses and dashes, using the rules of MiaoYan's Clean Typography, without touching code, math or links.
+- [中英文排版整理](https://miaoyan.app/zh/tools/chinese-typography-cleaner/): 免费的中英文排版整理工具，在浏览器里给中文和英文、数字之间加空格，把中文后面的半角标点换成全角，整理省略号和破折号，规则和妙言的清理排版一样，代码、公式和链接保持原样。
 <!-- tools:end -->

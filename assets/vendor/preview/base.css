@@ -1,0 +1,661 @@
+/**
+ * Base Styles (Theme-independent)
+ */
+
+/* ==================== Base Layout ==================== */
+html {
+  font-size: 15px;
+  font-display: block;
+  color: var(--text-color);
+  background: var(--bg-color);
+  font-family: var(--text-font);
+  -webkit-font-smoothing: subpixel-antialiased;
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--bg-color);
+  font-family: var(--text-font);
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  color-rendering: optimizeQuality;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-color-correction: default;
+  /* iPhone photos carry an HDR gain map that WebKit tone-boosts by
+     default, making them glow against the page. Clamp to SDR; older
+     WebKit ignores the property. */
+  dynamic-range-limit: standard;
+}
+
+/* ==================== Typography ==================== */
+.heti {
+  font-family: var(--text-font);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.markdown-body {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+a {
+  color: var(--link-color);
+}
+
+/* ==================== Code Styles ==================== */
+/* The code font belongs to code blocks only. Inline code and anything quoted
+   stay in the surrounding text face, where a second face mid-line reads as a
+   mistake rather than as code. */
+.heti p > code,
+.heti li > code,
+code {
+  font-family: inherit;
+  background-color: var(--code-bg);
+  padding: 0.12em 0.38em;
+  border-radius: var(--border-radius-sm);
+}
+
+pre {
+  font-family: var(--code-text-font);
+  background-color: var(--code-bg);
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+pre code {
+  font-family: var(--code-text-font);
+  background-color: var(--code-bg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.heti blockquote pre,
+.heti blockquote pre code {
+  font-family: inherit;
+}
+
+/* ==================== Tables ==================== */
+/* Tables keep their own layout box so print, borders and cell backgrounds all
+   behave; the scroll lives on a wrapper that app.js puts around each table.
+   `min-width: 100%` makes an ordinary table span the column as it always did,
+   while a table with content that cannot shrink (a formula, a long token) grows
+   past the wrapper and the wrapper scrolls. `table-layout: fixed` is gone: it
+   forced equal columns, and combined with `overflow-x: hidden` on #write it put
+   the overflow permanently out of reach (#560). */
+.heti table {
+  border-color: var(--border-color);
+  color: var(--text-color);
+  font-size: 0.92em;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+/* The block margins move from the table to the wrapper. `overflow-x` makes the
+   wrapper a block formatting context, so a margin left on the table can no
+   longer collapse with the paragraph next to it: keeping them there adds 36px
+   around every table, and puts the first/last-child margin resets on the wrapper
+   instead of on the table they were written for. */
+.heti .table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  margin-block-start: 1.15em;
+  margin-block-end: 1.15em;
+}
+
+.heti .table-scroll > table {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+/* `overflow-wrap` alone handles run-away tokens; `anywhere` and its
+   `word-break: break-word` companion also drove min-content down to a single
+   character, which let auto layout squeeze any table into the column and broke
+   words mid-token: a six-column parameter table came out as `windowsToolchai /
+   n`, `boole / an`, `mac / OS`. mobile-reader.css already made this call. */
+.heti th,
+.heti td {
+  border-color: var(--border-color);
+  color: var(--text-color);
+  overflow-wrap: break-word;
+}
+
+/* ==================== Blockquote ==================== */
+.heti blockquote ol,
+.heti blockquote ul {
+  margin-block-end: 0.4em !important;
+}
+
+.heti blockquote ol,
+.heti blockquote ul,
+.heti blockquote li {
+  line-height: 1.64 !important;
+}
+
+/* Images cut by the top edge while scrolling keep their rounded corners:
+   two paper-coloured corner pieces sit on the top corners of the image
+   crossing that edge (MiaoYanCommon.setupScrollCorners sets the position
+   and --corner-radius from the image itself). */
+.scroll-corners {
+  --corner-radius: var(--border-radius-lg);
+  position: fixed;
+  top: 0;
+  height: var(--corner-radius);
+  pointer-events: none;
+  z-index: 5;
+  display: none;
+}
+
+.scroll-corners.visible {
+  display: block;
+}
+
+.scroll-corners::before,
+.scroll-corners::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: var(--corner-radius);
+  height: var(--corner-radius);
+}
+
+.scroll-corners::before {
+  left: 0;
+  background: radial-gradient(circle at 100% 100%, transparent calc(var(--corner-radius) - 0.5px), var(--bg-color) var(--corner-radius));
+}
+
+.scroll-corners::after {
+  right: 0;
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--corner-radius) - 0.5px), var(--bg-color) var(--corner-radius));
+}
+
+@media print {
+  .scroll-corners {
+    display: none !important;
+  }
+}
+
+/* ==================== Heading Anchors ==================== */
+/* A small link beside each heading, shown while the pointer is over it, as
+   on GitHub. It is muted, sits after the text (the page has no left margin
+   to hang it in), and never prints. */
+#write .heading-anchor {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-inline-start: 0.4em;
+  vertical-align: middle;
+  color: var(--text-secondary);
+  opacity: 0;
+  text-decoration: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#write .heading-anchor svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#write :is(h1, h2, h3, h4, h5, h6):hover > .heading-anchor,
+#write .heading-anchor:focus {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #write .heading-anchor {
+    transition: opacity 0.12s ease-out;
+  }
+}
+
+@media print {
+  #write .heading-anchor {
+    display: none !important;
+  }
+}
+
+/* ==================== HR ==================== */
+.heti hr {
+  background-color: var(--border-color);
+}
+
+/* ==================== Form Elements ==================== */
+input[type='checkbox'] {
+  border: 1px solid var(--border-color);
+}
+
+/* ==================== Code Line Numbers ==================== */
+pre code,
+.heti pre code {
+  background-color: transparent;
+}
+
+pre .hljs-ln,
+.heti pre .hljs-ln {
+  border: none;
+  width: 100%;
+}
+
+pre .hljs-ln td,
+.heti pre .hljs-ln td {
+  border: none;
+  background: transparent !important;
+  padding: 0;
+}
+
+pre .hljs-ln tr,
+.heti pre .hljs-ln tr,
+pre .hljs-ln-line,
+.heti pre .hljs-ln-line {
+  background: transparent !important;
+}
+
+pre .hljs-ln-numbers,
+.heti pre .hljs-ln-numbers {
+  user-select: none;
+  color: var(--border-color);
+  opacity: 0.7;
+  padding: 0 12px 0 0;
+  text-align: right;
+}
+
+pre .hljs-ln-code,
+.heti pre .hljs-ln-code {
+  padding-left: 12px;
+}
+
+pre code,
+.heti pre code,
+pre code.hljs {
+  display: block;
+  background: transparent !important;
+  color: var(--text-color);
+}
+
+pre table.hljs-ln,
+.heti pre table.hljs-ln {
+  width: 100%;
+  border: none;
+  margin: 0;
+  background: transparent;
+}
+
+/* ==================== Syntax Highlighting ==================== */
+.hljs {
+  color: var(--hljs-base);
+  background: transparent;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--hljs-comment);
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-deletion {
+  color: var(--hljs-keyword);
+}
+
+.hljs-string,
+.hljs-addition {
+  color: var(--hljs-string);
+}
+
+.hljs-number,
+.hljs-literal {
+  color: var(--hljs-number);
+}
+
+.hljs-attribute,
+.hljs-variable {
+  color: var(--hljs-attribute);
+}
+
+.hljs-title,
+.hljs-section {
+  color: var(--hljs-title);
+}
+
+/* Dark mode syntax highlighting */
+.darkmode .hljs {
+  color: var(--hljs-base);
+  background: var(--code-bg) !important;
+}
+
+.darkmode .hljs-comment,
+.darkmode .hljs-quote {
+  color: var(--hljs-comment);
+}
+
+.darkmode .hljs-doctag,
+.darkmode .hljs-formula,
+.darkmode .hljs-keyword {
+  color: var(--hljs-keyword);
+}
+
+.darkmode .hljs-deletion,
+.darkmode .hljs-name,
+.darkmode .hljs-section,
+.darkmode .hljs-selector-tag,
+.darkmode .hljs-subst,
+.darkmode .hljs-built_in,
+.darkmode .hljs-class .hljs-title,
+.darkmode .hljs-title.class_ {
+  color: #ED716C;
+}
+
+.darkmode .hljs-literal {
+  color: #56b6c2;
+}
+
+.darkmode .hljs-addition,
+.darkmode .hljs-attribute,
+.darkmode .hljs-meta .hljs-string,
+.darkmode .hljs-regexp,
+.darkmode .hljs-string {
+  color: var(--hljs-string);
+}
+
+.darkmode .hljs-attr,
+.darkmode .hljs-number,
+.darkmode .hljs-selector-attr,
+.darkmode .hljs-selector-class,
+.darkmode .hljs-selector-pseudo,
+.darkmode .hljs-template-variable,
+.darkmode .hljs-type,
+.darkmode .hljs-variable {
+  color: var(--hljs-number);
+}
+
+.darkmode .hljs-bullet,
+.darkmode .hljs-link,
+.darkmode .hljs-meta,
+.darkmode .hljs-selector-id,
+.darkmode .hljs-symbol,
+.darkmode .hljs-title {
+  color: var(--hljs-title);
+}
+
+.darkmode .hljs-emphasis {
+  font-style: italic;
+}
+
+.darkmode .hljs-strong {
+  font-weight: 700;
+}
+
+/* ==================== Emoji Support ==================== */
+span.emoji {
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: baseline;
+  width: 1em;
+  height: 1em;
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  background-position: 50% 50%;
+}
+
+span.emoji-sizer {
+  line-height: 0.81em;
+  font-size: 1em;
+  margin: -2px 0;
+}
+
+span.emoji-outer {
+  display: -moz-inline-box;
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+}
+
+span.emoji-inner {
+  display: -moz-inline-box;
+  display: inline-block;
+  text-indent: -9999px;
+  width: 100%;
+  height: 100%;
+  vertical-align: baseline;
+}
+
+img.emoji {
+  width: 1em;
+  height: 1em;
+}
+
+/* ==================== Images ==================== */
+
+#write>img,
+#write>p>img,
+#write>table>img {
+  cursor: zoom-in;
+}
+
+img.border {
+  border-width: 36px;
+  border-style: solid;
+  border-image-source: url(https://miaoyan.app/assets/notes/image-frame.png);
+  border-image-slice: 30;
+  border-image-repeat: stretch;
+  border-radius: var(--border-radius-lg);
+  clip-path: inset(0 round 6px);
+}
+
+.markdown-body img,
+.markdown-body video {
+  border-radius: var(--border-radius-lg);
+}
+
+/* Media hold a tinted box until they show something: an image until it
+   loads (common.js holdImageBox), a video behind its first frame
+   (prepareVideos), which also starts out player-shaped instead of
+   300 by 150. A remote image never measured before holds a 16:9 box at
+   the width the note gave it, or the full column. An image takes the tint
+   only once it has not painted after 0.2s: one already seen still comes
+   through `load` a few frames after the page, from WebKit's cache, and a
+   tint at once flashed grey on every open, as on the iPhone reader
+   (maintainer 2026-11-24). Only a held image (`media-pending`) runs that
+   clock: a remote `lazy-image` waits for window load and the observer before
+   it is held, and a tint counted from first style already showed by then. */
+#write video {
+  background-color: var(--code-bg);
+}
+
+#write img.media-pending {
+  animation: media-tint 0.01s step-end 0.2s forwards;
+}
+
+@keyframes media-tint {
+  to {
+    background-color: var(--code-bg);
+  }
+}
+
+#write video {
+  aspect-ratio: auto 16 / 9;
+}
+
+#write img.media-reserve {
+  aspect-ratio: 16 / 9;
+}
+
+#write img.media-reserve:not([width]) {
+  width: 100%;
+}
+
+/* An image still downloading after a moment breathes its tint, the way a
+   skeleton screen pulses, so a slow one reads as loading rather than as a
+   blank gap; one that arrives within 0.45s never shows it. Off under
+   Reduce Motion. */
+/* After the same 0.45s a small turning arc sits in the middle of the box,
+   so a slow image reads as loading rather than as a grey card; the warm grey
+   reads on the light and the dark tint alike. */
+@media (prefers-reduced-motion: no-preference) {
+  #write img.media-pending {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%239A958A' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9' stroke-opacity='.25'/%3E%3Cpath d='M12 3a9 9 0 0 1 9 9'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 12 12' to='360 12 12' dur='0.9s' repeatCount='indefinite'/%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 0 0;
+    animation:
+      media-tint 0.01s step-end 0.2s forwards,
+      media-pulse 0.9s ease-out 0.45s infinite alternate,
+      media-spinner 0.01s step-end 0.45s forwards;
+  }
+}
+
+@keyframes media-spinner {
+  to {
+    background-size: 22px 22px;
+  }
+}
+
+@keyframes media-pulse {
+  to {
+    background-color: var(--media-pulse);
+  }
+}
+
+@media print {
+  #write img.lazy-image,
+  #write img.media-pending,
+  #write video {
+    background-color: transparent;
+    background-image: none;
+    animation: none;
+  }
+}
+
+/* ==================== Media Queries ==================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1E1D1B;
+    --text-color: #D6D1C6;
+    --link-color: #54C59F;
+    --border-color: #3A3936;
+    --code-bg: #282724;
+    --diagram-bg: #282724;
+    --media-pulse: #34332F;
+  }
+
+  html {
+    color: var(--text-color);
+  }
+
+  body {
+    background: var(--bg-color);
+  }
+
+  .heti hr {
+    background-color: var(--border-color);
+  }
+
+  .heti pre,
+  .mermaid-image-container,
+  .markmap-image-container,
+  .plantuml-image-container,
+  pre:has(.language-mermaid) {
+    background-color: var(--diagram-bg);
+  }
+
+  .heti table,
+  .heti th,
+  .heti td {
+    border-color: var(--border-color);
+  }
+
+  .heti p > code,
+  .heti li > code {
+    background-color: var(--code-bg);
+    color: var(--text-color);
+  }
+
+  .heti mark {
+    background-color: rgba(77, 74, 0, 0.88);
+  }
+
+  .heti sup:target,
+  .heti sup a:target,
+  .heti .heti-fn li:target {
+    background-color: #3a6188;
+  }
+
+  .heti u[title] {
+    border-block-end-color: rgba(255, 255, 255, 0.54);
+  }
+
+  .heti .heti-fn {
+    border-block-start-color: var(--border-color);
+  }
+}
+
+/* ==================== Split-mode chrome ====================
+ * Toggled by MPreviewView.setSplitChrome via JS classList. When the host
+ * pane is part of MiaoYan's side-by-side editor view, the editor's macOS
+ * NSScrollView (left pane) is the single visible scroll indicator and
+ * the preview's WebKit-rendered scrollbar (right pane) becomes redundant.
+ * Hiding it removes the simultaneous-scrollbars flash without losing the
+ * ability to scroll: wheel/trackpad still work, and the bidirectional
+ * sync engine pushes any preview-side scroll back to the editor's
+ * scrollbar so the user keeps a position indicator.
+ *
+ * In single-preview mode (Cmd+3) and Magic PPT mode this class is not
+ * applied, so the standalone pane retains its native scrollbar.
+ */
+body.miaoyan-split-mode::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+body.miaoyan-split-mode {
+  scrollbar-width: none;
+}
+
+/*
+ * A display formula ($$) starts 1.5em in from the text, where a bulleted
+ * list's text starts, rather than in the middle. The body is set from the
+ * left edge, and a centred formula moved with the window's width, so the eye
+ * jumped across the column and back (maintainer's pick of three rendered,
+ * 2026-11-21). The indent sits on .katex-display, in the text's em: on
+ * .katex, which KaTeX sets 1.21 times larger, it ran 5px past the list.
+ * #write is overflow-x: hidden and KaTeX sets the formula nowrap, so a formula
+ * wider than the column was cut off with no way to read the rest; it scrolls
+ * inside its own line instead, as on the iPhone. Scrolling in one axis makes
+ * the other clip, so 0.25em of padding keeps tall glyphs (\int, \sum with
+ * limits, \tag) whole, and the margin gives back what it adds. Slides keep
+ * reveal's centring: ppt.html loads reveal's stylesheets, not this file. A
+ * \tag number stays at the right. In print the formula does not scroll.
+ */
+#write .katex-display {
+  padding: 0.25em 0 0.25em 1.5em;
+  margin: 0.75em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+@media print {
+  #write .katex-display {
+    overflow: visible;
+  }
+}
+#write .katex-display > .katex {
+  text-align: left;
+}
