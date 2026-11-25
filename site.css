@@ -886,6 +886,20 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 }
 .markmap-foreign .katex math, .markmap-foreign .katex math * { font-family: "STIX Two Math", math; }
 .viewer-tool.is-drop .viewer-frame, .viewer-tool.is-drop .tool-editor { border-color: var(--brand); }
+/* The slides page: the deck's frame, which reveal fills with its theme's
+   ground; on a narrow screen it keeps the deck's 16:9. Presenting makes the
+   frame the screen through full screen or, where the browser has none for
+   it (an iPhone), a fixed layer over the page. */
+.viewer-frame.ppt-frame { background: #fff; }
+@media (max-width: 880px) { .viewer-frame.ppt-frame { height: auto; aspect-ratio: 16 / 9; } }
+.viewer-frame.ppt-frame:fullscreen { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.viewer-frame.ppt-frame:-webkit-full-screen { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.viewer-frame.ppt-frame.is-presenting { position: fixed; inset: 0; z-index: 1000; width: auto; height: auto; aspect-ratio: auto; border: 0; border-radius: 0; }
+.is-ppt-presenting, .is-ppt-presenting body { overflow: hidden; }
+/* The copy that prints, at the deck's own size, unseen behind the page; off
+   the page Chrome stops its animation frames, which reveal's layout waits on. */
+.ppt-print { position: fixed; left: 0; top: 0; z-index: -1; width: 1600px; height: 900px; border: 0; opacity: 0; pointer-events: none; }
+.ppt-tool.is-drop .viewer-frame, .ppt-tool.is-drop .tool-editor { border-color: var(--brand); }
 /* The NetNewsWire theme: its own render of an article, on the theme's own
    ground so the window reads as NetNewsWire's article pane. */
 .nnw-tool { --tool-h: max(440px, calc(100vh - 300px)); }

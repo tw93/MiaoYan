@@ -1,0 +1,92 @@
+section.has-dark-background,
+section.has-dark-background h1,
+section.has-dark-background h2,
+section.has-dark-background h3,
+section.has-dark-background h4,
+section.has-dark-background h5,
+section.has-dark-background h6 {
+    color: #fff;
+}
+
+/*********************************************
+ * GLOBAL STYLES
+ *********************************************/
+:root {
+    --r-main-color: #262626;
+    --r-background-color: #fff;
+    --r-heading-color: #262626;
+    --r-link-color: #1C9CF0;
+    --r-code-background-color:#F7F7F7;
+    --r-link-color-dark: #1C9CF0;
+    --r-link-color-hover: #6ca0e8;
+    --r-selection-background-color: #98bdef;
+    --r-selection-color: #fff;
+    --r-highlight-color: #05A699;
+}
+
+
+.hljs {
+    background: #f8f8f8;
+    color: #000;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-variable {
+    color: #035c21;
+}
+
+.hljs-built_in,
+.hljs-keyword,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag {
+    color: #0a69d9;
+}
+
+.hljs-addition,
+.hljs-attribute,
+.hljs-literal,
+.hljs-section,
+.hljs-string,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-title,
+.hljs-type {
+    color: #bf3889;
+}
+
+.hljs-deletion,
+.hljs-meta,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+    color: #208bff;
+}
+
+.hljs-doctag {
+    color: #6e7781;
+}
+
+.hljs-attr {
+    color: #cf212e;
+}
+
+.hljs-bullet,
+.hljs-link,
+.hljs-symbol {
+    color: #8250df;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+}
+
+.reveal strong,
+.reveal b {
+  color: #ED220C;
+}

@@ -917,6 +917,20 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 }
 .markmap-foreign .katex math, .markmap-foreign .katex math * { font-family: "STIX Two Math", math; }
 .viewer-tool.is-drop .viewer-frame, .viewer-tool.is-drop .tool-editor { border-color: var(--brand); }
+/* The slides page: the deck's frame, which reveal fills with its theme's
+   ground; on a narrow screen it keeps the deck's 16:9. Presenting makes the
+   frame the screen through full screen or, where the browser has none for
+   it (an iPhone), a fixed layer over the page. */
+.viewer-frame.ppt-frame { background: #fff; }
+@media (max-width: 880px) { .viewer-frame.ppt-frame { height: auto; aspect-ratio: 16 / 9; } }
+.viewer-frame.ppt-frame:fullscreen { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.viewer-frame.ppt-frame:-webkit-full-screen { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.viewer-frame.ppt-frame.is-presenting { position: fixed; inset: 0; z-index: 1000; width: auto; height: auto; aspect-ratio: auto; border: 0; border-radius: 0; }
+.is-ppt-presenting, .is-ppt-presenting body { overflow: hidden; }
+/* The copy that prints, at the deck's own size, unseen behind the page; off
+   the page Chrome stops its animation frames, which reveal's layout waits on. */
+.ppt-print { position: fixed; left: 0; top: 0; z-index: -1; width: 1600px; height: 900px; border: 0; opacity: 0; pointer-events: none; }
+.ppt-tool.is-drop .viewer-frame, .ppt-tool.is-drop .tool-editor { border-color: var(--brand); }
 /* The NetNewsWire theme: its own render of an article, on the theme's own
    ground so the window reads as NetNewsWire's article pane. */
 .nnw-tool { --tool-h: max(440px, calc(100vh - 300px)); }
@@ -1304,7 +1318,7 @@ graph LR
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">A light, native Markdown notebook</p>
       </div>
-      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col foot-tools"><p class="foot-col-title">Tools</p><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/tools/markdown-viewer/">Markdown Viewer</a><a href="/tools/markmap-editor/">Markmap Editor</a><a href="/tools/chinese-typography-cleaner/">Chinese Typography</a><a href="/tools/html-to-markdown/">HTML to Markdown</a><a href="/tools/markdown-to-word/">Markdown to Word</a><a href="/tools/netnewswire-theme/">NetNewsWire Theme</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col foot-tools"><p class="foot-col-title">Tools</p><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/tools/markdown-viewer/">Markdown Viewer</a><a href="/tools/markmap-editor/">Markmap Editor</a><a href="/tools/chinese-typography-cleaner/">Chinese Typography</a><a href="/tools/html-to-markdown/">HTML to Markdown</a><a href="/tools/markdown-to-word/">Markdown to Word</a><a href="/tools/markdown-slides/">Markdown Slides</a><a href="/tools/netnewswire-theme/">NetNewsWire Theme</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>

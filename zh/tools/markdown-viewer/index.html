@@ -915,6 +915,20 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 }
 .markmap-foreign .katex math, .markmap-foreign .katex math * { font-family: "STIX Two Math", math; }
 .viewer-tool.is-drop .viewer-frame, .viewer-tool.is-drop .tool-editor { border-color: var(--brand); }
+/* The slides page: the deck's frame, which reveal fills with its theme's
+   ground; on a narrow screen it keeps the deck's 16:9. Presenting makes the
+   frame the screen through full screen or, where the browser has none for
+   it (an iPhone), a fixed layer over the page. */
+.viewer-frame.ppt-frame { background: #fff; }
+@media (max-width: 880px) { .viewer-frame.ppt-frame { height: auto; aspect-ratio: 16 / 9; } }
+.viewer-frame.ppt-frame:fullscreen { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.viewer-frame.ppt-frame:-webkit-full-screen { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.viewer-frame.ppt-frame.is-presenting { position: fixed; inset: 0; z-index: 1000; width: auto; height: auto; aspect-ratio: auto; border: 0; border-radius: 0; }
+.is-ppt-presenting, .is-ppt-presenting body { overflow: hidden; }
+/* The copy that prints, at the deck's own size, unseen behind the page; off
+   the page Chrome stops its animation frames, which reveal's layout waits on. */
+.ppt-print { position: fixed; left: 0; top: 0; z-index: -1; width: 1600px; height: 900px; border: 0; opacity: 0; pointer-events: none; }
+.ppt-tool.is-drop .viewer-frame, .ppt-tool.is-drop .tool-editor { border-color: var(--brand); }
 /* The NetNewsWire theme: its own render of an article, on the theme's own
    ground so the window reads as NetNewsWire's article pane. */
 .nnw-tool { --tool-h: max(440px, calc(100vh - 300px)); }
@@ -1293,14 +1307,15 @@ flowchart LR
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">轻灵的原生 Markdown 笔记本</p>
       </div>
-      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col foot-tools"><p class="foot-col-title">工具</p><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/tools/markdown-viewer/">Markdown 预览</a><a href="/zh/tools/markmap-editor/">Markmap 思维导图</a><a href="/zh/tools/chinese-typography-cleaner/">中英文排版整理</a><a href="/zh/tools/html-to-markdown/">网页转 Markdown</a><a href="/zh/tools/markdown-to-word/">Markdown 转 Word</a><a href="/zh/tools/netnewswire-theme/">NetNewsWire 主题</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col foot-tools"><p class="foot-col-title">工具</p><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/tools/markdown-viewer/">Markdown 预览</a><a href="/zh/tools/markmap-editor/">Markmap 思维导图</a><a href="/zh/tools/chinese-typography-cleaner/">中英文排版整理</a><a href="/zh/tools/html-to-markdown/">网页转 Markdown</a><a href="/zh/tools/markdown-to-word/">Markdown 转 Word</a><a href="/zh/tools/markdown-slides/">妙言 PPT</a><a href="/zh/tools/netnewswire-theme/">NetNewsWire 主题</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>
 <script type="application/json" id="viewer-data">{"lang":"zh","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","site":"https://miaoyan.app","wechat":true,"strings":{"opened":"已打开 {name}。","fileType":"打开的需要是 5 MB 以内的 Markdown 或文本文件。","copied":"已复制，到公众号编辑器里粘贴就行，样式会跟着过去。","copiedLinks":"已复制，文中 {n} 个外部链接改成了文末的参考链接，公众号正文里的外链点不开。","copiedMath":"公式按源码复制，公众号里不会排成公式。","references":"参考链接","word":"{n} 字","words":"{n} 字","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这个文件。","loadFailed":"预览有一部分没加载上，检查网络后刷新页面。","wordImage":"已保存，有 1 张图片没放进去，它所在的网站不让网页读取，或者用的是相对路径。","wordImages":"已保存，有 {n} 张图片没放进去，它们所在的网站不让网页读取，或者用的是相对路径。"},"docx":["/assets/vendor/docx-9.15.3.js?v=32706f12e03a"]}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
-<script src="/assets/tools/markdown-viewer.js?v=9942822a741d" defer></script>
+<script src="/assets/tools/md-editor.js?v=8725d41dbbb2" defer></script>
+<script src="/assets/tools/markdown-viewer.js?v=461a1b7aab5f" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

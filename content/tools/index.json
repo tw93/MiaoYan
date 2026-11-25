@@ -113,6 +113,22 @@
    }
   },
   {
+   "slug": "markdown-slides",
+   "date": "2026-11-25",
+   "en": {
+    "title": "Markdown Slides",
+    "head_title": "Markdown Slides Online: turn Markdown into a presentation, save as PDF",
+    "lede": "Write slides in Markdown with --- between them and watch the deck MiaoYan's PPT mode draws as you type, then present it full screen or save it as a PDF.",
+    "description": "A free online Markdown to slides tool: --- splits the slides, with code highlighting that steps through lines, LaTeX math, backgrounds and step-by-step items from reveal.js, full-screen presenting and PDF export, in MiaoYan's light and dark themes."
+   },
+   "zh": {
+    "title": "妙言 PPT",
+    "head_title": "妙言 PPT：Markdown 在线做幻灯片，全屏演示、存成 PDF",
+    "lede": "用 Markdown 写幻灯片，一行 --- 分一页，右边实时画出妙言 PPT 模式的那套幻灯片，写好了直接全屏演示，或者存成 PDF。",
+    "description": "免费的 Markdown 转 PPT 在线工具，--- 分页，代码可以逐行高亮，支持 LaTeX 公式、背景色和分步出现，能全屏演示、存成 PDF，用的是妙言 PPT 模式的浅色和深色主题。"
+   }
+  },
+  {
    "slug": "netnewswire-theme",
    "date": "2026-11-25",
    "en": {

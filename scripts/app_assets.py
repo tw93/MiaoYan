@@ -5,7 +5,9 @@ Most are copied byte for byte from MiaoYan's preview bundle on the app's
 branch (Resources/DownView.bundle), so the Markdown viewer and the Markmap
 editor draw with the files a note's preview uses: the preview stylesheets,
 highlight.js 11.5.1, d3 6.7.0 and markmap-lib 0.14.1 with markmap-view 0.14.0
-(one combined file). Two come from npm instead, each checked against the
+(one combined file), and for the slides page reveal.js 4.3.1 with MiaoYan's
+white and night themes, its Markdown and highlight plugins, and KaTeX's
+auto-render and mhchem. Two come from npm instead, each checked against the
 registry's sha512: markdown-it 14.1.0, since the app parses Markdown natively
 with cmark-gfm, and KaTeX 0.16.47 with its woff2 fonts, taken from npm while
 the app's 0.16.0 let an edef expand past maxExpand (CVE-2024-28243, fixed in
@@ -40,6 +42,17 @@ FILES = {
     "assets/vendor/preview/diagrams.css": ('Resources/DownView.bundle/css/diagrams.css', "e004b542c098fa2e884422f6277edfbe78072de968cb185bb507755a42e55dee"),
     "assets/vendor/d3-6.7.0.min.js": ('Resources/DownView.bundle/js/d3.min.js', "fbb8da602a76f4ed49bac3561da62d8149fa121b8fd15685bacc21355d3a3322"),
     "assets/vendor/markmap-0.14.min.js": ('Resources/DownView.bundle/js/markmap-view.min.js', "40ba3d1e3c2c5f0b82a51a8c76767a6a8838f2b2fcdcc79e72cb7292a7585963"),
+    "assets/vendor/reveal-4.3.1/reveal.js": ('Resources/DownView.bundle/ppt/dist/reveal.js', "028fe6706c37e4c010e7be04cd93d00662851ff8460a2f5c651adbd02d586a4b"),
+    "assets/vendor/reveal-4.3.1/reveal.css": ('Resources/DownView.bundle/ppt/dist/reveal.css', "7c5950d6cd1a9d4ec3bc67a33863014ca1803967c7c3e84dc1734b13949de7b5"),
+    "assets/vendor/reveal-4.3.1/theme/white.css": ('Resources/DownView.bundle/ppt/dist/theme/white.css', "cfef32fd1beec2454a41794ba2b69e1ff3180f3da75a80edeac40be85bef4cff"),
+    "assets/vendor/reveal-4.3.1/theme/white_var.css": ('Resources/DownView.bundle/ppt/dist/theme/white_var.css', "70d9dc4d8e1c6738e0dc036777f5923a770e4a37eac680a33b8b5ba27541c783"),
+    "assets/vendor/reveal-4.3.1/theme/night.css": ('Resources/DownView.bundle/ppt/dist/theme/night.css', "1859d7a27b615523491a71b893d78772f1ad67deb4b0b9e26f49a797b34db018"),
+    "assets/vendor/reveal-4.3.1/theme/night_var.css": ('Resources/DownView.bundle/ppt/dist/theme/night_var.css', "44d122916c5f6552d3c979cd7626157330d27ff560861bc3f9f0737da174d7ec"),
+    "assets/vendor/reveal-4.3.1/theme/common.css": ('Resources/DownView.bundle/ppt/dist/theme/common.css', "b7257d486ed86581b9f79ca942a0a218cca8969c64566e4109dbe379d94a66da"),
+    "assets/vendor/reveal-4.3.1/plugin/markdown.js": ('Resources/DownView.bundle/ppt/plugin/markdown/markdown.js', "5b023d6665ef91cb2a1e80c91af092014495ce8f1d11892566eadbc8c20a6d86"),
+    "assets/vendor/reveal-4.3.1/plugin/highlight.js": ('Resources/DownView.bundle/ppt/plugin/highlight/highlight.js', "47bcfa195929fc2c30309eb02ef2022f1e6acaec4e7d6aa2d5a32227d0a6567c"),
+    "assets/vendor/katex/auto-render.min.js": ('Resources/DownView.bundle/js/auto-render.min.js', "e5372d199bcdae8b4de71d0f7ceba72a4ba12774a27c60a6f1f77d03b3228ee4"),
+    "assets/vendor/katex/mhchem.min.js": ('Resources/DownView.bundle/js/mhchem.min.js', "aaf20145c0b8ecd450ccf6eb0cebece2f77d8e6a02c30d291f28c1167b57b2df"),
     "assets/vendor/mammoth-1.13.0.browser.min.js": (None, "a175021900f7b85e69684564cdcf2e7f15ba08d968255cc59d6677998d3b9fbb"),
     "assets/vendor/docx-9.15.3.js": (None, "32706f12e03acf0a0b89fa24ec82ab93b62f26f763e957c64d0c3bd739bc0996"),
     "assets/vendor/katex-0.16.47.min.js": (None, "a29d2961d3146de5949d78ac7c1a9d93ae54955bad22a6db4fbe836e88e8bf48"),

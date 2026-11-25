@@ -53,7 +53,7 @@ UI = {
             "title": "Markdown Tools",
             "head_title": "Free Markdown Tools: Mermaid, Markmap, tables and preview",
             "lede": "Small tools for writing Markdown, free and in your browser.",
-            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, Markdown to Word and HTML to Markdown converters and a Chinese typography cleaner.",
+            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, Markdown slides, Markdown to Word and HTML to Markdown converters and a Chinese typography cleaner.",
         },
         "faq": "FAQ",
         "app_cta": "View in App Store",
@@ -143,6 +143,27 @@ UI = {
             "app_shot": "preview",
             "strings": {
                 "installing": "If NetNewsWire did not open, install it first and click again.",
+            },
+        },
+        "ppt": {
+            "open": "Open file",
+            "dark": "Dark",
+            "code": "Markdown",
+            "preview": "Slides",
+            "present": "Present",
+            "pdf": "Save as PDF",
+            "md": "Download Markdown",
+            "app_title": "Present it from MiaoYan",
+            "app_text": "In MiaoYan for Mac, a Markdown notebook, a note with --- between its slides plays as this same deck with Option-Command-P, in the app's light or dark theme.",
+            "app_alt": "MiaoYan on a Mac, with Markdown on the left and its preview on the right",
+            "app_shot": "split",
+            "strings": {
+                "slide": "{n} slide",
+                "slides": "{n} slides",
+                "opened": "Opened {name}.",
+                "fileType": "Open a Markdown or text file under 5 MB.",
+                "printing": "Laying the slides out a page each. In the print window, choose Save as PDF.",
+                "exportFailed": "This browser could not save the file.",
             },
         },
         "viewer": {
@@ -249,7 +270,7 @@ UI = {
             "title": "Markdown 在线工具",
             "head_title": "Markdown 在线工具：Mermaid、Markmap 思维导图、表格和预览",
             "lede": "写 Markdown 时顺手用的几个小工具，免费，打开浏览器就能用。",
-            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、Markdown 转 Word、网页转 Markdown，以及中英文排版整理。",
+            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、妙言 PPT、Markdown 转 Word、网页转 Markdown，以及中英文排版整理。",
         },
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
@@ -338,6 +359,27 @@ UI = {
             "app_shot": "preview",
             "strings": {
                 "installing": "NetNewsWire 没有打开的话，先装好它再点一次。",
+            },
+        },
+        "ppt": {
+            "open": "打开文件",
+            "dark": "深色",
+            "code": "Markdown",
+            "preview": "幻灯片",
+            "present": "演示",
+            "pdf": "存成 PDF",
+            "md": "下载 Markdown",
+            "app_title": "在妙言里放映",
+            "app_text": "妙言是 Mac 上的 Markdown 笔记本，一篇用 --- 分好页的笔记按 ⌥⌘P 就能放成这样的幻灯片，跟着 App 的浅色或深色主题。",
+            "app_alt": "Mac 上的妙言，左边是 Markdown，右边是它的预览",
+            "app_shot": "split",
+            "strings": {
+                "slide": "{n} 页",
+                "slides": "{n} 页",
+                "opened": "已打开 {name}。",
+                "fileType": "打开的需要是 5 MB 以内的 Markdown 或文本文件。",
+                "printing": "正在把幻灯片排成一页一张，弹出打印窗口后选存储为 PDF。",
+                "exportFailed": "这个浏览器存不了这个文件。",
             },
         },
         "viewer": {
@@ -959,11 +1001,93 @@ def viewer_page(tool, lang):
   </div>"""
     return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
                      data_id="viewer-data", data=data, script="assets/tools/markdown-viewer.js",
-                     before=("assets/tools/md-highlight.js",))
+                     before=("assets/tools/md-highlight.js", "assets/tools/md-editor.js"))
 
 
 APP_TEXT_FONT = "-apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif"
 APP_CODE_FONT = 'SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace'
+
+
+DECK = "tools/markdown-slides/deck.html"
+REVEAL = "assets/vendor/reveal-4.3.1/"
+DECK_CSS = (
+    ":root{--r-main-font:" + APP_TEXT_FONT + "}"
+    "html,body{margin:0;height:100%}"
+    # ppt.html's own slide number.
+    ".reveal .slide-number{left:24px;right:auto;bottom:24px;font-size:1.3rem;background:rgba(0,0,0,.08);color:#000;"
+    "padding:4px 12px;border-radius:999px;backdrop-filter:blur(12px)}.reveal .slide-number span{font-size:inherit}"
+    # common.css keeps media inside the window with vw and vh; the deck is a
+    # fixed 1600 by 900 scaled to its frame, so the same margins in its pixels.
+    ".reveal img,.reveal video,.reveal iframe{max-width:1520px;max-height:780px}"
+    # MiaoYan's reveal.css draws each PDF page as a card (a 20px margin, a
+    # border, the system's dark ground), which the app's own export lays out;
+    # printed by a browser, the margin pushes every slide past its page. Here a
+    # page is the slide edge to edge, on the deck's own theme.
+    "html.print-pdf .reveal .slides .pdf-page{margin:0;border:0;border-radius:0;box-shadow:none;"
+    "background-color:var(--r-background-color)!important}"
+    "html.print-pdf .reveal .slides .pdf-page:last-child{page-break-after:auto;break-after:auto}"
+)
+
+
+def deck_page():
+    """The deck the slides page frames: MiaoYan's ppt.html without the app's
+    placeholders, the Markdown arriving by postMessage (assets/tools/ppt-deck.js)."""
+    white = versioned(REVEAL + "theme/white.css")
+    night = versioned(REVEAL + "theme/night.css")
+    scripts = [REVEAL + "reveal.js", REVEAL + "plugin/markdown.js", REVEAL + "plugin/highlight.js",
+               "assets/vendor/katex-0.16.47.min.js", "assets/vendor/katex/mhchem.min.js",
+               "assets/vendor/katex/auto-render.min.js", "assets/tools/ppt-deck.js"]
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>MiaoYan PPT</title>
+<link rel="stylesheet" href="{versioned(REVEAL + "reveal.css")}">
+<link rel="stylesheet" href="{white}" id="theme" data-white="{white}" data-night="{night}">
+<link rel="stylesheet" href="{versioned("assets/vendor/katex/katex.min.css")}">
+<style>{DECK_CSS}</style>
+</head>
+<body>
+<div class="reveal"><div class="slides"></div></div>
+{"".join(f'<script src="{versioned(src)}"></script>' + chr(10) for src in scripts)}</body>
+</html>
+"""
+
+
+def ppt_page(tool, lang):
+    """Markdown slides: the text on the left, MiaoYan's PPT deck on the right."""
+    ui = UI[lang]["ppt"]
+    sample = (SRC / f"markdown-slides-sample.{lang}.md").read_text(encoding="utf-8").rstrip("\n")
+    # Versioned by what the build writes, as the deck is written with the pages.
+    deck = f"/{DECK}?v={hashlib.sha256(deck_page().encode()).hexdigest()[:12]}"
+    data = {"deck": deck, "strings": ui["strings"]}
+    tool_html = f"""  <div class="tool ppt-tool" id="ppt-tool">
+    <div class="table-bar">
+      <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="ppt-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
+      <button type="button" class="tool-chip" id="ppt-dark" aria-pressed="false">{esc(ui["dark"])}</button>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-editor">
+        <label class="visually-hidden" for="ppt-code">{esc(ui["code"])}</label>
+        <textarea id="ppt-code" class="tool-code viewer-code" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
+      </div>
+      <div class="viewer-frame ppt-frame"><iframe id="ppt-preview" title="{esc(ui["preview"])}" sandbox="allow-scripts allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe></div>
+    </div>
+    <div class="tool-foot">
+      <p class="tool-status" id="ppt-status" role="status" aria-live="polite"></p>
+      <p class="tool-count" id="ppt-count"></p>
+    </div>
+    <div class="tool-actions">
+      <button type="button" class="btn btn-primary" data-action="present">{esc(ui["present"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="pdf">{esc(ui["pdf"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="md">{esc(ui["md"])}</button>
+    </div>
+  </div>"""
+    return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
+                     data_id="ppt-data", data=data, script="assets/tools/ppt.js",
+                     before=("assets/tools/md-highlight.js", "assets/tools/md-editor.js"))
 
 
 def markmap_page(tool, lang):
@@ -1189,8 +1313,8 @@ def llms_block(tools):
     return "\n" + "\n".join(lines) + "\n"
 
 
-PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "html-to-markdown": h2m_page, "markdown-to-word": viewer_page, "netnewswire-theme": nnw_page}
-PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "html-to-markdown": "h2m", "markdown-to-word": "word", "netnewswire-theme": "nnw"}
+PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "html-to-markdown": h2m_page, "markdown-to-word": viewer_page, "markdown-slides": ppt_page, "netnewswire-theme": nnw_page}
+PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "html-to-markdown": "h2m", "markdown-to-word": "word", "markdown-slides": "ppt", "netnewswire-theme": "nnw"}
 
 
 def outputs(tools):
@@ -1200,6 +1324,8 @@ def outputs(tools):
     for t in tools:
         for lang in LANGS:
             files[output(lang, t["slug"])] = PAGES[t["slug"]](t, lang)
+    if any(t["slug"] == "markdown-slides" for t in tools):
+        files[ROOT / DECK] = deck_page()
     for name, block in (("sitemap.xml", sitemap_block(tools)), ("llms.txt", llms_block(tools))):
         files[ROOT / name] = replace_block((ROOT / name).read_text(encoding="utf-8"), block, name)
     return files
