@@ -28,6 +28,7 @@ The Chinese pages use the SC font subset: run python3 scripts/build-fonts.py
 after a Chinese post changes (build-fonts.py --check says when).
 """
 
+import hashlib
 import html
 import importlib.util
 import json
@@ -80,6 +81,8 @@ UI = {
         "related": "Keep reading",
         "faq": "FAQ",
         "open_editor": "Open in the Mermaid editor",
+        "open_markmap": "Open in the Markmap editor",
+        "markmap_alt": "The mind map this outline draws",
         "diagram_alt": "The {kind} this code draws",
     },
     "zh": {
@@ -92,6 +95,8 @@ UI = {
         "related": "继续阅读",
         "faq": "常见问题",
         "open_editor": "在 Mermaid 编辑器里打开",
+        "open_markmap": "在 Markmap 编辑器里打开",
+        "markmap_alt": "这份大纲画出的思维导图",
         "diagram_alt": "这段代码画出的{kind}",
     },
 }
@@ -239,16 +244,47 @@ def mermaid_figure(h, code, lang, where):
     )
 
 
+MARKMAP_RE = re.compile(r"^````markdown\n```markmap\n(.*?)\n```\n````$", re.M | re.S)
+
+
+def markmap_digest(code):
+    """img/markmap/<this>.svg, drawn by scripts/render-markmap.mjs."""
+    return hashlib.sha256(code.encode()).hexdigest()[:12]
+
+
+def markmap_figure(h, code, lang, where):
+    """The map a ````markdown example draws, as the site's Markmap editor
+    exports it, with a link that opens the outline in that editor."""
+    path = ROOT / "img" / "markmap" / f"{h}.svg"
+    if not path.exists():
+        raise BuildError(f"{where}: img/markmap/{h}.svg is missing; run node scripts/render-markmap.mjs")
+    size = re.search(r'<svg[^>]* width="([\d.]+)" height="([\d.]+)"', path.read_text(encoding="utf-8"))
+    w, hh = (math.ceil(float(v)) for v in size.groups())
+    editor = site.tool_path(lang, "markmap-editor") + "#m=" + mermaid_assets.payload(code)
+    return (
+        f'<figure class="mermaid-figure"><img src="/img/markmap/{h}.svg" width="{w}" height="{hh}" '
+        f'alt="{esc(UI[lang]["markmap_alt"])}" loading="lazy" decoding="async">'
+        f'<figcaption><a href="{editor}">{esc(UI[lang]["open_markmap"])}</a></figcaption></figure>'
+    )
+
+
 def render_body(slug, lang):
     where = f"content/blog/{slug}.{lang}.md"
     diagrams = {}
+    maps = {}
 
     def mark(m):
         h = mermaid_assets.digest(m.group(1))
         diagrams[h] = m.group(1)
         return f"{m.group(0)}\n\n[[mermaid:{h}]]"
 
+    def mark_map(m):
+        h = markmap_digest(m.group(1))
+        maps[h] = m.group(1)
+        return f"{m.group(0)}\n\n[[markmap:{h}]]"
+
     text = mermaid_assets.WRAPPED_RE.sub(mark, source(slug, lang))
+    text = MARKMAP_RE.sub(mark_map, text)
     text = FIGURE_RE.sub(lambda m: figure_html(m, where), text)
     md = markdown.Markdown(
         extensions=["extra", "toc", "sane_lists"],
@@ -256,6 +292,7 @@ def render_body(slug, lang):
     )
     out = md.convert(text)
     out = re.sub(r"<p>\[\[mermaid:([0-9a-f]{12})\]\]</p>", lambda m: mermaid_figure(m.group(1), diagrams[m.group(1)], lang, where), out)
+    out = re.sub(r"<p>\[\[markmap:([0-9a-f]{12})\]\]</p>", lambda m: markmap_figure(m.group(1), maps[m.group(1)], lang, where), out)
     out = re.sub(r'<a href="(https?://(?!miaoyan\.app)[^"]+)">', r'<a href="\1" target="_blank" rel="noopener">', out)
     if DOWNLOAD_RE.search(out):
         raise BuildError(f"{where}: links to a download; the site links only to the App Store and GitHub")

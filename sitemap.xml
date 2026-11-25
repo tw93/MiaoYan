@@ -581,6 +581,14 @@
   <!-- blog:end -->
   <!-- tools:start -->
   <url>
+    <loc>https://miaoyan.app/tools/</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <url>
+    <loc>https://miaoyan.app/zh/tools/</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <url>
     <loc>https://miaoyan.app/tools/mermaid-editor/</loc>
     <lastmod>2026-11-24</lastmod>
   </url>

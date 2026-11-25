@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build the free tool pages: /tools/<slug>/ in English and /zh/tools/<slug>/ in
-Simplified Chinese: the Mermaid live editor and the Markdown table generator.
+Simplified Chinese, one per tool in content/tools/index.json, and /tools/ and
+/zh/tools/, which list them.
 
 Sources:
   content/tools/index.json            titles, ledes and descriptions per language
@@ -48,6 +49,12 @@ AUTHOR = {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}
 UI = {
     "en": {
         "home_name": "MiaoYan",
+        "hub": {
+            "title": "Markdown Tools",
+            "head_title": "Free Markdown Tools: Mermaid, Markmap, tables and preview",
+            "lede": "Small tools for writing Markdown, free and in your browser.",
+            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer and a Chinese typography cleaner.",
+        },
         "faq": "FAQ",
         "app_cta": "View in App Store",
         "typography": {
@@ -93,6 +100,7 @@ UI = {
                 "copyFailed": "This browser did not allow copying.",
                 "exportFailed": "This browser could not save the image.",
                 "empty": "Write an outline to draw a mind map.",
+                "oldBrowser": "This browser cannot open mind map links. Update it, or open the link in another browser.",
             },
         },
         "viewer": {
@@ -181,6 +189,12 @@ UI = {
     },
     "zh": {
         "home_name": "妙言",
+        "hub": {
+            "title": "Markdown 在线工具",
+            "head_title": "Markdown 在线工具：Mermaid、Markmap 思维导图、表格和预览",
+            "lede": "写 Markdown 时顺手用的几个小工具，免费，打开浏览器就能用。",
+            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览和中英文排版整理。",
+        },
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
         "markmap": {
@@ -205,6 +219,7 @@ UI = {
                 "copyFailed": "这个浏览器不允许复制。",
                 "exportFailed": "这个浏览器存不了这张图。",
                 "empty": "写一份大纲就能画出导图。",
+                "oldBrowser": "这个浏览器打不开导图链接，更新一下或者换个浏览器打开。",
             },
         },
         "typography": {
@@ -320,11 +335,13 @@ class BuildError(Exception):
     pass
 
 
-def route(lang, slug):
-    return f"/zh/tools/{slug}/" if lang == "zh" else f"/tools/{slug}/"
+def route(lang, slug=None):
+    """A tool's page, or with no slug the page that lists every tool."""
+    base = "/zh/tools/" if lang == "zh" else "/tools/"
+    return f"{base}{slug}/" if slug else base
 
 
-def output(lang, slug):
+def output(lang, slug=None):
     return ROOT / route(lang, slug).strip("/") / "index.html"
 
 
@@ -459,7 +476,8 @@ def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=
             "@type": "BreadcrumbList",
             "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": ui["home_name"], "item": home},
-                {"@type": "ListItem", "position": 2, "name": meta["title"], "item": canonical},
+                {"@type": "ListItem", "position": 2, "name": ui["hub"]["title"], "item": SITE + route(lang)},
+                {"@type": "ListItem", "position": 3, "name": meta["title"], "item": canonical},
             ],
         },
         {
@@ -841,6 +859,47 @@ def typography_page(tool, lang):
                      before=("assets/tools/typography-cleaner.js",))
 
 
+def hub_page(tools, lang):
+    """/tools/: every tool with its lede, on the blog index's cards."""
+    hub = UI[lang]["hub"]
+    canonical = SITE + route(lang)
+    graph = [
+        {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": UI[lang]["home_name"], "item": SITE + site.lang_entry(lang)[1]},
+                {"@type": "ListItem", "position": 2, "name": hub["title"], "item": canonical},
+            ],
+        },
+        {
+            "@type": "CollectionPage",
+            "name": hub["title"],
+            "description": hub["description"],
+            "url": canonical,
+            "inLanguage": site.lang_entry(lang)[2],
+            "hasPart": [{"@type": "WebApplication", "@id": SITE + route(lang, t["slug"]) + "#app", "name": t[lang]["title"]} for t in tools],
+        },
+    ]
+    out = head(
+        lang, title=hub["head_title"], desc=hub["description"], canonical=canonical,
+        en_url=SITE + route("en"), zh_url=SITE + route("zh"),
+        jsonld={"@context": "https://schema.org", "@graph": graph},
+    )
+    cards = "".join(
+        f'<li class="blog-card"><a href="{route(lang, t["slug"])}"><span class="blog-card-body">'
+        f'<h2 class="blog-card-title">{esc(t[lang]["title"])}</h2>'
+        f'<span class="blog-card-desc">{esc(t[lang]["lede"])}</span>'
+        f"</span></a></li>"
+        for t in tools
+    )
+    main = f"""<main class="blog-index">
+  <h1 class="section-title">{esc(hub["title"])}</h1>
+  <p class="section-lede">{esc(hub["lede"])}</p>
+  <ul class="blog-cards">{cards}</ul>
+</main>"""
+    return out + shell(lang, None, main, "")
+
+
 def replace_block(text, inner, name):
     start, end = "<!-- tools:start -->", "<!-- tools:end -->"
     pattern = re.compile(re.escape(start) + ".*?" + re.escape(end), re.S)
@@ -850,12 +909,17 @@ def replace_block(text, inner, name):
 
 
 def sitemap_block(tools):
-    rows = [(SITE + route(lang, t["slug"]), t.get("modified") or t["date"]) for t in tools for lang in LANGS]
+    latest = max(t.get("modified") or t["date"] for t in tools)
+    rows = [(SITE + route(lang), latest) for lang in LANGS]
+    rows += [(SITE + route(lang, t["slug"]), t.get("modified") or t["date"]) for t in tools for lang in LANGS]
     return "".join(f"\n  <url>\n    <loc>{loc}</loc>\n    <lastmod>{mod}</lastmod>\n  </url>" for loc, mod in rows) + "\n  "
 
 
 def llms_block(tools):
     lines = ["## Tools", ""]
+    for lang in LANGS:
+        hub = UI[lang]["hub"]
+        lines.append(f"- [{hub['title']}]({SITE}{route(lang)}): {hub['description']}")
     for t in tools:
         for lang in LANGS:
             lines.append(f"- [{t[lang]['title']}]({SITE}{route(lang, t['slug'])}): {t[lang]['description']}")
@@ -868,6 +932,8 @@ PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "m
 
 def outputs(tools):
     files = {}
+    for lang in LANGS:
+        files[output(lang)] = hub_page(tools, lang)
     for t in tools:
         for lang in LANGS:
             files[output(lang, t["slug"])] = PAGES[t["slug"]](t, lang)

@@ -1079,7 +1079,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markmap-mind-maps.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>想把一份 Markdown 大纲变成思维导图，做法是把大纲放进语言名为 <code>markmap</code> 的围栏代码块，标题和嵌套的列表项会变成分支，预览里画成 SVG 树。妙言把 Markmap 库打包在应用里，所以普通大纲离线也能渲染，文字不会离开你的 Mac。代价是可控的东西少，颜色、间距和初始展开层级都由应用固定，普通预览里的导图不响应点击和滚轮，Markmap 官方文档里的那些选项在这里也不会生效。</p>
+<p>想把一份 Markdown 大纲变成思维导图，做法是把大纲放进语言名为 <code>markmap</code> 的围栏代码块，标题和嵌套的列表项会变成分支，预览里画成 SVG 树。妙言把 Markmap 库打包在应用里，所以普通大纲离线也能渲染，文字不会离开你的 Mac。代价是可控的东西少，颜色、间距和初始展开层级都由应用固定，普通预览里的导图不响应点击和滚轮，Markmap 官方文档里的那些选项在这里也不会生效。下面的大纲示例可以在 <a href="/zh/tools/markmap-editor/">Markmap 思维导图</a> 工具里打开，能折叠分支，也能下载成 PNG 或 SVG。</p>
 <h2 id="markmap-是什么">Markmap 是什么</h2>
 <p>Markmap 官方文档把它描述成 Markdown 和思维导图的结合，它解析 Markdown，取出层级结构，再渲染成可以交互的导图，标题级别或列表缩进决定谁是谁的父节点。输入就是普通大纲，所以可以先把结构当笔记写下来，再让它渲染成导图，笔记在任何编辑器里仍然是可读的文字。</p>
 <h2 id="写法">写法</h2>
@@ -1098,6 +1098,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 - 更新 appcast
 ```
 </code></pre>
+<figure class="mermaid-figure"><img src="/img/markmap/e006702fd221.svg" width="435" height="308" alt="这份大纲画出的思维导图" loading="lazy" decoding="async"><figcaption><a href="/zh/tools/markmap-editor/#m=U1Z42j_x6Y7mF-sWPu2YxKWsrPBi3T4gh0tX4fmu_c8Wtj2dvQ_IBpLPFrSDpJ_Na3m6exdIes-0F_smPp25gktBQVcBKPt87b6XC7dCeBPmPN-yCKjo5aKWF8s7QPog1oCMal3zYn0jkPFs9pZn0zYoJBYUJCcWlwAA">在 Markmap 编辑器里打开</a></figcaption></figure>
 <p>第一个 <code>#</code> 标题是根节点，<code>##</code> 标题是它的分支，列表项挂在最近的标题下面。列表按缩进嵌套，这里习惯每级两个空格，层级可以混用，<code>##</code> 标题下的列表比标题深一层。</p>
 <p>围栏不用手打，在妙言里输入 <code>/markmap</code> 再按 <code>Tab</code>，或者在「格式」菜单的「Tab快捷输入」子菜单里选 <code>/markmap</code> 那一项，会插入一个带根节点、两个分支和三个条目的小模板，根节点标题处于选中状态，占位文字是中文。</p>
 <h2 id="妙言里是怎么渲染的">妙言里是怎么渲染的</h2>

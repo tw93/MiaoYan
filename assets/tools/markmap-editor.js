@@ -179,6 +179,7 @@
 
   code.addEventListener("input", function () {
     if (!edited) { edited = true; track("tool_render", { tool: "markmap" }); }
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
     schedule();
   });
 
@@ -458,10 +459,63 @@
 
   // ---- Start ---------------------------------------------------------------------
 
-  try {
-    var saved = localStorage.getItem(DRAFT_KEY);
-    if (saved !== null && saved !== code.value) code.value = saved;
-  } catch (e) { /* storage blocked */ }
+  // A link from the blog carries an outline after #m=, deflated and in
+  // base64url as the Mermaid editor's links are (scripts/mermaid_assets.py
+  // payload); #b= is the same outline without compression. 200 KB inflated
+  // is far past any outline, so a bigger link is dropped.
+  var LIMIT = 200000;
 
-  load(data.vendor).then(setup, function () { say(S.loadFailed); });
+  function fromBase64Url(text) {
+    var b64 = text.replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4) b64 += "=";
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  function inflate(bytes) {
+    var reader = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw")).getReader();
+    var parts = [];
+    var size = 0;
+    function pump() {
+      return reader.read().then(function (step) {
+        if (step.done) {
+          var out = new Uint8Array(size);
+          var at = 0;
+          parts.forEach(function (p) { out.set(p, at); at += p.length; });
+          return out;
+        }
+        size += step.value.length;
+        if (size > LIMIT) { reader.cancel(); throw new Error("too large"); }
+        parts.push(step.value);
+        return pump();
+      });
+    }
+    return pump();
+  }
+
+  function shared(hash) {
+    var m = /^#([mb])=([A-Za-z0-9_-]+)$/.exec(hash);
+    if (!m) return Promise.resolve(null);
+    try {
+      var bytes = fromBase64Url(m[2]);
+      if (m[1] === "b") return Promise.resolve(bytes.length > LIMIT ? null : new TextDecoder().decode(bytes));
+      if (typeof DecompressionStream !== "function") { say(S.oldBrowser); return Promise.resolve(null); }
+      return inflate(bytes).then(function (out) { return new TextDecoder().decode(out); }, function () { return null; });
+    } catch (e) {
+      return Promise.resolve(null);
+    }
+  }
+
+  // A shared link opens its outline; otherwise the reader's last draft returns.
+  shared(location.hash).then(function (text) {
+    if (text !== null) { code.value = text; return; }
+    try {
+      var saved = localStorage.getItem(DRAFT_KEY);
+      if (saved !== null && saved !== code.value) code.value = saved;
+    } catch (e) { /* storage blocked */ }
+  }).then(function () {
+    return load(data.vendor).then(setup, function () { say(S.loadFailed); });
+  });
 })();
