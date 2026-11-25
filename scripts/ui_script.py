@@ -108,14 +108,21 @@ def compare(old: Path, new: Path, out: Path) -> int:
             print(f"{name}: size {ia.size} became {ib.size}")
             changed += 1
             continue
-        diff = ImageChops.difference(ia, ib)
-        box = diff.getbbox()
+        # The largest change in any band, as one grey image: getbbox() on the
+        # RGBA difference reads only its alpha band, which is 0 everywhere for
+        # two opaque captures, so every pair compared identical until
+        # 2026-11-25 (scripts/test_ui_script.py).
+        bands = ImageChops.difference(ia, ib).split()
+        changed_at = bands[0]
+        for band in bands[1:]:
+            changed_at = ImageChops.lighter(changed_at, band)
+        box = changed_at.getbbox()
         if box is None:
             print(f"{name}: identical")
             continue
-        count = sum(1 for px in diff.getdata() if px != (0, 0, 0, 0))
+        mask = changed_at.point(lambda v: 255 if v else 0)
+        count = mask.histogram()[255]
         print(f"{name}: {count} pixels differ in {box}")
-        mask = diff.convert("L").point(lambda v: 255 if v else 0)
         marked = ib.copy()
         marked.paste((255, 0, 0, 255), mask=mask)
         marked.save(out / f"diff-{name}")

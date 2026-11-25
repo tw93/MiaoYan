@@ -1,4 +1,6 @@
-"""scripts/ui_script.py must refuse the daily app's bundle id and must not call an empty compare a pass.
+"""scripts/ui_script.py must refuse the daily app's bundle id, must not call an empty compare a pass, and must see
+a change in colour: until 2026-11-25 compare called every pair identical, because Pillow's getbbox() reads only the
+alpha band of an RGBA difference and two opaque window captures differ only in colour.
 
     python3 -m unittest discover -s scripts -p 'test_*.py'
 """
@@ -70,6 +72,46 @@ class UIScriptTests(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(ui_script.main(), 1)
         self.assertEqual(run.call_count, 1)
+
+
+
+try:
+    from PIL import Image
+except ImportError:  # CI's Python may not have Pillow; compare needs it anyway.
+    Image = None
+
+
+@unittest.skipIf(Image is None, "Pillow is not installed")
+class CompareTests(unittest.TestCase):
+    def run_compare(self, old_pixel, new_pixel):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name, pixel in (("old", old_pixel), ("new", new_pixel)):
+                folder = root / name
+                folder.mkdir()
+                image = Image.new("RGBA", (40, 30), (250, 249, 246, 255))
+                image.putpixel((12, 7), pixel)
+                image.save(folder / "shot.png")
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                code = ui_script.compare(root / "old", root / "new", root)
+            return code, output.getvalue(), (root / "diff-shot.png").exists()
+
+    def test_an_opaque_capture_that_changed_colour_is_reported(self):
+        code, output, wrote_diff = self.run_compare((250, 249, 246, 255), (20, 20, 20, 255))
+        self.assertEqual(code, 1, output)
+        self.assertIn("1 pixels differ in (12, 7, 13, 8)", output)
+        self.assertTrue(wrote_diff)
+
+    def test_a_capture_that_changed_only_transparency_is_reported(self):
+        code, output, _ = self.run_compare((250, 249, 246, 255), (250, 249, 246, 0))
+        self.assertEqual(code, 1, output)
+
+    def test_identical_captures_are_identical(self):
+        code, output, wrote_diff = self.run_compare((250, 249, 246, 255), (250, 249, 246, 255))
+        self.assertEqual(code, 0, output)
+        self.assertIn("shot.png: identical", output)
+        self.assertFalse(wrote_diff)
 
 
 if __name__ == "__main__":
