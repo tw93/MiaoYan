@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#fbfaf6">
 <meta name="apple-itunes-app" content="app-id=6759252269">
 <script>document.documentElement.classList.add('js')</script>
-<title>Markdown 在线预览：打开 .md 文件，存成 PDF 和 HTML</title>
-<meta name="description" content="免费的 Markdown 在线预览，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，可以存成 PDF 和 HTML。">
+<title>Markdown 在线预览：一键复制到公众号，存成 PDF 和 HTML</title>
+<meta name="description" content="免费的 Markdown 在线预览和编辑，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，带样式一键复制到公众号，也能存成 PDF、HTML 和 Markdown。">
 <link rel="canonical" href="https://miaoyan.app/zh/tools/markdown-viewer/">
 <link rel="alternate" hreflang="en" href="https://miaoyan.app/tools/markdown-viewer/">
 <link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/tools/markdown-viewer/">
@@ -15,8 +15,8 @@
 <link rel="alternate" hreflang="x-default" href="https://miaoyan.app/tools/markdown-viewer/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://miaoyan.app/zh/tools/markdown-viewer/">
-<meta property="og:title" content="Markdown 在线预览：打开 .md 文件，存成 PDF 和 HTML">
-<meta property="og:description" content="免费的 Markdown 在线预览，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，可以存成 PDF 和 HTML。">
+<meta property="og:title" content="Markdown 在线预览：一键复制到公众号，存成 PDF 和 HTML">
+<meta property="og:description" content="免费的 Markdown 在线预览和编辑，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，带样式一键复制到公众号，也能存成 PDF、HTML 和 Markdown。">
 <meta property="og:image" content="https://miaoyan.app/assets/shots/og-zh.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -24,8 +24,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -107,14 +107,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -726,6 +726,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
+.tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -754,6 +755,32 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-bar > :is(.tool-templates, .table-bar) { flex: 1 1 auto; margin: 0; }
 .tool-bar > .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 0 auto; }
 .tool-chip-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+/* The full-screen switch: an icon the height of a chip, at the end of the row. */
+.tool-full { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 999px; background: var(--ivory); color: var(--olive); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.tool-full:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-full:focus { outline: none; }
+.tool-full svg { width: 16px; height: 16px; }
+.tool-full .tool-full-off, .tool-full[aria-pressed="true"] .tool-full-on { display: none; }
+.tool-full[aria-pressed="true"] .tool-full-off { display: block; }
+/* Full screen: the tool alone on the page's ground, the panes in the height
+   tool-shell.js measures under the toolbar (--full-h). */
+.tool.is-full {
+  position: fixed; inset: 0; z-index: 100; overflow: auto;
+  padding: 16px max(16px, min(32px, 2vw)) 12px; background: var(--parchment);
+}
+.tool.is-full:fullscreen { width: 100%; height: 100%; }
+.tool.is-full::backdrop { background: var(--parchment); }
+html.has-full-tool { overflow: hidden; }
+.tool.is-full .tool-foot { margin-top: 8px; }
+.tool-page .tool.is-full .tool-grid, .tool.is-full.table-tool, .tool.is-full.nnw-tool { --tool-h: var(--full-h, 600px); }
+@media (max-width: 880px) {
+  /* Stacked panes share the height. */
+  .tool.is-full .tool-grid > :is(.tool-editor, .tool-preview, .viewer-frame) { height: calc((var(--full-h, 600px) - 16px) / 2); }
+  .tool.is-full .tool-grid.is-preview-only > .viewer-frame { height: var(--full-h, 600px); }
+  .tool.is-full .nnw-frame { height: var(--full-h, 600px); }
+  .tool.is-full .table-wrap { max-height: calc(var(--full-h, 600px) * 0.55); }
+  .tool.is-full .table-md { max-height: calc(var(--full-h, 600px) * 0.45 - 16px); }
+}
 .tool-chip-primary:hover { background: var(--brand-light); border-color: var(--brand-light); }
 /* Panes that hold Markdown read as MiaoYan's editor: its paper and ink, the
    system pairing at 16px on a 1.3 line plus 3pt, tracked 0.02em
@@ -848,12 +875,15 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .table-md .w { display: inline-block; width: 2ch; text-align: center; }
 /* The Markdown viewer: the editor beside an iframe that holds MiaoYan's
    preview stylesheets on its paper, so neither page's styles reach the other. */
-.viewer-only { margin-left: auto; }
 /* Prose wraps here; line numbers serve the diagram editor's error line. */
 .viewer-code { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 18px; }
 .viewer-open { position: relative; }
 .viewer-open:focus-within { background: var(--warm-sand); }
 .viewer-frame { height: var(--tool-h); overflow: hidden; background: #FDFCF9; border: 1px solid var(--line); border-radius: 14px; }
+/* Phone width: the preview laid out at 375px, where a WeChat article is read. */
+.viewer-frame.is-phone { background: var(--ivory); }
+@media (max-width: 560px) { #viewer-phone { display: none; } }
+.viewer-frame.is-phone iframe { display: block; width: min(375px, 100%); margin: 0 auto; background: #FDFCF9; border-inline: 1px solid var(--line); }
 .viewer-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
 .viewer-grid.is-preview-only { grid-template-columns: minmax(0, 1fr); }
 .viewer-grid.is-preview-only .tool-editor { display: none; }
@@ -923,7 +953,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
   .tool-actions .btn-primary { grid-column: 1 / -1; }
-  .tool-preview { padding: 58px 16px 16px; }
+  .tool-preview:not(.markmap-frame) { padding: 58px 16px 16px; }
   .mermaid-figure { padding: 14px; }
   .table-wrap { padding: 8px 4px 12px 12px; }
   .table-md { padding: 14px; }
@@ -1120,7 +1150,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 在线预览", "item": "https://miaoyan.app/zh/tools/markdown-viewer/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/markdown-viewer/#app", "name": "Markdown 在线预览", "description": "免费的 Markdown 在线预览，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，可以存成 PDF 和 HTML。", "url": "https://miaoyan.app/zh/tools/markdown-viewer/", "inLanguage": "zh-CN", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "要收费吗，文件会上传吗？", "acceptedAnswer": {"@type": "Answer", "text": "不收费，也不用注册，打开的文件只在浏览器里读，不会发到服务器，最后一次的内容存在这个浏览器里，下次打开还在。"}}, {"@type": "Question", "name": "支持哪些写法？", "acceptedAnswer": {"@type": "Answer", "text": "标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 $...$ 和 $$...$$，写在 mermaid 代码块里的图会画出来。Mermaid 的写法见 Markdown 里画 Mermaid 图。"}}, {"@type": "Question", "name": "图片为什么显示不出来？", "acceptedAnswer": {"@type": "Answer", "text": "网页读不到电脑上的文件，images/a.png 这种本地路径的图片不会显示，只有以 https:// 开头的网络图片能显示。在妙言里打开同一个文件，本地图片照常显示。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 在线工具", "item": "https://miaoyan.app/zh/tools/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 在线预览", "item": "https://miaoyan.app/zh/tools/markdown-viewer/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/markdown-viewer/#app", "name": "Markdown 在线预览", "description": "免费的 Markdown 在线预览和编辑，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，带样式一键复制到公众号，也能存成 PDF、HTML 和 Markdown。", "url": "https://miaoyan.app/zh/tools/markdown-viewer/", "inLanguage": "zh-CN", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "要收费吗，文件会上传吗？", "acceptedAnswer": {"@type": "Answer", "text": "不收费，也不用注册，打开的文件只在浏览器里读，不会发到服务器，最后一次的内容存在这个浏览器里，下次打开还在。"}}, {"@type": "Question", "name": "支持哪些写法？", "acceptedAnswer": {"@type": "Answer", "text": "标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 $...$ 和 $$...$$，写在 mermaid 代码块里的图会画出来。Mermaid 的写法见 Markdown 里画 Mermaid 图。"}}, {"@type": "Question", "name": "图片为什么显示不出来？", "acceptedAnswer": {"@type": "Answer", "text": "网页读不到电脑上的文件，images/a.png 这种本地路径的图片不会显示，只有以 https:// 开头的网络图片能显示。在妙言里打开同一个文件，本地图片照常显示。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1139,17 +1169,20 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </header>
 <main class="tool-page">
   <h1 class="section-title">Markdown 在线预览</h1>
-  <p class="section-lede">打开或粘贴 Markdown，按妙言的预览样式实时显示，公式、代码和 Mermaid 图都会画出来，还能存成 PDF 和 HTML。</p>
+  <p class="section-lede">打开或粘贴 Markdown，按妙言的预览样式实时显示，公式、代码和 Mermaid 图都会画出来，写完一键复制到公众号，也能存成 PDF、HTML 和 Markdown。</p>
   <div class="tool viewer-tool" id="viewer-tool">
     <div class="tool-bar">
       <div class="table-bar">
         <label class="tool-chip viewer-open">打开文件<input type="file" id="viewer-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
-        <button type="button" class="tool-chip viewer-only" id="viewer-only" aria-pressed="false">只看预览</button>
+        <button type="button" class="tool-chip" id="viewer-only" aria-pressed="false">只看预览</button>
+        <button type="button" class="tool-chip" id="viewer-phone" aria-pressed="false">手机宽度</button>
       </div>
       <div class="tool-actions">
-        <button type="button" class="tool-chip tool-chip-primary" data-action="pdf">存成 PDF</button>
+        <button type="button" class="tool-chip tool-chip-primary" data-action="copy">复制到公众号</button>
+        <button type="button" class="tool-chip" data-action="pdf">存成 PDF</button>
         <button type="button" class="tool-chip" data-action="html">下载 HTML</button>
-        <button type="button" class="tool-chip" data-action="copy">复制带格式的内容</button>
+        <button type="button" class="tool-chip" data-action="md">下载 Markdown</button>
+      <button type="button" class="tool-full" aria-pressed="false" aria-label="全屏" title="全屏" data-on="全屏" data-off="退出全屏"><svg class="tool-full-on" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5h4v4M13.5 2.5L9 7M6.5 13.5h-4v-4M2.5 13.5L7 9"/></svg><svg class="tool-full-off" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5h-4v-4M9.5 6.5l4-4M2.5 9.5h4v4M6.5 9.5l-4 4"/></svg></button>
       </div>
     </div>
     <div class="tool-grid viewer-grid" id="viewer-grid">
@@ -1202,9 +1235,14 @@ flowchart LR
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="viewer-status" role="status" aria-live="polite"></p>
+      <p class="tool-count" id="viewer-count"></p>
     </div>
   </div>
   <div class="blog-body tool-body">
+<h2 id="复制到公众号">复制到公众号</h2>
+<p>写完点复制到公众号，到公众号后台的图文编辑器里粘贴，标题、引用、列表、表格和代码块会带着妙言的样式过去。公众号会丢掉样式表和 class，所以复制时把每个元素的样式都写在了它自己身上，引用的竖条改成左边框，任务列表的勾选框换成 ☐ 和 ☑，代码保留缩进和换行，Mermaid 图转成图片。公众号正文里指向其他网站的链接点不开，这些链接会变成右上角的编号，地址统一列在文末的参考链接里，公众号自己的文章链接保持原样，公式目前按 <code>$...$</code> 的源码复制过去。</p>
+<h2 id="写起来顺手的地方">写起来顺手的地方</h2>
+<p>快捷键和妙言一样，<code>⌘B</code> 加粗、<code>⌘I</code> 斜体、<code>⌘K</code> 链接、<code>⌘E</code> 行内代码、<code>⇧⌘E</code> 代码块，<code>⌘S</code> 把 Markdown 存成文件，Windows 上把 ⌘ 换成 Ctrl。列表和引用里按回车会接着写下一项，空着再按一次就结束。两边按段落对齐滚动，左边滚到哪一段，右边就停在哪一段，反过来也一样。手机宽度按 375 像素排版，和公众号文章在手机上的宽度差不多，工具栏最右边的按钮可以全屏写，底部的字数和妙言的算法一样，每个汉字算一个，英文按词算。</p>
 <h2 id="和妙言的预览有多像">和妙言的预览有多像</h2>
 <p>右边用的是妙言预览同一套样式表，代码高亮、公式和 Mermaid 也是 App 里那几份文件，所以字体、行距、表格和代码块都和笔记里看到的一样。不同的是这里用 markdown-it 解析 Markdown，App 里用的是 cmark-gfm，两者都遵循 CommonMark 和 GitHub 的表格、删除线、任务列表写法，只有很少见的写法结果会有差别。</p>
 <h2 id="常见问题">常见问题</h2>
@@ -1236,9 +1274,10 @@ flowchart LR
     </div>
   </div>
 </footer>
-<script type="application/json" id="viewer-data">{"lang":"zh","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","site":"https://miaoyan.app","strings":{"opened":"已打开 {name}。","fileType":"打开的需要是 5 MB 以内的 Markdown 或文本文件。","copied":"已复制，贴进文档或邮件里会带着格式。","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这个文件。","loadFailed":"预览有一部分没加载上，检查网络后刷新页面。"}}</script>
-<script src="/assets/tools/md-highlight.js?v=65a141b1fb17" defer></script>
-<script src="/assets/tools/markdown-viewer.js?v=ea4968ed1bb6" defer></script>
+<script type="application/json" id="viewer-data">{"lang":"zh","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","site":"https://miaoyan.app","wechat":true,"strings":{"opened":"已打开 {name}。","fileType":"打开的需要是 5 MB 以内的 Markdown 或文本文件。","copied":"已复制，到公众号编辑器里粘贴就行，样式会跟着过去。","copiedLinks":"已复制，文中 {n} 个外部链接改成了文末的参考链接，公众号正文里的外链点不开。","copiedMath":"公式按源码复制，公众号里不会排成公式。","references":"参考链接","word":"{n} 字","words":"{n} 字","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这个文件。","loadFailed":"预览有一部分没加载上，检查网络后刷新页面。"}}</script>
+<script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
+<script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
+<script src="/assets/tools/markdown-viewer.js?v=8a8481ad7153" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

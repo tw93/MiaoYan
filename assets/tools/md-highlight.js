@@ -58,9 +58,10 @@
       if (l) return esc(l[1]) + span("syn", l[2]) + esc(l[3]) + span("syn", l[4] || "") + inline(line.slice(l[0].length));
       return inline(line);
     });
-    // A trailing newline still needs a line box, or the last line of a long
-    // text scrolls out of step with the textarea.
-    return html.join("\n") + "\n ";
+    // Each source line in its own span, so a line's height after wrapping can
+    // be read (lineTops). A trailing newline still needs a line box, or the
+    // last line of a long text scrolls out of step with the textarea.
+    return html.map(function (line) { return '<span class="md-line">' + line + "</span>"; }).join("\n") + "\n ";
   }
 
   function attach(code) {
@@ -93,8 +94,19 @@
     code.addEventListener("input", schedule);
     code.addEventListener("scroll", function () { pre.scrollTop = code.scrollTop; });
     paint();
+    code._mdLineTops = function () {
+      if (frame) { cancelAnimationFrame(frame); paint(); }
+      var pad = parseFloat(getComputedStyle(pre).paddingTop) || 0;
+      return Array.prototype.map.call(pre.children, function (line) { return line.offsetTop - pad; });
+    };
   }
 
-  window.MiaoYanHighlight = { attach: attach, highlight: highlight };
+  // Where each source line of a highlighted textarea starts, in its scroll
+  // coordinates (0 is the first line at the top), wrapping included.
+  function lineTops(code) {
+    return code._mdLineTops ? code._mdLineTops() : null;
+  }
+
+  window.MiaoYanHighlight = { attach: attach, highlight: highlight, lineTops: lineTops };
   Array.prototype.forEach.call(document.querySelectorAll("textarea[data-highlight]"), attach);
 })();

@@ -57,6 +57,8 @@ UI = {
         },
         "faq": "FAQ",
         "app_cta": "View in App Store",
+        "fullscreen": "Full screen",
+        "exit_fullscreen": "Exit full screen",
         "typography": {
             "open": "Open file",
             "code": "Original",
@@ -122,10 +124,12 @@ UI = {
         "viewer": {
             "open": "Open file",
             "preview_only": "Preview only",
+            "phone": "Phone width",
             "code": "Markdown",
             "preview": "Preview",
             "pdf": "Save as PDF",
             "html": "Download HTML",
+            "md": "Download Markdown",
             "copy": "Copy formatted",
             "app_title": "Read and write it in MiaoYan",
             "app_text": "MiaoYan, a Markdown notebook for Mac, iPhone and iPad, keeps every note as a plain .md file, and this preview is drawn with its stylesheets.",
@@ -134,7 +138,10 @@ UI = {
             "strings": {
                 "opened": "Opened {name}.",
                 "fileType": "Open a Markdown or text file under 5 MB.",
-                "copied": "Copied with its formatting, ready to paste into a document or an email.",
+                "copied": "Copied with its styles, ready to paste into a document or an email.",
+                "copiedMath": " Formulas are copied as their TeX source.",
+                "word": "{n} word",
+                "words": "{n} words",
                 "copyFailed": "This browser did not allow copying.",
                 "exportFailed": "This browser could not save the file.",
                 "loadFailed": "Part of the preview did not load. Check the connection and reload the page.",
@@ -213,6 +220,8 @@ UI = {
         },
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
+        "fullscreen": "全屏",
+        "exit_fullscreen": "退出全屏",
         "markmap": {
             "code": "Markdown 大纲",
             "preview": "思维导图",
@@ -277,11 +286,13 @@ UI = {
         "viewer": {
             "open": "打开文件",
             "preview_only": "只看预览",
+            "phone": "手机宽度",
             "code": "Markdown",
             "preview": "预览",
             "pdf": "存成 PDF",
             "html": "下载 HTML",
-            "copy": "复制带格式的内容",
+            "md": "下载 Markdown",
+            "copy": "复制到公众号",
             "app_title": "在妙言里读和写",
             "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，每篇笔记都是一个普通的 .md 文件，这里的预览用的就是它的样式表。",
             "app_alt": "Mac 上的妙言，左边是笔记列表，右边是一篇笔记的预览",
@@ -289,7 +300,12 @@ UI = {
             "strings": {
                 "opened": "已打开 {name}。",
                 "fileType": "打开的需要是 5 MB 以内的 Markdown 或文本文件。",
-                "copied": "已复制，贴进文档或邮件里会带着格式。",
+                "copied": "已复制，到公众号编辑器里粘贴就行，样式会跟着过去。",
+                "copiedLinks": "已复制，文中 {n} 个外部链接改成了文末的参考链接，公众号正文里的外链点不开。",
+                "copiedMath": "公式按源码复制，公众号里不会排成公式。",
+                "references": "参考链接",
+                "word": "{n} 字",
+                "words": "{n} 字",
                 "copyFailed": "这个浏览器不允许复制。",
                 "exportFailed": "这个浏览器存不了这个文件。",
                 "loadFailed": "预览有一部分没加载上，检查网络后刷新页面。",
@@ -488,6 +504,8 @@ ICON = {
     "minus": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9"/></svg>',
     "plus": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9M8 3.5v9"/></svg>',
     "fit": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg>',
+    "expand": '<svg class="tool-full-on" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5h4v4M13.5 2.5L9 7M6.5 13.5h-4v-4M2.5 13.5L7 9"/></svg>',
+    "collapse": '<svg class="tool-full-off" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5h-4v-4M9.5 6.5l4-4M2.5 9.5h4v4M6.5 9.5l-4 4"/></svg>',
 }
 
 
@@ -495,16 +513,22 @@ ACTIONS_RE = re.compile(r'\n    <div class="tool-actions">.*?\n    </div>', re.S
 BAR_RE = re.compile(r'\n    <div class="(?:tool-templates|table-bar)"[^>]*>.*?</div>(?=\n    <div)', re.S)
 
 
-def toolbar(tool_html):
+def toolbar(tool_html, lang):
     """The tool's own controls on the left and its actions on the right, in one
-    row above the panes, so the first screen holds everything the tool does."""
+    row above the panes, so the first screen holds everything the tool does;
+    the row ends with the switch that gives the tool the whole screen
+    (assets/tools/tool-shell.js)."""
     actions = ACTIONS_RE.search(tool_html)
     if not actions:
         raise BuildError("a tool has no tool-actions block")
     html = tool_html[:actions.start()] + tool_html[actions.end():]
+    ui = UI[lang]
+    full = (f'\n      <button type="button" class="tool-full" aria-pressed="false" aria-label="{esc(ui["fullscreen"])}" title="{esc(ui["fullscreen"])}"'
+            f' data-on="{esc(ui["fullscreen"])}" data-off="{esc(ui["exit_fullscreen"])}">{ICON["expand"]}{ICON["collapse"]}</button>')
     block = (actions.group(0)
              .replace('class="btn btn-primary"', 'class="tool-chip tool-chip-primary"')
              .replace('class="btn btn-ghost"', 'class="tool-chip"'))
+    block = block[:block.rindex("\n    </div>")] + full.replace("\n      ", "\n    ") + "\n    </div>"
     bar = BAR_RE.search(html)
     if bar:
         return html[:bar.start()] + '\n    <div class="tool-bar">' + bar.group(0).replace("\n    ", "\n      ") + block.replace("\n    ", "\n      ") + "\n    </div>" + html[bar.end():]
@@ -515,7 +539,7 @@ def toolbar(tool_html):
 def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=(), system="Any"):
     """One tool page: title and lede, the tool, the prose with its FAQ, then the
     one quiet way into MiaoYan at the end, above the footer."""
-    tool_html = toolbar(tool_html)
+    tool_html = toolbar(tool_html, lang)
     ui = UI[lang]
     meta = tool[lang]
     slug = tool["slug"]
@@ -580,7 +604,7 @@ def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=
 </main>"""
     tail = (
         f'<script type="application/json" id="{data_id}">{script_json(data)}</script>\n'
-        + "".join(f'<script src="{versioned(s)}" defer></script>\n' for s in before)
+        + "".join(f'<script src="{versioned(s)}" defer></script>\n' for s in ("assets/tools/tool-shell.js",) + tuple(before))
         + f'<script src="{versioned(script)}" defer></script>'
     )
     return out + shell(lang, slug, main, tail)
@@ -806,12 +830,15 @@ def viewer_page(tool, lang):
         "css": [versioned(f"assets/vendor/preview/{c}.css") for c in PREVIEW_CSS],
         "pageCss": PREVIEW_PAGE_CSS,
         "site": SITE,
+        # The Chinese page copies for WeChat articles (links become references).
+        "wechat": lang == "zh",
         "strings": ui["strings"],
     }
     tool_html = f"""  <div class="tool viewer-tool" id="viewer-tool">
     <div class="table-bar">
       <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="viewer-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
-      <button type="button" class="tool-chip viewer-only" id="viewer-only" aria-pressed="false">{esc(ui["preview_only"])}</button>
+      <button type="button" class="tool-chip" id="viewer-only" aria-pressed="false">{esc(ui["preview_only"])}</button>
+      <button type="button" class="tool-chip" id="viewer-phone" aria-pressed="false">{esc(ui["phone"])}</button>
     </div>
     <div class="tool-grid viewer-grid" id="viewer-grid">
       <div class="tool-editor">
@@ -822,11 +849,13 @@ def viewer_page(tool, lang):
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="viewer-status" role="status" aria-live="polite"></p>
+      <p class="tool-count" id="viewer-count"></p>
     </div>
     <div class="tool-actions">
-      <button type="button" class="btn btn-primary" data-action="pdf">{esc(ui["pdf"])}</button>
+      <button type="button" class="btn btn-primary" data-action="copy">{esc(ui["copy"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="pdf">{esc(ui["pdf"])}</button>
       <button type="button" class="btn btn-ghost" data-action="html">{esc(ui["html"])}</button>
-      <button type="button" class="btn btn-ghost" data-action="copy">{esc(ui["copy"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="md">{esc(ui["md"])}</button>
     </div>
   </div>"""
     return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,

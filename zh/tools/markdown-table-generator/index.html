@@ -24,8 +24,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -107,14 +107,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -726,6 +726,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
+.tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -754,6 +755,32 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-bar > :is(.tool-templates, .table-bar) { flex: 1 1 auto; margin: 0; }
 .tool-bar > .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 0 auto; }
 .tool-chip-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+/* The full-screen switch: an icon the height of a chip, at the end of the row. */
+.tool-full { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 999px; background: var(--ivory); color: var(--olive); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.tool-full:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-full:focus { outline: none; }
+.tool-full svg { width: 16px; height: 16px; }
+.tool-full .tool-full-off, .tool-full[aria-pressed="true"] .tool-full-on { display: none; }
+.tool-full[aria-pressed="true"] .tool-full-off { display: block; }
+/* Full screen: the tool alone on the page's ground, the panes in the height
+   tool-shell.js measures under the toolbar (--full-h). */
+.tool.is-full {
+  position: fixed; inset: 0; z-index: 100; overflow: auto;
+  padding: 16px max(16px, min(32px, 2vw)) 12px; background: var(--parchment);
+}
+.tool.is-full:fullscreen { width: 100%; height: 100%; }
+.tool.is-full::backdrop { background: var(--parchment); }
+html.has-full-tool { overflow: hidden; }
+.tool.is-full .tool-foot { margin-top: 8px; }
+.tool-page .tool.is-full .tool-grid, .tool.is-full.table-tool, .tool.is-full.nnw-tool { --tool-h: var(--full-h, 600px); }
+@media (max-width: 880px) {
+  /* Stacked panes share the height. */
+  .tool.is-full .tool-grid > :is(.tool-editor, .tool-preview, .viewer-frame) { height: calc((var(--full-h, 600px) - 16px) / 2); }
+  .tool.is-full .tool-grid.is-preview-only > .viewer-frame { height: var(--full-h, 600px); }
+  .tool.is-full .nnw-frame { height: var(--full-h, 600px); }
+  .tool.is-full .table-wrap { max-height: calc(var(--full-h, 600px) * 0.55); }
+  .tool.is-full .table-md { max-height: calc(var(--full-h, 600px) * 0.45 - 16px); }
+}
 .tool-chip-primary:hover { background: var(--brand-light); border-color: var(--brand-light); }
 /* Panes that hold Markdown read as MiaoYan's editor: its paper and ink, the
    system pairing at 16px on a 1.3 line plus 3pt, tracked 0.02em
@@ -848,12 +875,15 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .table-md .w { display: inline-block; width: 2ch; text-align: center; }
 /* The Markdown viewer: the editor beside an iframe that holds MiaoYan's
    preview stylesheets on its paper, so neither page's styles reach the other. */
-.viewer-only { margin-left: auto; }
 /* Prose wraps here; line numbers serve the diagram editor's error line. */
 .viewer-code { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 18px; }
 .viewer-open { position: relative; }
 .viewer-open:focus-within { background: var(--warm-sand); }
 .viewer-frame { height: var(--tool-h); overflow: hidden; background: #FDFCF9; border: 1px solid var(--line); border-radius: 14px; }
+/* Phone width: the preview laid out at 375px, where a WeChat article is read. */
+.viewer-frame.is-phone { background: var(--ivory); }
+@media (max-width: 560px) { #viewer-phone { display: none; } }
+.viewer-frame.is-phone iframe { display: block; width: min(375px, 100%); margin: 0 auto; background: #FDFCF9; border-inline: 1px solid var(--line); }
 .viewer-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
 .viewer-grid.is-preview-only { grid-template-columns: minmax(0, 1fr); }
 .viewer-grid.is-preview-only .tool-editor { display: none; }
@@ -923,7 +953,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
   .tool-actions .btn-primary { grid-column: 1 / -1; }
-  .tool-preview { padding: 58px 16px 16px; }
+  .tool-preview:not(.markmap-frame) { padding: 58px 16px 16px; }
   .mermaid-figure { padding: 14px; }
   .table-wrap { padding: 8px 4px 12px 12px; }
   .table-md { padding: 14px; }
@@ -1150,6 +1180,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
       </div>
       <div class="tool-actions">
         <button type="button" class="tool-chip tool-chip-primary" data-action="copy">复制 Markdown</button>
+      <button type="button" class="tool-full" aria-pressed="false" aria-label="全屏" title="全屏" data-on="全屏" data-off="退出全屏"><svg class="tool-full-on" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5h4v4M13.5 2.5L9 7M6.5 13.5h-4v-4M2.5 13.5L7 9"/></svg><svg class="tool-full-off" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5h-4v-4M9.5 6.5l4-4M2.5 9.5h4v4M6.5 9.5l-4 4"/></svg></button>
       </div>
     </div>
     <div class="table-wrap" id="table-wrap"><table class="table-grid" id="table-grid"><thead><tr class="table-ctrl"><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 1 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="0" aria-label="删除第 1 列" title="删除第 1 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 2 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="1" aria-label="删除第 2 列" title="删除第 2 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 3 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="true" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="2" aria-label="删除第 3 列" title="删除第 3 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 4 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="true" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="3" aria-label="删除第 4 列" title="删除第 4 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td class="table-end"></td></tr></thead><tbody><tr class="is-head"><td data-align="none"><input class="table-cell" type="text" value="任务" aria-label="第 1 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="负责人" aria-label="第 1 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="工时" aria-label="第 1 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="状态" aria-label="第 1 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="0" aria-label="删除第 1 行" title="删除第 1 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="写提纲" aria-label="第 2 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="小林" aria-label="第 2 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="3" aria-label="第 2 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="已完成" aria-label="第 2 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="1" aria-label="删除第 2 行" title="删除第 2 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="写初稿" aria-label="第 3 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="阿杰" aria-label="第 3 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="12" aria-label="第 3 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="进行中" aria-label="第 3 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="2" aria-label="删除第 3 行" title="删除第 3 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="校对" aria-label="第 4 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="晓雯" aria-label="第 4 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="5" aria-label="第 4 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="待开始" aria-label="第 4 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="3" aria-label="删除第 4 行" title="删除第 4 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr></tbody></table></div>
@@ -1199,6 +1230,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </div>
 </footer>
 <script type="application/json" id="table-data">{"lang":"zh","start":{"rows":[["任务","负责人","工时","状态"],["写提纲","小林","3","已完成"],["写初稿","阿杰","12","进行中"],["校对","晓雯","5","待开始"]],"align":["","","right","center"]},"ui":{"cell":"第 {row} 行第 {col} 列","align_group":"第 {col} 列对齐","align_left":"左对齐","align_center":"居中","align_right":"右对齐","del_col":"删除第 {col} 列","del_row":"删除第 {row} 行"},"icons":{"x":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M4.5 4.5l7 7M11.5 4.5l-7 7\"/><\/svg>","left":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M2.5 8h7M2.5 12h9\"/><\/svg>","center":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M4.5 8h7M3.5 12h9\"/><\/svg>","right":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M6.5 8h7M4.5 12h9\"/><\/svg>"},"strings":{"copied":"已复制，贴进 Markdown 文件或者笔记里就行。","copyFailed":"这个浏览器不允许复制。","pasted":"已粘贴 {rows} 行 {cols} 列。","trimmed":"网格最多放 {rows} 行 {cols} 列，多出的部分没有放进来。","noTable":"这个文件里没有表格。","fileType":"拖进来的需要是 4 MB 以内的 CSV、TSV、Markdown 或文本文件。","cleared":"已清空表格。","deleted":"已删除。"}}</script>
+<script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
 <script src="/assets/tools/markdown-table-generator.js?v=ee503fb3698d" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads

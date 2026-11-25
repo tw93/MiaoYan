@@ -150,11 +150,10 @@
     new ResizeObserver(function () { if (mm) fit(); }).observe(frame);
   }
 
-  // markmap's own fit() scales up to 2x and uses the whole pane, so in this
-  // full-height pane a short outline came out at twice MiaoYan's size and its
-  // top row ran under the zoom buttons. This is the same fit, capped at 1x
-  // (the app's box grows with the outline, so its labels stay at 16px) and
-  // centred in the pane below the buttons. Zoom still goes past 1x.
+  // markmap's own fit(), up to its 2x so the map fills the pane (maintainer
+  // 2026-11-25, after a 1x cap left a short outline small in a large pane),
+  // but centred in the part of the pane below the zoom buttons: markmap uses
+  // the whole pane, and the top row of a tall map ran under them.
   function fit() {
     var box = svg.getBoundingClientRect();
     var zoom = frame.querySelector(".tool-zoom");
@@ -164,7 +163,7 @@
     var h = st.maxX - st.minX;
     var room = box.height - top;
     if (!(w > 0 && h > 0 && box.width > 0 && room > 0)) return mm.fit();
-    var k = Math.min(box.width / w * 0.92, room / h * 0.92, 1);
+    var k = Math.min(box.width / w * 0.92, room / h * 0.92, 2);
     var t = window.d3.zoomIdentity
       .translate((box.width - w * k) / 2 - st.minY * k, top + (room - h * k) / 2 - st.minX * k)
       .scale(k);

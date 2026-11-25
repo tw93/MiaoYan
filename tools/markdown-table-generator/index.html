@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -724,6 +724,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
+.tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -752,6 +753,32 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-bar > :is(.tool-templates, .table-bar) { flex: 1 1 auto; margin: 0; }
 .tool-bar > .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 0 auto; }
 .tool-chip-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+/* The full-screen switch: an icon the height of a chip, at the end of the row. */
+.tool-full { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 999px; background: var(--ivory); color: var(--olive); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.tool-full:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-full:focus { outline: none; }
+.tool-full svg { width: 16px; height: 16px; }
+.tool-full .tool-full-off, .tool-full[aria-pressed="true"] .tool-full-on { display: none; }
+.tool-full[aria-pressed="true"] .tool-full-off { display: block; }
+/* Full screen: the tool alone on the page's ground, the panes in the height
+   tool-shell.js measures under the toolbar (--full-h). */
+.tool.is-full {
+  position: fixed; inset: 0; z-index: 100; overflow: auto;
+  padding: 16px max(16px, min(32px, 2vw)) 12px; background: var(--parchment);
+}
+.tool.is-full:fullscreen { width: 100%; height: 100%; }
+.tool.is-full::backdrop { background: var(--parchment); }
+html.has-full-tool { overflow: hidden; }
+.tool.is-full .tool-foot { margin-top: 8px; }
+.tool-page .tool.is-full .tool-grid, .tool.is-full.table-tool, .tool.is-full.nnw-tool { --tool-h: var(--full-h, 600px); }
+@media (max-width: 880px) {
+  /* Stacked panes share the height. */
+  .tool.is-full .tool-grid > :is(.tool-editor, .tool-preview, .viewer-frame) { height: calc((var(--full-h, 600px) - 16px) / 2); }
+  .tool.is-full .tool-grid.is-preview-only > .viewer-frame { height: var(--full-h, 600px); }
+  .tool.is-full .nnw-frame { height: var(--full-h, 600px); }
+  .tool.is-full .table-wrap { max-height: calc(var(--full-h, 600px) * 0.55); }
+  .tool.is-full .table-md { max-height: calc(var(--full-h, 600px) * 0.45 - 16px); }
+}
 .tool-chip-primary:hover { background: var(--brand-light); border-color: var(--brand-light); }
 /* Panes that hold Markdown read as MiaoYan's editor: its paper and ink, the
    system pairing at 16px on a 1.3 line plus 3pt, tracked 0.02em
@@ -846,12 +873,15 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .table-md .w { display: inline-block; width: 2ch; text-align: center; }
 /* The Markdown viewer: the editor beside an iframe that holds MiaoYan's
    preview stylesheets on its paper, so neither page's styles reach the other. */
-.viewer-only { margin-left: auto; }
 /* Prose wraps here; line numbers serve the diagram editor's error line. */
 .viewer-code { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 18px; }
 .viewer-open { position: relative; }
 .viewer-open:focus-within { background: var(--warm-sand); }
 .viewer-frame { height: var(--tool-h); overflow: hidden; background: #FDFCF9; border: 1px solid var(--line); border-radius: 14px; }
+/* Phone width: the preview laid out at 375px, where a WeChat article is read. */
+.viewer-frame.is-phone { background: var(--ivory); }
+@media (max-width: 560px) { #viewer-phone { display: none; } }
+.viewer-frame.is-phone iframe { display: block; width: min(375px, 100%); margin: 0 auto; background: #FDFCF9; border-inline: 1px solid var(--line); }
 .viewer-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
 .viewer-grid.is-preview-only { grid-template-columns: minmax(0, 1fr); }
 .viewer-grid.is-preview-only .tool-editor { display: none; }
@@ -921,7 +951,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
   .tool-actions .btn-primary { grid-column: 1 / -1; }
-  .tool-preview { padding: 58px 16px 16px; }
+  .tool-preview:not(.markmap-frame) { padding: 58px 16px 16px; }
   .mermaid-figure { padding: 14px; }
   .table-wrap { padding: 8px 4px 12px 12px; }
   .table-md { padding: 14px; }
@@ -1148,6 +1178,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
       </div>
       <div class="tool-actions">
         <button type="button" class="tool-chip tool-chip-primary" data-action="copy">Copy Markdown</button>
+      <button type="button" class="tool-full" aria-pressed="false" aria-label="Full screen" title="Full screen" data-on="Full screen" data-off="Exit full screen"><svg class="tool-full-on" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5h4v4M13.5 2.5L9 7M6.5 13.5h-4v-4M2.5 13.5L7 9"/></svg><svg class="tool-full-off" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5h-4v-4M9.5 6.5l4-4M2.5 9.5h4v4M6.5 9.5l-4 4"/></svg></button>
       </div>
     </div>
     <div class="table-wrap" id="table-wrap"><table class="table-grid" id="table-grid"><thead><tr class="table-ctrl"><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="Column 1 alignment"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="Align left" title="Align left"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="Align center" title="Align center"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="Align right" title="Align right"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="0" aria-label="Delete column 1" title="Delete column 1"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="Column 2 alignment"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="Align left" title="Align left"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="Align center" title="Align center"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="Align right" title="Align right"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="1" aria-label="Delete column 2" title="Delete column 2"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="Column 3 alignment"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="Align left" title="Align left"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="Align center" title="Align center"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="true" aria-label="Align right" title="Align right"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="2" aria-label="Delete column 3" title="Delete column 3"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="Column 4 alignment"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="Align left" title="Align left"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="true" aria-label="Align center" title="Align center"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="Align right" title="Align right"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="3" aria-label="Delete column 4" title="Delete column 4"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td class="table-end"></td></tr></thead><tbody><tr class="is-head"><td data-align="none"><input class="table-cell" type="text" value="Task" aria-label="Row 1, column 1" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="Owner" aria-label="Row 1, column 2" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="Hours" aria-label="Row 1, column 3" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="Status" aria-label="Row 1, column 4" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="0" aria-label="Delete row 1" title="Delete row 1"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="Write the outline" aria-label="Row 2, column 1" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="Ana" aria-label="Row 2, column 2" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="3" aria-label="Row 2, column 3" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="Done" aria-label="Row 2, column 4" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="1" aria-label="Delete row 2" title="Delete row 2"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="Draft the chapters" aria-label="Row 3, column 1" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="Ben" aria-label="Row 3, column 2" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="12" aria-label="Row 3, column 3" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="In progress" aria-label="Row 3, column 4" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="2" aria-label="Delete row 3" title="Delete row 3"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="Copy edit" aria-label="Row 4, column 1" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="Chloe" aria-label="Row 4, column 2" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="5" aria-label="Row 4, column 3" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="Next" aria-label="Row 4, column 4" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="3" aria-label="Delete row 4" title="Delete row 4"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr></tbody></table></div>
@@ -1197,6 +1228,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </div>
 </footer>
 <script type="application/json" id="table-data">{"lang":"en","start":{"rows":[["Task","Owner","Hours","Status"],["Write the outline","Ana","3","Done"],["Draft the chapters","Ben","12","In progress"],["Copy edit","Chloe","5","Next"]],"align":["","","right","center"]},"ui":{"cell":"Row {row}, column {col}","align_group":"Column {col} alignment","align_left":"Align left","align_center":"Align center","align_right":"Align right","del_col":"Delete column {col}","del_row":"Delete row {row}"},"icons":{"x":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M4.5 4.5l7 7M11.5 4.5l-7 7\"/><\/svg>","left":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M2.5 8h7M2.5 12h9\"/><\/svg>","center":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M4.5 8h7M3.5 12h9\"/><\/svg>","right":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M6.5 8h7M4.5 12h9\"/><\/svg>"},"strings":{"copied":"Copied. Paste it into a Markdown file or a note.","copyFailed":"This browser did not allow copying.","pasted":"Pasted a table of {rows} by {cols}.","trimmed":"The grid holds {rows} rows and {cols} columns, so the rest was left out.","noTable":"There is no table in this file.","fileType":"Drop a CSV, TSV, Markdown or text file under 4 MB.","cleared":"Cleared the table.","deleted":"Deleted."}}</script>
+<script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
 <script src="/assets/tools/markdown-table-generator.js?v=ee503fb3698d" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads

@@ -16,6 +16,9 @@
   var status = document.getElementById("viewer-status");
   var fileInput = document.getElementById("viewer-file");
   var onlyButton = document.getElementById("viewer-only");
+  var phoneButton = document.getElementById("viewer-phone");
+  var countEl = document.getElementById("viewer-count");
+  var frameBox = frame.parentNode;
 
   var DRAFT_KEY = "miaoyan.markdown-viewer.draft";
   var MAX_BYTES = 5e6;
@@ -168,6 +171,10 @@
 
   var needs = { math: false, mermaid: false };
 
+  function lineAttr(token) {
+    return token.map && token.level === 0 ? ' data-line="' + token.map[0] + '"' : "";
+  }
+
   function renderMath(tex, display) {
     needs.math = true;
     if (window.katex) {
@@ -191,15 +198,22 @@
       if (lang === "mermaid") {
         needs.mermaid = true;
         var svg = svgCache[token.content];
-        return '<div class="mermaid-image-container" data-mermaid="' + esc(token.content) + '">' +
+        return '<div class="mermaid-image-container"' + lineAttr(token) + ' data-mermaid="' + esc(token.content) + '">' +
           (svg || "<pre><code>" + esc(token.content) + "</code></pre>") + "</div>\n";
       }
       var hl = window.hljs;
       var body = lang && hl && hl.getLanguage(lang)
         ? hl.highlight(token.content, { language: lang, ignoreIllegals: true }).value
         : esc(token.content);
-      return '<pre><code class="hljs' + (lang ? " language-" + esc(lang) : "") + '">' + body + "</code></pre>\n";
+      return "<pre" + lineAttr(token) + '><code class="hljs' + (lang ? " language-" + esc(lang) : "") + '">' + body + "</code></pre>\n";
     };
+    // Every top-level block carries the source line it starts on, which is
+    // how the two panes scroll together (sync below).
+    md.core.ruler.push("source_lines", function (state) {
+      state.tokens.forEach(function (token) {
+        if (token.map && token.level === 0 && token.nesting >= 0 && token.type !== "inline") token.attrSet("data-line", String(token.map[0]));
+      });
+    });
     // GitHub task list items: "[ ] " or "[x] " at the start of an item.
     md.core.ruler.after("inline", "task_lists", function (state) {
       var tokens = state.tokens;
@@ -297,6 +311,8 @@
         return;
       }
       doc.addEventListener("click", onPreviewClick);
+      frame.contentWindow.addEventListener("scroll", onPreviewScroll);
+      doc.addEventListener("load", stale, true);
       doc.addEventListener("submit", function (e) { e.preventDefault(); });
       doc.addEventListener("dragover", onDragOver);
       doc.addEventListener("drop", onDrop);
@@ -315,6 +331,8 @@
     needs.mermaid = false;
     write.innerHTML = md.render(code.value);
     finish(write);
+    anchors = null;
+    countWords();
     // Saved once everything has drawn, math and diagrams included (the render
     // after KaTeX arrives, or the diagrams' end, saves), so text that hangs
     // the page never comes back on the next visit.
@@ -372,6 +390,7 @@
       }, Promise.resolve());
     }).catch(function () { /* said by load */ }).then(function () {
       if (mine !== seq) return;
+      anchors = null;
       diagramsPending = false;
       if (edited && !mathPending()) store();
     });
@@ -398,6 +417,9 @@
   code.addEventListener("keydown", function (e) {
     if (e.key === "Escape") { tabLeaves = true; return; }
     if (e.key === "Shift" || e.key === "Control" || e.key === "Alt" || e.key === "Meta") return;
+    if (e.isComposing || e.keyCode === 229) return;
+    if ((e.metaKey || e.ctrlKey) && !e.altKey && shortcut(e)) { e.preventDefault(); tabLeaves = false; return; }
+    if (e.key === "Enter" && !e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey && continueList()) { e.preventDefault(); tabLeaves = false; return; }
     if (e.key !== "Tab" || e.altKey || e.ctrlKey || e.metaKey) { tabLeaves = false; return; }
     if (tabLeaves) { tabLeaves = false; return; }
     e.preventDefault();
@@ -424,27 +446,210 @@
   function insert(start, end, text) {
     code.setSelectionRange(start, end);
     var ok = false;
-    try { ok = document.execCommand("insertText", false, text); } catch (err) { ok = false; }
+    try { ok = document.execCommand(text ? "insertText" : "delete", false, text); } catch (err) { ok = false; }
     if (!ok) {
       code.setRangeText(text, start, end, "end");
       code.dispatchEvent(new Event("input", { bubbles: true }));
     }
   }
 
-  // The preview follows the editor's scroll by proportion.
-  code.addEventListener("scroll", function () {
+  // MiaoYan's formatting keys (its Format menu): Command-B bold, -I italic,
+  // -K link, -E inline code, Shift-Command-E code block, with the caret where
+  // the app leaves it (Helpers/TextFormatter.swift); Command-S saves the
+  // Markdown. MiaoYan's Command-T task belongs to the browser here.
+  function wrap(mark) {
+    var start = code.selectionStart;
+    var end = code.selectionEnd;
+    var sel = code.value.slice(start, end);
+    insert(start, end, mark + sel + mark);
+    var caret = sel ? end + 2 * mark.length : start + mark.length;
+    code.setSelectionRange(caret, caret);
+  }
+
+  function shortcut(e) {
+    var start = code.selectionStart;
+    var end = code.selectionEnd;
+    var sel = code.value.slice(start, end);
+    var key = (e.key || "").toLowerCase();
+    var caret;
+    if (e.shiftKey) {
+      if (key !== "e") return false;
+      insert(start, end, "```\n" + sel + (sel && sel.slice(-1) !== "\n" ? "\n" : sel ? "" : "\n") + "```" + (sel ? "\n" : ""));
+      caret = start + 3;
+    } else if (key === "b") { wrap("**"); return true; }
+    else if (key === "i") { wrap("*"); return true; }
+    else if (key === "e") { wrap("`"); return true; }
+    else if (key === "k") {
+      insert(start, end, "[" + sel + "]()");
+      caret = sel ? end + 3 : start + 1;
+    } else if (key === "s") {
+      saveMarkdown();
+      return true;
+    } else {
+      return false;
+    }
+    code.setSelectionRange(caret, caret);
+    return true;
+  }
+
+  // Return at the end of a list or quote line writes the next item's marker
+  // or the quote's >, and Return on an empty item or quote line ends it, as
+  // MiaoYan's editors do (MiaoYanCore ListContinuation); not inside a fence.
+  var ITEM = /^([ \t]*(?:>[ \t]*)*)([-*+]|\d{1,9}[.)])[ \t]+(\[[ xX]\][ \t]+|\[[ xX]\]$)?(.*)$/;
+  var QUOTE = /^([ \t]*(?:>[ \t]*)*>[ \t]+)(.*)$/;
+  var RULE = /^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$/;
+
+  function inFence(value, target) {
+    if (value.indexOf("```") < 0) return false;
+    var lines = value.split("\n");
+    var opened = -1;
+    var inside = false;
+    for (var i = 0; i < lines.length; i++) {
+      if (opened >= 0) {
+        if (/^```[ \t]*$/.test(lines[i])) {
+          inside = opened < target && target <= i;
+          opened = -1;
+          if (inside || i >= target) break;
+        }
+        continue;
+      }
+      if (lines[i].slice(0, 3) === "```") opened = i;
+      if (i >= target) break;
+    }
+    return inside;
+  }
+
+  function continueList() {
+    var value = code.value;
+    var caret = code.selectionStart;
+    if (caret !== code.selectionEnd) return false;
+    var lineStart = value.lastIndexOf("\n", caret - 1) + 1;
+    var lineEnd = value.indexOf("\n", caret);
+    if (lineEnd < 0) lineEnd = value.length;
+    if (caret !== lineEnd) return false;
+    var line = value.slice(lineStart, lineEnd);
+    if (inFence(value, value.slice(0, lineStart).split("\n").length - 1)) return false;
+    var m = RULE.test(line) ? null : ITEM.exec(line);
+    var prefix;
+    if (m) {
+      if (!m[4].trim()) { insert(lineStart, lineEnd, ""); return true; }
+      var n = /^(\d+)([.)])$/.exec(m[2]);
+      prefix = m[1] + (n ? (+n[1] + 1) + n[2] : m[2]) + " " + (m[3] ? "[ ] " : "");
+    } else if ((m = QUOTE.exec(line))) {
+      if (!m[2].trim()) { insert(lineStart, lineEnd, ""); return true; }
+      prefix = m[1];
+    } else {
+      return false;
+    }
+    insert(caret, caret, "\n" + prefix);
+    return true;
+  }
+
+  // ---- Scrolling together --------------------------------------------------------
+  // Each top-level block in the preview carries its source line; that line's
+  // top in the editor (wrapping included, from the highlighter) and the
+  // block's top in the preview make a pair, and a scroll in either pane moves
+  // the other along straight lines between neighbouring pairs, so a long
+  // table or a tall diagram never pulls the panes apart, as doocs/md's
+  // block-mapped sync does. A scroll this code made is not sent back.
+  var anchors = null;
+  var echo = { code: -1, preview: -1 };
+
+  function scroller() {
     var doc = frame.contentDocument;
-    var el = doc && doc.scrollingElement;
-    if (!el) return;
-    var room = code.scrollHeight - code.clientHeight;
-    el.scrollTop = room > 0 ? (code.scrollTop / room) * (el.scrollHeight - el.clientHeight) : 0;
+    return doc && doc.scrollingElement;
+  }
+
+  function buildAnchors() {
+    var el = scroller();
+    var tops = window.MiaoYanHighlight && window.MiaoYanHighlight.lineTops(code);
+    if (!el || !write || !tops || !code.offsetParent) return null;
+    var codeMax = code.scrollHeight - code.clientHeight;
+    var viewMax = el.scrollHeight - el.clientHeight;
+    var base = write.getBoundingClientRect().top;
+    var out = [[0, 0]];
+    Array.prototype.forEach.call(write.querySelectorAll("[data-line]"), function (block) {
+      var a = tops[+block.getAttribute("data-line")];
+      var b = block.getBoundingClientRect().top - base;
+      var last = out[out.length - 1];
+      // Blocks past either pane's last scroll position fall to the end pair,
+      // so the bottom of one pane always meets the bottom of the other.
+      if (a === undefined || a >= codeMax || b >= viewMax) return;
+      if (a > last[0] && b > last[1]) out.push([a, b]);
+    });
+    var end = out[out.length - 1];
+    if (codeMax > end[0] && viewMax > end[1]) out.push([codeMax, viewMax]);
+    return out;
+  }
+
+  function along(y, from, to) {
+    var a = anchors;
+    if (a.length < 2) return 0;
+    for (var i = 1; i < a.length; i++) {
+      if (y <= a[i][from] || i === a.length - 1) {
+        var p = a[i - 1];
+        var q = a[i];
+        var span = q[from] - p[from];
+        var t = span > 0 ? Math.min(1, Math.max(0, (y - p[from]) / span)) : 0;
+        return p[to] + t * (q[to] - p[to]);
+      }
+    }
+    return 0;
+  }
+
+  code.addEventListener("scroll", function () {
+    if (echo.code >= 0 && Math.abs(code.scrollTop - echo.code) < 2) { echo.code = -1; return; }
+    echo.code = -1;
+    var el = scroller();
+    if (!el || !(anchors = anchors || buildAnchors())) return;
+    var y = Math.round(along(code.scrollTop, 0, 1));
+    if (Math.abs(el.scrollTop - y) < 1) return;
+    echo.preview = y;
+    el.scrollTop = y;
   });
+
+  function onPreviewScroll() {
+    var el = scroller();
+    if (!el) return;
+    if (echo.preview >= 0 && Math.abs(el.scrollTop - echo.preview) < 2) { echo.preview = -1; return; }
+    echo.preview = -1;
+    if (!(anchors = anchors || buildAnchors())) return;
+    var y = Math.round(along(el.scrollTop, 1, 0));
+    if (Math.abs(code.scrollTop - y) < 1) return;
+    echo.code = y;
+    code.scrollTop = y;
+  }
+
+  function stale() { anchors = null; }
+  window.addEventListener("resize", stale);
 
   onlyButton.addEventListener("click", function () {
     var on = onlyButton.getAttribute("aria-pressed") !== "true";
     onlyButton.setAttribute("aria-pressed", String(on));
     grid.classList.toggle("is-preview-only", on);
+    stale();
   });
+
+  // The preview at a phone's width, where a WeChat article is read.
+  phoneButton.addEventListener("click", function () {
+    var on = phoneButton.getAttribute("aria-pressed") !== "true";
+    phoneButton.setAttribute("aria-pressed", String(on));
+    frameBox.classList.toggle("is-phone", on);
+    stale();
+  });
+
+  // Words counted as MiaoYan counts them (String+.swift noteWordCount): each
+  // CJK character is one, each run of letters and digits is one, front matter
+  // left out.
+  var CJK = "\\u3040-\\u30FF\\u3400-\\u4DBF\\u4E00-\\u9FFF\\uAC00-\\uD7AF\\uF900-\\uFAFF\\u{20000}-\\u{2FA1F}";
+  var WORDS = new RegExp("[" + CJK + "]|(?:(?![" + CJK + "])[\\p{L}\\p{M}\\p{N}])(?:(?![" + CJK + "])[\\p{L}\\p{M}\\p{N}'\\u2019])*", "gu");
+  var number = new Intl.NumberFormat(data.lang === "zh" ? "zh-CN" : "en-US");
+
+  function countWords() {
+    var text = code.value.replace(/^---\n[\s\S]*?\n---(?:\n|$)/, "");
+    var n = (text.match(WORDS) || []).length;
+    countEl.textContent = fill(n === 1 ? S.word : S.words, { n: number.format(n) });
+  }
 
   // ---- Files -------------------------------------------------------------------
 
@@ -537,7 +742,7 @@
       // The preview runs none of the note's script, and the file does not either.
       var csp = '<meta http-equiv="Content-Security-Policy" content="script-src \'none\'">';
       var html = shell(csp + "<style>" + sheets.join("\n") + "</style>" + math).replace("<title></title>", title) +
-        write.innerHTML + "</div></body></html>\n";
+        write.innerHTML.replace(/ data-line="\d+"/g, "") + "</div></body></html>\n";
       download(new Blob([html], { type: "text/html" }), baseName() + ".html");
       track("tool_export", { tool: "viewer", format: "html" });
     });
@@ -551,17 +756,259 @@
     return Promise.resolve();
   }
 
-  // The rendered note as rich text, for a document, an email or a CMS.
+  function saveMarkdown() {
+    var name = /\.(md|markdown|mdown|mkd|txt)$/i.test(fileName) ? fileName : baseName() + ".md";
+    download(new Blob([code.value], { type: "text/markdown;charset=utf-8" }), name);
+    track("tool_export", { tool: "viewer", format: "md" });
+    return Promise.resolve();
+  }
+
+  // ---- Copy with its styles -----------------------------------------------------
+  // Editors that take pasted HTML (WeChat's article editor, a mail, a CMS)
+  // drop <style> and class, so the copy carries each element's computed style
+  // inline, read from a copy of the preview laid out offscreen in the same
+  // frame. What those editors cannot hold becomes what they can, after
+  // doocs/md's WeChat copy (services/export/clipboard-dom.ts): MiaoYan's quote
+  // bar, an absolutely placed ::before, becomes a left border on a <section>
+  // (WeChat paints its own bar on <blockquote>); task boxes become ☐ and ☑;
+  // code keeps its spaces and line breaks as &nbsp; and <br>; a nested list
+  // follows its item; diagrams become PNG images; formulas stay as their TeX.
+  // On the Chinese page, written for WeChat articles, where a link to another
+  // site does not open, links become numbered references at the end.
+  var SVG_NS = "http://www.w3.org/2000/svg";
+  var INHERITED = ["color", "font-family", "font-size", "font-style", "font-weight", "line-height", "letter-spacing", "text-align", "text-indent", "word-break", "overflow-wrap", "white-space"];
+  var SIDES = ["top", "right", "bottom", "left"];
+  var BLOCK = { P: 1, H1: 1, H2: 1, H3: 1, H4: 1, H5: 1, H6: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, PRE: 1, TABLE: 1, HR: 1, DIV: 1, SECTION: 1, FIGURE: 1, IMG: 1 };
+  var NONE = { "0px": 1, "none": 1, "normal": 1, "auto": 1, "rgba(0, 0, 0, 0)": 1, "transparent": 1, "baseline": 1, "visible": 1, "separate": 1 };
+
+  function styleOf(win, el, parent) {
+    var cs = win.getComputedStyle(el);
+    var ps = parent ? win.getComputedStyle(parent) : null;
+    var out = [];
+    function put(k, v) { out.push(k + ": " + v); }
+    INHERITED.forEach(function (k) {
+      var v = cs.getPropertyValue(k);
+      if (!ps || ps.getPropertyValue(k) !== v) put(k, v);
+    });
+    var block = BLOCK[el.tagName];
+    if (block || cs.display !== "inline") put("display", cs.display);
+    ["margin", "padding"].forEach(function (box) {
+      SIDES.forEach(function (s) {
+        var v = cs.getPropertyValue(box + "-" + s);
+        if (block || !NONE[v]) put(box + "-" + s, v);
+      });
+    });
+    SIDES.forEach(function (s) {
+      var style = cs.getPropertyValue("border-" + s + "-style");
+      if (style !== "none" && style !== "hidden") {
+        put("border-" + s, cs.getPropertyValue("border-" + s + "-width") + " " + style + " " + cs.getPropertyValue("border-" + s + "-color"));
+      }
+    });
+    ["border-radius", "background-color", "vertical-align", "border-collapse", "overflow-x", "max-width"].forEach(function (k) {
+      var v = cs.getPropertyValue(k);
+      if (!NONE[v]) put(k, v);
+    });
+    if (cs.textDecorationLine !== "none") put("text-decoration", cs.textDecorationLine + " " + cs.textDecorationColor);
+    if (el.tagName === "UL" || el.tagName === "OL" || el.tagName === "LI") put("list-style-type", cs.listStyleType);
+    if (el.tagName === "IMG") { put("max-width", "100%"); put("height", "auto"); }
+    return out.join("; ");
+  }
+
+  // A diagram as a PNG at twice its size, for editors that drop SVG.
+  function diagramImage(svg) {
+    var r = svg.getBoundingClientRect();
+    var w = Math.round(r.width);
+    var h = Math.round(r.height);
+    if (!w || !h) return Promise.resolve(null);
+    var copy = svg.cloneNode(true);
+    copy.setAttribute("width", w);
+    copy.setAttribute("height", h);
+    copy.style.maxWidth = "none";
+    var xml = new XMLSerializer().serializeToString(copy);
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var canvas = document.createElement("canvas");
+          canvas.width = w * 2;
+          canvas.height = h * 2;
+          var g = canvas.getContext("2d");
+          g.scale(2, 2);
+          g.drawImage(img, 0, 0, w, h);
+          resolve({ src: canvas.toDataURL("image/png"), width: w });
+        } catch (e) { resolve(null); }
+      };
+      img.onerror = function () { resolve(null); };
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xml);
+    });
+  }
+
+  function each(root, selector, fn) {
+    Array.prototype.slice.call(root.querySelectorAll(selector)).forEach(fn);
+  }
+
+  function retag(el, tag) {
+    var next = el.ownerDocument.createElement(tag);
+    Array.prototype.forEach.call(el.attributes, function (a) { next.setAttribute(a.name, a.value); });
+    while (el.firstChild) next.appendChild(el.firstChild);
+    el.parentNode.replaceChild(next, el);
+    return next;
+  }
+
+  function styledCopy() {
+    var doc = frame.contentDocument;
+    var win = frame.contentWindow;
+    var box = write.cloneNode(true);
+    var notes = { links: 0, math: false };
+    write.removeAttribute("id");
+    box.style.cssText = "position: absolute; left: -100000px; top: 0; width: " + write.clientWidth + "px";
+    doc.body.appendChild(box);
+    var mounted = box;
+
+    var diagrams = Array.prototype.slice.call(box.querySelectorAll(".mermaid-image-container svg"));
+    return Promise.all(diagrams.map(diagramImage)).then(function (images) {
+      images.forEach(function (image, i) {
+        if (!image) return;
+        var img = doc.createElement("img");
+        img.src = image.src;
+        img.alt = "";
+        img.setAttribute("data-width", image.width);
+        diagrams[i].parentNode.replaceChild(img, diagrams[i]);
+      });
+      each(box, ".katex-display, .katex", function (k) {
+        if (!k.isConnected) return;
+        var tex = k.querySelector('annotation[encoding="application/x-tex"]');
+        if (!tex) return;
+        var display = k.classList.contains("katex-display");
+        var c = doc.createElement("code");
+        c.textContent = display ? "$$" + tex.textContent + "$$" : "$" + tex.textContent + "$";
+        notes.math = true;
+        if (display) {
+          var p = doc.createElement("p");
+          p.appendChild(c);
+          k.parentNode.replaceChild(p, k);
+        } else {
+          k.parentNode.replaceChild(c, k);
+        }
+      });
+      each(box, "input[type=checkbox]", function (input) {
+        var mark = doc.createElement("span");
+        mark.textContent = input.checked ? "☑ " : "☐ ";
+        input.parentNode.replaceChild(mark, input);
+      });
+      var refs = [];
+      if (data.wechat) {
+        each(box, "a[href]", function (a) {
+          var href = a.getAttribute("href");
+          if (!/^https?:/i.test(href) || /^https?:\/\/mp\.weixin\.qq\.com\//i.test(href)) return;
+          var text = a.textContent.trim();
+          var span = doc.createElement("span");
+          while (a.firstChild) span.appendChild(a.firstChild);
+          a.parentNode.replaceChild(span, a);
+          if (text === href) return;
+          refs.push([text, href]);
+          var sup = doc.createElement("sup");
+          sup.textContent = "[" + refs.length + "]";
+          span.parentNode.insertBefore(sup, span.nextSibling);
+        });
+        if (refs.length) {
+          var title = doc.createElement("h4");
+          title.textContent = S.references;
+          box.appendChild(title);
+          refs.forEach(function (ref, i) {
+            var p = doc.createElement("p");
+            p.className = "copy-ref";
+            p.textContent = "[" + (i + 1) + "] " + ref[0] + ": " + ref[1];
+            box.appendChild(p);
+          });
+        }
+        notes.links = refs.length;
+      }
+
+      // Read every style before any element changes.
+      var all = [box].concat(Array.prototype.slice.call(box.querySelectorAll("*"))).filter(function (el) {
+        return el.namespaceURI !== SVG_NS;
+      });
+      var styles = all.map(function (el) { return styleOf(win, el, el === box ? null : el.parentElement); });
+      var bars = Array.prototype.slice.call(box.querySelectorAll("blockquote")).map(function (q) {
+        var bar = win.getComputedStyle(q, "::before");
+        return [q, bar.width, bar.backgroundColor, parseFloat(win.getComputedStyle(q).paddingLeft) || 0];
+      });
+      var secondary = win.getComputedStyle(box).getPropertyValue("--text-secondary").trim();
+      all.forEach(function (el, i) { el.setAttribute("style", styles[i]); });
+
+      bars.forEach(function (b) {
+        var width = parseFloat(b[1]) || 0;
+        if (width && b[2] !== "rgba(0, 0, 0, 0)") {
+          b[0].style.borderLeft = width + "px solid " + b[2];
+          b[0].style.paddingLeft = Math.max(0, b[3] - width) + "px";
+        }
+        retag(b[0], "section");
+      });
+      // The PNG is drawn at twice the diagram's size; it shows at its size.
+      each(box, "img[data-width]", function (img) {
+        img.style.width = img.getAttribute("data-width") + "px";
+        img.style.margin = "0 auto";
+        img.removeAttribute("data-width");
+      });
+      each(box, ".copy-ref", function (p) {
+        p.style.fontSize = "14px";
+        p.style.wordBreak = "break-all";
+        if (secondary) p.style.color = secondary;
+      });
+      each(box, "pre", function (pre) {
+        var walker = doc.createTreeWalker(pre, NodeFilter.SHOW_TEXT);
+        var texts = [];
+        while (walker.nextNode()) texts.push(walker.currentNode);
+        texts.forEach(function (node) {
+          var parts = node.data.replace(/\t/g, "    ").split("\n");
+          var frag = doc.createDocumentFragment();
+          parts.forEach(function (part, i) {
+            if (i) frag.appendChild(doc.createElement("br"));
+            if (part) frag.appendChild(doc.createTextNode(part.replace(/ /g, "\u00a0")));
+          });
+          node.parentNode.replaceChild(frag, node);
+        });
+        // A trailing newline would leave an empty last line.
+        var last = pre.querySelector("code") || pre;
+        while (last.lastChild && last.lastChild.nodeName === "BR") last.removeChild(last.lastChild);
+        pre.style.overflowX = "auto";
+        pre.style.whiteSpace = "nowrap";
+        pre.setAttribute("data-ignore-width", "");
+      });
+      each(box, "table, .table-scroll", function (el) { el.setAttribute("data-ignore-width", ""); });
+      each(box, "li > ul, li > ol", function (list) { list.parentNode.parentNode.insertBefore(list, list.parentNode.nextSibling); });
+      each(box, 'a[href^="#"]', function (a) { a.removeAttribute("href"); });
+      [box].concat(Array.prototype.slice.call(box.querySelectorAll("[class], [id], [data-line], [data-mermaid], [target], [rel]"))).forEach(function (el) {
+        ["class", "id", "data-line", "data-mermaid", "target", "rel"].forEach(function (k) { el.removeAttribute(k); });
+      });
+      box.style.position = "";
+      box.style.left = "";
+      box.style.top = "";
+      box.style.width = "";
+      var root = mounted = retag(box, "section");
+      return { html: root.outerHTML, text: root.innerText, notes: notes };
+    }).then(function (copy) {
+      mounted.remove();
+      write.id = "write";
+      return copy;
+    }, function (err) {
+      mounted.remove();
+      write.id = "write";
+      throw err;
+    });
+  }
+
   function copyFormatted() {
-    var html = write.innerHTML;
-    var text = write.innerText;
-    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write && window.isSecureContext) {
-      return navigator.clipboard.write([new ClipboardItem({
-        "text/html": new Blob([html], { type: "text/html" }),
-        "text/plain": new Blob([text], { type: "text/plain" })
-      })]).then(done);
-    }
-    return new Promise(function (resolve, reject) {
+    return styledCopy().then(function (copy) {
+      var html = copy.html;
+      var text = copy.text;
+      if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write && window.isSecureContext) {
+        return navigator.clipboard.write([new ClipboardItem({
+          "text/html": new Blob([html], { type: "text/html" }),
+          "text/plain": new Blob([text], { type: "text/plain" })
+        })]).then(function () { return copy.notes; });
+      }
       var onCopy = function (e) {
         e.clipboardData.setData("text/html", html);
         e.clipboardData.setData("text/plain", text);
@@ -571,16 +1018,17 @@
       var ok = false;
       try { ok = document.execCommand("copy"); } catch (err) { ok = false; }
       document.removeEventListener("copy", onCopy);
-      ok ? resolve() : reject(new Error("copy"));
-    }).then(done);
-    function done() {
-      say(S.copied);
-      track("tool_copy", { tool: "viewer", kind: "formatted" });
-    }
+      if (!ok) throw new Error("copy");
+      return copy.notes;
+    }).then(function (notes) {
+      var said = notes.links ? fill(S.copiedLinks, { n: notes.links }) : S.copied;
+      say(notes.math ? said + S.copiedMath : said);
+      track("tool_copy", { tool: "viewer", kind: data.wechat ? "wechat" : "formatted" });
+    });
   }
 
-  var actions = { pdf: exportPdf, html: exportHtml, copy: copyFormatted };
-  var failures = { pdf: S.exportFailed, html: S.exportFailed, copy: S.copyFailed };
+  var actions = { pdf: exportPdf, html: exportHtml, md: saveMarkdown, copy: copyFormatted };
+  var failures = { pdf: S.exportFailed, html: S.exportFailed, md: S.exportFailed, copy: S.copyFailed };
   tool.querySelector(".tool-actions").addEventListener("click", function (e) {
     var button = e.target.closest("[data-action]");
     if (!button || !write) return;

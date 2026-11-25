@@ -105,14 +105,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -724,6 +724,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
+.tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -752,6 +753,32 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-bar > :is(.tool-templates, .table-bar) { flex: 1 1 auto; margin: 0; }
 .tool-bar > .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 0 auto; }
 .tool-chip-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+/* The full-screen switch: an icon the height of a chip, at the end of the row. */
+.tool-full { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 999px; background: var(--ivory); color: var(--olive); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.tool-full:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-full:focus { outline: none; }
+.tool-full svg { width: 16px; height: 16px; }
+.tool-full .tool-full-off, .tool-full[aria-pressed="true"] .tool-full-on { display: none; }
+.tool-full[aria-pressed="true"] .tool-full-off { display: block; }
+/* Full screen: the tool alone on the page's ground, the panes in the height
+   tool-shell.js measures under the toolbar (--full-h). */
+.tool.is-full {
+  position: fixed; inset: 0; z-index: 100; overflow: auto;
+  padding: 16px max(16px, min(32px, 2vw)) 12px; background: var(--parchment);
+}
+.tool.is-full:fullscreen { width: 100%; height: 100%; }
+.tool.is-full::backdrop { background: var(--parchment); }
+html.has-full-tool { overflow: hidden; }
+.tool.is-full .tool-foot { margin-top: 8px; }
+.tool-page .tool.is-full .tool-grid, .tool.is-full.table-tool, .tool.is-full.nnw-tool { --tool-h: var(--full-h, 600px); }
+@media (max-width: 880px) {
+  /* Stacked panes share the height. */
+  .tool.is-full .tool-grid > :is(.tool-editor, .tool-preview, .viewer-frame) { height: calc((var(--full-h, 600px) - 16px) / 2); }
+  .tool.is-full .tool-grid.is-preview-only > .viewer-frame { height: var(--full-h, 600px); }
+  .tool.is-full .nnw-frame { height: var(--full-h, 600px); }
+  .tool.is-full .table-wrap { max-height: calc(var(--full-h, 600px) * 0.55); }
+  .tool.is-full .table-md { max-height: calc(var(--full-h, 600px) * 0.45 - 16px); }
+}
 .tool-chip-primary:hover { background: var(--brand-light); border-color: var(--brand-light); }
 /* Panes that hold Markdown read as MiaoYan's editor: its paper and ink, the
    system pairing at 16px on a 1.3 line plus 3pt, tracked 0.02em
@@ -846,12 +873,15 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .table-md .w { display: inline-block; width: 2ch; text-align: center; }
 /* The Markdown viewer: the editor beside an iframe that holds MiaoYan's
    preview stylesheets on its paper, so neither page's styles reach the other. */
-.viewer-only { margin-left: auto; }
 /* Prose wraps here; line numbers serve the diagram editor's error line. */
 .viewer-code { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 18px; }
 .viewer-open { position: relative; }
 .viewer-open:focus-within { background: var(--warm-sand); }
 .viewer-frame { height: var(--tool-h); overflow: hidden; background: #FDFCF9; border: 1px solid var(--line); border-radius: 14px; }
+/* Phone width: the preview laid out at 375px, where a WeChat article is read. */
+.viewer-frame.is-phone { background: var(--ivory); }
+@media (max-width: 560px) { #viewer-phone { display: none; } }
+.viewer-frame.is-phone iframe { display: block; width: min(375px, 100%); margin: 0 auto; background: #FDFCF9; border-inline: 1px solid var(--line); }
 .viewer-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
 .viewer-grid.is-preview-only { grid-template-columns: minmax(0, 1fr); }
 .viewer-grid.is-preview-only .tool-editor { display: none; }
@@ -921,7 +951,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
   .tool-actions .btn-primary { grid-column: 1 / -1; }
-  .tool-preview { padding: 58px 16px 16px; }
+  .tool-preview:not(.markmap-frame) { padding: 58px 16px 16px; }
   .mermaid-figure { padding: 14px; }
   .table-wrap { padding: 8px 4px 12px 12px; }
   .table-md { padding: 14px; }
@@ -1138,7 +1168,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <main class="blog-index">
   <h1 class="section-title">Markdown Tools</h1>
   <p class="section-lede">Small tools for writing Markdown, free and in your browser.</p>
-  <ul class="blog-cards"><li class="blog-card"><a href="/tools/mermaid-editor/"><span class="blog-card-body"><h2 class="blog-card-title">Mermaid Live Editor</h2><span class="blog-card-desc">Write Mermaid and the diagram draws as you type, then download it or copy it into a note.</span></span></a></li><li class="blog-card"><a href="/tools/markdown-table-generator/"><span class="blog-card-body"><h2 class="blog-card-title">Markdown Table Generator</h2><span class="blog-card-desc">Edit a table, or paste cells from Excel, Google Sheets, a CSV or a Markdown table, and copy the Markdown with its columns lined up.</span></span></a></li><li class="blog-card"><a href="/tools/markdown-viewer/"><span class="blog-card-body"><h2 class="blog-card-title">Markdown Viewer</h2><span class="blog-card-desc">Open or paste Markdown and read it in MiaoYan&#x27;s preview styling as you type, with math, code highlighting and Mermaid diagrams, then save it as a PDF or HTML.</span></span></a></li><li class="blog-card"><a href="/tools/markmap-editor/"><span class="blog-card-body"><h2 class="blog-card-title">Markmap Editor</h2><span class="blog-card-desc">Write a Markdown outline and watch it grow into a mind map in MiaoYan&#x27;s colours, fold and zoom it, then download it as PNG or SVG.</span></span></a></li><li class="blog-card"><a href="/tools/chinese-typography-cleaner/"><span class="blog-card-body"><h2 class="blog-card-title">Chinese Typography Cleaner</h2><span class="blog-card-desc">Paste Chinese text or Markdown to add a space between Chinese and English or digits and fix half-width punctuation, with every change marked and code and links left alone.</span></span></a></li><li class="blog-card"><a href="/tools/netnewswire-theme/"><span class="blog-card-body"><h2 class="blog-card-title">MiaoYan Theme for NetNewsWire</h2><span class="blog-card-desc">A reading theme for the NetNewsWire RSS reader, with looser line height and tracking for Chinese, blue links and a green accent, light and dark following the system, installed with one click.</span></span></a></li></ul>
+  <ul class="blog-cards"><li class="blog-card"><a href="/tools/mermaid-editor/"><span class="blog-card-body"><h2 class="blog-card-title">Mermaid Live Editor</h2><span class="blog-card-desc">Write Mermaid and the diagram draws as you type, then download it or copy it into a note.</span></span></a></li><li class="blog-card"><a href="/tools/markdown-table-generator/"><span class="blog-card-body"><h2 class="blog-card-title">Markdown Table Generator</h2><span class="blog-card-desc">Edit a table, or paste cells from Excel, Google Sheets, a CSV or a Markdown table, and copy the Markdown with its columns lined up.</span></span></a></li><li class="blog-card"><a href="/tools/markdown-viewer/"><span class="blog-card-body"><h2 class="blog-card-title">Markdown Viewer</h2><span class="blog-card-desc">Open or paste Markdown and read it in MiaoYan&#x27;s preview styling as you type, with math, code highlighting and Mermaid diagrams, then copy it with its styles or save it as PDF, HTML or Markdown.</span></span></a></li><li class="blog-card"><a href="/tools/markmap-editor/"><span class="blog-card-body"><h2 class="blog-card-title">Markmap Editor</h2><span class="blog-card-desc">Write a Markdown outline and watch it grow into a mind map in MiaoYan&#x27;s colours, fold and zoom it, then download it as PNG or SVG.</span></span></a></li><li class="blog-card"><a href="/tools/chinese-typography-cleaner/"><span class="blog-card-body"><h2 class="blog-card-title">Chinese Typography Cleaner</h2><span class="blog-card-desc">Paste Chinese text or Markdown to add a space between Chinese and English or digits and fix half-width punctuation, with every change marked and code and links left alone.</span></span></a></li><li class="blog-card"><a href="/tools/netnewswire-theme/"><span class="blog-card-body"><h2 class="blog-card-title">MiaoYan Theme for NetNewsWire</h2><span class="blog-card-desc">A reading theme for the NetNewsWire RSS reader, with looser line height and tracking for Chinese, blue links and a green accent, light and dark following the system, installed with one click.</span></span></a></li></ul>
 </main>
 </div>
 <footer>

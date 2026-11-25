@@ -24,8 +24,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -107,14 +107,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=b1d789fd795b") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=75a844dc96b4") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=fe418edc502c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e824d05f342e") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -726,6 +726,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
+.tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -754,6 +755,32 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-bar > :is(.tool-templates, .table-bar) { flex: 1 1 auto; margin: 0; }
 .tool-bar > .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 0 auto; }
 .tool-chip-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+/* The full-screen switch: an icon the height of a chip, at the end of the row. */
+.tool-full { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 999px; background: var(--ivory); color: var(--olive); cursor: pointer; transition: background 0.15s, color 0.15s; }
+.tool-full:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-full:focus { outline: none; }
+.tool-full svg { width: 16px; height: 16px; }
+.tool-full .tool-full-off, .tool-full[aria-pressed="true"] .tool-full-on { display: none; }
+.tool-full[aria-pressed="true"] .tool-full-off { display: block; }
+/* Full screen: the tool alone on the page's ground, the panes in the height
+   tool-shell.js measures under the toolbar (--full-h). */
+.tool.is-full {
+  position: fixed; inset: 0; z-index: 100; overflow: auto;
+  padding: 16px max(16px, min(32px, 2vw)) 12px; background: var(--parchment);
+}
+.tool.is-full:fullscreen { width: 100%; height: 100%; }
+.tool.is-full::backdrop { background: var(--parchment); }
+html.has-full-tool { overflow: hidden; }
+.tool.is-full .tool-foot { margin-top: 8px; }
+.tool-page .tool.is-full .tool-grid, .tool.is-full.table-tool, .tool.is-full.nnw-tool { --tool-h: var(--full-h, 600px); }
+@media (max-width: 880px) {
+  /* Stacked panes share the height. */
+  .tool.is-full .tool-grid > :is(.tool-editor, .tool-preview, .viewer-frame) { height: calc((var(--full-h, 600px) - 16px) / 2); }
+  .tool.is-full .tool-grid.is-preview-only > .viewer-frame { height: var(--full-h, 600px); }
+  .tool.is-full .nnw-frame { height: var(--full-h, 600px); }
+  .tool.is-full .table-wrap { max-height: calc(var(--full-h, 600px) * 0.55); }
+  .tool.is-full .table-md { max-height: calc(var(--full-h, 600px) * 0.45 - 16px); }
+}
 .tool-chip-primary:hover { background: var(--brand-light); border-color: var(--brand-light); }
 /* Panes that hold Markdown read as MiaoYan's editor: its paper and ink, the
    system pairing at 16px on a 1.3 line plus 3pt, tracked 0.02em
@@ -848,12 +875,15 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .table-md .w { display: inline-block; width: 2ch; text-align: center; }
 /* The Markdown viewer: the editor beside an iframe that holds MiaoYan's
    preview stylesheets on its paper, so neither page's styles reach the other. */
-.viewer-only { margin-left: auto; }
 /* Prose wraps here; line numbers serve the diagram editor's error line. */
 .viewer-code { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 18px; }
 .viewer-open { position: relative; }
 .viewer-open:focus-within { background: var(--warm-sand); }
 .viewer-frame { height: var(--tool-h); overflow: hidden; background: #FDFCF9; border: 1px solid var(--line); border-radius: 14px; }
+/* Phone width: the preview laid out at 375px, where a WeChat article is read. */
+.viewer-frame.is-phone { background: var(--ivory); }
+@media (max-width: 560px) { #viewer-phone { display: none; } }
+.viewer-frame.is-phone iframe { display: block; width: min(375px, 100%); margin: 0 auto; background: #FDFCF9; border-inline: 1px solid var(--line); }
 .viewer-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
 .viewer-grid.is-preview-only { grid-template-columns: minmax(0, 1fr); }
 .viewer-grid.is-preview-only .tool-editor { display: none; }
@@ -923,7 +953,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
   .tool-actions .btn-primary { grid-column: 1 / -1; }
-  .tool-preview { padding: 58px 16px 16px; }
+  .tool-preview:not(.markmap-frame) { padding: 58px 16px 16px; }
   .mermaid-figure { padding: 14px; }
   .table-wrap { padding: 8px 4px 12px 12px; }
   .table-md { padding: 14px; }
@@ -1149,6 +1179,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
         <button type="button" class="tool-chip" data-action="svg">下载 SVG</button>
         <button type="button" class="tool-chip" data-action="markdown">复制 Markdown</button>
         <button type="button" class="tool-chip" data-action="link">复制链接</button>
+      <button type="button" class="tool-full" aria-pressed="false" aria-label="全屏" title="全屏" data-on="全屏" data-off="退出全屏"><svg class="tool-full-on" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5h4v4M13.5 2.5L9 7M6.5 13.5h-4v-4M2.5 13.5L7 9"/></svg><svg class="tool-full-off" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5h-4v-4M9.5 6.5l4-4M2.5 9.5h4v4M6.5 9.5l-4 4"/></svg></button>
       </div>
     </div>
     <div class="tool-grid">
@@ -1213,6 +1244,7 @@ flowchart LR
   </div>
 </footer>
 <script type="application/json" id="mermaid-data">{"lang":"zh","default":"flowchart","templates":[{"id":"flowchart","label":"流程图","kind":"流程图","code":"flowchart LR\n    A[写笔记] --> B{写好了吗}\n    B -->|是| C[发布]\n    B -->|否| D[修改]\n    D --> B","svg":"/img/mermaid/6283e98ec5e4.svg","width":657,"height":250,"syntax":"/zh/blog/mermaid-flowchart/","syntaxLabel":"流程图写法"},{"id":"sequence","label":"时序图","kind":"时序图","code":"sequenceDiagram\n    participant U as 用户\n    participant A as 应用\n    participant S as 服务器\n    U->>A: 登录\n    A->>S: 校验密码\n    S-->>A: 返回令牌\n    A-->>U: 欢迎回来","svg":"/img/mermaid/caa45cb7f61c.svg","width":650,"height":347,"syntax":"/zh/blog/mermaid-sequence-diagram/","syntaxLabel":"时序图写法"},{"id":"timeline","label":"时间线","kind":"时间线","code":"timeline\n    title 写一本书\n    section 初稿\n        一月 : 列提纲\n        二月 : 写前几章 : 外出调研\n    section 修改\n        三月 : 第二稿\n        四月 : 校对","svg":"/img/mermaid/ca5365823d47.svg","width":1190,"height":642,"syntax":"/zh/blog/mermaid-timeline/","syntaxLabel":"时间线写法"},{"id":"gantt","label":"甘特图","kind":"甘特图","code":"gantt\n    title 发布计划\n    dateFormat YYYY-MM-DD\n    section 开发\n        设计 :a1, 2026-12-01, 4d\n        编码 :a2, after a1, 6d\n    section 上线\n        测试 :a3, after a2, 3d\n        发布 :milestone, after a3, 0d","svg":"/img/mermaid/c4bc04b8a0ba.svg","width":1264,"height":196,"syntax":"/zh/blog/mermaid-gantt-chart/","syntaxLabel":"甘特图写法"},{"id":"class","label":"类图","kind":"类图","code":"classDiagram\n    class Folder {\n        +String name\n        +notes() List~Note~\n    }\n    class Note {\n        +String title\n        +Date modified\n        +save()\n    }\n    Folder \"1\" --> \"*\" Note : 包含","svg":"/img/mermaid/966f6d48a281.svg","width":215,"height":385,"syntax":"/zh/blog/mermaid-class-diagram/","syntaxLabel":"类图写法"},{"id":"state","label":"状态图","kind":"状态图","code":"stateDiagram-v2\n    state \"草稿\" as Draft\n    state \"审阅\" as Review\n    state \"已发布\" as Published\n    [*] --> Draft\n    Draft --> Review : 提交\n    Review --> Draft : 要求修改\n    Review --> Published : 通过\n    Published --> [*]","svg":"/img/mermaid/e2c7f27acec8.svg","width":140,"height":505,"syntax":null,"syntaxLabel":"状态图写法"},{"id":"er","label":"ER 图","kind":"ER 图","code":"erDiagram\n    AUTHOR ||--o{ NOTE : 撰写\n    NOTE }o--o{ TAG : 标记\n    AUTHOR {\n        string name\n        string email\n    }\n    NOTE {\n        string title\n        date created\n    }","svg":"/img/mermaid/baea98ef8f39.svg","width":171,"height":511,"syntax":"/zh/blog/mermaid-er-diagram/","syntaxLabel":"ER 图写法"},{"id":"pie","label":"饼图","kind":"饼图","code":"pie title 写作时间都花在哪\n    \"写作\" : 45\n    \"修改\" : 30\n    \"查资料\" : 25","svg":"/img/mermaid/51ae00406d4a.svg","width":563,"height":450,"syntax":null,"syntaxLabel":"饼图写法"},{"id":"mindmap","label":"思维导图","kind":"思维导图","code":"mindmap\n  root((笔记))\n    写作\n      草稿\n      想法\n    阅读\n      书\n      文章\n    工作\n      会议","svg":"/img/mermaid/fe42d07845af.svg","width":529,"height":359,"syntax":null,"syntaxLabel":"思维导图写法"},{"id":"xychart","label":"XY 图表","kind":"XY 图表","code":"xychart-beta\n    title \"每月写的笔记\"\n    x-axis [\"1月\", \"2月\", \"3月\", \"4月\", \"5月\", \"6月\"]\n    y-axis \"篇数\" 0 --> 40\n    bar [12, 18, 25, 22, 30, 36]\n    line [12, 18, 25, 22, 30, 36]","svg":"/img/mermaid/b54554d6aa4e.svg","width":700,"height":500,"syntax":null,"syntaxLabel":"XY 图表写法"}],"config":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"vendor":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"preview":"{kind}预览","strings":{"loading":"正在加载 Mermaid…","loadFailed":"Mermaid 没加载上，检查网络后刷新页面。","replaced":"已换成这个模板。","copiedMarkdown":"已复制成 Markdown 代码块。","copiedImage":"图片已复制，可以直接粘贴。","copiedLink":"链接已复制，打开就是这张图。","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这张图。","empty":"写一段 Mermaid 就能画出图。","oldBrowser":"这个浏览器打不开图表链接，更新一下或者换个浏览器打开。"}}</script>
+<script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
 <script src="/assets/tools/mermaid-editor.js?v=a7d83ae44da9" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads

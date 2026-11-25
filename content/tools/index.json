@@ -38,14 +38,14 @@
    "en": {
     "title": "Markdown Viewer",
     "head_title": "Markdown Viewer Online: open .md files, save as PDF or HTML",
-    "lede": "Open or paste Markdown and read it in MiaoYan's preview styling as you type, with math, code highlighting and Mermaid diagrams, then save it as a PDF or HTML.",
-    "description": "A free online Markdown viewer: open a .md file or paste text and read it with MiaoYan's preview styling, tables, task lists, math, code highlighting and Mermaid included, then save as PDF or HTML."
+    "lede": "Open or paste Markdown and read it in MiaoYan's preview styling as you type, with math, code highlighting and Mermaid diagrams, then copy it with its styles or save it as PDF, HTML or Markdown.",
+    "description": "A free online Markdown viewer and editor: open a .md file or paste text and read it with MiaoYan's preview styling, tables, task lists, math, code highlighting and Mermaid included, then copy it with inline styles or save as PDF, HTML or Markdown."
    },
    "zh": {
     "title": "Markdown 在线预览",
-    "head_title": "Markdown 在线预览：打开 .md 文件，存成 PDF 和 HTML",
-    "lede": "打开或粘贴 Markdown，按妙言的预览样式实时显示，公式、代码和 Mermaid 图都会画出来，还能存成 PDF 和 HTML。",
-    "description": "免费的 Markdown 在线预览，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，可以存成 PDF 和 HTML。"
+    "head_title": "Markdown 在线预览：一键复制到公众号，存成 PDF 和 HTML",
+    "lede": "打开或粘贴 Markdown，按妙言的预览样式实时显示，公式、代码和 Mermaid 图都会画出来，写完一键复制到公众号，也能存成 PDF、HTML 和 Markdown。",
+    "description": "免费的 Markdown 在线预览和编辑，打开 .md 文件或粘贴文字，按妙言的预览样式显示表格、任务列表、公式、代码高亮和 Mermaid 图，带样式一键复制到公众号，也能存成 PDF、HTML 和 Markdown。"
    }
   },
   {
