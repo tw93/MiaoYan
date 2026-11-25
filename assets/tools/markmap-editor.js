@@ -82,7 +82,7 @@
       });
     }
     mm.setData(result.root);
-    mm.fit();
+    fit();
     // Saved once it has drawn, math included (the render after KaTeX arrives
     // saves), so an outline that hangs the page is not brought back on the
     // next visit.
@@ -129,10 +129,6 @@
       spacingVertical: 20,
       spacingHorizontal: 20,
       fitRatio: 0.92,
-      // The app's box grows with the outline, so its labels stay near 16px;
-      // this pane is the window's height, and markmap's default 2x would fit
-      // a short outline at twice the size. Zoom still goes past it.
-      maxScale: 1,
       color: function (node) {
         var list = colors();
         return list[node.depth % list.length];
@@ -151,7 +147,28 @@
       if (e.ctrlKey || e.metaKey) e.preventDefault();
     }, { passive: false });
     render();
-    new ResizeObserver(function () { if (mm) mm.fit(); }).observe(frame);
+    new ResizeObserver(function () { if (mm) fit(); }).observe(frame);
+  }
+
+  // markmap's own fit() scales up to 2x and uses the whole pane, so in this
+  // full-height pane a short outline came out at twice MiaoYan's size and its
+  // top row ran under the zoom buttons. This is the same fit, capped at 1x
+  // (the app's box grows with the outline, so its labels stay at 16px) and
+  // centred in the pane below the buttons. Zoom still goes past 1x.
+  function fit() {
+    var box = svg.getBoundingClientRect();
+    var zoom = frame.querySelector(".tool-zoom");
+    var top = zoom.offsetTop + zoom.offsetHeight;
+    var st = mm.state;
+    var w = st.maxY - st.minY;
+    var h = st.maxX - st.minX;
+    var room = box.height - top;
+    if (!(w > 0 && h > 0 && box.width > 0 && room > 0)) return mm.fit();
+    var k = Math.min(box.width / w * 0.92, room / h * 0.92, 1);
+    var t = window.d3.zoomIdentity
+      .translate((box.width - w * k) / 2 - st.minY * k, top + (room - h * k) / 2 - st.minX * k)
+      .scale(k);
+    return mm.transition(mm.svg).call(mm.zoom.transform, t).end().catch(function () {});
   }
 
   svg.addEventListener("click", function (e) {
@@ -168,7 +185,7 @@
     var button = e.target.closest("[data-zoom]");
     if (!button || !mm) return;
     var kind = button.dataset.zoom;
-    if (kind === "fit") mm.fit();
+    if (kind === "fit") fit();
     else mm.rescale(kind === "in" ? 1.25 : 0.8);
   });
 

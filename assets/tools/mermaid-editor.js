@@ -74,15 +74,20 @@
   function fit() {
     var size = contentSize();
     if (!size) return;
-    // The frame's own padding, as the CSS sets it before the script takes over.
-    var pad = window.matchMedia("(max-width: 560px)").matches ? 16 : 24;
-    var fw = frame.clientWidth;
-    var fh = frame.clientHeight;
+    // The frame's own padding, read from the CSS that lays the diagram out
+    // before the script takes over; its top keeps the zoom buttons clear.
+    var cs = getComputedStyle(frame);
+    var top = parseFloat(cs.paddingTop) || 0;
+    var right = parseFloat(cs.paddingRight) || 0;
+    var bottom = parseFloat(cs.paddingBottom) || 0;
+    var left = parseFloat(cs.paddingLeft) || 0;
+    var fw = frame.clientWidth - left - right;
+    var fh = frame.clientHeight - top - bottom;
     if (fw <= 0 || fh <= 0) return;
     // A small diagram grows a little to fill the larger frame, as far as 1.4x.
-    view.scale = Math.min(1.4, (fw - pad * 2) / size.w, (fh - pad * 2) / size.h);
-    view.x = (fw - size.w * view.scale) / 2;
-    view.y = (fh - size.h * view.scale) / 2;
+    view.scale = Math.min(1.4, fw / size.w, fh / size.h);
+    view.x = left + (fw - size.w * view.scale) / 2;
+    view.y = top + (fh - size.h * view.scale) / 2;
     view.fitted = true;
     frame.classList.add("is-live");
     apply();

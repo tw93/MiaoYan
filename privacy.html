@@ -682,6 +682,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-code:focus { outline: none; }
 .tool-preview {
   position: relative; height: var(--tool-h); overflow: hidden; padding: 24px;
+  /* The diagram fits below the zoom buttons (12px down, 38px tall), never under them. */
+  padding-top: 58px;
   display: flex; align-items: center; justify-content: center;
   background: var(--diagram); border: 1px solid var(--line); border-radius: 14px;
 }
@@ -905,7 +907,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
   .tool-actions .btn-primary { grid-column: 1 / -1; }
-  .tool-preview { padding: 16px; }
+  .tool-preview { padding: 58px 16px 16px; }
   .mermaid-figure { padding: 14px; }
   .table-wrap { padding: 8px 4px 12px 12px; }
   .table-md { padding: 14px; }
