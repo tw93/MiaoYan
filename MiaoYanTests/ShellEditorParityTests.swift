@@ -422,6 +422,11 @@ final class ShellEditorParityTests: XCTestCase {
         try png.write(to: source.appendingPathComponent("shot.png"))
         try Data("%PDF-1.4".utf8).write(to: source.appendingPathComponent("Plan.pdf"))
 
+        // Where each copy ran, read from inside the copy itself.
+        let threads = CopyThreads()
+        ImagesProcessor.willCopyAttachment = { _ in threads.record(Thread.isMainThread) }
+        defer { ImagesProcessor.willCopyAttachment = nil }
+
         let drop = ClipboardManager(textView: controller.textView)
         let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-many-\(UUID().uuidString)"))
         defer { board.releaseGlobally() }
@@ -441,6 +446,7 @@ final class ShellEditorParityTests: XCTestCase {
         let secondName = String(text[second].dropFirst("[Plan.pdf](/files/Plan.pdf)[Plan.pdf](/files/".count).dropLast(")after".count))
         XCTAssertNotEqual(secondName, "Plan.pdf")
         for copy in drop.copies { await copy.value }
+        XCTAssertEqual(threads.onMainThread, [false, false, false], "the video and both PDFs were copied, none on the main thread")
 
         let files = tempDir.appendingPathComponent("files")
         XCTAssertEqual(try Data(contentsOf: files.appendingPathComponent("clip.mov")), video)
@@ -998,4 +1004,23 @@ private final class StubDraggingInfo: NSObject, @preconcurrency NSDraggingInfo {
         searchOptions: [NSPasteboard.ReadingOptionKey: Any], using block: @escaping (NSDraggingItem, Int, UnsafeMutablePointer<ObjCBool>) -> Void
     ) {}
     func resetSpringLoading() {}
+}
+
+/// The threads `ImagesProcessor.willCopyAttachment` reports, from whichever
+/// thread each copy ran on.
+private final class CopyThreads: @unchecked Sendable {
+    private let lock = NSLock()
+    private var values: [Bool] = []
+
+    func record(_ onMainThread: Bool) {
+        lock.lock()
+        values.append(onMainThread)
+        lock.unlock()
+    }
+
+    var onMainThread: [Bool] {
+        lock.lock()
+        defer { lock.unlock() }
+        return values
+    }
 }

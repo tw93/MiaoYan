@@ -234,6 +234,13 @@ public class ImagesProcessor {
         reservedAttachments.remove(destination.path)
     }
 
+    #if DEBUG
+        /// Runs on the thread each copy runs on, just before it copies, so a
+        /// test can check that thread or hold the copy back. Set it only from
+        /// a test, before the copy starts.
+        nonisolated(unsafe) static var willCopyAttachment: (@Sendable (URL) -> Void)?
+    #endif
+
     /// Clones `source` to `destination` without reading it into memory,
     /// through a hidden name beside it, so a copy cut short by a quit leaves
     /// no half-written file under the name the note links. The hidden name is
@@ -242,6 +249,9 @@ public class ImagesProcessor {
     /// APFS's 255 where writing the file itself worked. Fails rather than overwrite a file
     /// that appeared at `destination` meanwhile. Call it off the main thread.
     nonisolated static func copyAttachment(from source: URL, to destination: URL) throws {
+        #if DEBUG
+            willCopyAttachment?(destination)
+        #endif
         let manager = FileManager.default
         let partial = destination.deletingLastPathComponent().appendingPathComponent(".\(UUID().uuidString).partial")
         try manager.copyItem(at: source, to: partial)
