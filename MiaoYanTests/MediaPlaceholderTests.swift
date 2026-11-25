@@ -356,4 +356,43 @@ final class MediaPlaceholderTests: XCTestCase {
             HtmlManager.noteAttachmentURL(for: URL(fileURLWithPath: "/files/x.pdf"), noteFolder: note)?.lastPathComponent, "x.pdf",
             "the absolute form still works")
     }
+
+    /// Slides skip the preview's renderer, and reveal's markdown drew
+    /// `![](/files/clip.mov)`, how a Mac drop and the iPhone write a video, as
+    /// an image that never loads, and a PDF in `files/` the same. They are a
+    /// player and a link, as in the preview.
+    func testSlidesPlayAVideoAndLinkAFileWrittenAsAnImage() throws {
+        let files = directory.appendingPathComponent("files", isDirectory: true)
+        try FileManager.default.createDirectory(at: files, withIntermediateDirectories: true)
+        let clip = files.appendingPathComponent("clip.mov")
+        try Data([0]).write(to: clip)
+        try Data([0]).write(to: files.appendingPathComponent("report.pdf"))
+        let images = directory.appendingPathComponent("i", isDirectory: true)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        let shot = images.appendingPathComponent("shot.png")
+        try Data([0]).write(to: shot)
+
+        let markdown = """
+            ![](/files/clip.mov)
+
+            ![](/files/report.pdf)
+
+            ![Q3 <draft>](files/report.pdf)
+
+            ![](https://example.com/talk.mp4)
+
+            ![](/i/shot.png)
+            """
+        let lines = HtmlManager.processImagesInMarkdown(markdown, imagesStorage: directory)
+            .components(separatedBy: "\n").filter { !$0.isEmpty }
+        XCTAssertEqual(
+            lines,
+            [
+                "<video src=\"\(HtmlManager.localMediaURL(forPath: clip.path))\" controls preload=\"none\"></video>",
+                "<a href=\"/files/report.pdf\">report.pdf</a>",
+                "<a href=\"files/report.pdf\">Q3 &lt;draft&gt;</a>",
+                "<video src=\"https://example.com/talk.mp4\" controls preload=\"none\"></video>",
+                "![](\(HtmlManager.localMediaURL(forPath: shot.path)))",
+            ])
+    }
 }

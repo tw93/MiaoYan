@@ -578,6 +578,30 @@ final class MermaidExportTests: XCTestCase {
         XCTAssertGreaterThan(code[0], code[1] * 3, "one line of code is drawn as one line, not a letter per line, \(code)")
     }
 
+    /// A video written as an image (`![](/files/clip.mov)`) drew as a
+    /// broken image on its slide: reveal's markdown makes every `![](…)` an
+    /// `<img>`. The slide shows a player.
+    @MainActor
+    func testASlideVideoIsAPlayer() async throws {
+        let files = tempDirectory.appendingPathComponent("files", isDirectory: true)
+        try FileManager.default.createDirectory(at: files, withIntermediateDirectories: true)
+        try Data([0]).write(to: files.appendingPathComponent("clip.mov"))
+        let (webView, window) = try loadSlides("# Clip\n\n![](/files/clip.mov)\n\n---\n\n# Next\n")
+        defer { window.orderOut(nil) }
+        try await waitFor(webView, "!!window.Reveal && Reveal.isReady()")
+
+        let found = try await webView.evaluateJavaScript(
+            """
+            [document.querySelectorAll('.reveal video').length,
+             document.querySelectorAll('.reveal img').length,
+             document.querySelector('.reveal video')?.getAttribute('preload') || '']
+            """)
+        let result = try XCTUnwrap(found as? [Any])
+        XCTAssertEqual(result[0] as? Int, 1, "\(result)")
+        XCTAssertEqual(result[1] as? Int, 0, "no image stands for the video, \(result)")
+        XCTAssertEqual(result[2] as? String, "none", "\(result)")
+    }
+
     private func rgb(_ color: NSColor?) -> String? {
         guard let srgb = color?.usingColorSpace(.sRGB) else { return nil }
         return String(format: "%.3f %.3f %.3f", srgb.redComponent, srgb.greenComponent, srgb.blueComponent)
@@ -588,6 +612,38 @@ final class MermaidExportTests: XCTestCase {
         var value: String?
         view.effectiveAppearance.performAsCurrentDrawingAppearance { value = self.rgb(color) }
         return value
+    }
+
+    /// The deck page MPreviewView loads for `markdown`, in a window off
+    /// screen so reveal lays it out and its diagrams draw. `printing` renders
+    /// it as a PPT export does, and the page reloads itself with `?print-pdf`.
+    @MainActor
+    private func loadSlides(_ markdown: String, printing: Bool = false) throws -> (WKWebView, NSWindow) {
+        let previous = (
+            preview: UserDefaultsManagement.preview, presentation: UserDefaultsManagement.presentation,
+            ppt: UserDefaultsManagement.magicPPT, exporting: UserDefaultsManagement.isOnExportPPT
+        )
+        UserDefaultsManagement.magicPPT = true
+        UserDefaultsManagement.isOnExportPPT = printing
+        defer {
+            UserDefaultsManagement.magicPPT = previous.ppt
+            if !previous.ppt {
+                UserDefaultsManagement.presentation = previous.presentation
+                UserDefaultsManagement.preview = previous.preview
+            }
+            UserDefaultsManagement.isOnExportPPT = previous.exporting
+        }
+        let processed = HtmlManager.processImagesInMarkdown(markdown, imagesStorage: tempDirectory)
+        let page = try HtmlManager.htmlFromTemplate(processed, css: HtmlManager.previewStyle(), currentName: "deck")
+        let index = try XCTUnwrap(HtmlManager.createTemporaryBundle(pageHTMLString: page))
+        addTeardownBlock { try? FileManager.default.removeItem(at: index) }
+        let webView = makeWebView()
+        let window = NSWindow(contentRect: webView.frame, styleMask: [.borderless], backing: .buffered, defer: false)
+        window.contentView = webView
+        window.setFrameOrigin(NSPoint(x: -5000, y: -5000))
+        window.orderBack(nil)
+        webView.loadFileURL(index, allowingReadAccessTo: index.deletingLastPathComponent())
+        return (webView, window)
     }
 
     @MainActor

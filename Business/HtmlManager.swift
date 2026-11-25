@@ -1,5 +1,6 @@
 import Foundation
 import ImageIO
+import MiaoYanCore
 import WebKit
 
 class HtmlManager {
@@ -695,6 +696,12 @@ class HtmlManager {
         return false
     }
 
+    /// The slides' markdown with each local image pointed at
+    /// `miaoyan-file://`. Reveal's markdown draws every `![](…)` as an image,
+    /// so a video written as one (`![](/files/clip.mov)`, as a Mac drop and
+    /// the iPhone write it) and a file in `files/` showed as broken images;
+    /// they become a player and a link, as `renderAttachmentMedia` makes
+    /// them in the preview.
     static func processImagesInMarkdown(_ markdown: String, imagesStorage: URL) -> String {
         let pattern = #"!\[([^\]]*)\]\(([^)]+)\)"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
@@ -716,28 +723,34 @@ class HtmlManager {
 
             let alt = nsMarkdown.substring(with: match.range(at: 1))
             let srcPath = nsMarkdown.substring(with: match.range(at: 2))
+            let isRemote = srcPath.starts(with: "http://") || srcPath.starts(with: "https://")
+            let cleanPath = cleanImagePath(srcPath)
+            let bare = cleanPath.split(whereSeparator: { $0 == "?" || $0 == "#" }).first.map(String.init) ?? cleanPath
+            let kind = AttachmentFile.kind(ofExtension: (bare as NSString).pathExtension)
 
-            guard !srcPath.starts(with: "http://"),
-                !srcPath.starts(with: "https://"),
-                !srcPath.starts(with: "file://")
-            else {
+            if kind == .file, bare.hasPrefix("/files/") || bare.hasPrefix("files/") {
+                let name = alt.isEmpty ? (bare as NSString).lastPathComponent : alt
+                replacements.append((match.range, "<a href=\"\(escapedAttribute(srcPath))\">\(escapeHTMLText(name))</a>"))
                 continue
             }
-
-            let cleanPath = cleanImagePath(srcPath)
-
-            if isAbsolutePath(cleanPath) {
-                if FileManager.default.fileExists(atPath: cleanPath) {
-                    replacements.append((match.range, "![\(alt)](\(localMediaURL(forPath: cleanPath)))"))
+            if isRemote {
+                if kind == .video {
+                    replacements.append((match.range, slideVideoTag(source: srcPath)))
                 }
                 continue
             }
+            guard !srcPath.starts(with: "file://") else { continue }
 
-            let relativePath = cleanPath.hasPrefix("/") ? String(cleanPath.dropFirst()) : cleanPath
-            let imageURL = imagesStorage.appendingPathComponent(relativePath)
-            if FileManager.default.fileExists(atPath: imageURL.path) {
-                replacements.append((match.range, "![\(alt)](\(localMediaURL(forPath: imageURL.path)))"))
+            let fileURL: URL
+            if isAbsolutePath(cleanPath) {
+                fileURL = URL(fileURLWithPath: cleanPath)
+            } else {
+                let relativePath = cleanPath.hasPrefix("/") ? String(cleanPath.dropFirst()) : cleanPath
+                fileURL = imagesStorage.appendingPathComponent(relativePath)
             }
+            guard FileManager.default.fileExists(atPath: fileURL.path) else { continue }
+            let source = localMediaURL(forPath: fileURL.path)
+            replacements.append((match.range, kind == .video ? slideVideoTag(source: source) : "![\(alt)](\(source))"))
         }
 
         // Apply replacements in reverse order to preserve earlier ranges
@@ -747,6 +760,16 @@ class HtmlManager {
         }
 
         return mutable as String
+    }
+
+    /// A player that loads nothing until it is played, as the preview's
+    /// videos start (`PreviewMedia.deferredVideoTags`).
+    private static func slideVideoTag(source: String) -> String {
+        "<video src=\"\(escapedAttribute(source))\" controls preload=\"none\"></video>"
+    }
+
+    private static func escapedAttribute(_ value: String) -> String {
+        escapeHTMLText(value).replacingOccurrences(of: "\"", with: "&quot;")
     }
 
     // MARK: - Bundle and Resource Management
