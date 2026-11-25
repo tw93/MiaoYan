@@ -1,0 +1,34 @@
+{
+  "netnewswire-theme-en-light.webp": {
+    "width": 1600,
+    "height": 2918
+  },
+  "netnewswire-theme-en-dark.webp": {
+    "width": 1600,
+    "height": 2918
+  },
+  "netnewswire-theme-en-light-phone.webp": {
+    "width": 780,
+    "height": 5714
+  },
+  "netnewswire-theme-en-dark-phone.webp": {
+    "width": 780,
+    "height": 5714
+  },
+  "netnewswire-theme-zh-light.webp": {
+    "width": 1600,
+    "height": 2206
+  },
+  "netnewswire-theme-zh-dark.webp": {
+    "width": 1600,
+    "height": 2206
+  },
+  "netnewswire-theme-zh-light-phone.webp": {
+    "width": 780,
+    "height": 3748
+  },
+  "netnewswire-theme-zh-dark-phone.webp": {
+    "width": 780,
+    "height": 3748
+  }
+}

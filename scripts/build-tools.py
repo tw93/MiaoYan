@@ -103,6 +103,22 @@ UI = {
                 "oldBrowser": "This browser cannot open mind map links. Update it, or open the link in another browser.",
             },
         },
+        "nnw": {
+            "appearance": "Appearance",
+            "light": "Light",
+            "dark": "Dark",
+            "install": "Install in NetNewsWire",
+            "zip": "Download .zip",
+            "github": "GitHub",
+            "preview": "A MiaoYan blog post in NetNewsWire with this theme, in {scheme} mode",
+            "app_title": "Write in MiaoYan",
+            "app_text": "MiaoYan, from the same author, is a Markdown notebook for Mac, iPhone and iPad that keeps every note as a plain .md file.",
+            "app_alt": "MiaoYan on a Mac, with the note list on the left and a note in its preview on the right",
+            "app_shot": "preview",
+            "strings": {
+                "installing": "If NetNewsWire did not open, install it first and click again.",
+            },
+        },
         "viewer": {
             "open": "Open file",
             "preview_only": "Preview only",
@@ -240,6 +256,22 @@ UI = {
                 "copied": "已复制，贴回原来的地方就行。",
                 "copyFailed": "这个浏览器不允许复制。",
                 "exportFailed": "这个浏览器存不了这个文件。",
+            },
+        },
+        "nnw": {
+            "appearance": "外观",
+            "light": "浅色",
+            "dark": "深色",
+            "install": "在 NetNewsWire 里安装",
+            "zip": "下载 .zip",
+            "github": "GitHub",
+            "preview": "NetNewsWire 用这套主题显示的一篇妙言博客文章，{scheme}外观",
+            "app_title": "写东西用妙言",
+            "app_text": "妙言是同一个作者做的 Mac、iPhone 和 iPad 上的 Markdown 笔记本，每篇笔记都是一个普通的 .md 文件。",
+            "app_alt": "Mac 上的妙言，左边是笔记列表，右边是一篇笔记的预览",
+            "app_shot": "preview",
+            "strings": {
+                "installing": "NetNewsWire 没有打开的话，先装好它再点一次。",
             },
         },
         "viewer": {
@@ -459,9 +491,31 @@ ICON = {
 }
 
 
-def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=()):
+ACTIONS_RE = re.compile(r'\n    <div class="tool-actions">.*?\n    </div>', re.S)
+BAR_RE = re.compile(r'\n    <div class="(?:tool-templates|table-bar)"[^>]*>.*?</div>(?=\n    <div)', re.S)
+
+
+def toolbar(tool_html):
+    """The tool's own controls on the left and its actions on the right, in one
+    row above the panes, so the first screen holds everything the tool does."""
+    actions = ACTIONS_RE.search(tool_html)
+    if not actions:
+        raise BuildError("a tool has no tool-actions block")
+    html = tool_html[:actions.start()] + tool_html[actions.end():]
+    block = (actions.group(0)
+             .replace('class="btn btn-primary"', 'class="tool-chip tool-chip-primary"')
+             .replace('class="btn btn-ghost"', 'class="tool-chip"'))
+    bar = BAR_RE.search(html)
+    if bar:
+        return html[:bar.start()] + '\n    <div class="tool-bar">' + bar.group(0).replace("\n    ", "\n      ") + block.replace("\n    ", "\n      ") + "\n    </div>" + html[bar.end():]
+    head = html.index(">") + 1
+    return html[:head] + '\n    <div class="tool-bar">' + block.replace("\n    ", "\n      ") + "\n    </div>" + html[head:]
+
+
+def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=(), system="Any"):
     """One tool page: title and lede, the tool, the prose with its FAQ, then the
     one quiet way into MiaoYan at the end, above the footer."""
+    tool_html = toolbar(tool_html)
     ui = UI[lang]
     meta = tool[lang]
     slug = tool["slug"]
@@ -488,7 +542,7 @@ def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=
             "url": canonical,
             "inLanguage": site.lang_entry(lang)[2],
             "applicationCategory": category,
-            "operatingSystem": "Any",
+            "operatingSystem": system,
             "browserRequirements": "Requires JavaScript",
             "isAccessibleForFree": True,
             "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
@@ -711,15 +765,12 @@ def table_page(tool, lang):
     <div class="table-bar">
       <button type="button" class="tool-chip" data-op="row">{esc(ui["add_row"])}</button>
       <button type="button" class="tool-chip" data-op="col">{esc(ui["add_col"])}</button>
+      <label class="table-pad"><input type="checkbox" id="table-pad" checked>{esc(ui["pad"])}</label>
       <button type="button" class="tool-chip table-clear" data-op="clear">{esc(ui["clear"])}</button>
     </div>
     <div class="table-wrap" id="table-wrap">{table_grid_html(rows, align, ui)}</div>
     <div class="table-out">
-      <div class="table-out-head">
-        <span class="table-out-title">{esc(ui["output"])}</span>
-        <label class="table-pad"><input type="checkbox" id="table-pad" checked>{esc(ui["pad"])}</label>
-      </div>
-      <pre class="table-md" id="table-md" tabindex="0">{table_markdown_html(md)}</pre>
+      <pre class="table-md" id="table-md" tabindex="0" aria-label="{esc(ui["output"])}">{table_markdown_html(md)}</pre>
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="table-status" role="status" aria-live="polite"></p>
@@ -765,7 +816,7 @@ def viewer_page(tool, lang):
     <div class="tool-grid viewer-grid" id="viewer-grid">
       <div class="tool-editor">
         <label class="visually-hidden" for="viewer-code">{esc(ui["code"])}</label>
-        <textarea id="viewer-code" class="tool-code viewer-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
+        <textarea id="viewer-code" class="tool-code viewer-code" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
       </div>
       <div class="viewer-frame"><iframe id="viewer-preview" title="{esc(ui["preview"])}" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
     </div>
@@ -779,7 +830,8 @@ def viewer_page(tool, lang):
     </div>
   </div>"""
     return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
-                     data_id="viewer-data", data=data, script="assets/tools/markdown-viewer.js")
+                     data_id="viewer-data", data=data, script="assets/tools/markdown-viewer.js",
+                     before=("assets/tools/md-highlight.js",))
 
 
 APP_TEXT_FONT = "-apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif"
@@ -808,7 +860,7 @@ def markmap_page(tool, lang):
     <div class="tool-grid">
       <div class="tool-editor">
         <label class="visually-hidden" for="markmap-code">{esc(ui["code"])}</label>
-        <textarea id="markmap-code" class="tool-code viewer-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
+        <textarea id="markmap-code" class="tool-code viewer-code" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
       </div>
       <div class="tool-preview markmap-frame" id="markmap-frame">
         <svg id="markmap-svg" class="markmap-svg" role="img" aria-label="{esc(ui["preview"])}"></svg>
@@ -826,7 +878,8 @@ def markmap_page(tool, lang):
     </div>
   </div>"""
     return tool_page(tool, lang, category="DesignApplication", tool_html=tool_html,
-                     data_id="markmap-data", data=data, script="assets/tools/markmap-editor.js")
+                     data_id="markmap-data", data=data, script="assets/tools/markmap-editor.js",
+                     before=("assets/tools/md-highlight.js",))
 
 
 def typography_page(tool, lang):
@@ -840,7 +893,7 @@ def typography_page(tool, lang):
     <div class="tool-grid">
       <div class="tool-editor">
         <label class="visually-hidden" for="typography-code">{esc(ui["code"])}</label>
-        <textarea id="typography-code" class="tool-code viewer-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
+        <textarea id="typography-code" class="tool-code viewer-code" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(sample)}</textarea>
       </div>
       <div class="tool-editor tc-pane">
         <div class="tool-code viewer-code tc-result" id="typography-result" role="region" tabindex="0" aria-label="{esc(ui["result"])}"></div>
@@ -856,7 +909,55 @@ def typography_page(tool, lang):
   </div>"""
     return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
                      data_id="typography-data", data=data, script="assets/tools/chinese-typography-cleaner.js",
-                     before=("assets/tools/typography-cleaner.js",))
+                     before=("assets/tools/md-highlight.js", "assets/tools/typography-cleaner.js"))
+
+
+NNW_REPO = "https://github.com/tw93/MiaoYan-NetNewsWire-Theme"
+NNW_ZIP = NNW_REPO + "/releases/latest/download/MiaoYan.nnwtheme.zip"
+
+
+def nnw_page(tool, lang):
+    """The NetNewsWire theme: a MiaoYan post as NetNewsWire shows it with the
+    theme (scripts/render-netnewswire-theme.mjs), light or dark, and the ways
+    to install it."""
+    ui = UI[lang]["nnw"]
+    sizes = json.loads((ROOT / "img" / "tools" / "netnewswire-theme.json").read_text(encoding="utf-8"))
+    chips = "".join(
+        f'<button type="button" class="tool-chip" data-scheme="{s}" aria-pressed="{"true" if s == "light" else "false"}">{esc(ui[s])}</button>'
+        for s in ("light", "dark")
+    )
+    shots = []
+    for s in ("light", "dark"):
+        name = f"netnewswire-theme-{lang}-{s}.webp"
+        phone = f"netnewswire-theme-{lang}-{s}-phone.webp"
+        size, small = sizes[name], sizes[phone]
+        lazy = ' fetchpriority="high"' if s == "light" else ' loading="lazy"'
+        # The phone shot is the article at a phone's width, not the Mac one shrunk.
+        shots.append(
+            f'<picture class="nnw-shot" data-scheme="{s}"{"" if s == "light" else " hidden"}>'
+            f'<source media="(max-width: 560px)" srcset="{versioned("img/tools/" + phone)}" width="{small["width"] // 2}" height="{small["height"] // 2}">'
+            f'<img src="{versioned("img/tools/" + name)}" width="{size["width"] // 2}" height="{size["height"] // 2}"'
+            f' alt="{esc(ui["preview"].format(scheme=ui[s]))}" decoding="async"{lazy}></picture>'
+        )
+    install = "netnewswire://theme/add?url=" + NNW_ZIP
+    tool_html = f"""  <div class="tool nnw-tool" id="nnw-tool">
+    <div class="tool-templates" role="group" aria-label="{esc(ui["appearance"])}">{chips}</div>
+    <div class="nnw-frame is-light" id="nnw-frame">
+      {shots[0]}
+      {shots[1]}
+    </div>
+    <div class="tool-foot">
+      <p class="tool-status" id="nnw-status" role="status" aria-live="polite"></p>
+    </div>
+    <div class="tool-actions">
+      <a class="btn btn-primary" href="{esc(install)}" data-action="install">{esc(ui["install"])}</a>
+      <a class="btn btn-ghost" href="{NNW_ZIP}">{esc(ui["zip"])}</a>
+      <a class="btn btn-ghost" href="{NNW_REPO}" target="_blank" rel="noopener">{esc(ui["github"])}</a>
+    </div>
+  </div>"""
+    return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
+                     data_id="nnw-data", data={"strings": ui["strings"]}, script="assets/tools/netnewswire-theme.js",
+                     system="macOS, iOS, iPadOS")
 
 
 def hub_page(tools, lang):
@@ -926,8 +1027,8 @@ def llms_block(tools):
     return "\n" + "\n".join(lines) + "\n"
 
 
-PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page}
-PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography"}
+PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "netnewswire-theme": nnw_page}
+PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "netnewswire-theme": "nnw"}
 
 
 def outputs(tools):

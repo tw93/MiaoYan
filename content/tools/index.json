@@ -79,6 +79,22 @@
     "lede": "粘贴中文或 Markdown，自动在中英文、数字之间加空格，把中文后面的半角标点换成全角，改了哪里都会标出来，代码和链接不动。",
     "description": "免费的中英文排版整理工具，在浏览器里给中文和英文、数字之间加空格，把中文后面的半角标点换成全角，整理省略号和破折号，规则和妙言的清理排版一样，代码、公式和链接保持原样。"
    }
+  },
+  {
+   "slug": "netnewswire-theme",
+   "date": "2026-11-25",
+   "en": {
+    "title": "MiaoYan Theme for NetNewsWire",
+    "head_title": "MiaoYan Theme for NetNewsWire: a calm reading theme for Chinese and English",
+    "lede": "A reading theme for the NetNewsWire RSS reader, with looser line height and tracking for Chinese, blue links and a green accent, light and dark following the system, installed with one click.",
+    "description": "A free, open source theme for NetNewsWire on Mac, iPhone and iPad that sets Chinese and English articles at a 1.7 line height with 0.5px tracking, keeps blue links and a green accent, follows the system's light and dark appearance and installs with one click."
+   },
+   "zh": {
+    "title": "NetNewsWire 妙言主题",
+    "head_title": "NetNewsWire 妙言主题：给 RSS 阅读器换一套舒服的中文排版",
+    "lede": "RSS 阅读器 NetNewsWire 的一套阅读主题，中文的行距和字距调松了，链接蓝色、点缀绿色，跟着系统切换浅色和深色，点一下就能装上。",
+    "description": "免费开源的 NetNewsWire 主题，Mac、iPhone 和 iPad 上都能用，正文行高 1.7、字距 0.5px，中文文章读起来不挤，链接蓝色、点缀绿色，跟着系统切换浅色和深色，一键安装。"
+   }
   }
  ]
 }

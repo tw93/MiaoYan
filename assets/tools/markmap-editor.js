@@ -129,6 +129,10 @@
       spacingVertical: 20,
       spacingHorizontal: 20,
       fitRatio: 0.92,
+      // The app's box grows with the outline, so its labels stay near 16px;
+      // this pane is the window's height, and markmap's default 2x would fit
+      // a short outline at twice the size. Zoom still goes past it.
+      maxScale: 1,
       color: function (node) {
         var list = colors();
         return list[node.depth % list.length];

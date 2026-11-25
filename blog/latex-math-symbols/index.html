@@ -32,6 +32,8 @@
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
 :root {
+  --app-paper: #FDFCF9;
+  --app-ink: #403E3C;
   --parchment: #fbfaf6;
   --ivory: #fefdfb;
   --warm-sand: #ebe9e1;
@@ -738,6 +740,54 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
+   title and tool on one edge, and the tool fills the first screen; the prose
+   and the way into MiaoYan below keep the reading column. */
+.wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
+@supports (height: 100svh) {
+  .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
+}
+/* One row above the panes: the tool's own controls, then its actions. */
+.tool-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; margin: 0 0 16px; }
+.tool-bar > :is(.tool-templates, .table-bar) { flex: 1 1 auto; margin: 0; }
+.tool-bar > .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 0 auto; }
+.tool-chip-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.tool-chip-primary:hover { background: var(--brand-light); border-color: var(--brand-light); }
+/* Panes that hold Markdown read as MiaoYan's editor: its paper and ink, the
+   system pairing at 16px on a 1.3 line plus 3pt, tracked 0.02em
+   (FontConfiguration, UserDefaultsManagement, Theme in the app). */
+.tool-editor {
+  background: var(--app-paper); color: var(--app-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+  font-size: 16px; line-height: 23.8px; letter-spacing: 0.02em;
+}
+.tool-code { color: var(--app-ink); }
+.tool-gutter { letter-spacing: 0; }
+.table-wrap, .table-md { background: var(--app-paper); }
+/* Markdown coloured as MiaoYan's editor colours it (assets/tools/md-highlight.js):
+   the textarea's letters are transparent over a <pre> of the same text. Weights
+   never change, so both wrap on the same characters. */
+.md-hl-box { position: relative; flex: 1; min-width: 0; height: 100%; }
+.md-hl-box > .tool-code { position: absolute; inset: 0; width: 100%; height: 100%; scrollbar-gutter: stable; }
+.md-hl { pointer-events: none; overflow: hidden; }
+.md-hl-input { color: transparent; -webkit-text-fill-color: transparent; background: transparent; }
+.md-hl-input::selection { background: rgba(28, 93, 51, 0.18); }
+.md-title, .md-italic { color: #5E3DB3; }
+.md-syn, .md-quote { color: #7A7872; }
+.md-code, .md-bold { color: #9A7400; }
+.md-link { color: #24837B; }
+.md-block { color: #333333; }
+/* The table generator's grid and its Markdown side by side, as the other tools' panes. */
+@media (min-width: 881px) {
+  .table-tool { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); column-gap: 16px; align-items: start; }
+  .table-tool > :is(.tool-bar, .tool-foot) { grid-column: 1 / -1; }
+  .table-tool > .table-wrap { height: var(--tool-h); max-height: none; }
+  .table-tool > .table-out { display: flex; flex-direction: column; height: var(--tool-h); margin: 0; }
+  .table-tool > .table-out .table-md { flex: 1; max-height: none; }
+  .table-tool { --tool-h: max(440px, calc(100vh - 300px)); }
+}
 /* The Markdown table generator: a grid of plain text fields over the Markdown
    it writes. Column controls sit above each column; a row's delete button at
    its end shows on hover, always on touch. */
@@ -785,7 +835,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .table-grid tr:hover .table-end .table-x, .table-end .table-x:focus-visible { opacity: 1; }
 .table-out { margin: 16px 0 0; }
 .table-out-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 8px; font-size: var(--text-meta); color: var(--stone); }
-.table-pad { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.table-pad { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; margin-left: 8px; font-size: var(--text-meta); color: var(--olive); }
 .table-pad input { width: 16px; height: 16px; margin: 0; accent-color: var(--brand); cursor: pointer; }
 .table-pad input:focus { outline: none; }
 .table-md {
@@ -831,6 +881,20 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 }
 .markmap-foreign .katex math, .markmap-foreign .katex math * { font-family: "STIX Two Math", math; }
 .viewer-tool.is-drop .viewer-frame, .viewer-tool.is-drop .tool-editor { border-color: var(--brand); }
+/* The NetNewsWire theme: its own render of an article, on the theme's own
+   ground so the window reads as NetNewsWire's article pane. */
+.nnw-tool { --tool-h: max(440px, calc(100vh - 300px)); }
+@supports (height: 100svh) {
+  .nnw-tool { --tool-h: max(440px, calc(100svh - 300px)); }
+}
+.nnw-frame { height: var(--tool-h); overflow: auto; overscroll-behavior: contain; border: 1px solid var(--line); border-radius: 14px; background: #FDFDFD; }
+.nnw-frame.is-dark { background: #1A1A1A; border-color: #1A1A1A; }
+.nnw-shot { display: block; }
+.nnw-shot[hidden] { display: none; }
+.nnw-shot img { display: block; width: min(800px, 100%); height: auto; margin: 0 auto; }
+@media (max-width: 880px) {
+  .nnw-frame { height: 520px; }
+}
 /* The typography cleaner: the result wraps exactly as the text beside it, new
    characters tinted, a removed space or blank line a hairline that takes no width. */
 /* Prose, so the system's text face: a code face shrinks …… and spaces CJK
@@ -2052,7 +2116,7 @@ $$
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">A light, native Markdown notebook</p>
       </div>
-      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col foot-tools"><p class="foot-col-title">Tools</p><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/tools/markdown-viewer/">Markdown Viewer</a><a href="/tools/markmap-editor/">Markmap Editor</a><a href="/tools/chinese-typography-cleaner/">Chinese Typography</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col foot-tools"><p class="foot-col-title">Tools</p><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/tools/markdown-viewer/">Markdown Viewer</a><a href="/tools/markmap-editor/">Markmap Editor</a><a href="/tools/chinese-typography-cleaner/">Chinese Typography</a><a href="/tools/netnewswire-theme/">NetNewsWire Theme</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>

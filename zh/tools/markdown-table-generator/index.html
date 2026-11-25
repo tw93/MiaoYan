@@ -30,6 +30,8 @@
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
 :root {
+  --app-paper: #FDFCF9;
+  --app-ink: #403E3C;
   --parchment: #fbfaf6;
   --ivory: #fefdfb;
   --warm-sand: #ebe9e1;
@@ -736,6 +738,54 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
+   title and tool on one edge, and the tool fills the first screen; the prose
+   and the way into MiaoYan below keep the reading column. */
+.wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
+.tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: auto; }
+.tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
+@supports (height: 100svh) {
+  .tool-page .tool-grid { --tool-h: max(440px, calc(100svh - 300px)); }
+}
+/* One row above the panes: the tool's own controls, then its actions. */
+.tool-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; margin: 0 0 16px; }
+.tool-bar > :is(.tool-templates, .table-bar) { flex: 1 1 auto; margin: 0; }
+.tool-bar > .tool-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 0 auto; }
+.tool-chip-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.tool-chip-primary:hover { background: var(--brand-light); border-color: var(--brand-light); }
+/* Panes that hold Markdown read as MiaoYan's editor: its paper and ink, the
+   system pairing at 16px on a 1.3 line plus 3pt, tracked 0.02em
+   (FontConfiguration, UserDefaultsManagement, Theme in the app). */
+.tool-editor {
+  background: var(--app-paper); color: var(--app-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
+  font-size: 16px; line-height: 23.8px; letter-spacing: 0.02em;
+}
+.tool-code { color: var(--app-ink); }
+.tool-gutter { letter-spacing: 0; }
+.table-wrap, .table-md { background: var(--app-paper); }
+/* Markdown coloured as MiaoYan's editor colours it (assets/tools/md-highlight.js):
+   the textarea's letters are transparent over a <pre> of the same text. Weights
+   never change, so both wrap on the same characters. */
+.md-hl-box { position: relative; flex: 1; min-width: 0; height: 100%; }
+.md-hl-box > .tool-code { position: absolute; inset: 0; width: 100%; height: 100%; scrollbar-gutter: stable; }
+.md-hl { pointer-events: none; overflow: hidden; }
+.md-hl-input { color: transparent; -webkit-text-fill-color: transparent; background: transparent; }
+.md-hl-input::selection { background: rgba(28, 93, 51, 0.18); }
+.md-title, .md-italic { color: #5E3DB3; }
+.md-syn, .md-quote { color: #7A7872; }
+.md-code, .md-bold { color: #9A7400; }
+.md-link { color: #24837B; }
+.md-block { color: #333333; }
+/* The table generator's grid and its Markdown side by side, as the other tools' panes. */
+@media (min-width: 881px) {
+  .table-tool { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); column-gap: 16px; align-items: start; }
+  .table-tool > :is(.tool-bar, .tool-foot) { grid-column: 1 / -1; }
+  .table-tool > .table-wrap { height: var(--tool-h); max-height: none; }
+  .table-tool > .table-out { display: flex; flex-direction: column; height: var(--tool-h); margin: 0; }
+  .table-tool > .table-out .table-md { flex: 1; max-height: none; }
+  .table-tool { --tool-h: max(440px, calc(100vh - 300px)); }
+}
 /* The Markdown table generator: a grid of plain text fields over the Markdown
    it writes. Column controls sit above each column; a row's delete button at
    its end shows on hover, always on touch. */
@@ -783,7 +833,7 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .table-grid tr:hover .table-end .table-x, .table-end .table-x:focus-visible { opacity: 1; }
 .table-out { margin: 16px 0 0; }
 .table-out-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 8px; font-size: var(--text-meta); color: var(--stone); }
-.table-pad { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.table-pad { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; margin-left: 8px; font-size: var(--text-meta); color: var(--olive); }
 .table-pad input { width: 16px; height: 16px; margin: 0; accent-color: var(--brand); cursor: pointer; }
 .table-pad input:focus { outline: none; }
 .table-md {
@@ -829,6 +879,20 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 }
 .markmap-foreign .katex math, .markmap-foreign .katex math * { font-family: "STIX Two Math", math; }
 .viewer-tool.is-drop .viewer-frame, .viewer-tool.is-drop .tool-editor { border-color: var(--brand); }
+/* The NetNewsWire theme: its own render of an article, on the theme's own
+   ground so the window reads as NetNewsWire's article pane. */
+.nnw-tool { --tool-h: max(440px, calc(100vh - 300px)); }
+@supports (height: 100svh) {
+  .nnw-tool { --tool-h: max(440px, calc(100svh - 300px)); }
+}
+.nnw-frame { height: var(--tool-h); overflow: auto; overscroll-behavior: contain; border: 1px solid var(--line); border-radius: 14px; background: #FDFDFD; }
+.nnw-frame.is-dark { background: #1A1A1A; border-color: #1A1A1A; }
+.nnw-shot { display: block; }
+.nnw-shot[hidden] { display: none; }
+.nnw-shot img { display: block; width: min(800px, 100%); height: auto; margin: 0 auto; }
+@media (max-width: 880px) {
+  .nnw-frame { height: 520px; }
+}
 /* The typography cleaner: the result wraps exactly as the text beside it, new
    characters tinted, a removed space or blank line a hairline that takes no width. */
 /* Prose, so the system's text face: a code face shrinks …… and spaces CJK
@@ -1075,18 +1139,20 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <h1 class="section-title">Markdown 表格生成器</h1>
   <p class="section-lede">在网格里编辑表格，或者直接粘贴 Excel、Google Sheets、CSV 和已有的 Markdown 表格，复制出来就是各列对齐的 Markdown。</p>
   <div class="tool table-tool" id="table-tool">
-    <div class="table-bar">
-      <button type="button" class="tool-chip" data-op="row">加一行</button>
-      <button type="button" class="tool-chip" data-op="col">加一列</button>
-      <button type="button" class="tool-chip table-clear" data-op="clear">清空</button>
+    <div class="tool-bar">
+      <div class="table-bar">
+        <button type="button" class="tool-chip" data-op="row">加一行</button>
+        <button type="button" class="tool-chip" data-op="col">加一列</button>
+        <label class="table-pad"><input type="checkbox" id="table-pad" checked>对齐各列</label>
+        <button type="button" class="tool-chip table-clear" data-op="clear">清空</button>
+      </div>
+      <div class="tool-actions">
+        <button type="button" class="tool-chip tool-chip-primary" data-action="copy">复制 Markdown</button>
+      </div>
     </div>
     <div class="table-wrap" id="table-wrap"><table class="table-grid" id="table-grid"><thead><tr class="table-ctrl"><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 1 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="0" aria-label="删除第 1 列" title="删除第 1 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 2 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="1" aria-label="删除第 2 列" title="删除第 2 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 3 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="false" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="true" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="2" aria-label="删除第 3 列" title="删除第 3 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td><div class="table-col-ctrl"><div class="table-align" role="group" aria-label="第 4 列对齐"><button type="button" class="table-btn" data-align="left" aria-pressed="false" aria-label="左对齐" title="左对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M2.5 8h7M2.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="center" aria-pressed="true" aria-label="居中" title="居中"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M4.5 8h7M3.5 12h9"/></svg></button><button type="button" class="table-btn" data-align="right" aria-pressed="false" aria-label="右对齐" title="右对齐"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 4h11M6.5 8h7M4.5 12h9"/></svg></button></div><button type="button" class="table-btn table-x" data-del-col="3" aria-label="删除第 4 列" title="删除第 4 列"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></div></td><td class="table-end"></td></tr></thead><tbody><tr class="is-head"><td data-align="none"><input class="table-cell" type="text" value="任务" aria-label="第 1 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="负责人" aria-label="第 1 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="工时" aria-label="第 1 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="状态" aria-label="第 1 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="0" aria-label="删除第 1 行" title="删除第 1 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="写提纲" aria-label="第 2 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="小林" aria-label="第 2 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="3" aria-label="第 2 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="已完成" aria-label="第 2 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="1" aria-label="删除第 2 行" title="删除第 2 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="写初稿" aria-label="第 3 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="阿杰" aria-label="第 3 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="12" aria-label="第 3 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="进行中" aria-label="第 3 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="2" aria-label="删除第 3 行" title="删除第 3 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr><tr><td data-align="none"><input class="table-cell" type="text" value="校对" aria-label="第 4 行第 1 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="none"><input class="table-cell" type="text" value="晓雯" aria-label="第 4 行第 2 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="right"><input class="table-cell" type="text" value="5" aria-label="第 4 行第 3 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td data-align="center"><input class="table-cell" type="text" value="待开始" aria-label="第 4 行第 4 列" spellcheck="false" autocomplete="off" autocapitalize="off"></td><td class="table-end"><button type="button" class="table-btn table-x" data-del-row="3" aria-label="删除第 4 行" title="删除第 4 行"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg></button></td></tr></tbody></table></div>
     <div class="table-out">
-      <div class="table-out-head">
-        <span class="table-out-title">Markdown</span>
-        <label class="table-pad"><input type="checkbox" id="table-pad" checked>对齐各列</label>
-      </div>
-      <pre class="table-md" id="table-md" tabindex="0">| <span class="w">任</span><span class="w">务</span>   | <span class="w">负</span><span class="w">责</span><span class="w">人</span> | <span class="w">工</span><span class="w">时</span> |  <span class="w">状</span><span class="w">态</span>  |
+      <pre class="table-md" id="table-md" tabindex="0" aria-label="Markdown">| <span class="w">任</span><span class="w">务</span>   | <span class="w">负</span><span class="w">责</span><span class="w">人</span> | <span class="w">工</span><span class="w">时</span> |  <span class="w">状</span><span class="w">态</span>  |
 | ------ | ------ | ---: | :----: |
 | <span class="w">写</span><span class="w">提</span><span class="w">纲</span> | <span class="w">小</span><span class="w">林</span>   |    3 | <span class="w">已</span><span class="w">完</span><span class="w">成</span> |
 | <span class="w">写</span><span class="w">初</span><span class="w">稿</span> | <span class="w">阿</span><span class="w">杰</span>   |   12 | <span class="w">进</span><span class="w">行</span><span class="w">中</span> |
@@ -1095,9 +1161,6 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <div class="tool-foot">
       <p class="tool-status" id="table-status" role="status" aria-live="polite"></p>
       <button type="button" class="tool-undo" id="table-undo" hidden>撤销</button>
-    </div>
-    <div class="tool-actions">
-      <button type="button" class="btn btn-primary" data-action="copy">复制 Markdown</button>
     </div>
   </div>
   <div class="blog-body tool-body">
@@ -1129,7 +1192,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">轻灵的原生 Markdown 笔记本</p>
       </div>
-      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col foot-tools"><p class="foot-col-title">工具</p><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/tools/markdown-viewer/">Markdown 预览</a><a href="/zh/tools/markmap-editor/">Markmap 思维导图</a><a href="/zh/tools/chinese-typography-cleaner/">中英文排版整理</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col foot-tools"><p class="foot-col-title">工具</p><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/tools/markdown-viewer/">Markdown 预览</a><a href="/zh/tools/markmap-editor/">Markmap 思维导图</a><a href="/zh/tools/chinese-typography-cleaner/">中英文排版整理</a><a href="/zh/tools/netnewswire-theme/">NetNewsWire 主题</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>

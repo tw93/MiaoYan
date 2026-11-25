@@ -671,6 +671,7 @@ TABLE_LABEL = {"en": "Table Generator", "zh": "表格生成器", "tw": "表格�
 VIEWER_LABEL = {"en": "Markdown Viewer", "zh": "Markdown 预览", "tw": "Markdown 預覽", "ja": "Markdown ビューア", "ko": "Markdown 뷰어", "de": "Markdown-Viewer", "fr": "Visionneuse Markdown", "es": "Visor de Markdown"}
 MARKMAP_LABEL = {"en": "Markmap Editor", "zh": "Markmap 思维导图", "tw": "Markmap 心智圖", "ja": "Markmap エディタ", "ko": "Markmap 마인드맵", "de": "Markmap-Editor", "fr": "Éditeur Markmap", "es": "Editor de Markmap"}
 TYPOGRAPHY_LABEL = {"en": "Chinese Typography", "zh": "中英文排版整理", "tw": "中英文排版整理", "ja": "中国語の組版整理", "ko": "중국어 조판 정리", "de": "Chinesische Typografie", "fr": "Typographie chinoise", "es": "Tipografía china"}
+NNW_LABEL = {"en": "NetNewsWire Theme", "zh": "NetNewsWire 主题", "tw": "NetNewsWire 主題", "ja": "NetNewsWire テーマ", "ko": "NetNewsWire 테마", "de": "NetNewsWire-Theme", "fr": "Thème NetNewsWire", "es": "Tema de NetNewsWire"}
 RELEASES_LABEL = {"en": "Release Notes", "zh": "更新日志", "tw": "更新日誌", "ja": "リリースノート", "ko": "릴리스 노트", "de": "Versionshinweise", "fr": "Notes de version", "es": "Notas de versión"}
 
 ICONS = (
@@ -886,7 +887,8 @@ def footer_html(key, *, faq_href="#faq"):
         f'<a href="{tool_path(key, "markdown-table-generator")}">{esc(TABLE_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-viewer")}">{esc(VIEWER_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markmap-editor")}">{esc(MARKMAP_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "chinese-typography-cleaner")}">{esc(TYPOGRAPHY_LABEL[key])}</a></div>'
+        f'<a href="{tool_path(key, "chinese-typography-cleaner")}">{esc(TYPOGRAPHY_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "netnewswire-theme")}">{esc(NNW_LABEL[key])}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
         f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(MORE_APPS_TITLE[key])}</p>'
