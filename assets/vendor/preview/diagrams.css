@@ -275,3 +275,21 @@ pre:has(.language-mermaid) {
 .markmap-foreign .katex math * {
   font-family: "STIX Two Math", math;
 }
+
+/* A node's box is as wide as its widest line, and the drawn one resolves to
+   zero width (width: auto above), where the preview's code block, wrapping
+   anywhere, drew one letter per line. In a node, code is as wide as its
+   longest line, keeps its own line breaks and is not centred with the map. */
+.markmap-foreign pre {
+  display: inline-block;
+  max-width: none;
+  overflow: visible;
+  text-align: left;
+}
+
+.markmap-foreign pre,
+.markmap-foreign pre code {
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+}
