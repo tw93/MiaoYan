@@ -31,7 +31,7 @@
     {
       "slug": "latex-math-in-markdown",
       "date": "2026-10-19",
-      "modified": "2026-11-21",
+      "modified": "2026-11-25",
       "category": "writing",
       "en": {
         "title": "LaTeX math in Markdown: syntax, KaTeX and pitfalls",
@@ -171,7 +171,7 @@
     {
       "slug": "markdown-note-version-history",
       "date": "2026-10-19",
-      "modified": "2026-11-06",
+      "modified": "2026-11-25",
       "category": "notes",
       "en": {
         "title": "Markdown note version history: MiaoYan, Time Machine, git",
@@ -339,7 +339,7 @@
     {
       "slug": "markdown-links-and-anchors",
       "date": "2026-10-19",
-      "modified": "2026-11-21",
+      "modified": "2026-11-25",
       "category": "writing",
       "en": {
         "title": "Markdown links and anchors: inline, reference, headings",
@@ -367,7 +367,7 @@
     {
       "slug": "markdown-tables",
       "date": "2026-10-19",
-      "modified": "2026-10-19",
+      "modified": "2026-11-25",
       "category": "writing",
       "en": {
         "title": "Markdown tables: alignment, pipes and line breaks",
@@ -395,7 +395,7 @@
     {
       "slug": "markmap-mind-maps",
       "date": "2026-10-19",
-      "modified": "2026-11-21",
+      "modified": "2026-11-25",
       "category": "writing",
       "en": {
         "title": "Markmap: turn a Markdown outline into a mind map",
@@ -633,7 +633,7 @@
     {
       "slug": "markdown-superscript-subscript",
       "date": "2026-10-25",
-      "modified": "2026-11-21",
+      "modified": "2026-11-25",
       "category": "writing",
       "en": {
         "title": "Markdown superscript and subscript: what works",

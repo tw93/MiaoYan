@@ -3,7 +3,7 @@ MiaoYan keeps up to 20 earlier versions of each note, saved automatically while 
 ## Open and restore a version
 
 1. Select a note and press Command Shift H, or use the "Version History" item in the note menu.
-2. The window lists "Current Version" at the top, then saved versions with their time and a relative description such as "2 hours ago". Click one to preview its text.
+2. The window lists "Current Version" at the top, then saved versions with their time and a relative description such as "2 hours ago". Since V4.12.0 each row also shows `+N -M`, the lines that version added and removed against the one before it, so the version before a bad edit is easy to spot. Click one to preview its text: lines it added are tinted green, lines it rewrote yellow, and the preview opens at the first change.
 3. Click "Restore to This Version". MiaoYan replaces the note's text with that version and shows a confirmation, "Restored to version from" followed by that version's time.
 
 If the note has no snapshots yet, the window says "No Version History".
@@ -20,7 +20,7 @@ This is read from the app's source, so it describes behavior rather than promise
 
 **Where files go.** Each note gets its own folder under `Library/Application Support/com.tw93.miaoyan/Versions/`, named with the note's file name plus a hash of its full path. Inside are plain `.md` files named by their UTC timestamp, for example `2026-10-18T15-42-07Z.md`. They are ordinary text, so you can open them in any editor. The history window shows the date in your local time.
 
-**How many.** At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted.
+**How many.** At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted. Since V4.12.0 the versions of all notes together also stay under 200 MB: past that, the oldest versions across every note go first, and a note's newest version is never removed.
 
 **Renames, moves and deletions.** Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash moves its history to the new path along with it, and the history comes back if the delete is undone. Moving the whole library in Finder is not tracked, so the history stays under the old path.
 
@@ -58,7 +58,7 @@ What MiaoYan's history does not cover:
 ## What goes wrong and how to check
 
 - **The window says "No Version History".** The note is new, empty, or has not been saved twice with different text. Edit it, wait, switch to another note and come back.
-- **A version you expected is missing.** The newest 20 are kept, and near-identical saves are skipped. Check whether the text differs only by spacing.
+- **A version you expected is missing.** The newest 20 are kept, since V4.12.0 the oldest go first once all notes' versions pass 200 MB, and near-identical saves are skipped. Check whether the text differs only by spacing.
 - **Restore did not seem to change the file.** The text is replaced in the editor and written to disk after the usual short delay. Re-open the note to confirm.
 - **You moved the library folder.** Snapshots are keyed by the note's full path. If you relocate the whole library in Finder, the paths change and the old history is no longer found for those notes.
 

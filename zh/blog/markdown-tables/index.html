@@ -20,7 +20,7 @@
 <meta property="og:description" content="表格写法、列对齐、转义竖线、单元格内换行，妙言里宽表格的表现，以及合并单元格时退回 HTML。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-tables.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-11-25">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -112,14 +112,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -1274,7 +1274,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 表格：对齐、竖线与单元格换行", "item": "https://miaoyan.app/zh/blog/markdown-tables/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-tables/#article", "headline": "Markdown 表格：对齐、竖线与单元格换行", "description": "表格写法、列对齐、转义竖线、单元格内换行，妙言里宽表格的表现，以及合并单元格时退回 HTML。", "url": "https://miaoyan.app/zh/blog/markdown-tables/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-tables/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-tables.webp", "timeRequired": "PT5M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "为什么我的 Markdown 表格没有渲染？", "acceptedAnswer": {"@type": "Answer", "text": "多半是分隔行的单元格数和表头行不一致，把两行的数量改成相同即可。"}}, {"@type": "Question", "name": "单元格里可以多行吗？", "acceptedAnswer": {"@type": "Answer", "text": "竖线语法不行。换行用 <br>，要写段落和列表就用 HTML 表格。"}}, {"@type": "Question", "name": "能合并单元格吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，用带 colspan 或 rowspan 的 HTML 表格。"}}, {"@type": "Question", "name": "单元格里怎么写竖线字符？", "acceptedAnswer": {"@type": "Answer", "text": "写成 \\|，在行内代码里也一样。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 表格：对齐、竖线与单元格换行", "item": "https://miaoyan.app/zh/blog/markdown-tables/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-tables/#article", "headline": "Markdown 表格：对齐、竖线与单元格换行", "description": "表格写法、列对齐、转义竖线、单元格内换行，妙言里宽表格的表现，以及合并单元格时退回 HTML。", "url": "https://miaoyan.app/zh/blog/markdown-tables/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-tables/", "datePublished": "2026-10-19", "dateModified": "2026-11-25", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-tables.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "为什么我的 Markdown 表格没有渲染？", "acceptedAnswer": {"@type": "Answer", "text": "多半是分隔行的单元格数和表头行不一致，把两行的数量改成相同即可。"}}, {"@type": "Question", "name": "单元格里可以多行吗？", "acceptedAnswer": {"@type": "Answer", "text": "竖线语法不行。换行用 <br>，要写段落和列表就用 HTML 表格。"}}, {"@type": "Question", "name": "能合并单元格吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，用带 colspan 或 rowspan 的 HTML 表格。"}}, {"@type": "Question", "name": "单元格里怎么写竖线字符？", "acceptedAnswer": {"@type": "Answer", "text": "写成 \\|，在行内代码里也一样。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1295,7 +1295,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
     <h1 class="blog-title">Markdown 表格：对齐、竖线与单元格换行</h1>
-    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 5 分钟</span></p>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-tables.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
 <p>Markdown 表格由一行表头、一行用连字符写的分隔行，加上每行一条的数据行组成，单元格之间用竖线隔开，分隔行里的冒号决定对齐方式。单元格里要写竖线就写成 <code>\|</code>，要在单元格里换行就写 <code>&lt;br&gt;</code>。它是 GitHub Flavored Markdown 的扩展，不属于 CommonMark 核心，限制也很明确，一个单元格只能有一行，也不能合并单元格，需要更多时就退回 HTML 的 <code>&lt;table&gt;</code>。</p>
@@ -1316,7 +1316,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 | 1    | 打开文件&lt;br&gt;按保存          |
 </code></pre>
 <p>渲染器允许行内 HTML 时才有效，妙言的预览允许。行尾的反斜杠在这里帮不上忙，因为单元格后面没有下一行源码可以续。如果查看器把 HTML 转义了，<code>&lt;br&gt;</code> 会原样显示出来，这时更好的办法是调整数据结构。</p>
-<p><strong>行内代码和公式。</strong> 行内代码除了竖线规则之外没有别的限制。公式方面，妙言的渲染器在表格解析之前，会把 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code> 里的每个字符都先遮蔽起来，所以单元格里的 <code>$n$</code> 是安全的，按源码来看公式里的 <code>|</code> 同样会被遮蔽。这是这个渲染器自己的行为，换一个工具不要想当然，写绝对值这类符号，用 <code>\vert</code> 在任何 KaTeX 渲染器里都不用担心。分隔符见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<p><strong>行内代码和公式。</strong> 行内代码除了竖线规则之外没有别的限制。公式方面，妙言的渲染器在表格解析之前，会把 <code>$...$</code> 和 <code>$$...$$</code> 里的每个字符都先遮蔽起来，没有美元符号公式的笔记里 <code>\(...\)</code> 和 <code>\[...\]</code> 也一样（从 V4.12.0 起，和美元符号公式放在一起时它们是普通的 Markdown 转义），所以单元格里的 <code>$n$</code> 是安全的，按源码来看公式里的 <code>|</code> 同样会被遮蔽。这是这个渲染器自己的行为，换一个工具不要想当然，写绝对值这类符号，用 <code>\vert</code> 在任何 KaTeX 渲染器里都不用担心。分隔符见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
 <h2 id="表格做不到的事">表格做不到的事</h2>
 <p>没有合并单元格，没有跨行，没有多段落单元格，单元格里不能放列表，也不能设置列宽，这套语法描述的只是一个普通网格。需要合并表头或者单元格里放列表时，就用 HTML 写表格：</p>
 <pre><code class="language-markdown">&lt;table&gt;
@@ -1326,6 +1326,13 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </code></pre>
 <p>妙言的预览会放行原始 HTML，所以这样能渲染，但不是每个渲染器都允许原始 HTML，要在笔记最终阅读的地方测一遍。代价是 HTML 表格比竖线表格难改，差异对比也不清楚。</p>
 <p>更好的办法常常是改数据。需要列表的单元格，多半更适合做成标题下面的一个列表，需要合并单元格的表格，往往本来就是两张表。</p>
+<h2 id="在妙言里编辑表格">在妙言里编辑表格</h2>
+<p>妙言里的表格仍然是纯文本，没有在上面再盖一层网格编辑器，不过从 V4.12.0 起，琐碎的活交给了编辑器：</p>
+<ul>
+<li><strong>列会对齐。</strong> 编辑器按每列最宽的单元格来画，就算是比例字体，竖线也会上下对齐，竖线和分隔线的颜色和 <code>#</code>、<code>**</code> 一样淡下去，文件里不会多出任何字符。比编辑区还宽的表格、超过 300 行的表格，以及含有制表符或图片的表格，保持你打的原样。</li>
+<li><strong>Tab 和回车在单元格之间移动。</strong> Tab 跳到下一个单元格并选中里面的文字，Shift-Tab 往回跳，在一行最后一格按 Tab 会进入下一行。回车跳到下一行的第一格。在表格末尾这两个键都会新加一行，在空着的最后一行按回车就离开表格，和空列表项的回车一样。Shift-回车仍然是普通换行。</li>
+<li><strong>格式 &gt; 表格</strong> 可以在上方或下方插入行、在左侧或右侧插入列、删除行或列，也可以把当前列设成左对齐、居中对齐或右对齐，对应写成 <code>:--</code>、<code>:-:</code> 或 <code>--:</code>。光标在表格里时这些菜单项才能用，每一项都会把表格重新排成补齐空格、上下对齐的样子。</li>
+</ul>
 <h2 id="妙言里的宽表格">妙言里的宽表格</h2>
 <p>在屏幕上，妙言给每个表格套了一层可滚动的容器。表格至少和正文一样宽，某个单元格里有缩不下去的内容，比如很长的网址或公式时，表格会超出正文宽度，在自己的框里横向滚动，不会把整个页面撑宽。文字在空格处换行，没有空格的长字符串会保持原宽并让表格出现滚动，而不是从单词中间截断。</p>
 <p>PDF 和图片导出没法滚动，所以导出样式会撤掉这一层。滚动容器不再裁剪，表格被设成页面宽度的固定布局，各列等宽。结果是一列很长、几列很短的表格，在纸上会被压成等宽的几列。导出的表格显得局促时，缩短最长的单元格、删一列，或者把表格拆开。导出的步骤见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。打印样式还要求表格不要跨页拆开。</p>
@@ -1345,7 +1352,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-links-and-anchors/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 链接与锚点：行内、引用和标题跳转</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-task-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 待办列表与复选框写法</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-links-and-anchors/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 链接与锚点：行内、引用和标题跳转</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markdown-task-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 待办列表与复选框写法</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

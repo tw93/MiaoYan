@@ -1,4 +1,4 @@
-To get a mind map from a Markdown outline, put the outline in a fenced code block tagged `markmap`: headings and nested list items become branches, and the preview draws them as an SVG tree. In MiaoYan the Markmap library is bundled inside the app, so a plain outline renders offline and its text does not leave your Mac. The trade-off is control. The colors, spacing and starting expansion are fixed by the app, the map in the normal preview does not respond to clicks or the scroll wheel, and the options you may know from Markmap's own documentation do not change anything here. The outline below opens in the [Markmap editor](/tools/markmap-editor/), where you can fold its branches and download the map as PNG or SVG.
+To get a mind map from a Markdown outline, put the outline in a fenced code block tagged `markmap`: headings and nested list items become branches, and the preview draws them as an SVG tree. In MiaoYan the Markmap library is bundled inside the app, so a map renders offline and its text does not leave your Mac. The trade-off is control. The colors, spacing and starting expansion are fixed by the app, the map in the normal preview does not respond to clicks or the scroll wheel, and the options you may know from Markmap's own documentation do not change anything here. The outline below opens in the [Markmap editor](/tools/markmap-editor/), where you can fold its branches and download the map as PNG or SVG.
 
 ## What Markmap does
 
@@ -29,7 +29,7 @@ You do not have to type the fence. In MiaoYan, type `/markmap` and press `Tab`, 
 
 ## How it works in MiaoYan
 
-A fenced block with a language tag reaches the page as a code element with the class `language-markmap`. After the preview loads, a script (`diagram-handler.js`) finds those elements and hands each one to the bundled Markmap loader (`markmap.min.js`, with `markmap-view.min.js` and `d3.min.js` beside it). The loader reads the text of the block, strips the common indentation, converts the outline into a tree and draws it into an SVG that replaces the code. All of those files are packaged in the preview bundle (markmap-lib 0.14.1 and markmap-view 0.14.0) and referenced by relative path, so a plain outline sends no request. Math is the exception: a node with `$x^2$` makes the Markmap library fetch KaTeX styles and fonts from jsDelivr, so keep formulas out of maps that must stay offline.
+A fenced block with a language tag reaches the page as a code element with the class `language-markmap`. After the preview loads, a script (`diagram-handler.js`) finds those elements and hands each one to the bundled Markmap loader (`markmap.min.js`, with `markmap-view.min.js` and `d3.min.js` beside it). The loader reads the text of the block, strips the common indentation, converts the outline into a tree and draws it into an SVG that replaces the code. All of those files are packaged in the preview bundle (markmap-lib 0.14.1 and markmap-view 0.14.0) and referenced by relative path, so a plain outline sends no request. Before V4.12.0 math was the exception, since a node with `$x^2$` made the Markmap library fetch KaTeX styles and fonts from jsDelivr; since V4.12.0 the loader drops every remote asset, so formulas stay offline too.
 
 Reading the loader, a few behaviors are fixed:
 
@@ -66,7 +66,8 @@ The two solve different problems. Markmap reads the headings and lists you alrea
 - **The map is a single node.** The block needs headings or list items. A paragraph of prose on its own becomes one node with the whole sentence in it.
 - **A very large outline.** Each node is drawn as an HTML label inside the SVG, and a few hundred nodes is hard to read even when it fits. Split the outline into several blocks, one per branch.
 - **Links and formatting inside nodes.** Bold, inline code and links render inside nodes. A link cannot be clicked in the normal preview, because the map ignores pointer events, so do not use a map as navigation.
-- **Export.** For PDF export, MiaoYan waits until every Markmap block has rendered before printing. Still open an exported file once: a diagram is a drawn snapshot, and large maps are the likeliest to be scaled.
+- **Math and code in nodes.** Since V4.12.0 a `$...$` formula in a node is typeset by the KaTeX bundled with the app and drawn inside its node, and a fenced code block in a node is highlighted and sized to its longest line. Before that, a formula could land in the map's corner, and a code block could turn the whole map into plain text.
+- **Export.** For PDF export, MiaoYan waits until every Markmap block has rendered before printing, and since V4.12.0 each map sits centred in its box on the page. Still open an exported file once: a diagram is a drawn snapshot, and large maps are the likeliest to be scaled.
 
 To check it works, insert the template, switch to preview (`⌘3`) or split mode (`⌘\`), and confirm the tree appears with colored branches.
 
@@ -74,7 +75,7 @@ To check it works, insert the template, switch to preview (`⌘3`) or split mode
 
 ### Does Markmap need an internet connection in MiaoYan?
 
-Not for a plain outline. The library files ship inside the app, unlike PlantUML, which sends the diagram to a public server. A node with math is the exception, since it loads KaTeX from a CDN.
+No. The library files ship inside the app, unlike PlantUML, which sends the diagram to a public server. Since V4.12.0 that holds for formulas and code in nodes too: they use the KaTeX and highlighter bundled with the preview. In earlier versions a node with math loaded KaTeX's styles and fonts from jsDelivr, and a node with code loaded Prism from it.
 
 ### Can I make the map start collapsed?
 

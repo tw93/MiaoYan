@@ -20,7 +20,7 @@
 <meta property="og:description" content="Markdown 没有上标下标语法，看 HTML 标签、^ 与 ~、Unicode 字符和 LaTeX 公式各自适合什么，以及妙言里的渲染结果。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-superscript-subscript.webp">
 <meta property="article:published_time" content="2026-10-25">
-<meta property="article:modified_time" content="2026-11-21">
+<meta property="article:modified_time" content="2026-11-25">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -112,14 +112,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -1274,7 +1274,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 上标和下标怎么写", "item": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/#article", "headline": "Markdown 上标和下标怎么写", "description": "Markdown 没有上标下标语法，看 HTML 标签、^ 与 ~、Unicode 字符和 LaTeX 公式各自适合什么，以及妙言里的渲染结果。", "url": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/", "datePublished": "2026-10-25", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-superscript-subscript.webp", "timeRequired": "PT8M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "GitHub 支持上标和下标吗？", "acceptedAnswer": {"@type": "Answer", "text": "支持，用 <sup> 和 <sub>，它的格式说明里有写，说明里没有插入符号的语法。"}}, {"@type": "Question", "name": "妙言里能用 ^ 和 ~ 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，^text^ 原样显示，~text~ 被划掉，用 <sup>、<sub> 或数学公式。"}}, {"@type": "Question", "name": "10 的负 6 次方怎么写？", "acceptedAnswer": {"@type": "Answer", "text": "HTML 写 10<sup>-6</sup>，Unicode 写 10⁻⁶，数学写 $10^{-6}$。数学里花括号不能省，^-6 只会把负号抬上去。"}}, {"@type": "Question", "name": "化学式用哪种？", "acceptedAnswer": {"@type": "Answer", "text": "正文里用 H<sub>2</sub>O，化学式和方程写在一起时用数学。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 上标和下标怎么写", "item": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/#article", "headline": "Markdown 上标和下标怎么写", "description": "Markdown 没有上标下标语法，看 HTML 标签、^ 与 ~、Unicode 字符和 LaTeX 公式各自适合什么，以及妙言里的渲染结果。", "url": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-superscript-subscript/", "datePublished": "2026-10-25", "dateModified": "2026-11-25", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-superscript-subscript.webp", "timeRequired": "PT8M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "GitHub 支持上标和下标吗？", "acceptedAnswer": {"@type": "Answer", "text": "支持，用 <sup> 和 <sub>，它的格式说明里有写，说明里没有插入符号的语法。"}}, {"@type": "Question", "name": "妙言里能用 ^ 和 ~ 吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，^text^ 原样显示，~text~ 被划掉，用 <sup>、<sub> 或数学公式。"}}, {"@type": "Question", "name": "10 的负 6 次方怎么写？", "acceptedAnswer": {"@type": "Answer", "text": "HTML 写 10<sup>-6</sup>，Unicode 写 10⁻⁶，数学写 $10^{-6}$。数学里花括号不能省，^-6 只会把负号抬上去。"}}, {"@type": "Question", "name": "化学式用哪种？", "acceptedAnswer": {"@type": "Answer", "text": "正文里用 H<sub>2</sub>O。写反应式，或者化学式和方程写在一起时，用 $\\ce{...}$，比如 $\\ce{2H2 + O2 -> 2H2O}$，妙言从 V4.12.0 起能渲染，在不带 mhchem 的渲染器里就退回用 \\text 写数学。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1391,7 +1391,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 
 水是 $\text{H}_2\text{O}$。
 </code></pre>
-<p>数学模式会给出合适的字号和间距，变量也是斜体，还可以在同一个符号上同时放上下标（<code>x_i^2</code>）。妙言在解析器运行之前先把数学范围的内容保护起来，所以 <code>$...$</code> 里的 <code>_</code> 和 <code>^</code> 不会被当成强调。定界符和支持的函数见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。正文里的化学式用 <code>H&lt;sub&gt;2&lt;/sub&gt;O</code> 更轻，化学式和方程写在一起时数学更合适。直接写 <code>$H_2O$</code> 字母会变成斜体，因为数学模式把它们当变量，上面的例子才用 <code>\text</code> 包起来。</p>
+<p>数学模式会给出合适的字号和间距，变量也是斜体，还可以在同一个符号上同时放上下标（<code>x_i^2</code>）。妙言在解析器运行之前先把数学范围的内容保护起来，所以 <code>$...$</code> 里的 <code>_</code> 和 <code>^</code> 不会被当成强调。定界符和支持的函数见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。正文里的化学式用 <code>H&lt;sub&gt;2&lt;/sub&gt;O</code> 更轻，化学式和方程写在一起时数学更合适。直接写 <code>$H_2O$</code> 字母会变成斜体，因为数学模式把它们当变量，上面的例子才用 <code>\text</code> 包起来。妙言从 V4.12.0 起也认 mhchem，写 <code>$\ce{H2O}$</code> 字母就是正体，下标按化学式自动排好。</p>
 <h2 id="脚注标记是另一回事">脚注标记是另一回事</h2>
 <p>脚注标记看起来像上标，其实是链接。正文里的 <code>[^1]</code> 加一行 <code>[^1]: 注释</code> 的定义，会生成一个抬高的小数字，点它跳到注释，注释里还有链接跳回来。妙言的 cmark-gfm 会自动把每个标记变成上标数字，不用自己写 <code>&lt;sup&gt;</code>。手写 <code>&lt;sup&gt;1&lt;/sup&gt;</code> 得到的是一个不指向任何地方的抬高的 1。读者需要看注释时用脚注，抬高的文字本身就是内容时用 <code>&lt;sup&gt;</code>，比如 <code>26&lt;sup&gt;th&lt;/sup&gt;</code>，详见 <a href="/zh/blog/markdown-footnotes/">Markdown 脚注</a>。</p>
 <h2 id="显示不对怎么查">显示不对怎么查</h2>
@@ -1411,7 +1411,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h3 id="10-的负-6-次方怎么写">10 的负 6 次方怎么写？</h3>
 <p>HTML 写 <code>10&lt;sup&gt;-6&lt;/sup&gt;</code>，Unicode 写 <code>10⁻⁶</code>，数学写 <code>$10^{-6}$</code>。数学里花括号不能省，<code>^-6</code> 只会把负号抬上去。</p>
 <h3 id="化学式用哪种">化学式用哪种？</h3>
-<p>正文里用 <code>H&lt;sub&gt;2&lt;/sub&gt;O</code>，化学式和方程写在一起时用数学。</p>
+<p>正文里用 <code>H&lt;sub&gt;2&lt;/sub&gt;O</code>。写反应式，或者化学式和方程写在一起时，用 <code>$\ce{...}$</code>，比如 <code>$\ce{2H2 + O2 -&gt; 2H2O}$</code>，妙言从 V4.12.0 起能渲染，在不带 mhchem 的渲染器里就退回用 <code>\text</code> 写数学。</p>
     </div>
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">

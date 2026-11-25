@@ -1,4 +1,4 @@
-Write inline math between single dollar signs, like `$E = mc^2$`, and block math between double dollar signs on their own lines. Markdown itself has no math syntax, so the app's renderer finds those delimiters and typesets the contents with a TeX engine, usually KaTeX or MathJax. In MiaoYan the engine is KaTeX 0.16.0, bundled inside the app, so formulas render without a network connection. The common failures are a dollar sign read as math, an environment that needs a wrapper, and an underscore eaten by Markdown before the engine sees it.
+Write inline math between single dollar signs, like `$E = mc^2$`, and block math between double dollar signs on their own lines. Markdown itself has no math syntax, so the app's renderer finds those delimiters and typesets the contents with a TeX engine, usually KaTeX or MathJax. In MiaoYan the engine is KaTeX 0.16.47, bundled inside the app, so formulas render without a network connection. The common failures are a dollar sign read as math, an environment that needs a wrapper, and an underscore eaten by Markdown before the engine sees it.
 
 ## Inline and block math
 
@@ -10,9 +10,9 @@ $$
 $$
 ```
 
-Inline math sits in the sentence and uses compact layout. Block math is centered on its own line with full-size operators, so sums and integrals show their limits above and below. If a formula is part of a sentence, use inline. If it should stand on its own, use a block.
+Inline math sits in the sentence and uses compact layout. Block math sits on its own line with full-size operators, so sums and integrals show their limits above and below. Most renderers centre it; MiaoYan's preview starts it where a bulleted list's text starts, and its slides centre it. If a formula is part of a sentence, use inline. If it should stand on its own, use a block.
 
-MiaoYan accepts four delimiter pairs: `$...$`, `$$...$$`, `\(...\)` and `\[...\]`. The last two are the LaTeX-native forms. You can mix them, but picking one pair for inline and one for block makes notes easier to move between apps.
+MiaoYan accepts four delimiter pairs: `$...$`, `$$...$$`, `\(...\)` and `\[...\]`. The last two are the LaTeX-native forms. Since V4.12.0 the dollar forms are always math, while `\(...\)` and `\[...\]` are math only in a note that has no dollar math. Beside dollar math they are ordinary Markdown escapes, so `\[1\]` stays a literal `[1]`. Pick one family per note: dollars, or the LaTeX-native pair, which is how ChatGPT and Claude write it.
 
 ## Constructs you will use most
 
@@ -50,13 +50,23 @@ $$
 
 Use `&` to separate columns and `\\` to end a row. KaTeX lists `matrix`, `pmatrix`, `bmatrix`, `cases`, `align`, `aligned` and others as supported environments. In MiaoYan, wrap `aligned` inside `$$`. KaTeX's auto-render extension can pick up bare `\begin{align}` blocks by default, but MiaoYan's delimiter list has only the four pairs above, so a bare `\begin{align}` is not recognized as a math block. The wrapped form works across more tools anyway.
 
+### Chemistry formulas
+
+```markdown
+$\ce{2H2 + O2 -> 2H2O}$
+
+$\ce{CO2 + C -> 2CO}$, at $\pu{1000 K}$
+```
+
+`\ce` writes formulas and reactions with upright element symbols, automatic subscripts and reaction arrows, and `\pu` writes physical units. Both come from KaTeX's mhchem extension, which MiaoYan bundles since V4.12.0, in the preview and in slides. A formula mhchem cannot read stays as its source text, and the rest of the page still renders.
+
 ## How it actually works
 
 A Markdown parser has no idea what a formula is. If it sees `a_b_c`, it may read the underscores as emphasis. If it sees `\\`, it may read one backslash as an escape. So an app has to protect the math before the Markdown pass, then hand the original text to the TeX engine afterwards.
 
 MiaoYan does this in two steps. First, a pre-pass finds math ranges outside code spans and fences, ignores escaped delimiters, and shields their contents from the parser. Second, the rendered HTML loads into a web view, where KaTeX's auto-render script scans the page for the four delimiter pairs and replaces them with typeset output. KaTeX's default ignored tags include `code` and `pre`, so math inside a code fence is never rendered.
 
-Engines also differ in speed and LaTeX coverage. KaTeX is fast and renders synchronously, but supports a subset of LaTeX. MathJax is the other common engine, and Typora's site says it supports most MathJax extensions, including mhchem and AMSmath. If your formulas come from a paper using exotic packages, test them in the editor before relying on them. MiaoYan's bundled KaTeX 0.16.0 runs entirely from files inside the app.
+Engines also differ in speed and LaTeX coverage. KaTeX is fast and renders synchronously, but supports a subset of LaTeX. MathJax is the other common engine, and Typora's site says it supports most MathJax extensions, including mhchem and AMSmath. If your formulas come from a paper using exotic packages, test them in the editor before relying on them. MiaoYan's bundled KaTeX 0.16.47, mhchem included, runs entirely from files inside the app.
 
 ## Dollar signs and prices
 
@@ -94,6 +104,7 @@ If you see a root sign, a sum with limits, and a literal `$5`, the engine and th
 
 - KaTeX covers most of what notes need, but not all of LaTeX. Packages and macros defined with `\newcommand` in a preamble are not part of a Markdown note.
 - Math is rendered in the preview. The editor pane shows raw source.
+- A display formula wider than the page scrolls sideways in its own box in the preview, since V4.12.0. Print and PDF cannot scroll, so break a long equation with `aligned` before exporting it.
 - PDF, HTML and image exports are produced from the rendered preview. Check an exported file once to verify any formulas you care about; [Markdown to PDF on Mac](/blog/markdown-to-pdf-mac/) covers the PDF route.
 
 ## FAQ

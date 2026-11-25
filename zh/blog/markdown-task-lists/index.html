@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -112,14 +112,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -1322,7 +1322,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="在妙言里点击复选框发生了什么">在妙言里点击复选框发生了什么</h2>
 <p>预览页脚本（<code>common.js</code>）会启用所有复选框，并记下每个待办项在源文本里的行号。点击时把行号发给应用，应用（<code>MPreviewHandlers.swift</code> 里的 <code>HandlerCheckbox</code>）找到那一行的复选框，把括号里的空格或 <code>x</code> 换成另一个并保存笔记。</p>
 <p>边界情况都由这个机制决定。应用按源文本的行号处理，点的是哪个框就改哪个，不管笔记用的是 <code>-</code>、<code>*</code>、<code>+</code>、<code>1.</code> 还是 <code>1)</code>，大写 <code>X</code> 和引用行里的待办也都算。围栏代码块里的 <code>- [ ]</code> 不会画出复选框，也就点不到、改不到。点了没反应时，先看那一行是不是真的被渲染成了待办。iPhone 和 iPad 版从 V4.9.0 起在阅读视图里也能这样勾选，点一下方框就改写那一行并保存，不用进编辑器。</p>
-<p>编辑时可以用「格式」菜单里的「待办」（<code>⌘T</code>），当前行不是待办就插入 <code>- [ ]</code>，已经是待办就在 <code>- [ ]</code> 和 <code>- [x]</code> 之间切换。它只改括号中间的那个字符，缩进的子任务和编号待办也能用，在待办行按回车会新开一条未勾选的。输入 <code>/task</code> 再按 <code>Tab</code> 会插入三行模板，两条未完成、一条已完成，占位文字是中文，「Tab快捷输入」菜单里也列着这一项。</p>
+<p>编辑时可以用「格式」菜单里的「待办」（<code>⌘T</code>），当前行不是待办就插入 <code>- [ ]</code>，已经是待办就在 <code>- [ ]</code> 和 <code>- [x]</code> 之间切换。它只改括号中间的那个字符，缩进的子任务和编号待办也能用，在待办行按回车会新开一条未勾选的。输入 <code>/task</code> 再按 <code>Tab</code> 会插入三行模板，两条未完成、一条已完成，占位文字是中文，「Tab 快捷输入」菜单里也列着这一项。</p>
 <h2 id="引用块里的待办">引用块里的待办</h2>
 <pre><code class="language-markdown">&gt; - [ ] 问清截止时间
 &gt; - [x] 发出初稿
@@ -1351,7 +1351,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-tables/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 表格：对齐、竖线与单元格换行</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markmap-mind-maps/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">用 Markdown 大纲画 Markmap 思维导图</span><span class="blog-related-meta">约 6 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-tables/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 表格：对齐、竖线与单元格换行</span><span class="blog-related-meta">约 7 分钟</span></a></li><li><a href="/zh/blog/markmap-mind-maps/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">用 Markdown 大纲画 Markmap 思维导图</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

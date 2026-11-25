@@ -20,7 +20,7 @@
 <meta property="og:description" content="行内与块级公式的写法、常用 LaTeX 结构、美元符号和下划线的坑，以及妙言如何用 KaTeX 渲染。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-21">
+<meta property="article:modified_time" content="2026-11-25">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -112,14 +112,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -1274,7 +1274,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里写 LaTeX 公式", "item": "https://miaoyan.app/zh/blog/latex-math-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/latex-math-in-markdown/#article", "headline": "Markdown 里写 LaTeX 公式", "description": "行内与块级公式的写法、常用 LaTeX 结构、美元符号和下划线的坑，以及妙言如何用 KaTeX 渲染。", "url": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的公式需要联网吗", "acceptedAnswer": {"@type": "Answer", "text": "不需要，KaTeX 随应用打包。这一类功能里需要联网的是 PlantUML，它会发到公共服务器渲染。"}}, {"@type": "Question", "name": "KaTeX 和 MathJax 怎么选", "acceptedAnswer": {"@type": "Answer", "text": "需要某个只有 MathJax 才有的扩展，就用提供它的编辑器。普通的代数、微积分、矩阵和对齐公式，KaTeX 够用而且渲染快。"}}, {"@type": "Question", "name": "怎么写出美元符号本身", "acceptedAnswer": {"@type": "Answer", "text": "在妙言里，$5 后面跟空格或标点时本来就保持文字，$5M 这类写成 \\$5M，V4.10.0 起妙言会把它显示成普通的美元符号，放进行内代码也行，在别的应用里同样有效。"}}, {"@type": "Question", "name": "公式能自动编号吗", "acceptedAnswer": {"@type": "Answer", "text": "Typora 官网说开启后可以自动给公式编号。妙言没有公式编号的设置，KaTeX 在部分环境里支持用 \\tag{1} 给行加标签，可以手动编号。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里写 LaTeX 公式", "item": "https://miaoyan.app/zh/blog/latex-math-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/latex-math-in-markdown/#article", "headline": "Markdown 里写 LaTeX 公式", "description": "行内与块级公式的写法、常用 LaTeX 结构、美元符号和下划线的坑，以及妙言如何用 KaTeX 渲染。", "url": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/latex-math-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-11-25", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言的公式需要联网吗", "acceptedAnswer": {"@type": "Answer", "text": "不需要，KaTeX 随应用打包。这一类功能里需要联网的是 PlantUML，它会发到公共服务器渲染。"}}, {"@type": "Question", "name": "KaTeX 和 MathJax 怎么选", "acceptedAnswer": {"@type": "Answer", "text": "需要某个只有 MathJax 才有的扩展，就用提供它的编辑器。普通的代数、微积分、矩阵和对齐公式，KaTeX 够用而且渲染快。"}}, {"@type": "Question", "name": "怎么写出美元符号本身", "acceptedAnswer": {"@type": "Answer", "text": "在妙言里，$5 后面跟空格或标点时本来就保持文字，$5M 这类写成 \\$5M，V4.10.0 起妙言会把它显示成普通的美元符号，放进行内代码也行，在别的应用里同样有效。"}}, {"@type": "Question", "name": "公式能自动编号吗", "acceptedAnswer": {"@type": "Answer", "text": "Typora 官网说开启后可以自动给公式编号。妙言没有公式编号的设置，KaTeX 在部分环境里支持用 \\tag{1} 给行加标签，可以手动编号。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1295,10 +1295,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
     <h1 class="blog-title">Markdown 里写 LaTeX 公式</h1>
-    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/latex-math-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>行内公式写在单个美元符号之间，比如 <code>$E = mc^2$</code>，块级公式写在各占一行的双美元符号之间。Markdown 本身没有数学语法，靠应用的渲染器识别出这些定界符，再交给 TeX 引擎排版，常见的引擎是 KaTeX 或 MathJax。妙言用的是 KaTeX 0.16.0，随应用打包，所以公式渲染不需要联网。最常见的几类问题是美元符号被当成公式、某些环境需要套一层外壳，以及下划线在引擎看到之前就被 Markdown 吃掉了。</p>
+<p>行内公式写在单个美元符号之间，比如 <code>$E = mc^2$</code>，块级公式写在各占一行的双美元符号之间。Markdown 本身没有数学语法，靠应用的渲染器识别出这些定界符，再交给 TeX 引擎排版，常见的引擎是 KaTeX 或 MathJax。妙言用的是 KaTeX 0.16.47，随应用打包，所以公式渲染不需要联网。最常见的几类问题是美元符号被当成公式、某些环境需要套一层外壳，以及下划线在引擎看到之前就被 Markdown 吃掉了。</p>
 <h2 id="行内公式和块级公式">行内公式和块级公式</h2>
 <pre><code class="language-markdown">静止时的能量是 $E = mc^2$。
 
@@ -1306,8 +1306,8 @@ $$
 \int_0^1 x^2 \, dx = \frac{1}{3}
 $$
 </code></pre>
-<p>行内公式嵌在句子里，排版紧凑，块级公式单独居中，运算符是完整大小，求和与积分的上下限会放在符号的上下方。公式只是句子的一部分就用行内，想让读者专门看它就用块级。</p>
-<p>妙言识别四对定界符，分别是 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，后两种是 LaTeX 原生写法。可以混用，不过行内和块级各自固定一套写法，笔记在不同应用之间搬运会省心很多。</p>
+<p>行内公式嵌在句子里，排版紧凑，块级公式单独占一行，运算符是完整大小，求和与积分的上下限会放在符号的上下方。多数渲染器把它居中，妙言的预览让它从列表文字开始的位置起排，幻灯片里则居中。公式只是句子的一部分就用行内，想让读者专门看它就用块级。</p>
+<p>妙言识别四对定界符，分别是 <code>$...$</code>、<code>$$...$$</code>、<code>\(...\)</code> 和 <code>\[...\]</code>，后两种是 LaTeX 原生写法。从 V4.12.0 起，美元符号的写法始终是公式，<code>\(...\)</code> 和 <code>\[...\]</code> 只在没有美元符号公式的笔记里才算公式，和美元符号公式放在一起时它们就是普通的 Markdown 转义，<code>\[1\]</code> 显示成字面的 <code>[1]</code>。所以一篇笔记固定用一套，要么美元符号，要么 LaTeX 原生写法，从 ChatGPT 或 Claude 粘过来的内容通常是后者。</p>
 <h2 id="最常用的写法">最常用的写法</h2>
 <table>
 <thead>
@@ -1369,10 +1369,16 @@ a &amp;= b + c \\
 $$
 </code></pre>
 <p>用 <code>&amp;</code> 分列，用 <code>\\</code> 换行。KaTeX 把 <code>matrix</code>、<code>pmatrix</code>、<code>bmatrix</code>、<code>cases</code>、<code>align</code>、<code>aligned</code> 等列为支持的环境。在妙言里要把 <code>aligned</code> 套在 <code>$$</code> 里面。KaTeX 的 auto-render 扩展默认能识别裸写的 <code>\begin{align}</code>，但妙言的定界符只有上面这四对，裸写的 <code>\begin{align}</code> 在这里不会被识别成公式，套一层 <code>$$</code> 的写法在更多应用里也都能用。</p>
+<h3 id="化学式">化学式</h3>
+<pre><code class="language-markdown">$\ce{2H2 + O2 -&gt; 2H2O}$
+
+$\ce{CO2 + C -&gt; 2CO}$，温度 $\pu{1000 K}$
+</code></pre>
+<p><code>\ce</code> 用来写化学式和反应式，元素符号是正体，下标和反应箭头会自动排好，<code>\pu</code> 用来写物理单位。两个都来自 KaTeX 的 mhchem 扩展，妙言从 V4.12.0 起把它打包进预览和幻灯片。mhchem 读不懂的式子会原样显示源码，页面上其余公式照常渲染。</p>
 <h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
 <p>Markdown 解析器并不知道什么是公式，看到 <code>a_b_c</code> 可能把下划线当成强调，看到 <code>\\</code> 可能把一个反斜杠当成转义，所以应用必须在 Markdown 解析之前先把公式保护起来，之后再把原文交给 TeX 引擎。</p>
 <p>妙言分两步做这件事。先用一个预处理找出代码段和代码块之外的公式范围，跳过被转义的定界符，把里面的内容挡在解析器之外。解析后的 HTML 再装进网页视图，由 KaTeX 的 auto-render 脚本扫描四对定界符，替换成排好版的结果。KaTeX 默认忽略 <code>code</code> 和 <code>pre</code> 标签，所以代码块里的公式不会被渲染。</p>
-<p>引擎之间的差别也在这里。KaTeX 快，同步渲染，支持 LaTeX 的一个子集。MathJax 是另一个常见引擎，Typora 官网说它支持大部分 MathJax 扩展，包括 mhchem 和 AMSmath。公式如果来自用了冷门宏包的论文，先在编辑器里实测，再决定能不能依赖。妙言内置的 KaTeX 0.16.0 完全从应用内文件运行。</p>
+<p>引擎之间的差别也在这里。KaTeX 快，同步渲染，支持 LaTeX 的一个子集。MathJax 是另一个常见引擎，Typora 官网说它支持大部分 MathJax 扩展，包括 mhchem 和 AMSmath。公式如果来自用了冷门宏包的论文，先在编辑器里实测，再决定能不能依赖。妙言内置的 KaTeX 0.16.47 连同 mhchem 完全从应用内文件运行。</p>
 <h2 id="美元符号和价格">美元符号和价格</h2>
 <p>单个 <code>$</code> 同时也是货币符号，这是最常见的坑。妙言对此有一道保护，美元符号后面跟着数字，数字后面又不是数学的延续字符，就当作货币处理，所以 <code>It costs $5 today</code> 保持纯文本，<code>$2+2$</code> 仍然是公式，因为数字后面的 <code>+</code> 算作数学延续。这道保护遇到字母就停了，<code>$5M and $10M</code> 会被读成两个美元符号之间的一个公式。从 V4.10.0 起反斜杠就管用了，<code>\$5M and \$10M</code> 显示成两个美元符号，因为妙言会把代码和公式之外的每个 <code>\$</code> 换成公式处理跳过的美元符号，行内的 <code>$</code> 也只和同一段里的 <code>$</code> 配对。旧版本，或者会在数学处理前去掉反斜杠的应用里，金额一定要保持文字的话，放进行内代码或者换个说法：</p>
 <pre><code class="language-markdown">预算从 `$5M` 涨到了一千万美元。
@@ -1400,6 +1406,7 @@ $$
 <ul>
 <li>KaTeX 覆盖笔记里的大部分需求，但不是全部 LaTeX，像导言区里用 <code>\newcommand</code> 定义的宏和宏包在 Markdown 笔记里无法使用。</li>
 <li>公式在预览里渲染，编辑区显示的是源码。</li>
+<li>从 V4.12.0 起，比页面还宽的块级公式会在预览里自己的框内左右滚动。打印和 PDF 没法滚动，导出前用 <code>aligned</code> 把长公式拆成几行。</li>
 <li>PDF、HTML 和图片导出都来自渲染后的预览，重要的公式导出后要看一眼，导出 PDF 的细节见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</li>
 </ul>
 <h2 id="常见问题">常见问题</h2>

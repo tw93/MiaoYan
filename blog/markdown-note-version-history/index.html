@@ -20,7 +20,7 @@
 <meta property="og:description" content="How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-06">
+<meta property="article:modified_time" content="2026-11-25">
 <meta property="article:section" content="Managing notes">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -110,14 +110,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -1272,7 +1272,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown note version history: MiaoYan, Time Machine, git", "item": "https://miaoyan.app/blog/markdown-note-version-history/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-note-version-history/#article", "headline": "Markdown note version history: MiaoYan, Time Machine, git", "description": "How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.", "url": "https://miaoyan.app/blog/markdown-note-version-history/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-note-version-history/", "datePublished": "2026-10-19", "dateModified": "2026-11-06", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp", "timeRequired": "PT7M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does MiaoYan save a version every time I type?", "acceptedAnswer": {"@type": "Answer", "text": "No. At most one every five minutes per note while editing, plus one when you leave the note."}}, {"@type": "Question", "name": "Can I turn version history off?", "acceptedAnswer": {"@type": "Answer", "text": "There is no setting for it in the app's preferences, so it is always on."}}, {"@type": "Question", "name": "Are versions stored in my notes folder?", "acceptedAnswer": {"@type": "Answer", "text": "No, in the app's support folder, so they do not appear in Finder next to your notes or sync with them."}}, {"@type": "Question", "name": "Can I recover a note I deleted?", "acceptedAnswer": {"@type": "Answer", "text": "Notes sent to the Trash can be recovered from the Trash. The history window looks the note up by its path, and the versions follow the note into the Trash and back when the delete is undone."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown note version history: MiaoYan, Time Machine, git", "item": "https://miaoyan.app/blog/markdown-note-version-history/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-note-version-history/#article", "headline": "Markdown note version history: MiaoYan, Time Machine, git", "description": "How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.", "url": "https://miaoyan.app/blog/markdown-note-version-history/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-note-version-history/", "datePublished": "2026-10-19", "dateModified": "2026-11-25", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp", "timeRequired": "PT7M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does MiaoYan save a version every time I type?", "acceptedAnswer": {"@type": "Answer", "text": "No. At most one every five minutes per note while editing, plus one when you leave the note."}}, {"@type": "Question", "name": "Can I turn version history off?", "acceptedAnswer": {"@type": "Answer", "text": "There is no setting for it in the app's preferences, so it is always on."}}, {"@type": "Question", "name": "Are versions stored in my notes folder?", "acceptedAnswer": {"@type": "Answer", "text": "No, in the app's support folder, so they do not appear in Finder next to your notes or sync with them."}}, {"@type": "Question", "name": "Can I recover a note I deleted?", "acceptedAnswer": {"@type": "Answer", "text": "Notes sent to the Trash can be recovered from the Trash. The history window looks the note up by its path, and the versions follow the note into the Trash and back when the delete is undone."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1300,7 +1300,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="open-and-restore-a-version">Open and restore a version</h2>
 <ol>
 <li>Select a note and press Command Shift H, or use the "Version History" item in the note menu.</li>
-<li>The window lists "Current Version" at the top, then saved versions with their time and a relative description such as "2 hours ago". Click one to preview its text.</li>
+<li>The window lists "Current Version" at the top, then saved versions with their time and a relative description such as "2 hours ago". Since V4.12.0 each row also shows <code>+N -M</code>, the lines that version added and removed against the one before it, so the version before a bad edit is easy to spot. Click one to preview its text: lines it added are tinted green, lines it rewrote yellow, and the preview opens at the first change.</li>
 <li>Click "Restore to This Version". MiaoYan replaces the note's text with that version and shows a confirmation, "Restored to version from" followed by that version's time.</li>
 </ol>
 <p>If the note has no snapshots yet, the window says "No Version History".</p>
@@ -1310,7 +1310,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p><strong>When a snapshot is taken.</strong> A snapshot is considered whenever the note is written to disk, which happens after a short pause in typing. A new one is saved only if at least five minutes have passed since the previous snapshot of that note. Two events skip the five-minute wait: switching to another note (the one you leave is saved as a snapshot) and restoring a version (the current text is saved as a snapshot first). Opening the history window also tries a save, but a normal, throttled one that respects the interval.</p>
 <p><strong>What is skipped.</strong> Empty or whitespace-only notes are not saved. A snapshot is also skipped when it matches the newest saved version after comparing line by line with surrounding whitespace trimmed and blank lines removed, so a pure spacing change does not create an entry.</p>
 <p><strong>Where files go.</strong> Each note gets its own folder under <code>Library/Application Support/com.tw93.miaoyan/Versions/</code>, named with the note's file name plus a hash of its full path. Inside are plain <code>.md</code> files named by their UTC timestamp, for example <code>2026-10-18T15-42-07Z.md</code>. They are ordinary text, so you can open them in any editor. The history window shows the date in your local time.</p>
-<p><strong>How many.</strong> At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted.</p>
+<p><strong>How many.</strong> At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted. Since V4.12.0 the versions of all notes together also stay under 200 MB: past that, the oldest versions across every note go first, and a note's newest version is never removed.</p>
 <p><strong>Renames, moves and deletions.</strong> Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash moves its history to the new path along with it, and the history comes back if the delete is undone. Moving the whole library in Finder is not tracked, so the history stays under the old path.</p>
 <p><strong>The five-minute timer is per session.</strong> The record of when the last snapshot happened lives in memory, so after you quit and reopen the app, the first save of a note can create a snapshot straight away, provided the text differs from the newest saved version.</p>
 <h2 id="what-this-covers-and-what-it-does-not">What this covers and what it does not</h2>
@@ -1381,7 +1381,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="what-goes-wrong-and-how-to-check">What goes wrong and how to check</h2>
 <ul>
 <li><strong>The window says "No Version History".</strong> The note is new, empty, or has not been saved twice with different text. Edit it, wait, switch to another note and come back.</li>
-<li><strong>A version you expected is missing.</strong> The newest 20 are kept, and near-identical saves are skipped. Check whether the text differs only by spacing.</li>
+<li><strong>A version you expected is missing.</strong> The newest 20 are kept, since V4.12.0 the oldest go first once all notes' versions pass 200 MB, and near-identical saves are skipped. Check whether the text differs only by spacing.</li>
 <li><strong>Restore did not seem to change the file.</strong> The text is replaced in the editor and written to disk after the usual short delay. Re-open the note to confirm.</li>
 <li><strong>You moved the library folder.</strong> Snapshots are keyed by the note's full path. If you relocate the whole library in Finder, the paths change and the old history is no longer found for those notes.</li>
 </ul>

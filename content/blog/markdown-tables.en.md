@@ -29,7 +29,7 @@ A cell holds inline Markdown only. Emphasis, links, images, inline code and stri
 
 That works where the renderer allows inline HTML. MiaoYan's preview does. A backslash at the end of the line cannot help here, because the cell has no following source line to continue onto. If the viewer escapes HTML, you will see `<br>` as text, which is the cue to restructure the data instead.
 
-**Inline code and math.** Inline code is fine apart from the pipe rule. For math, MiaoYan's renderer masks each character inside `$...$`, `$$...$$`, `\(...\)` and `\[...\]` before the table parser runs, so `$n$` in a cell is safe, and the source also shows that a `|` inside a math span is masked too. That is this renderer's behavior and should not be assumed elsewhere; for a notation like absolute value, `\vert` sidesteps the problem in any KaTeX renderer. See [LaTeX math in Markdown](/blog/latex-math-in-markdown/) for the delimiters.
+**Inline code and math.** Inline code is fine apart from the pipe rule. For math, MiaoYan's renderer masks each character inside `$...$` and `$$...$$` before the table parser runs, and inside `\(...\)` and `\[...\]` in a note with no dollar math (beside dollar math those are plain Markdown escapes since V4.12.0), so `$n$` in a cell is safe, and the source also shows that a `|` inside a math span is masked too. That is this renderer's behavior and should not be assumed elsewhere; for a notation like absolute value, `\vert` sidesteps the problem in any KaTeX renderer. See [LaTeX math in Markdown](/blog/latex-math-in-markdown/) for the delimiters.
 
 ## What a table cannot do
 
@@ -45,6 +45,14 @@ There are no merged cells, no row spans, no multi-paragraph cells, no lists in c
 Raw HTML passes through in MiaoYan's preview, so this renders. Not every renderer allows raw HTML, so test where the note will be read. The trade-off is that an HTML table is harder to edit than a pipe table and does not diff cleanly.
 
 Often the better answer is to change the data. A cell that needs a list usually wants to be a list under a heading, and a table that needs merged cells is often two tables.
+
+## Editing tables in MiaoYan
+
+A table in MiaoYan is still plain text, with no grid editor on top, but since V4.12.0 the editor does the bookkeeping:
+
+- **Columns line up.** The editor draws each column as wide as its widest cell, so the pipes stand under each other even in a proportional font, and they and the line of dashes are greyed like `#` and `**`. Nothing is added to the file. A table wider than the editor, one past 300 rows, or one with a tab or an image is left as typed.
+- **Tab and Return move through cells.** Tab goes to the next cell and selects its words, Shift-Tab goes back, and Tab in a row's last cell goes on to the next row. Return goes to the first cell of the next row. At the end of the table both add a new row, and Return on an empty last row leaves the table, as it does for an empty list item. Shift-Return stays a plain line break.
+- **Format > Table** inserts a row above or below, a column left or right, deletes the row or column, and sets the column to Align Left, Align Center or Align Right, which writes `:--`, `:-:` or `--:`. The items are active only when the cursor is in a table, and each one rewrites the table with padded, lined-up cells.
 
 ## Wide tables in MiaoYan
 

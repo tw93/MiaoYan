@@ -20,7 +20,7 @@
 <meta property="og:description" content="行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。">
 <meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp">
 <meta property="article:published_time" content="2026-10-19">
-<meta property="article:modified_time" content="2026-11-21">
+<meta property="article:modified_time" content="2026-11-25">
 <meta property="article:section" content="Markdown 写作">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -112,14 +112,14 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=9d773f2828ad") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=0440a024dc0f") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=e10bc40cd98c") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=dcb024b5607a") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -1274,7 +1274,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 链接与锚点：行内、引用和标题跳转", "item": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/#article", "headline": "Markdown 链接与锚点：行内、引用和标题跳转", "description": "行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。", "url": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "datePublished": "2026-10-19", "dateModified": "2026-11-21", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp", "timeRequired": "PT6M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 怎么链接到某个标题？", "acceptedAnswer": {"@type": "Answer", "text": "写 [文字](#标题slug)。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪里读。"}}, {"@type": "Question", "name": "为什么锚点链接在妙言里不好用？", "acceptedAnswer": {"@type": "Answer", "text": "预览用标题文字当 id，不是小写 slug，带空格的片段也选不中。只有一个词的标题按原样链接，或者在标题上方加 <a id=\"name\"></a>。"}}, {"@type": "Question", "name": "Markdown 链接里有空格怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "把目的地放进尖括号，[文字](<my file.md>)，或者每个空格写成 %20。"}}, {"@type": "Question", "name": "裸网址会变成链接吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 会，妙言的预览从 V4.10.0 起也会，不带 GFM 自动链接扩展的查看器不会，在意的话用尖括号包起来。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 链接与锚点：行内、引用和标题跳转", "item": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/#article", "headline": "Markdown 链接与锚点：行内、引用和标题跳转", "description": "行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。", "url": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-links-and-anchors/", "datePublished": "2026-10-19", "dateModified": "2026-11-25", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp", "timeRequired": "PT7M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Markdown 怎么链接到某个标题？", "acceptedAnswer": {"@type": "Answer", "text": "写 [文字](#标题slug)。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪里读。"}}, {"@type": "Question", "name": "为什么锚点链接在妙言里不好用？", "acceptedAnswer": {"@type": "Answer", "text": "从 V4.12.0 起，预览既认 #install-on-mac 这样的 GitHub slug，也认把空格写成百分号编码的标题原文。还是跳不过去，说明片段两种都对不上，看看是不是带了 GitHub 规则会去掉的标点，或者重复的标题少写了 -1。更早的版本只认标题原文，GitHub slug 在那里点了没反应。"}}, {"@type": "Question", "name": "Markdown 链接里有空格怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "把目的地放进尖括号，[文字](<my file.md>)，或者每个空格写成 %20。"}}, {"@type": "Question", "name": "裸网址会变成链接吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 会，妙言的预览从 V4.10.0 起也会，不带 GFM 自动链接扩展的查看器不会，在意的话用尖括号包起来。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1295,10 +1295,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <article class="blog-article">
     <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
     <h1 class="blog-title">Markdown 链接与锚点：行内、引用和标题跳转</h1>
-    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 6 分钟</span></p>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 7 分钟</span></p>
     <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-links-and-anchors.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
     <div class="blog-body">
-<p>Markdown 链接的写法是 <code>[文字](目的地)</code>，目的地可以是网址、指向另一个文件的相对路径，或者 <code>#某处</code> 这样的文内跳转。前两种有标准，第三种没有，CommonMark 没规定标题怎么变成锚点，所以 <code>#my-heading</code> 在 GitHub 上能用，在别处看工具，在妙言的预览里则有自己的规则，下面会说。</p>
+<p>Markdown 链接的写法是 <code>[文字](目的地)</code>，目的地可以是网址、指向另一个文件的相对路径，或者 <code>#某处</code> 这样的文内跳转。前两种有标准，第三种没有，CommonMark 没规定标题怎么变成锚点，所以 <code>#my-heading</code> 在 GitHub 上能用，在别处看工具，在妙言的预览里既认 GitHub 的写法，也认标题原文，下面会说。</p>
 <h2 id="几种链接写法">几种链接写法</h2>
 <p>行内链接把目的地紧跟在文字后面，可以再加一个引号包起来的标题：</p>
 <pre><code class="language-markdown">[妙言 GitHub](https://github.com/tw93/MiaoYan &quot;源码和发布&quot;)
@@ -1328,20 +1328,20 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </code></pre>
 <p>想看 GitHub 实际生成的锚点，把鼠标放到标题上，点出现的链接图标，地址栏里就是。如果想要一个改标题也不变的目标，GitHub 还支持写成 <code>&lt;a name="unique-name"&gt;&lt;/a&gt;</code> 的自定义锚点，用 <code>#unique-name</code> 链接，它不会出现在自动生成的目录里。</p>
 <h2 id="妙言预览怎么处理锚点">妙言预览怎么处理锚点</h2>
-<p>预览用的不是 GitHub 的写法。预览脚本给每个标题设置一个 <code>id</code>，值就是标题可见文字去掉首尾空白，重复的标题依次加 <code>-1</code>、<code>-2</code>。以 <code>#</code> 开头的链接被点击时会被拦截，片段先做 URL 解码，再平滑滚动到 id 相同的那个元素。鼠标移到预览里的标题上会出现一个链接图标，它的地址就是这个标题自己的片段。</p>
-<p>有三个后果。GitHub 风格的 <code>#在-mac-上安装</code> 对不上 id 为 <code>在 Mac 上安装</code> 的标题。片段会先解码再按 id 查找，所以多个单词的标题，把空格写成百分号编码就能跳到，比如 <code>#Install%20on%20Mac</code>。只有一个词的标题，或者不带空格的中文标题，按原样写就行，<code>#Install</code> 或 <code>#快速开始</code>。想要一个短一点的目标时，在标题上方写 <code>&lt;a id="install"&gt;&lt;/a&gt;</code>，再链接到 <code>#install</code>，原始 HTML 会被放行，预览查找的正是 id。GitHub 文档里自定义锚点用的是 <code>name</code> 属性，笔记要两边都能用就把两个属性都写上。</p>
-<p>这是笔记在妙言里看着没问题、放到 GitHub 上就失效的主要地方，反过来也一样，所以链接要在最终阅读的地方点一遍。</p>
+<p>预览脚本给每个标题设置一个 <code>id</code>，值就是标题可见文字去掉首尾空白，重复的标题依次加 <code>-1</code>、<code>-2</code>。从 V4.12.0 起，脚本还会按 GitHub 的规则给每个标题算出 slug，转小写，去掉 <code>-</code> 和 <code>_</code> 以外的标点，空格换成连字符，重复的 slug 依次加 <code>-1</code>、<code>-2</code>。以 <code>#</code> 开头的链接被点击时会被拦截，片段先做 URL 解码，再平滑滚动到 id 相同的标题，没有的话就找 GitHub slug 相同的那个。鼠标移到预览里的标题上会出现一个链接图标，它的地址是这个标题的原文。</p>
+<p>所以两种写法都能跳到标题。GitHub 风格的 <code>#在-mac-上安装</code> 能找到 <code>在 Mac 上安装</code>，给 README 写的目录，或者 Agent 生成的目录，放进妙言的预览里不用改就能点。标题原文也能用，只有一个词的标题或者不带空格的中文标题按原样写，<code>#Install</code> 或 <code>#快速开始</code>，多个单词的标题把空格写成百分号编码，比如 <code>#Install%20on%20Mac</code>。想要一个短一点的目标时，在标题上方写 <code>&lt;a id="install"&gt;&lt;/a&gt;</code>，再链接到 <code>#install</code>，原始 HTML 会被放行，预览查找的正是 id。GitHub 文档里自定义锚点用的是 <code>name</code> 属性，笔记要两边都能用就把两个属性都写上。</p>
+<p>两边都能用的是 GitHub 的 slug。<code>#Install%20on%20Mac</code> 这种原文写法在妙言里能跳，放到 GitHub 上就失效，V4.12.0 之前的预览又只认这一种，所以链接要在最终阅读的地方点一遍。</p>
 <h2 id="相对路径和笔记之间的跳转">相对路径和笔记之间的跳转</h2>
 <p>在 GitHub 上，<code>[指南](docs/guide.md)</code> 这样的相对链接按当前文件解析，并随你查看的分支改写，以 <code>/</code> 开头的路径相对仓库根目录，所以仓库里的文件互相引用时，用相对链接最合适，链接文字必须在同一行。</p>
 <p>妙言的预览是一个网页视图，加载的是应用缓存文件夹里那份预览文件的副本，不是笔记所在的文件夹，点击的链接会交给 macOS 去打开。网址会用默认浏览器打开，指向另一个 <code>.md</code> 文件的相对路径在预览里不会按笔记所在文件夹解析，用它在笔记之间跳转并不可靠。本地图片则不同，预览会按笔记所在的项目文件夹改写路径，见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
 <p>笔记之间的跳转，妙言用的是 wikilink，写成 <code>[[笔记标题]]</code>。在编辑区里点击它会打开标题完全一致的那篇笔记，预览在渲染前也会把它改写成 <code>miaoyan://goto/</code> 链接，所以在预览里同样能点。它不是标准 Markdown，不认识它的查看器会显示方括号。取舍见<a href="/zh/blog/wikilinks-and-backlinks/">Wikilink 与反向链接</a>。如果这些笔记还要在 GitHub 上当文件用，那里就用相对路径的 Markdown 链接，接受它们只给 GitHub 用，不用来在妙言里点。</p>
 <h2 id="怎么检查链接">怎么检查链接</h2>
-<p>打开渲染后的页面逐个点。在妙言里点预览中的标题链接，没有滚动就说明片段对不上任何 id；在 GitHub 上从标题的链接图标复制锚点，不要自己猜 slug。链接里混着标点、空格和非 ASCII 文字时，给目的地加尖括号或做编码，标题尽量短，slug 才好预测。妙言还能渲染哪些语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。</p>
+<p>打开渲染后的页面逐个点。在妙言里点预览中的标题链接，没有滚动就说明片段既对不上 id，也对不上标题的 GitHub slug；在 GitHub 上从标题的链接图标复制锚点，不要自己猜 slug。链接里混着标点、空格和非 ASCII 文字时，给目的地加尖括号或做编码，标题尽量短，slug 才好预测。妙言还能渲染哪些语法见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。</p>
 <h2 id="常见问题">常见问题</h2>
 <h3 id="markdown-怎么链接到某个标题">Markdown 怎么链接到某个标题？</h3>
 <p>写 <code>[文字](#标题slug)</code>。GitHub 上 slug 是标题转小写、空格换连字符、去掉标点，其他工具不一样，要看笔记最终在哪里读。</p>
 <h3 id="为什么锚点链接在妙言里不好用">为什么锚点链接在妙言里不好用？</h3>
-<p>预览用标题文字当 id，不是小写 slug，带空格的片段也选不中。只有一个词的标题按原样链接，或者在标题上方加 <code>&lt;a id="name"&gt;&lt;/a&gt;</code>。</p>
+<p>从 V4.12.0 起，预览既认 <code>#install-on-mac</code> 这样的 GitHub slug，也认把空格写成百分号编码的标题原文。还是跳不过去，说明片段两种都对不上，看看是不是带了 GitHub 规则会去掉的标点，或者重复的标题少写了 <code>-1</code>。更早的版本只认标题原文，GitHub slug 在那里点了没反应。</p>
 <h3 id="markdown-链接里有空格怎么办">Markdown 链接里有空格怎么办？</h3>
 <p>把目的地放进尖括号，<code>[文字](&lt;my file.md&gt;)</code>，或者每个空格写成 <code>%20</code>。</p>
 <h3 id="裸网址会变成链接吗">裸网址会变成链接吗？</h3>
@@ -1350,7 +1350,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   </article>
   <nav class="blog-related" aria-labelledby="blog-related-title">
     <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
-    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-line-breaks/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 换行：软换行、硬换行与妙言的设置</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-tables/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 表格：对齐、竖线与单元格换行</span><span class="blog-related-meta">约 5 分钟</span></a></li></ul>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-line-breaks/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 换行：软换行、硬换行与妙言的设置</span><span class="blog-related-meta">约 6 分钟</span></a></li><li><a href="/zh/blog/markdown-tables/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 表格：对齐、竖线与单元格换行</span><span class="blog-related-meta">约 7 分钟</span></a></li></ul>
   </nav>
 </main>
 </div>

@@ -102,7 +102,7 @@ Markmap 不太一样，它把普通的 Markdown 大纲变成可交互的思维�
 
 想梳理一棵树的时候用 Markmap，关心方框之间谁调用谁、谁接着谁的时候用 Mermaid。
 
-妙言里不用背这些围栏，输入 `/mermaid`、`/plantuml` 或 `/markmap` 再按 `Tab` 就会插入模板，也可以在菜单栏「格式」里选「Tab快捷输入」。
+妙言里不用背这些围栏，输入 `/mermaid`、`/plantuml` 或 `/markmap` 再按 `Tab` 就会插入模板，也可以在菜单栏「格式」里选「Tab 快捷输入」。
 
 ## 它实际是怎么工作的
 

@@ -68,7 +68,7 @@ $x^2$, $x_i$, $x^{10}$, $x_{ij}$
 Water is $\text{H}_2\text{O}$.
 ```
 
-Math gets the right size, spacing and italics for variables, and it combines both on one symbol (`x_i^2`). MiaoYan protects the contents of math ranges from the Markdown parser before it runs, so `_` and `^` inside `$...$` are not mistaken for emphasis. The [LaTeX math in Markdown](/blog/latex-math-in-markdown/) post has the delimiters and the supported functions. For a chemical formula in running text, `H<sub>2</sub>O` is lighter, and math is better when the formula sits next to equations. Plain `$H_2O$` makes the letters italic, as variables are, which is why the example above wraps them in `\text`.
+Math gets the right size, spacing and italics for variables, and it combines both on one symbol (`x_i^2`). MiaoYan protects the contents of math ranges from the Markdown parser before it runs, so `_` and `^` inside `$...$` are not mistaken for emphasis. The [LaTeX math in Markdown](/blog/latex-math-in-markdown/) post has the delimiters and the supported functions. For a chemical formula in running text, `H<sub>2</sub>O` is lighter, and math is better when the formula sits next to equations. Plain `$H_2O$` makes the letters italic, as variables are, which is why the example above wraps them in `\text`. Since V4.12.0 MiaoYan also reads mhchem, so `$\ce{H2O}$` gives upright letters and the subscript from the formula as written.
 
 ## Footnote markers are a different thing
 
@@ -100,4 +100,4 @@ No. `^text^` stays literal and `~text~` is struck through. Use `<sup>`, `<sub>` 
 
 ### Which should I use for a chemical formula?
 
-`H<sub>2</sub>O` in running text, math when the formula appears with equations.
+`H<sub>2</sub>O` in running text. For reactions, or a formula beside equations, use `$\ce{...}$`, such as `$\ce{2H2 + O2 -> 2H2O}$`, which MiaoYan renders since V4.12.0; in a renderer without mhchem, fall back to math with `\text`.
