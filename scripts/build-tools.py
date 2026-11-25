@@ -673,6 +673,58 @@ ACTIONS_RE = re.compile(r'\n    <div class="tool-actions">.*?\n    </div>', re.S
 BAR_RE = re.compile(r'\n    <div class="(?:tool-templates|table-bar)"[^>]*>.*?</div>(?=\n    <div)', re.S)
 
 
+# Save to MiaoYan (assets/tools/save-to-miaoyan.js): which text each tool
+# hands to the app, and the fence that keeps a diagram a diagram there, the
+# same block its Copy Markdown gives. The theme page has no Markdown to give.
+SAVE_SOURCE = {
+    "mermaid-editor": ("#mermaid-code", "mermaid"),
+    "markmap-editor": ("#markmap-code", "markmap"),
+    "markdown-table-generator": ("#table-md", ""),
+    "markdown-viewer": ("#viewer-code", ""),
+    "markdown-to-word": ("#viewer-code", ""),
+    "markdown-to-image": ("#viewer-code", ""),
+    "markdown-slides": ("#ppt-code", ""),
+    "html-to-markdown": ("#h2m-code", ""),
+    "chinese-typography-cleaner": ("#typography-code", ""),
+}
+SAVE_COPY = {
+    "en": {"label": "Save to MiaoYan", "missing": "Don't have MiaoYan yet? Get it from the App Store, then save again.",
+           "empty": "Nothing to save yet.", "long": "Too long to send to MiaoYan this way. Copy it and paste it into a new note."},
+    "zh": {"label": "存进妙言", "missing": "还没装妙言的话，先从 App Store 装上再来存。",
+           "empty": "还没有可以存的内容。", "long": "内容太长，没法直接存进妙言，全选复制后粘贴到妙言里就好。"},
+}
+
+
+def save_button(lang, tool, *, status, source="", fence="", cls="btn btn-ghost"):
+    """The hidden button save-to-miaoyan.js shows on a Mac."""
+    c = SAVE_COPY[lang]
+    attrs = f' data-source="{esc(source)}"' if source else ""
+    attrs += f' data-fence="{esc(fence)}"' if fence else ""
+    return (f'<button type="button" class="{cls}" data-miaoyan-save data-tool="{esc(tool)}" data-status="{esc(status)}"{attrs}'
+            f' data-missing="{esc(c["missing"])}" data-empty="{esc(c["empty"])}" data-long="{esc(c["long"])}" hidden>{esc(c["label"])}</button>')
+
+
+def with_save(tool_html, lang, slug):
+    if slug not in SAVE_SOURCE:
+        return tool_html
+    status = re.search(r'id="([a-z0-9-]+-status)"', tool_html)
+    if not status:
+        raise BuildError(f"{slug} has no status line for Save to MiaoYan")
+    # It sits at the end of the status line under the panes, not in the
+    # toolbar, where a sixth action broke the row at 1024 to 1440 (the viewer,
+    # Mermaid, Word, image and slides pages, measured 2026-11-25).
+    foot = re.search(r'\n    <div class="tool-foot">.*?\n    </div>', tool_html, re.S)
+    if not foot:
+        raise BuildError(f"{slug} has no status line for Save to MiaoYan")
+    source, fence = SAVE_SOURCE[slug]
+    if f'id="{source[1:]}"' not in tool_html:
+        raise BuildError(f"{slug} has no {source} to save")
+    block = foot.group(0)
+    end = block.rindex("\n    </div>")
+    block = block[:end] + "\n      " + save_button(lang, slug, status="#" + status.group(1), source=source, fence=fence, cls="tool-save") + block[end:]
+    return tool_html[:foot.start()] + block + tool_html[foot.end():]
+
+
 def toolbar(tool_html, lang):
     """The tool's own controls on the left and its actions on the right, in one
     row above the panes, so the first screen holds everything the tool does;
@@ -699,7 +751,7 @@ def toolbar(tool_html, lang):
 def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=(), system="Any"):
     """One tool page: title and lede, the tool, the prose with its FAQ, then the
     one quiet way into MiaoYan at the end, above the footer."""
-    tool_html = toolbar(tool_html, lang)
+    tool_html = toolbar(with_save(tool_html, lang, tool["slug"]), lang)
     ui = UI[lang]
     meta = tool[lang]
     slug = tool["slug"]
@@ -764,7 +816,7 @@ def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=
 </main>"""
     tail = (
         f'<script type="application/json" id="{data_id}">{script_json(data)}</script>\n'
-        + "".join(f'<script src="{versioned(s)}" defer></script>\n' for s in ("assets/tools/tool-shell.js",) + tuple(before))
+        + "".join(f'<script src="{versioned(s)}" defer></script>\n' for s in ("assets/tools/tool-shell.js", "assets/tools/save-to-miaoyan.js") + tuple(before))
         + f'<script src="{versioned(script)}" defer></script>'
     )
     return out + shell(lang, slug, main, tail)
@@ -1315,6 +1367,15 @@ def nnw_page(tool, lang):
                      system="macOS, iOS, iPadOS")
 
 
+# The tools page groups the tools as the footer does, by the job at hand
+# (maintainer 2026-11-25, after YouMind's tools page, which asks which task
+# you want to finish before listing tools).
+HUB_GROUPS = (
+    ("write", ("mermaid-editor", "markdown-table-generator", "markdown-viewer", "markmap-editor", "chinese-typography-cleaner")),
+    ("convert", ("html-to-markdown", "markdown-to-word", "markdown-to-image", "markdown-slides", "netnewswire-theme")),
+)
+
+
 def hub_page(tools, lang):
     """/tools/: every tool with its lede, on the blog index's cards."""
     hub = UI[lang]["hub"]
@@ -1341,17 +1402,25 @@ def hub_page(tools, lang):
         en_url=SITE + route("en"), zh_url=SITE + route("zh"),
         jsonld={"@context": "https://schema.org", "@graph": graph},
     )
-    cards = "".join(
-        f'<li class="blog-card"><a href="{route(lang, t["slug"])}"><span class="blog-card-body">'
-        f'<h2 class="blog-card-title">{esc(t[lang]["title"])}</h2>'
-        f'<span class="blog-card-desc">{esc(t[lang]["lede"])}</span>'
-        f"</span></a></li>"
-        for t in tools
-    )
+    by_slug = {t["slug"]: t for t in tools}
+    if sorted(by_slug) != sorted(s for _, slugs in HUB_GROUPS for s in slugs):
+        raise BuildError("every tool belongs to exactly one group on the tools page")
+    sections = ""
+    for group, slugs in HUB_GROUPS:
+        label = (site.WRITE_TITLE if group == "write" else site.CONVERT_TITLE)[lang]
+        cards = "".join(
+            f'<li class="blog-card"><a href="{route(lang, s)}"><span class="blog-card-body">'
+            f'<h3 class="blog-card-title">{esc(by_slug[s][lang]["title"])}</h3>'
+            f'<span class="blog-card-desc">{esc(by_slug[s][lang]["lede"])}</span>'
+            f"</span></a></li>"
+            for s in slugs
+        )
+        sections += (f'\n  <section id="{group}" class="blog-group" aria-labelledby="{group}-title">'
+                     f'\n    <h2 class="blog-group-title" id="{group}-title">{esc(label)}</h2>'
+                     f'\n    <ul class="blog-cards">{cards}</ul>\n  </section>')
     main = f"""<main class="blog-index">
   <h1 class="section-title">{esc(hub["title"])}</h1>
-  <p class="section-lede">{esc(hub["lede"])}</p>
-  <ul class="blog-cards">{cards}</ul>
+  <p class="section-lede">{esc(hub["lede"])}</p>{sections}
 </main>"""
     return out + shell(lang, None, main, "")
 

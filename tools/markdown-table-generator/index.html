@@ -730,6 +730,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Save to MiaoYan (save-to-miaoyan.js), shown only on a Mac: a quiet text
+   action at the line's end, after the count when there is one. */
+.tool-save { margin: 0 0 0 auto; padding: 0; border: 0; background: none; font: inherit; color: var(--brand); cursor: pointer; white-space: nowrap; }
+.tool-count + .tool-save { margin-left: 0; }
+.tool-save:focus { outline: none; }
+@media (hover: hover) { .tool-save:hover { text-decoration: underline; text-underline-offset: 3px; } }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -1233,6 +1239,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 .learn-hint a, .learn-finish a { color: var(--brand); }
 .learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .learn-actions [hidden] { display: none; }
+.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .learn-pane { min-width: 0; }
 .learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
@@ -1300,6 +1307,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     <div class="tool-foot">
       <p class="tool-status" id="table-status" role="status" aria-live="polite"></p>
       <button type="button" class="tool-undo" id="table-undo" hidden>Undo</button>
+      <button type="button" class="tool-save" data-miaoyan-save data-tool="markdown-table-generator" data-status="#table-status" data-source="#table-md" data-missing="Don&#x27;t have MiaoYan yet? Get it from the App Store, then save again." data-empty="Nothing to save yet." data-long="Too long to send to MiaoYan this way. Copy it and paste it into a new note." hidden>Save to MiaoYan</button>
     </div>
   </div>
   <div class="blog-body tool-body">
@@ -1332,6 +1340,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </footer>
 <script type="application/json" id="table-data">{"lang":"en","start":{"rows":[["Task","Owner","Hours","Status"],["Write the outline","Ana","3","Done"],["Draft the chapters","Ben","12","In progress"],["Copy edit","Chloe","5","Next"]],"align":["","","right","center"]},"ui":{"cell":"Row {row}, column {col}","align_group":"Column {col} alignment","align_left":"Align left","align_center":"Align center","align_right":"Align right","del_col":"Delete column {col}","del_row":"Delete row {row}"},"icons":{"x":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M4.5 4.5l7 7M11.5 4.5l-7 7\"/><\/svg>","left":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M2.5 8h7M2.5 12h9\"/><\/svg>","center":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M4.5 8h7M3.5 12h9\"/><\/svg>","right":"<svg viewBox=\"0 0 16 16\" aria-hidden=\"true\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"><path d=\"M2.5 4h11M6.5 8h7M4.5 12h9\"/><\/svg>"},"strings":{"copied":"Copied. Paste it into a Markdown file or a note.","copyFailed":"This browser did not allow copying.","pasted":"Pasted a table of {rows} by {cols}.","trimmed":"The grid holds {rows} rows and {cols} columns, so the rest was left out.","noTable":"There is no table in this file.","fileType":"Drop a CSV, TSV, Markdown or text file under 4 MB.","cleared":"Cleared the table.","deleted":"Deleted."}}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
+<script src="/assets/tools/save-to-miaoyan.js?v=a189c8ac6217" defer></script>
 <script src="/assets/tools/markdown-table-generator.js?v=ee503fb3698d" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads

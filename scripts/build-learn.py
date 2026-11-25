@@ -635,7 +635,10 @@ def page(lang):
     <section class="learn-finish" id="learn-finish" hidden>
       <h2 class="learn-finish-title">{esc(copy["finish_title"])}</h2>
       <p>{finish_text}</p>
-      <button type="button" class="tool-chip" data-action="again">{esc(copy["again"])}</button>
+      <div class="learn-finish-actions">
+        {bt.save_button(lang, "learn", status="#learn-status", cls="tool-chip tool-chip-primary")}
+        <button type="button" class="tool-chip" data-action="again">{esc(copy["again"])}</button>
+      </div>
     </section>
   </div>
   <div class="blog-body tool-body">
@@ -652,7 +655,7 @@ def page(lang):
 </main>"""
     tail = (
         f'<script type="application/json" id="learn-data">{bt.script_json(data)}</script>\n'
-        + "".join(f'<script src="{bt.versioned(s)}" defer></script>\n' for s in ("assets/tools/md-highlight.js", "assets/tools/md-editor.js", "assets/tools/md-rules.js"))
+        + "".join(f'<script src="{bt.versioned(s)}" defer></script>\n' for s in ("assets/tools/md-highlight.js", "assets/tools/md-editor.js", "assets/tools/md-rules.js", "assets/tools/save-to-miaoyan.js"))
         + f'<script src="{bt.versioned("assets/tools/learn.js")}" defer></script>'
     )
     menu = [(k, route(k)) for k in LANGS]

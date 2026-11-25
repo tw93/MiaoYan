@@ -730,6 +730,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Save to MiaoYan (save-to-miaoyan.js), shown only on a Mac: a quiet text
+   action at the line's end, after the count when there is one. */
+.tool-save { margin: 0 0 0 auto; padding: 0; border: 0; background: none; font: inherit; color: var(--brand); cursor: pointer; white-space: nowrap; }
+.tool-count + .tool-save { margin-left: 0; }
+.tool-save:focus { outline: none; }
+@media (hover: hover) { .tool-save:hover { text-decoration: underline; text-underline-offset: 3px; } }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -1233,6 +1239,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 .learn-hint a, .learn-finish a { color: var(--brand); }
 .learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .learn-actions [hidden] { display: none; }
+.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .learn-pane { min-width: 0; }
 .learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
@@ -1416,6 +1423,7 @@ $$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$
     <div class="tool-foot">
       <p class="tool-status" id="ppt-status" role="status" aria-live="polite"></p>
       <p class="tool-count" id="ppt-count"></p>
+      <button type="button" class="tool-save" data-miaoyan-save data-tool="markdown-slides" data-status="#ppt-status" data-source="#ppt-code" data-missing="Don&#x27;t have MiaoYan yet? Get it from the App Store, then save again." data-empty="Nothing to save yet." data-long="Too long to send to MiaoYan this way. Copy it and paste it into a new note." hidden>Save to MiaoYan</button>
     </div>
   </div>
   <div class="blog-body tool-body">
@@ -1449,6 +1457,7 @@ $$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$
 </footer>
 <script type="application/json" id="ppt-data">{"deck":"/tools/markdown-slides/deck.html?v=0d85e28360aa","fonts":[{"id":"system","label":"System font","names":[],"stack":"-apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif"},{"id":"song","label":"Songti","names":["Songti SC","STSong","SimSun","Noto Serif CJK SC","Source Han Serif SC"],"stack":"\"Songti SC\", \"STSong\", \"SimSun\", \"Noto Serif CJK SC\", \"Source Han Serif SC\", serif"},{"id":"kai","label":"Kaiti","names":["Kaiti SC","STKaiti","KaiTi","BiauKai"],"stack":"\"Kaiti SC\", \"STKaiti\", \"KaiTi\", \"BiauKai\", serif"},{"id":"tsanger","label":"TsangerJinKai","names":["TsangerJinKai02"],"stack":"\"TsangerJinKai02\", -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif"},{"id":"georgia","label":"Georgia","names":["Georgia"],"stack":"\"Georgia\", \"Songti SC\", STSong, SimSun, serif"}],"strings":{"slide":"{n} slide","slides":"{n} slides","opened":"Opened {name}.","fileType":"Open a Markdown or text file under 5 MB.","printing":"Laying the slides out a page each. In the print window, choose Save as PDF.","exportFailed":"This browser could not save the file.","notSaved":"This deck is too large for the browser to keep, so download the Markdown before you close the page."}}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
+<script src="/assets/tools/save-to-miaoyan.js?v=a189c8ac6217" defer></script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
 <script src="/assets/tools/md-editor.js?v=8725d41dbbb2" defer></script>
 <script src="/assets/tools/ppt.js?v=024f9ff62ab3" defer></script>

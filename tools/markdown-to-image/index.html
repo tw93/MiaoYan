@@ -730,6 +730,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Save to MiaoYan (save-to-miaoyan.js), shown only on a Mac: a quiet text
+   action at the line's end, after the count when there is one. */
+.tool-save { margin: 0 0 0 auto; padding: 0; border: 0; background: none; font: inherit; color: var(--brand); cursor: pointer; white-space: nowrap; }
+.tool-count + .tool-save { margin-left: 0; }
+.tool-save:focus { outline: none; }
+@media (hover: hover) { .tool-save:hover { text-decoration: underline; text-underline-offset: 3px; } }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -1233,6 +1239,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 .learn-hint a, .learn-finish a { color: var(--brand); }
 .learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .learn-actions [hidden] { display: none; }
+.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .learn-pane { min-width: 0; }
 .learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
@@ -1339,6 +1346,7 @@ flowchart LR
     <div class="tool-foot">
       <p class="tool-status" id="viewer-status" role="status" aria-live="polite"></p>
       <p class="tool-count" id="viewer-count"></p>
+      <button type="button" class="tool-save" data-miaoyan-save data-tool="markdown-to-image" data-status="#viewer-status" data-source="#viewer-code" data-missing="Don&#x27;t have MiaoYan yet? Get it from the App Store, then save again." data-empty="Nothing to save yet." data-long="Too long to send to MiaoYan this way. Copy it and paste it into a new note." hidden>Save to MiaoYan</button>
     </div>
   </div>
   <div class="blog-body tool-body">
@@ -1371,6 +1379,7 @@ flowchart LR
 </footer>
 <script type="application/json" id="viewer-data">{"lang":"en","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","site":"https://miaoyan.app","wechat":false,"strings":{"opened":"Opened {name}.","fileType":"Open a Markdown or text file under 5 MB.","copied":"Copied with its styles, ready to paste into a document or an email.","copiedMath":" Formulas are copied as their TeX source.","word":"{n} word","words":"{n} words","copyFailed":"This browser did not allow copying.","exportFailed":"This browser could not save the file.","loadFailed":"Part of the preview did not load. Check the connection and reload the page.","wordImage":"Saved. 1 picture stayed out, as its site does not let a page read it or its path is relative.","wordImages":"Saved. {n} pictures stayed out, as their sites do not let a page read them or their paths are relative.","imageMaking":"Making the image.","imageSaved":"Saved the image.","imageCopied":"Copied the image, ready to paste into a chat or a document.","imageMissed":"1 picture stayed out, as its site does not let a page read it or its path is relative.","imagesMissed":"{n} pictures stayed out, as their sites do not let a page read them or their paths are relative.","imageTooLong":"This is too long for one image. Split the text and make an image of each part.","imageFailed":"This browser could not make the image."},"docx":["/assets/vendor/docx-9.15.3.js?v=32706f12e03a"],"tool":"markdown-to-image","draftKey":"miaoyan.markdown-to-image.draft"}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
+<script src="/assets/tools/save-to-miaoyan.js?v=a189c8ac6217" defer></script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
 <script src="/assets/tools/md-editor.js?v=8725d41dbbb2" defer></script>
 <script src="/assets/tools/md-rules.js?v=dee1d7b0f9b3" defer></script>

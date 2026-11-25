@@ -29,6 +29,7 @@
   var finish = $("learn-finish");
   var dots = Array.prototype.slice.call(tool.querySelectorAll(".learn-dot"));
   var nextButton = tool.querySelector('[data-action="next"]');
+  var saveButton = finish.querySelector("[data-miaoyan-save]");
 
   var state = { at: 0, done: {}, text: {} };
   try {
@@ -314,6 +315,9 @@
     var n = doneCount();
     countEl.textContent = fill(S.count, { n: n, total: LV.length });
     finish.hidden = n < LV.length;
+    // The finished note, the last level's text, is what Save to MiaoYan hands on.
+    var last = LV[LV.length - 1];
+    if (saveButton) saveButton.setAttribute("data-text", state.text[last.id] != null ? state.text[last.id] : last.answer);
   }
 
   function render() {

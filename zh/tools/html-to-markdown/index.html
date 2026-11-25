@@ -732,6 +732,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Save to MiaoYan (save-to-miaoyan.js), shown only on a Mac: a quiet text
+   action at the line's end, after the count when there is one. */
+.tool-save { margin: 0 0 0 auto; padding: 0; border: 0; background: none; font: inherit; color: var(--brand); cursor: pointer; white-space: nowrap; }
+.tool-count + .tool-save { margin-left: 0; }
+.tool-save:focus { outline: none; }
+@media (hover: hover) { .tool-save:hover { text-decoration: underline; text-underline-offset: 3px; } }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -1235,6 +1241,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 .learn-hint a, .learn-finish a { color: var(--brand); }
 .learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .learn-actions [hidden] { display: none; }
+.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .learn-pane { min-width: 0; }
 .learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
@@ -1319,6 +1326,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="h2m-status" role="status" aria-live="polite"></p>
+      <button type="button" class="tool-save" data-miaoyan-save data-tool="html-to-markdown" data-status="#h2m-status" data-source="#h2m-code" data-missing="还没装妙言的话，先从 App Store 装上再来存。" data-empty="还没有可以存的内容。" data-long="内容太长，没法直接存进妙言，全选复制后粘贴到妙言里就好。" hidden>存进妙言</button>
     </div>
   </div>
   <div class="blog-body tool-body">
@@ -1353,6 +1361,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </footer>
 <script type="application/json" id="h2m-data">{"strings":{"converted":"已转成 Markdown。","opened":"已打开 {name}。","reading":"正在读取 Word 文件。","fileType":"打开的需要是 20 MB 以内的 .docx 或 .html 文件。","docxFailed":"这个 Word 文件读不出来，重新另存为 .docx 再试一次。","imageLost":"有 1 张内嵌图片没有带过来，Markdown 里只能放图片的地址。","imagesLost":"有 {n} 张内嵌图片没有带过来，Markdown 里只能放图片的地址。","copied":"已复制。","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这个文件。"},"mammoth":"/assets/vendor/mammoth-1.13.0.browser.min.js?v=a175021900f7"}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
+<script src="/assets/tools/save-to-miaoyan.js?v=a189c8ac6217" defer></script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
 <script src="/assets/tools/html-to-markdown-core.js?v=d8a714481af5" defer></script>
 <script src="/assets/tools/html-to-markdown.js?v=1e3cfd654b78" defer></script>

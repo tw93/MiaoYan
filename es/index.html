@@ -739,6 +739,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Save to MiaoYan (save-to-miaoyan.js), shown only on a Mac: a quiet text
+   action at the line's end, after the count when there is one. */
+.tool-save { margin: 0 0 0 auto; padding: 0; border: 0; background: none; font: inherit; color: var(--brand); cursor: pointer; white-space: nowrap; }
+.tool-count + .tool-save { margin-left: 0; }
+.tool-save:focus { outline: none; }
+@media (hover: hover) { .tool-save:hover { text-decoration: underline; text-underline-offset: 3px; } }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -1242,6 +1248,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 .learn-hint a, .learn-finish a { color: var(--brand); }
 .learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .learn-actions [hidden] { display: none; }
+.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .learn-pane { min-width: 0; }
 .learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }

@@ -732,6 +732,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-count { margin: 0 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Save to MiaoYan (save-to-miaoyan.js), shown only on a Mac: a quiet text
+   action at the line's end, after the count when there is one. */
+.tool-save { margin: 0 0 0 auto; padding: 0; border: 0; background: none; font: inherit; color: var(--brand); cursor: pointer; white-space: nowrap; }
+.tool-count + .tool-save { margin-left: 0; }
+.tool-save:focus { outline: none; }
+@media (hover: hover) { .tool-save:hover { text-decoration: underline; text-underline-offset: 3px; } }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
 .tool-undo { font: inherit; color: var(--brand); background: none; border: 0; padding: 0; cursor: pointer; }
 .tool-undo:focus { outline: none; }
@@ -1235,6 +1241,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 .learn-hint a, .learn-finish a { color: var(--brand); }
 .learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .learn-actions [hidden] { display: none; }
+.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .learn-pane { min-width: 0; }
 .learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
@@ -1315,6 +1322,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="markmap-status" role="status" aria-live="polite"></p>
+      <button type="button" class="tool-save" data-miaoyan-save data-tool="markmap-editor" data-status="#markmap-status" data-source="#markmap-code" data-fence="markmap" data-missing="还没装妙言的话，先从 App Store 装上再来存。" data-empty="还没有可以存的内容。" data-long="内容太长，没法直接存进妙言，全选复制后粘贴到妙言里就好。" hidden>存进妙言</button>
     </div>
   </div>
   <div class="blog-body tool-body">
@@ -1347,6 +1355,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </footer>
 <script type="application/json" id="markmap-data">{"vendor":["/assets/vendor/d3-6.7.0.min.js?v=fbb8da602a76","/assets/vendor/markmap-0.14.min.js?v=40ba3d1e3c2c","/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","font":"-apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif","codeFont":"SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace","ink":"#262626","link":"#1C5D33","strings":{"loadFailed":"Markmap 没加载上，检查网络后刷新页面。","copiedMarkdown":"已复制成 Markdown 代码块。","copiedImage":"图片已复制，可以直接粘贴。","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这张图。","empty":"写一份大纲就能画出导图。","oldBrowser":"这个浏览器打不开导图链接，更新一下或者换个浏览器打开。"}}</script>
 <script src="/assets/tools/tool-shell.js?v=5017e17f2a9d" defer></script>
+<script src="/assets/tools/save-to-miaoyan.js?v=a189c8ac6217" defer></script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
 <script src="/assets/tools/markmap-editor.js?v=0e1c7ba635b1" defer></script>
 <script>
