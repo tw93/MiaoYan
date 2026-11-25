@@ -53,7 +53,7 @@ UI = {
             "title": "Markdown Tools",
             "head_title": "Free Markdown Tools: Mermaid, Markmap, tables and preview",
             "lede": "Small tools for writing Markdown, free and in your browser.",
-            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, an HTML and Word to Markdown converter and a Chinese typography cleaner.",
+            "description": "Free browser tools from MiaoYan: a Mermaid live editor, a Markmap mind map editor, a Markdown table generator, a Markdown viewer, Markdown to Word and HTML to Markdown converters and a Chinese typography cleaner.",
         },
         "faq": "FAQ",
         "app_cta": "View in App Store",
@@ -154,6 +154,7 @@ UI = {
             "pdf": "Save as PDF",
             "html": "Download HTML",
             "md": "Download Markdown",
+            "docx": "Download Word",
             "copy": "Copy formatted",
             "app_title": "Read and write it in MiaoYan",
             "app_text": "MiaoYan, a Markdown notebook for Mac, iPhone and iPad, keeps every note as a plain .md file, and this preview is drawn with its stylesheets.",
@@ -169,7 +170,15 @@ UI = {
                 "copyFailed": "This browser did not allow copying.",
                 "exportFailed": "This browser could not save the file.",
                 "loadFailed": "Part of the preview did not load. Check the connection and reload the page.",
+                "wordImage": "Saved. 1 picture stayed out, as its site does not let a page read it or its path is relative.",
+                "wordImages": "Saved. {n} pictures stayed out, as their sites do not let a page read them or their paths are relative.",
             },
+        },
+        "word": {
+            "app_title": "Write it in MiaoYan",
+            "app_text": "MiaoYan is a Markdown notebook for Mac, iPhone and iPad that keeps every note as a plain .md file, and this page lays a note out with its preview stylesheets before it goes into Word.",
+            "app_alt": "MiaoYan on a Mac, with the note list on the left and a note in its preview on the right",
+            "app_shot": "preview",
         },
         "table": {
             "add_row": "Add row",
@@ -240,7 +249,7 @@ UI = {
             "title": "Markdown 在线工具",
             "head_title": "Markdown 在线工具：Mermaid、Markmap 思维导图、表格和预览",
             "lede": "写 Markdown 时顺手用的几个小工具，免费，打开浏览器就能用。",
-            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、网页和 Word 转 Markdown，以及中英文排版整理。",
+            "description": "妙言的免费在线工具，Mermaid 在线编辑器、Markmap 思维导图、Markdown 表格生成器、Markdown 在线预览、Markdown 转 Word、网页转 Markdown，以及中英文排版整理。",
         },
         "faq": "常见问题",
         "app_cta": "在 App Store 获取",
@@ -340,6 +349,7 @@ UI = {
             "pdf": "存成 PDF",
             "html": "下载 HTML",
             "md": "下载 Markdown",
+            "docx": "下载 Word",
             "copy": "复制到公众号",
             "app_title": "在妙言里读和写",
             "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，每篇笔记都是一个普通的 .md 文件，这里的预览用的就是它的样式表。",
@@ -357,7 +367,15 @@ UI = {
                 "copyFailed": "这个浏览器不允许复制。",
                 "exportFailed": "这个浏览器存不了这个文件。",
                 "loadFailed": "预览有一部分没加载上，检查网络后刷新页面。",
+                "wordImage": "已保存，有 1 张图片没放进去，它所在的网站不让网页读取，或者用的是相对路径。",
+                "wordImages": "已保存，有 {n} 张图片没放进去，它们所在的网站不让网页读取，或者用的是相对路径。",
             },
+        },
+        "word": {
+            "app_title": "在妙言里写",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，每篇笔记都是一个普通的 .md 文件，这个页面用它的预览样式排好版再放进 Word。",
+            "app_alt": "Mac 上的妙言，左边是笔记列表，右边是一篇笔记的预览",
+            "app_shot": "preview",
         },
         "table": {
             "add_row": "加一行",
@@ -866,6 +884,9 @@ PREVIEW_PAGE_CSS = (
 
 
 def viewer_page(tool, lang):
+    """The Markdown viewer, and with tool markdown-to-word the same tool led by
+    its Word download."""
+    word = tool["slug"] == "markdown-to-word"
     ui = UI[lang]["viewer"]
     sample = (SRC / f"markdown-viewer-sample.{lang}.md").read_text(encoding="utf-8").rstrip("\n")
     data = {
@@ -881,7 +902,24 @@ def viewer_page(tool, lang):
         # The Chinese page copies for WeChat articles (links become references).
         "wechat": lang == "zh",
         "strings": ui["strings"],
+        "docx": [versioned("assets/vendor/docx-9.15.3.js")],
     }
+    if word:
+        data["tool"] = "markdown-to-word"
+        data["draftKey"] = "miaoyan.markdown-to-word.draft"
+        actions = (
+            f'<button type="button" class="btn btn-primary" data-action="docx">{esc(ui["docx"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="pdf">{esc(ui["pdf"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="md">{esc(ui["md"])}</button>'
+        )
+    else:
+        actions = (
+            f'<button type="button" class="btn btn-primary" data-action="copy">{esc(ui["copy"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="docx">{esc(ui["docx"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="pdf">{esc(ui["pdf"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="html">{esc(ui["html"])}</button>'
+            f'<button type="button" class="btn btn-ghost" data-action="md">{esc(ui["md"])}</button>'
+        )
     tool_html = f"""  <div class="tool viewer-tool" id="viewer-tool">
     <div class="table-bar">
       <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="viewer-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
@@ -900,10 +938,7 @@ def viewer_page(tool, lang):
       <p class="tool-count" id="viewer-count"></p>
     </div>
     <div class="tool-actions">
-      <button type="button" class="btn btn-primary" data-action="copy">{esc(ui["copy"])}</button>
-      <button type="button" class="btn btn-ghost" data-action="pdf">{esc(ui["pdf"])}</button>
-      <button type="button" class="btn btn-ghost" data-action="html">{esc(ui["html"])}</button>
-      <button type="button" class="btn btn-ghost" data-action="md">{esc(ui["md"])}</button>
+      {actions}
     </div>
   </div>"""
     return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
@@ -1138,8 +1173,8 @@ def llms_block(tools):
     return "\n" + "\n".join(lines) + "\n"
 
 
-PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "html-to-markdown": h2m_page, "netnewswire-theme": nnw_page}
-PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "html-to-markdown": "h2m", "netnewswire-theme": "nnw"}
+PAGES = {"mermaid-editor": mermaid_page, "markdown-table-generator": table_page, "markdown-viewer": viewer_page, "markmap-editor": markmap_page, "chinese-typography-cleaner": typography_page, "html-to-markdown": h2m_page, "markdown-to-word": viewer_page, "netnewswire-theme": nnw_page}
+PAGE_KEY = {"mermaid-editor": "mermaid", "markdown-table-generator": "table", "markdown-viewer": "viewer", "markmap-editor": "markmap", "chinese-typography-cleaner": "typography", "html-to-markdown": "h2m", "markdown-to-word": "word", "netnewswire-theme": "nnw"}
 
 
 def outputs(tools):

@@ -2,6 +2,8 @@
 
 Copy formatted puts the note on the clipboard with each element's style written onto the element itself, since documents, mail and CMS editors drop stylesheets and classes, so headings, quotes, lists, tables and code keep MiaoYan's look where you paste them. The quote bar becomes a left border, task boxes become ☐ and ☑, code keeps its indentation and line breaks, Mermaid diagrams become images, and formulas are copied as their `$...$` source for now.
 
+For someone who works in Word, Download Word saves a .docx laid out in the same styles, with formulas as Word equations; [Markdown to Word](/tools/markdown-to-word/) has the details.
+
 ## Writing in it
 
 The shortcuts are MiaoYan's: `⌘B` bold, `⌘I` italic, `⌘K` link, `⌘E` inline code, `⇧⌘E` code block, and `⌘S` saves the Markdown as a file, with Ctrl in place of ⌘ on Windows. Return in a list or quote starts the next item, and Return on an empty one ends it. The two panes scroll together paragraph by paragraph, whichever one you scroll. Phone width lays the preview out at 375 pixels, the button at the end of the toolbar gives the editor the whole screen, and the word count follows MiaoYan's, one for each CJK character and one for each word of other text.

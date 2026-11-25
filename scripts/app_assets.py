@@ -13,7 +13,11 @@ the app's 0.16.0 let an edef expand past maxExpand (CVE-2024-28243, fixed in
 0.16.47 on 2026-11-25. mammoth 1.13.0 (the browser build, its sha512 checked
 against the registry, with its BSD-2-Clause LICENSE put in front as a comment
 since the minified file carries none) reads a .docx for the HTML to Markdown
-page, which loads it only when a Word file is opened.
+page, which loads it only when a Word file is opened. docx 9.15.3 (its
+dist/index, math and html browser builds joined unchanged into one file behind
+its MIT LICENSE, the package's sha512 checked against the registry) writes the
+.docx of the Markdown viewer and Markdown to Word pages, loaded only when one
+is saved.
 
     python3 -I scripts/app_assets.py --check   fail on a changed copy, note when
                                                the app's copy moved ahead
@@ -37,6 +41,7 @@ FILES = {
     "assets/vendor/d3-6.7.0.min.js": ('Resources/DownView.bundle/js/d3.min.js', "fbb8da602a76f4ed49bac3561da62d8149fa121b8fd15685bacc21355d3a3322"),
     "assets/vendor/markmap-0.14.min.js": ('Resources/DownView.bundle/js/markmap-view.min.js', "40ba3d1e3c2c5f0b82a51a8c76767a6a8838f2b2fcdcc79e72cb7292a7585963"),
     "assets/vendor/mammoth-1.13.0.browser.min.js": (None, "a175021900f7b85e69684564cdcf2e7f15ba08d968255cc59d6677998d3b9fbb"),
+    "assets/vendor/docx-9.15.3.js": (None, "32706f12e03acf0a0b89fa24ec82ab93b62f26f763e957c64d0c3bd739bc0996"),
     "assets/vendor/katex-0.16.47.min.js": (None, "a29d2961d3146de5949d78ac7c1a9d93ae54955bad22a6db4fbe836e88e8bf48"),
     "assets/vendor/katex/katex.min.css": (None, "0289a02cf451a44dd73add683a09644252363871ac11713a647b732cee8b1ee3"),
     "assets/vendor/katex/fonts/KaTeX_AMS-Regular.woff2": (None, "0cdd387c9590a1a9f9794560022dbb59654a7d86f187aa0c81495ad42d3a7308"),

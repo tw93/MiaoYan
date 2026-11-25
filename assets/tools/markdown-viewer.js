@@ -20,7 +20,10 @@
   var countEl = document.getElementById("viewer-count");
   var frameBox = frame.parentNode;
 
-  var DRAFT_KEY = "miaoyan.markdown-viewer.draft";
+  // The Markdown viewer and the Markdown to Word page run this same tool,
+  // each with its own draft.
+  var TOOL = data.tool || "viewer";
+  var DRAFT_KEY = data.draftKey || "miaoyan.markdown-viewer.draft";
   var MAX_BYTES = 5e6;
   var md = null;
   var write = null;
@@ -406,7 +409,7 @@
   }
 
   code.addEventListener("input", function () {
-    if (!edited) { edited = true; track("tool_render", { tool: "viewer" }); }
+    if (!edited) { edited = true; track("tool_render", { tool: TOOL }); }
     say("");
     schedule();
   });
@@ -677,7 +680,7 @@
       var doc = frame.contentDocument;
       if (doc && doc.scrollingElement) doc.scrollingElement.scrollTop = 0;
       say(fill(S.opened, { name: file.name }));
-      track("tool_import", { tool: "viewer", source: "file" });
+      track("tool_import", { tool: TOOL, source: "file" });
     }, function () { if (mine === opening) say(S.fileType); });
   }
 
@@ -744,7 +747,7 @@
       var html = shell(csp + "<style>" + sheets.join("\n") + "</style>" + math).replace("<title></title>", title) +
         write.innerHTML.replace(/ data-line="\d+"/g, "") + "</div></body></html>\n";
       download(new Blob([html], { type: "text/html" }), baseName() + ".html");
-      track("tool_export", { tool: "viewer", format: "html" });
+      track("tool_export", { tool: TOOL, format: "html" });
     });
   }
 
@@ -752,14 +755,14 @@
     var win = frame.contentWindow;
     win.focus();
     win.print();
-    track("tool_export", { tool: "viewer", format: "pdf" });
+    track("tool_export", { tool: TOOL, format: "pdf" });
     return Promise.resolve();
   }
 
   function saveMarkdown() {
     var name = /\.(md|markdown|mdown|mkd|txt)$/i.test(fileName) ? fileName : baseName() + ".md";
     download(new Blob([code.value], { type: "text/markdown;charset=utf-8" }), name);
-    track("tool_export", { tool: "viewer", format: "md" });
+    track("tool_export", { tool: TOOL, format: "md" });
     return Promise.resolve();
   }
 
@@ -775,6 +778,10 @@
   // follows its item; diagrams become PNG images; formulas stay as their TeX.
   // On the Chinese page, written for WeChat articles, where a link to another
   // site does not open, links become numbered references at the end.
+  // For Word (mode "word") the same styled copy goes to docx's HTML reader,
+  // which holds what a paste cannot: lists stay nested, task boxes stay
+  // checkboxes, code keeps its own spaces, links stay links, and formulas
+  // become Word equations from KaTeX's MathML.
   var SVG_NS = "http://www.w3.org/2000/svg";
   var INHERITED = ["color", "font-family", "font-size", "font-style", "font-weight", "line-height", "letter-spacing", "text-align", "text-indent", "word-break", "overflow-wrap", "white-space"];
   var SIDES = ["top", "right", "bottom", "left"];
@@ -855,13 +862,16 @@
     return next;
   }
 
-  function styledCopy() {
+  function styledCopy(mode) {
+    var word = mode === "word";
     var doc = frame.contentDocument;
     var win = frame.contentWindow;
     var box = write.cloneNode(true);
     var notes = { links: 0, math: false };
     write.removeAttribute("id");
-    box.style.cssText = "position: absolute; left: -100000px; top: 0; width: " + write.clientWidth + "px";
+    // For Word the copy is laid out at the page's text width, so tables and
+    // diagrams are measured to fit between its margins.
+    box.style.cssText = "position: absolute; left: -100000px; top: 0; width: " + (word ? WORD_PAGE.text + "px; padding: 0; margin: 0; max-width: none" : write.clientWidth + "px");
     doc.body.appendChild(box);
     var mounted = box;
 
@@ -877,6 +887,25 @@
       });
       each(box, ".katex-display, .katex", function (k) {
         if (!k.isConnected) return;
+        if (word) {
+          var math = k.querySelector(".katex-mathml math");
+          if (!math) return;
+          var eq = math.cloneNode(true);
+          each(eq, "annotation", function (a) { a.remove(); });
+          if (k.classList.contains("katex-display")) {
+            eq.setAttribute("display", "block");
+            var line = doc.createElement("p");
+            line.style.textAlign = "center";
+            line.appendChild(eq);
+            var host = k.parentNode;
+            // A formula alone in its block takes the block's place.
+            if (host !== box && host.textContent.trim() === k.textContent.trim() && !host.querySelector("img")) host.parentNode.replaceChild(line, host);
+            else host.replaceChild(line, k);
+          } else {
+            k.parentNode.replaceChild(eq, k);
+          }
+          return;
+        }
         var tex = k.querySelector('annotation[encoding="application/x-tex"]');
         if (!tex) return;
         var display = k.classList.contains("katex-display");
@@ -891,13 +920,13 @@
           k.parentNode.replaceChild(c, k);
         }
       });
-      each(box, "input[type=checkbox]", function (input) {
+      if (!word) each(box, "input[type=checkbox]", function (input) {
         var mark = doc.createElement("span");
         mark.textContent = input.checked ? "☑ " : "☐ ";
         input.parentNode.replaceChild(mark, input);
       });
       var refs = [];
-      if (data.wechat) {
+      if (data.wechat && !word) {
         each(box, "a[href]", function (a) {
           var href = a.getAttribute("href");
           if (!/^https?:/i.test(href) || /^https?:\/\/mp\.weixin\.qq\.com\//i.test(href)) return;
@@ -927,7 +956,7 @@
 
       // Read every style before any element changes.
       var all = [box].concat(Array.prototype.slice.call(box.querySelectorAll("*"))).filter(function (el) {
-        return el.namespaceURI !== SVG_NS;
+        return el.namespaceURI !== SVG_NS && el.namespaceURI !== "http://www.w3.org/1998/Math/MathML";
       });
       var styles = all.map(function (el) { return styleOf(win, el, el === box ? null : el.parentElement); });
       var bars = Array.prototype.slice.call(box.querySelectorAll("blockquote")).map(function (q) {
@@ -936,6 +965,13 @@
       });
       var secondary = win.getComputedStyle(box).getPropertyValue("--text-secondary").trim();
       all.forEach(function (el, i) { el.setAttribute("style", styles[i]); });
+      // Word takes one font name per run, the first it knows of a list, and
+      // the system's own fonts have names Word does not: the text's fonts go
+      // in the document's styles instead (WORD_FONT), code keeps one name.
+      if (word) all.forEach(function (el) {
+        if (el.closest("pre") || /^(CODE|KBD|SAMP)$/.test(el.tagName)) el.style.fontFamily = WORD_CODE_FONT;
+        else el.style.removeProperty("font-family");
+      });
 
       bars.forEach(function (b) {
         var width = parseFloat(b[1]) || 0;
@@ -956,7 +992,7 @@
         p.style.wordBreak = "break-all";
         if (secondary) p.style.color = secondary;
       });
-      each(box, "pre", function (pre) {
+      if (!word) each(box, "pre", function (pre) {
         var walker = doc.createTreeWalker(pre, NodeFilter.SHOW_TEXT);
         var texts = [];
         while (walker.nextNode()) texts.push(walker.currentNode);
@@ -977,7 +1013,7 @@
         pre.setAttribute("data-ignore-width", "");
       });
       each(box, "table, .table-scroll", function (el) { el.setAttribute("data-ignore-width", ""); });
-      each(box, "li > ul, li > ol", function (list) { list.parentNode.parentNode.insertBefore(list, list.parentNode.nextSibling); });
+      if (!word) each(box, "li > ul, li > ol", function (list) { list.parentNode.parentNode.insertBefore(list, list.parentNode.nextSibling); });
       each(box, 'a[href^="#"]', function (a) { a.removeAttribute("href"); });
       [box].concat(Array.prototype.slice.call(box.querySelectorAll("[class], [id], [data-line], [data-mermaid], [target], [rel]"))).forEach(function (el) {
         ["class", "id", "data-line", "data-mermaid", "target", "rel"].forEach(function (k) { el.removeAttribute(k); });
@@ -1023,12 +1059,71 @@
     }).then(function (notes) {
       var said = notes.links ? fill(S.copiedLinks, { n: notes.links }) : S.copied;
       say(notes.math ? said + S.copiedMath : said);
-      track("tool_copy", { tool: "viewer", kind: data.wechat ? "wechat" : "formatted" });
+      track("tool_copy", { tool: TOOL, kind: data.wechat ? "wechat" : "formatted" });
     });
   }
 
-  var actions = { pdf: exportPdf, html: exportHtml, md: saveMarkdown, copy: copyFormatted };
-  var failures = { pdf: S.exportFailed, html: S.exportFailed, md: S.exportFailed, copy: S.copyFailed };
+  // ---- Word ------------------------------------------------------------------------
+  // The styled copy as a .docx through docx's HTML reader, loaded on the first
+  // save. Pictures from other sites are fetched for their bytes; one a site
+  // will not hand over (no CORS) or a relative path stays out, and the status
+  // line says how many.
+  function imageBytes(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var srcs = [];
+    each(doc, "img[src]", function (img) {
+      var src = img.getAttribute("src");
+      if (!/^data:/i.test(src) && srcs.indexOf(src) < 0) srcs.push(src);
+    });
+    var map = {};
+    var missed = 0;
+    return Promise.all(srcs.map(function (src) {
+      if (!/^https?:/i.test(src)) { missed++; return null; }
+      return fetch(src, { mode: "cors", credentials: "omit", referrerPolicy: "no-referrer" }).then(function (r) {
+        if (!r.ok) throw new Error("image");
+        return r.arrayBuffer();
+      }).then(function (buffer) { map[src] = new Uint8Array(buffer); }, function () { missed++; });
+    })).then(function () { return { map: map, missed: missed }; });
+  }
+
+  // MiaoYan's preview faces; Word on a machine without them substitutes its own.
+  var WORD_FONT = { ascii: "Helvetica Neue", hAnsi: "Helvetica Neue", cs: "Helvetica Neue", eastAsia: "PingFang SC" };
+  var WORD_CODE_FONT = "Menlo";
+  // A4 for the Chinese page and US Letter for the English one, one-inch
+  // margins; text is the width between them in CSS pixels (1in = 96px), sizes
+  // in twentieths of a point.
+  var WORD_PAGE = data.lang === "zh" ? { width: 11906, height: 16838, text: 601 } : { width: 12240, height: 15840, text: 624 };
+
+  function exportDocx() {
+    var title = frame.contentDocument ? frame.contentDocument.title : "";
+    return Promise.all([load(data.docx), styledCopy("word")]).then(function (r) {
+      var copy = r[1];
+      return imageBytes(copy.html).then(function (images) {
+        var d = window.docx;
+        var children = window.docxHtml.htmlToContent(copy.html, { images: images.map, onWarning: function () {} });
+        var styles = { document: { run: { font: WORD_FONT } } };
+        for (var level = 1; level <= 6; level++) styles["heading" + level] = { run: { font: WORD_FONT } };
+        styles.title = { run: { font: WORD_FONT } };
+        var doc = new d.Document({
+          title: title || undefined,
+          creator: "MiaoYan",
+          styles: { default: styles },
+          sections: [{
+            properties: { page: { size: { width: WORD_PAGE.width, height: WORD_PAGE.height }, margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 } } },
+            children: children,
+          }],
+        });
+        return d.Packer.toBlob(doc).then(function (blob) {
+          download(blob, baseName() + ".docx");
+          say(images.missed ? fill(images.missed === 1 ? S.wordImage : S.wordImages, { n: images.missed }) : "");
+          track("tool_export", { tool: TOOL, format: "docx" });
+        });
+      });
+    });
+  }
+
+  var actions = { pdf: exportPdf, html: exportHtml, md: saveMarkdown, copy: copyFormatted, docx: exportDocx };
+  var failures = { pdf: S.exportFailed, html: S.exportFailed, md: S.exportFailed, copy: S.copyFailed, docx: S.exportFailed };
   tool.querySelector(".tool-actions").addEventListener("click", function (e) {
     var button = e.target.closest("[data-action]");
     if (!button || !write) return;
