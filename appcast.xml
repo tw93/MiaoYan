@@ -3,6 +3,63 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>4.12.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description xml:lang="en"><![CDATA[
+  <ol>
+    <li>Mac: Tables line up in columns with quieter pipes, and a Table menu adds and removes rows and columns</li>
+    <li>Mac: Version history shows how many lines each version changed and highlights what it changed</li>
+    <li>Mac: A long list item wraps under its own words instead of under the dash</li>
+    <li>Mac: In split view the preview reaches the end together with the editor, even when a note ends in images or tables</li>
+    <li>Mac: Going into and out of the preview keeps the line you were on, and leaving a presentation or PPT brings back the columns it hid</li>
+    <li>Mac: Cleaning unused attachments is safer: files used by notes in subfolders or the Trash, notes still only in iCloud, and files you just added are never removed</li>
+    <li>Mac: Command-Z outside the editor undoes the note on screen, pressing Replace again no longer replaces text it just wrote, and the slash templates write their placeholders in your interface language</li>
+    <li>Mac: YouTube videos play right in the preview and in exported HTML</li>
+    <li>Mac: Mermaid diagrams in Magic PPT draw properly instead of showing a syntax error, and its PDF export waits for every diagram before printing</li>
+    <li>Mac: Formulas and code in mind maps show properly, a map sits centred in an exported PDF, and nothing loads from the network</li>
+    <li>Mac: Typing below a code block in a very long note no longer slows down</li>
+    <li>Tab and Return move between cells as you edit a table</li>
+    <li>Pins follow your notes to your other devices through iCloud</li>
+    <li>The preview and slides show chemistry formulas, \( \) and \[ \] read as math in a note without $, and a wide formula scrolls sideways</li>
+    <li>Links written for GitHub reach their heading, and pie charts use eight soft colours so touching slices never match</li>
+    <li>Note list dates follow your system's region and 12 or 24-hour clock</li>
+    <li>Notes can hold videos and files: videos play in the preview and in PPT, other files show as links that open in their own app, dragged in on Mac or picked from Photos, the camera or Files on iPhone and iPad, and they move along with the note</li>
+    <li>iPhone and iPad: Share a web page or text from Safari or any app to MiaoYan, and it becomes a note</li>
+    <li>iPhone and iPad: Settings lets you choose whether a single Return starts a new line, and iPhone turns to landscape for reading and editing</li>
+    <li>iPhone and iPad: An insert bar above the keyboard adds to-dos, lists, links and attachments without remembering Markdown marks</li>
+    <li>iPhone and iPad: A new note saves itself once it has a title, and the top buttons and More menus follow the system's layout, with common actions first and Delete last</li>
+  </ol>
+          ]]>      </description>
+      <description xml:lang="zh-Hans"><![CDATA[
+  <ol>
+    <li>Mac：表格按列对齐显示，竖线淡下去，表格菜单可以增删行和列</li>
+    <li>Mac：版本历史显示每个版本改了几行，并把这一版改动的地方标出来</li>
+    <li>Mac：很长的列表项换行后和自己的文字对齐，不再缩到短横下面</li>
+    <li>Mac：分栏时预览跟着编辑器一起滚到底，笔记以图片或表格结尾时也能看到最后</li>
+    <li>Mac：进出预览都停在刚才那一行，退出演示或 PPT 后收起的栏会回来</li>
+    <li>Mac：清理未使用的附件更稳妥，子文件夹和废纸篓里的笔记用到的附件、只存在 iCloud 里的笔记和刚放进来的文件都不会被清掉</li>
+    <li>Mac：在编辑器外按 Command-Z 也能撤销当前笔记，连着按替换不会再替换自己刚写进去的文字，斜杠模板的占位文字跟着界面语言</li>
+    <li>Mac：YouTube 视频在预览和导出的 HTML 里都能直接播放</li>
+    <li>Mac：Magic PPT 里的 Mermaid 图正常画出来了，不再显示语法错误，导出 PDF 会等图都画好再打印</li>
+    <li>Mac：思维导图里的公式和代码能正常显示，导出 PDF 时居中，也不再联网加载</li>
+    <li>Mac：很长的笔记里在代码块下面打字不再变慢</li>
+    <li>编辑表格时 Tab 和回车在单元格之间移动</li>
+    <li>置顶会通过 iCloud 跟着笔记同步到其他设备</li>
+    <li>预览和幻灯片支持化学式，没有 $ 的笔记里 \( \) 和 \[ \] 也按公式显示，很宽的公式可以左右滚动</li>
+    <li>按 GitHub 写法的标题链接能跳到对应标题，饼图换成八种柔和的颜色，相邻扇区不会撞色</li>
+    <li>笔记列表的日期跟着系统的地区和 12 或 24 小时制</li>
+    <li>笔记里可以放视频和文件了，视频在预览和 PPT 里直接播放，其他文件显示成链接，点开用系统应用打开，Mac 直接拖进来，iPhone 和 iPad 从相册、相机或文件里选，移动笔记时附件一起带走</li>
+    <li>iPhone 和 iPad：在 Safari 或其他 App 里把网页和文字分享到妙言，直接存成一篇笔记</li>
+    <li>iPhone 和 iPad：设置里可以选单个回车算不算换行，iPhone 也能横过来阅读和编辑</li>
+    <li>iPhone 和 iPad：键盘上方多了一条插入栏，不用记 Markdown 符号也能加待办、列表、链接和附件</li>
+    <li>iPhone 和 iPad：新建笔记写好标题就会自动保存，顶部按钮和更多菜单按系统的习惯重新排过，常用的放前面，删除放在最后</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Wed, 25 Nov 2026 12:43:30 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V4.12.0/MiaoYan_V4.12.0.zip" sparkle:shortVersionString="4.12.0" sparkle:version="4.12.0" sparkle:edSignature="WcyeHW6eM9v/zoXqz0+wwyg4Mr4cA8//nDc6XYx+DxSD53kt0fCrKK05aCoaSYGBUt7FWRmUdZuek+kEhfejCg==" length="13504610" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>12.0</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>4.11.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description xml:lang="en"><![CDATA[
