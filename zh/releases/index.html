@@ -60,6 +60,7 @@
   /* 1000 as on the other product sites since 2026-11-10: 1120, kept on
      2026-11-08 for the screenshots, read wide to the maintainer. */
   --page: 1000px;
+  --tool-page: 1440px;
   --inset: 64px;
   --gap: 90px;
   /* Desktop type ladder shared by the product sites (2026-11-01): five rungs, nothing between. */
@@ -759,8 +760,14 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
    left edge (centred, it started 190px in from the title above it; maintainer
-   2026-11-25). */
-.wrap:has(> main.tool-page) { max-width: none; padding-inline: min(var(--inset), 32px); }
+   2026-11-25). On a wide display the page stops at 1440px and centres, and
+   the footer takes the same width so its brand sits on that edge (maintainer
+   2026-11-25, of three candidates at 2333px: the prose hugged the left while
+   the footer sat centred 635px in). Narrower windows are unchanged. */
+.wrap:has(> main.tool-page) { max-width: calc(var(--tool-page) + 64px); padding-inline: min(var(--inset), 32px); }
+@media (min-width: 1505px) {
+  body:has(> .wrap > main.tool-page) footer .wrap { max-width: calc(var(--tool-page) + 64px); padding-inline: 32px; }
+}
 .tool-page > :is(.tool-body, .tool-app) { max-width: var(--page); margin-inline: 0; }
 .tool-page .tool-grid { --tool-h: max(440px, calc(100vh - 300px)); }
 @supports (height: 100svh) {
