@@ -66,4 +66,23 @@ final class ImportScanTests: XCTestCase {
             from: [tempDir, tempDir.appendingPathComponent("one.md")], allowedExtensions: extensions)
         XCTAssertEqual(files.count, 1)
     }
+
+    /// A copy that failed partway, under a name that was free, left the part
+    /// it had copied in the library: a text bundle copied up to the file it
+    /// could not read, which the library listed as a note.
+    @MainActor
+    func testAnImportThatFailsPartwayLeavesNothingBehind() throws {
+        let bundle = tempDir.appendingPathComponent("source/plan.textbundle", isDirectory: true)
+        try FileManager.default.createDirectory(at: bundle, withIntermediateDirectories: true)
+        try "# Plan\n".write(to: bundle.appendingPathComponent("text.md"), atomically: true, encoding: .utf8)
+        let unreadable = bundle.appendingPathComponent("unreadable.png")
+        try Data([0]).write(to: unreadable)
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: unreadable.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: unreadable.path) }
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+
+        XCTAssertNil(ViewController.importCopy(of: bundle, into: Project(url: work, label: "Work")), "the copy failed")
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: work.path), [], "no part of it is left")
+    }
 }

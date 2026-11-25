@@ -1139,6 +1139,16 @@ extension ViewController {
                 // free yet cannot be written.
                 let taken = (error as? CocoaError)?.code == .fileWriteFileExists || existed
                 guard taken else {
+                    // The name was free, so what is there now is this copy's
+                    // part: a folder (a text bundle) copied up to the file it
+                    // could not read, which the library listed as a note.
+                    if (try? destination.checkResourceIsReachable()) == true {
+                        do {
+                            try manager.removeItem(at: destination)
+                        } catch let removal {
+                            AppDelegate.trackError(removal, context: "ViewController.importCopy partial")
+                        }
+                    }
                     AppDelegate.trackError(error, context: "ViewController.importCopy")
                     return nil
                 }
