@@ -813,6 +813,21 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .markmap-svg .markmap-foreign div { white-space: nowrap; }
 .markmap-svg .markmap-foreign code { font-family: SFMono-Regular, Menlo, Consolas, monospace; background: rgba(0, 0, 0, 0.05); color: #262626; }
 .markmap-svg .markmap-foreign a { color: #1C5D33; }
+/* As MiaoYan's diagrams.css: WebKit paints KaTeX's positioned boxes inside a
+   foreignObject from the map's corner, so there a formula in a node shows as
+   its MathML; -apple-system-body is a font keyword only WebKit knows. Other
+   engines keep KaTeX's HTML, which they place right and Chromium sizes better.
+   .markmap-foreign is also the off-page box markmap measures a node in. */
+@supports (font: -apple-system-body) {
+  .markmap-foreign .katex { position: static; }
+  .markmap-foreign .katex .katex-html { display: none; }
+  .markmap-foreign .katex .katex-mathml { position: static; clip-path: none; -webkit-clip-path: none; width: auto; height: auto; overflow: visible; }
+  .markmap-foreign .katex math { padding-bottom: 2px; }
+  .markmap-foreign .katex math, .markmap-foreign .katex math * { font-family: "STIX Two Math", math; }
+  /* A superscript rises above the label's 20px line; MiaoYan's foreignObject is visible too. */
+  .markmap-svg foreignObject { overflow: visible; }
+}
+.markmap-foreign .katex math, .markmap-foreign .katex math * { font-family: "STIX Two Math", math; }
 .viewer-tool.is-drop .viewer-frame, .viewer-tool.is-drop .tool-editor { border-color: var(--brand); }
 /* The typography cleaner: the result wraps exactly as the text beside it, new
    characters tinted, a removed space or blank line a hairline that takes no width. */

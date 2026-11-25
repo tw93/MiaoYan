@@ -7,9 +7,10 @@ editor draw with the files a note's preview uses: the preview stylesheets,
 highlight.js 11.5.1, d3 6.7.0 and markmap-lib 0.14.1 with markmap-view 0.14.0
 (one combined file). Two come from npm instead, each checked against the
 registry's sha512: markdown-it 14.1.0, since the app parses Markdown natively
-with cmark-gfm, and KaTeX 0.16.47 with its woff2 fonts, since the app's 0.16.0
-lets an edef expand past maxExpand (CVE-2024-28243, fixed in 0.16.10) and a
-pasted formula could freeze the page.
+with cmark-gfm, and KaTeX 0.16.47 with its woff2 fonts, taken from npm while
+the app's 0.16.0 let an edef expand past maxExpand (CVE-2024-28243, fixed in
+0.16.10) and a pasted formula could freeze the page; the app moved to the same
+0.16.47 on 2026-11-25.
 
     python3 -I scripts/app_assets.py --check   fail on a changed copy, note when
                                                the app's copy moved ahead
@@ -29,7 +30,7 @@ FILES = {
     "assets/vendor/preview/typography.css": ('Resources/DownView.bundle/css/typography.css', "7eca8db5f31fdcb50783cb51624c0c946508d082743a1d316a55d9491a362a81"),
     "assets/vendor/preview/theme-light.css": ('Resources/DownView.bundle/css/theme-light.css', "c929441d212b4e3b9256bb09a512fba9ea85a9c68f05ce29bc5901466c530059"),
     "assets/vendor/preview/base.css": ('Resources/DownView.bundle/css/base.css', "51fd8b37a4f5f45cb1843114d7bf81f9c7e4d8434323d04bca11704a12083133"),
-    "assets/vendor/preview/diagrams.css": ('Resources/DownView.bundle/css/diagrams.css', "1d596c2c24e3589fec25eba48ac4b7fb1282742ba7c13cc4bf8c78751c0eb5c7"),
+    "assets/vendor/preview/diagrams.css": ('Resources/DownView.bundle/css/diagrams.css', "79e65e86d7ee0ca29050bb159629b00ec6baa3f5f1dbc918f598a8bd33086aa2"),
     "assets/vendor/d3-6.7.0.min.js": ('Resources/DownView.bundle/js/d3.min.js', "fbb8da602a76f4ed49bac3561da62d8149fa121b8fd15685bacc21355d3a3322"),
     "assets/vendor/markmap-0.14.min.js": ('Resources/DownView.bundle/js/markmap-view.min.js', "40ba3d1e3c2c5f0b82a51a8c76767a6a8838f2b2fcdcc79e72cb7292a7585963"),
     "assets/vendor/katex-0.16.47.min.js": (None, "a29d2961d3146de5949d78ac7c1a9d93ae54955bad22a6db4fbe836e88e8bf48"),
