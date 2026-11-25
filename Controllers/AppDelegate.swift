@@ -176,12 +176,43 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        if AppEnvironment.current.storage.deferUntilFolderMoveFinishes({
+        Self.terminationReply(storage: AppEnvironment.current.storage) {
             sender.reply(toApplicationShouldTerminate: true)
-        }) {
-            return .terminateLater
         }
-        return .terminateNow
+    }
+
+    /// How long quitting waits for dropped files still being copied. A copy
+    /// is an APFS clone on one volume and done at once; from another volume a
+    /// large video takes longer, and quit must never hang on it.
+    static let attachmentCopyQuitCap: TimeInterval = 30
+
+    /// Quitting waits for a folder move (a rename, uncapped as before) and
+    /// for every attachment copy under way, up to `copyCap`; `reply` runs
+    /// once all of them are done. Quitting mid-copy left the saved link
+    /// with no file and a hidden `.<UUID>.partial` in `files/`.
+    static func terminationReply(
+        storage: Storage, copyCap: TimeInterval = attachmentCopyQuitCap, reply: @escaping () -> Void
+    ) -> NSApplication.TerminateReply {
+        let wait = QuitWait(reply: reply)
+        if storage.deferUntilFolderMoveFinishes({ wait.done() }) { wait.pending += 1 }
+        if ImagesProcessor.deferUntilCopiesFinish(cap: copyCap, { wait.done() }) { wait.pending += 1 }
+        return wait.pending == 0 ? .terminateNow : .terminateLater
+    }
+
+    /// Counts what quitting still waits for and replies when it reaches 0.
+    @MainActor
+    private final class QuitWait {
+        var pending = 0
+        private let reply: () -> Void
+
+        init(reply: @escaping () -> Void) {
+            self.reply = reply
+        }
+
+        func done() {
+            pending -= 1
+            if pending == 0 { reply() }
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

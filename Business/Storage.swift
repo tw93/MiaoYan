@@ -1493,8 +1493,9 @@ class Storage {
             }
             let paths = referenced
             let names = trashNames
+            let busy = ImagesProcessor.foldersWithCopiesUnderWay
             let orphaned = await Task.detached(priority: .userInitiated) {
-                Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: paths, changedBefore: cutoff)
+                Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: paths, changedBefore: cutoff, copyingInto: busy)
                     .filter { !names.contains($0.lastPathComponent) }
             }.value
             completion(orphaned)
@@ -1597,7 +1598,13 @@ class Storage {
         return notes
     }
 
-    nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>, changedBefore cutoff: Date) -> [URL] {
+    /// A partial copy (`ImagesProcessor.isPartialCopyName`) left in an `i/`
+    /// or `files/` folder by a crash is hidden, so the walk skipped it and it
+    /// stayed forever; it is offered like any unused file, except in a folder
+    /// a copy is being written into now (`copyingInto`).
+    nonisolated private static func scanOrphanAttachments(
+        folders: [URL], referenced: Set<String>, changedBefore cutoff: Date, copyingInto busy: Set<String> = []
+    ) -> [URL] {
         var orphaned = [URL]()
         let manager = FileManager.default
         // A note resolves /i/ against its folder as stored, while the folder
@@ -1619,9 +1626,7 @@ class Storage {
                 // pasted while the scan or its confirmation ran, or one that
                 // reached this Mac from iCloud before the note linking it,
                 // would otherwise go to the Trash (2026-11-22).
-                let dates = try? fileURL.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey])
-                let changed = [dates?.creationDate, dates?.contentModificationDate].compactMap { $0 }.max() ?? .distantFuture
-                if changed >= cutoff {
+                if lastChange(of: fileURL) >= cutoff {
                     continue
                 }
 
@@ -1630,9 +1635,22 @@ class Storage {
                     orphaned.append(fileURL)
                 }
             }
+
+            guard !busy.contains(folderURL.resolvingSymlinksInPath().path) else { continue }
+            let hidden = (try? manager.contentsOfDirectory(at: folderURL, includingPropertiesForKeys: keys, options: [])) ?? []
+            for fileURL in hidden where ImagesProcessor.isPartialCopyName(fileURL.lastPathComponent) {
+                if lastChange(of: fileURL) < cutoff { orphaned.append(fileURL) }
+            }
         }
 
         return orphaned
+    }
+
+    /// The later of a file's creation and modification dates; the far
+    /// future when neither can be read, so the file is never offered.
+    nonisolated private static func lastChange(of url: URL) -> Date {
+        let dates = try? url.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey])
+        return [dates?.creationDate, dates?.contentModificationDate].compactMap { $0 }.max() ?? .distantFuture
     }
 
     public func removeAttachments(urls: [URL]) -> (removed: [URL], failed: [URL]) {

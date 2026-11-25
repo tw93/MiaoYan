@@ -275,7 +275,48 @@ public class ImagesProcessor {
                 movable = false
             }
         }
+        if reservedAttachments.isEmpty {
+            let waiters = copyWaiters.values
+            copyWaiters.removeAll()
+            for waiter in waiters { waiter() }
+        }
         return landed
+    }
+
+    /// Callers waiting for every copy to end, by a key of their own.
+    @MainActor private static var copyWaiters: [UUID: () -> Void] = [:]
+
+    /// Calls `completion` once no copy is under way, or once `cap` seconds
+    /// have passed, whichever comes first; false, and nothing is called, when
+    /// none is under way. Quitting waits here: cut short, a copy left the
+    /// note's link with no file and a `.<UUID>.partial` beside it.
+    @MainActor
+    static func deferUntilCopiesFinish(cap: TimeInterval, _ completion: @escaping () -> Void) -> Bool {
+        guard !reservedAttachments.isEmpty else { return false }
+        let key = UUID()
+        copyWaiters[key] = completion
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: UInt64(max(cap, 0) * 1_000_000_000))
+            copyWaiters.removeValue(forKey: key)?()
+        }
+        return true
+    }
+
+    /// The folders a copy is being written into now, resolved, so Clean
+    /// Unused Attachments leaves their partial copies alone.
+    @MainActor
+    static var foldersWithCopiesUnderWay: Set<String> {
+        Set(reservedAttachments.map { URL(fileURLWithPath: $0).deletingLastPathComponent().resolvingSymlinksInPath().path })
+    }
+
+    /// The hidden name `copyAttachment` writes through, `.<UUID>.partial`,
+    /// or `.<name>.<UUID>.partial` as builds before 2026-11-25 wrote it. One
+    /// left by a crash or a forced quit is nobody's file.
+    nonisolated static func isPartialCopyName(_ name: String) -> Bool {
+        guard name.hasPrefix("."), name.hasSuffix(".partial") else { return false }
+        let stem = name.dropLast(".partial".count)
+        guard let last = stem.split(separator: ".").last else { return false }
+        return UUID(uuidString: String(last)) != nil
     }
 
     #if DEBUG

@@ -588,6 +588,67 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: files.path), [name], "no partial copy is left")
     }
 
+    /// Quitting waited only for folder moves, so a quit while a dropped file
+    /// was being copied left the saved link with no file. It waits for the
+    /// copies too, up to a cap, so quit never hangs on one.
+    @MainActor
+    func testQuittingWaitsForAFileStillBeingCopied() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+        let storage = Storage(loadsLibrary: false)
+        var replies = 0
+        XCTAssertEqual(AppDelegate.terminationReply(storage: storage) { replies += 1 }, .terminateNow, "nothing under way")
+
+        let copying = try XCTUnwrap(ImagesProcessor.reserveAttachment(for: URL(fileURLWithPath: "/tmp/Plan.pdf"), note: note))
+        XCTAssertEqual(AppDelegate.terminationReply(storage: storage) { replies += 1 }, .terminateLater)
+        XCTAssertEqual(replies, 0, "the copy is still under way")
+        ImagesProcessor.finishCopy(copying.destination, copied: false)
+        XCTAssertEqual(replies, 1, "the quit goes on once the copy ends")
+
+        let stuck = try XCTUnwrap(ImagesProcessor.reserveAttachment(for: URL(fileURLWithPath: "/tmp/clip.mov"), note: note))
+        defer { ImagesProcessor.finishCopy(stuck.destination, copied: false) }
+        let capped = expectation(description: "the quit goes on after the cap")
+        XCTAssertEqual(AppDelegate.terminationReply(storage: storage, copyCap: 0.2) { capped.fulfill() }, .terminateLater)
+        await fulfillment(of: [capped], timeout: 5)
+    }
+
+    /// A copy runs through a hidden `.<UUID>.partial` beside its file; one a
+    /// crash left there was skipped as hidden by Clean Unused Attachments and
+    /// stayed forever. It is offered like any unused file, the old
+    /// `.<name>.<UUID>.partial` form too, except in a folder a copy is
+    /// being written into now. Other hidden files are still left alone.
+    @MainActor
+    func testAPartialCopyLeftByACrashIsOfferedUnlessACopyIsUnderWay() async throws {
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        let manager = FileManager.default
+        try manager.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        try "# Note\n\n![](/i/used.png)\n".write(to: work.appendingPathComponent("n.md"), atomically: true, encoding: .utf8)
+        try Data([1]).write(to: work.appendingPathComponent("i/used.png"))
+        let partials = [
+            "files/.\(UUID().uuidString).partial", "files/.Report.pdf.\(UUID().uuidString).partial", "i/.\(UUID().uuidString).partial",
+        ]
+        for name in partials + ["files/.keep", "files/.notes.partial"] {
+            try Data([0]).write(to: work.appendingPathComponent(name))
+        }
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: tempDir, label: "root")
+        _ = storage.add(project: root)
+        _ = storage.subfolders(of: root)
+
+        let found = await orphans(in: storage)
+        XCTAssertEqual(found.map { Set($0.map(\.lastPathComponent)) }, Set(partials.map { ($0 as NSString).lastPathComponent }))
+
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+        let copying = try XCTUnwrap(ImagesProcessor.reserveAttachment(for: URL(fileURLWithPath: "/tmp/Report.pdf"), note: note))
+        defer { ImagesProcessor.finishCopy(copying.destination, copied: false) }
+        let whileCopying = await orphans(in: storage)
+        XCTAssertEqual(
+            whileCopying.map { Set($0.map(\.lastPathComponent)) }, [(partials[2] as NSString).lastPathComponent],
+            "files/ is being copied into, so its partial copies stay")
+    }
+
     @MainActor
     func testAnImageThatCannotBeWrittenGetsNoLink() throws {
         let work = tempDir.appendingPathComponent("Work", isDirectory: true)
