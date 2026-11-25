@@ -21,13 +21,9 @@ Yes, and there is no account. The diagram is drawn in your browser, and a copied
 
 Mermaid 11.14.0 with MiaoYan's diagram colours, the same file the MiaoYan app bundles, so a diagram drawn here looks the same in a note. Labels are drawn as SVG text so that a downloaded file reads the same on every computer.
 
-### How do I export a diagram?
-
-Download PNG saves an image at twice the size on a light background, ready for slides and documents. Download SVG keeps it as a vector that stays sharp at any size and opens in Figma, Sketch or Illustrator.
-
 ### Why did the diagram stop updating?
 
-When the code has a mistake, the last working diagram stays, faded, and Mermaid's message appears under the editor with the line it stopped at. Common causes are a lowercase `end` as a flowchart node, a missing colon in a timeline, and a diagram type that Mermaid 11.14.0 does not know.
+When the code has a mistake, the last working diagram stays, faded, Mermaid's message appears under the editor, and the line it stopped at is marked beside the code. Common causes are a lowercase `end` as a flowchart node, a missing colon in a timeline, and a diagram type that Mermaid 11.14.0 does not know.
 
 ### Where is my diagram kept?
 

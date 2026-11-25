@@ -676,21 +676,41 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-chip:hover { background: var(--warm-sand); }
 .tool-chip[aria-pressed="true"] { background: var(--warm-sand); border-color: var(--warm-sand); color: var(--near-black); }
 .tool-chip:focus { outline: none; }
-.tool-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-grid { --tool-h: clamp(460px, calc(100svh - 300px), 780px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-editor {
+  display: flex; height: var(--tool-h); overflow: hidden;
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65;
+}
+.tool-gutter { flex: none; overflow: hidden; padding: 16px 10px 16px 14px; color: var(--stone); opacity: 0.7; text-align: right; font-variant-numeric: tabular-nums; user-select: none; }
+.tool-lines span { display: block; min-width: 2ch; padding: 0 4px; border-radius: 4px; }
+.tool-lines span.is-error { color: var(--near-black); background: var(--warm-sand); opacity: 1; }
 .tool-code {
-  display: block; width: 100%; height: 440px; min-height: 240px; resize: vertical; margin: 0;
-  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65; tab-size: 4;
-  color: var(--dark-warm); caret-color: var(--brand); background: var(--ivory);
-  border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; white-space: pre; overflow: auto;
+  display: block; flex: 1; min-width: 0; height: 100%; resize: none; margin: 0;
+  font: inherit; tab-size: 4; color: var(--dark-warm); caret-color: var(--brand);
+  background: transparent; border: 0; padding: 16px 18px 16px 6px; white-space: pre; overflow: auto;
 }
 /* No focus ring on inputs, the caret is enough (family rule). */
 .tool-code:focus { outline: none; }
 .tool-preview {
-  display: flex; align-items: center; justify-content: center; min-height: 440px; padding: 24px;
-  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px; overflow: auto;
+  position: relative; height: var(--tool-h); overflow: hidden; padding: 24px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px;
 }
-.tool-preview > :is(svg, img) { display: block; max-width: 100%; height: auto; transition: opacity 0.2s; }
-.tool-preview.is-stale > :is(svg, img) { opacity: 0.35; }
+/* Before the script measures the frame the first diagram fits by CSS alone; then
+   it is placed and zoomed in diagram units. */
+.tool-canvas { display: flex; align-items: center; justify-content: center; max-width: 100%; max-height: 100%; }
+.tool-canvas > :is(svg, img) { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; transition: opacity 0.2s; }
+.tool-preview.is-live .tool-canvas { position: absolute; left: 0; top: 0; display: block; max-width: none; max-height: none; transform-origin: 0 0; }
+.tool-preview.is-live .tool-canvas > :is(svg, img) { max-width: none; max-height: none; }
+.tool-canvas.is-stale > :is(svg, img) { opacity: 0.35; }
+.tool-preview.is-zoomed { cursor: grab; touch-action: none; }
+.tool-preview.is-dragging { cursor: grabbing; }
+.tool-zoom { position: absolute; top: 12px; right: 12px; display: flex; gap: 2px; padding: 3px; background: var(--ivory); border: 1px solid var(--line); border-radius: 999px; }
+.tool-zoom-btn { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 999px; background: none; color: var(--olive); cursor: pointer; }
+.tool-zoom-btn svg { width: 16px; height: 16px; }
+.tool-zoom-btn:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-zoom-btn:focus { outline: none; }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
@@ -709,18 +729,19 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 @media (max-width: 880px) {
   .tool-grid { grid-template-columns: minmax(0, 1fr); }
-  .tool-code { height: 300px; font-size: 16px; }
-  .tool-preview { min-height: 300px; }
+  .tool-editor { height: 320px; font-size: 16px; }
+  .tool-preview { height: 380px; }
   .tool-app { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 56px; }
   .tool-body { margin-top: 56px; }
 }
 /* iOS zooms the page into a text field set under 16px. */
 @media (hover: none) and (pointer: coarse) {
-  .tool-code { font-size: 16px; }
+  .tool-editor { font-size: 16px; }
 }
 @media (max-width: 560px) {
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
+  .tool-actions .btn-primary { grid-column: 1 / -1; }
   .tool-preview { padding: 16px; }
   .mermaid-figure { padding: 14px; }
 }
@@ -913,7 +934,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Mermaid Live Editor", "item": "https://miaoyan.app/tools/mermaid-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/mermaid-editor/#app", "name": "Mermaid Live Editor", "description": "A free Mermaid live editor in your browser: flowcharts, sequence diagrams, timelines, Gantt charts and more, with SVG and PNG export and links that carry the diagram.", "url": "https://miaoyan.app/tools/mermaid-editor/", "inLanguage": "en", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and there is no account. The diagram is drawn in your browser, and a copied link carries the whole diagram inside the link itself."}}, {"@type": "Question", "name": "Which Mermaid version does it use?", "acceptedAnswer": {"@type": "Answer", "text": "Mermaid 11.14.0 with MiaoYan's diagram colours, the same file the MiaoYan app bundles, so a diagram drawn here looks the same in a note. Labels are drawn as SVG text so that a downloaded file reads the same on every computer."}}, {"@type": "Question", "name": "How do I export a diagram?", "acceptedAnswer": {"@type": "Answer", "text": "Download PNG saves an image at twice the size on a light background, ready for slides and documents. Download SVG keeps it as a vector that stays sharp at any size and opens in Figma, Sketch or Illustrator."}}, {"@type": "Question", "name": "Why did the diagram stop updating?", "acceptedAnswer": {"@type": "Answer", "text": "When the code has a mistake, the last working diagram stays, faded, and Mermaid's message appears under the editor with the line it stopped at. Common causes are a lowercase end as a flowchart node, a missing colon in a timeline, and a diagram type that Mermaid 11.14.0 does not know."}}, {"@type": "Question", "name": "Where is my diagram kept?", "acceptedAnswer": {"@type": "Answer", "text": "The editor keeps your last diagram in this browser, so it is still there when you come back. Copy link puts the code into the link, so whoever opens it sees the same diagram."}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Mermaid Live Editor", "item": "https://miaoyan.app/tools/mermaid-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/tools/mermaid-editor/#app", "name": "Mermaid Live Editor", "description": "A free Mermaid live editor in your browser: flowcharts, sequence diagrams, timelines, Gantt charts and more, with SVG and PNG export and links that carry the diagram.", "url": "https://miaoyan.app/tools/mermaid-editor/", "inLanguage": "en", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, and there is no account. The diagram is drawn in your browser, and a copied link carries the whole diagram inside the link itself."}}, {"@type": "Question", "name": "Which Mermaid version does it use?", "acceptedAnswer": {"@type": "Answer", "text": "Mermaid 11.14.0 with MiaoYan's diagram colours, the same file the MiaoYan app bundles, so a diagram drawn here looks the same in a note. Labels are drawn as SVG text so that a downloaded file reads the same on every computer."}}, {"@type": "Question", "name": "Why did the diagram stop updating?", "acceptedAnswer": {"@type": "Answer", "text": "When the code has a mistake, the last working diagram stays, faded, Mermaid's message appears under the editor, and the line it stopped at is marked beside the code. Common causes are a lowercase end as a flowchart node, a missing colon in a timeline, and a diagram type that Mermaid 11.14.0 does not know."}}, {"@type": "Question", "name": "Where is my diagram kept?", "acceptedAnswer": {"@type": "Answer", "text": "The editor keeps your last diagram in this browser, so it is still there when you come back. Copy link puts the code into the link, so whoever opens it sees the same diagram."}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -936,7 +957,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <div class="tool" id="mermaid-tool">
     <div class="tool-templates" role="group" aria-label="Templates"><button type="button" class="tool-chip" data-template="flowchart" aria-pressed="true">Flowchart</button><button type="button" class="tool-chip" data-template="sequence" aria-pressed="false">Sequence</button><button type="button" class="tool-chip" data-template="timeline" aria-pressed="false">Timeline</button><button type="button" class="tool-chip" data-template="gantt" aria-pressed="false">Gantt</button><button type="button" class="tool-chip" data-template="class" aria-pressed="false">Class</button><button type="button" class="tool-chip" data-template="state" aria-pressed="false">State</button><button type="button" class="tool-chip" data-template="er" aria-pressed="false">ER</button><button type="button" class="tool-chip" data-template="pie" aria-pressed="false">Pie</button><button type="button" class="tool-chip" data-template="mindmap" aria-pressed="false">Mindmap</button><button type="button" class="tool-chip" data-template="xychart" aria-pressed="false">XY chart</button></div>
     <div class="tool-grid">
-      <div class="tool-pane">
+      <div class="tool-editor">
+        <div class="tool-gutter" aria-hidden="true"><div class="tool-lines" id="mermaid-lines"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div>
         <label class="visually-hidden" for="mermaid-code">Mermaid code</label>
         <textarea id="mermaid-code" class="tool-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off">flowchart LR
     A[Write a note] --&gt; B{Ready?}
@@ -944,7 +966,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     B --&gt;|No| D[Revise]
     D --&gt; B</textarea>
       </div>
-      <div class="tool-preview" id="mermaid-preview" role="img" aria-label="flowchart preview"><img src="/img/mermaid/3583f1cc0c53.svg" width="718" height="250" alt="" fetchpriority="high"></div>
+      <div class="tool-preview" id="mermaid-frame">
+        <div class="tool-canvas" id="mermaid-preview" role="img" aria-label="flowchart preview"><img src="/img/mermaid/3583f1cc0c53.svg" width="718" height="250" alt="" fetchpriority="high"></div>
+        <div class="tool-zoom" role="group"><button type="button" class="tool-zoom-btn" data-zoom="out" aria-label="Zoom out" title="Zoom out"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="in" aria-label="Zoom in" title="Zoom in"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9M8 3.5v9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="fit" aria-label="Fit" title="Fit"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button></div>
+      </div>
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="mermaid-status" role="status" aria-live="polite"></p>
@@ -953,19 +978,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     </div>
     <div class="tool-actions">
       <button type="button" class="btn btn-primary" data-action="png">Download PNG</button>
+      <button type="button" class="btn btn-ghost" data-action="image" hidden>Copy image</button>
       <button type="button" class="btn btn-ghost" data-action="svg">Download SVG</button>
       <button type="button" class="btn btn-ghost" data-action="markdown">Copy Markdown</button>
       <button type="button" class="btn btn-ghost" data-action="link">Copy link</button>
     </div>
   </div>
-  <section class="tool-app" aria-labelledby="tool-app-title">
-    <div class="tool-app-text">
-      <h2 class="tool-app-title" id="tool-app-title">The same diagrams, inside your notes</h2>
-      <p>MiaoYan is a light Markdown notebook for Mac, iPhone and iPad. Put this code in a mermaid block and the preview draws it the way it looks here, offline, right beside the rest of your note.</p>
-      <a class="btn btn-primary" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>View in App Store</a>
-    </div>
-    <figure class="tool-app-shot"><img src="/assets/shots/en-split-1400.webp" width="1400" height="910" alt="MiaoYan on a Mac, with Mermaid code on the left and the drawn flowchart in the preview on the right" loading="lazy" decoding="async"></figure>
-  </section>
   <div class="blog-body tool-body">
 <h2 id="put-the-diagram-in-a-markdown-note">Put the diagram in a Markdown note</h2>
 <p>Copy Markdown wraps your code in a fenced block tagged <code>mermaid</code>:</p>
@@ -980,13 +998,19 @@ flowchart LR
 <p>Yes, and there is no account. The diagram is drawn in your browser, and a copied link carries the whole diagram inside the link itself.</p>
 <h3 id="which-mermaid-version-does-it-use">Which Mermaid version does it use?</h3>
 <p>Mermaid 11.14.0 with MiaoYan's diagram colours, the same file the MiaoYan app bundles, so a diagram drawn here looks the same in a note. Labels are drawn as SVG text so that a downloaded file reads the same on every computer.</p>
-<h3 id="how-do-i-export-a-diagram">How do I export a diagram?</h3>
-<p>Download PNG saves an image at twice the size on a light background, ready for slides and documents. Download SVG keeps it as a vector that stays sharp at any size and opens in Figma, Sketch or Illustrator.</p>
 <h3 id="why-did-the-diagram-stop-updating">Why did the diagram stop updating?</h3>
-<p>When the code has a mistake, the last working diagram stays, faded, and Mermaid's message appears under the editor with the line it stopped at. Common causes are a lowercase <code>end</code> as a flowchart node, a missing colon in a timeline, and a diagram type that Mermaid 11.14.0 does not know.</p>
+<p>When the code has a mistake, the last working diagram stays, faded, Mermaid's message appears under the editor, and the line it stopped at is marked beside the code. Common causes are a lowercase <code>end</code> as a flowchart node, a missing colon in a timeline, and a diagram type that Mermaid 11.14.0 does not know.</p>
 <h3 id="where-is-my-diagram-kept">Where is my diagram kept?</h3>
 <p>The editor keeps your last diagram in this browser, so it is still there when you come back. Copy link puts the code into the link, so whoever opens it sees the same diagram.</p>
   </div>
+  <section class="tool-app" aria-labelledby="tool-app-title">
+    <div class="tool-app-text">
+      <h2 class="tool-app-title" id="tool-app-title">The same diagrams, inside your notes</h2>
+      <p>MiaoYan, a Markdown notebook for Mac, iPhone and iPad, draws Mermaid with this same file. Put the code in a mermaid block and the note&#x27;s preview shows this diagram.</p>
+      <a class="btn btn-ghost" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>View in App Store</a>
+    </div>
+    <figure class="tool-app-shot"><img src="/assets/shots/en-split-1400.webp" width="1400" height="910" alt="MiaoYan on a Mac, with Mermaid code on the left and the drawn flowchart in the preview on the right" loading="lazy" decoding="async"></figure>
+  </section>
 </main>
 </div>
 <footer>
@@ -1000,8 +1024,8 @@ flowchart LR
     </div>
   </div>
 </footer>
-<script type="application/json" id="mermaid-data">{"lang":"en","default":"flowchart","templates":[{"id":"flowchart","label":"Flowchart","kind":"flowchart","code":"flowchart LR\n    A[Write a note] --> B{Ready?}\n    B -->|Yes| C[Publish]\n    B -->|No| D[Revise]\n    D --> B","svg":"/img/mermaid/3583f1cc0c53.svg","width":718,"height":250,"syntax":"/blog/mermaid-flowchart/","syntaxLabel":"Flowchart syntax"},{"id":"sequence","label":"Sequence","kind":"sequence diagram","code":"sequenceDiagram\n    participant U as User\n    participant A as App\n    participant S as Server\n    U->>A: Sign in\n    A->>S: Check password\n    S-->>A: Token\n    A-->>U: Welcome back","svg":"/img/mermaid/1ecec357127c.svg","width":650,"height":347,"syntax":"/blog/mermaid-sequence-diagram/","syntaxLabel":"Sequence syntax"},{"id":"timeline","label":"Timeline","kind":"timeline","code":"timeline\n    title Writing a book\n    section Draft\n        January : Outline\n        February : First chapters : Research trip\n    section Revise\n        March : Second draft\n        April : Copy edit","svg":"/img/mermaid/4f34aac17f0c.svg","width":1190,"height":642,"syntax":"/blog/mermaid-timeline/","syntaxLabel":"Timeline syntax"},{"id":"gantt","label":"Gantt","kind":"Gantt chart","code":"gantt\n    title Release plan\n    dateFormat YYYY-MM-DD\n    section Build\n        Design  :a1, 2026-12-01, 4d\n        Develop :a2, after a1, 6d\n    section Ship\n        Test    :a3, after a2, 3d\n        Release :milestone, after a3, 0d","svg":"/img/mermaid/f4f2b9ce247d.svg","width":1264,"height":196,"syntax":"/blog/mermaid-gantt-chart/","syntaxLabel":"Gantt syntax"},{"id":"class","label":"Class","kind":"class diagram","code":"classDiagram\n    class Folder {\n        +String name\n        +notes() List~Note~\n    }\n    class Note {\n        +String title\n        +Date modified\n        +save()\n    }\n    Folder \"1\" --> \"*\" Note : contains","svg":"/img/mermaid/36c83b753b98.svg","width":215,"height":385,"syntax":"/blog/mermaid-class-diagram/","syntaxLabel":"Class syntax"},{"id":"state","label":"State","kind":"state diagram","code":"stateDiagram-v2\n    [*] --> Draft\n    Draft --> Review : submit\n    Review --> Draft : changes requested\n    Review --> Published : approve\n    Published --> [*]","svg":"/img/mermaid/9c6f8879fa3d.svg","width":228,"height":506,"syntax":null,"syntaxLabel":"State syntax"},{"id":"er","label":"ER","kind":"ER diagram","code":"erDiagram\n    AUTHOR ||--o{ NOTE : writes\n    NOTE }o--o{ TAG : has\n    AUTHOR {\n        string name\n        string email\n    }\n    NOTE {\n        string title\n        date created\n    }","svg":"/img/mermaid/1a4b1f18af56.svg","width":171,"height":511,"syntax":"/blog/mermaid-er-diagram/","syntaxLabel":"ER syntax"},{"id":"pie","label":"Pie","kind":"pie chart","code":"pie title Where the writing time goes\n    \"Writing\" : 45\n    \"Editing\" : 30\n    \"Research\" : 25","svg":"/img/mermaid/d02c9447d218.svg","width":585,"height":450,"syntax":null,"syntaxLabel":"Pie syntax"},{"id":"mindmap","label":"Mindmap","kind":"mind map","code":"mindmap\n  root((Notes))\n    Writing\n      Drafts\n      Ideas\n    Reading\n      Books\n      Articles\n    Work\n      Meetings","svg":"/img/mermaid/07547c1022d5.svg","width":612,"height":366,"syntax":null,"syntaxLabel":"Mindmap syntax"},{"id":"xychart","label":"XY chart","kind":"XY chart","code":"xychart-beta\n    title \"Notes written per month\"\n    x-axis [Jan, Feb, Mar, Apr, May, Jun]\n    y-axis \"Notes\" 0 --> 40\n    bar [12, 18, 25, 22, 30, 36]\n    line [12, 18, 25, 22, 30, 36]","svg":"/img/mermaid/f639285e0bc6.svg","width":700,"height":500,"syntax":null,"syntaxLabel":"XY chart syntax"}],"config":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"vendor":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"preview":"{kind} preview","strings":{"loading":"Loading Mermaid…","loadFailed":"Mermaid did not load. Check the connection and reload the page.","replaced":"Switched to the template.","copiedMarkdown":"Copied as a Markdown code block.","copiedLink":"Link copied. Whoever opens it sees this diagram.","copyFailed":"This browser did not allow copying.","exportFailed":"This browser could not save the image.","empty":"Write some Mermaid to draw a diagram.","oldBrowser":"This browser cannot open diagram links. Update it, or open the link in another browser."}}</script>
-<script src="/assets/tools/mermaid-editor.js?v=13e8a54a26fe" defer></script>
+<script type="application/json" id="mermaid-data">{"lang":"en","default":"flowchart","templates":[{"id":"flowchart","label":"Flowchart","kind":"flowchart","code":"flowchart LR\n    A[Write a note] --> B{Ready?}\n    B -->|Yes| C[Publish]\n    B -->|No| D[Revise]\n    D --> B","svg":"/img/mermaid/3583f1cc0c53.svg","width":718,"height":250,"syntax":"/blog/mermaid-flowchart/","syntaxLabel":"Flowchart syntax"},{"id":"sequence","label":"Sequence","kind":"sequence diagram","code":"sequenceDiagram\n    participant U as User\n    participant A as App\n    participant S as Server\n    U->>A: Sign in\n    A->>S: Check password\n    S-->>A: Token\n    A-->>U: Welcome back","svg":"/img/mermaid/1ecec357127c.svg","width":650,"height":347,"syntax":"/blog/mermaid-sequence-diagram/","syntaxLabel":"Sequence syntax"},{"id":"timeline","label":"Timeline","kind":"timeline","code":"timeline\n    title Writing a book\n    section Draft\n        January : Outline\n        February : First chapters : Research trip\n    section Revise\n        March : Second draft\n        April : Copy edit","svg":"/img/mermaid/4f34aac17f0c.svg","width":1190,"height":642,"syntax":"/blog/mermaid-timeline/","syntaxLabel":"Timeline syntax"},{"id":"gantt","label":"Gantt","kind":"Gantt chart","code":"gantt\n    title Release plan\n    dateFormat YYYY-MM-DD\n    section Build\n        Design  :a1, 2026-12-01, 4d\n        Develop :a2, after a1, 6d\n    section Ship\n        Test    :a3, after a2, 3d\n        Release :milestone, after a3, 0d","svg":"/img/mermaid/f4f2b9ce247d.svg","width":1264,"height":196,"syntax":"/blog/mermaid-gantt-chart/","syntaxLabel":"Gantt syntax"},{"id":"class","label":"Class","kind":"class diagram","code":"classDiagram\n    class Folder {\n        +String name\n        +notes() List~Note~\n    }\n    class Note {\n        +String title\n        +Date modified\n        +save()\n    }\n    Folder \"1\" --> \"*\" Note : contains","svg":"/img/mermaid/36c83b753b98.svg","width":215,"height":385,"syntax":"/blog/mermaid-class-diagram/","syntaxLabel":"Class syntax"},{"id":"state","label":"State","kind":"state diagram","code":"stateDiagram-v2\n    [*] --> Draft\n    Draft --> Review : submit\n    Review --> Draft : changes requested\n    Review --> Published : approve\n    Published --> [*]","svg":"/img/mermaid/9c6f8879fa3d.svg","width":228,"height":506,"syntax":null,"syntaxLabel":"State syntax"},{"id":"er","label":"ER","kind":"ER diagram","code":"erDiagram\n    AUTHOR ||--o{ NOTE : writes\n    NOTE }o--o{ TAG : has\n    AUTHOR {\n        string name\n        string email\n    }\n    NOTE {\n        string title\n        date created\n    }","svg":"/img/mermaid/1a4b1f18af56.svg","width":171,"height":511,"syntax":"/blog/mermaid-er-diagram/","syntaxLabel":"ER syntax"},{"id":"pie","label":"Pie","kind":"pie chart","code":"pie title Where the writing time goes\n    \"Writing\" : 45\n    \"Editing\" : 30\n    \"Research\" : 25","svg":"/img/mermaid/d02c9447d218.svg","width":585,"height":450,"syntax":null,"syntaxLabel":"Pie syntax"},{"id":"mindmap","label":"Mindmap","kind":"mind map","code":"mindmap\n  root((Notes))\n    Writing\n      Drafts\n      Ideas\n    Reading\n      Books\n      Articles\n    Work\n      Meetings","svg":"/img/mermaid/07547c1022d5.svg","width":612,"height":366,"syntax":null,"syntaxLabel":"Mindmap syntax"},{"id":"xychart","label":"XY chart","kind":"XY chart","code":"xychart-beta\n    title \"Notes written per month\"\n    x-axis [Jan, Feb, Mar, Apr, May, Jun]\n    y-axis \"Notes\" 0 --> 40\n    bar [12, 18, 25, 22, 30, 36]\n    line [12, 18, 25, 22, 30, 36]","svg":"/img/mermaid/f639285e0bc6.svg","width":700,"height":500,"syntax":null,"syntaxLabel":"XY chart syntax"}],"config":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"vendor":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"preview":"{kind} preview","strings":{"loading":"Loading Mermaid…","loadFailed":"Mermaid did not load. Check the connection and reload the page.","replaced":"Switched to the template.","copiedMarkdown":"Copied as a Markdown code block.","copiedImage":"Image copied, ready to paste.","copiedLink":"Link copied. Whoever opens it sees this diagram.","copyFailed":"This browser did not allow copying.","exportFailed":"This browser could not save the image.","empty":"Write some Mermaid to draw a diagram.","oldBrowser":"This browser cannot open diagram links. Update it, or open the link in another browser."}}</script>
+<script src="/assets/tools/mermaid-editor.js?v=74cf0cdcd0cf" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

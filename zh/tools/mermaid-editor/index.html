@@ -678,21 +678,41 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-chip:hover { background: var(--warm-sand); }
 .tool-chip[aria-pressed="true"] { background: var(--warm-sand); border-color: var(--warm-sand); color: var(--near-black); }
 .tool-chip:focus { outline: none; }
-.tool-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-grid { --tool-h: clamp(460px, calc(100svh - 300px), 780px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-editor {
+  display: flex; height: var(--tool-h); overflow: hidden;
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65;
+}
+.tool-gutter { flex: none; overflow: hidden; padding: 16px 10px 16px 14px; color: var(--stone); opacity: 0.7; text-align: right; font-variant-numeric: tabular-nums; user-select: none; }
+.tool-lines span { display: block; min-width: 2ch; padding: 0 4px; border-radius: 4px; }
+.tool-lines span.is-error { color: var(--near-black); background: var(--warm-sand); opacity: 1; }
 .tool-code {
-  display: block; width: 100%; height: 440px; min-height: 240px; resize: vertical; margin: 0;
-  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65; tab-size: 4;
-  color: var(--dark-warm); caret-color: var(--brand); background: var(--ivory);
-  border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; white-space: pre; overflow: auto;
+  display: block; flex: 1; min-width: 0; height: 100%; resize: none; margin: 0;
+  font: inherit; tab-size: 4; color: var(--dark-warm); caret-color: var(--brand);
+  background: transparent; border: 0; padding: 16px 18px 16px 6px; white-space: pre; overflow: auto;
 }
 /* No focus ring on inputs, the caret is enough (family rule). */
 .tool-code:focus { outline: none; }
 .tool-preview {
-  display: flex; align-items: center; justify-content: center; min-height: 440px; padding: 24px;
-  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px; overflow: auto;
+  position: relative; height: var(--tool-h); overflow: hidden; padding: 24px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px;
 }
-.tool-preview > :is(svg, img) { display: block; max-width: 100%; height: auto; transition: opacity 0.2s; }
-.tool-preview.is-stale > :is(svg, img) { opacity: 0.35; }
+/* Before the script measures the frame the first diagram fits by CSS alone; then
+   it is placed and zoomed in diagram units. */
+.tool-canvas { display: flex; align-items: center; justify-content: center; max-width: 100%; max-height: 100%; }
+.tool-canvas > :is(svg, img) { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; transition: opacity 0.2s; }
+.tool-preview.is-live .tool-canvas { position: absolute; left: 0; top: 0; display: block; max-width: none; max-height: none; transform-origin: 0 0; }
+.tool-preview.is-live .tool-canvas > :is(svg, img) { max-width: none; max-height: none; }
+.tool-canvas.is-stale > :is(svg, img) { opacity: 0.35; }
+.tool-preview.is-zoomed { cursor: grab; touch-action: none; }
+.tool-preview.is-dragging { cursor: grabbing; }
+.tool-zoom { position: absolute; top: 12px; right: 12px; display: flex; gap: 2px; padding: 3px; background: var(--ivory); border: 1px solid var(--line); border-radius: 999px; }
+.tool-zoom-btn { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 999px; background: none; color: var(--olive); cursor: pointer; }
+.tool-zoom-btn svg { width: 16px; height: 16px; }
+.tool-zoom-btn:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-zoom-btn:focus { outline: none; }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
@@ -711,18 +731,19 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 @media (max-width: 880px) {
   .tool-grid { grid-template-columns: minmax(0, 1fr); }
-  .tool-code { height: 300px; font-size: 16px; }
-  .tool-preview { min-height: 300px; }
+  .tool-editor { height: 320px; font-size: 16px; }
+  .tool-preview { height: 380px; }
   .tool-app { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 56px; }
   .tool-body { margin-top: 56px; }
 }
 /* iOS zooms the page into a text field set under 16px. */
 @media (hover: none) and (pointer: coarse) {
-  .tool-code { font-size: 16px; }
+  .tool-editor { font-size: 16px; }
 }
 @media (max-width: 560px) {
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
+  .tool-actions .btn-primary { grid-column: 1 / -1; }
   .tool-preview { padding: 16px; }
   .mermaid-figure { padding: 14px; }
 }
@@ -915,7 +936,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Mermaid 在线编辑器", "item": "https://miaoyan.app/zh/tools/mermaid-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/mermaid-editor/#app", "name": "Mermaid 在线编辑器", "description": "免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。", "url": "https://miaoyan.app/zh/tools/mermaid-editor/", "inLanguage": "zh-CN", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "要收费吗？", "acceptedAnswer": {"@type": "Answer", "text": "不收费，也不用注册账号，图就在你的浏览器里画，复制出来的链接里带着整张图。"}}, {"@type": "Question", "name": "用的是哪个版本的 Mermaid？", "acceptedAnswer": {"@type": "Answer", "text": "Mermaid 11.14.0，配妙言的图表配色，和妙言 App 自带的是同一个文件，所以这里画出来的图放进笔记里也是一样的。文字用 SVG 文本来画，下载下来的文件换到别的电脑上打开也一样。"}}, {"@type": "Question", "name": "怎么导出图片？", "acceptedAnswer": {"@type": "Answer", "text": "下载 PNG 会存一张两倍尺寸的浅色底图片，放进幻灯片和文档里刚好。下载 SVG 存的是矢量图，放多大都清晰，Figma、Sketch 和 Illustrator 都能直接打开再改。"}}, {"@type": "Question", "name": "图为什么不更新了？", "acceptedAnswer": {"@type": "Answer", "text": "代码写错时，上一张能画出来的图会留着并变淡，编辑器下面会显示 Mermaid 的报错和出错的行号。常见的原因是流程图里用了小写的 end 当节点名、时间线里少了冒号，或者用了 Mermaid 11.14.0 还不认识的图类型。"}}, {"@type": "Question", "name": "画的图存在哪？", "acceptedAnswer": {"@type": "Answer", "text": "编辑器会把你最后一次画的图留在这个浏览器里，下次打开还在。复制链接会把代码放进链接里，别人打开就是同一张图。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Mermaid 在线编辑器", "item": "https://miaoyan.app/zh/tools/mermaid-editor/"}]}, {"@type": "WebApplication", "@id": "https://miaoyan.app/zh/tools/mermaid-editor/#app", "name": "Mermaid 在线编辑器", "description": "免费的 Mermaid 在线编辑器，在浏览器里实时画流程图、时序图、时间线和甘特图，可以导出 SVG、PNG，也能生成带着整张图的分享链接。", "url": "https://miaoyan.app/zh/tools/mermaid-editor/", "inLanguage": "zh-CN", "applicationCategory": "DesignApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "要收费吗？", "acceptedAnswer": {"@type": "Answer", "text": "不收费，也不用注册账号，图就在你的浏览器里画，复制出来的链接里带着整张图。"}}, {"@type": "Question", "name": "用的是哪个版本的 Mermaid？", "acceptedAnswer": {"@type": "Answer", "text": "Mermaid 11.14.0，配妙言的图表配色，和妙言 App 自带的是同一个文件，所以这里画出来的图放进笔记里也是一样的。文字用 SVG 文本来画，下载下来的文件换到别的电脑上打开也一样。"}}, {"@type": "Question", "name": "图为什么不更新了？", "acceptedAnswer": {"@type": "Answer", "text": "代码写错时，上一张能画出来的图会留着并变淡，编辑器下面会显示 Mermaid 的报错，出错的那一行在行号上标了出来。常见的原因是流程图里用了小写的 end 当节点名、时间线里少了冒号，或者用了 Mermaid 11.14.0 还不认识的图类型。"}}, {"@type": "Question", "name": "画的图存在哪？", "acceptedAnswer": {"@type": "Answer", "text": "编辑器会把你最后一次画的图留在这个浏览器里，下次打开还在。复制链接会把代码放进链接里，别人打开就是同一张图。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -938,7 +959,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <div class="tool" id="mermaid-tool">
     <div class="tool-templates" role="group" aria-label="模板"><button type="button" class="tool-chip" data-template="flowchart" aria-pressed="true">流程图</button><button type="button" class="tool-chip" data-template="sequence" aria-pressed="false">时序图</button><button type="button" class="tool-chip" data-template="timeline" aria-pressed="false">时间线</button><button type="button" class="tool-chip" data-template="gantt" aria-pressed="false">甘特图</button><button type="button" class="tool-chip" data-template="class" aria-pressed="false">类图</button><button type="button" class="tool-chip" data-template="state" aria-pressed="false">状态图</button><button type="button" class="tool-chip" data-template="er" aria-pressed="false">ER 图</button><button type="button" class="tool-chip" data-template="pie" aria-pressed="false">饼图</button><button type="button" class="tool-chip" data-template="mindmap" aria-pressed="false">思维导图</button><button type="button" class="tool-chip" data-template="xychart" aria-pressed="false">XY 图表</button></div>
     <div class="tool-grid">
-      <div class="tool-pane">
+      <div class="tool-editor">
+        <div class="tool-gutter" aria-hidden="true"><div class="tool-lines" id="mermaid-lines"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div></div>
         <label class="visually-hidden" for="mermaid-code">Mermaid 代码</label>
         <textarea id="mermaid-code" class="tool-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off">flowchart LR
     A[写笔记] --&gt; B{写好了吗}
@@ -946,7 +968,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     B --&gt;|否| D[修改]
     D --&gt; B</textarea>
       </div>
-      <div class="tool-preview" id="mermaid-preview" role="img" aria-label="流程图预览"><img src="/img/mermaid/6283e98ec5e4.svg" width="657" height="250" alt="" fetchpriority="high"></div>
+      <div class="tool-preview" id="mermaid-frame">
+        <div class="tool-canvas" id="mermaid-preview" role="img" aria-label="流程图预览"><img src="/img/mermaid/6283e98ec5e4.svg" width="657" height="250" alt="" fetchpriority="high"></div>
+        <div class="tool-zoom" role="group"><button type="button" class="tool-zoom-btn" data-zoom="out" aria-label="缩小" title="缩小"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="in" aria-label="放大" title="放大"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9M8 3.5v9"/></svg></button><button type="button" class="tool-zoom-btn" data-zoom="fit" aria-label="适应窗口" title="适应窗口"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button></div>
+      </div>
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="mermaid-status" role="status" aria-live="polite"></p>
@@ -955,19 +980,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     </div>
     <div class="tool-actions">
       <button type="button" class="btn btn-primary" data-action="png">下载 PNG</button>
+      <button type="button" class="btn btn-ghost" data-action="image" hidden>复制图片</button>
       <button type="button" class="btn btn-ghost" data-action="svg">下载 SVG</button>
       <button type="button" class="btn btn-ghost" data-action="markdown">复制 Markdown</button>
       <button type="button" class="btn btn-ghost" data-action="link">复制链接</button>
     </div>
   </div>
-  <section class="tool-app" aria-labelledby="tool-app-title">
-    <div class="tool-app-text">
-      <h2 class="tool-app-title" id="tool-app-title">在笔记里画同样的图</h2>
-      <p>妙言是一个轻灵的 Markdown 笔记本，Mac、iPhone 和 iPad 都能用，把这段代码放进 mermaid 代码块，预览里画出来就是这里的样子，不联网也能画，就在笔记旁边。</p>
-      <a class="btn btn-primary" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>在 App Store 获取</a>
-    </div>
-    <figure class="tool-app-shot"><img src="/assets/shots/zh-split-1400.webp" width="1400" height="910" alt="Mac 上的妙言，左边是 Mermaid 代码，右边预览里是画好的流程图" loading="lazy" decoding="async"></figure>
-  </section>
   <div class="blog-body tool-body">
 <h2 id="把图放进-markdown-笔记">把图放进 Markdown 笔记</h2>
 <p>复制 Markdown 会把代码包进语言名为 <code>mermaid</code> 的围栏代码块：</p>
@@ -982,13 +1000,19 @@ flowchart LR
 <p>不收费，也不用注册账号，图就在你的浏览器里画，复制出来的链接里带着整张图。</p>
 <h3 id="用的是哪个版本的-mermaid">用的是哪个版本的 Mermaid？</h3>
 <p>Mermaid 11.14.0，配妙言的图表配色，和妙言 App 自带的是同一个文件，所以这里画出来的图放进笔记里也是一样的。文字用 SVG 文本来画，下载下来的文件换到别的电脑上打开也一样。</p>
-<h3 id="怎么导出图片">怎么导出图片？</h3>
-<p>下载 PNG 会存一张两倍尺寸的浅色底图片，放进幻灯片和文档里刚好。下载 SVG 存的是矢量图，放多大都清晰，Figma、Sketch 和 Illustrator 都能直接打开再改。</p>
 <h3 id="图为什么不更新了">图为什么不更新了？</h3>
-<p>代码写错时，上一张能画出来的图会留着并变淡，编辑器下面会显示 Mermaid 的报错和出错的行号。常见的原因是流程图里用了小写的 <code>end</code> 当节点名、时间线里少了冒号，或者用了 Mermaid 11.14.0 还不认识的图类型。</p>
+<p>代码写错时，上一张能画出来的图会留着并变淡，编辑器下面会显示 Mermaid 的报错，出错的那一行在行号上标了出来。常见的原因是流程图里用了小写的 <code>end</code> 当节点名、时间线里少了冒号，或者用了 Mermaid 11.14.0 还不认识的图类型。</p>
 <h3 id="画的图存在哪">画的图存在哪？</h3>
 <p>编辑器会把你最后一次画的图留在这个浏览器里，下次打开还在。复制链接会把代码放进链接里，别人打开就是同一张图。</p>
   </div>
+  <section class="tool-app" aria-labelledby="tool-app-title">
+    <div class="tool-app-text">
+      <h2 class="tool-app-title" id="tool-app-title">在笔记里画同样的图</h2>
+      <p>妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，预览里用的就是这份 Mermaid，把代码放进 mermaid 代码块，画出来就是这张图。</p>
+      <a class="btn btn-ghost" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>在 App Store 获取</a>
+    </div>
+    <figure class="tool-app-shot"><img src="/assets/shots/zh-split-1400.webp" width="1400" height="910" alt="Mac 上的妙言，左边是 Mermaid 代码，右边预览里是画好的流程图" loading="lazy" decoding="async"></figure>
+  </section>
 </main>
 </div>
 <footer>
@@ -1002,8 +1026,8 @@ flowchart LR
     </div>
   </div>
 </footer>
-<script type="application/json" id="mermaid-data">{"lang":"zh","default":"flowchart","templates":[{"id":"flowchart","label":"流程图","kind":"流程图","code":"flowchart LR\n    A[写笔记] --> B{写好了吗}\n    B -->|是| C[发布]\n    B -->|否| D[修改]\n    D --> B","svg":"/img/mermaid/6283e98ec5e4.svg","width":657,"height":250,"syntax":"/zh/blog/mermaid-flowchart/","syntaxLabel":"流程图写法"},{"id":"sequence","label":"时序图","kind":"时序图","code":"sequenceDiagram\n    participant U as 用户\n    participant A as 应用\n    participant S as 服务器\n    U->>A: 登录\n    A->>S: 校验密码\n    S-->>A: 返回令牌\n    A-->>U: 欢迎回来","svg":"/img/mermaid/caa45cb7f61c.svg","width":650,"height":347,"syntax":"/zh/blog/mermaid-sequence-diagram/","syntaxLabel":"时序图写法"},{"id":"timeline","label":"时间线","kind":"时间线","code":"timeline\n    title 写一本书\n    section 初稿\n        一月 : 列提纲\n        二月 : 写前几章 : 外出调研\n    section 修改\n        三月 : 第二稿\n        四月 : 校对","svg":"/img/mermaid/ca5365823d47.svg","width":1190,"height":642,"syntax":"/zh/blog/mermaid-timeline/","syntaxLabel":"时间线写法"},{"id":"gantt","label":"甘特图","kind":"甘特图","code":"gantt\n    title 发布计划\n    dateFormat YYYY-MM-DD\n    section 开发\n        设计 :a1, 2026-12-01, 4d\n        编码 :a2, after a1, 6d\n    section 上线\n        测试 :a3, after a2, 3d\n        发布 :milestone, after a3, 0d","svg":"/img/mermaid/c4bc04b8a0ba.svg","width":1264,"height":196,"syntax":"/zh/blog/mermaid-gantt-chart/","syntaxLabel":"甘特图写法"},{"id":"class","label":"类图","kind":"类图","code":"classDiagram\n    class Folder {\n        +String name\n        +notes() List~Note~\n    }\n    class Note {\n        +String title\n        +Date modified\n        +save()\n    }\n    Folder \"1\" --> \"*\" Note : 包含","svg":"/img/mermaid/966f6d48a281.svg","width":215,"height":385,"syntax":"/zh/blog/mermaid-class-diagram/","syntaxLabel":"类图写法"},{"id":"state","label":"状态图","kind":"状态图","code":"stateDiagram-v2\n    state \"草稿\" as Draft\n    state \"审阅\" as Review\n    state \"已发布\" as Published\n    [*] --> Draft\n    Draft --> Review : 提交\n    Review --> Draft : 要求修改\n    Review --> Published : 通过\n    Published --> [*]","svg":"/img/mermaid/e2c7f27acec8.svg","width":140,"height":505,"syntax":null,"syntaxLabel":"状态图写法"},{"id":"er","label":"ER 图","kind":"ER 图","code":"erDiagram\n    AUTHOR ||--o{ NOTE : 撰写\n    NOTE }o--o{ TAG : 标记\n    AUTHOR {\n        string name\n        string email\n    }\n    NOTE {\n        string title\n        date created\n    }","svg":"/img/mermaid/baea98ef8f39.svg","width":171,"height":511,"syntax":"/zh/blog/mermaid-er-diagram/","syntaxLabel":"ER 图写法"},{"id":"pie","label":"饼图","kind":"饼图","code":"pie title 写作时间都花在哪\n    \"写作\" : 45\n    \"修改\" : 30\n    \"查资料\" : 25","svg":"/img/mermaid/51ae00406d4a.svg","width":563,"height":450,"syntax":null,"syntaxLabel":"饼图写法"},{"id":"mindmap","label":"思维导图","kind":"思维导图","code":"mindmap\n  root((笔记))\n    写作\n      草稿\n      想法\n    阅读\n      书\n      文章\n    工作\n      会议","svg":"/img/mermaid/fe42d07845af.svg","width":529,"height":359,"syntax":null,"syntaxLabel":"思维导图写法"},{"id":"xychart","label":"XY 图表","kind":"XY 图表","code":"xychart-beta\n    title \"每月写的笔记\"\n    x-axis [\"1月\", \"2月\", \"3月\", \"4月\", \"5月\", \"6月\"]\n    y-axis \"篇数\" 0 --> 40\n    bar [12, 18, 25, 22, 30, 36]\n    line [12, 18, 25, 22, 30, 36]","svg":"/img/mermaid/b54554d6aa4e.svg","width":700,"height":500,"syntax":null,"syntaxLabel":"XY 图表写法"}],"config":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"vendor":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"preview":"{kind}预览","strings":{"loading":"正在加载 Mermaid…","loadFailed":"Mermaid 没加载上，检查网络后刷新页面。","replaced":"已换成这个模板。","copiedMarkdown":"已复制成 Markdown 代码块。","copiedLink":"链接已复制，打开就是这张图。","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这张图。","empty":"写一段 Mermaid 就能画出图。","oldBrowser":"这个浏览器打不开图表链接，更新一下或者换个浏览器打开。"}}</script>
-<script src="/assets/tools/mermaid-editor.js?v=13e8a54a26fe" defer></script>
+<script type="application/json" id="mermaid-data">{"lang":"zh","default":"flowchart","templates":[{"id":"flowchart","label":"流程图","kind":"流程图","code":"flowchart LR\n    A[写笔记] --> B{写好了吗}\n    B -->|是| C[发布]\n    B -->|否| D[修改]\n    D --> B","svg":"/img/mermaid/6283e98ec5e4.svg","width":657,"height":250,"syntax":"/zh/blog/mermaid-flowchart/","syntaxLabel":"流程图写法"},{"id":"sequence","label":"时序图","kind":"时序图","code":"sequenceDiagram\n    participant U as 用户\n    participant A as 应用\n    participant S as 服务器\n    U->>A: 登录\n    A->>S: 校验密码\n    S-->>A: 返回令牌\n    A-->>U: 欢迎回来","svg":"/img/mermaid/caa45cb7f61c.svg","width":650,"height":347,"syntax":"/zh/blog/mermaid-sequence-diagram/","syntaxLabel":"时序图写法"},{"id":"timeline","label":"时间线","kind":"时间线","code":"timeline\n    title 写一本书\n    section 初稿\n        一月 : 列提纲\n        二月 : 写前几章 : 外出调研\n    section 修改\n        三月 : 第二稿\n        四月 : 校对","svg":"/img/mermaid/ca5365823d47.svg","width":1190,"height":642,"syntax":"/zh/blog/mermaid-timeline/","syntaxLabel":"时间线写法"},{"id":"gantt","label":"甘特图","kind":"甘特图","code":"gantt\n    title 发布计划\n    dateFormat YYYY-MM-DD\n    section 开发\n        设计 :a1, 2026-12-01, 4d\n        编码 :a2, after a1, 6d\n    section 上线\n        测试 :a3, after a2, 3d\n        发布 :milestone, after a3, 0d","svg":"/img/mermaid/c4bc04b8a0ba.svg","width":1264,"height":196,"syntax":"/zh/blog/mermaid-gantt-chart/","syntaxLabel":"甘特图写法"},{"id":"class","label":"类图","kind":"类图","code":"classDiagram\n    class Folder {\n        +String name\n        +notes() List~Note~\n    }\n    class Note {\n        +String title\n        +Date modified\n        +save()\n    }\n    Folder \"1\" --> \"*\" Note : 包含","svg":"/img/mermaid/966f6d48a281.svg","width":215,"height":385,"syntax":"/zh/blog/mermaid-class-diagram/","syntaxLabel":"类图写法"},{"id":"state","label":"状态图","kind":"状态图","code":"stateDiagram-v2\n    state \"草稿\" as Draft\n    state \"审阅\" as Review\n    state \"已发布\" as Published\n    [*] --> Draft\n    Draft --> Review : 提交\n    Review --> Draft : 要求修改\n    Review --> Published : 通过\n    Published --> [*]","svg":"/img/mermaid/e2c7f27acec8.svg","width":140,"height":505,"syntax":null,"syntaxLabel":"状态图写法"},{"id":"er","label":"ER 图","kind":"ER 图","code":"erDiagram\n    AUTHOR ||--o{ NOTE : 撰写\n    NOTE }o--o{ TAG : 标记\n    AUTHOR {\n        string name\n        string email\n    }\n    NOTE {\n        string title\n        date created\n    }","svg":"/img/mermaid/baea98ef8f39.svg","width":171,"height":511,"syntax":"/zh/blog/mermaid-er-diagram/","syntaxLabel":"ER 图写法"},{"id":"pie","label":"饼图","kind":"饼图","code":"pie title 写作时间都花在哪\n    \"写作\" : 45\n    \"修改\" : 30\n    \"查资料\" : 25","svg":"/img/mermaid/51ae00406d4a.svg","width":563,"height":450,"syntax":null,"syntaxLabel":"饼图写法"},{"id":"mindmap","label":"思维导图","kind":"思维导图","code":"mindmap\n  root((笔记))\n    写作\n      草稿\n      想法\n    阅读\n      书\n      文章\n    工作\n      会议","svg":"/img/mermaid/fe42d07845af.svg","width":529,"height":359,"syntax":null,"syntaxLabel":"思维导图写法"},{"id":"xychart","label":"XY 图表","kind":"XY 图表","code":"xychart-beta\n    title \"每月写的笔记\"\n    x-axis [\"1月\", \"2月\", \"3月\", \"4月\", \"5月\", \"6月\"]\n    y-axis \"篇数\" 0 --> 40\n    bar [12, 18, 25, 22, 30, 36]\n    line [12, 18, 25, 22, 30, 36]","svg":"/img/mermaid/b54554d6aa4e.svg","width":700,"height":500,"syntax":null,"syntaxLabel":"XY 图表写法"}],"config":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"vendor":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"preview":"{kind}预览","strings":{"loading":"正在加载 Mermaid…","loadFailed":"Mermaid 没加载上，检查网络后刷新页面。","replaced":"已换成这个模板。","copiedMarkdown":"已复制成 Markdown 代码块。","copiedImage":"图片已复制，可以直接粘贴。","copiedLink":"链接已复制，打开就是这张图。","copyFailed":"这个浏览器不允许复制。","exportFailed":"这个浏览器存不了这张图。","empty":"写一段 Mermaid 就能画出图。","oldBrowser":"这个浏览器打不开图表链接，更新一下或者换个浏览器打开。"}}</script>
+<script src="/assets/tools/mermaid-editor.js?v=74cf0cdcd0cf" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

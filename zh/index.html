@@ -687,21 +687,41 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-chip:hover { background: var(--warm-sand); }
 .tool-chip[aria-pressed="true"] { background: var(--warm-sand); border-color: var(--warm-sand); color: var(--near-black); }
 .tool-chip:focus { outline: none; }
-.tool-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-grid { --tool-h: clamp(460px, calc(100svh - 300px), 780px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.tool-editor {
+  display: flex; height: var(--tool-h); overflow: hidden;
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 14px;
+  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65;
+}
+.tool-gutter { flex: none; overflow: hidden; padding: 16px 10px 16px 14px; color: var(--stone); opacity: 0.7; text-align: right; font-variant-numeric: tabular-nums; user-select: none; }
+.tool-lines span { display: block; min-width: 2ch; padding: 0 4px; border-radius: 4px; }
+.tool-lines span.is-error { color: var(--near-black); background: var(--warm-sand); opacity: 1; }
 .tool-code {
-  display: block; width: 100%; height: 440px; min-height: 240px; resize: vertical; margin: 0;
-  font-family: "SF Mono", Menlo, Consolas, monospace; font-size: var(--text-button); line-height: 1.65; tab-size: 4;
-  color: var(--dark-warm); caret-color: var(--brand); background: var(--ivory);
-  border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; white-space: pre; overflow: auto;
+  display: block; flex: 1; min-width: 0; height: 100%; resize: none; margin: 0;
+  font: inherit; tab-size: 4; color: var(--dark-warm); caret-color: var(--brand);
+  background: transparent; border: 0; padding: 16px 18px 16px 6px; white-space: pre; overflow: auto;
 }
 /* No focus ring on inputs, the caret is enough (family rule). */
 .tool-code:focus { outline: none; }
 .tool-preview {
-  display: flex; align-items: center; justify-content: center; min-height: 440px; padding: 24px;
-  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px; overflow: auto;
+  position: relative; height: var(--tool-h); overflow: hidden; padding: 24px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--diagram); border: 1px solid var(--line); border-radius: 14px;
 }
-.tool-preview > :is(svg, img) { display: block; max-width: 100%; height: auto; transition: opacity 0.2s; }
-.tool-preview.is-stale > :is(svg, img) { opacity: 0.35; }
+/* Before the script measures the frame the first diagram fits by CSS alone; then
+   it is placed and zoomed in diagram units. */
+.tool-canvas { display: flex; align-items: center; justify-content: center; max-width: 100%; max-height: 100%; }
+.tool-canvas > :is(svg, img) { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; transition: opacity 0.2s; }
+.tool-preview.is-live .tool-canvas { position: absolute; left: 0; top: 0; display: block; max-width: none; max-height: none; transform-origin: 0 0; }
+.tool-preview.is-live .tool-canvas > :is(svg, img) { max-width: none; max-height: none; }
+.tool-canvas.is-stale > :is(svg, img) { opacity: 0.35; }
+.tool-preview.is-zoomed { cursor: grab; touch-action: none; }
+.tool-preview.is-dragging { cursor: grabbing; }
+.tool-zoom { position: absolute; top: 12px; right: 12px; display: flex; gap: 2px; padding: 3px; background: var(--ivory); border: 1px solid var(--line); border-radius: 999px; }
+.tool-zoom-btn { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 999px; background: none; color: var(--olive); cursor: pointer; }
+.tool-zoom-btn svg { width: 16px; height: 16px; }
+.tool-zoom-btn:hover { background: var(--warm-sand); color: var(--near-black); }
+.tool-zoom-btn:focus { outline: none; }
 .tool-foot { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; min-height: 24px; margin: 12px 0 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .tool-status { margin: 0; flex: 1 1 280px; min-width: 0; overflow-wrap: anywhere; }
 .tool-status.is-error { color: var(--dark-warm); white-space: pre-wrap; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
@@ -720,18 +740,19 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-body { margin-top: 72px; }
 @media (max-width: 880px) {
   .tool-grid { grid-template-columns: minmax(0, 1fr); }
-  .tool-code { height: 300px; font-size: 16px; }
-  .tool-preview { min-height: 300px; }
+  .tool-editor { height: 320px; font-size: 16px; }
+  .tool-preview { height: 380px; }
   .tool-app { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 56px; }
   .tool-body { margin-top: 56px; }
 }
 /* iOS zooms the page into a text field set under 16px. */
 @media (hover: none) and (pointer: coarse) {
-  .tool-code { font-size: 16px; }
+  .tool-editor { font-size: 16px; }
 }
 @media (max-width: 560px) {
   .tool-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-actions .btn { min-width: 0; padding: 13px 12px; }
+  .tool-actions .btn-primary { grid-column: 1 / -1; }
   .tool-preview { padding: 16px; }
   .mermaid-figure { padding: 14px; }
 }

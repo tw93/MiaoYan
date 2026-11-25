@@ -48,57 +48,73 @@ UI = {
     "en": {
         "home_name": "MiaoYan",
         "faq": "FAQ",
-        "templates": "Templates",
-        "code": "Mermaid code",
-        "preview": "{kind} preview",
-        "syntax": "{label} syntax",
-        "png": "Download PNG",
-        "svg": "Download SVG",
-        "markdown": "Copy Markdown",
-        "link": "Copy link",
-        "undo": "Undo",
-        "app_title": "The same diagrams, inside your notes",
-        "app_text": "MiaoYan is a light Markdown notebook for Mac, iPhone and iPad. Put this code in a mermaid block and the preview draws it the way it looks here, offline, right beside the rest of your note.",
         "app_cta": "View in App Store",
-        "app_alt": "MiaoYan on a Mac, with Mermaid code on the left and the drawn flowchart in the preview on the right",
-        "strings": {
-            "loading": "Loading Mermaid…",
-            "loadFailed": "Mermaid did not load. Check the connection and reload the page.",
-            "replaced": "Switched to the template.",
-            "copiedMarkdown": "Copied as a Markdown code block.",
-            "copiedLink": "Link copied. Whoever opens it sees this diagram.",
-            "copyFailed": "This browser did not allow copying.",
-            "exportFailed": "This browser could not save the image.",
-            "empty": "Write some Mermaid to draw a diagram.",
-            "oldBrowser": "This browser cannot open diagram links. Update it, or open the link in another browser.",
+        "mermaid": {
+            "templates": "Templates",
+            "code": "Mermaid code",
+            "preview": "{kind} preview",
+            "syntax": "{label} syntax",
+            "png": "Download PNG",
+            "copy_image": "Copy image",
+            "svg": "Download SVG",
+            "markdown": "Copy Markdown",
+            "link": "Copy link",
+            "undo": "Undo",
+            "zoom_out": "Zoom out",
+            "zoom_in": "Zoom in",
+            "fit": "Fit",
+            "app_title": "The same diagrams, inside your notes",
+            "app_text": "MiaoYan, a Markdown notebook for Mac, iPhone and iPad, draws Mermaid with this same file. Put the code in a mermaid block and the note's preview shows this diagram.",
+            "app_alt": "MiaoYan on a Mac, with Mermaid code on the left and the drawn flowchart in the preview on the right",
+            "app_shot": "split",
+            "strings": {
+                "loading": "Loading Mermaid…",
+                "loadFailed": "Mermaid did not load. Check the connection and reload the page.",
+                "replaced": "Switched to the template.",
+                "copiedMarkdown": "Copied as a Markdown code block.",
+                "copiedImage": "Image copied, ready to paste.",
+                "copiedLink": "Link copied. Whoever opens it sees this diagram.",
+                "copyFailed": "This browser did not allow copying.",
+                "exportFailed": "This browser could not save the image.",
+                "empty": "Write some Mermaid to draw a diagram.",
+                "oldBrowser": "This browser cannot open diagram links. Update it, or open the link in another browser.",
+            },
         },
     },
     "zh": {
         "home_name": "妙言",
         "faq": "常见问题",
-        "templates": "模板",
-        "code": "Mermaid 代码",
-        "preview": "{kind}预览",
-        "syntax": "{label}写法",
-        "png": "下载 PNG",
-        "svg": "下载 SVG",
-        "markdown": "复制 Markdown",
-        "link": "复制链接",
-        "undo": "撤销",
-        "app_title": "在笔记里画同样的图",
-        "app_text": "妙言是一个轻灵的 Markdown 笔记本，Mac、iPhone 和 iPad 都能用，把这段代码放进 mermaid 代码块，预览里画出来就是这里的样子，不联网也能画，就在笔记旁边。",
         "app_cta": "在 App Store 获取",
-        "app_alt": "Mac 上的妙言，左边是 Mermaid 代码，右边预览里是画好的流程图",
-        "strings": {
-            "loading": "正在加载 Mermaid…",
-            "loadFailed": "Mermaid 没加载上，检查网络后刷新页面。",
-            "replaced": "已换成这个模板。",
-            "copiedMarkdown": "已复制成 Markdown 代码块。",
-            "copiedLink": "链接已复制，打开就是这张图。",
-            "copyFailed": "这个浏览器不允许复制。",
-            "exportFailed": "这个浏览器存不了这张图。",
-            "empty": "写一段 Mermaid 就能画出图。",
-            "oldBrowser": "这个浏览器打不开图表链接，更新一下或者换个浏览器打开。",
+        "mermaid": {
+            "templates": "模板",
+            "code": "Mermaid 代码",
+            "preview": "{kind}预览",
+            "syntax": "{label}写法",
+            "png": "下载 PNG",
+            "copy_image": "复制图片",
+            "svg": "下载 SVG",
+            "markdown": "复制 Markdown",
+            "link": "复制链接",
+            "undo": "撤销",
+            "zoom_out": "缩小",
+            "zoom_in": "放大",
+            "fit": "适应窗口",
+            "app_title": "在笔记里画同样的图",
+            "app_text": "妙言是 Mac、iPhone 和 iPad 上的 Markdown 笔记本，预览里用的就是这份 Mermaid，把代码放进 mermaid 代码块，画出来就是这张图。",
+            "app_alt": "Mac 上的妙言，左边是 Mermaid 代码，右边预览里是画好的流程图",
+            "app_shot": "split",
+            "strings": {
+                "loading": "正在加载 Mermaid…",
+                "loadFailed": "Mermaid 没加载上，检查网络后刷新页面。",
+                "replaced": "已换成这个模板。",
+                "copiedMarkdown": "已复制成 Markdown 代码块。",
+                "copiedImage": "图片已复制，可以直接粘贴。",
+                "copiedLink": "链接已复制，打开就是这张图。",
+                "copyFailed": "这个浏览器不允许复制。",
+                "exportFailed": "这个浏览器存不了这张图。",
+                "empty": "写一段 Mermaid 就能画出图。",
+                "oldBrowser": "这个浏览器打不开图表链接，更新一下或者换个浏览器打开。",
+            },
         },
     },
 }
@@ -211,7 +227,7 @@ def template_data(lang):
             "width": w,
             "height": hh,
             "syntax": (site.blog_path(lang) + t["post"] + "/") if t.get("post") else None,
-            "syntaxLabel": UI[lang]["syntax"].format(label=t[lang]["label"]),
+            "syntaxLabel": UI[lang]["mermaid"]["syntax"].format(label=t[lang]["label"]),
         })
     return out
 
@@ -225,13 +241,22 @@ def script_json(data):
     return json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
-def mermaid_page(tool, lang):
+ICON = {
+    "minus": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9"/></svg>',
+    "plus": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3.5 8h9M8 3.5v9"/></svg>',
+    "fit": '<svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg>',
+}
+
+
+def tool_page(tool, lang, *, category, tool_html, data_id, data, script):
+    """One tool page: title and lede, the tool, the prose with its FAQ, then the
+    one quiet way into MiaoYan at the end, above the footer."""
     ui = UI[lang]
     meta = tool[lang]
     slug = tool["slug"]
+    key = PAGE_KEY[slug]
+    copy = ui[key]
     canonical = SITE + route(lang, slug)
-    templates = template_data(lang)
-    first = next(t for t in templates if t["id"] == DEFAULT_TEMPLATE)
     prose = render_prose(slug, lang)
     faqs = faq_pairs(prose, lang)
     home = SITE + site.lang_entry(lang)[1]
@@ -250,7 +275,7 @@ def mermaid_page(tool, lang):
             "description": meta["description"],
             "url": canonical,
             "inLanguage": site.lang_entry(lang)[2],
-            "applicationCategory": "DesignApplication",
+            "applicationCategory": category,
             "operatingSystem": "Any",
             "browserRequirements": "Requires JavaScript",
             "isAccessibleForFree": True,
@@ -269,6 +294,35 @@ def mermaid_page(tool, lang):
         en_url=SITE + route("en", slug), zh_url=SITE + route("zh", slug),
         jsonld={"@context": "https://schema.org", "@graph": graph},
     )
+    store = site.store_url(lang)
+    shot = f"/assets/shots/{lang}-{copy['app_shot']}-1400.webp"
+    main = f"""<main class="tool-page">
+  <h1 class="section-title">{esc(meta["title"])}</h1>
+  <p class="section-lede">{esc(meta["lede"])}</p>
+{tool_html}
+  <div class="blog-body tool-body">
+{prose}
+  </div>
+  <section class="tool-app" aria-labelledby="tool-app-title">
+    <div class="tool-app-text">
+      <h2 class="tool-app-title" id="tool-app-title">{esc(copy["app_title"])}</h2>
+      <p>{esc(copy["app_text"])}</p>
+      <a class="btn btn-ghost" href="{store}" target="_blank" rel="noopener" data-store>{site.APPLE}{esc(ui["app_cta"])}</a>
+    </div>
+    <figure class="tool-app-shot"><img src="{shot}" width="1400" height="910" alt="{esc(copy["app_alt"])}" loading="lazy" decoding="async"></figure>
+  </section>
+</main>"""
+    tail = (
+        f'<script type="application/json" id="{data_id}">{script_json(data)}</script>\n'
+        f'<script src="{versioned(script)}" defer></script>'
+    )
+    return out + shell(lang, slug, main, tail)
+
+
+def mermaid_page(tool, lang):
+    ui = UI[lang]["mermaid"]
+    templates = template_data(lang)
+    first = next(t for t in templates if t["id"] == DEFAULT_TEMPLATE)
     chips = "".join(
         f'<button type="button" class="tool-chip" data-template="{t["id"]}" aria-pressed="{"true" if t is first else "false"}">{esc(t["label"])}</button>'
         for t in templates
@@ -277,8 +331,11 @@ def mermaid_page(tool, lang):
         f'<a class="tool-syntax" id="mermaid-syntax" href="{first["syntax"]}">{esc(first["syntaxLabel"])}</a>'
         if first["syntax"] else '<a class="tool-syntax" id="mermaid-syntax" hidden></a>'
     )
-    store = site.store_url(lang)
-    shot = f"/assets/shots/{lang}-split-1400.webp"
+    lines = "".join(f"<span>{i}</span>" for i in range(1, first["code"].count("\n") + 2))
+    zoom = "".join(
+        f'<button type="button" class="tool-zoom-btn" data-zoom="{k}" aria-label="{esc(ui[label])}" title="{esc(ui[label])}">{ICON[icon]}</button>'
+        for k, label, icon in (("out", "zoom_out", "minus"), ("in", "zoom_in", "plus"), ("fit", "fit", "fit"))
+    )
     data = {
         "lang": lang,
         "default": DEFAULT_TEMPLATE,
@@ -288,17 +345,18 @@ def mermaid_page(tool, lang):
         "preview": ui["preview"],
         "strings": ui["strings"],
     }
-    main = f"""<main class="tool-page">
-  <h1 class="section-title">{esc(meta["title"])}</h1>
-  <p class="section-lede">{esc(meta["lede"])}</p>
-  <div class="tool" id="mermaid-tool">
+    tool_html = f"""  <div class="tool" id="mermaid-tool">
     <div class="tool-templates" role="group" aria-label="{esc(ui["templates"])}">{chips}</div>
     <div class="tool-grid">
-      <div class="tool-pane">
+      <div class="tool-editor">
+        <div class="tool-gutter" aria-hidden="true"><div class="tool-lines" id="mermaid-lines">{lines}</div></div>
         <label class="visually-hidden" for="mermaid-code">{esc(ui["code"])}</label>
         <textarea id="mermaid-code" class="tool-code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off">{esc(first["code"])}</textarea>
       </div>
-      <div class="tool-preview" id="mermaid-preview" role="img" aria-label="{esc(ui["preview"].format(kind=first["kind"]))}"><img src="{first["svg"]}" width="{first["width"]}" height="{first["height"]}" alt="" fetchpriority="high"></div>
+      <div class="tool-preview" id="mermaid-frame">
+        <div class="tool-canvas" id="mermaid-preview" role="img" aria-label="{esc(ui["preview"].format(kind=first["kind"]))}"><img src="{first["svg"]}" width="{first["width"]}" height="{first["height"]}" alt="" fetchpriority="high"></div>
+        <div class="tool-zoom" role="group">{zoom}</div>
+      </div>
     </div>
     <div class="tool-foot">
       <p class="tool-status" id="mermaid-status" role="status" aria-live="polite"></p>
@@ -307,28 +365,14 @@ def mermaid_page(tool, lang):
     </div>
     <div class="tool-actions">
       <button type="button" class="btn btn-primary" data-action="png">{esc(ui["png"])}</button>
+      <button type="button" class="btn btn-ghost" data-action="image" hidden>{esc(ui["copy_image"])}</button>
       <button type="button" class="btn btn-ghost" data-action="svg">{esc(ui["svg"])}</button>
       <button type="button" class="btn btn-ghost" data-action="markdown">{esc(ui["markdown"])}</button>
       <button type="button" class="btn btn-ghost" data-action="link">{esc(ui["link"])}</button>
     </div>
-  </div>
-  <section class="tool-app" aria-labelledby="tool-app-title">
-    <div class="tool-app-text">
-      <h2 class="tool-app-title" id="tool-app-title">{esc(ui["app_title"])}</h2>
-      <p>{esc(ui["app_text"])}</p>
-      <a class="btn btn-primary" href="{store}" target="_blank" rel="noopener" data-store>{site.APPLE}{esc(ui["app_cta"])}</a>
-    </div>
-    <figure class="tool-app-shot"><img src="{shot}" width="1400" height="910" alt="{esc(ui["app_alt"])}" loading="lazy" decoding="async"></figure>
-  </section>
-  <div class="blog-body tool-body">
-{prose}
-  </div>
-</main>"""
-    tail = (
-        f'<script type="application/json" id="mermaid-data">{script_json(data)}</script>\n'
-        f'<script src="{versioned("assets/tools/mermaid-editor.js")}" defer></script>'
-    )
-    return out + shell(lang, slug, main, tail)
+  </div>"""
+    return tool_page(tool, lang, category="DesignApplication", tool_html=tool_html,
+                     data_id="mermaid-data", data=data, script="assets/tools/mermaid-editor.js")
 
 
 def replace_block(text, inner, name):
@@ -353,6 +397,7 @@ def llms_block(tools):
 
 
 PAGES = {"mermaid-editor": mermaid_page}
+PAGE_KEY = {"mermaid-editor": "mermaid"}
 
 
 def outputs(tools):
