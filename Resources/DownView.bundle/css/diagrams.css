@@ -243,3 +243,35 @@ pre:has(.language-mermaid) {
 .markmap svg {
   shape-rendering: geometricPrecision;
 }
+
+/* WebKit paints a positioned box inside a foreignObject from the SVG's own
+   origin, so a formula in a map node (KaTeX's relative and absolute boxes)
+   landed at the map's top-left corner. In a node the formula shows as its
+   MathML, which needs no positioning, as Mermaid's labels already do.
+   .markmap-foreign is both the drawn foreignObject and the off-page box
+   markmap measures a node in, so the node is sized for what it shows. */
+.markmap-foreign .katex {
+  position: static;
+}
+
+.markmap-foreign .katex .katex-html {
+  display: none;
+}
+
+.markmap-foreign .katex .katex-mathml {
+  position: static;
+  clip-path: none;
+  -webkit-clip-path: none;
+  width: auto;
+  height: auto;
+  overflow: visible;
+}
+
+.markmap-foreign .katex math {
+  padding-bottom: 2px;
+}
+
+.markmap-foreign .katex math,
+.markmap-foreign .katex math * {
+  font-family: "STIX Two Math", math;
+}

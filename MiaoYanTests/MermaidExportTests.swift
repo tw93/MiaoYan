@@ -426,6 +426,94 @@ final class MermaidExportTests: XCTestCase {
         })();
         """
 
+    /// WebKit paints a positioned box inside an SVG foreignObject from the
+    /// SVG's own origin, and KaTeX builds a formula out of positioned boxes:
+    /// `## Two $x^2$` in a Markmap drew its x² in the map's top-left corner
+    /// while the node kept only "Two". Judged on the painted pixels, since
+    /// the DOM reports the formula's box at the node either way.
+    @MainActor
+    func testMarkmapFormulaIsDrawnInsideItsNode() async throws {
+        let js = downViewBundleURL.appendingPathComponent("js", isDirectory: true)
+        let css = downViewBundleURL.appendingPathComponent("css", isDirectory: true)
+        let index = try String(contentsOf: downViewBundleURL.appendingPathComponent("index.html"), encoding: .utf8)
+        let loaderSettings = index.components(separatedBy: "\n")
+            .filter { $0.contains("<script>window.markmap") }
+            .joined(separator: "\n")
+        let styles = ["katex.min.css", "diagrams.css"]
+            .map { "<link rel=\"stylesheet\" href=\"\(css.appendingPathComponent($0).absoluteString)\">" }
+            .joined()
+        let scripts = ["katex.min.js", "frame-fallback.js", "d3.min.js", "markmap.min.js", "markmap-view.min.js", "theme-config.js", "diagram-handler.js"]
+            .map { "<script src=\"\(js.appendingPathComponent($0).absoluteString)\"></script>" }
+            .joined()
+        let page = """
+            <!doctype html><html><head><meta charset="utf-8">
+            <base href="\(downViewBundleURL.absoluteString)">
+            <style>body { margin: 0; background: #FDFCF9; color: #262626; }</style>
+            \(styles)
+            <script>
+            window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);
+            window.ThemeConfig = { isDarkMode: () => false };
+            </script>
+            \(loaderSettings)
+            \(scripts)
+            </head><body><pre><code class="language-markmap"># Root
+            ## Two $x^2$
+            ## Plain node
+            ## Frac $\\frac{a}{b}$</code></pre>
+            <script>window.addEventListener('load', () => DiagramHandler.initializeMarkmap());</script>
+            </body></html>
+            """
+        // markmap preloads its scripts by the page-relative js/ path, and
+        // until they load it never adds the style that shows the map.
+        let url = tempDirectory.appendingPathComponent("markmap-math.html")
+        try page.write(to: url, atomically: true, encoding: .utf8)
+
+        let webView = makeWebView()
+        let window = NSWindow(contentRect: webView.frame, styleMask: [.borderless], backing: .buffered, defer: false)
+        window.contentView = webView
+        window.setFrameOrigin(NSPoint(x: -5000, y: -5000))
+        window.orderBack(nil)
+        defer { window.orderOut(nil) }
+        webView.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
+        try await waitFor(webView, "document.querySelector('.language-markmap')?.dataset.markmapShown === 'true'")
+
+        let measured = try await webView.evaluateJavaScript(
+            """
+            (() => {
+              const r = (e) => { const b = e.getBoundingClientRect(); return [b.left, b.top, b.width, b.height]; };
+              const svg = document.querySelector('.language-markmap svg');
+              const formulas = [...svg.querySelectorAll('foreignObject .katex')].map(r);
+              return { svg: r(svg), formulas };
+            })()
+            """)
+        let boxes = try XCTUnwrap(measured as? [String: Any])
+        let formulas = try XCTUnwrap(boxes["formulas"] as? [[Double]])
+        let svg = try XCTUnwrap(boxes["svg"] as? [Double])
+        XCTAssertEqual(formulas.count, 2, "\(boxes)")
+
+        let snapshot = try await webView.takeSnapshot(configuration: nil)
+        let rep = try XCTUnwrap(snapshot.tiffRepresentation.flatMap(NSBitmapImageRep.init(data:)))
+        let scale = Double(rep.pixelsWide) / Double(webView.bounds.width)
+        func ink(_ box: [Double]) -> Int {
+            var count = 0
+            let x0 = max(0, Int(box[0] * scale)), y0 = max(0, Int(box[1] * scale))
+            let x1 = min(rep.pixelsWide, Int((box[0] + box[2]) * scale)), y1 = min(rep.pixelsHigh, Int((box[1] + box[3]) * scale))
+            guard x0 < x1, y0 < y1 else { return 0 }
+            for y in y0..<y1 {
+                for x in x0..<x1 {
+                    guard let c = rep.colorAt(x: x, y: y)?.usingColorSpace(.sRGB) else { continue }
+                    if c.redComponent + c.greenComponent + c.blueComponent < 1.2 { count += 1 }
+                }
+            }
+            return count
+        }
+        XCTAssertGreaterThan(ink(svg), 500, "the map itself is drawn, so the checks below read a real paint")
+        for box in formulas {
+            XCTAssertGreaterThan(ink(box), 20, "a formula's own box holds its ink, \(box)")
+        }
+        XCTAssertEqual(ink([svg[0], svg[1], 80, 60]), 0, "nothing is drawn in the map's top-left corner")
+    }
+
     private func rgb(_ color: NSColor?) -> String? {
         guard let srgb = color?.usingColorSpace(.sRGB) else { return nil }
         return String(format: "%.3f %.3f %.3f", srgb.redComponent, srgb.greenComponent, srgb.blueComponent)
