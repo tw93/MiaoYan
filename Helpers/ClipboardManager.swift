@@ -239,7 +239,13 @@ class ClipboardManager {
         }
         let arrivals = PromiseArrivals(count: promises.count) { [weak self] files in
             self?.insertReceived(files, into: note, at: caret)
-            try? FileManager.default.removeItem(at: folder)
+            // A received file that is not an image is still being copied
+            // out of the folder; it goes once those copies are done.
+            let copies = self?.copies ?? []
+            Task {
+                for copy in copies { await copy.value }
+                try? FileManager.default.removeItem(at: folder)
+            }
         }
         for (index, promise) in promises.enumerated() {
             promise.receivePromisedFiles(
@@ -280,8 +286,15 @@ class ClipboardManager {
         }
     }
 
+    /// Puts the file at `url` into the note at the caret. An image is read,
+    /// written to `i/` and linked as before (and may go to the image host);
+    /// a video or any other file is linked at once and cloned into `files/`
+    /// off the main thread (`copyFile`).
     func saveFile(url: URL, in note: Note) -> Bool {
         guard let textView = textView else { return false }
+
+        let kind = AttachmentFile.kind(ofExtension: url.pathExtension)
+        guard kind == .image else { return copyFile(url: url, kind: kind, in: note) }
 
         if let data = try? Data(contentsOf: url) {
             var ext: String?
@@ -305,6 +318,70 @@ class ClipboardManager {
         }
 
         return false
+    }
+
+    /// The copies `copyFile` started, newest last, so a caller (the promise
+    /// folder's clean-up, a test) can wait for them.
+    private(set) var copies: [Task<Void, Never>] = []
+
+    /// A video or any other file was read whole into memory and written back
+    /// on the main thread, so dropping a large video or PDF stalled the
+    /// editor. Its name in `files/` is taken now and its link goes in at the
+    /// caret, in order with whatever else is put in alongside it; the file is
+    /// cloned there off the main thread (`FileManager.copyItem`, an APFS clone
+    /// on the same volume). If the copy fails the link is taken out again, so
+    /// no link is left pointing at a file that was never written.
+    private func copyFile(url: URL, kind: AttachmentFile.Kind, in note: Note) -> Bool {
+        guard let textView, let reserved = ImagesProcessor.reserveAttachment(for: url, note: note) else { return false }
+        let link = AttachmentFile.markdown(path: reserved.path, kind: kind, title: url.lastPathComponent)
+        EditTextView.shouldForceRescan = true
+        textView.breakUndoCoalescing()
+        textView.insertText(link, replacementRange: textView.selectedRange())
+        textView.saveTextStorageContent(to: note)
+        note.save()
+
+        let destination = reserved.destination
+        copies.append(
+            Task { [weak textView] in
+                let failure = await Task.detached(priority: .userInitiated) { () -> Error? in
+                    do {
+                        try ImagesProcessor.copyAttachment(from: url, to: destination)
+                        return nil
+                    } catch {
+                        return error
+                    }
+                }.value
+                ImagesProcessor.releaseAttachment(destination)
+                guard let failure else { return }
+                AppDelegate.trackError(failure, context: "ClipboardManager.copyFile")
+                Self.removeLink(link, of: note, in: textView)
+                textView?.window?.contentViewController?.toast(message: I18n.str("Save Failed"), style: .failure)
+            })
+        return true
+    }
+
+    /// Takes the link of a file that could not be copied back out of the
+    /// note: from the editor while it still holds that note, else from the
+    /// note's own text.
+    private static func removeLink(_ link: String, of note: Note, in textView: EditTextView?) {
+        if let textView, textView.storageNote === note, let storage = textView.textStorage {
+            let range = storage.mutableString.range(of: link)
+            if range.location != NSNotFound {
+                if textView.shouldChangeText(in: range, replacementString: "") {
+                    storage.replaceCharacters(in: range, with: "")
+                    textView.didChangeText()
+                } else {
+                    storage.replaceCharacters(in: range, with: "")
+                }
+                textView.saveTextStorageContent(to: note)
+                note.save()
+                return
+            }
+        }
+        let range = note.content.mutableString.range(of: link)
+        guard range.location != NSNotFound else { return }
+        note.content.replaceCharacters(in: range, with: "")
+        note.save()
     }
 
     // Simplified parameters for uPic/Picsee

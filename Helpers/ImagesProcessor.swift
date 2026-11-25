@@ -142,7 +142,9 @@ public class ImagesProcessor {
         return ""
     }
 
-    public static func getFileName(from: URL? = nil, to: URL, ext: String? = nil) -> String? {
+    /// `reserved` holds paths already promised to a copy still under way,
+    /// which are as taken as a file on disk.
+    public static func getFileName(from: URL? = nil, to: URL, ext: String? = nil, reserved: Set<String> = []) -> String? {
         let path = from?.absoluteString ?? to.absoluteString
         var name: String?
 
@@ -167,8 +169,10 @@ public class ImagesProcessor {
                 // beside it; taking its name would overwrite it on arrival.
                 let icloud = to.appendingPathComponent(".\(pathComponent).icloud")
 
-                if FileManager.default.fileExists(atPath: destination.path) || FileManager.default.fileExists(atPath: icloud.path) {
-                    pathComponent = NSUUID().uuidString.lowercased() + ".\(ext)"
+                if reserved.contains(destination.path) || FileManager.default.fileExists(atPath: destination.path)
+                    || FileManager.default.fileExists(atPath: icloud.path)
+                {
+                    pathComponent = NSUUID().uuidString.lowercased() + (ext.isEmpty ? "" : ".\(ext)")
                     continue
                 }
 
@@ -191,7 +195,7 @@ public class ImagesProcessor {
             try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: false, attributes: nil)
         } catch {}
 
-        guard let fileName = ImagesProcessor.getFileName(from: url, to: destination, ext: ext) else { return nil }
+        guard let fileName = ImagesProcessor.getFileName(from: url, to: destination, ext: ext, reserved: reservedAttachments) else { return nil }
 
         let to = destination.appendingPathComponent(fileName)
         // No file, no link: a link to a file that was never written showed
@@ -206,4 +210,45 @@ public class ImagesProcessor {
         return "\(prefix)\(fileName)"
     }
 
+    /// Destinations named for a copy that has not finished yet.
+    @MainActor private static var reservedAttachments = Set<String>()
+
+    /// Takes the name `url` gets in its note's folder for its kind (the same
+    /// name dedupe and `.icloud` check `writeFile` uses) and holds it until
+    /// `releaseAttachment`, so two files dropped with one name while the
+    /// first is still copying do not get the same one. Returns the link path
+    /// (`/files/Report-v2.pdf`) and where the file goes.
+    @MainActor
+    static func reserveAttachment(for url: URL, note: Note) -> (path: String, destination: URL)? {
+        let prefix = NotesTextProcessor.getAttachPrefix(url: url)
+        let folder = URL(fileURLWithPath: note.project.url.path + prefix)
+        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false, attributes: nil)
+        guard let fileName = getFileName(from: url, to: folder, ext: url.pathExtension, reserved: reservedAttachments) else { return nil }
+        let destination = folder.appendingPathComponent(fileName)
+        reservedAttachments.insert(destination.path)
+        return ("\(prefix)\(fileName)", destination)
+    }
+
+    @MainActor
+    static func releaseAttachment(_ destination: URL) {
+        reservedAttachments.remove(destination.path)
+    }
+
+    /// Clones `source` to `destination` without reading it into memory,
+    /// through a hidden name beside it, so a copy cut short by a quit leaves
+    /// no half-written file under the name the note links. Fails rather than
+    /// overwrite a file that appeared at `destination` meanwhile. Call it off
+    /// the main thread.
+    nonisolated static func copyAttachment(from source: URL, to destination: URL) throws {
+        let manager = FileManager.default
+        let partial = destination.deletingLastPathComponent()
+            .appendingPathComponent(".\(destination.lastPathComponent).\(UUID().uuidString).partial")
+        try manager.copyItem(at: source, to: partial)
+        do {
+            try manager.moveItem(at: partial, to: destination)
+        } catch {
+            try? manager.removeItem(at: partial)
+            throw error
+        }
+    }
 }

@@ -315,7 +315,7 @@ final class ShellEditorParityTests: XCTestCase {
     /// named as it was dropped, the Markdown the iPhone writes too.
     @available(macOS 14, *)
     @MainActor
-    func testADroppedPDFIsALinkNamedAsTheFile() throws {
+    func testADroppedPDFIsALinkNamedAsTheFile() async throws {
         let previousNote = EditTextView.note
         defer { EditTextView.note = previousNote }
         EditTextView.note = nil
@@ -341,6 +341,7 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
 
         XCTAssertEqual(controller.textView.string, "before [Report v2.pdf](/files/Report-v2.pdf)after")
+        for copy in drop.copies { await copy.value }
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("files/Report-v2.pdf").path))
     }
 
@@ -351,7 +352,7 @@ final class ShellEditorParityTests: XCTestCase {
     /// installed on the test Macs, so the old code's attempt reached no host.
     @available(macOS 14, *)
     @MainActor
-    func testWithAnImageHostSetADroppedPDFStaysALocalLink() throws {
+    func testWithAnImageHostSetADroppedPDFStaysALocalLink() async throws {
         XCTAssertEqual(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "PicGo"), .http)
         XCTAssertEqual(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "PicList"), .http)
         XCTAssertEqual(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "uPic"), .app("uPic"))
@@ -386,7 +387,78 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
 
         XCTAssertEqual(controller.textView.string, "before [Report v2.pdf](/files/Report-v2.pdf)after")
+        for copy in drop.copies { await copy.value }
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("files/Report-v2.pdf").path))
+    }
+
+    /// A large video or PDF was read whole into memory and written back on
+    /// the main thread. Anything but an image is now linked at once, in drop
+    /// order with the images beside it, and cloned into `files/` off the main
+    /// thread; a copy that fails takes its link out again.
+    @available(macOS 14, *)
+    @MainActor
+    func testDroppedFilesAreLinkedInOrderAndCopiedOffTheMainThread() async throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let note = makeLoadedNote("drop-many.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDrop-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let video = Data((0..<4096).map { UInt8($0 % 251) })
+        try video.write(to: source.appendingPathComponent("clip.mov"))
+        let image = NSImage(size: NSSize(width: 4, height: 4))
+        image.lockFocus()
+        NSColor.red.drawSwatch(in: NSRect(x: 0, y: 0, width: 4, height: 4))
+        image.unlockFocus()
+        let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(image.tiffRepresentation))?.representation(using: .png, properties: [:]))
+        try png.write(to: source.appendingPathComponent("shot.png"))
+        try Data("%PDF-1.4".utf8).write(to: source.appendingPathComponent("Plan.pdf"))
+
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-many-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects(["clip.mov", "shot.png", "Plan.pdf"].map { source.appendingPathComponent($0) as NSURL })
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+
+        XCTAssertEqual(
+            controller.textView.string, "before ![](/files/clip.mov)\n\n![](/i/shot.png)\n\n[Plan.pdf](/files/Plan.pdf)after",
+            "every link is in, in drop order, before the copies finish")
+        XCTAssertEqual(drop.copies.count, 2, "the video and the PDF are copied, the image is written as before")
+        // The same file again, its name taken (on disk, or held while the
+        // first copy runs): it gets a name of its own.
+        XCTAssertTrue(drop.saveFile(url: source.appendingPathComponent("Plan.pdf"), in: note))
+        let text = controller.textView.string
+        let second = try XCTUnwrap(text.range(of: #"\[Plan\.pdf\]\(/files/Plan\.pdf\)\[Plan\.pdf\]\(/files/[^)]+\)after$"#, options: .regularExpression), text)
+        let secondName = String(text[second].dropFirst("[Plan.pdf](/files/Plan.pdf)[Plan.pdf](/files/".count).dropLast(")after".count))
+        XCTAssertNotEqual(secondName, "Plan.pdf")
+        for copy in drop.copies { await copy.value }
+
+        let files = tempDir.appendingPathComponent("files")
+        XCTAssertEqual(try Data(contentsOf: files.appendingPathComponent("clip.mov")), video)
+        XCTAssertEqual(try Data(contentsOf: files.appendingPathComponent("Plan.pdf")), Data("%PDF-1.4".utf8))
+        XCTAssertEqual(try Data(contentsOf: files.appendingPathComponent(secondName)), Data("%PDF-1.4".utf8))
+        XCTAssertEqual(try Data(contentsOf: tempDir.appendingPathComponent("i/shot.png")), png)
+        XCTAssertEqual(
+            try FileManager.default.contentsOfDirectory(atPath: files.path).filter { $0.hasPrefix(".") }, [],
+            "no partial copy is left beside them")
+        XCTAssertEqual(note.content.string, controller.textView.string)
+
+        // A file gone before it could be copied: its link comes back out.
+        let before = controller.textView.string
+        XCTAssertTrue(drop.saveFile(url: source.appendingPathComponent("gone.pdf"), in: note))
+        XCTAssertNotEqual(controller.textView.string, before)
+        for copy in drop.copies { await copy.value }
+        XCTAssertEqual(controller.textView.string, before)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: files.appendingPathComponent("gone.pdf").path))
     }
 
     /// Picture data dragged with no file beside it, as from a browser, was
