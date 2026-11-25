@@ -1,3 +1,4 @@
+import MiaoYanCore
 import XCTest
 
 @testable import MiaoYan
@@ -754,5 +755,54 @@ final class AttachmentCleanupTests: XCTestCase {
         let path = String(text[link...].dropFirst(2).prefix { $0 != ")" }).removingPercentEncoding ?? ""
         let copied = to.url.appendingPathComponent(path)
         XCTAssertEqual(try Data(contentsOf: copied), Data([1, 2, 3]), "the renamed copy holds the note's own image")
+    }
+
+    // MARK: - One rule for which folder a file goes in
+
+    /// The Mac decided `i/` or `files/` by UTType, the iPhone by the shared
+    /// `AttachmentFile` list, and they disagreed on PSD, ICO, ICNS and RAW:
+    /// the Mac put them in `i/` as images (maintainer, 2026-11-25: follow the
+    /// shared rule).
+    @MainActor
+    func testTheMacSortsAttachmentsByTheSharedRule() throws {
+        let expected: [String: String] = [
+            "png": "/i/", "HEIC": "/i/", "jpeg": "/i/",
+            "psd": "/files/", "ico": "/files/", "icns": "/files/", "cr2": "/files/", "dng": "/files/",
+            "mov": "/files/", "mp4": "/files/", "pdf": "/files/",
+        ]
+        for (ext, prefix) in expected {
+            let url = URL(fileURLWithPath: "/tmp/source.\(ext)")
+            XCTAssertEqual(NotesTextProcessor.getAttachPrefix(url: url), prefix, ext)
+            XCTAssertEqual(AttachmentFile.folder(for: AttachmentFile.kind(ofExtension: ext)), String(prefix.dropFirst().dropLast()), ext)
+        }
+        XCTAssertEqual(NotesTextProcessor.getAttachPrefix(), "/i/", "a pasted picture has no URL")
+
+        let work = tempDir.appendingPathComponent("Work", isDirectory: true)
+        try FileManager.default.createDirectory(at: work, withIntermediateDirectories: true)
+        let note = Note(url: work.appendingPathComponent("n.md"), with: Project(url: work, label: "Work"))
+        let psd = try XCTUnwrap(ImagesProcessor.writeFile(data: Data([1]), url: URL(fileURLWithPath: "/tmp/Layers.psd"), note: note))
+        XCTAssertEqual(psd, "/files/Layers.psd")
+        let raw = try XCTUnwrap(ImagesProcessor.writeFile(data: Data([2]), url: URL(fileURLWithPath: "/tmp/IMG_1.CR2"), note: note))
+        XCTAssertEqual(raw, "/files/IMG_1.CR2")
+        let png = try XCTUnwrap(ImagesProcessor.writeFile(data: Data([3]), url: URL(fileURLWithPath: "/tmp/Shot.png"), note: note))
+        XCTAssertEqual(png, "/i/Shot.png")
+    }
+
+    /// A PSD an older build kept in `i/` goes to `files/` when its note moves,
+    /// and the link follows it there instead of pointing at an `i/` the
+    /// destination does not have.
+    @MainActor
+    func testMovingANoteTakesAnOlderImageFolderFileToFilesAndTheLinkFollows() throws {
+        let folders = try makeFolders()
+        let (from, to, noteURL) = (folders.from, folders.to, folders.noteURL)
+        try Data([7, 7]).write(to: from.url.appendingPathComponent("i/Layers.psd"))
+        try "# Trip\n\n![](/i/Shot%201.png)\n\n![](/i/Layers.psd)\n".write(to: noteURL, atomically: true, encoding: .utf8)
+        let note = Note(url: noteURL, with: from)
+
+        note.move(toProject: to)
+
+        XCTAssertEqual(try Data(contentsOf: to.url.appendingPathComponent("files/Layers.psd")), Data([7, 7]))
+        let text = try String(contentsOf: to.url.appendingPathComponent("trip.md"), encoding: .utf8)
+        XCTAssertEqual(text, "# Trip\n\n![](/i/Shot%201.png)\n\n![](/files/Layers.psd)\n")
     }
 }

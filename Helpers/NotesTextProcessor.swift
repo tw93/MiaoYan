@@ -1,5 +1,6 @@
 import Cocoa
 import Highlightr
+import MiaoYanCore
 
 @MainActor
 public class NotesTextProcessor {
@@ -378,12 +379,14 @@ public class NotesTextProcessor {
         BacktickAndFontNormalizer.normalize(styleApplier: styleApplier, paragraphRange: paragraphRange)
     }
 
+    /// The folder a file of `url`'s kind lives in beside its note, `/i/` for
+    /// an image and `/files/` for anything else, decided by the shared
+    /// `AttachmentFile` rule the iPhone uses too: a PSD or a RAW photo is a
+    /// file there, so it is here (maintainer, 2026-11-25). No URL means a
+    /// pasted picture.
     public static func getAttachPrefix(url: URL? = nil) -> String {
-        if let url = url, !url.isImage {
-            return "/files/"
-        }
-
-        return "/i/"
+        let kind = url.map { AttachmentFile.kind(ofExtension: $0.pathExtension) } ?? .image
+        return "/\(AttachmentFile.folder(for: kind))/"
     }
 
     /// Tabs are automatically converted to spaces as part of the transform

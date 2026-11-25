@@ -1234,8 +1234,11 @@ public class Note: NSObject {
     /// Copies one attachment into `project`'s attachment folder under its own
     /// name. Moving a note copies rather than moves, because another note may
     /// share the image; the original is left for Clean Unused Attachments. On a
-    /// name clash with a different file the copy gets a fresh name and the
-    /// note's links, written encoded or not, follow it.
+    /// name clash with a different file the copy gets a fresh name, and when
+    /// the copy lands under another path than the link names (a fresh name, a
+    /// PSD an older build kept in `i/` that the shared rule puts in `files/`,
+    /// an image linked from another folder), the note's links, written encoded
+    /// or not, follow it.
     func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project) {
         let manager = FileManager.default
         let dstPrefix = NotesTextProcessor.getAttachPrefix(url: imageURL)
@@ -1248,28 +1251,42 @@ public class Note: NSObject {
 
         var target = folder.appendingPathComponent(imageURL.lastPathComponent)
         if target.standardizedFileURL.path == imageURL.standardizedFileURL.path { return }
+        var copied = false
         if manager.fileExists(atPath: target.path) {
-            if manager.contentsEqual(atPath: target.path, andPath: imageURL.path) { return }
-            guard let fileName = ImagesProcessor.getFileName(from: imageURL, to: folder, ext: imageURL.pathExtension) else { return }
-            target = folder.appendingPathComponent(fileName)
+            copied = manager.contentsEqual(atPath: target.path, andPath: imageURL.path)
+            if !copied {
+                guard let fileName = ImagesProcessor.getFileName(from: imageURL, to: folder, ext: imageURL.pathExtension) else { return }
+                target = folder.appendingPathComponent(fileName)
+            }
         }
 
-        do {
-            try manager.copyItem(at: imageURL, to: target)
-        } catch {
-            AppDelegate.trackError(error, context: "Note.relocateAttachment")
-            return
+        if !copied {
+            do {
+                try manager.copyItem(at: imageURL, to: target)
+            } catch {
+                AppDelegate.trackError(error, context: "Note.relocateAttachment")
+                return
+            }
         }
 
-        let newName = target.lastPathComponent
-        guard newName != imageURL.lastPathComponent else { return }
+        let newPath = dstPrefix + target.lastPathComponent
+        guard newPath != imagePath else { return }
+        rewriteAttachmentLinks(from: imagePath, to: newPath)
+    }
+
+    /// Points every link to `oldPath` in the body, written plain or
+    /// percent-encoded, as Markdown (`](/files/a.pdf "title")`, `](<…>)`) or
+    /// as `src="…"`, at `newPath`.
+    private func rewriteAttachmentLinks(from oldPath: String, to newPath: String) {
         let encode = { (path: String) in path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? path }
-        let oldForms = Set([imagePath, encode(imagePath)])
-        let replacement = "](" + encode(dstPrefix + newName) + ")"
-        for old in oldForms {
-            let find = "](" + old + ")"
-            while content.mutableString.contains(find) {
-                content.replaceCharacters(in: content.mutableString.range(of: find), with: replacement)
+        let replacement = encode(newPath)
+        for old in Set([oldPath, encode(oldPath)]) {
+            let pattern = #"(\]\(\s*<?|src=["'])"# + NSRegularExpression.escapedPattern(for: old) + #"(?=[)\s"'>])"#
+            guard let regex = try? NSRegularExpression(pattern: pattern) else { continue }
+            let text = content.string as NSString
+            for match in regex.matches(in: content.string, range: NSRange(location: 0, length: text.length)).reversed() {
+                let opening = text.substring(with: match.range(at: 1))
+                content.replaceCharacters(in: match.range, with: opening + replacement)
             }
         }
     }

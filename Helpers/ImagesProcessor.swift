@@ -182,10 +182,7 @@ public class ImagesProcessor {
     // Access note.project (@MainActor)
     @MainActor
     public static func writeFile(data: Data, url: URL? = nil, note: Note, ext: String? = nil) -> String? {
-        var prefix = "/i/"
-        if let url = url, !url.isImage {
-            prefix = "/files/"
-        }
+        let prefix = NotesTextProcessor.getAttachPrefix(url: url)
 
         let project = note.project
         let destination = URL(fileURLWithPath: project.url.path + prefix)
