@@ -148,6 +148,8 @@ UI = {
         "ppt": {
             "open": "Open file",
             "dark": "Dark",
+            "font": "Font",
+            "fonts": {"system": "System font", "song": "Songti", "kai": "Kaiti", "tsanger": "TsangerJinKai", "georgia": "Georgia"},
             "code": "Markdown",
             "preview": "Slides",
             "present": "Present",
@@ -164,6 +166,7 @@ UI = {
                 "fileType": "Open a Markdown or text file under 5 MB.",
                 "printing": "Laying the slides out a page each. In the print window, choose Save as PDF.",
                 "exportFailed": "This browser could not save the file.",
+                "notSaved": "This deck is too large for the browser to keep, so download the Markdown before you close the page.",
             },
         },
         "viewer": {
@@ -364,6 +367,8 @@ UI = {
         "ppt": {
             "open": "打开文件",
             "dark": "深色",
+            "font": "字体",
+            "fonts": {"system": "系统字体", "song": "宋体", "kai": "楷体", "tsanger": "仓耳今楷", "georgia": "Georgia"},
             "code": "Markdown",
             "preview": "幻灯片",
             "present": "演示",
@@ -380,6 +385,7 @@ UI = {
                 "fileType": "打开的需要是 5 MB 以内的 Markdown 或文本文件。",
                 "printing": "正在把幻灯片排成一页一张，弹出打印窗口后选存储为 PDF。",
                 "exportFailed": "这个浏览器存不了这个文件。",
+                "notSaved": "这份文稿太大，浏览器存不下，关掉页面前记得下载 Markdown。",
             },
         },
         "viewer": {
@@ -1008,6 +1014,26 @@ APP_TEXT_FONT = "-apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC,
 APP_CODE_FONT = 'SFMono-Regular, Menlo, Consolas, "Liberation Mono", "Courier New", monospace'
 
 
+# The slide faces on offer, after the app's recommended preview faces
+# (FontCatalog.recommendedText). The site serves none of them: each is a face
+# the reader's own system has, and the page lists only the ones it finds
+# installed. Safari hides faces a user installed, so TsangerJinKai shows there
+# only if it ever ships with the system.
+SLIDE_FONTS = [
+    ("system", [], APP_TEXT_FONT),
+    ("song", ["Songti SC", "STSong", "SimSun", "Noto Serif CJK SC", "Source Han Serif SC"], "serif"),
+    ("kai", ["Kaiti SC", "STKaiti", "KaiTi", "BiauKai"], "serif"),
+    ("tsanger", ["TsangerJinKai02"], APP_TEXT_FONT),
+    ("georgia", ["Georgia"], '"Songti SC", STSong, SimSun, serif'),
+]
+
+
+def slide_fonts(lang):
+    labels = UI[lang]["ppt"]["fonts"]
+    return [{"id": key, "label": labels[key], "names": names,
+             "stack": ", ".join([f'"{n}"' for n in names] + [rest])} for key, names, rest in SLIDE_FONTS]
+
+
 DECK = "tools/markdown-slides/deck.html"
 REVEAL = "assets/vendor/reveal-4.3.1/"
 DECK_CSS = (
@@ -1062,11 +1088,15 @@ def ppt_page(tool, lang):
     sample = (SRC / f"markdown-slides-sample.{lang}.md").read_text(encoding="utf-8").rstrip("\n")
     # Versioned by what the build writes, as the deck is written with the pages.
     deck = f"/{DECK}?v={hashlib.sha256(deck_page().encode()).hexdigest()[:12]}"
-    data = {"deck": deck, "strings": ui["strings"]}
+    fonts = slide_fonts(lang)
+    data = {"deck": deck, "fonts": fonts, "strings": ui["strings"]}
+    options = "".join(f'<option value="{f["id"]}">{esc(f["label"])}</option>' for f in fonts)
     tool_html = f"""  <div class="tool ppt-tool" id="ppt-tool">
     <div class="table-bar">
       <label class="tool-chip viewer-open">{esc(ui["open"])}<input type="file" id="ppt-file" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" class="visually-hidden"></label>
       <button type="button" class="tool-chip" id="ppt-dark" aria-pressed="false">{esc(ui["dark"])}</button>
+      <label class="visually-hidden" for="ppt-font">{esc(ui["font"])}</label>
+      <select class="tool-chip tool-select" id="ppt-font">{options}</select>
     </div>
     <div class="tool-grid">
       <div class="tool-editor">

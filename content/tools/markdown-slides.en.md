@@ -4,7 +4,7 @@ Write Markdown on the left with `---` on a line of its own between slides, and t
 
 To change the transition or show slide numbers, put a comment such as `<!-- transition: fade -->` at the top of the text, its keys the same as reveal.js config options. A slide takes a background with `<!-- .slide: data-background="#F8CB9E" -->`, and a line appears on its own step with `<!-- .element: class="fragment" -->` at its end.
 
-Present plays the deck full screen, the arrow keys or Space turn the page and Esc leaves, and Save as PDF puts one slide on each page. You can also open a .md file or drop one on the page. The shortcuts are MiaoYan's, `⌘B` bold, `⌘I` italic and `⌘S` to save the Markdown, and the last text you wrote stays in this browser.
+Present plays the deck full screen, the arrow keys or Space turn the page and Esc leaves, and Save as PDF puts one slide on each page. You can also open a .md file or drop one on the page. The shortcuts are MiaoYan's, `⌘B` bold, `⌘I` italic and `⌘S` to save the Markdown, The font picker offers the system font, Songti, Kaiti and Georgia, listing only the ones this computer already has. Your text, the dark switch and the font stay in this browser, so they are there next time, until you switch browsers or clear the site's data; download the Markdown to keep it for good.
 
 ## FAQ
 
@@ -18,7 +18,7 @@ Not as a .pptx. This is a web deck, and it saves as a PDF, which Preview or Acro
 
 ### How is it different from presenting in the MiaoYan app?
 
-The layout and themes are the same, with three differences: here the deck is a fixed 16:9 that scales to the screen, where the app fills its window; here it uses the system font, where the app uses the preview font chosen in its settings; and Mermaid diagrams, which the app draws, show here as code.
+The layout and themes are the same, with three differences: here the deck is a fixed 16:9 that scales to the screen, where the app fills its window; here the font comes from the few your computer ships with, where the app uses whatever preview font you chose in its settings; and Mermaid diagrams, which the app draws, show here as code.
 
 ### Is my text uploaded?
 

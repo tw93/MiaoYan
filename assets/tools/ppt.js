@@ -17,9 +17,11 @@
   var countEl = document.getElementById("ppt-count");
   var fileInput = document.getElementById("ppt-file");
   var darkButton = document.getElementById("ppt-dark");
+  var fontSelect = document.getElementById("ppt-font");
 
   var DRAFT_KEY = "miaoyan.markdown-slides.draft";
   var THEME_KEY = "miaoyan.markdown-slides.theme";
+  var FONT_KEY = "miaoyan.markdown-slides.font";
   var MAX_BYTES = 5e6;
   // reveal's own separator: a line of three hyphens between blank-free lines.
   var SEPARATOR = /\r?\n---\r?\n/g;
@@ -40,6 +42,32 @@
 
   try { if (localStorage.getItem(THEME_KEY) === "night") theme = "night"; } catch (e) { /* storage blocked */ }
   darkButton.setAttribute("aria-pressed", String(theme === "night"));
+
+  // A face is offered only when this system has it: text set in a missing
+  // face and in a generic one measure the same.
+  function installed(names) {
+    if (!names.length) return true;
+    var ctx = document.createElement("canvas").getContext("2d");
+    var probe = "永妙言 The quick brown fox 0123";
+    return names.some(function (name) {
+      return ["monospace", "serif"].some(function (generic) {
+        ctx.font = "72px " + generic;
+        var plain = ctx.measureText(probe).width;
+        ctx.font = '72px "' + name + '", ' + generic;
+        return ctx.measureText(probe).width !== plain;
+      });
+    });
+  }
+  var fonts = {};
+  data.fonts.forEach(function (f) {
+    if (installed(f.names)) fonts[f.id] = f.stack;
+    else fontSelect.querySelector('option[value="' + f.id + '"]').remove();
+  });
+  try {
+    var savedFont = localStorage.getItem(FONT_KEY);
+    if (savedFont && fonts[savedFont]) fontSelect.value = savedFont;
+  } catch (e) { /* storage blocked */ }
+  function font() { return fonts[fontSelect.value] || data.fonts[0].stack; }
 
   // ---- Talking to the deck --------------------------------------------------------
 
@@ -77,7 +105,7 @@
     countEl.textContent = fill(slideCount() === 1 ? S.slide : S.slides, slideCount());
     if (!ready) return;
     shownSlide = caretSlide();
-    send(frame.contentWindow, { markdown: code.value, slide: shownSlide, theme: theme, title: title() });
+    send(frame.contentWindow, { markdown: code.value, slide: shownSlide, theme: theme, font: font(), title: title() });
   }
 
   function schedule() {
@@ -117,7 +145,7 @@
         present(false);
       }
     } else if (printFrame && e.source === printFrame.contentWindow) {
-      if (msg.event === "ready") send(printFrame.contentWindow, { markdown: code.value, theme: theme, title: title() });
+      if (msg.event === "ready") send(printFrame.contentWindow, { markdown: code.value, theme: theme, font: font(), title: title() });
       else if (msg.event === "printed") { dropPrint(); say(""); }
     }
   });
@@ -126,9 +154,13 @@
 
   // ---- Editing ---------------------------------------------------------------------
 
+  // The text is kept on every edit, so it is there when the page opens again.
+  // A deck too large for the browser's storage is not kept, and says so,
+  // rather than an older draft coming back in its place.
   function store() {
     try { localStorage.setItem(DRAFT_KEY, code.value); } catch (e) {
       try { localStorage.removeItem(DRAFT_KEY); } catch (e2) { /* storage blocked */ }
+      say(S.notSaved);
     }
   }
 
@@ -147,6 +179,11 @@
     darkButton.setAttribute("aria-pressed", String(theme === "night"));
     try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* storage blocked */ }
     if (ready) send(frame.contentWindow, { theme: theme });
+  });
+
+  fontSelect.addEventListener("change", function () {
+    try { localStorage.setItem(FONT_KEY, fontSelect.value); } catch (e) { /* storage blocked */ }
+    if (ready) send(frame.contentWindow, { font: font() });
   });
 
   // ---- Files -----------------------------------------------------------------------

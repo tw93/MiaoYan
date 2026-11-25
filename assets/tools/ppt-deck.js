@@ -443,6 +443,12 @@
     window.parent.postMessage(data, "*");
   }
 
+  // A face the page found on this system; a long slide may now need to scroll.
+  function setFont(stack) {
+    document.documentElement.style.setProperty("--r-main-font", stack);
+    if (started) started.then(function () { Reveal.layout(); fitCurrent(); });
+  }
+
   function setTheme(name) {
     var file = name === "night" ? "night.css" : "white.css";
     if (theme.getAttribute("href").indexOf(file) < 0) theme.setAttribute("href", theme.getAttribute("data-" + (name === "night" ? "night" : "white")));
@@ -467,6 +473,7 @@
     var msg = e.data;
     if (msg.title) document.title = msg.title;
     if (msg.theme) setTheme(msg.theme);
+    if (typeof msg.font === "string") setFont(msg.font);
     if (typeof msg.markdown === "string") {
       if (printing && started) return;
       pending = msg;
