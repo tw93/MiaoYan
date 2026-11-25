@@ -864,9 +864,16 @@ def header_html(key, *, home="", menu=None, hide_cta=False, blog_current=False):
 
 # The footer's last group links the maintainer's sibling apps: English names and
 # one Han character each, the same in every language (only the title is copy).
-TOOLS_TITLE = {
-    "en": "Tools", "zh": "工具", "tw": "工具", "ja": "ツール",
-    "ko": "도구", "de": "Tools", "fr": "Outils", "es": "Herramientas",
+# The ten tools in two groups of five, each with its own head, verbs like
+# Get and Connect beside them (maintainer 2026-11-25: one Tools head over
+# two columns left the second looking headless).
+WRITE_TITLE = {
+    "en": "Write", "zh": "写作", "tw": "寫作", "ja": "執筆",
+    "ko": "쓰기", "de": "Schreiben", "fr": "Écrire", "es": "Escribir",
+}
+CONVERT_TITLE = {
+    "en": "Convert", "zh": "转换", "tw": "轉換", "ja": "変換",
+    "ko": "변환", "de": "Umwandeln", "fr": "Convertir", "es": "Convertir",
 }
 
 MORE_APPS_TITLE = {
@@ -898,12 +905,13 @@ def footer_html(key, *, faq_href="#faq", tools_new_tab=False):
         f'<a href="{learn_path(key)}">{esc(LEARN_LABEL[key])}</a>'
         f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
         f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
-        f'<div class="foot-col foot-tools"><p class="foot-col-title">{esc(TOOLS_TITLE[key])}</p>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(WRITE_TITLE[key])}</p>'
         f'<a href="{tool_path(key)}"{tab}>{esc(TOOL_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-table-generator")}"{tab}>{esc(TABLE_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-viewer")}"{tab}>{esc(VIEWER_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markmap-editor")}"{tab}>{esc(MARKMAP_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "chinese-typography-cleaner")}"{tab}>{esc(TYPOGRAPHY_LABEL[key])}</a>'
+        f'<a href="{tool_path(key, "chinese-typography-cleaner")}"{tab}>{esc(TYPOGRAPHY_LABEL[key])}</a></div>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(CONVERT_TITLE[key])}</p>'
         f'<a href="{tool_path(key, "html-to-markdown")}"{tab}>{esc(H2M_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-to-word")}"{tab}>{esc(WORD_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-to-image")}"{tab}>{esc(IMAGE_LABEL[key])}</a>'
