@@ -1089,10 +1089,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </ol>
 <p>Apple's warning is worth repeating: do not click Change All if you only want that one file to open in the app. The change applies to every file of the same type, so it also affects other Markdown files in other folders.</p>
 <h2 id="see-it-rendered">See it rendered</h2>
-<p>Two options cover most cases.</p>
+<p>Three options cover most cases.</p>
 <ul>
 <li><strong>VS Code.</strong> Visual Studio Code supports Markdown out of the box. Its documentation describes a command to toggle between the code and the preview, and Markdown: Open Preview to the Side, which shows both next to each other and updates as you type. It is the right pick if you already work in a code editor.</li>
 <li><strong>A Markdown app.</strong> An app built for notes shows the rendered result alongside the source. MiaoYan is one, and <a href="/blog/markdown-editor-for-mac/">Choosing a Markdown editor for Mac</a> compares it with Typora, Obsidian and VS Code.</li>
+<li><strong>A browser.</strong> For a quick look with no editor installed, drop the file into MiaoYan's <a href="/tools/markdown-viewer/">Markdown viewer</a>. It shows the file in MiaoYan's preview styling, reads it in your browser without uploading it, and can save it as a PDF.</li>
 </ul>
 <h2 id="how-miaoyan-opens-md-files">How MiaoYan opens .md files</h2>
 <p>MiaoYan declares itself in its Info.plist as an editor for Markdown files with the extensions <code>md</code> and <code>markdown</code>, under the type <code>net.daringfireball.markdown</code>. That is what lets it appear in Open With and in the Open with pop-up of Get Info. It does not list <code>mdown</code>, <code>mkd</code> or other rarer extensions itself, so whether macOS offers it for those files depends on what other installed apps declare.</p>

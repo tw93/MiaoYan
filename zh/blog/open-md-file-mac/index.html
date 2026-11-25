@@ -1091,10 +1091,11 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 </ol>
 <p>苹果的提醒值得重复一遍，只想让这一个文件用该应用打开的话，不要点「全部更改」，它会改掉同类型的所有文件，其他文件夹里的 Markdown 文件也包括在内。</p>
 <h2 id="看渲染后的样子">看渲染后的样子</h2>
-<p>有两种选择覆盖大部分情况。</p>
+<p>有三种选择覆盖大部分情况。</p>
 <ul>
 <li><strong>VS Code。</strong> Visual Studio Code 开箱就支持 Markdown，文档里写了在代码和预览之间切换的命令，也有「Markdown: Open Preview to the Side」，把预览放在旁边，边写边更新，已经在用代码编辑器的话选它最顺手。</li>
 <li><strong>Markdown 应用。</strong> 为笔记设计的应用会把渲染结果和源码并排显示，妙言就是其中一个，<a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编辑器</a>把它和 Typora、Obsidian、VS Code 做了对比。</li>
+<li><strong>浏览器。</strong> 只想临时看一眼、手边又没装编辑器时，把文件拖进妙言的 <a href="/zh/tools/markdown-viewer/">Markdown 在线预览</a>，按妙言的预览样式显示，文件只在浏览器里读，不发到服务器，看完还能存成 PDF。</li>
 </ul>
 <h2 id="妙言怎么打开-md-文件">妙言怎么打开 .md 文件</h2>
 <p>妙言在 Info.plist 里把自己声明为 Markdown 文件的编辑器，扩展名是 <code>md</code> 和 <code>markdown</code>，类型是 <code>net.daringfireball.markdown</code>，所以它会出现在「打开方式」和「显示简介」的「打开方式」菜单里。<code>mdown</code>、<code>mkd</code> 这些少见的扩展名它自己没有声明，这类文件会不会推荐给它，要看 Mac 上其他应用怎么声明。</p>

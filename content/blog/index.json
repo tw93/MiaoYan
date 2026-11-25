@@ -213,7 +213,7 @@
     {
       "slug": "chinese-english-spacing",
       "date": "2026-10-19",
-      "modified": "2026-11-11",
+      "modified": "2026-11-25",
       "category": "writing",
       "en": {
         "title": "Chinese-English spacing in Markdown notes",
@@ -221,7 +221,7 @@
       },
       "zh": {
         "title": "Markdown 里的中英文空格",
-        "description": "为什么中英文之间要加空格、有哪些例外，以及妙言的「排版净化」怎么处理又不碰代码。"
+        "description": "为什么中英文之间要加空格、有哪些例外，以及妙言的清理排版怎么处理又不碰代码。"
       }
     },
     {

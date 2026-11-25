@@ -39,10 +39,11 @@ Apple's warning is worth repeating: do not click Change All if you only want tha
 
 ## See it rendered
 
-Two options cover most cases.
+Three options cover most cases.
 
 - **VS Code.** Visual Studio Code supports Markdown out of the box. Its documentation describes a command to toggle between the code and the preview, and Markdown: Open Preview to the Side, which shows both next to each other and updates as you type. It is the right pick if you already work in a code editor.
 - **A Markdown app.** An app built for notes shows the rendered result alongside the source. MiaoYan is one, and [Choosing a Markdown editor for Mac](/blog/markdown-editor-for-mac/) compares it with Typora, Obsidian and VS Code.
+- **A browser.** For a quick look with no editor installed, drop the file into MiaoYan's [Markdown viewer](/tools/markdown-viewer/). It shows the file in MiaoYan's preview styling, reads it in your browser without uploading it, and can save it as a PDF.
 
 ## How MiaoYan opens .md files
 

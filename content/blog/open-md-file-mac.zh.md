@@ -39,10 +39,11 @@ Markdown 文件就是普通文本，用几个标点符号代替排版，`#` 是�
 
 ## 看渲染后的样子
 
-有两种选择覆盖大部分情况。
+有三种选择覆盖大部分情况。
 
 - **VS Code。** Visual Studio Code 开箱就支持 Markdown，文档里写了在代码和预览之间切换的命令，也有「Markdown: Open Preview to the Side」，把预览放在旁边，边写边更新，已经在用代码编辑器的话选它最顺手。
 - **Markdown 应用。** 为笔记设计的应用会把渲染结果和源码并排显示，妙言就是其中一个，[Mac 上怎么选 Markdown 编辑器](/zh/blog/markdown-editor-for-mac/)把它和 Typora、Obsidian、VS Code 做了对比。
+- **浏览器。** 只想临时看一眼、手边又没装编辑器时，把文件拖进妙言的 [Markdown 在线预览](/zh/tools/markdown-viewer/)，按妙言的预览样式显示，文件只在浏览器里读，不发到服务器，看完还能存成 PDF。
 
 ## 妙言怎么打开 .md 文件
 

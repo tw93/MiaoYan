@@ -24,7 +24,7 @@ MiaoYan has two commands in the Edit menu that both change spacing, and they do 
 
 **Format** (`⌘⇧L`, Chinese UI: 文档排版) runs a bundled Prettier Markdown formatter over the note and tidies Markdown structure such as list markers and table alignment. The Prettier it bundles is from the 2.x line, which still inserts a space between Chinese and Latin letters or digits, so `使用Swift开发` comes out as `使用 Swift 开发` here too; Prettier 3.0 dropped that behavior. Format does nothing else for Chinese text: `你好,世界` keeps its half-width comma, a space before a full-width comma stays, and inline code gets no space around it.
 
-**Clean Typography** (Chinese UI: 排版净化) is the command built for Chinese text. It has no keyboard shortcut. It rewrites the whole open note in one step, and the rewrite lands in the undo stack, so `⌘Z` reverts it. If nothing needs changing, it shows a message that the typography is already clean. Like Format, it refuses to run in preview mode, so leave preview first.
+**Clean Typography** (Chinese UI: 清理排版) is the command built for Chinese text. It has no keyboard shortcut. It rewrites the whole open note in one step, and the rewrite lands in the undo stack, so `⌘Z` reverts it. If nothing needs changing, it shows a message that the typography is already clean. Like Format, it refuses to run in preview mode, so leave preview first.
 
 The rules in the source are these:
 
@@ -35,6 +35,8 @@ The rules in the source are these:
 - Runs of blank lines collapse to one.
 
 It does not insert a space between a digit and a Latin unit, so `10Gbps` stays as it is, and `90°` and `15%` are untouched because those symbols are not letters or digits. It also does not know product names such as 豆瓣FM, so review the result.
+
+For text outside MiaoYan, such as a post you are about to send, the [Chinese typography cleaner](/tools/chinese-typography-cleaner/) on this site runs the same rules in the browser and marks every change.
 
 ## What it leaves alone
 
