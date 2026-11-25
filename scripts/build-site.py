@@ -669,7 +669,7 @@ UPDATES_LABEL = {"en": "Free updates", "zh": "持续更新", "tw": "持續更新
 TOOL_LABEL = {"en": "Mermaid Editor", "zh": "Mermaid 编辑器", "tw": "Mermaid 編輯器", "ja": "Mermaid エディタ", "ko": "Mermaid 편집기", "de": "Mermaid-Editor", "fr": "Éditeur Mermaid", "es": "Editor de Mermaid"}
 TABLE_LABEL = {"en": "Table Generator", "zh": "表格生成器", "tw": "表格產生器", "ja": "表ジェネレーター", "ko": "표 생성기", "de": "Tabellengenerator", "fr": "Générateur de tableaux", "es": "Generador de tablas"}
 VIEWER_LABEL = {"en": "Markdown Viewer", "zh": "Markdown 预览", "tw": "Markdown 預覽", "ja": "Markdown ビューア", "ko": "Markdown 뷰어", "de": "Markdown-Viewer", "fr": "Visionneuse Markdown", "es": "Visor de Markdown"}
-MARKMAP_LABEL = {"en": "Markmap Editor", "zh": "Markmap 思维导图", "tw": "Markmap 心智圖", "ja": "Markmap マインドマップ", "ko": "Markmap 마인드맵", "de": "Markmap-Editor", "fr": "Éditeur Markmap", "es": "Editor de Markmap"}
+MARKMAP_LABEL = {"en": "Markmap Editor", "zh": "Markmap 思维导图", "tw": "Markmap 心智圖", "ja": "Markmap エディタ", "ko": "Markmap 마인드맵", "de": "Markmap-Editor", "fr": "Éditeur Markmap", "es": "Editor de Markmap"}
 TYPOGRAPHY_LABEL = {"en": "Chinese Typography", "zh": "中英文排版整理", "tw": "中英文排版整理", "ja": "中国語の組版整理", "ko": "중국어 조판 정리", "de": "Chinesische Typografie", "fr": "Typographie chinoise", "es": "Tipografía china"}
 RELEASES_LABEL = {"en": "Release Notes", "zh": "更新日志", "tw": "更新日誌", "ja": "リリースノート", "ko": "릴리스 노트", "de": "Versionshinweise", "fr": "Notes de version", "es": "Notas de versión"}
 
@@ -852,6 +852,11 @@ def header_html(key, *, home="", menu=None, hide_cta=False, blog_current=False):
 
 # The footer's last group links the maintainer's sibling apps: English names and
 # one Han character each, the same in every language (only the title is copy).
+TOOLS_TITLE = {
+    "en": "Tools", "zh": "工具", "tw": "工具", "ja": "ツール",
+    "ko": "도구", "de": "Tools", "fr": "Outils", "es": "Herramientas",
+}
+
 MORE_APPS_TITLE = {
     "en": "More Apps", "zh": "更多产品", "tw": "更多產品", "ja": "その他のアプリ",
     "ko": "다른 앱", "de": "Weitere Apps", "fr": "Autres apps", "es": "Más apps",
@@ -874,13 +879,14 @@ def footer_html(key, *, faq_href="#faq"):
         f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
         f'<a href="{faq_href}">{esc(faq_label)}</a><a href="{blog_path(key)}">{esc(BLOG_LABEL[key])}</a>'
+        f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
+        f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
+        f'<div class="foot-col foot-tools"><p class="foot-col-title">{esc(TOOLS_TITLE[key])}</p>'
         f'<a href="{tool_path(key)}">{esc(TOOL_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-table-generator")}">{esc(TABLE_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-viewer")}">{esc(VIEWER_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markmap-editor")}">{esc(MARKMAP_LABEL[key])}</a>'
-        f'<a href="{tool_path(key, "chinese-typography-cleaner")}">{esc(TYPOGRAPHY_LABEL[key])}</a>'
-        f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
-        f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
+        f'<a href="{tool_path(key, "chinese-typography-cleaner")}">{esc(TYPOGRAPHY_LABEL[key])}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
         f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(MORE_APPS_TITLE[key])}</p>'
