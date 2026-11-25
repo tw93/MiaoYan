@@ -90,6 +90,39 @@ extension ShellModel {
         stalePage.map { preview.shownLoadEpoch > $0 } ?? true
     }
 
+    /// How far the deck export's wait has gone. The reload a second export
+    /// waits for has its own budget, so a slow reload does not use up the
+    /// 50 polls (5s) the slides are given, which then read as Export failed.
+    struct DeckWait: Equatable {
+        /// 10s for the reloaded page, 5s for the slides to show, as before.
+        static let reloadBudget = 100
+        static let slideBudget = 50
+
+        var reloadPolls = 0
+        var slidePolls = 0
+
+        enum Step: Equatable {
+            case print
+            case poll(DeckWait)
+            case fail
+        }
+
+        func next(isPPT: Bool, pageIsFresh: Bool, slidesShown: Bool) -> Step {
+            // Leaving full screen ends the slides; the preview then left is
+            // not the deck, so it is not printed as one.
+            guard isPPT else { return .fail }
+            if !pageIsFresh {
+                guard reloadPolls < Self.reloadBudget else { return .fail }
+                return .poll(DeckWait(reloadPolls: reloadPolls + 1, slidePolls: slidePolls))
+            }
+            if !slidesShown {
+                guard slidePolls < Self.slideBudget else { return .fail }
+                return .poll(DeckWait(reloadPolls: reloadPolls, slidePolls: slidePolls + 1))
+            }
+            return .print
+        }
+    }
+
     /// Hands the deck to the preview that shows it. Entering PPT from the
     /// editor or split view makes a new preview on SwiftUI's next pass, so
     /// the export waits for one showing slides; the preview then waits for
@@ -98,23 +131,22 @@ extension ShellModel {
     /// already in PPT mode ran that check on the `?print-pdf` page of the
     /// first, before the reload its `previewStyleRevision` bump starts had
     /// landed, so it waits for a page newer than `stalePage` first.
-    private func printDeckWhenShown(after stalePage: Int?, attempt: Int = 0) {
-        // Leaving full screen ends the slides; the preview then left is
-        // not the deck, so it is not printed as one.
-        guard isPPT, attempt < 50 else {
+    private func printDeckWhenShown(after stalePage: Int?, wait: DeckWait = DeckWait()) {
+        let pageIsFresh = preview.map { Self.deckPageIsFresh($0, after: stalePage) } ?? true
+        let slidesShown = preview.map { $0.window != nil && $0.pageIsSlides } ?? false
+        switch wait.next(isPPT: isPPT, pageIsFresh: pageIsFresh, slidesShown: slidesShown) {
+        case .print:
+            preview?.exportPPTOptimized(awaitingPrintPage: true)
+        case .poll(let next):
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                self?.printDeckWhenShown(after: stalePage, wait: next)
+            }
+        case .fail:
             UserDefaultsManagement.isOnExportPPT = false
             host?.toast(message: I18n.str("Export failed"), style: .failure)
             finishPPTExport()
             finishExport()
-            return
         }
-        guard let preview, preview.window != nil, preview.pageIsSlides, Self.deckPageIsFresh(preview, after: stalePage) else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-                self?.printDeckWhenShown(after: stalePage, attempt: attempt + 1)
-            }
-            return
-        }
-        preview.exportPPTOptimized(awaitingPrintPage: true)
     }
 
     /// Called once the deck is printed, before the file is written.

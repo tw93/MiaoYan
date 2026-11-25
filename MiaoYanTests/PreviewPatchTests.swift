@@ -727,6 +727,30 @@ final class PreviewPatchTests: XCTestCase {
         XCTAssertTrue(ShellModel.deckPageIsFresh(preview, after: stale), "the reloaded page is up")
     }
 
+    /// The wait for the reload ate the 50 polls (5s) the slides get, so a
+    /// reload slower than that read as Export failed with the deck about to
+    /// show. Each wait has its own budget.
+    @available(macOS 14, *)
+    func testADeckExportGivesTheReloadItsOwnTime() {
+        typealias Wait = ShellModel.DeckWait
+        var wait = Wait()
+        for _ in 0..<60 {
+            guard case .poll(let next) = wait.next(isPPT: true, pageIsFresh: false, slidesShown: true) else {
+                return XCTFail("a 6s reload is still waited for, \(wait)")
+            }
+            wait = next
+        }
+        guard case .poll(let next) = wait.next(isPPT: true, pageIsFresh: true, slidesShown: false) else {
+            return XCTFail("the slides still get their own time, \(wait)")
+        }
+        XCTAssertEqual(next.next(isPPT: true, pageIsFresh: true, slidesShown: true), .print)
+        XCTAssertEqual(wait.next(isPPT: false, pageIsFresh: true, slidesShown: true), .fail, "slides closed")
+        XCTAssertEqual(
+            Wait(reloadPolls: Wait.reloadBudget).next(isPPT: true, pageIsFresh: false, slidesShown: true), .fail, "a reload never ends")
+        XCTAssertEqual(
+            Wait(slidePolls: Wait.slideBudget).next(isPPT: true, pageIsFresh: true, slidesShown: false), .fail, "slides never show")
+    }
+
     /// The first Command-3 on a long note showed its top, and so did the split
     /// pane back from preview: the scroll to the editor's line ran on a page
     /// that was ready but still held another note (the blank one preloaded
