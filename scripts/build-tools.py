@@ -1046,7 +1046,7 @@ def viewer_page(tool, lang):
   </div>"""
     return tool_page(tool, lang, category="UtilitiesApplication", tool_html=tool_html,
                      data_id="viewer-data", data=data, script="assets/tools/markdown-viewer.js",
-                     before=("assets/tools/md-highlight.js", "assets/tools/md-editor.js"))
+                     before=("assets/tools/md-highlight.js", "assets/tools/md-editor.js", "assets/tools/md-rules.js"))
 
 
 APP_TEXT_FONT = "-apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif"

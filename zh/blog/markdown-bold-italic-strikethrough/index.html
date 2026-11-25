@@ -28,8 +28,8 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5" crossorigin fetchpriority="high">
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2?v=f219883fad33" crossorigin fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2?v=7149b84e3f9b" crossorigin fetchpriority="high">
 <style id="site-css">
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
    the accent is MiaoYan's own green and the footer its dark paper. */
@@ -111,28 +111,28 @@
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=58efce59f9f5") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-regular.woff2?v=f219883fad33") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
-  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=c8de64a48100") format("woff2");
+  src: url("/fonts/miaoyan-serif-sc-semibold.woff2?v=7149b84e3f9b") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=67c380e69a1f") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-regular.woff2?v=330e4e1fc0b4") format("woff2");
   font-weight: 400;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
 }
 @font-face {
   font-family: "MiaoYan Serif TC";
-  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=a7a85ba279b6") format("woff2");
+  src: url("/fonts/miaoyan-serif-tc-semibold.woff2?v=13a0e8cf6d53") format("woff2");
   font-weight: 500 700;
   font-display: block;
   unicode-range: U+201C-201D, U+2026, U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
@@ -1039,6 +1039,11 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 .foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
 @media (hover: hover) { .foot-col a:hover { color: #fff; } }
 .foot-col a .foot-cn { font-family: "Sibling Mark", var(--sans); }
+/* Ten tools read as two columns of five under one head, filled down then
+   across, so the column is no taller than its neighbours (maintainer
+   2026-11-25: one ten-row column read unbalanced). */
+.foot-tools { grid-template-columns: repeat(2, auto); grid-template-rows: repeat(6, auto); grid-auto-flow: column; column-gap: 44px; }
+.foot-tools .foot-col-title { grid-row: 1; grid-column: 1 / -1; }
 
 /* Tablets keep the links that fit in every language with Android's Noto Serif
    (no Charter there) and the App Store pill showing: all five from 820, then
@@ -1078,7 +1083,6 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
      its links in two columns, so no group is left alone and no name wraps. */
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
   .foot-tools { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
-  .foot-tools .foot-col-title { grid-column: 1 / -1; }
   .hero h1 { font-size: 66px; margin-bottom: calc(24px - 0.115em); }
   /* The bar lands on a half pixel here, which rounds the name up by one. */
   .brand b { top: 1.9px; }
@@ -1200,6 +1204,54 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) body { letter-spacing: var(--cjk-track
 html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(h2, h3, h4, .blog-title, .blog-card-title) { letter-spacing: var(--cjk-track-title); }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.nav, footer, .btn, .foot-col-title, pre, code, kbd, samp) { letter-spacing: 0; }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive); }
+
+/* Learn Markdown (/learn/, scripts/build-learn.py): the level map, the lesson
+   with its actions, then the editor, the reader's preview and the goal. */
+.learn-map { display: flex; flex-wrap: wrap; gap: 16px 32px; margin: 0 0 28px; }
+.learn-chapter-name { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
+.learn-dots { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.learn-dot {
+  display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--ivory); color: var(--olive);
+  font: inherit; font-size: var(--text-meta); font-variant-numeric: tabular-nums; cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.learn-dot:hover { background: var(--warm-sand); }
+.learn-dot.is-done { background: var(--brand); border-color: var(--brand); color: #fff; }
+.learn-dot[aria-current="step"] { box-shadow: 0 0 0 2px var(--parchment), 0 0 0 3px var(--near-black); color: var(--near-black); }
+.learn-dot.is-done[aria-current="step"] { color: #fff; }
+.learn-dot:focus { outline: none; }
+.learn-dot:focus-visible { border-color: var(--near-black); }
+.learn-head { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 32px; margin: 0 0 20px; }
+.learn-lesson { flex: 1 1 480px; min-width: 0; max-width: 860px; }
+.learn-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 8px; }
+.learn-no { color: var(--stone); margin-right: 6px; }
+.learn-text, .learn-hint { margin: 0; font-size: var(--text-lede); line-height: 1.75; color: var(--olive); }
+.learn-hint { margin-top: 6px; color: var(--stone); }
+.learn-text code, .learn-hint code, .learn-finish code { font-family: "SF Mono", Menlo, monospace; font-size: 0.9em; background: var(--warm-sand); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
+.learn-hint a, .learn-finish a { color: var(--brand); }
+.learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+.learn-actions [hidden] { display: none; }
+.learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.learn-pane { min-width: 0; }
+.learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
+.learn-grid .tool-editor, .learn-frame { height: var(--learn-h); }
+.learn-frame-goal { overflow: auto; }
+.learn-frame-goal iframe { height: auto; }
+.learn-finish { margin: 32px 0 0; padding: 24px 28px; background: var(--ivory); border: 1px solid var(--line); border-radius: 14px; }
+.learn-finish-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 8px; }
+.learn-finish p { margin: 0 0 16px; font-size: var(--text-lede); line-height: 1.75; color: var(--olive); }
+@media (max-width: 1100px) {
+  .learn-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .learn-grid > .learn-pane:last-child { grid-column: 1 / -1; order: -1; }
+  .learn-grid > .learn-pane:last-child .learn-frame { height: auto; max-height: calc(var(--learn-h) * 0.75); }
+}
+@media (max-width: 720px) {
+  .learn-grid { --learn-h: 280px; grid-template-columns: minmax(0, 1fr); }
+  .learn-grid > .learn-pane:last-child .learn-frame { max-height: 240px; }
+  .learn-map { gap: 16px 24px; }
+  .learn-actions { margin-left: 0; }
+}
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
@@ -1352,7 +1404,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">轻灵的原生 Markdown 笔记本</p>
       </div>
-      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col foot-tools"><p class="foot-col-title">工具</p><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/tools/markdown-viewer/">Markdown 预览</a><a href="/zh/tools/markmap-editor/">Markmap 思维导图</a><a href="/zh/tools/chinese-typography-cleaner/">中英文排版整理</a><a href="/zh/tools/html-to-markdown/">网页转 Markdown</a><a href="/zh/tools/markdown-to-word/">Markdown 转 Word</a><a href="/zh/tools/markdown-to-image/">Markdown 转长图</a><a href="/zh/tools/markdown-slides/">妙言 PPT</a><a href="/zh/tools/netnewswire-theme/">NetNewsWire 主题</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="页脚"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/zh/learn/">Markdown 闯关</a><a href="/zh/releases/">更新日志</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col foot-tools"><p class="foot-col-title">工具</p><a href="/zh/tools/mermaid-editor/">Mermaid 编辑器</a><a href="/zh/tools/markdown-table-generator/">表格生成器</a><a href="/zh/tools/markdown-viewer/">Markdown 预览</a><a href="/zh/tools/markmap-editor/">Markmap 思维导图</a><a href="/zh/tools/chinese-typography-cleaner/">中英文排版整理</a><a href="/zh/tools/html-to-markdown/">网页转 Markdown</a><a href="/zh/tools/markdown-to-word/">Markdown 转 Word</a><a href="/zh/tools/markdown-to-image/">Markdown 转长图</a><a href="/zh/tools/markdown-slides/">妙言 PPT</a><a href="/zh/tools/netnewswire-theme/">NetNewsWire 主题</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">更多产品</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>

@@ -669,4 +669,14 @@
     <lastmod>2026-11-25</lastmod>
   </url>
   <!-- tools:end -->
+  <!-- learn:start -->
+  <url>
+    <loc>https://miaoyan.app/learn/</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <url>
+    <loc>https://miaoyan.app/zh/learn/</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <!-- learn:end -->
 </urlset>
