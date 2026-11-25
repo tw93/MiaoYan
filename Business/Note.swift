@@ -1237,7 +1237,7 @@ public class Note: NSObject {
                 return
             }
             let attachments = getAllAttachments()
-            relocateAttachments(attachments, to: project)
+            relocateAttachments(attachments, to: project, forwardingCopies: true)
 
             if !attachments.isEmpty {
                 save()
@@ -1252,11 +1252,16 @@ public class Note: NSObject {
     /// the text as it was before any of them. Run one after another, a later
     /// rewrite took over a link an earlier one had just written: `assets/b.png`
     /// landed as `/i/b.png`, the note's own `/i/b.png` then clashed and got a
-    /// new name, and both links went to it.
-    func relocateAttachments(_ attachments: [(url: URL, path: String)], to project: Project) {
+    /// new name, and both links went to it. `forwardingCopies` is for a move:
+    /// a file still being copied into the note is sent on to `project` once it
+    /// lands (`ImagesProcessor.forwardCopy`). A duplicate stays beside the
+    /// original and must not take the original's file away.
+    func relocateAttachments(_ attachments: [(url: URL, path: String)], to project: Project, forwardingCopies: Bool = false) {
         var rewrites: [String: String] = [:]
         for attachment in attachments {
-            if let newPath = relocateAttachment(from: attachment.url, imagePath: attachment.path, to: project) {
+            if let newPath = relocateAttachment(
+                from: attachment.url, imagePath: attachment.path, to: project, forwardingCopies: forwardingCopies)
+            {
                 rewrites[attachment.path] = newPath
             }
         }
@@ -1275,11 +1280,15 @@ public class Note: NSObject {
     /// the path the note's links must take when the copy landed under another
     /// path than the link names (a fresh name, an image linked from another
     /// folder); `relocateAttachments` rewrites them.
-    private func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project) -> String? {
+    private func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project, forwardingCopies: Bool) -> String? {
         let manager = FileManager.default
         let dstPrefix = Self.attachmentPrefix(namedBy: imagePath) ?? NotesTextProcessor.getAttachPrefix(url: imageURL)
         let folder = project.url.appendingPathComponent(dstPrefix)
-        guard manager.fileExists(atPath: imageURL.path) else { return nil }
+        guard manager.fileExists(atPath: imageURL.path) else {
+            guard forwardingCopies, let target = ImagesProcessor.forwardCopy(at: imageURL, into: folder) else { return nil }
+            let newPath = dstPrefix + target.lastPathComponent
+            return newPath == imagePath ? nil : newPath
+        }
 
         if !manager.fileExists(atPath: folder.path) {
             try? manager.createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)

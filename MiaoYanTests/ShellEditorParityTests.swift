@@ -467,6 +467,68 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: files.appendingPathComponent("gone.pdf").path))
     }
 
+    /// Moving a note while a file dropped into it was still copying found
+    /// no file to carry: the copy then landed in the old folder and the moved
+    /// note's link pointed nowhere. The copy is sent on to the new folder
+    /// once it lands, under its own name when that is free there, else a new
+    /// one the link already follows.
+    @available(macOS 14, *)
+    @MainActor
+    func testMovingANoteWhileItsFileIsCopyingTakesTheFileAlong() async throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let note = makeLoadedNote("drop-move.md", body: "before after")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        let manager = FileManager.default
+        let source = manager.temporaryDirectory.appendingPathComponent("MiaoYanDrop-\(UUID().uuidString)")
+        try manager.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? manager.removeItem(at: source) }
+        let video = Data((0..<4096).map { UInt8($0 % 251) })
+        try video.write(to: source.appendingPathComponent("clip.mov"))
+        try Data("%PDF-1.4".utf8).write(to: source.appendingPathComponent("Plan.pdf"))
+        let other = tempDir.appendingPathComponent("Other", isDirectory: true)
+        try manager.createDirectory(at: other.appendingPathComponent("files"), withIntermediateDirectories: true)
+        try Data([9]).write(to: other.appendingPathComponent("files/Plan.pdf"))
+
+        // Every copy waits inside the copy until the note has moved.
+        let gate = DispatchSemaphore(value: 0)
+        ImagesProcessor.willCopyAttachment = { _ in gate.wait() }
+        defer { ImagesProcessor.willCopyAttachment = nil }
+
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-move-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects(["clip.mov", "Plan.pdf"].map { source.appendingPathComponent($0) as NSURL })
+        XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
+        XCTAssertEqual(drop.copies.count, 2)
+
+        note.move(toProject: Project(url: other, label: "Other"))
+        XCTAssertEqual(note.url.deletingLastPathComponent().standardizedFileURL, other.standardizedFileURL, "the note moved")
+        gate.signal()
+        gate.signal()
+        for copy in drop.copies { await copy.value }
+
+        let files = other.appendingPathComponent("files")
+        XCTAssertEqual(try Data(contentsOf: files.appendingPathComponent("clip.mov")), video, "the video followed under its own name")
+        XCTAssertEqual(try Data(contentsOf: files.appendingPathComponent("Plan.pdf")), Data([9]), "the file already there is left alone")
+        let text = try String(contentsOf: other.appendingPathComponent("drop-move.md"), encoding: .utf8)
+        XCTAssertTrue(text.contains("![](/files/clip.mov)"), text)
+        let link = try XCTUnwrap(text.range(of: #"\[Plan\.pdf\]\(/files/[^)]+\)"#, options: .regularExpression), text)
+        let name = String(text[link].dropFirst("[Plan.pdf](/files/".count).dropLast())
+        XCTAssertNotEqual(name, "Plan.pdf")
+        XCTAssertEqual(try Data(contentsOf: files.appendingPathComponent(name)), Data("%PDF-1.4".utf8), "the PDF landed where its link points")
+        let left = tempDir.appendingPathComponent("files")
+        XCTAssertEqual((try? manager.contentsOfDirectory(atPath: left.path)) ?? [], [], "nothing stays in the old folder")
+    }
+
     /// Picture data dragged with no file beside it, as from a browser, was
     /// left to NSTextView and became an inline attachment never written to
     /// the note's folder (#578). It is saved and linked like a paste; a text
