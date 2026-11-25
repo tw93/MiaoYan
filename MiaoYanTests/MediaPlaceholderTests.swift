@@ -327,4 +327,33 @@ final class MediaPlaceholderTests: XCTestCase {
         let relay = try await webView.evaluateJavaScript("MiaoYanYouTubeRelay.relay") as? String
         XCTAssertEqual(relay, PreviewMedia.youTubeRelay)
     }
+
+    /// `[x](files/x.pdf)`, a relative link as Obsidian writes one, resolves
+    /// against the page, a file in the preview's cache folder: the click
+    /// arrived as `…/wkPreview/files/x.pdf` and opened a file that is not
+    /// there. It names the file beside the note, as `/files/x.pdf` does.
+    func testARelativeAttachmentLinkOpensTheFileBesideTheNote() throws {
+        let note = directory.appendingPathComponent("Work", isDirectory: true)
+        for (folder, name) in [("files", "x.pdf"), ("i", "shot.png")] {
+            let url = note.appendingPathComponent(folder, isDirectory: true)
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+            try Data([0]).write(to: url.appendingPathComponent(name))
+        }
+        try Data([0]).write(to: directory.appendingPathComponent("outside.pdf"))
+        let page = HtmlManager.previewBundleURL()
+        func clicked(_ relative: String) -> URL? {
+            HtmlManager.noteAttachmentURL(for: URL(fileURLWithPath: page.path + "/" + relative), noteFolder: note)
+        }
+
+        XCTAssertEqual(clicked("files/x.pdf")?.path, note.appendingPathComponent("files/x.pdf").standardizedFileURL.path)
+        XCTAssertEqual(clicked("i/shot.png")?.path, note.appendingPathComponent("i/shot.png").standardizedFileURL.path)
+        let encoded = try XCTUnwrap(URL(string: page.absoluteString + "files/x.pdf"))
+        XCTAssertEqual(HtmlManager.noteAttachmentURL(for: encoded, noteFolder: note)?.lastPathComponent, "x.pdf")
+        XCTAssertNil(clicked("files/../../outside.pdf"), "a link out of the note's folder stays refused")
+        XCTAssertNil(clicked("files/missing.pdf"), "a missing file stays refused")
+        XCTAssertNil(clicked("index.html"), "the page's own files are not attachments")
+        XCTAssertEqual(
+            HtmlManager.noteAttachmentURL(for: URL(fileURLWithPath: "/files/x.pdf"), noteFolder: note)?.lastPathComponent, "x.pdf",
+            "the absolute form still works")
+    }
 }

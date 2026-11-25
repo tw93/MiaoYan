@@ -415,10 +415,17 @@ class HtmlManager {
     }
 
     /// A link the preview opens, `href="/files/report.pdf"`, arrives as
-    /// `file:///files/report.pdf`; it names the file beside the note.
-    static func noteAttachmentURL(for url: URL, noteFolder: URL) -> URL? {
+    /// `file:///files/report.pdf`; it names the file beside the note. A
+    /// relative one, `files/report.pdf` as Obsidian writes it, resolves
+    /// against the page, a file in the preview's cache folder, so it arrives
+    /// under that folder and opened nothing; it names the same file.
+    static func noteAttachmentURL(for url: URL, noteFolder: URL, pageFolder: URL = previewBundleURL()) -> URL? {
         guard url.isFileURL else { return nil }
-        let path = url.path
+        var path = url.path
+        let page = pageFolder.standardizedFileURL.path + "/"
+        if path.hasPrefix(page) {
+            path = "/" + path.dropFirst(page.count)
+        }
         guard path.hasPrefix("/files/") || path.hasPrefix("/i/") else { return nil }
         let resolved = noteFolder.appendingPathComponent(String(path.dropFirst())).standardizedFileURL
         guard resolved.path.hasPrefix(noteFolder.standardizedFileURL.path + "/"),
