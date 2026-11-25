@@ -59,7 +59,7 @@ final class ExportToastTests: XCTestCase {
         let note = Note(url: dir.appendingPathComponent("gone.md"), with: Project(url: dir, label: "export", isRoot: true))
         let preview = NoLoadPreviewView(frame: CGRect(x: 0, y: 0, width: 400, height: 300), note: note, closure: nil)
 
-        preview.exportPPTOptimized()
+        preview.exportPPTOptimized(awaitingPrintPage: false)
 
         XCTAssertEqual(host.exportStatuses, [false])
         XCTAssertEqual(host.finishPPTCount, 1)

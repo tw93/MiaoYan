@@ -358,9 +358,18 @@ const DiagramHandler = {
     this.initializeMarkmapForPPT();
     this.initializeMermaid();
     this.initializePlantUML();
+    // Every diagram now carries the marker it is waited on by. reveal says
+    // isReady() a timer before its ready event, which runs this, so the
+    // deck's PDF waits for this flag too.
+    this.slidesInitialized = true;
   },
 
   initializeMarkmapForPPT() {
+    // markmap's own loader draws a slide's ```markmap block (code.markmap);
+    // with the preview's class the export's diagram wait counts it.
+    document.querySelectorAll('.reveal pre code.markmap').forEach((code) => {
+      code.classList.add('language-markmap');
+    });
     let markMapList = document.querySelectorAll('.language-markmap');
 
     // Fallback: inspect generic code blocks for ```markmap fences
@@ -402,6 +411,7 @@ const DiagramHandler = {
 
     item.classList.add('markmap');
     item.classList.add(markMapName);
+    this.markSlideMapWhenDrawn(item);
 
     setTimeout(() => {
       const markMapItem = document.querySelector('.' + markMapName);
@@ -421,6 +431,24 @@ const DiagramHandler = {
         }, 50);
       }
     }, 10);
+  },
+
+  // The deck's PDF waits for every map's data-markmap-shown, which the
+  // preview sets in renderMarkmap. A slide's map is drawn by markmap's loader,
+  // so it is marked here once its nodes are in and d3 has settled, and one
+  // that never draws (a block the fallback above took for a map) is marked
+  // failed, or the export would wait out its whole timeout.
+  markSlideMapWhenDrawn(item, since = Date.now()) {
+    const svg = item.querySelector('svg');
+    if (svg && svg.querySelector('.markmap-node')) {
+      this.markWhenSettled(item, svg);
+      return;
+    }
+    if (Date.now() - since >= 5000) {
+      item.dataset.markmapFailed = 'true';
+      return;
+    }
+    setTimeout(() => this.markSlideMapWhenDrawn(item, since), 50);
   },
 
   isDarkMode() {

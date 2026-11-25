@@ -699,9 +699,11 @@ extension ViewController {
         // Mark export state
         sessionIsExportingPPT = true
 
-        // Short delay then export (1.2s is sufficient for PPT layout)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            self.editArea.markdownView?.exportPPTOptimized()
+        // The export waits for the deck itself (MPreviewView.deckReadyScript):
+        // the page entering PPT reloads, reveal and every diagram. A fixed
+        // 1.2s printed Mermaid slides before they were drawn.
+        DispatchQueue.main.async {
+            self.editArea.markdownView?.exportPPTOptimized(awaitingPrintPage: needsDisableAfterExport)
         }
     }
 

@@ -77,19 +77,31 @@ extension ShellModel {
         }
         isExporting = true
         leavePPTAfterExport = !wasPPT
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
-            guard let self else { return }
-            // Leaving full screen ends the slides; the preview then left is
-            // not the deck, so it is not printed as one.
-            guard let preview = self.preview, self.isPPT else {
-                UserDefaultsManagement.isOnExportPPT = false
-                self.host?.toast(message: I18n.str("Export failed"), style: .failure)
-                self.finishPPTExport()
-                self.finishExport()
-                return
-            }
-            preview.exportPPTOptimized()
+        printDeckWhenShown()
+    }
+
+    /// Hands the deck to the preview that shows it. Entering PPT from the
+    /// editor or split view makes a new preview on SwiftUI's next pass, so
+    /// the export waits for one showing slides; the preview then waits for
+    /// the deck itself (`MPreviewView.deckReadyScript`), where a fixed 1.2s
+    /// printed Mermaid slides before they were drawn.
+    private func printDeckWhenShown(attempt: Int = 0) {
+        // Leaving full screen ends the slides; the preview then left is
+        // not the deck, so it is not printed as one.
+        guard isPPT, attempt < 50 else {
+            UserDefaultsManagement.isOnExportPPT = false
+            host?.toast(message: I18n.str("Export failed"), style: .failure)
+            finishPPTExport()
+            finishExport()
+            return
         }
+        guard let preview, preview.window != nil, preview.pageIsSlides else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                self?.printDeckWhenShown(attempt: attempt + 1)
+            }
+            return
+        }
+        preview.exportPPTOptimized(awaitingPrintPage: true)
     }
 
     /// Called once the deck is printed, before the file is written.

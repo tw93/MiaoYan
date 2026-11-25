@@ -620,6 +620,74 @@ final class MermaidExportTests: XCTestCase {
         try await waitFor(webView, "document.querySelectorAll('.language-markmap svg foreignObject .katex').length === 1")
     }
 
+    /// The deck's PDF waited a fixed 1.2s and then only for `readyState`, so
+    /// a Mermaid slide could print before it was drawn. The wait now holds
+    /// until the export's `?print-pdf` page, reveal and every diagram are in.
+    @MainActor
+    func testADeckPrintsOnlyOnceItsDiagramsAreDrawn() async throws {
+        let deck = """
+            # Flow
+
+            ```mermaid
+            graph TD
+              A[Start] --> B[Ship]
+            ```
+
+            ---
+
+            # Map
+
+            ```markmap
+            # Root
+            ## One
+            ## Two
+            ```
+            """
+        let (webView, window) = try loadSlides(deck, printing: true)
+        defer { window.orderOut(nil) }
+        let ready = MPreviewView.deckReadyScript(awaitingPrintPage: true)
+        let deadline = Date().addingTimeInterval(20)
+        var isReady = false
+        while Date() < deadline, !isReady {
+            isReady = (try? await webView.evaluateJavaScript(ready) as? Bool) == true
+            if !isReady { try await Task.sleep(nanoseconds: 25_000_000) }
+        }
+        XCTAssertTrue(isReady, "the deck became ready")
+        let found = try await webView.evaluateJavaScript(
+            """
+            [/print-pdf/.test(location.search),
+             [...document.querySelectorAll('code.language-mermaid')].map((c) => !!c.querySelector('svg')),
+             [...document.querySelectorAll('code.language-markmap')].map((c) => c.dataset.markmapShown === 'true' && !!c.querySelector('.markmap-node'))]
+            """)
+        let result = try XCTUnwrap(found as? [Any])
+        XCTAssertEqual(result[0] as? Bool, true, "the export's own page, \(result)")
+        XCTAssertEqual(result[1] as? [Bool], [true], "the flowchart is drawn when the deck reads ready, \(result)")
+        XCTAssertEqual(result[2] as? [Bool], [true], "the map is drawn and settled, \(result)")
+    }
+
+    /// A slide's code block that only reads like a map ("markmap is…") is
+    /// tagged as one by the fallback; drawn by markmap's loader or not, it
+    /// ends shown or failed, so the deck still reads ready. A page not reloaded for the export does
+    /// not read ready to an export that awaits that reload.
+    @MainActor
+    func testADeckWaitEndsForABlockThatIsNoMap() async throws {
+        let (webView, window) = try loadSlides("# Tools\n\n```\nmarkmap is the tool we use\n```\n\n---\n\n# Next\n")
+        defer { window.orderOut(nil) }
+        try await waitFor(webView, "!!window.Reveal && Reveal.isReady()")
+        let deadline = Date().addingTimeInterval(15)
+        var isReady = false
+        while Date() < deadline, !isReady {
+            isReady = (try? await webView.evaluateJavaScript(MPreviewView.deckReadyScript(awaitingPrintPage: false)) as? Bool) == true
+            if !isReady { try await Task.sleep(nanoseconds: 50_000_000) }
+        }
+        XCTAssertTrue(isReady, "the wait ends")
+        let marker = try await webView.evaluateJavaScript(
+            "(() => { const c = document.querySelector('code.language-markmap'); return c ? (c.dataset.markmapShown || c.dataset.markmapFailed || '') : 'no block' })()")
+        XCTAssertEqual(marker as? String, "true", "the block carries one of the two markers")
+        let awaiting = try await webView.evaluateJavaScript(MPreviewView.deckReadyScript(awaitingPrintPage: true)) as? Bool
+        XCTAssertEqual(awaiting, false, "this page is not the export's ?print-pdf reload")
+    }
+
     /// A video written as an image (`![](/files/clip.mov)`) drew as a
     /// broken image on its slide: reveal's markdown makes every `![](…)` an
     /// `<img>`. The slide shows a player.
@@ -679,7 +747,14 @@ final class MermaidExportTests: XCTestCase {
         let page = try HtmlManager.htmlFromTemplate(processed, css: HtmlManager.previewStyle(), currentName: "deck")
         let index = try XCTUnwrap(HtmlManager.createTemporaryBundle(pageHTMLString: page))
         addTeardownBlock { try? FileManager.default.removeItem(at: index) }
+        // A window off screen gets no animation frames, which the deck on
+        // screen has; frames come from a timer, as the other Markmap tests
+        // here run them, or d3's transitions on a map never end.
         let webView = makeWebView()
+        webView.configuration.userContentController.addUserScript(
+            WKUserScript(
+                source: "window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 16);",
+                injectionTime: .atDocumentStart, forMainFrameOnly: true))
         let window = NSWindow(contentRect: webView.frame, styleMask: [.borderless], backing: .buffered, defer: false)
         window.contentView = webView
         window.setFrameOrigin(NSPoint(x: -5000, y: -5000))

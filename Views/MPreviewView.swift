@@ -50,7 +50,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var lastRendererInitializationTime: TimeInterval = 0
     /// The page on screen is the slide template, which cannot take another
     /// note in place.
-    private var pageIsSlides = false
+    private(set) var pageIsSlides = false
     /// The preview style the page on screen was built with. A settings change
     /// (font, size, width) gives a different one, and the page is loaded
     /// again rather than reused.

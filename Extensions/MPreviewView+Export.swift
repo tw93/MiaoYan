@@ -550,7 +550,11 @@ extension MPreviewView {
         }
     }
 
-    public func exportPPTOptimized() {
+    /// Prints the deck once its page is ready (`deckReadyScript`).
+    /// `awaitingPrintPage` says the caller has just reloaded the page for the
+    /// export, which reloads itself again with `?print-pdf`; until then the
+    /// page on screen is the one before.
+    public func exportPPTOptimized(awaitingPrintPage: Bool) {
         guard let (vc, note) = ExportHosts.target(deck: true) else { return }
 
         // Show progress toast immediately
@@ -561,8 +565,8 @@ extension MPreviewView {
 
         vc.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
 
-        // Wait for Reveal.js layout to stabilize
-        self.waitForWebViewReady { [weak self] ready in
+        // Wait for the deck: its page, reveal and every diagram.
+        self.waitForWebViewReady(script: Self.deckReadyScript(awaitingPrintPage: awaitingPrintPage)) { [weak self] ready in
             guard ready, let self = self else {
                 UserDefaultsManagement.isOnExportPPT = false
                 vc.toastDismiss()
@@ -715,26 +719,60 @@ extension MPreviewView {
         checkImages()
     }
 
-    private func waitForWebViewReady(maxRetries: Int = 150, completion: @escaping (_ ready: Bool) -> Void) {
-        // Check if WebView has finished loading and rendering
-        let readyScript = """
-                (function() {
-                    if (document.readyState !== 'complete') return false;
-                    if (document.body.offsetHeight === 0) return false;
-                    if (window.Reveal) {
-                        // Force print-friendly layout when exporting PPT
-                        if (!document.documentElement.classList.contains('print-pdf')) {
-                            document.documentElement.classList.add('print-pdf');
-                            document.body.classList.add('print-pdf');
-                        }
-                        if (typeof Reveal.layout === 'function') {
-                            Reveal.layout();
-                        }
-                    }
-                    return true;
-                })()
-            """
+    /// True once the deck can print: the page has loaded (after the
+    /// export's `?print-pdf` reload when one is awaited), reveal is ready and
+    /// has laid out its PDF pages, DiagramHandler has set the slides'
+    /// diagrams up and none is still drawing. A fixed 1.2s wait before a check of
+    /// `readyState` alone printed Mermaid slides still blank.
+    static func deckReadyScript(awaitingPrintPage: Bool) -> String {
+        """
+        (function() {
+            if (document.readyState !== 'complete') return false;
+            if (!document.body || document.body.offsetHeight === 0) return false;
+            if (!window.Reveal) return false;
+            if (\(awaitingPrintPage) && !/print-pdf/i.test(window.location.search)) return false;
+            if (typeof Reveal.isReady === 'function' && !Reveal.isReady()) return false;
+            // The print page lays the slides out as pages off the page and
+            // puts them back a frame later; until then no diagram is counted.
+            if (/print-pdf/i.test(window.location.search) && !document.querySelector('.reveal .pdf-page')) return false;
+            // reveal is ready a timer before its ready event sets the diagrams up.
+            if (!window.DiagramHandler || !DiagramHandler.slidesInitialized) return false;
+            if ((\(HtmlManager.pendingDiagramsExpression)) > 0) return false;
+            // Force print-friendly layout when exporting PPT
+            if (!document.documentElement.classList.contains('print-pdf')) {
+                document.documentElement.classList.add('print-pdf');
+                document.body.classList.add('print-pdf');
+            }
+            if (typeof Reveal.layout === 'function') {
+                Reveal.layout();
+            }
+            return true;
+        })()
+        """
+    }
 
+    /// The image export's check: the page has loaded and laid out.
+    static let pageReadyScript = """
+            (function() {
+                if (document.readyState !== 'complete') return false;
+                if (document.body.offsetHeight === 0) return false;
+                if (window.Reveal) {
+                    // Force print-friendly layout when exporting PPT
+                    if (!document.documentElement.classList.contains('print-pdf')) {
+                        document.documentElement.classList.add('print-pdf');
+                        document.body.classList.add('print-pdf');
+                    }
+                    if (typeof Reveal.layout === 'function') {
+                        Reveal.layout();
+                    }
+                }
+                return true;
+            })()
+        """
+
+    private func waitForWebViewReady(
+        script readyScript: String = pageReadyScript, maxRetries: Int = 150, completion: @escaping (_ ready: Bool) -> Void
+    ) {
         func checkReady(remaining: Int) {
             guard remaining > 0 else {
                 completion(false)
