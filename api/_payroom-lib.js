@@ -704,11 +704,6 @@ async function syncSearch(state, today, now = new Date()) {
     for (const spec of SEARCH_WINDOWS) keep(spec.key, error.message);
     if (next.pages) next.pages = { ...next.pages, stale: true };
   }
-  // An outage with nothing to keep leaves no snapshot rather than an empty one.
-  if (!Object.keys(next.windows).length && !next.pages && !old) {
-    state.search = { v: 1, site: SEARCH_SITE, windows: {}, pages: null, error: next.error, syncedAt: null };
-    return;
-  }
   state.search = next;
 }
 
@@ -784,9 +779,6 @@ async function runSync({ budgetMs = 200000, now = new Date() } = {}) {
   await part('store', () => syncStore(state));
   await part('fx', () => syncFx(state));
   await part('traffic', (p) => syncTraffic(state, today, p, now));
-  await part('search', () => syncSearch(state, today, now));
-  // A soft failure is not a success: drop the stamp so the next hourly run asks again.
-  if (state.search && state.search.error && health.search) delete health.search.ok;
   // A first run that got nothing must not create the store: a read that wrongly
   // answered "absent" would otherwise replace the history with an empty one.
   if (!stored && !state.sales.rows.length) {
@@ -797,6 +789,13 @@ async function runSync({ budgetMs = 200000, now = new Date() } = {}) {
   // Saved before the channel reports, whose downloads are the slow part: a run
   // killed there keeps the sales it already has.
   await writeState(state);
+  // Search Console runs after the first save, so a slow answer never costs the
+  // sales; a run already past its budget leaves it for the next one.
+  if (Date.now() < deadline) {
+    await part('search', () => syncSearch(state, today, now));
+    // A soft failure is not a success: drop the stamp so the next hourly run asks again.
+    if (state.search && state.search.error && health.search) delete health.search.ok;
+  }
   await part('analytics', () => syncAnalytics(state, deadline));
   state.errors = errors;
   await writeState(state);

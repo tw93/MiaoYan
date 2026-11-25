@@ -347,8 +347,13 @@ function searchSection(view) {
   const switcher = blocks.length > 1
     ? `<div class="switch" role="group" aria-label="搜索表现窗口">${s.windows.map((w) => `<button type="button" aria-pressed="${w.key === first}" onclick="var p=this.closest('.panel');p.dataset.win='${w.key}';p.querySelectorAll('.switch button').forEach(function(b){b.setAttribute('aria-pressed',b===this?'true':'false')},this)">${esc(w.label)}</button>`).join('')}</div>`
     : '';
-  const windows = blocks.map((b) => `<div data-w="${b.key}"><p class="line">${esc(b.note)}</p>${b.cards ? `<div class="mini">${b.cards}</div>` : ''}${b.queries || pages ? `<div class="split search-split">${b.queries}${pages}</div>` : ''}</div>`).join('');
-  return `<section class="panel search" data-win="${first}"><div class="head"><div><h2>搜索表现</h2></div>${switcher}</div>${windows}</section>`;
+  // The page table covers its own 28 days whichever window is chosen, so it is
+  // drawn once beside the chosen window's queries.
+  const heads = blocks.map((b) => `<div data-w="${b.key}"><p class="line">${esc(b.note)}</p>${b.cards ? `<div class="mini">${b.cards}</div>` : ''}</div>`).join('');
+  const anyQueries = blocks.some((b) => b.queries);
+  const queries = anyQueries ? `<div>${blocks.map((b) => `<div data-w="${b.key}">${b.queries}</div>`).join('')}</div>` : '';
+  const split = queries || pages ? `<div class="split search-split">${queries}${pages}</div>` : '';
+  return `<section class="panel search" data-win="${first}"><div class="head"><div><h2>搜索表现</h2></div>${switcher}</div>${heads}${split}</section>`;
 }
 
 function chart(view) {

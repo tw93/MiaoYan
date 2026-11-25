@@ -614,6 +614,16 @@ eq(JSON.stringify(q('/payroom', 'miaoyan_payroom_view=bogus%7CEUR').view), JSON.
   const html = page.renderDashboard(sv);
   assert.ok(html.includes('<h2>搜索表现</h2>') && html.includes('markdown 编辑器') && html.includes('/zh/blog/a') && html.includes('近 30 天'), 'the panel draws windows, queries and pages');
   checks += 1;
+  eq(html.split('/zh/blog/a').length - 1, 1, 'the page table is drawn once, not once per window');
+  eq(html.split('markdown 编辑器').length - 1, 2, 'each window keeps its own queries');
+  checks += 2;
+
+  // A run already past its budget leaves Search Console for the next one.
+  scBodies.length = 0;
+  writes = stub({ blob: stored(warmSearch), sales: () => answer(404), json: sc });
+  await lib.runSync({ now: SYNC_NOW, budgetMs: -1 });
+  eq(scBodies.length, 0, 'no Search Console read past the budget');
+  checks += 1;
 
   // Unreachable, empty, and unconfigured reads draw nothing and keep the rest.
   for (const mode of ['down', 'empty']) {
