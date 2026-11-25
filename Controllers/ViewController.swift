@@ -1399,7 +1399,8 @@ class ViewController:
             guard let self else { return }
             // A launch by a double-clicked file skips configureNotesList,
             // which otherwise ends the launch state and shows the window.
-            if self.storageOutlineView.isLaunch {
+            let opensAtLaunch = self.storageOutlineView.isLaunch
+            if opensAtLaunch {
                 self.storageOutlineView.isLaunch = false
                 (self.view.window?.windowController as? MainWindowController)?.revealWindowWhenReady()
             }
@@ -1408,6 +1409,13 @@ class ViewController:
             self.notesTableView.scrollRowToVisible(row: index, animated: false)
             self.editArea.fill(note: note, options: .silent)
             self.revealEditor()
+            // viewDidAppear returns before it restores the saved preview for
+            // such a launch, so the body stayed blank until preview was
+            // toggled twice (#584). The file is selected now, so the preview
+            // shows it rather than the last note.
+            if opensAtLaunch, self.sessionPreviewMode {
+                self.enablePreview()
+            }
             self.requestOpenedFolderAccess(for: note)
         }
     }

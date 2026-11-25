@@ -186,6 +186,24 @@ final class PrefsWindowControllerTests: XCTestCase {
         XCTAssertTrue(appearance.contains("enablePreview()"))
     }
 
+    /// A launch by a double-clicked file returns from viewDidAppear before the
+    /// saved preview is restored; with preview saved the body stayed blank
+    /// until the preview button was clicked twice (#584). openFromFinder
+    /// restores it once the file is selected and filled.
+    func testAColdOpenFromFinderRestoresTheSavedPreview() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("Controllers/ViewController.swift"), encoding: .utf8)
+        let start = try XCTUnwrap(source.range(of: "func openFromFinder(_ urls: [URL])"))
+        let end = try XCTUnwrap(source.range(of: "private var declinedOpenedFolders", range: start.upperBound..<source.endIndex))
+        let body = String(source[start.upperBound..<end.lowerBound])
+        let fill = try XCTUnwrap(body.range(of: "self.editArea.fill(note: note, options: .silent)"))
+        let after = String(body[fill.upperBound...])
+        XCTAssertNotNil(
+            after.range(of: #"if\s+opensAtLaunch,\s*self\.sessionPreviewMode\s*\{\s*self\.enablePreview\(\)"#, options: .regularExpression),
+            "a cold open from Finder must enable the saved preview after the file is filled")
+        XCTAssertNotNil(body.range(of: #"let\s+opensAtLaunch\s*=\s*self\.storageOutlineView\.isLaunch"#, options: .regularExpression))
+    }
+
     @MainActor
     func testPreferencesWindowTracksAlwaysOnTopSetting() {
         let originalValue = UserDefaultsManagement.alwaysOnTop
