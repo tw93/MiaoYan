@@ -739,6 +739,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The homepage's FAQ under a tool; the article's paragraph margin stays out of it. */
+.tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
@@ -1245,15 +1247,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>With a file, use Open file or drop it on the tool. A .docx is read in the browser for its headings, lists, tables and bold, and an .html file is read as a web page. A Google Doc copies as one bold run with its real bold and italic written as styles, and Word copies its lists as paragraphs with a dot in front; both come out as plain Markdown.</p>
 <h2 id="what-does-not-come-along">What does not come along</h2>
 <p>Markdown holds only an image's address, so pictures inserted into a Word file or pasted into a document stay behind, while images from a web page keep their address. Font size, colour, typeface and alignment are dropped, a merged table cell takes a single column, and a formula keeps only the text that copies out of it, so glance over tables and formulas when it is done.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="is-this-what-miaoyan-does-when-i-paste">Is this what MiaoYan does when I paste?</h3>
-<p>Yes. This is the conversion MiaoYan's Mac app runs when you paste from a web page, written line for line from its source, so the same page gives the same Markdown in both. MiaoYan converts only when the paste has headings, lists, tables, quotes or code blocks and pastes a plain sentence as it is, while this page always converts, and it also reads Google Docs' bold wrapper, Word's lists and the caption under a picture.</p>
-<h3 id="can-it-convert-a-pdf">Can it convert a PDF?</h3>
-<p>It cannot open a PDF, which holds laid-out text without the structure of headings and lists. Text copied from a PDF reader and pasted here comes out as plain paragraphs, and the headings and lists are yours to add.</p>
-<h3 id="is-what-i-paste-uploaded">Is what I paste uploaded?</h3>
-<p>No. The conversion runs in your browser, so what you paste and the files you open are never sent to a server; only the images shown on the left load from the sites they came from.</p>
-<h3 id="how-do-i-use-the-markdown">How do I use the Markdown?</h3>
-<p>Copy it into MiaoYan, GitHub, Obsidian or anywhere else that takes Markdown, or download it as a .md file named after the file you opened or the first heading. To see it laid out first, paste it into the <a href="/tools/markdown-viewer/">Markdown Viewer</a>.</p>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Is this what MiaoYan does when I paste?</summary><p>Yes. This is the conversion MiaoYan's Mac app runs when you paste from a web page, written line for line from its source, so the same page gives the same Markdown in both. MiaoYan converts only when the paste has headings, lists, tables, quotes or code blocks and pastes a plain sentence as it is, while this page always converts, and it also reads Google Docs' bold wrapper, Word's lists and the caption under a picture.</p></details><details><summary>Can it convert a PDF?</summary><p>It cannot open a PDF, which holds laid-out text without the structure of headings and lists. Text copied from a PDF reader and pasted here comes out as plain paragraphs, and the headings and lists are yours to add.</p></details><details><summary>Is what I paste uploaded?</summary><p>No. The conversion runs in your browser, so what you paste and the files you open are never sent to a server; only the images shown on the left load from the sites they came from.</p></details><details><summary>How do I use the Markdown?</summary><p>Copy it into MiaoYan, GitHub, Obsidian or anywhere else that takes Markdown, or download it as a .md file named after the file you opened or the first heading. To see it laid out first, paste it into the <a href="/tools/markdown-viewer/">Markdown Viewer</a>.</p></details></section>
+
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

@@ -484,6 +484,22 @@ def faq_pairs(body, lang):
     return [(plain(q), re.sub(r"\s+", " ", plain(a))) for q, a in re.findall(r"<h3[^>]*>(.*?)</h3>(.*?)(?=<h3[ >]|\Z)", section.group(1), re.S)]
 
 
+def fold_faq(body, lang):
+    """The FAQ as the homepage draws it: each question a closed <details> under
+    the section's heading (maintainer 2026-11-25: answers laid open made the
+    page under the tool read as a wall of text). FAQPage data still comes from
+    faq_pairs, and a closed answer is still in the page for search."""
+    section = re.search(rf"(<h2[^>]*>{re.escape(UI[lang]['faq'])}</h2>)(.*?)(?=<h2[ >]|\Z)", body, re.S)
+    if not section:
+        return body
+    items = "".join(
+        f"<details><summary>{q.strip()}</summary>{a.strip()}</details>"
+        for q, a in re.findall(r"<h3[^>]*>(.*?)</h3>(.*?)(?=<h3[ >]|\Z)", section.group(2), re.S)
+    )
+    folded = f'<section class="faq tool-faq">{section.group(1)}{items}</section>\n'
+    return body[:section.start()] + folded + body[section.end():]
+
+
 def head(lang, *, title, desc, canonical, en_url, zh_url, jsonld):
     lang_attr = site.lang_entry(lang)[2]
     image = f"{SITE}/assets/shots/og-{lang}.jpg"
@@ -657,7 +673,7 @@ def tool_page(tool, lang, *, category, tool_html, data_id, data, script, before=
   <p class="section-lede">{esc(meta["lede"])}</p>
 {tool_html}
   <div class="blog-body tool-body">
-{prose}
+{fold_faq(prose, lang)}
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

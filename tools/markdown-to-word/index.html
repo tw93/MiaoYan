@@ -739,6 +739,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The homepage's FAQ under a tool; the article's paragraph margin stays out of it. */
+.tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
@@ -1265,17 +1267,8 @@ flowchart LR
 <h2 id="what-you-get">What you get</h2>
 <p>Write or paste Markdown on the left, the right lays it out in MiaoYan's preview styling as you type, and Download Word saves a .docx that looks like it: headings, bold, italic and strikethrough as they are, nested lists as Word lists, tables with their borders, code blocks with their indentation and highlight colours, task lists as checkboxes you can tick in Word, and links you can click. Formulas become Word's own equations, still editable once the file is open, and Mermaid diagrams become pictures at twice their size. The English page uses US Letter with one-inch margins and sets the text in Helvetica Neue, which Word replaces with one of its own fonts on Windows.</p>
 <p>You can also open a .md file or drop one on the page. The shortcuts are MiaoYan's, <code>⌘B</code> bold, <code>⌘I</code> italic, <code>⌘K</code> link and <code>⌘S</code> to save the Markdown, and the last text you wrote stays in this browser.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="can-word-build-a-table-of-contents-from-it">Can Word build a table of contents from it?</h3>
-<p>Yes. Headings use Word's own Heading 1 to Heading 6 styles, so Insert Table of Contents works straight away and the navigation pane lists them.</p>
-<h3 id="can-i-edit-the-formulas-in-word">Can I edit the formulas in Word?</h3>
-<p>Yes. They are Word's own equations, not pictures, so you can click into one and change it. A formula on its own line is centred, and an inline one runs with the text.</p>
-<h3 id="why-are-some-pictures-missing">Why are some pictures missing?</h3>
-<p>Pictures from the web are downloaded by your browser and put in the document. A site that does not let other pages read its pictures, and a local path such as <code>images/a.png</code>, cannot be included; the status line says how many were left out, so you can insert them in Word.</p>
-<h3 id="is-my-document-uploaded">Is my document uploaded?</h3>
-<p>No. The .docx is made in your browser and nothing is sent to a server; only the web pictures in the text are downloaded from their sites.</p>
-<h3 id="will-it-open-in-apps-other-than-word">Will it open in apps other than Word?</h3>
-<p>Yes, it is a standard .docx, and its headings, lists, tables, checkboxes and formulas were checked in LibreOffice. Some apps handle equations and checkboxes less fully than Word.</p>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Can Word build a table of contents from it?</summary><p>Yes. Headings use Word's own Heading 1 to Heading 6 styles, so Insert Table of Contents works straight away and the navigation pane lists them.</p></details><details><summary>Can I edit the formulas in Word?</summary><p>Yes. They are Word's own equations, not pictures, so you can click into one and change it. A formula on its own line is centred, and an inline one runs with the text.</p></details><details><summary>Why are some pictures missing?</summary><p>Pictures from the web are downloaded by your browser and put in the document. A site that does not let other pages read its pictures, and a local path such as <code>images/a.png</code>, cannot be included; the status line says how many were left out, so you can insert them in Word.</p></details><details><summary>Is my document uploaded?</summary><p>No. The .docx is made in your browser and nothing is sent to a server; only the web pictures in the text are downloaded from their sites.</p></details><details><summary>Will it open in apps other than Word?</summary><p>Yes, it is a standard .docx, and its headings, lists, tables, checkboxes and formulas were checked in LibreOffice. Some apps handle equations and checkboxes less fully than Word.</p></details></section>
+
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

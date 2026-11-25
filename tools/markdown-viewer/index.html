@@ -739,6 +739,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The homepage's FAQ under a tool; the article's paragraph margin stays out of it. */
+.tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
@@ -1269,15 +1271,8 @@ flowchart LR
 <p>The shortcuts are MiaoYan's: <code>⌘B</code> bold, <code>⌘I</code> italic, <code>⌘K</code> link, <code>⌘E</code> inline code, <code>⇧⌘E</code> code block, and <code>⌘S</code> saves the Markdown as a file, with Ctrl in place of ⌘ on Windows. Return in a list or quote starts the next item, and Return on an empty one ends it. The two panes scroll together paragraph by paragraph, whichever one you scroll. Phone width lays the preview out at 375 pixels, the button at the end of the toolbar gives the editor the whole screen, and the word count follows MiaoYan's, one for each CJK character and one for each word of other text.</p>
 <h2 id="how-close-it-is-to-miaoyans-preview">How close it is to MiaoYan's preview</h2>
 <p>The preview uses the stylesheets of MiaoYan's own preview, and its code highlighting, math and Mermaid come from the same files the app ships, so fonts, spacing, tables and code blocks look as they do in a note. The difference is the parser: this page reads Markdown with markdown-it and the app with cmark-gfm. Both follow CommonMark plus GitHub's tables, strikethrough and task lists, so only rare edge cases come out differently.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="why-are-formulas-copied-as">Why are formulas copied as <code>$...$</code>?</h3>
-<p>A typeset formula needs KaTeX's fonts, which a paste cannot carry, so Copy formatted puts the formula's source on the clipboard. For a document with formulas, Download Word turns them into Word equations, or save it as PDF.</p>
-<h3 id="why-does-an-image-not-show">Why does an image not show?</h3>
-<p>A web page cannot read files on your computer, so an image with a local path such as <code>images/a.png</code> does not show; images with an <code>https://</code> address do. Opened in MiaoYan, the same file shows its local images.</p>
-<h3 id="is-what-i-write-saved">Is what I write saved?</h3>
-<p>Your last text stays in this browser for the next visit, until you switch browsers, use a private window or clear the site's data, so press <code>⌘S</code> to keep anything that matters as a .md file. A file you open is read in your browser and never sent to a server.</p>
-<h3 id="what-syntax-does-it-support">What syntax does it support?</h3>
-<p>Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with <code>$...$</code> and <code>$$...$$</code>, and diagrams in mermaid code blocks. The Mermaid syntax is in <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid in Markdown</a>.</p>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Why are formulas copied as <code>$...$</code>?</summary><p>A typeset formula needs KaTeX's fonts, which a paste cannot carry, so Copy formatted puts the formula's source on the clipboard. For a document with formulas, Download Word turns them into Word equations, or save it as PDF.</p></details><details><summary>Why does an image not show?</summary><p>A web page cannot read files on your computer, so an image with a local path such as <code>images/a.png</code> does not show; images with an <code>https://</code> address do. Opened in MiaoYan, the same file shows its local images.</p></details><details><summary>Is what I write saved?</summary><p>Your last text stays in this browser for the next visit, until you switch browsers, use a private window or clear the site's data, so press <code>⌘S</code> to keep anything that matters as a .md file. A file you open is read in your browser and never sent to a server.</p></details><details><summary>What syntax does it support?</summary><p>Headings, lists, quotes, tables, task lists, strikethrough, code blocks with highlighting, math with <code>$...$</code> and <code>$$...$$</code>, and diagrams in mermaid code blocks. The Mermaid syntax is in <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid in Markdown</a>.</p></details></section>
+
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

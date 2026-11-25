@@ -741,6 +741,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The homepage's FAQ under a tool; the article's paragraph margin stays out of it. */
+.tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
@@ -1271,17 +1273,8 @@ flowchart LR
 <p>快捷键和妙言一样，<code>⌘B</code> 加粗、<code>⌘I</code> 斜体、<code>⌘K</code> 链接、<code>⌘E</code> 行内代码、<code>⇧⌘E</code> 代码块，<code>⌘S</code> 把 Markdown 存成文件，Windows 上把 ⌘ 换成 Ctrl。列表和引用里按回车会接着写下一项，空着再按一次就结束。两边按段落对齐滚动，左边滚到哪一段，右边就停在哪一段，反过来也一样。手机宽度按 375 像素排版，和公众号文章在手机上的宽度差不多，工具栏最右边的按钮可以全屏写，底部的字数和妙言的算法一样，每个汉字算一个，英文按词算。</p>
 <h2 id="和妙言的预览有多像">和妙言的预览有多像</h2>
 <p>右边用的是妙言预览同一套样式表，代码高亮、公式和 Mermaid 也是 App 里那几份文件，所以字体、行距、表格和代码块都和笔记里看到的一样。不同的是这里用 markdown-it 解析 Markdown，App 里用的是 cmark-gfm，两者都遵循 CommonMark 和 GitHub 的表格、删除线、任务列表写法，只有很少见的写法结果会有差别。</p>
-<h2 id="常见问题">常见问题</h2>
-<h3 id="公式能复制到公众号吗">公式能复制到公众号吗？</h3>
-<p>现在不行，公式会按 <code>$...$</code> 的源码复制过去，排好的公式要靠 KaTeX 的字体，粘贴时带不过去。文章里公式多的话可以下载 Word，公式会变成 Word 公式，或者存成 PDF。</p>
-<h3 id="外部链接为什么变成了文末的编号">外部链接为什么变成了文末的编号？</h3>
-<p>公众号正文里指向其他网站的链接点不开，复制时就把它们换成右上角的编号，地址统一列在文末的参考链接里，读者至少能看到地址，公众号自己的文章链接保持原样。</p>
-<h3 id="图片为什么显示不出来">图片为什么显示不出来？</h3>
-<p>网页读不到电脑上的文件，<code>images/a.png</code> 这种本地路径的图片不会显示，只有以 <code>https://</code> 开头的网络图片能显示，在妙言里打开同一个文件，本地图片照常显示。</p>
-<h3 id="写的内容会保存吗">写的内容会保存吗？</h3>
-<p>最后一次的内容存在这个浏览器里，下次打开还在，换了浏览器、用了无痕窗口或者清掉网站数据就没了，要留着的文章按 <code>⌘S</code> 存成 .md 文件。打开的文件只在浏览器里读，不会发到服务器。</p>
-<h3 id="支持哪些写法">支持哪些写法？</h3>
-<p>标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 <code>$...$</code> 和 <code>$$...$$</code>，写在 mermaid 代码块里的图会画出来，Mermaid 的写法见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
+<section class="faq tool-faq"><h2 id="常见问题">常见问题</h2><details><summary>公式能复制到公众号吗？</summary><p>现在不行，公式会按 <code>$...$</code> 的源码复制过去，排好的公式要靠 KaTeX 的字体，粘贴时带不过去。文章里公式多的话可以下载 Word，公式会变成 Word 公式，或者存成 PDF。</p></details><details><summary>外部链接为什么变成了文末的编号？</summary><p>公众号正文里指向其他网站的链接点不开，复制时就把它们换成右上角的编号，地址统一列在文末的参考链接里，读者至少能看到地址，公众号自己的文章链接保持原样。</p></details><details><summary>图片为什么显示不出来？</summary><p>网页读不到电脑上的文件，<code>images/a.png</code> 这种本地路径的图片不会显示，只有以 <code>https://</code> 开头的网络图片能显示，在妙言里打开同一个文件，本地图片照常显示。</p></details><details><summary>写的内容会保存吗？</summary><p>最后一次的内容存在这个浏览器里，下次打开还在，换了浏览器、用了无痕窗口或者清掉网站数据就没了，要留着的文章按 <code>⌘S</code> 存成 .md 文件。打开的文件只在浏览器里读，不会发到服务器。</p></details><details><summary>支持哪些写法？</summary><p>标题、列表、引用、表格、任务列表、删除线、代码块和代码高亮都支持，公式用 <code>$...$</code> 和 <code>$$...$$</code>，写在 mermaid 代码块里的图会画出来，Mermaid 的写法见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p></details></section>
+
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

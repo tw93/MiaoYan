@@ -739,6 +739,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The homepage's FAQ under a tool; the article's paragraph margin stays out of it. */
+.tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
@@ -1226,15 +1228,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="what-happens-when-you-paste">What happens when you paste</h2>
 <p>Copy cells in Excel, Numbers or Google Sheets, click the first cell of the grid and paste, and the whole table becomes what you copied. Paste into a cell further in and it fills right and down from there, adding rows and columns as needed, and Undo takes it back. CSV and TSV files can be dropped onto the grid, and an existing Markdown table pasted in brings its column alignment with it.</p>
 <p>Markdown tables have limits of their own, so a line break inside a cell becomes <code>&lt;br&gt;</code>, a pipe is escaped as <code>\|</code>, and a merged cell is split, with its content in the first cell. The first row is always the header. The syntax is covered in <a href="/blog/markdown-tables/">Markdown tables: alignment, pipes and line breaks</a>, and other ways to convert a sheet in <a href="/blog/excel-to-markdown-table/">Excel to Markdown table: paste, convert and check</a>.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="how-large-can-a-table-be">How large can a table be?</h3>
-<p>The grid holds up to 500 rows and 30 columns. When a paste from Excel or a CSV file is larger, the extra rows and columns are left out and the status line says so.</p>
-<h3 id="why-do-chinese-and-japanese-characters-count-as-two">Why do Chinese and Japanese characters count as two?</h3>
-<p>Terminals and Prettier count a CJK character as two columns wide, and the padding here does the same, so the pipes line up in a font where a CJK character is exactly two Latin characters wide. Turn off Line up columns for the compact form without padding.</p>
-<h3 id="can-i-merge-cells">Can I merge cells?</h3>
-<p>Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML <code>&lt;table&gt;</code> in the note and use <code>colspan</code> and <code>rowspan</code>.</p>
-<h3 id="is-my-table-saved">Is my table saved?</h3>
-<p>Your last table stays in this browser for the next visit, until you switch browsers or clear the site's data. Pasted data is converted in your browser and never sent to a server.</p>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>How large can a table be?</summary><p>The grid holds up to 500 rows and 30 columns. When a paste from Excel or a CSV file is larger, the extra rows and columns are left out and the status line says so.</p></details><details><summary>Why do Chinese and Japanese characters count as two?</summary><p>Terminals and Prettier count a CJK character as two columns wide, and the padding here does the same, so the pipes line up in a font where a CJK character is exactly two Latin characters wide. Turn off Line up columns for the compact form without padding.</p></details><details><summary>Can I merge cells?</summary><p>Markdown tables cannot merge cells, so merged cells you paste are split, with the content in the first one. When a merge is essential, write an HTML <code>&lt;table&gt;</code> in the note and use <code>colspan</code> and <code>rowspan</code>.</p></details><details><summary>Is my table saved?</summary><p>Your last table stays in this browser for the next visit, until you switch browsers or clear the site's data. Pasted data is converted in your browser and never sent to a server.</p></details></section>
+
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

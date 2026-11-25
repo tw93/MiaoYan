@@ -739,6 +739,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The homepage's FAQ under a tool; the article's paragraph margin stays out of it. */
+.tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
@@ -1239,15 +1241,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <h2 id="writing-the-outline">Writing the outline</h2>
 <p>The first <code>#</code> heading is the centre, <code>##</code> headings are its branches, and list items hang under the nearest heading, nesting one level per indent; two spaces a level is the habit, and <code>Tab</code> and <code>Shift + Tab</code> in the editor add or remove one. Nodes can hold <strong>bold</strong>, <em>italic</em>, <code>code</code>, links and math in <code>$...$</code>. Click the dot on a node to fold or unfold its branch, drag to move the map, and pinch or hold <code>Ctrl</code> while scrolling to zoom.</p>
 <p>When the map is ready, Copy Markdown gives you a markmap code block. Paste it into a MiaoYan note and the preview draws it with the same Markmap. More syntax, and how it compares with Mermaid's mind maps, is in <a href="/blog/markmap-mind-maps/">Markmap: turn a Markdown outline into a mind map</a>.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="how-is-it-different-from-a-mermaid-mind-map">How is it different from a Mermaid mind map?</h3>
-<p>Markmap reads the headings and lists of plain Markdown, so an outline you already have draws as it is and its branches fold on click. A Mermaid mindmap has its own indented syntax with brackets for node shapes, which pays off when it lives beside flowcharts and sequence diagrams. With an outline in hand, use Markmap; to keep it with other diagrams, use the <a href="/tools/mermaid-editor/">Mermaid Editor</a>.</p>
-<h3 id="does-the-exported-image-match-what-i-see">Does the exported image match what I see?</h3>
-<p>It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. PNG is exported at twice the size, and node labels in the SVG are plain SVG text, so other apps show them and can edit the words.</p>
-<h3 id="how-is-it-different-from-the-map-in-miaoyan">How is it different from the map in MiaoYan?</h3>
-<p>It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline.</p>
-<h3 id="is-my-outline-saved">Is my outline saved?</h3>
-<p>Your last outline stays in this browser for the next visit, until you switch browsers or clear the site's data. The map is drawn in your browser and the outline never reaches a server.</p>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>How is it different from a Mermaid mind map?</summary><p>Markmap reads the headings and lists of plain Markdown, so an outline you already have draws as it is and its branches fold on click. A Mermaid mindmap has its own indented syntax with brackets for node shapes, which pays off when it lives beside flowcharts and sequence diagrams. With an outline in hand, use Markmap; to keep it with other diagrams, use the <a href="/tools/mermaid-editor/">Mermaid Editor</a>.</p></details><details><summary>Does the exported image match what I see?</summary><p>It has the same layout and colours, as the map is currently unfolded: folded branches stay out of the image. PNG is exported at twice the size, and node labels in the SVG are plain SVG text, so other apps show them and can edit the words.</p></details><details><summary>How is it different from the map in MiaoYan?</summary><p>It uses the same Markmap version and colours as MiaoYan. In MiaoYan's preview the map has a fixed size and does not fold on click; here you can fold, zoom and drag, which helps with a long outline.</p></details><details><summary>Is my outline saved?</summary><p>Your last outline stays in this browser for the next visit, until you switch browsers or clear the site's data. The map is drawn in your browser and the outline never reaches a server.</p></details></section>
+
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">

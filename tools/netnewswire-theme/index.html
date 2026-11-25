@@ -739,6 +739,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .blog-title 
 .tool-app-shot { margin: 0; }
 .tool-app-shot img { border-radius: 14px; }
 .tool-body { margin-top: 72px; }
+/* The homepage's FAQ under a tool; the article's paragraph margin stays out of it. */
+.tool-faq p { margin: 0; }
 /* Tool pages run the window's full width (maintainer 2026-11-25), the nav,
    title and tool on one edge, and the tool fills the first screen; the prose
    and the way into MiaoYan below keep the reading column's width on that same
@@ -1219,15 +1221,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>Install <a href="https://netnewswire.com/" target="_blank" rel="noopener">NetNewsWire</a> first, then click Install in NetNewsWire above. The browser asks to open NetNewsWire, and NetNewsWire then asks to Install Theme. Once it is in, choose MiaoYan under Article Theme in the Appearance settings.</p>
 <h2 id="what-it-changes">What it changes</h2>
 <p>Body text sits at a 1.7 line height with 0.5px tracking, so Chinese paragraphs no longer feel cramped. Links stay a classic blue, feed names take a green accent, feed avatars are round and code is set in SF Mono. Light mode is #444444 text on #FDFDFD and dark mode is #DCDCDC on #1A1A1A, following the system. The article in the preview above is a post from the <a href="/blog/">MiaoYan blog</a>, and this is how it reads in NetNewsWire. Its feed is <code>https://miaoyan.app/blog/feed.xml</code>.</p>
-<h2 id="faq">FAQ</h2>
-<h3 id="nothing-happens-when-i-click-install-what-now">Nothing happens when I click Install. What now?</h3>
-<p>NetNewsWire is probably not installed on this device yet; install it and click again. You can also download MiaoYan.nnwtheme.zip, unzip it and double-click MiaoYan.nnwtheme.</p>
-<h3 id="does-it-work-on-iphone-and-ipad">Does it work on iPhone and iPad?</h3>
-<p>Yes. NetNewsWire for iPhone and iPad reads the same theme and the same install link, so tapping Install in NetNewsWire on the phone puts it there.</p>
-<h3 id="which-font-does-the-body-use">Which font does the body use?</h3>
-<p>The theme asks for TsangerJinKai first, but NetNewsWire loads an article with the article's own address as its base, so the font file inside the theme cannot be read. It is used only when TsangerJinKai is installed in the system; otherwise the text is set in PingFang SC, which is what the preview shows.</p>
-<h3 id="can-i-change-how-it-looks">Can I change how it looks?</h3>
-<p>Yes. The theme is free and open source on <a href="https://github.com/tw93/MiaoYan-NetNewsWire-Theme" target="_blank" rel="noopener">GitHub</a>, its stylesheet and template under the MIT licence; in the unzipped download, colours, sizes and line height are in the stylesheet.css inside MiaoYan.nnwtheme, and double-clicking MiaoYan.nnwtheme again installs your edit.</p>
+<section class="faq tool-faq"><h2 id="faq">FAQ</h2><details><summary>Nothing happens when I click Install. What now?</summary><p>NetNewsWire is probably not installed on this device yet; install it and click again. You can also download MiaoYan.nnwtheme.zip, unzip it and double-click MiaoYan.nnwtheme.</p></details><details><summary>Does it work on iPhone and iPad?</summary><p>Yes. NetNewsWire for iPhone and iPad reads the same theme and the same install link, so tapping Install in NetNewsWire on the phone puts it there.</p></details><details><summary>Which font does the body use?</summary><p>The theme asks for TsangerJinKai first, but NetNewsWire loads an article with the article's own address as its base, so the font file inside the theme cannot be read. It is used only when TsangerJinKai is installed in the system; otherwise the text is set in PingFang SC, which is what the preview shows.</p></details><details><summary>Can I change how it looks?</summary><p>Yes. The theme is free and open source on <a href="https://github.com/tw93/MiaoYan-NetNewsWire-Theme" target="_blank" rel="noopener">GitHub</a>, its stylesheet and template under the MIT licence; in the unzipped download, colours, sizes and line height are in the stylesheet.css inside MiaoYan.nnwtheme, and double-clicking MiaoYan.nnwtheme again installs your edit.</p></details></section>
+
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
     <div class="tool-app-text">
