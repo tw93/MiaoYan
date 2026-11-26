@@ -985,7 +985,11 @@ td[data-align="right"] .table-cell { text-align: right; font-variant-numeric: ta
 .h2m-source :is(h4, h5, h6) { font-size: 1em; }
 .h2m-source :is(p, ul, ol, pre, table, blockquote, figure) { margin: 0 0 0.8em; }
 .h2m-source :is(ul, ol) { padding-left: 1.5em; }
-.h2m-source blockquote { margin-left: 0; padding-left: 1em; border-left: 3px solid var(--line); color: var(--stone); }
+/* A quote reads as one in the app's own preview: a thin warm bar with round ends,
+   as tall as the text (typography.css, maintainer's pick 2026-10-25), not a block-high edge. */
+.h2m-source blockquote { position: relative; margin-left: 0; padding-left: 12px; color: var(--stone); }
+.h2m-source blockquote::before { content: ""; position: absolute; left: 0; top: 0.32em; bottom: 0.32em; width: 3px; border-radius: 1.5px; background: #DDD9CD; }
+.h2m-source blockquote > :last-child { margin-bottom: 0; }
 .h2m-source :is(code, kbd, samp) { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; letter-spacing: 0; }
 .h2m-source :not(pre) > code { padding: 0.1em 0.35em; border-radius: 4px; background: rgba(0, 0, 0, 0.05); }
 .h2m-source pre { padding: 12px 14px; overflow: auto; border-radius: 8px; background: rgba(0, 0, 0, 0.04); white-space: pre; }
