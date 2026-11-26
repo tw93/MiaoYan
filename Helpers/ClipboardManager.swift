@@ -475,8 +475,9 @@ class ClipboardManager {
             let imagePath = "\(note.project.url.path)\(path)"
             let tempPath = URL(fileURLWithPath: imagePath)
 
-            switch Self.uploadHost(forAttachmentAt: path, setting: UserDefaultsManagement.defaultPicUpload) {
-            case .http:
+            let uploadHost = Self.uploadHost(forAttachmentAt: path, setting: UserDefaultsManagement.defaultPicUpload)
+            switch uploadHost {
+            case .http, .s3:
                 host?.toast(message: I18n.str("Uploading image…"))
                 // The local link holds the spot until the upload finishes:
                 // inserting the link at the cursor afterwards dropped it wherever
@@ -487,7 +488,19 @@ class ClipboardManager {
                 textView.breakUndoCoalescing()
                 textView.insertText(defaultImage, replacementRange: textView.selectedRange())
 
-                postToPicGo(imagePath: imagePath, serverURL: uploadServerURL) { [weak self] result, error in
+                let upload: (@escaping @Sendable (String?, Error?) -> Void) -> Void = { completion in
+                    if uploadHost == .s3 {
+                        S3Uploader.upload(fileAt: tempPath) { result in
+                            switch result {
+                            case .success(let link): completion(link, nil)
+                            case .failure(let error): completion(nil, error)
+                            }
+                        }
+                    } else {
+                        self.postToPicGo(imagePath: imagePath, serverURL: uploadServerURL, completion: completion)
+                    }
+                }
+                upload { [weak self] result, error in
                     Task { @MainActor in
                         guard let self else { return }
                         if let resultString = result {
@@ -535,6 +548,8 @@ class ClipboardManager {
         case http
         /// uPic or Picsee, run as a command.
         case app(String)
+        /// An S3-compatible bucket (R2, S3, MinIO), written by MiaoYan itself.
+        case s3
     }
 
     /// The image host that takes the attachment just written at `path`
@@ -546,6 +561,7 @@ class ClipboardManager {
         switch setting {
         case "PicGo", "PicList": return .http
         case "uPic", "Picsee": return .app(setting)
+        case "S3": return .s3
         default: return nil
         }
     }

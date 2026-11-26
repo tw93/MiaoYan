@@ -377,3 +377,13 @@
 "Task 1" = "タスク1";
 "Task 2" = "タスク2";
 "Finished task" = "完了したタスク";
+
+/* Image upload to S3 or R2 */
+"Save" = "保存";
+"Set Up" = "設定";
+"Region" = "リージョン";
+"Public URL" = "公開 URL";
+"Pasted images upload to %@" = "貼り付けた画像を %@ にアップロード";
+"Upload to S3 or R2" = "S3 または R2 にアップロード";
+"Could not save the secret key to the Keychain" = "シークレットキーをキーチェーンに保存できませんでした";
+"Images go to your bucket and the note links them through the public URL. The secret key is kept in your Keychain." = "画像はバケットにアップロードされ、ノートには公開 URL でリンクされます。シークレットキーはキーチェーンに保存されます。";

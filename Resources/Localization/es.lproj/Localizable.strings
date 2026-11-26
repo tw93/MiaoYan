@@ -371,3 +371,13 @@
 "Task 1" = "Tarea 1";
 "Task 2" = "Tarea 2";
 "Finished task" = "Tarea terminada";
+
+/* Image upload to S3 or R2 */
+"Save" = "Guardar";
+"Set Up" = "Configurar";
+"Region" = "Región";
+"Public URL" = "URL pública";
+"Pasted images upload to %@" = "Las imágenes pegadas se suben a %@";
+"Upload to S3 or R2" = "Subir a S3 o R2";
+"Could not save the secret key to the Keychain" = "No se pudo guardar la clave secreta en el llavero";
+"Images go to your bucket and the note links them through the public URL. The secret key is kept in your Keychain." = "Las imágenes se suben a tu bucket y la nota las enlaza con la URL pública. La clave secreta se guarda en tu llavero.";

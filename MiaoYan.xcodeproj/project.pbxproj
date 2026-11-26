@@ -35,6 +35,7 @@
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
 		275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */; };
 		275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F592E68150E006BC2AC /* ClipboardManager.swift */; };
+		97351EFBB6A58AE3E70BCB13 /* S3Uploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDCEB66B1A94CF52956C717 /* S3Uploader.swift */; };
 		275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */; };
 		275F9F602E6820F8006BC2AC /* ViewController+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */; };
 		275F9F622E682239006BC2AC /* ViewController+Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F612E682239006BC2AC /* ViewController+Editor.swift */; };
@@ -91,6 +92,7 @@
 		33F1E2FF1B56462C8C96769E /* MiaoYanTests/PrefsWindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */; };
 		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
 		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
+		D0CCF9999FAA905EDFF8C628 /* MiaoYanTests/S3UploaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239051D28441B22648DC05C3 /* MiaoYanTests/S3UploaderTests.swift */; };
 		2A8E143A5FAF3D26B274A890 /* MiaoYanTests/PinSyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683BB3C7A2147A7E34861498 /* MiaoYanTests/PinSyncTests.swift */; };
 		FD97D5B010334F905A3BF32E /* MiaoYanTests/GuideSeedingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836FC0B8CB4EAFB36A33893C /* MiaoYanTests/GuideSeedingTests.swift */; };
 		F6FD8E1E519424172346988B /* MiaoYanTests/NameHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67122BA15993F737C511F524 /* MiaoYanTests/NameHelperTests.swift */; };
@@ -246,6 +248,7 @@
 		274D62D02E434B9C003C075F /* ImagePreviewWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewWindow.swift; sourceTree = "<group>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		275F9F592E68150E006BC2AC /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
+		ADDCEB66B1A94CF52956C717 /* S3Uploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3Uploader.swift; sourceTree = "<group>"; };
 		275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMenuManager.swift; sourceTree = "<group>"; };
 		275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewManager.swift; sourceTree = "<group>"; };
 		275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Layout.swift"; sourceTree = "<group>"; };
@@ -325,6 +328,7 @@
 		D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsWindowControllerTests.swift; sourceTree = SOURCE_ROOT; };
 		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
 		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
+		239051D28441B22648DC05C3 /* MiaoYanTests/S3UploaderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/S3UploaderTests.swift; sourceTree = SOURCE_ROOT; };
 		683BB3C7A2147A7E34861498 /* MiaoYanTests/PinSyncTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PinSyncTests.swift; sourceTree = SOURCE_ROOT; };
 		836FC0B8CB4EAFB36A33893C /* MiaoYanTests/GuideSeedingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GuideSeedingTests.swift; sourceTree = SOURCE_ROOT; };
 		67122BA15993F737C511F524 /* MiaoYanTests/NameHelperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NameHelperTests.swift; sourceTree = SOURCE_ROOT; };
@@ -523,6 +527,7 @@
 				B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */,
 				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
 				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
+				239051D28441B22648DC05C3 /* MiaoYanTests/S3UploaderTests.swift */,
 				683BB3C7A2147A7E34861498 /* MiaoYanTests/PinSyncTests.swift */,
 				836FC0B8CB4EAFB36A33893C /* MiaoYanTests/GuideSeedingTests.swift */,
 				67122BA15993F737C511F524 /* MiaoYanTests/NameHelperTests.swift */,
@@ -728,6 +733,7 @@
 				2763128C2E766CE3007BB5E9 /* Theme.swift */,
 				276312602E7580B5007BB5E9 /* Localization.swift */,
 				275F9F592E68150E006BC2AC /* ClipboardManager.swift */,
+				ADDCEB66B1A94CF52956C717 /* S3Uploader.swift */,
 				275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */,
 				275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */,
 				27A1B2C42E681510006BC2AC /* PdfExportController.swift */,
@@ -918,6 +924,7 @@
 				BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */,
 				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
 				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
+				D0CCF9999FAA905EDFF8C628 /* MiaoYanTests/S3UploaderTests.swift in Sources */,
 				2A8E143A5FAF3D26B274A890 /* MiaoYanTests/PinSyncTests.swift in Sources */,
 				FD97D5B010334F905A3BF32E /* MiaoYanTests/GuideSeedingTests.swift in Sources */,
 				F6FD8E1E519424172346988B /* MiaoYanTests/NameHelperTests.swift in Sources */,
@@ -1062,6 +1069,7 @@
 				D79FE8A21F77D04A00113CFD /* Note.swift in Sources */,
 				275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */,
 				275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */,
+				97351EFBB6A58AE3E70BCB13 /* S3Uploader.swift in Sources */,
 				275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */,
 				27A1B2C32E681510006BC2AC /* PdfExportController.swift in Sources */,
 				D7153E092285EC6100A2C20F /* TitleTextField.swift in Sources */,

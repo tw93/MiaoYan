@@ -379,3 +379,13 @@
 "Task 1" = "待完成任务1";
 "Task 2" = "待完成任务2";
 "Finished task" = "已完成任务";
+
+/* Image upload to S3 or R2 */
+"Save" = "保存";
+"Set Up" = "配置";
+"Region" = "区域";
+"Public URL" = "访问地址";
+"Pasted images upload to %@" = "粘贴的图片上传到 %@";
+"Upload to S3 or R2" = "上传到 S3 或 R2";
+"Could not save the secret key to the Keychain" = "密钥没能存进钥匙串";
+"Images go to your bucket and the note links them through the public URL. The secret key is kept in your Keychain." = "图片会上传到你的存储桶，笔记里用访问地址引用它，密钥存在钥匙串里。";

@@ -353,3 +353,13 @@
 "Task 1" = "待完成任務1";
 "Task 2" = "待完成任務2";
 "Finished task" = "已完成任務";
+
+/* Image upload to S3 or R2 */
+"Save" = "儲存";
+"Set Up" = "設定";
+"Region" = "區域";
+"Public URL" = "存取網址";
+"Pasted images upload to %@" = "貼上的圖片上傳到 %@";
+"Upload to S3 or R2" = "上傳到 S3 或 R2";
+"Could not save the secret key to the Keychain" = "密鑰沒能存進鑰匙圈";
+"Images go to your bucket and the note links them through the public URL. The secret key is kept in your Keychain." = "圖片會上傳到你的儲存貯體，筆記裡用存取網址引用它，密鑰存在鑰匙圈裡。";
