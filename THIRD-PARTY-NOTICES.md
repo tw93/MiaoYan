@@ -4,9 +4,9 @@ MiaoYan includes the open source software and fonts listed below. Thank you to
 everyone who made this work available. Each entry names the source, the
 copyright notice and the license; the complete license texts follow the list.
 
-PlantUML diagrams are not drawn on this Mac: the preview encodes the diagram
-text with plantuml-encoder and loads the image from www.plantuml.com. Every
-other diagram, formula and slide is rendered locally.
+PlantUML diagrams are not drawn on your device: the preview encodes the
+diagram text with plantuml-encoder and loads the image from www.plantuml.com.
+Every other diagram, formula and slide is rendered locally.
 
 ## Preview and slides
 
