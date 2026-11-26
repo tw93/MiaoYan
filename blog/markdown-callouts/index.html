@@ -1046,21 +1046,32 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
 .foot-name { margin: 0 0 8px; color: #fff; font-family: var(--serif); font-size: var(--text-title); font-weight: 500; line-height: 1.1; }
 .foot-name .cn { font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif; font-weight: 400; }
 .foot-mark p.foot-about { margin: 10px 0 0; font-size: var(--text-meta); line-height: 1.5; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
-/* The brand sits on top and the six groups share the full width, as on
-   mole.fit. Where the brand fits beside them with every gap at least 40px
-   (Chinese and Korean from 1100; English needs about 1036 at the page's
-   1000, so it and the longer languages stay stacked, as they already
-   wrapped), the brand and the groups take the spare width as equal gaps, an
-   empty first cell making the brand's gap one of them (maintainer
-   2026-11-25: 间隔开一点; measured on one line in all eight languages). The
-   ten tools are two groups of five, Write and Convert, each with its own
-   head: one head over two columns left the second column looking headless
-   (maintainer 2026-11-25). Below 960 three across, below 640 two across. */
-.foot-cols { display: grid; grid-template-columns: repeat(6, auto); justify-content: space-between; gap: 40px 24px; align-self: stretch; }
+/* One row as on mole.fit: the brand, then the five groups spread to the right
+   edge with every gap at least 40px, an empty first cell making the brand's gap
+   one of them (maintainer 2026-11-25: 间隔开一点). Get and Connect, two links
+   each, became Product (App Store, GitHub, Release Notes, X, Telegram) and
+   Privacy moved to Help (maintainer 2026-11-26): six groups did not fit beside
+   the brand in English at 1000, and stacked they spread 70px apart under a lone
+   brand and read sparse. Latin and Japanese about lines take two lines to make
+   room. Measured with no link on two lines: English, Chinese and Korean fit
+   from 1000, Japanese, German, French and Spanish from 1100 (French needs
+   1080, Japanese 1100); narrower, the brand sits on top and the groups share
+   the full width. The ten tools are two groups of five, Write and Convert,
+   each with its own head: one head over two columns left the second column
+   looking headless (maintainer 2026-11-25). Below 960 three across, below 640
+   two across. */
+.foot-cols { display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; gap: 40px 24px; align-self: stretch; }
+@media (min-width: 1000px) {
+  :lang(en) .foot-mark { max-width: 10.5em; }
+  :is(:lang(en), :lang(zh), :lang(ko)) .foot { flex-direction: row; gap: 0; }
+  :is(:lang(en), :lang(zh), :lang(ko)) .foot-cols { grid-template-columns: repeat(6, auto); column-gap: 40px; flex: 1 1 auto; align-self: auto; }
+  :is(:lang(en), :lang(zh), :lang(ko)) .foot-cols::before { content: ""; }
+}
 @media (min-width: 1100px) {
-  :is(:lang(zh), :lang(ko)) .foot { flex-direction: row; gap: 0; }
-  :is(:lang(zh), :lang(ko)) .foot-cols { grid-template-columns: repeat(7, auto); column-gap: 40px; flex: 1 1 auto; align-self: auto; }
-  :is(:lang(zh), :lang(ko)) .foot-cols::before { content: ""; }
+  .foot { flex-direction: row; gap: 0; }
+  .foot-cols { grid-template-columns: repeat(6, auto); column-gap: 40px; flex: 1 1 auto; align-self: auto; }
+  .foot-cols::before { content: ""; }
+  html:not(:lang(zh)):not(:lang(ko)) .foot-mark { max-width: 10.5em; }
 }
 @media (max-width: 960px) {
   .foot-cols { grid-template-columns: repeat(3, auto); }
@@ -1418,7 +1429,7 @@ Markdown works inside.
         <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
         <p class="foot-about">A light, native Markdown notebook</p>
       </div>
-      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/learn/">Learn Markdown</a><a href="/releases/">Release Notes</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Write</p><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/tools/markdown-viewer/">Markdown Viewer</a><a href="/tools/markmap-editor/">Markmap Editor</a><a href="/tools/chinese-typography-cleaner/">Chinese Typography</a></div><div class="foot-col"><p class="foot-col-title">Convert</p><a href="/tools/html-to-markdown/">HTML to Markdown</a><a href="/tools/markdown-to-word/">Markdown to Word</a><a href="/tools/markdown-to-image/">Markdown to Image</a><a href="/tools/markdown-slides/">Markdown Slides</a><a href="/tools/netnewswire-theme/">NetNewsWire Theme</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Product</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a><a href="/releases/">Release Notes</a><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/learn/">Learn Markdown</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Write</p><a href="/tools/mermaid-editor/">Mermaid Editor</a><a href="/tools/markdown-table-generator/">Table Generator</a><a href="/tools/markdown-viewer/">Markdown Viewer</a><a href="/tools/markmap-editor/">Markmap Editor</a><a href="/tools/chinese-typography-cleaner/">Chinese Typography</a></div><div class="foot-col"><p class="foot-col-title">Convert</p><a href="/tools/html-to-markdown/">HTML to Markdown</a><a href="/tools/markdown-to-word/">Markdown to Word</a><a href="/tools/markdown-to-image/">Markdown to Image</a><a href="/tools/markdown-slides/">Markdown Slides</a><a href="/tools/netnewswire-theme/">NetNewsWire Theme</a></div><div class="foot-col"><p class="foot-col-title">More Apps</p><a href="https://mole.fit" target="_blank" rel="noopener">Mole <span class="foot-cn" lang="zh-Hans">鼹</span></a><a href="https://yado.house" target="_blank" rel="noopener">Yado <span class="foot-cn" lang="zh-Hant">宿</span></a><a href="https://pake.run" target="_blank" rel="noopener">Pake <span class="foot-cn" lang="zh-Hant">殼</span></a><a href="https://kaku.fun" target="_blank" rel="noopener">Kaku <span class="foot-cn" lang="zh-Hant">書</span></a></div></nav>
     </div>
   </div>
 </footer>

@@ -93,7 +93,7 @@ COPY = {
             ("What do I need to run it?", "macOS 12 or later on the Mac, and iOS 18 or iPadOS 18 or later on iPhone and iPad."),
         ],
         "about": "A light, native Markdown notebook",
-        "foot": (("Get", "Help", "Connect"), ("FAQ", "Privacy")),
+        "foot": (("Product", "Help"), ("FAQ", "Privacy")),
     },
     "zh": {
         "title": "妙言 MiaoYan · Mac、iPhone 和 iPad 上轻灵的原生 Markdown 笔记本",
@@ -147,7 +147,7 @@ COPY = {
             ("需要什么系统？", "Mac 需要 macOS 12 及以上，iPhone 和 iPad 分别需要 iOS 18 与 iPadOS 18 及以上。"),
         ],
         "about": "轻灵的原生 Markdown 笔记本",
-        "foot": (("获取", "帮助", "联系"), ("常见问题", "隐私政策")),
+        "foot": (("产品", "帮助"), ("常见问题", "隐私政策")),
     },
     "tw": {
         "title": "妙言 MiaoYan · Mac、iPhone 和 iPad 上輕靈的原生 Markdown 筆記本",
@@ -201,7 +201,7 @@ COPY = {
             ("需要什麼系統？", "Mac 需要 macOS 12 以上，iPhone 和 iPad 分別需要 iOS 18 與 iPadOS 18 以上。"),
         ],
         "about": "輕靈的原生 Markdown 筆記本",
-        "foot": (("取得", "說明", "聯絡"), ("常見問題", "隱私權政策")),
+        "foot": (("產品", "說明"), ("常見問題", "隱私權政策")),
     },
     "ja": {
         "title": "MiaoYan · Mac、iPhone、iPad 向けの軽やかなネイティブ Markdown ノート",
@@ -255,7 +255,7 @@ COPY = {
             ("動作環境は？", "MacはmacOS 12以降、iPhoneとiPadはiOS 18またはiPadOS 18以降が必要です。"),
         ],
         "about": "軽やかなネイティブ Markdown ノート",
-        "foot": (("入手", "ヘルプ", "連絡先"), ("よくある質問", "プライバシー")),
+        "foot": (("製品", "ヘルプ"), ("よくある質問", "プライバシー")),
     },
     "ko": {
         "title": "MiaoYan · Mac, iPhone, iPad용 가벼운 네이티브 마크다운 노트",
@@ -309,7 +309,7 @@ COPY = {
             ("실행 환경은 어떻게 되나요?", "Mac은 macOS 12 이상, iPhone과 iPad는 iOS 18 또는 iPadOS 18 이상이 필요합니다."),
         ],
         "about": "가벼운 네이티브 마크다운 노트",
-        "foot": (("받기", "도움말", "연락"), ("자주 묻는 질문", "개인정보 처리방침")),
+        "foot": (("제품", "도움말"), ("자주 묻는 질문", "개인정보 처리방침")),
     },
     "de": {
         "title": "MiaoYan · Leichtes natives Markdown-Notizbuch für Mac, iPhone und iPad",
@@ -363,7 +363,7 @@ COPY = {
             ("Was brauche ich dafür?", "macOS 12 oder neuer auf dem Mac sowie iOS 18 bzw. iPadOS 18 oder neuer auf iPhone und iPad."),
         ],
         "about": "Leichtes natives Markdown-Notizbuch",
-        "foot": (("Laden", "Hilfe", "Kontakt"), ("FAQ", "Datenschutz")),
+        "foot": (("Produkt", "Hilfe"), ("FAQ", "Datenschutz")),
     },
     "fr": {
         "title": "MiaoYan · Carnet Markdown natif et léger pour Mac, iPhone et iPad",
@@ -417,7 +417,7 @@ COPY = {
             ("De quoi ai-je besoin ?", "macOS 12 ou version ultérieure sur le Mac, et iOS 18 et iPadOS 18 ou version ultérieure sur iPhone et iPad."),
         ],
         "about": "Carnet Markdown natif et léger",
-        "foot": (("Obtenir", "Aide", "Contact"), ("FAQ", "Confidentialité")),
+        "foot": (("Produit", "Aide"), ("FAQ", "Confidentialité")),
     },
     "es": {
         "title": "MiaoYan · Cuaderno Markdown nativo y ligero para Mac, iPhone y iPad",
@@ -471,7 +471,7 @@ COPY = {
             ("¿Qué necesito para usarlo?", "macOS 12 o posterior en el Mac, e iOS 18 o iPadOS 18 o posterior en iPhone y iPad."),
         ],
         "about": "Cuaderno Markdown nativo y ligero",
-        "foot": (("Obtener", "Ayuda", "Contacto"), ("Preguntas", "Privacidad")),
+        "foot": (("Producto", "Ayuda"), ("Preguntas", "Privacidad")),
     },
 }
 
@@ -891,19 +891,20 @@ MORE_APPS = (
 def footer_html(key, *, faq_href="#faq", tools_new_tab=False):
     c = COPY[key]
     store = store_url(key)
-    (col_get, col_help, col_connect), (faq_label, privacy_label) = c["foot"]
+    (col_product, col_help), (faq_label, privacy_label) = c["foot"]
     ext = ' target="_blank" rel="noopener"'
     # From the homepage a tool opens in its own tab, so the page someone was
     # reading stays where it was (maintainer 2026-11-25); elsewhere in the
     # site the tools open in place, as every other internal link does.
     tab = ext if tools_new_tab else ""
     foot = (
-        f'<div class="foot-col"><p class="foot-col-title">{esc(col_get)}</p>'
-        f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(col_product)}</p>'
+        f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a>'
+        f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
+        f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
         f'<a href="{faq_href}">{esc(faq_label)}</a><a href="{blog_path(key)}">{esc(BLOG_LABEL[key])}</a>'
         f'<a href="{learn_path(key)}">{esc(LEARN_LABEL[key])}</a>'
-        f'<a href="{releases_path(key)}">{esc(RELEASES_LABEL[key])}</a>'
         f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(WRITE_TITLE[key])}</p>'
         f'<a href="{tool_path(key)}"{tab}>{esc(TOOL_LABEL[key])}</a>'
@@ -917,8 +918,6 @@ def footer_html(key, *, faq_href="#faq", tools_new_tab=False):
         f'<a href="{tool_path(key, "markdown-to-image")}"{tab}>{esc(IMAGE_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "markdown-slides")}"{tab}>{esc(SLIDES_LABEL[key])}</a>'
         f'<a href="{tool_path(key, "netnewswire-theme")}"{tab}>{esc(NNW_LABEL[key])}</a></div>'
-        f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
-        f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(MORE_APPS_TITLE[key])}</p>'
         + "".join(
             f'<a href="{url}"{ext}>{name} <span class="foot-cn" lang="{han_lang}">{han}</span></a>'
