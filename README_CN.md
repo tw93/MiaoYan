@@ -64,7 +64,7 @@ miao update             # 更新 CLI
 - [PPT 演示模式](Resources/Initial/妙言%20PPT.md) - 使用 `---` 分隔幻灯片的演示指南
 - [妙言 Agent Skill](skills/miaoyan) - 让 Agent 掌握妙言语法、附件、PPT 与 CLI 使用方式
 
-运行 `npx skills add tw93/MiaoYan/skills/miaoyan -g` 安装官方 Skill。
+运行 `npx skills add tw93/MiaoYan/skills/miaoyan -g` 安装官方 Skill，在 Claude Code 里也可以用 `/plugin install miaoyan --marketplace tw93/MiaoYan` 安装。
 
 ## 支持
 

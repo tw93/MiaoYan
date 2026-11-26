@@ -65,7 +65,7 @@ miao update                # Mettre à jour le CLI
 - [Mode présentation PPT](Resources/Initial/MiaoYan%20PPT.md) - Guide de création de présentations avec séparateurs `---`
 - [MiaoYan Agent Skill](skills/miaoyan) - Enseigne aux agents la syntaxe MiaoYan, la gestion des pièces jointes, les présentations et le CLI
 
-Installez le skill officiel avec `npx skills add tw93/MiaoYan/skills/miaoyan -g`.
+Installez le skill officiel avec `npx skills add tw93/MiaoYan/skills/miaoyan -g`, ou dans Claude Code avec `/plugin install miaoyan --marketplace tw93/MiaoYan`.
 
 ## Soutien
 

@@ -65,7 +65,7 @@ Edit and preview sit side by side. Press `⌘\` to toggle split mode, or open Pr
 - [PPT Presentation Mode](Resources/Initial/MiaoYan%20PPT.md) - Guide to creating presentations with `---` slide separators
 - [MiaoYan Agent Skill](skills/miaoyan) - Teach your agent MiaoYan syntax, attachments, PPT patterns, and CLI workflows
 
-Install the official skill with `npx skills add tw93/MiaoYan/skills/miaoyan -g`.
+Install the official skill with `npx skills add tw93/MiaoYan/skills/miaoyan -g`, or in Claude Code with `/plugin install miaoyan --marketplace tw93/MiaoYan`.
 
 ## Support
 

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "miaoyan",
+  "description": "The MiaoYan Agent Skill: MiaoYan's Markdown, attachments, PPT mode and the miao CLI, for agents that write in a MiaoYan library.",
+  "owner": {
+    "name": "Tw93",
+    "email": "hitw93@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "miaoyan",
+      "description": "Create, edit, review, organize, and present content for MiaoYan: its Markdown, wikilinks and backlinks, math, Mermaid, PlantUML, Markmap, local attachments, PPT mode, and the miao CLI.",
+      "category": "productivity",
+      "source": "./skills/miaoyan",
+      "homepage": "https://github.com/tw93/MiaoYan",
+      "skills": [
+        "./"
+      ],
+      "strict": false
+    }
+  ]
+}

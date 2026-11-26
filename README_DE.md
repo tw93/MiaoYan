@@ -65,7 +65,7 @@ Editor und Vorschau stehen nebeneinander. Drücke `⌘\`, um die geteilte Ansich
 - [PPT-Präsentationsmodus](Resources/Initial/MiaoYan%20PPT.md) - Anleitung zur Folienerstellung mit `---`-Trennlinien
 - [MiaoYan Agent Skill](skills/miaoyan) - Bringt KI-Agenten MiaoYan-Syntax, Anhänge, PPT-Strukturen und CLI-Abläufe bei
 
-Installiere den offiziellen Skill mit `npx skills add tw93/MiaoYan/skills/miaoyan -g`.
+Installiere den offiziellen Skill mit `npx skills add tw93/MiaoYan/skills/miaoyan -g`, in Claude Code auch mit `/plugin install miaoyan --marketplace tw93/MiaoYan`.
 
 ## Unterstützung
 

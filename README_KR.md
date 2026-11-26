@@ -65,7 +65,7 @@ miao update              # CLI 업데이트
 - [PPT 프레젠테이션 모드](Resources/Initial/MiaoYan%20PPT.md) - `---` 슬라이드 구분선을 활용한 발표 가이드
 - [MiaoYan Agent Skill](skills/miaoyan) - 에이전트에게 MiaoYan 문법, 첨부파일, PPT 및 CLI 워크플로 학습
 
-`npx skills add tw93/MiaoYan/skills/miaoyan -g` 명령어로 공식 Skill을 설치할 수 있습니다.
+`npx skills add tw93/MiaoYan/skills/miaoyan -g` 명령어로 공식 Skill을 설치할 수 있습니다. Claude Code에서는 `/plugin install miaoyan --marketplace tw93/MiaoYan`으로도 설치할 수 있습니다.
 
 ## 후원
 
