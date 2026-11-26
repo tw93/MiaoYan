@@ -291,6 +291,23 @@ public enum LineEdits {
         }
     }
 
+    /// The todo button of the iPhone and iPad insert bar, which does what the
+    /// Mac's Format > Todo does on the same line: when the first line with
+    /// words is already a task, the boxes are ticked or cleared; otherwise the
+    /// lines become tasks, as `toggle(.task)` makes them.
+    public static func todo(in text: NSString, selection: NSRange) -> Edit? {
+        guard selection.location >= 0, NSMaxRange(selection) <= text.length else { return nil }
+        var start = 0
+        var end = 0
+        var contentsEnd = 0
+        text.getLineStart(&start, end: &end, contentsEnd: &contentsEnd, for: selection)
+        let first = text.substring(with: NSRange(location: start, length: contentsEnd - start))
+            .components(separatedBy: "\n").map { $0.hasSuffix("\r") ? String($0.dropLast()) : $0 }
+            .first { !Line($0).words.trimmingCharacters(in: .whitespaces).isEmpty }
+        if let first, Line(first).is(.task) { return toggleTask(in: text, selection: selection) }
+        return toggle(.task, in: text, selection: selection)
+    }
+
     /// Applies `change` to each line of the selection's lines. A caret keeps
     /// its distance from the end of its line; a selection becomes the lines.
     private static func rewrite(in text: NSString, selection: NSRange, _ change: (String) -> String) -> Edit? {

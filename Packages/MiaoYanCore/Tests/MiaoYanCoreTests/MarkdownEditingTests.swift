@@ -233,6 +233,25 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(toggle("- [ ] a\r\nnext"), "- [x] a\r\nnext")
     }
 
+    func testTodoTicksATaskAndMakesAnythingElseOne() {
+        func todo(_ text: String, _ selection: NSRange = NSRange(location: 0, length: 0)) -> String? {
+            apply(LineEdits.todo(in: text as NSString, selection: selection), to: text)?.0
+        }
+        XCTAssertEqual(todo("- [ ] a"), "- [x] a")
+        XCTAssertEqual(todo("- [X] a"), "- [ ] a")
+        XCTAssertEqual(todo("> 1. [ ] a"), "> 1. [x] a")
+        XCTAssertEqual(todo("- [ ] a\r\nnext"), "- [x] a\r\nnext")
+        // Anything else becomes a task the way the bar always made one.
+        XCTAssertEqual(todo("- a"), "- [ ] a")
+        XCTAssertEqual(todo("2. a"), "- [ ] a")
+        XCTAssertEqual(todo("plain"), "- [ ] plain")
+        XCTAssertEqual(todo(""), "- [ ] ")
+        // The first line with words decides for the whole selection.
+        let both = "- [ ] a\n- [x] b"
+        XCTAssertEqual(todo(both, NSRange(location: 0, length: (both as NSString).length)), "- [x] a\n- [ ] b")
+        XCTAssertEqual(todo("plain\n- [ ] b", NSRange(location: 0, length: 13)), "- [ ] plain\n- [ ] b")
+    }
+
     func testToggleTaskKeepsTheQuote() {
         func toggle(_ text: String) -> String? {
             apply(LineEdits.toggleTask(in: text as NSString, selection: NSRange(location: 0, length: 0)), to: text)?.0
