@@ -63,8 +63,16 @@ public enum AttachmentLinks {
     /// library: a note in a subfolder reaches a parent folder's `i/` or
     /// `files/` with `../`, and bounded by its folder, Clean Unused
     /// Attachments trashed those files.
+    ///
+    /// The bounds are compared in the same form as the result:
+    /// `standardizingPath` drops a leading `/private` from a path that
+    /// exists, and every iPhone library is under `/private/var`, so a link to
+    /// an existing file there fell outside its own folder and its file was
+    /// offered as unused.
     public static func resolve(_ link: String, folder: String, noteDirectory: String, library: String) -> String? {
         guard !link.isEmpty else { return nil }
+        let folder = (folder as NSString).standardizingPath
+        let library = (library as NSString).standardizingPath
 
         if link.hasPrefix("/") {
             let resolved = NSString(string: folder + link).standardizingPath

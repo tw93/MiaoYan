@@ -45,4 +45,32 @@ final class AttachmentLinksTests: XCTestCase {
         // an extra entry only keeps a file, never trashes one.
         XCTAssertTrue(paths.contains("/lib/Work/Deep/i/c.png"))
     }
+
+    /// `standardizingPath` drops a leading `/private` from a path that
+    /// exists, and every library on an iPhone (the iCloud container, a folder
+    /// picked in Files) is under `/private/var`: compared against the folder
+    /// as given, every link to an existing file fell outside it and its file
+    /// was offered as unused.
+    func testALibraryUnderPrivateKeepsItsLinks() throws {
+        let base = URL(fileURLWithPath: NSTemporaryDirectory()).resolvingSymlinksInPath()
+            .appendingPathComponent("AttachmentLinks-\(UUID().uuidString)")
+        let work = base.appendingPathComponent("Work")
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("Deep"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: work.appendingPathComponent("files"), withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: base) }
+        try Data("PNG".utf8).write(to: work.appendingPathComponent("i/a.png"))
+        try Data("PDF".utf8).write(to: work.appendingPathComponent("files/b.pdf"))
+        // The temporary folder is under /private/var on every Apple system.
+        let folder = work.path.hasPrefix("/private/") ? work.path : "/private" + work.path
+        let library = (folder as NSString).deletingLastPathComponent
+        XCTAssertTrue(FileManager.default.fileExists(atPath: folder + "/i/a.png"))
+
+        for link in ["i/a.png", "/i/a.png", "files/b.pdf"] {
+            XCTAssertNotNil(AttachmentLinks.resolve(link, folder: folder, noteDirectory: folder, library: library), link)
+        }
+        let deep = folder + "/Deep"
+        XCTAssertNotNil(AttachmentLinks.resolve("../i/a.png", folder: deep, noteDirectory: deep, library: library))
+        XCTAssertNil(AttachmentLinks.resolve("../../../etc/hosts", folder: deep, noteDirectory: deep, library: library))
+    }
 }
