@@ -98,11 +98,42 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         }
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         let realHome = getpwuid(getuid()).map { String(cString: $0.pointee.pw_dir) } ?? home
-        for prefix in [realHome, home] where path == prefix || path.hasPrefix(prefix + "/") {
-            storageRow.detail = "~" + path.dropFirst(prefix.count)
-            return
+        let ownContainer = "iCloud~" + (Bundle.main.bundleIdentifier ?? "com.tw93.miaoyan").replacingOccurrences(of: ".", with: "~")
+        let appName = Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String ?? "MiaoYan"
+        storageRow.detail = Self.displayPath(
+            path, homes: [realHome, home], iCloudDrive: I18n.str("iCloud Drive"),
+            containerName: { container in
+                container == ownContainer
+                    ? appName
+                    : FileManager.default.displayName(atPath: (realHome as NSString).appendingPathComponent("Library/Mobile Documents/" + container))
+            })
+    }
+
+    /// A path as Finder names it. The iCloud library lives in the app's
+    /// container, `~/Library/Mobile Documents/iCloud~com~tw93~miaoyan/Documents`
+    /// on every Mac, and shown as it is people read the bundle id as the
+    /// developer's own iCloud account; Finder shows the same folder as
+    /// iCloud Drive/MiaoYan, and iCloud Drive's own folder as iCloud Drive.
+    nonisolated static func displayPath(
+        _ path: String, homes: [String], iCloudDrive: String, containerName: (String) -> String
+    ) -> String {
+        guard let home = homes.first(where: { path == $0 || path.hasPrefix($0 + "/") }) else { return path }
+        let relative = String(path.dropFirst(home.count))
+        let mobileDocuments = "/Library/Mobile Documents/"
+        guard relative.hasPrefix(mobileDocuments) else { return "~" + relative }
+        var parts = relative.dropFirst(mobileDocuments.count).split(separator: "/", omittingEmptySubsequences: true).map(String.init)
+        guard let container = parts.first else { return "~" + relative }
+        if container == "com~apple~CloudDocs" {
+            parts[0] = iCloudDrive
+        } else if container.hasPrefix("iCloud~") {
+            // An app's container shows its Documents folder as the app's
+            // folder; anything beside Documents is not in Finder at all.
+            guard parts.count >= 2, parts[1] == "Documents" else { return "~" + relative }
+            parts.replaceSubrange(0...1, with: [iCloudDrive, containerName(container)])
+        } else {
+            return "~" + relative
         }
-        storageRow.detail = path
+        return parts.joined(separator: "/")
     }
 
     // MARK: - Actions

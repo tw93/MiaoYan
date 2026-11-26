@@ -325,4 +325,29 @@ final class PrefsWindowControllerTests: XCTestCase {
         let button = try XCTUnwrap((0..<340).map { CGFloat($0) }.first { view.hitTest(NSPoint(x: $0, y: 174)) === view })
         XCTAssertGreaterThan(button, 250)
     }
+
+    /// The iCloud library sits in a folder named after the bundle id, and a
+    /// reader took `iCloud~com~tw93~miaoyan` in Settings for the developer's
+    /// own iCloud account (2026-11-26). Settings names it as Finder does.
+    func testNoteLocationNamesICloudFoldersAsFinderDoes() {
+        let homes = ["/Users/me"]
+        func shown(_ path: String) -> String {
+            GeneralPrefsViewController.displayPath(path, homes: homes, iCloudDrive: "iCloud Drive") {
+                $0 == "iCloud~com~tw93~miaoyan" ? "MiaoYan" : "Other"
+            }
+        }
+        let container = "/Users/me/Library/Mobile Documents/iCloud~com~tw93~miaoyan"
+        XCTAssertEqual(shown(container + "/Documents"), "iCloud Drive/MiaoYan")
+        XCTAssertEqual(shown(container + "/Documents/Work/Plans"), "iCloud Drive/MiaoYan/Work/Plans")
+        XCTAssertEqual(shown("/Users/me/Library/Mobile Documents/iCloud~md~obsidian/Documents/Vault"), "iCloud Drive/Other/Vault")
+        XCTAssertEqual(shown("/Users/me/Library/Mobile Documents/com~apple~CloudDocs/Notes"), "iCloud Drive/Notes")
+        XCTAssertEqual(shown("/Users/me/Library/Mobile Documents/com~apple~CloudDocs"), "iCloud Drive")
+        XCTAssertEqual(shown(container + "/Library"), "~/Library/Mobile Documents/iCloud~com~tw93~miaoyan/Library")
+        XCTAssertEqual(shown("/Users/me/Documents/Notes"), "~/Documents/Notes")
+        XCTAssertEqual(shown("/Users/me"), "~")
+        XCTAssertEqual(shown("/Volumes/Disk/Notes"), "/Volumes/Disk/Notes")
+        for path in [container + "/Documents", "/Users/me/Documents"] {
+            XCTAssertFalse(shown(path).contains("tw93"))
+        }
+    }
 }
