@@ -153,7 +153,8 @@ class ClipboardManager {
 
     /// Files dropped on the editor take the paste path: each is copied into
     /// the note's attachment folder (or uploaded, per the image upload
-    /// setting) and its Markdown link goes in at the drop point. Left to
+    /// setting) and its Markdown link goes in on a line of its own after the
+    /// line of the drop point (`beginDroppedLine`). Left to
     /// NSTextView, which imports graphics, a file became an inline attachment
     /// that was never written anywhere, since a73f4585 removed the drop
     /// handling. Nil when the pasteboard holds no file, leaving the drop to
@@ -171,18 +172,57 @@ class ClipboardManager {
         guard !urls.isEmpty, let textView, textView.isEditable, let note = EditTextView.note, textView.storageNote === note,
             let storage = textView.textStorage
         else { return false }
-        textView.setSelectedRange(NSRange(location: min(max(location, 0), storage.length), length: 0))
+        textView.undoManager?.beginUndoGrouping()
+        let lineBreak = beginDroppedLine(at: location, in: textView, storage: storage)
+        let length = storage.length
         var inserted = 0
         for url in urls {
             if inserted > 0 {
                 textView.insertText("\n\n", replacementRange: textView.selectedRange())
             }
+            droppedLineBreak = inserted == 0 ? lineBreak.map { storage.mutableString.substring(with: $0) } : nil
             if saveFile(url: url, in: note) {
                 inserted += 1
             }
         }
+        endDroppedLine(lineBreak, inserted: storage.length != length, in: textView)
+        textView.undoManager?.endUndoGrouping()
         return inserted > 0
     }
+
+    /// A drop goes after the line it was let go on, on a line of its own,
+    /// and never splits that line (maintainer 2026-11-26): the caret moves to
+    /// the line's end, and a line holding text gets a line break first. The
+    /// iPhone and iPad editor places a dropped picture the same way. Returns
+    /// the break, for a drop that put nothing in to take back; that is read
+    /// from the text's length, since `saveFile` answers true for a picture
+    /// whose file could not be written.
+    private func beginDroppedLine(at location: Int, in textView: EditTextView, storage: NSTextStorage) -> NSRange? {
+        let text = storage.string as NSString
+        let end = NSMaxRange(SourceLines.range(around: min(max(location, 0), text.length), in: text))
+        textView.setSelectedRange(NSRange(location: end, length: 0))
+        guard end > 0 else { return nil }
+        let previous = text.character(at: end - 1)
+        guard previous != 0x0A, previous != 0x0D else { return nil }
+        // A note written with CRLF keeps one kind of line ending. Coalescing
+        // is broken first, as before every insert in this file, so the break
+        // belongs to the drop's undo group rather than the typing before it.
+        let lineBreak = ListContinuation.lineBreak(in: text)
+        textView.breakUndoCoalescing()
+        textView.insertText(lineBreak, replacementRange: NSRange(location: end, length: 0))
+        return NSRange(location: end, length: (lineBreak as NSString).length)
+    }
+
+    private func endDroppedLine(_ lineBreak: NSRange?, inserted: Bool, in textView: EditTextView) {
+        droppedLineBreak = nil
+        guard !inserted, let lineBreak else { return }
+        textView.insertText("", replacementRange: lineBreak)
+    }
+
+    /// The line break `beginDroppedLine` put in front of the link about to
+    /// go in, while no link of the drop has, so a copy that fails later
+    /// takes the break out with its link (`copyFile`).
+    private var droppedLineBreak: String?
 
     /// A drag that carries no readable file: the files its source promises
     /// to write, as Photos, Mail and browsers offer a picture, or else bare
@@ -204,9 +244,13 @@ class ClipboardManager {
             receive(promises, into: note, at: caret)
             return true
         }
-        textView.setSelectedRange(NSRange(location: caret, length: 0))
+        textView.undoManager?.beginUndoGrouping()
+        let lineBreak = beginDroppedLine(at: caret, in: textView, storage: storage)
+        let length = storage.length
         EditTextView.shouldForceRescan = true
         saveClipboard(data: image.data, note: note, ext: image.ext)
+        endDroppedLine(lineBreak, inserted: storage.length != length, in: textView)
+        textView.undoManager?.endUndoGrouping()
         textView.saveTextStorageContent(to: note)
         note.save()
         return true
@@ -264,16 +308,21 @@ class ClipboardManager {
         guard !files.isEmpty, let textView, textView.isEditable, EditTextView.note === note, textView.storageNote === note,
             let storage = textView.textStorage
         else { return }
-        textView.setSelectedRange(NSRange(location: min(caret, storage.length), length: 0))
+        textView.undoManager?.beginUndoGrouping()
+        let lineBreak = beginDroppedLine(at: caret, in: textView, storage: storage)
+        let length = storage.length
         var inserted = 0
         for url in files {
             if inserted > 0 {
                 textView.insertText("\n\n", replacementRange: textView.selectedRange())
             }
+            droppedLineBreak = inserted == 0 ? lineBreak.map { storage.mutableString.substring(with: $0) } : nil
             if saveFile(url: url, in: note) {
                 inserted += 1
             }
         }
+        endDroppedLine(lineBreak, inserted: storage.length != length, in: textView)
+        textView.undoManager?.endUndoGrouping()
     }
 
     /// The regular files on a pasteboard, as Finder puts them there when
@@ -334,6 +383,8 @@ class ClipboardManager {
     private func copyFile(url: URL, kind: AttachmentFile.Kind, in note: Note) -> Bool {
         guard let textView, let reserved = ImagesProcessor.reserveAttachment(for: url, note: note) else { return false }
         let link = AttachmentFile.markdown(path: reserved.path, kind: kind, title: url.lastPathComponent)
+        let removal = (droppedLineBreak ?? "") + link
+        droppedLineBreak = nil
         EditTextView.shouldForceRescan = true
         textView.breakUndoCoalescing()
         textView.insertText(link, replacementRange: textView.selectedRange())
@@ -354,7 +405,9 @@ class ClipboardManager {
                 ImagesProcessor.releaseAttachment(destination)
                 guard let failure else { return }
                 AppDelegate.trackError(failure, context: "ClipboardManager.copyFile")
-                Self.removeLink(link, of: note, in: textView)
+                if !Self.removeLink(removal, of: note, in: textView), removal != link {
+                    Self.removeLink(link, of: note, in: textView)
+                }
                 textView?.window?.contentViewController?.toast(message: I18n.str("Save Failed"), style: .failure)
             })
         return true
@@ -362,8 +415,9 @@ class ClipboardManager {
 
     /// Takes the link of a file that could not be copied back out of the
     /// note: from the editor while it still holds that note, else from the
-    /// note's own text.
-    private static func removeLink(_ link: String, of note: Note, in textView: EditTextView?) {
+    /// note's own text. False when the text no longer holds it.
+    @discardableResult
+    private static func removeLink(_ link: String, of note: Note, in textView: EditTextView?) -> Bool {
         if let textView, textView.storageNote === note, let storage = textView.textStorage {
             let range = storage.mutableString.range(of: link)
             if range.location != NSNotFound {
@@ -375,13 +429,14 @@ class ClipboardManager {
                 }
                 textView.saveTextStorageContent(to: note)
                 note.save()
-                return
+                return true
             }
         }
         let range = note.content.mutableString.range(of: link)
-        guard range.location != NSNotFound else { return }
+        guard range.location != NSNotFound else { return false }
         note.content.replaceCharacters(in: range, with: "")
         note.save()
+        return true
     }
 
     // Simplified parameters for uPic/Picsee

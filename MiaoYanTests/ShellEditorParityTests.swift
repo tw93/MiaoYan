@@ -253,8 +253,8 @@ final class ShellEditorParityTests: XCTestCase {
 
     /// A file dragged in from Finder became an inline attachment NSTextView
     /// never saved (the drop handling went in a73f4585). It now takes the
-    /// paste path: the file is copied to `i/` and its link goes in at the
-    /// drop point. A text drag is still NSTextView's.
+    /// paste path: the file is copied to `i/` and its link goes in on its
+    /// own line after the drop point's line. A text drag is still NSTextView's.
     @available(macOS 14, *)
     @MainActor
     func testDroppedFileIsCopiedAndLinkedAtTheDropPoint() throws {
@@ -304,8 +304,8 @@ final class ShellEditorParityTests: XCTestCase {
 
         XCTAssertFalse(controller.textView.textStorage?.containsAttachments ?? true)
         let text = controller.textView.string
-        let match = try XCTUnwrap(text.range(of: "^before !\\[\\]\\((/i/[^)]+\\.png)\\)after$", options: .regularExpression), text)
-        let link = String(text[match].dropFirst("before ![](".count).dropLast(")after".count))
+        let match = try XCTUnwrap(text.range(of: "^before after\n!\\[\\]\\((/i/[^)]+\\.png)\\)$", options: .regularExpression), text)
+        let link = String(text[match].dropFirst("before after\n![](".count).dropLast(")".count))
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.path + link), "copied to \(link)")
         XCTAssertEqual(note.content.string, text)
     }
@@ -340,9 +340,161 @@ final class ShellEditorParityTests: XCTestCase {
         board.writeObjects([file as NSURL])
         XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
 
-        XCTAssertEqual(controller.textView.string, "before [Report v2.pdf](/files/Report-v2.pdf)after")
+        XCTAssertEqual(controller.textView.string, "before after\n[Report v2.pdf](/files/Report-v2.pdf)")
         for copy in drop.copies { await copy.value }
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("files/Report-v2.pdf").path))
+    }
+
+    /// A file dropped inside a line went in at the drop point and split the
+    /// line around its link. It goes after the line it was dropped on, on a
+    /// line of its own (maintainer 2026-11-26); one undo takes the whole drop
+    /// back, and a drop that puts nothing in leaves no line break behind.
+    @available(macOS 14, *)
+    @MainActor
+    func testADropGoesOnItsOwnLineAfterTheLineItWasDroppedOn() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let previousUpload = UserDefaultsManagement.defaultPicUpload
+        defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
+        UserDefaultsManagement.defaultPicUpload = "None"
+        let body = "first line\n\nthird line"
+        let note = makeLoadedNote("drop-line.md", body: body)
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let editor = controller.textView
+        // A text view only has an undo manager inside a window.
+        let scroll = try XCTUnwrap(editor.enclosingScrollView)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 320), styleMask: [.titled], backing: .buffered, defer: true)
+        window.contentView = scroll
+        defer { window.contentView = nil }
+        let undo = try XCTUnwrap(editor.undoManager)
+        undo.groupsByEvent = false
+        defer { undo.groupsByEvent = true }
+        undo.removeAllActions()
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDropLine-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let file = source.appendingPathComponent("Plan.pdf")
+        try Data("%PDF-1.4".utf8).write(to: file)
+        let drop = ClipboardManager(textView: editor)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-line-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+
+        XCTAssertEqual(drop.dropFiles(from: board, at: 3), true)
+        XCTAssertEqual(editor.string, "first line\n[Plan.pdf](/files/Plan.pdf)\n\nthird line", "after the line, which stays whole")
+        undo.undo()
+        XCTAssertEqual(editor.string, body, "one undo takes the drop back")
+
+        XCTAssertEqual(drop.dropFiles(from: board, at: 11), true)
+        XCTAssertTrue(editor.string.hasPrefix("first line\n[Plan.pdf](/files/"), "an empty line takes the link with no extra break: \(editor.string)")
+        XCTAssertTrue(editor.string.hasSuffix(")\nthird line"), editor.string)
+        undo.undo()
+        XCTAssertEqual(editor.string, body)
+
+        // A picture whose file cannot be written (a file named `i` where
+        // the folder goes) inserts nothing, and the line break made for it
+        // is taken back.
+        let blocker = tempDir.appendingPathComponent("i")
+        try Data().write(to: blocker)
+        defer { try? FileManager.default.removeItem(at: blocker) }
+        let picture = source.appendingPathComponent("shot.png")
+        let image = NSImage(size: NSSize(width: 4, height: 4))
+        image.lockFocus()
+        NSColor.red.drawSwatch(in: NSRect(x: 0, y: 0, width: 4, height: 4))
+        image.unlockFocus()
+        try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(image.tiffRepresentation))?.representation(using: .png, properties: [:])).write(to: picture)
+        board.clearContents()
+        board.writeObjects([picture as NSURL])
+        _ = drop.dropFiles(from: board, at: 3)
+        XCTAssertEqual(editor.string, body, "no stray line break")
+    }
+
+    /// A CRLF note keeps one kind of line ending, and the break a drop adds
+    /// at the end of a line just typed on is not folded into that typing:
+    /// one undo takes the drop back and leaves the typing.
+    @available(macOS 14, *)
+    @MainActor
+    func testADropKeepsCRLFAndIsItsOwnUndoStepAfterTyping() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let note = makeLoadedNote("drop-crlf.md", body: "first line\r\nthird line")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let editor = controller.textView
+        let scroll = try XCTUnwrap(editor.enclosingScrollView)
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 480, height: 320), styleMask: [.titled], backing: .buffered, defer: true)
+        window.contentView = scroll
+        defer { window.contentView = nil }
+        let undo = try XCTUnwrap(editor.undoManager)
+        undo.groupsByEvent = false
+        defer { undo.groupsByEvent = true }
+        undo.removeAllActions()
+
+        undo.beginUndoGrouping()
+        editor.setSelectedRange(NSRange(location: 10, length: 0))
+        editor.insertText("!", replacementRange: editor.selectedRange())
+        undo.endUndoGrouping()
+        let typed = "first line!\r\nthird line"
+        XCTAssertEqual(editor.string, typed)
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDropCRLF-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let file = source.appendingPathComponent("Plan.pdf")
+        try Data("%PDF-1.4".utf8).write(to: file)
+        let drop = ClipboardManager(textView: editor)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-crlf-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+
+        XCTAssertEqual(drop.dropFiles(from: board, at: 3), true)
+        XCTAssertEqual(editor.string, "first line!\r\n[Plan.pdf](/files/Plan.pdf)\r\nthird line")
+        undo.undo()
+        XCTAssertEqual(editor.string, typed, "one undo takes the drop back, the typing stays")
+    }
+
+    /// A dropped file whose copy fails later has its link taken out; the
+    /// line break the drop made for it goes with it.
+    @available(macOS 14, *)
+    @MainActor
+    func testADropWhoseCopyFailsTakesItsLineBreakBack() async throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let body = "first line\nthird line"
+        let note = makeLoadedNote("drop-copy-fails.md", body: body)
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+
+        // `files/` that cannot be written: the name is taken, the copy fails.
+        let files = tempDir.appendingPathComponent("files")
+        try FileManager.default.createDirectory(at: files, withIntermediateDirectories: true)
+        try FileManager.default.setAttributes([.posixPermissions: 0o555], ofItemAtPath: files.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: files.path) }
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDropFail-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let file = source.appendingPathComponent("Plan.pdf")
+        try Data("%PDF-1.4".utf8).write(to: file)
+        let drop = ClipboardManager(textView: controller.textView)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-fail-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+
+        XCTAssertEqual(drop.dropFiles(from: board, at: 3), true)
+        XCTAssertEqual(controller.textView.string, "first line\n[Plan.pdf](/files/Plan.pdf)\nthird line")
+        for copy in drop.copies { await copy.value }
+        XCTAssertEqual(controller.textView.string, body, "the link and its line break are gone")
     }
 
     /// With an image host set, every dropped file went up to it whatever its
@@ -386,7 +538,7 @@ final class ShellEditorParityTests: XCTestCase {
         board.writeObjects([file as NSURL])
         XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
 
-        XCTAssertEqual(controller.textView.string, "before [Report v2.pdf](/files/Report-v2.pdf)after")
+        XCTAssertEqual(controller.textView.string, "before after\n[Report v2.pdf](/files/Report-v2.pdf)")
         for copy in drop.copies { await copy.value }
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.appendingPathComponent("files/Report-v2.pdf").path))
     }
@@ -435,15 +587,15 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(drop.dropFiles(from: board, at: 7), true)
 
         XCTAssertEqual(
-            controller.textView.string, "before ![](/files/clip.mov)\n\n![](/i/shot.png)\n\n[Plan.pdf](/files/Plan.pdf)after",
+            controller.textView.string, "before after\n![](/files/clip.mov)\n\n![](/i/shot.png)\n\n[Plan.pdf](/files/Plan.pdf)",
             "every link is in, in drop order, before the copies finish")
         XCTAssertEqual(drop.copies.count, 2, "the video and the PDF are copied, the image is written as before")
         // The same file again, its name taken (on disk, or held while the
         // first copy runs): it gets a name of its own.
         XCTAssertTrue(drop.saveFile(url: source.appendingPathComponent("Plan.pdf"), in: note))
         let text = controller.textView.string
-        let second = try XCTUnwrap(text.range(of: #"\[Plan\.pdf\]\(/files/Plan\.pdf\)\[Plan\.pdf\]\(/files/[^)]+\)after$"#, options: .regularExpression), text)
-        let secondName = String(text[second].dropFirst("[Plan.pdf](/files/Plan.pdf)[Plan.pdf](/files/".count).dropLast(")after".count))
+        let second = try XCTUnwrap(text.range(of: #"\[Plan\.pdf\]\(/files/Plan\.pdf\)\[Plan\.pdf\]\(/files/[^)]+\)$"#, options: .regularExpression), text)
+        let secondName = String(text[second].dropFirst("[Plan.pdf](/files/Plan.pdf)[Plan.pdf](/files/".count).dropLast(")".count))
         XCTAssertNotEqual(secondName, "Plan.pdf")
         for copy in drop.copies { await copy.value }
         XCTAssertEqual(threads.onMainThread, [false, false, false], "the video and both PDFs were copied, none on the main thread")
@@ -565,8 +717,8 @@ final class ShellEditorParityTests: XCTestCase {
 
         XCTAssertFalse(controller.textView.textStorage?.containsAttachments ?? true)
         let text = controller.textView.string
-        let match = try XCTUnwrap(text.range(of: "^before !\\[\\]\\((/i/[^)]+\\.png)\\)after$", options: .regularExpression), text)
-        let link = String(text[match].dropFirst("before ![](".count).dropLast(")after".count))
+        let match = try XCTUnwrap(text.range(of: "^before after\n!\\[\\]\\((/i/[^)]+\\.png)\\)$", options: .regularExpression), text)
+        let link = String(text[match].dropFirst("before after\n![](".count).dropLast(")".count))
         XCTAssertEqual(try Data(contentsOf: URL(fileURLWithPath: tempDir.path + link)), png, "written to \(link) as it was dragged")
         XCTAssertEqual(note.content.string, text)
     }
@@ -655,7 +807,7 @@ final class ShellEditorParityTests: XCTestCase {
     /// location; a text drag stays NSTextView's.
     @available(macOS 14, *)
     @MainActor
-    func testPerformDragOperationRoutesFilesToDropFilesAtTheDragPoint() throws {
+    func testPerformDragOperationRoutesFilesToDropFilesOnTheDragLine() throws {
         let previousNote = EditTextView.note
         defer { EditTextView.note = previousNote }
         EditTextView.note = nil
@@ -703,9 +855,7 @@ final class ShellEditorParityTests: XCTestCase {
         let handled = editor.performDragOperation(StubDraggingInfo(pasteboard: board, location: point))
         XCTAssertTrue(handled)
         let text = editor.string
-        let match = try XCTUnwrap(text.range(of: "^(.*)!\\[\\]\\((/i/[^)]+\\.png)\\)(.*)$", options: .regularExpression), text)
-        let head = String(text[..<(text.range(of: "![](")!.lowerBound)])
-        XCTAssertEqual(head.utf16.count, expected, "the link lands at the drag point")
+        let match = try XCTUnwrap(text.range(of: "^before after\n!\\[\\]\\((/i/[^)]+\\.png)\\)$", options: .regularExpression), text)
         XCTAssertFalse(editor.textStorage?.containsAttachments ?? true)
         let link = String(text[text.range(of: "(/i/")!.lowerBound...].dropFirst().prefix(while: { $0 != ")" }))
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.path + link), "copied to \(link) (\(match))")
