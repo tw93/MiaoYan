@@ -43,6 +43,28 @@ final class NoteVersionFilesTests: XCTestCase {
         XCTAssertEqual(try String(contentsOf: versions[0].url, encoding: .utf8), "v\(NoteVersionFiles.keptPerNote + 2)")
     }
 
+    /// The iPhone's history must find its notes after an app update moves
+    /// the container, across `/private`, and through an iCloud placeholder.
+    func testADeviceNoteKeepsItsFolderAcrossTheWaysItsPathDrifts() {
+        let before = "/var/mobile/Containers/Data/Application/AAAA"
+        let after = "/private/var/mobile/Containers/Data/Application/BBBB"
+        let key = NoteVersionFiles.folderName(for: URL(fileURLWithPath: before + "/Documents/Library/Work/Plan.md"), home: before)
+        XCTAssertEqual(
+            key, NoteVersionFiles.folderName(for: URL(fileURLWithPath: after + "/Documents/Library/Work/Plan.md"), home: after),
+            "an update gave the app a new container")
+        XCTAssertEqual(
+            key, NoteVersionFiles.folderName(for: URL(fileURLWithPath: before + "/Documents/Library/Work/.Plan.md.icloud"), home: before),
+            "a note iCloud has not downloaded")
+        XCTAssertNotEqual(
+            key, NoteVersionFiles.folderName(for: URL(fileURLWithPath: before + "/Documents/Library/Home/Plan.md"), home: before))
+
+        let cloud = "/var/mobile/Library/Mobile Documents/iCloud~com~tw93~miaoyan/Documents/Plan.md"
+        XCTAssertEqual(
+            NoteVersionFiles.folderName(for: URL(fileURLWithPath: cloud), home: before),
+            NoteVersionFiles.folderName(for: URL(fileURLWithPath: "/private" + cloud), home: after),
+            "an iCloud note, outside the app's home, read with and without /private")
+    }
+
     func testTheFolderNameKeepsTwoNotesOfOneNameApart() {
         let first = NoteVersionFiles.folderName(for: URL(fileURLWithPath: "/lib/Work/Plan.md"))
         let second = NoteVersionFiles.folderName(for: URL(fileURLWithPath: "/lib/Home/Plan.md"))

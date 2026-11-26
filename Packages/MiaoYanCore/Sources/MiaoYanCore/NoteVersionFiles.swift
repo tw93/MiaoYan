@@ -21,6 +21,33 @@ public enum NoteVersionFiles {
         return "\(noteURL.deletingPathExtension().lastPathComponent)-\(String(hash, radix: 16))"
     }
 
+    /// The folder for a note on the iPhone and iPad, whose paths drift in
+    /// three ways the Mac's do not, each of which would part a note from
+    /// its history: iOS gives the app a new container path when it updates,
+    /// so a note under `home` (the app's own Documents) is filed from it;
+    /// a note's URL from the iCloud catalog and from a folder listing can
+    /// differ by `/private`, dropped as text since a note's old path after
+    /// a move no longer exists to resolve; and a note iCloud has not
+    /// downloaded is listed as `.Name.md.icloud`, filed as `Name.md`.
+    public static func folderName(for note: URL, home: String) -> String {
+        func withoutPrivate(_ path: String) -> String {
+            for alias in ["/private/var/", "/private/tmp/"] where path.hasPrefix(alias) {
+                return String(path.dropFirst("/private".count))
+            }
+            return path
+        }
+        var note = note
+        let name = note.lastPathComponent
+        if name.hasPrefix("."), name.hasSuffix(".icloud"), name.count > ".icloud".count + 1 {
+            note = note.deletingLastPathComponent()
+                .appendingPathComponent(String(name.dropFirst().dropLast(".icloud".count)))
+        }
+        var path = withoutPrivate(note.standardizedFileURL.path)
+        let home = withoutPrivate((home as NSString).standardizingPath)
+        if path.hasPrefix(home + "/") { path = "/~" + path.dropFirst(home.count) }
+        return folderName(for: URL(fileURLWithPath: path))
+    }
+
     /// `2026-11-21T10-00-00Z.md`, the name a version saved at `date` gets.
     public static func fileName(for date: Date) -> String {
         formatter().string(from: date) + ".md"
