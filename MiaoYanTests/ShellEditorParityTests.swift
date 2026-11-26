@@ -414,6 +414,39 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(editor.string, body, "no stray line break")
     }
 
+    /// A file dropped inside a table became a row of it, and one dropped in a
+    /// code block a line of the code; it goes after the whole block.
+    @available(macOS 14, *)
+    @MainActor
+    func testADropInsideATableOrCodeGoesAfterTheBlock() throws {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let body = "| a | b |\n| - | - |\n| 1 | 2 |\n\n```\ncode\n```\nend"
+        let note = makeLoadedNote("drop-block.md", body: body)
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let editor = controller.textView
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanDropBlock-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let file = source.appendingPathComponent("Plan.pdf")
+        try Data("%PDF-1.4".utf8).write(to: file)
+        let drop = ClipboardManager(textView: editor)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-drop-block-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([file as NSURL])
+
+        XCTAssertEqual(drop.dropFiles(from: board, at: 2), true)
+        XCTAssertTrue(editor.string.hasPrefix("| a | b |\n| - | - |\n| 1 | 2 |\n[Plan.pdf](/files/Plan"), editor.string)
+        editor.string = body
+        XCTAssertEqual(drop.dropFiles(from: board, at: (body as NSString).range(of: "code").location), true)
+        XCTAssertTrue(editor.string.contains("```\ncode\n```\n[Plan.pdf](/files/"), editor.string)
+    }
+
     /// A CRLF note keeps one kind of line ending, and the break a drop adds
     /// at the end of a line just typed on is not folded into that typing:
     /// one undo takes the drop back and leaves the typing.

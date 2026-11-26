@@ -192,14 +192,16 @@ class ClipboardManager {
 
     /// A drop goes after the line it was let go on, on a line of its own,
     /// and never splits that line (maintainer 2026-11-26): the caret moves to
-    /// the line's end, and a line holding text gets a line break first. The
+    /// the line's end, or the end of the table or fenced code block the drop
+    /// landed in (`DropPlacement`), and a line holding text gets a line
+    /// break first. The
     /// iPhone and iPad editor places a dropped picture the same way. Returns
     /// the break, for a drop that put nothing in to take back; that is read
     /// from the text's length, since `saveFile` answers true for a picture
     /// whose file could not be written.
     private func beginDroppedLine(at location: Int, in textView: EditTextView, storage: NSTextStorage) -> NSRange? {
         let text = storage.string as NSString
-        let end = NSMaxRange(SourceLines.range(around: min(max(location, 0), text.length), in: text))
+        let end = DropPlacement.lineEnd(around: location, in: text)
         textView.setSelectedRange(NSRange(location: end, length: 0))
         guard end > 0 else { return nil }
         let previous = text.character(at: end - 1)

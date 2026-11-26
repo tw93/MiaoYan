@@ -456,6 +456,39 @@ final class MarkdownEditingTests: XCTestCase {
         let template = TableEditing.template(headers: ["Column 1", "Column 2"])
         XCTAssertEqual((template.text as NSString).substring(with: template.selection), "Column 1")
     }
+
+    /// A drop goes after the line it lands on, and after the whole table or
+    /// fenced code block it lands in, so it never splits a line, adds a row
+    /// to a table or a line to the code.
+    func testADropGoesAfterItsLineTableOrCodeBlock() {
+        func end(_ text: String, at needle: String, plus offset: Int = 0) -> String {
+            let ns = text as NSString
+            let at = ns.range(of: needle).location + offset
+            return ns.substring(to: DropPlacement.lineEnd(around: at, in: ns))
+        }
+        XCTAssertEqual(end("alpha beta\nnext", at: "beta"), "alpha beta")
+        XCTAssertEqual(end("alpha beta\r\nnext", at: "beta"), "alpha beta")
+        XCTAssertEqual(end("first\n\nthird", at: "\n\n", plus: 1), "first\n")
+
+        let table = "intro\n\n| a | b |\n| - | - |\n| 1 | 2 |\n| 3 | 4 |\n\nafter"
+        let wholeTable = "intro\n\n| a | b |\n| - | - |\n| 1 | 2 |\n| 3 | 4 |"
+        XCTAssertEqual(end(table, at: "| a"), wholeTable, "on the header")
+        XCTAssertEqual(end(table, at: "| 1", plus: 2), wholeTable, "inside a body row")
+        XCTAssertEqual(end(table, at: "intro"), "intro")
+
+        let code = "text\n```swift\nlet a = 1\nlet b = 2\n```\nafter"
+        let wholeCode = "text\n```swift\nlet a = 1\nlet b = 2\n```"
+        XCTAssertEqual(end(code, at: "```swift"), wholeCode, "on the opening fence")
+        XCTAssertEqual(end(code, at: "a = 1"), wholeCode, "inside the code")
+        XCTAssertEqual(end(code, at: "```\nafter"), wholeCode, "on the closing fence")
+        XCTAssertEqual(end(code, at: "after"), code)
+        XCTAssertEqual(end(code, at: "text"), "text")
+        // A fence never closed is no block.
+        XCTAssertEqual(end("text\n```\nlet a = 1\nmore", at: "a = 1"), "text\n```\nlet a = 1")
+        // A table inside code is code.
+        let tableInCode = "```\n| a | b |\n| - | - |\n```\nend"
+        XCTAssertEqual(end(tableInCode, at: "| a"), "```\n| a | b |\n| - | - |\n```")
+    }
 }
 
 /// A small deterministic generator (SplitMix64), so a failure names a seed
@@ -470,4 +503,5 @@ private struct SeededGenerator: RandomNumberGenerator {
         z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
         return z ^ (z >> 31)
     }
+
 }

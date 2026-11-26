@@ -212,6 +212,28 @@ public enum ListContinuation {
             }
     }
 
+    /// The end, without its line ending, of the closing fence of the fenced
+    /// code block holding the line that starts at `lineStart`, its opening
+    /// and closing fences included; nil outside one. A fence never closed is
+    /// no block, as everywhere else here.
+    static func fencedBlockEnd(lineStart: Int, in text: NSString) -> Int? {
+        guard text.range(of: "```").location != NSNotFound else { return nil }
+        let line = SourceLines.range(around: lineStart, in: text)
+        let inside = isInFencedCode(lineStart: line.location, in: text)
+        guard inside || opensFence(line, in: text) else { return nil }
+        if inside, isClosingFence(line, in: text) { return NSMaxRange(line) }
+        var end: Int?
+        SourceLines.forEach(in: text) { _, range in
+            guard range.location > line.location else { return true }
+            if isClosingFence(range, in: text) {
+                end = NSMaxRange(range)
+                return false
+            }
+            return true
+        }
+        return end
+    }
+
     /// `3.` becomes `4.`; a bullet stays as it is.
     private static func next(_ bullet: String) -> String {
         guard let closer = bullet.last, closer == "." || closer == ")", let number = Int(bullet.dropLast()) else {
@@ -232,6 +254,25 @@ public enum ListContinuation {
         pattern: #"^([ \t]*(?:>[ \t]*)*>[ \t]+)(.*)$"#, options: [.dotMatchesLineSeparators])
     private static let ruleRegex = try! NSRegularExpression(
         pattern: #"^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$"#)
+}
+
+/// Where a file or picture dropped on the editor goes, the same on the Mac
+/// and the iPhone and iPad (maintainer 2026-11-26): after the line it was
+/// let go on, never splitting it, and after the whole table or fenced code
+/// block when it was let go inside one, where a link would have become a
+/// row of the table or a line of the code.
+public enum DropPlacement {
+    /// The offset the dropped link's line goes after: the end, without its
+    /// line ending, of the line holding `offset`, or of the table or fenced
+    /// code block holding that line.
+    public static func lineEnd(around offset: Int, in text: NSString) -> Int {
+        let line = SourceLines.range(around: min(max(offset, 0), text.length), in: text)
+        if let fence = ListContinuation.fencedBlockEnd(lineStart: line.location, in: text) { return fence }
+        if let table = TableEditing.locate(in: text, selection: NSRange(location: line.location, length: 0)) {
+            return NSMaxRange(table.range)
+        }
+        return NSMaxRange(line)
+    }
 }
 
 /// Line commands the iPhone and iPad editor runs from a hardware keyboard,
