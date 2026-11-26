@@ -1,4 +1,5 @@
 import AppKit
+import MiaoYanCore
 
 @MainActor
 private final class VersionHistoryBackgroundView: NSView {

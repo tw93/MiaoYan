@@ -73,7 +73,6 @@
 		27E951092E814E61004E2883 /* ShortcutTemplateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */; };
 		CEFF8E779B556799D5478F64 /* TableColumnAligner.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DA59B57722AC30C4443032 /* TableColumnAligner.swift */; };
 		E6604FF192363C721861D569 /* UIScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC8436D044B76ADBF6B26AB /* UIScript.swift */; };
-		AF01C884C40A297889697130 /* VersionChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 556E5743CCB0D7DF08B04F33 /* VersionChanges.swift */; };
 		58FCE3292337FBFC27C632CC /* ListHangingIndent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF9C7F011C78065C96404BA /* ListHangingIndent.swift */; };
 		27EAA59A2EA8C76500D13871 /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
 		27EFD78A2E40E2E400DE6636 /* HtmlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFD7892E40E2E400DE6636 /* HtmlManager.swift */; };
@@ -297,7 +296,6 @@
 		27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutTemplateManager.swift; sourceTree = "<group>"; };
 		C6DA59B57722AC30C4443032 /* TableColumnAligner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableColumnAligner.swift; sourceTree = "<group>"; };
 		FAC8436D044B76ADBF6B26AB /* UIScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScript.swift; sourceTree = "<group>"; };
-		556E5743CCB0D7DF08B04F33 /* VersionChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionChanges.swift; sourceTree = "<group>"; };
 		6DF9C7F011C78065C96404BA /* ListHangingIndent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHangingIndent.swift; sourceTree = "<group>"; };
 		27EAA5992EA8C76500D13871 /* app.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = app.icon; sourceTree = "<group>"; };
 		27EFD7892E40E2E400DE6636 /* HtmlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlManager.swift; sourceTree = "<group>"; };
@@ -726,7 +724,6 @@
 				27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */,
 				C6DA59B57722AC30C4443032 /* TableColumnAligner.swift */,
 				FAC8436D044B76ADBF6B26AB /* UIScript.swift */,
-				556E5743CCB0D7DF08B04F33 /* VersionChanges.swift */,
 				6DF9C7F011C78065C96404BA /* ListHangingIndent.swift */,
 				2763128C2E766CE3007BB5E9 /* Theme.swift */,
 				276312602E7580B5007BB5E9 /* Localization.swift */,
@@ -1011,7 +1008,6 @@
 				27E951092E814E61004E2883 /* ShortcutTemplateManager.swift in Sources */,
 				CEFF8E779B556799D5478F64 /* TableColumnAligner.swift in Sources */,
 				E6604FF192363C721861D569 /* UIScript.swift in Sources */,
-				AF01C884C40A297889697130 /* VersionChanges.swift in Sources */,
 				58FCE3292337FBFC27C632CC /* ListHangingIndent.swift in Sources */,
 				278160A12E7588F100F3D54B /* TypographyPrefsViewController.swift in Sources */,
 				D797004C1F3DD10700BAD94D /* EditTextView.swift in Sources */,

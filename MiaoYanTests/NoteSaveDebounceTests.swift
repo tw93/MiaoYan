@@ -1,3 +1,4 @@
+import MiaoYanCore
 import XCTest
 
 @testable import MiaoYan
@@ -493,7 +494,7 @@ final class NoteSaveDebounceTests: XCTestCase {
 
         let texts = versionTexts(of: fixture.staying)
         XCTAssertEqual(Set(texts), ["the moving note", "the note already there"], "both versions are in the new history")
-        XCTAssertTrue(manager.versions(for: fixture.staying).allSatisfy { NoteVersionManager.isVersionFileName($0.url.lastPathComponent) })
+        XCTAssertTrue(manager.versions(for: fixture.staying).allSatisfy { NoteVersionFiles.isVersionFileName($0.url.lastPathComponent) })
         XCTAssertFalse(manager.hasVersions(for: fixture.moving), "nothing is left for a new note at the old path")
     }
 

@@ -6,27 +6,32 @@ import Foundation
 /// run of new lines replaced old ones, as many as were replaced are
 /// rewrites and the rest additions. Removed lines leave no mark in the
 /// newer text: the older version shows them.
-struct VersionChanges: Equatable {
-    enum Kind: Equatable {
+public struct VersionChanges: Equatable, Sendable {
+    public enum Kind: Equatable, Sendable {
         case added, rewritten
     }
 
-    struct Mark: Equatable {
+    public struct Mark: Equatable, Sendable {
         /// Zero-based line in the newer text.
-        let line: Int
-        let kind: Kind
+        public let line: Int
+        public let kind: Kind
+
+        public init(line: Int, kind: Kind) {
+            self.line = line
+            self.kind = kind
+        }
     }
 
-    let added: Int
-    let removed: Int
-    let marks: [Mark]
+    public let added: Int
+    public let removed: Int
+    public let marks: [Mark]
 
     /// Past this many lines on both sides together the diff is skipped:
     /// `CollectionDifference` grows with lines times changes, and a note
     /// that long is not read line by line in this panel anyway.
-    static let longestDiffed = 20000
+    public static let longestDiffed = 20000
 
-    static func between(older: String, newer: String) -> VersionChanges? {
+    public static func between(older: String, newer: String) -> VersionChanges? {
         let old = lines(of: older)
         let new = lines(of: newer)
         guard old.count + new.count <= longestDiffed else { return nil }
@@ -71,13 +76,13 @@ struct VersionChanges: Equatable {
     /// Lines without their ending, so a file saved with CRLF compares equal
     /// to the same text with LF. "\r\n" is one Character in Swift, so it is
     /// a separator of its own: splitting on "\n" alone never sees it.
-    static func lines(of text: String) -> [Substring] {
+    public static func lines(of text: String) -> [Substring] {
         text.split(omittingEmptySubsequences: false) { $0 == "\n" || $0 == "\r\n" }
     }
 
     /// The UTF-16 range of each marked line in `text`, its line break
     /// included, for drawing.
-    static func ranges(of marks: [Mark], in text: String) -> [(range: NSRange, kind: Kind)] {
+    public static func ranges(of marks: [Mark], in text: String) -> [(range: NSRange, kind: Kind)] {
         guard !marks.isEmpty else { return [] }
         let ns = text as NSString
         // Only "\n" ends a line, as in `lines(of:)`: NSString's own line

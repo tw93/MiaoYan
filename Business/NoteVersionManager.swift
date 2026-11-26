@@ -1,10 +1,10 @@
 import Foundation
+import MiaoYanCore
 
 final class NoteVersionManager: @unchecked Sendable {
     static let shared = NoteVersionManager()
 
     private let versionsRoot: URL
-    private let maxVersions = 20
     private let minInterval: TimeInterval = 300
     private var lastSaved: [String: Date] = [:]
     /// The history's size as of the last walk plus what was written since,
@@ -45,52 +45,27 @@ final class NoteVersionManager: @unchecked Sendable {
             }
 
             let dir = self.versionsRoot.appendingPathComponent(key)
-            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-
-            if let latest = self.versionsInDir(dir).first,
-                let prev = try? String(contentsOf: latest.url, encoding: .utf8),
-                self.normalizeForComparison(prev) == self.normalizeForComparison(text)
-            {
-                return
-            }
-
-            let fmt = DateFormatter()
-            fmt.dateFormat = "yyyy-MM-dd'T'HH-mm-ss'Z'"
-            fmt.timeZone = TimeZone(secondsFromGMT: 0)
-            fmt.locale = Locale(identifier: "en_US_POSIX")
-            // A version merged in from a rename can already hold this second
-            // (it moved to the next free one); the save takes the next free
-            // second too rather than writing over it.
-            var date = Date()
-            var dest = dir.appendingPathComponent(fmt.string(from: date) + ".md")
-            while FileManager.default.fileExists(atPath: dest.path) {
-                date.addTimeInterval(1)
-                dest = dir.appendingPathComponent(fmt.string(from: date) + ".md")
-            }
+            let written: URL?
             do {
-                try text.write(to: dest, atomically: true, encoding: .utf8)
+                written = try NoteVersionFiles.save(text, in: dir)
             } catch {
                 // Not marked as saved, so the next save tries again instead of
                 // skipping the whole interval without a snapshot.
                 DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.saveVersion") }
                 return
             }
+            // The same text as the newest version writes nothing.
+            guard written != nil else { return }
 
             self.lastSaved[key] = Date()
-            self.prune(dir: dir)
-            let written = Int64(text.utf8.count)
-            if let size = self.historySize, size + written <= Self.libraryBudget {
-                self.historySize = size + written
+            let size = Int64(text.utf8.count)
+            if let history = self.historySize, history + size <= NoteVersionFiles.budget {
+                self.historySize = history + size
             } else {
-                self.historySize = Self.keepWithinBudget(root: self.versionsRoot, budget: Self.libraryBudget)
+                self.historySize = NoteVersionFiles.keepWithinBudget(root: self.versionsRoot, budget: NoteVersionFiles.budget)
             }
         }
     }
-
-    /// Every note's versions together stay under this: 20 versions of a
-    /// few long notes, kept forever, otherwise grow without a ceiling
-    /// (quiet-md keeps the same 200 MiB, 2026-11-21).
-    static let libraryBudget: Int64 = 200 << 20
 
     /// A scripted run (UIScript) is a Debug or timing build typing into a
     /// scratch library, and those builds share the release app's folder.
@@ -103,66 +78,10 @@ final class NoteVersionManager: @unchecked Sendable {
         #endif
     }
 
-    /// Removes the oldest versions across all notes until the history fits
-    /// in `budget`, never a note's newest one, so each note keeps the
-    /// version it can always go back to. Version files are named by their
-    /// UTC time, so names sort oldest first in every folder alike. Returns
-    /// the size left.
-    @discardableResult
-    static func keepWithinBudget(root: URL, budget: Int64) -> Int64 {
-        let manager = FileManager.default
-        let keys: [URLResourceKey] = [.isDirectoryKey, .isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]
-        guard let folders = try? manager.contentsOfDirectory(at: root, includingPropertiesForKeys: keys) else { return 0 }
-        var total: Int64 = 0
-        var removable: [(url: URL, size: Int64)] = []
-        // Only real folders and files named as a version are counted or
-        // removed: a symlink, a .DS_Store or anything else left in the folder
-        // is neither, and must not pass for a note's newest version.
-        for folder in folders {
-            let folderValues = try? folder.resourceValues(forKeys: Set(keys))
-            guard folderValues?.isDirectory == true, folderValues?.isSymbolicLink != true else { continue }
-            let files = (try? manager.contentsOfDirectory(at: folder, includingPropertiesForKeys: keys)) ?? []
-            let versions = files.filter { file in
-                let values = try? file.resourceValues(forKeys: Set(keys))
-                return values?.isRegularFile == true && values?.isSymbolicLink != true && isVersionFileName(file.lastPathComponent)
-            }
-            let newestFirst = versions.sorted { $0.lastPathComponent > $1.lastPathComponent }
-            for (index, file) in newestFirst.enumerated() {
-                let size = Int64((try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0)
-                total += size
-                if index > 0 { removable.append((file, size)) }
-            }
-        }
-        guard total > budget else { return total }
-        for file in removable.sorted(by: { $0.url.lastPathComponent < $1.url.lastPathComponent }) {
-            guard total > budget else { break }
-            if (try? manager.removeItem(at: file.url)) != nil { total -= file.size }
-        }
-        return total
-    }
-
-    /// `2026-11-21T10-00-00Z.md`, the name `saveVersion` gives a version.
-    static func isVersionFileName(_ name: String) -> Bool {
-        name.range(of: #"^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z\.md$"#, options: .regularExpression) != nil
-    }
-
     @MainActor
     func versions(for note: Note) -> [(date: Date, url: URL)] {
         let dir = versionsRoot.appendingPathComponent(versionKey(for: note.url))
-        return versionsInDir(dir)
-    }
-
-    private func versionsInDir(_ dir: URL) -> [(date: Date, url: URL)] {
-        let fmt = DateFormatter()
-        fmt.dateFormat = "yyyy-MM-dd'T'HH-mm-ss'Z'"
-        fmt.timeZone = TimeZone(secondsFromGMT: 0)
-        fmt.locale = Locale(identifier: "en_US_POSIX")
-        return (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil))?
-            .compactMap { url -> (Date, URL)? in
-                guard let d = fmt.date(from: url.deletingPathExtension().lastPathComponent) else { return nil }
-                return (d, url)
-            }
-            .sorted { $0.0 > $1.0 } ?? []
+        return NoteVersionFiles.versions(in: dir)
     }
 
     @MainActor
@@ -206,9 +125,9 @@ final class NoteVersionManager: @unchecked Sendable {
                 var allMoved = true
                 do {
                     for file in try manager.contentsOfDirectory(at: source, includingPropertiesForKeys: nil)
-                    where Self.isVersionFileName(file.lastPathComponent) {
+                    where NoteVersionFiles.isVersionFileName(file.lastPathComponent) {
                         do {
-                            try Self.merge(version: file, into: target)
+                            try NoteVersionFiles.merge(version: file, into: target)
                         } catch {
                             allMoved = false
                             DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.moveVersions.merge") }
@@ -226,39 +145,12 @@ final class NoteVersionManager: @unchecked Sendable {
                         try? manager.removeItem(at: source)
                     }
                 }
-                self?.prune(dir: target)
+                NoteVersionFiles.prune(target)
             }
             if let last = self?.lastSaved.removeValue(forKey: oldKey) {
                 self?.lastSaved[newKey] = last
             }
         }
-    }
-
-    /// Moves one version into `folder`. Two saves in the same second share
-    /// a name: the same bytes there make this copy a duplicate, which goes;
-    /// other bytes move under the next free second, so the name still
-    /// reads as a version and the history keeps its order.
-    private static func merge(version file: URL, into folder: URL) throws {
-        let manager = FileManager.default
-        var destination = folder.appendingPathComponent(file.lastPathComponent)
-        if manager.fileExists(atPath: destination.path) {
-            if manager.contentsEqual(atPath: file.path, andPath: destination.path) {
-                try manager.removeItem(at: file)
-                return
-            }
-            let fmt = DateFormatter()
-            fmt.dateFormat = "yyyy-MM-dd'T'HH-mm-ss'Z'"
-            fmt.timeZone = TimeZone(secondsFromGMT: 0)
-            fmt.locale = Locale(identifier: "en_US_POSIX")
-            guard var date = fmt.date(from: file.deletingPathExtension().lastPathComponent) else {
-                throw CocoaError(.fileWriteFileExists, userInfo: [NSFilePathErrorKey: destination.path])
-            }
-            repeat {
-                date.addTimeInterval(1)
-                destination = folder.appendingPathComponent(fmt.string(from: date) + ".md")
-            } while manager.fileExists(atPath: destination.path)
-        }
-        try manager.moveItem(at: file, to: destination)
     }
 
     /// Returns once queued version work has run; tests use it to read the result.
@@ -267,28 +159,6 @@ final class NoteVersionManager: @unchecked Sendable {
     }
 
     private func versionKey(for url: URL) -> String {
-        var hash: UInt64 = 5381
-        for byte in url.path.utf8 { hash = hash &* 31 &+ UInt64(byte) }
-        return "\(url.deletingPathExtension().lastPathComponent)-\(String(hash, radix: 16))"
-    }
-
-    private func normalizeForComparison(_ text: String) -> String {
-        text.components(separatedBy: "\n")
-            .map { $0.trimmingCharacters(in: .whitespaces) }
-            .filter { !$0.isEmpty }
-            .joined(separator: "\n")
-    }
-
-    /// Keeps the newest `maxVersions` versions; files that are no version
-    /// (`.DS_Store`) are neither counted nor removed.
-    private func prune(dir: URL) {
-        guard
-            let all = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
-                .filter({ Self.isVersionFileName($0.lastPathComponent) }),
-            all.count > maxVersions
-        else { return }
-        all.sorted { $0.lastPathComponent > $1.lastPathComponent }
-            .dropFirst(maxVersions)
-            .forEach { try? FileManager.default.removeItem(at: $0) }
+        NoteVersionFiles.folderName(for: url)
     }
 }
