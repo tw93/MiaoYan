@@ -950,7 +950,7 @@ public class Note: NSObject {
     }
 
     /// `text` stands in for a body that is not loaded; `links` is
-    /// `Note.attachmentLinks(in: text)` when the caller already has it, as
+    /// `AttachmentLinks.links(in: text)` when the caller already has it, as
     /// the orphan scan does after reading notes off the main actor.
     public func getReferencedAttachmentPaths(in text: String? = nil, links: Set<String>? = nil) -> Set<String> {
         var referenced = Set<String>()
@@ -962,7 +962,7 @@ public class Note: NSObject {
         let noteString = text ?? content.string
         guard !noteString.isEmpty else { return referenced }
 
-        for link in links ?? Note.attachmentLinks(in: noteString) {
+        for link in links ?? AttachmentLinks.links(in: noteString) {
             if let absolutePath = resolveAttachmentAbsolutePath(forNormalizedPath: link) {
                 referenced.insert(absolutePath)
             }
@@ -976,7 +976,7 @@ public class Note: NSObject {
     /// a `../files/a.pdf` there resolves to nothing; its files are kept by
     /// name instead (2026-11-22).
     func referencedAttachmentNames(in text: String, links: Set<String>? = nil) -> Set<String> {
-        let links = links ?? Note.attachmentLinks(in: text)
+        let links = links ?? AttachmentLinks.links(in: text)
         var names = Set(getReferencedAttachmentPaths(in: text, links: links).map { ($0 as NSString).lastPathComponent })
         for link in links {
             names.insert((link as NSString).lastPathComponent)
@@ -984,132 +984,11 @@ public class Note: NSObject {
         return names
     }
 
-    /// The forms a link as written may name its file by: itself, percent
-    /// decoded, with Markdown's backslash escapes removed (`i/a\_b.png`),
-    /// and cut at the first `#` or `?`, since a query or fragment
-    /// (`files/spec.pdf#page=3`, `i/a.png?v=2`) is no part of the name.
-    nonisolated static func linkVariants(_ raw: String) -> Set<String> {
-        var variants: Set<String> = [raw]
-        if let decoded = raw.removingPercentEncoding { variants.insert(decoded) }
-        for variant in variants where variant.contains("\\") {
-            variants.insert(removingBackslashEscapes(variant))
-        }
-        for variant in variants {
-            if let cut = variant.firstIndex(where: { $0 == "#" || $0 == "?" }), cut != variant.startIndex {
-                variants.insert(String(variant[..<cut]))
-            }
-        }
-        return variants
-    }
-
-    /// Every attachment link in `text`, in each form `linkVariants` gives,
-    /// once: the two patterns find the same `src` value, and a note repeats
-    /// its links. A link target is read whole where the text marks its
-    /// ends: a `<…>` destination, which may hold spaces
-    /// (`![](<i/my photo.png>)`), a quoted `src` or `href` value
-    /// (`<img src="i/my photo.png">`), and a `](…)` with balanced
-    /// parentheses. Elsewhere `attachmentPathRegex` stops at a space or an
-    /// angle bracket. Cut at the space (`i/my`), or keeping the closing
-    /// `>`, the link named no file, and Clean Unused Attachments offered an
-    /// image the preview still showed. Extra entries only keep files, so
-    /// anything unsure is included. Text only, so the orphan scan runs it
-    /// off the main actor.
-    nonisolated static func attachmentLinks(in text: String) -> Set<String> {
-        let nsString = text as NSString
-        let range = NSRange(location: 0, length: nsString.length)
-        var raw = Set<String>()
-        attachmentPathRegex.enumerateMatches(in: text, options: [], range: range) { result, _, _ in
-            guard let match = result?.range else { return }
-            raw.insert(nsString.substring(with: match))
-        }
-        wholeLinkTargetRegex.enumerateMatches(in: text, options: [], range: range) { result, _, _ in
-            guard let result else { return }
-            for group in 1..<result.numberOfRanges where result.range(at: group).location != NSNotFound {
-                let target = nsString.substring(with: result.range(at: group)).trimmingCharacters(in: .whitespaces)
-                if !target.isEmpty, !target.contains("://"), !target.hasPrefix("data:") { raw.insert(target) }
-            }
-        }
-        var links = Set<String>()
-        for link in raw {
-            links.formUnion(linkVariants(link))
-        }
-        return links
-    }
-
-    /// A backslash before ASCII punctuation is Markdown's escape for it.
-    nonisolated private static func removingBackslashEscapes(_ text: String) -> String {
-        var result = ""
-        var escaping = false
-        for character in text {
-            if escaping {
-                if !(character.isASCII && (character.isPunctuation || character.isSymbol)) { result.append("\\") }
-                result.append(character)
-                escaping = false
-            } else if character == "\\" {
-                escaping = true
-            } else {
-                result.append(character)
-            }
-        }
-        if escaping { result.append("\\") }
-        return result
-    }
-
-    /// `](<target>)`, a reference definition `]: <target>`, a quoted
-    /// `src`/`href` value, an unquoted one up to a space or `>`, and a plain
-    /// `](target)` or `]: target` with balanced parentheses
-    /// (`files/report(1).pdf`, `files/Tom's.pdf`), which ends at a space
-    /// before a title; the target is whichever group matched.
-    nonisolated private static let wholeLinkTargetRegex: NSRegularExpression = {
-        let pattern =
-            #"\]\(\s*<([^<>\n]+)>|\]:[ \t]*<([^<>\n]+)>|\b(?:src|href)\s*=\s*(?:"([^"\n]*)"|'([^'\n]*)'|([^\s"'>][^\s">]*))|\](?:\(\s*|:[ \t]*)(?!<)((?:[^()\s]|\([^()\s]*\))+)"#
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
-            preconditionFailure("Note.wholeLinkTargetRegex literal is invalid: \(pattern)")
-        }
-        return regex
-    }()
-
     private func resolveAttachmentAbsolutePath(forNormalizedPath path: String) -> String? {
-        guard !path.isEmpty else { return nil }
-
-        let projectPath = project.url.path
-
-        if path.hasPrefix("/") {
-            let resolved = NSString(string: projectPath + path).standardizingPath
-            guard resolved.hasPrefix(projectPath) else { return nil }
-            return resolved
-        }
-
-        var normalizedPath = path
-        if normalizedPath.hasPrefix("./") {
-            normalizedPath = String(normalizedPath.dropFirst(2))
-        }
-
-        if normalizedPath.hasPrefix("i/") || normalizedPath.hasPrefix("files/") {
-            let resolved = NSString(string: projectPath + "/" + normalizedPath).standardizingPath
-            guard resolved.hasPrefix(projectPath) else { return nil }
-            return resolved
-        }
-
-        let noteDirectory = url.deletingLastPathComponent().path
-        let resolvedRelative = NSString(string: noteDirectory).appendingPathComponent(normalizedPath)
-        let standardized = NSString(string: resolvedRelative).standardizingPath
-        // A note in a subfolder reaches a parent folder's i/ or files/ with
-        // ../, so the bound is the library, not the note's own folder: bounded
-        // by the folder, Clean Unused Attachments trashed those files.
-        let libraryPath = project.getParent().url.path
-        guard standardized.hasPrefix(libraryPath.hasSuffix("/") ? libraryPath : libraryPath + "/") else { return nil }
-
-        return standardized
+        AttachmentLinks.resolve(
+            path, folder: project.url.path, noteDirectory: url.deletingLastPathComponent().path,
+            library: project.getParent().url.path)
     }
-
-    nonisolated private static let attachmentPathRegex: NSRegularExpression = {
-        let pattern = #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"<>]+"#
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
-            preconditionFailure("Note.attachmentPathRegex literal is invalid: \(pattern)")
-        }
-        return regex
-    }()
 
     public func duplicate() {
         guard let duplicateName = getDupeName() else { return }

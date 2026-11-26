@@ -1475,7 +1475,7 @@ class Storage {
             let reads = await Task.detached(priority: .userInitiated) {
                 urls.map { url -> (text: String, links: Set<String>)? in
                     guard let text = (try? Data(contentsOf: url)).flatMap(NoteText.decode) else { return nil }
-                    return (text, Note.attachmentLinks(in: text))
+                    return (text, AttachmentLinks.links(in: text))
                 }
             }.value
             for (note, read) in zip(unloaded, reads) {
