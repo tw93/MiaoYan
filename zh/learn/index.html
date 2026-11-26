@@ -1234,58 +1234,120 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(h2, h3, h4, .blog-title, .blog-car
 html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.nav, footer, .btn, .foot-col-title, pre, code, kbd, samp) { letter-spacing: 0; }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive); }
 
-/* Learn Markdown (/learn/, scripts/build-learn.py): the level map, the lesson
-   with its actions, then the editor, the reader's preview and the goal. */
-.learn-map { display: flex; flex-wrap: wrap; gap: 16px 32px; margin: 0 0 28px; }
-.learn-chapter-name { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
-.learn-dots { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.learn-dot {
-  display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+/* Learn Markdown (/learn/, scripts/build-learn.py), laid out as Flexbox Froggy
+   and CSS Diner lay out a level (maintainer 2026-11-26: 一点都不游戏): a level
+   counter with the run as one track, the lesson, editor and Next on the left,
+   the goal over the reader's preview on the right. The goal's blocks stay faint
+   until the reader's text draws them, Next is the one filled button once the
+   level is done, and pressing it before that shakes the editor and shows the
+   hint. Phones read lesson, goal, editor, preview, Next. */
+.learn-tool { position: relative; }
+.learn-bar { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 0 0 20px; }
+.learn-nav { display: flex; align-items: center; gap: 6px; }
+.learn-arrow, .learn-picker {
+  display: inline-flex; align-items: center; justify-content: center; height: 36px;
   border: 1px solid var(--line); border-radius: 999px; background: var(--ivory); color: var(--olive);
-  font: inherit; font-size: var(--text-meta); font-variant-numeric: tabular-nums; cursor: pointer;
-  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  font: inherit; cursor: pointer; transition: background 0.15s, color 0.15s;
 }
-.learn-dot:hover { background: var(--warm-sand); }
-.learn-dot.is-done { background: var(--brand); border-color: var(--brand); color: #fff; }
-.learn-dot[aria-current="step"] { box-shadow: 0 0 0 2px var(--parchment), 0 0 0 3px var(--near-black); color: var(--near-black); }
-.learn-dot.is-done[aria-current="step"] { color: #fff; }
-.learn-dot:focus { outline: none; }
-.learn-dot:focus-visible { border-color: var(--near-black); }
-.learn-head { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 32px; margin: 0 0 20px; }
-.learn-lesson { flex: 1 1 480px; min-width: 0; max-width: 860px; }
+.learn-arrow { width: 36px; padding: 0; }
+.learn-arrow-next svg { transform: scaleX(-1); }
+.learn-picker { gap: 6px; padding: 0 14px 0 16px; font-size: var(--text-button); color: var(--near-black); font-variant-numeric: tabular-nums; }
+.learn-of { color: var(--stone); }
+.learn-picker svg { margin-left: 2px; color: var(--stone); transition: transform 0.15s; }
+.learn-picker[aria-expanded="true"] svg { transform: rotate(180deg); }
+.learn-arrow:hover, .learn-picker:hover, .learn-picker[aria-expanded="true"] { background: var(--warm-sand); color: var(--near-black); }
+.learn-arrow:disabled { opacity: 0.4; cursor: default; background: var(--ivory); }
+.learn-arrow:focus, .learn-picker:focus, .learn-pick:focus, .learn-link:focus { outline: none; }
+.learn-track { flex: 1 1 240px; display: flex; align-items: center; gap: 10px; min-width: 0; height: 12px; }
+.learn-track-part { display: flex; align-items: center; gap: 3px; flex-basis: 0; min-width: 0; }
+.learn-step { flex: 1 1 0; min-width: 0; height: 6px; border-radius: 3px; background: var(--warm-sand); transition: background 0.3s, height 0.2s; }
+.learn-step.is-done { background: var(--brand); }
+.learn-step.is-now { height: 12px; background: var(--near-black); }
+.learn-step.is-now.is-done { background: var(--brand); }
+.learn-step.is-won { animation: learn-step 0.5s ease-out; }
+.learn-count { margin: 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.learn-map {
+  position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 10;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px 24px; padding: 20px 20px 16px;
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 16px 40px rgba(54, 52, 51, 0.12);
+}
+.learn-map[hidden] { display: none; }
+.learn-chapter-name { margin: 0 0 6px 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
+.learn-picks { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.learn-pick {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; border: 0; border-radius: 10px;
+  background: none; font: inherit; font-size: var(--text-meta); line-height: 1.4; color: var(--olive); text-align: left; cursor: pointer;
+}
+.learn-pick:hover, .learn-pick[aria-current="step"] { background: var(--warm-sand); color: var(--near-black); }
+.learn-pick-no {
+  flex: none; display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--ivory); font-size: 12px; color: var(--stone); font-variant-numeric: tabular-nums;
+}
+.learn-pick.is-done .learn-pick-no { background: var(--brand); border-color: var(--brand); color: #fff; }
+.learn-pick-name { min-width: 0; }
+.learn-board { --learn-h: clamp(480px, calc(100vh - 230px), 740px); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 20px; height: var(--learn-h); }
+.learn-side, .learn-stage { display: flex; flex-direction: column; gap: 16px; min-width: 0; min-height: 0; }
+.learn-lesson { flex: none; padding: 18px 22px 20px; background: var(--ivory); border: 1px solid var(--line); border-radius: 14px; }
+.learn-chapter-now { margin: 0 0 4px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
 .learn-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 8px; }
-.learn-no { color: var(--stone); margin-right: 6px; }
 .learn-text, .learn-hint { margin: 0; font-size: var(--text-lede); line-height: 1.75; color: var(--olive); }
-.learn-hint { margin-top: 6px; color: var(--stone); }
+.learn-hint { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line-faint, var(--line)); color: var(--stone); }
 .learn-text code, .learn-hint code, .learn-finish code { font-family: "SF Mono", Menlo, monospace; font-size: 0.9em; background: var(--warm-sand); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
 .learn-hint a, .learn-finish a { color: var(--brand); }
-.learn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
-.learn-actions [hidden] { display: none; }
-.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.learn-grid { --learn-h: clamp(260px, calc(100vh - 480px), 480px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.learn-pane { min-width: 0; }
-.learn-label { margin: 0 0 8px; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
-.learn-grid .tool-editor, .learn-frame { height: var(--learn-h); }
-.learn-frame-goal { overflow: auto; }
+.learn-pane-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 8px; }
+.learn-label { margin: 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); }
+.learn-tools { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.learn-link { padding: 0; border: 0; background: none; font: inherit; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); cursor: pointer; transition: color 0.15s; }
+.learn-link:hover { color: var(--near-black); }
+.learn-edit { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+.learn-edit .tool-editor { flex: 1 1 auto; height: auto; min-height: 140px; }
+.learn-edit.is-shake .tool-editor { animation: learn-shake 0.34s ease-in-out; }
+.learn-go { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; }
+.learn-status { display: flex; align-items: center; gap: 6px; margin: 0; font-size: var(--text-button); line-height: 1.5; color: var(--brand); }
+.learn-next { padding: 8px 24px; font-size: var(--text-button); }
+.learn-next[hidden] { display: none; }
+.learn-tool.is-won .learn-next { animation: learn-pop 0.45s ease-out; }
+.learn-goal { flex: 0 1 auto; display: flex; flex-direction: column; max-height: 55%; min-height: 0; }
+.learn-frame-goal { flex: 0 1 auto; height: auto; overflow: auto; transition: border-color 0.3s, box-shadow 0.3s; }
 .learn-frame-goal iframe { height: auto; }
+.learn-score { margin: 0; font-size: var(--text-meta); line-height: 1.5; color: var(--stone); font-variant-numeric: tabular-nums; }
+.learn-tool.is-passed .learn-frame-goal { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); }
+.learn-tool.is-passed .learn-score { color: var(--brand); }
+.learn-mine { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+.learn-frame-mine { flex: 1 1 auto; height: auto; min-height: 120px; }
+.learn-finish-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn-finish { margin: 32px 0 0; padding: 24px 28px; background: var(--ivory); border: 1px solid var(--line); border-radius: 14px; }
 .learn-finish-title { font-family: var(--serif); font-weight: 500; font-size: var(--text-title); line-height: 1.3; color: var(--near-black); margin: 0 0 8px; }
 .learn-finish p { margin: 0 0 16px; font-size: var(--text-lede); line-height: 1.75; color: var(--olive); }
-@media (max-width: 1100px) {
-  .learn-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .learn-grid > .learn-pane:last-child { grid-column: 1 / -1; order: -1; }
-  .learn-grid > .learn-pane:last-child .learn-frame { height: auto; max-height: calc(var(--learn-h) * 0.75); }
+@keyframes learn-shake { 0%, 100% { transform: none; } 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+@keyframes learn-pop { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 100% { transform: scale(1); } }
+@keyframes learn-step { 0% { transform: scaleY(1); } 40% { transform: scaleY(1.8); } 100% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .learn-edit.is-shake .tool-editor, .learn-tool.is-won .learn-next, .learn-step.is-won { animation: none; }
 }
-@media (max-width: 720px) {
-  .learn-grid { --learn-h: 280px; grid-template-columns: minmax(0, 1fr); }
-  .learn-grid > .learn-pane:last-child .learn-frame { max-height: 240px; }
-  .learn-map { gap: 16px 24px; }
-  .learn-actions { margin-left: 0; }
+@media (max-width: 880px) {
+  .learn-board { display: flex; flex-direction: column; gap: 16px; height: auto; }
+  .learn-side, .learn-stage { display: contents; }
+  .learn-lesson { order: 1; }
+  .learn-goal { order: 2; max-height: none; }
+  .learn-frame-goal { max-height: 280px; }
+  .learn-edit { order: 3; }
+  .learn-edit .tool-editor { flex: none; height: 220px; }
+  .learn-mine { order: 4; }
+  .learn-frame-mine { flex: none; height: 260px; }
+  .learn-go { order: 5; }
+  .learn-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .learn-track { order: 3; flex-basis: 100%; }
+  .learn-count { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .learn-lesson { padding: 16px 18px 18px; }
+  .learn-map { gap: 12px 8px; padding: 16px 12px 12px; }
 }
 </style>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"or":[{"href_matches":"/*/"},{"href_matches":"/*.html"}]},{"not":{"selector_matches":"[target=_blank], [download], [data-lang]"}}]},"eagerness":"moderate"}]}</script>
 <script id="prefetch-fallback">if(!(HTMLScriptElement.supports&&HTMLScriptElement.supports('speculationrules'))){var done={},timer;document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a||a.origin!==location.origin||a.target||a.hasAttribute('download')||a.hasAttribute('data-lang')||a.pathname===location.pathname||done[a.pathname]||!/\/$|\.html$/.test(a.pathname))return;clearTimeout(timer);timer=setTimeout(function(){done[a.pathname]=1;var l=document.createElement('link');l.rel='prefetch';l.href=a.pathname;document.head.appendChild(l)},100)});document.addEventListener('pointerout',function(){clearTimeout(timer)})}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 闯关", "item": "https://miaoyan.app/zh/learn/"}]}, {"@type": "LearningResource", "name": "Markdown 闯关", "url": "https://miaoyan.app/zh/learn/", "description": "免费的 Markdown 交互教程，26 关从标题、加粗、列表、待办到表格、代码块、公式和 Mermaid 图，边写边看妙言的预览，写对了就过关，进度留在浏览器里。", "inLanguage": "zh-CN", "learningResourceType": "Interactive tutorial", "teaches": "Markdown", "isAccessibleForFree": true, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "怎样才算过关？", "acceptedAnswer": {"@type": "Answer", "text": "预览和目标排出来一样就过了，比的是结果而不是原文，*斜体* 和 _斜体_、- 和 * 开头的列表都算对，文字要和目标一致。"}}, {"@type": "Question", "name": "进度会保存吗？", "acceptedAnswer": {"@type": "Answer", "text": "会，过了哪几关、每一关写到哪里都留在这个浏览器里，下次打开接着闯，换浏览器或者清除网站数据会从头开始。"}}, {"@type": "Question", "name": "卡住了怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "先点提示，预览里底色变深的地方就是和目标还不一样的，实在想不出来可以点看答案，再点重来自己写一遍。"}}, {"@type": "Question", "name": "这些写法在妙言里都能用吗？", "acceptedAnswer": {"@type": "Answer", "text": "能，预览用的就是妙言的样式，公式和 Mermaid 图在妙言里一样会画出来，--- 在妙言的 PPT 里还是翻页的记号。"}}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "Markdown 闯关", "item": "https://miaoyan.app/zh/learn/"}]}, {"@type": "LearningResource", "name": "Markdown 闯关", "url": "https://miaoyan.app/zh/learn/", "description": "免费的 Markdown 交互教程，26 关从标题、加粗、列表、待办到表格、代码块、公式和 Mermaid 图，边写边看妙言的预览，写对了就过关，进度留在浏览器里。", "inLanguage": "zh-CN", "learningResourceType": "Interactive tutorial", "teaches": "Markdown", "isAccessibleForFree": true, "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "publisher": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "怎样才算过关？", "acceptedAnswer": {"@type": "Answer", "text": "预览和目标排出来一样就过了，比的是结果而不是原文，*斜体* 和 _斜体_、- 和 * 开头的列表都算对，文字要和目标一致。"}}, {"@type": "Question", "name": "进度会保存吗？", "acceptedAnswer": {"@type": "Answer", "text": "会，过了哪几关、每一关写到哪里都留在这个浏览器里，下次打开接着闯，换浏览器或者清除网站数据会从头开始。"}}, {"@type": "Question", "name": "卡住了怎么办？", "acceptedAnswer": {"@type": "Answer", "text": "先点提示，目标里亮起绿点的是已经写对的，预览里底色变深的地方就是和目标还不一样的，实在想不出来可以点看答案，再点重来自己写一遍。"}}, {"@type": "Question", "name": "这些写法在妙言里都能用吗？", "acceptedAnswer": {"@type": "Answer", "text": "能，预览用的就是妙言的样式，公式和 Mermaid 图在妙言里一样会画出来，--- 在妙言的 PPT 里还是翻页的记号。"}}]}]}</script>
 </head>
 <body>
 <div class="wrap">
@@ -1306,37 +1368,44 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
   <h1 class="section-title">Markdown 闯关</h1>
   <p class="section-lede">26 关，每关学一种写法，让你写的和目标排出来一样就过关，做完常用的 Markdown 就都会了。</p>
   <div class="tool learn-tool" id="learn-tool">
-    <nav class="learn-map" aria-label="关卡"><div class="learn-chapter"><p class="learn-chapter-name">文字</p><ol class="learn-dots"><li><button type="button" class="learn-dot" data-level="0" aria-label="第 1 关 标题" title="第 1 关 标题" aria-current="step">1</button></li><li><button type="button" class="learn-dot" data-level="1" aria-label="第 2 关 小标题" title="第 2 关 小标题">2</button></li><li><button type="button" class="learn-dot" data-level="2" aria-label="第 3 关 分段" title="第 3 关 分段">3</button></li><li><button type="button" class="learn-dot" data-level="3" aria-label="第 4 关 加粗" title="第 4 关 加粗">4</button></li><li><button type="button" class="learn-dot" data-level="4" aria-label="第 5 关 斜体" title="第 5 关 斜体">5</button></li><li><button type="button" class="learn-dot" data-level="5" aria-label="第 6 关 删除线" title="第 6 关 删除线">6</button></li><li><button type="button" class="learn-dot" data-level="6" aria-label="第 7 关 行内代码" title="第 7 关 行内代码">7</button></li><li><button type="button" class="learn-dot" data-level="7" aria-label="第 8 关 链接" title="第 8 关 链接">8</button></li><li><button type="button" class="learn-dot" data-level="8" aria-label="第 9 关 小结" title="第 9 关 小结">9</button></li></ol></div><div class="learn-chapter"><p class="learn-chapter-name">结构</p><ol class="learn-dots"><li><button type="button" class="learn-dot" data-level="9" aria-label="第 10 关 列表" title="第 10 关 列表">10</button></li><li><button type="button" class="learn-dot" data-level="10" aria-label="第 11 关 编号列表" title="第 11 关 编号列表">11</button></li><li><button type="button" class="learn-dot" data-level="11" aria-label="第 12 关 嵌套列表" title="第 12 关 嵌套列表">12</button></li><li><button type="button" class="learn-dot" data-level="12" aria-label="第 13 关 待办" title="第 13 关 待办">13</button></li><li><button type="button" class="learn-dot" data-level="13" aria-label="第 14 关 引用" title="第 14 关 引用">14</button></li><li><button type="button" class="learn-dot" data-level="14" aria-label="第 15 关 分割线" title="第 15 关 分割线">15</button></li><li><button type="button" class="learn-dot" data-level="15" aria-label="第 16 关 小结" title="第 16 关 小结">16</button></li></ol></div><div class="learn-chapter"><p class="learn-chapter-name">代码与表格</p><ol class="learn-dots"><li><button type="button" class="learn-dot" data-level="16" aria-label="第 17 关 代码块" title="第 17 关 代码块">17</button></li><li><button type="button" class="learn-dot" data-level="17" aria-label="第 18 关 表格" title="第 18 关 表格">18</button></li><li><button type="button" class="learn-dot" data-level="18" aria-label="第 19 关 表格对齐" title="第 19 关 表格对齐">19</button></li><li><button type="button" class="learn-dot" data-level="19" aria-label="第 20 关 图片" title="第 20 关 图片">20</button></li><li><button type="button" class="learn-dot" data-level="20" aria-label="第 21 关 转义" title="第 21 关 转义">21</button></li><li><button type="button" class="learn-dot" data-level="21" aria-label="第 22 关 小结" title="第 22 关 小结">22</button></li></ol></div><div class="learn-chapter"><p class="learn-chapter-name">公式与图</p><ol class="learn-dots"><li><button type="button" class="learn-dot" data-level="22" aria-label="第 23 关 公式" title="第 23 关 公式">23</button></li><li><button type="button" class="learn-dot" data-level="23" aria-label="第 24 关 公式块" title="第 24 关 公式块">24</button></li><li><button type="button" class="learn-dot" data-level="24" aria-label="第 25 关 流程图" title="第 25 关 流程图">25</button></li><li><button type="button" class="learn-dot" data-level="25" aria-label="第 26 关 整篇笔记" title="第 26 关 整篇笔记">26</button></li></ol></div></nav>
-    <div class="learn-head">
-      <div class="learn-lesson">
-        <h2 class="learn-title" id="learn-title"><span class="learn-no">第 1 关</span> 标题</h2>
-        <p class="learn-text" id="learn-text">行首写一个 <code>#</code> 再空一格，这一行就是一级标题，一篇笔记通常只有一个。把下面这行变成一级标题。</p>
-        <p class="learn-hint" id="learn-hint" hidden><code>#</code> 和文字之间要有一个空格。</p>
+    <div class="learn-bar"><div class="learn-nav"><button type="button" class="learn-arrow" data-action="prev" aria-label="上一关"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="learn-picker" id="learn-picker" aria-expanded="false" aria-controls="learn-map"><span id="learn-at">第 1 关</span><span class="learn-of">/ 26</span><svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" class="learn-arrow learn-arrow-next" data-action="skip" aria-label="下一关"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="learn-track" aria-hidden="true"><span class="learn-track-part" style="flex-grow:9"><i class="learn-step" data-level="0"></i><i class="learn-step" data-level="1"></i><i class="learn-step" data-level="2"></i><i class="learn-step" data-level="3"></i><i class="learn-step" data-level="4"></i><i class="learn-step" data-level="5"></i><i class="learn-step" data-level="6"></i><i class="learn-step" data-level="7"></i><i class="learn-step" data-level="8"></i></span><span class="learn-track-part" style="flex-grow:7"><i class="learn-step" data-level="9"></i><i class="learn-step" data-level="10"></i><i class="learn-step" data-level="11"></i><i class="learn-step" data-level="12"></i><i class="learn-step" data-level="13"></i><i class="learn-step" data-level="14"></i><i class="learn-step" data-level="15"></i></span><span class="learn-track-part" style="flex-grow:6"><i class="learn-step" data-level="16"></i><i class="learn-step" data-level="17"></i><i class="learn-step" data-level="18"></i><i class="learn-step" data-level="19"></i><i class="learn-step" data-level="20"></i><i class="learn-step" data-level="21"></i></span><span class="learn-track-part" style="flex-grow:4"><i class="learn-step" data-level="22"></i><i class="learn-step" data-level="23"></i><i class="learn-step" data-level="24"></i><i class="learn-step" data-level="25"></i></span></div><p class="learn-count" id="learn-count">已过 0 / 26</p><nav class="learn-map" id="learn-map" aria-label="关卡" hidden><div class="learn-chapter"><p class="learn-chapter-name">文字</p><ol class="learn-picks"><li><button type="button" class="learn-pick" data-level="0" aria-current="step"><span class="learn-pick-no">1</span><span class="learn-pick-name">标题</span></button></li><li><button type="button" class="learn-pick" data-level="1"><span class="learn-pick-no">2</span><span class="learn-pick-name">小标题</span></button></li><li><button type="button" class="learn-pick" data-level="2"><span class="learn-pick-no">3</span><span class="learn-pick-name">分段</span></button></li><li><button type="button" class="learn-pick" data-level="3"><span class="learn-pick-no">4</span><span class="learn-pick-name">加粗</span></button></li><li><button type="button" class="learn-pick" data-level="4"><span class="learn-pick-no">5</span><span class="learn-pick-name">斜体</span></button></li><li><button type="button" class="learn-pick" data-level="5"><span class="learn-pick-no">6</span><span class="learn-pick-name">删除线</span></button></li><li><button type="button" class="learn-pick" data-level="6"><span class="learn-pick-no">7</span><span class="learn-pick-name">行内代码</span></button></li><li><button type="button" class="learn-pick" data-level="7"><span class="learn-pick-no">8</span><span class="learn-pick-name">链接</span></button></li><li><button type="button" class="learn-pick" data-level="8"><span class="learn-pick-no">9</span><span class="learn-pick-name">小结</span></button></li></ol></div><div class="learn-chapter"><p class="learn-chapter-name">结构</p><ol class="learn-picks"><li><button type="button" class="learn-pick" data-level="9"><span class="learn-pick-no">10</span><span class="learn-pick-name">列表</span></button></li><li><button type="button" class="learn-pick" data-level="10"><span class="learn-pick-no">11</span><span class="learn-pick-name">编号列表</span></button></li><li><button type="button" class="learn-pick" data-level="11"><span class="learn-pick-no">12</span><span class="learn-pick-name">嵌套列表</span></button></li><li><button type="button" class="learn-pick" data-level="12"><span class="learn-pick-no">13</span><span class="learn-pick-name">待办</span></button></li><li><button type="button" class="learn-pick" data-level="13"><span class="learn-pick-no">14</span><span class="learn-pick-name">引用</span></button></li><li><button type="button" class="learn-pick" data-level="14"><span class="learn-pick-no">15</span><span class="learn-pick-name">分割线</span></button></li><li><button type="button" class="learn-pick" data-level="15"><span class="learn-pick-no">16</span><span class="learn-pick-name">小结</span></button></li></ol></div><div class="learn-chapter"><p class="learn-chapter-name">代码与表格</p><ol class="learn-picks"><li><button type="button" class="learn-pick" data-level="16"><span class="learn-pick-no">17</span><span class="learn-pick-name">代码块</span></button></li><li><button type="button" class="learn-pick" data-level="17"><span class="learn-pick-no">18</span><span class="learn-pick-name">表格</span></button></li><li><button type="button" class="learn-pick" data-level="18"><span class="learn-pick-no">19</span><span class="learn-pick-name">表格对齐</span></button></li><li><button type="button" class="learn-pick" data-level="19"><span class="learn-pick-no">20</span><span class="learn-pick-name">图片</span></button></li><li><button type="button" class="learn-pick" data-level="20"><span class="learn-pick-no">21</span><span class="learn-pick-name">转义</span></button></li><li><button type="button" class="learn-pick" data-level="21"><span class="learn-pick-no">22</span><span class="learn-pick-name">小结</span></button></li></ol></div><div class="learn-chapter"><p class="learn-chapter-name">公式与图</p><ol class="learn-picks"><li><button type="button" class="learn-pick" data-level="22"><span class="learn-pick-no">23</span><span class="learn-pick-name">公式</span></button></li><li><button type="button" class="learn-pick" data-level="23"><span class="learn-pick-no">24</span><span class="learn-pick-name">公式块</span></button></li><li><button type="button" class="learn-pick" data-level="24"><span class="learn-pick-no">25</span><span class="learn-pick-name">流程图</span></button></li><li><button type="button" class="learn-pick" data-level="25"><span class="learn-pick-no">26</span><span class="learn-pick-name">整篇笔记</span></button></li></ol></div></nav></div>
+    <div class="learn-board">
+      <div class="learn-side">
+        <div class="learn-lesson">
+          <p class="learn-chapter-now" id="learn-chapter">文字</p>
+          <h2 class="learn-title" id="learn-title">标题</h2>
+          <p class="learn-text" id="learn-text">行首写一个 <code>#</code> 再空一格，这一行就是一级标题，一篇笔记通常只有一个。把下面这行变成一级标题。</p>
+          <p class="learn-hint" id="learn-hint" hidden><code>#</code> 和文字之间要有一个空格。</p>
+        </div>
+        <div class="learn-edit">
+          <div class="learn-pane-head">
+            <p class="learn-label" id="learn-code-label">Markdown</p>
+            <div class="learn-tools">
+              <button type="button" class="learn-link" data-action="hint">提示</button>
+              <button type="button" class="learn-link" data-action="answer">看答案</button>
+              <button type="button" class="learn-link" data-action="reset">重来</button>
+            </div>
+          </div>
+          <div class="tool-editor"><textarea id="learn-code" class="tool-code viewer-code" aria-labelledby="learn-code-label" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">周末读书笔记</textarea></div>
+        </div>
+        <div class="learn-go">
+          <p class="learn-status" id="learn-status" role="status" aria-live="polite"></p>
+          <button type="button" class="tool-chip learn-next" data-action="next">下一关</button>
+        </div>
       </div>
-      <div class="learn-actions">
-        <button type="button" class="tool-chip" data-action="hint">提示</button>
-        <button type="button" class="tool-chip" data-action="answer">看答案</button>
-        <button type="button" class="tool-chip" data-action="reset">重来</button>
-        <button type="button" class="tool-chip" data-action="next">下一关</button>
+      <div class="learn-stage">
+        <div class="learn-goal">
+          <div class="learn-pane-head">
+            <p class="learn-label">目标</p>
+            <p class="learn-score" id="learn-score"></p>
+          </div>
+          <div class="viewer-frame learn-frame learn-frame-goal"><iframe id="learn-goal" title="目标" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
+        </div>
+        <div class="learn-mine">
+          <div class="learn-pane-head"><p class="learn-label">预览</p></div>
+          <div class="viewer-frame learn-frame learn-frame-mine"><iframe id="learn-mine" title="预览" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
+        </div>
       </div>
-    </div>
-    <div class="learn-grid">
-      <div class="learn-pane learn-pane-edit">
-        <p class="learn-label" id="learn-code-label">Markdown</p>
-        <div class="tool-editor"><textarea id="learn-code" class="tool-code viewer-code" aria-labelledby="learn-code-label" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">周末读书笔记</textarea></div>
-      </div>
-      <div class="learn-pane">
-        <p class="learn-label">预览</p>
-        <div class="viewer-frame learn-frame"><iframe id="learn-mine" title="预览" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
-      </div>
-      <div class="learn-pane">
-        <p class="learn-label">目标</p>
-        <div class="viewer-frame learn-frame learn-frame-goal"><iframe id="learn-goal" title="目标" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" srcdoc="&lt;!doctype html&gt;&lt;title&gt;&lt;/title&gt;"></iframe></div>
-      </div>
-    </div>
-    <div class="tool-foot">
-      <p class="tool-status" id="learn-status" role="status" aria-live="polite"></p>
-      <p class="tool-count" id="learn-count">已过 0 / 26</p>
     </div>
     <section class="learn-finish" id="learn-finish" hidden>
       <h2 class="learn-finish-title">26 关都过了</h2>
@@ -1352,7 +1421,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
 <p>从最常用的标题、加粗和列表开始，到待办、引用、表格和代码块，最后是妙言能画出来的公式和 Mermaid 流程图，每关只学一种写法，每一章最后有一关小结把前面的串起来，最后一关排一整篇笔记。下面是每一关的写法，忘了的时候可以回来查。</p>
 <table><thead><tr><th>Markdown</th><th>用来</th></tr></thead><tbody><tr><td><code># 标题</code></td><td>标题</td></tr><tr><td><code>## 小标题</code></td><td>小标题</td></tr><tr><td>段落之间空一行</td><td>分段</td></tr><tr><td><code>**加粗**</code></td><td>加粗</td></tr><tr><td><code>*斜体*</code></td><td>斜体</td></tr><tr><td><code>~~删除线~~</code></td><td>删除线</td></tr><tr><td><code>`代码`</code></td><td>行内代码</td></tr><tr><td><code>[文字](https://…)</code></td><td>链接</td></tr><tr><td><code>- 列表项</code></td><td>列表</td></tr><tr><td><code>1. 第一步</code></td><td>编号列表</td></tr><tr><td><code>  - 子项</code></td><td>嵌套列表</td></tr><tr><td><code>- [ ] 待办</code></td><td>待办</td></tr><tr><td><code>&gt; 引用</code></td><td>引用</td></tr><tr><td><code>---</code></td><td>分割线</td></tr><tr><td><code>```python</code></td><td>代码块</td></tr><tr><td><code>| 表头 | 表头 |</code></td><td>表格</td></tr><tr><td><code>| :---: | ---: |</code></td><td>表格对齐</td></tr><tr><td><code>![说明](地址)</code></td><td>图片</td></tr><tr><td><code>\*</code></td><td>转义</td></tr><tr><td><code>$a^2$</code></td><td>公式</td></tr><tr><td><code>$$</code></td><td>公式块</td></tr><tr><td><code>```mermaid</code></td><td>流程图</td></tr></tbody></table>
 
-<section class="faq tool-faq"><h2>常见问题</h2><details><summary><span>怎样才算过关？</span></summary><p>预览和目标排出来一样就过了，比的是结果而不是原文，<code>*斜体*</code> 和 <code>_斜体_</code>、<code>-</code> 和 <code>*</code> 开头的列表都算对，文字要和目标一致。</p></details><details><summary><span>进度会保存吗？</span></summary><p>会，过了哪几关、每一关写到哪里都留在这个浏览器里，下次打开接着闯，换浏览器或者清除网站数据会从头开始。</p></details><details><summary><span>卡住了怎么办？</span></summary><p>先点提示，预览里底色变深的地方就是和目标还不一样的，实在想不出来可以点看答案，再点重来自己写一遍。</p></details><details><summary><span>这些写法在妙言里都能用吗？</span></summary><p>能，预览用的就是妙言的样式，公式和 Mermaid 图在妙言里一样会画出来，<code>---</code> 在妙言的 PPT 里还是翻页的记号。</p></details></section>
+<section class="faq tool-faq"><h2>常见问题</h2><details><summary><span>怎样才算过关？</span></summary><p>预览和目标排出来一样就过了，比的是结果而不是原文，<code>*斜体*</code> 和 <code>_斜体_</code>、<code>-</code> 和 <code>*</code> 开头的列表都算对，文字要和目标一致。</p></details><details><summary><span>进度会保存吗？</span></summary><p>会，过了哪几关、每一关写到哪里都留在这个浏览器里，下次打开接着闯，换浏览器或者清除网站数据会从头开始。</p></details><details><summary><span>卡住了怎么办？</span></summary><p>先点提示，目标里亮起绿点的是已经写对的，预览里底色变深的地方就是和目标还不一样的，实在想不出来可以点看答案，再点重来自己写一遍。</p></details><details><summary><span>这些写法在妙言里都能用吗？</span></summary><p>能，预览用的就是妙言的样式，公式和 Mermaid 图在妙言里一样会画出来，<code>---</code> 在妙言的 PPT 里还是翻页的记号。</p></details></section>
 
   </div>
   <section class="tool-app" aria-labelledby="tool-app-title">
@@ -1376,12 +1445,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .blog-card-desc { color: var(--olive);
     </div>
   </div>
 </footer>
-<script type="application/json" id="learn-data">{"lang":"zh","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","strings":{"level":"第 {n} 关","passed":"这一关过了","allDone":"26 关都过了","count":"已过 {n} / {total}","loadFailed":"页面有一部分没加载出来，刷新一下再试。"},"levels":[{"id":"heading","title":"标题","text":"行首写一个 <code>#<\/code> 再空一格，这一行就是一级标题，一篇笔记通常只有一个。把下面这行变成一级标题。","hint":"<code>#<\/code> 和文字之间要有一个空格。","start":"周末读书笔记","answer":"# 周末读书笔记"},{"id":"subheading","title":"小标题","text":"<code>##<\/code> 是二级标题，<code>###<\/code> 是三级，井号越多级别越低。把“还要做的事”和“几个数字”变成二级标题。","hint":"两行开头都写 <code>## <\/code>。","start":"# 周末读书笔记\n\n还要做的事\n\n几个数字","answer":"# 周末读书笔记\n\n## 还要做的事\n\n## 几个数字"},{"id":"paragraphs","title":"分段","text":"只换一行，两句还在同一段里，中间空一行才是新的一段。把下面两句分成两段。","hint":"在两句之间多按一次回车。","start":"这周读完了第二部分。\n周末想把笔记整理一下。","answer":"这周读完了第二部分。\n\n周末想把笔记整理一下。"},{"id":"bold","title":"加粗","text":"两边各加两个星号就是加粗，<code>**像这样**<\/code>。把“第三部分”加粗。","hint":"也可以选中文字按 <code>⌘B<\/code>。","start":"这本书最值得读的是第三部分。","answer":"这本书最值得读的是**第三部分**。"},{"id":"italic","title":"斜体","text":"两边各加一个星号是斜体，<code>*像这样*<\/code>。把“并不是”变成斜体。","hint":"选中后按 <code>⌘I<\/code>。","start":"历史并不是一条直线。","answer":"历史*并不是*一条直线。"},{"id":"strike","title":"删除线","text":"两边各加两个波浪线 <code>~~<\/code> 是删除线，适合划掉改了主意的地方。把“周六”划掉。","hint":"<code>~~<\/code> 要紧贴着文字。","start":"周六周日去图书馆还书。","answer":"~~周六~~周日去图书馆还书。"},{"id":"code","title":"行内代码","text":"用反引号包起来是行内代码，反引号在 Esc 下面，命令、文件名和快捷键都适合这样写。把 git status 标成代码。","hint":"两边各一个反引号。","start":"在终端里输入 git status 看看改了什么。","answer":"在终端里输入 `git status` 看看改了什么。"},{"id":"link","title":"链接","text":"方括号里写文字，紧跟着的圆括号里写地址，<code>[妙言](https://miaoyan.app)<\/code>。把“妙言官网”做成指向 <code>https://miaoyan.app<\/code> 的链接。","hint":"方括号和圆括号之间不能有空格。","start":"有空去妙言官网看看。","answer":"有空去[妙言官网](https://miaoyan.app)看看。"},{"id":"text-review","title":"小结","text":"把这一章用上：一级标题、分段、加粗、斜体，再加一个指向 <code>https://miaoyan.app/zh/blog/<\/code> 的链接，排成目标的样子。","hint":"先分段，再一处处加标记，预览里底色变深的地方就是还不一样的。","start":"读书会通知\n这周六下午三点，在二楼会议室。\n记得带上自己的笔记，往期笔记在这里。","answer":"# 读书会通知\n\n这周六下午三点，在**二楼会议室**。\n\n记得带上*自己的笔记*，往期笔记在[这里](https://miaoyan.app/zh/blog/)。"},{"id":"list","title":"列表","text":"每行开头写 <code>-<\/code> 加空格，就是一个列表项。把下面三样变成列表。","hint":"每一行都以 <code>- <\/code> 开头，在妙言里写完一项按回车，下一行会自动接上。","start":"牛奶\n面包\n鸡蛋","answer":"- 牛奶\n- 面包\n- 鸡蛋"},{"id":"ordered","title":"编号列表","text":"用 <code>1.<\/code> 加空格开头是编号列表，后面的数字写错了也会按顺序排。给三个步骤编上号。","hint":"每行都写 <code>1.<\/code> 也可以。","start":"打开妙言\n新建一篇笔记\n开始写","answer":"1. 打开妙言\n2. 新建一篇笔记\n3. 开始写"},{"id":"nested","title":"嵌套列表","text":"把一项往里缩进，比上一项多两个空格或者按一下 Tab，它就挂到上一项下面。让苹果和香蕉成为水果的子项。","hint":"在苹果和香蕉那两行开头按 Tab。","start":"- 水果\n- 苹果\n- 香蕉\n- 蔬菜","answer":"- 水果\n  - 苹果\n  - 香蕉\n- 蔬菜"},{"id":"tasks","title":"待办","text":"在 <code>-<\/code> 后面写 <code>[ ]<\/code> 是没做的待办，<code>[x]<\/code> 是做完的。把下面变成待办，第一项已经做完。","hint":"没做的方括号中间是一个空格，做完的写 <code>x<\/code>。","start":"- 读完第三部分\n- 整理笔记\n- 写短评","answer":"- [x] 读完第三部分\n- [ ] 整理笔记\n- [ ] 写短评"},{"id":"quote","title":"引用","text":"行首写 <code>&gt;<\/code> 加空格，这一段就是引用，摘抄书里的话正合适。把这句变成引用。","hint":"<code>&gt;<\/code> 后面空一格。","start":"历史从来不是一条直线，读的时候最好也别急着下结论。","answer":"> 历史从来不是一条直线，读的时候最好也别急着下结论。"},{"id":"rule","title":"分割线","text":"单独一行写 <code>---<\/code> 是一条分割线，上面要空一行，紧贴在文字下面会把那行变成标题，在妙言的 PPT 里它还是翻到下一页的记号。在两段中间加一条分割线。","hint":"<code>---<\/code> 的上下都留一个空行。","start":"上半场读完了。\n\n下半场明天继续。","answer":"上半场读完了。\n\n---\n\n下半场明天继续。"},{"id":"structure-review","title":"小结","text":"“周末计划”是二级标题，“要买的”和“要做的”是三级标题，要买的东西编上号，第一项待办已经做完，最后一句是引用。","hint":"标题和下面的列表之间空一行。","start":"周末计划\n要买的\n牛奶\n面包\n要做的\n读完第三部分\n写短评\n慢慢读，不着急。","answer":"## 周末计划\n\n### 要买的\n\n1. 牛奶\n2. 面包\n\n### 要做的\n\n- [x] 读完第三部分\n- [ ] 写短评\n\n> 慢慢读，不着急。"},{"id":"fence","title":"代码块","text":"上下各一行三个反引号 <code>```<\/code> 围起来是代码块，开头的反引号后面写上语言名会按语言着色。把这段 Python 放进代码块，标上 <code>python<\/code>。","hint":"第一行写 <code>```python<\/code>，最后一行写 <code>```<\/code>。","start":"def words(text):\n    return len(text.split())","answer":"```python\ndef words(text):\n    return len(text.split())\n```"},{"id":"table","title":"表格","text":"用竖线 <code>|<\/code> 隔开每一格，第二行写 <code>---<\/code> 把表头和内容分开。把下面做成两列的表格，第一行是表头。","hint":"每一行写成 <code>| a | b |<\/code>，第二行是 <code>| --- | --- |<\/code>，大一点的表格可以用 <a href=\"/zh/tools/markdown-table-generator/\">Markdown 表格生成器<\/a> 来做。","start":"事件，距今\n认知革命，7 万年\n农业革命，1.2 万年","answer":"| 事件 | 距今 |\n| --- | --- |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |"},{"id":"align","title":"表格对齐","text":"在 <code>---<\/code> 那一行加冒号决定对齐，<code>:---<\/code> 靠左，<code>:---:<\/code> 居中，<code>---:<\/code> 靠右。让“距今”这一列靠右。","hint":"把第二行的第二格改成 <code>---:<\/code>。","start":"| 事件 | 距今 |\n| --- | --- |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |","answer":"| 事件 | 距今 |\n| --- | ---: |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |"},{"id":"image","title":"图片","text":"图片和链接很像，前面多一个感叹号，<code>![说明](地址)<\/code>，方括号里写图片说明。插入地址为 <code>/assets/shots/zh-preview-1400.webp<\/code> 的图片，说明写“妙言预览”。","hint":"地址开头的 <code>/<\/code> 别漏了，感叹号要紧贴着方括号。","start":"妙言的预览长这样：\n\n","answer":"妙言的预览长这样：\n\n![妙言预览](/assets/shots/zh-preview-1400.webp)"},{"id":"escape","title":"转义","text":"想让星号这类符号原样显示，在它前面加一个反斜杠 <code>\\<\/code>。让下面的星号原样显示，不变成斜体。","hint":"两个星号前面都要加 <code>\\<\/code>。","start":"*星号* 是 Markdown 的标记。","answer":"\\*星号\\* 是 Markdown 的标记。"},{"id":"blocks-review","title":"小结","text":"“常用命令”是二级标题，表格里的命令写成行内代码，最后两行放进标着 <code>bash<\/code> 的代码块。","hint":"表格和代码块之间空一行。","start":"常用命令\n命令，作用\ngit status，看改了什么\ngit diff，看改了哪几行\ngit add .\ngit commit -m \"更新笔记\"","answer":"## 常用命令\n\n| 命令 | 作用 |\n| --- | --- |\n| `git status` | 看改了什么 |\n| `git diff` | 看改了哪几行 |\n\n```bash\ngit add .\ngit commit -m \"更新笔记\"\n```"},{"id":"math","title":"公式","text":"两个 <code>$<\/code> 中间写 LaTeX 就是行内公式，<code>^<\/code> 是上标。把勾股定理写成公式。","hint":"<code>$<\/code> 紧贴着公式，里面开头结尾不要留空格。","start":"勾股定理：a^2 + b^2 = c^2","answer":"勾股定理：$a^2 + b^2 = c^2$"},{"id":"math-block","title":"公式块","text":"单独成行的公式上下各写一行 <code>$$<\/code>，会居中放大显示。把这个增长公式写成公式块，<code>_0<\/code> 是下标。","hint":"第一行 <code>$$<\/code>，中间是公式，最后一行 <code>$$<\/code>。","start":"N(t) = N_0 e^{rt}","answer":"$$\nN(t) = N_0 e^{rt}\n$$"},{"id":"mermaid","title":"流程图","text":"代码块的语言写成 <code>mermaid<\/code>，里面的文字就会画成图，<code>--&gt;<\/code> 是箭头。把这段放进 mermaid 代码块，再加一步，做笔记指向写短评。","hint":"加一行 <code>B --&gt; C[写短评]<\/code>。","start":"flowchart LR\n  A[读书] --> B[做笔记]","answer":"```mermaid\nflowchart LR\n  A[读书] --> B[做笔记]\n  B --> C[写短评]\n```"},{"id":"final","title":"整篇笔记","text":"最后一关，把学过的都用上：两级标题、加粗、做完的待办、第二列靠右的表格、引用和公式，把这份草稿排成目标的样子。","hint":"从上往下一块块来，预览里底色变深的就是下一处要改的。","start":"周末读书笔记\n读《人类简史》后半本时记下的几个地方，第三部分最值得读。\n还要做的事\n读完第三部分\n整理书里的几个数字\n几个数字\n事件，距今\n认知革命，7 万年\n农业革命，1.2 万年\n历史从来不是一条直线。\n人口按 N_0 e^{rt} 增长。","answer":"# 周末读书笔记\n\n读《人类简史》后半本时记下的几个地方，**第三部分**最值得读。\n\n## 还要做的事\n\n- [x] 读完第三部分\n- [ ] 整理书里的几个数字\n\n## 几个数字\n\n| 事件 | 距今 |\n| --- | ---: |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |\n\n> 历史从来不是一条直线。\n\n人口按 $N_0 e^{rt}$ 增长。"}]}</script>
+<script type="application/json" id="learn-data">{"lang":"zh","parser":["/assets/vendor/markdown-it-14.1.0.min.js?v=38c70a1e7ca9","/assets/vendor/highlight-11.5.1.min.js?v=7d31127fbc6c"],"katex":["/assets/vendor/katex-0.16.47.min.js?v=a29d2961d314"],"katexCss":"/assets/vendor/katex/katex.min.css?v=0289a02cf451","mermaid":["/assets/vendor/miaoyan-theme-config.js?v=6fd8cd13a7a7","/assets/vendor/mermaid-11.14.0.min.js?v=217b66ef4279"],"mermaidConfig":{"securityLevel":"strict","htmlLabels":false,"fontFamily":"Arial, Helvetica, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif"},"css":["/assets/vendor/preview/typography.css?v=7eca8db5f31f","/assets/vendor/preview/theme-light.css?v=c929441d212b","/assets/vendor/preview/base.css?v=51fd8b37a4f5","/assets/vendor/preview/diagrams.css?v=e004b542c098"],"pageCss":":root { --code-text-font: SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } html { font-size: 16px; padding-top: 24px; } #write { max-width: 760px; margin: 0 auto; }","strings":{"level":"第 {n} 关","passed":"这一关过了","allDone":"26 关都过了","count":"已过 {n} / {total}","blocks":"{n} / {total}","loadFailed":"页面有一部分没加载出来，刷新一下再试。"},"levels":[{"id":"heading","chapter":"文字","title":"标题","text":"行首写一个 <code>#<\/code> 再空一格，这一行就是一级标题，一篇笔记通常只有一个。把下面这行变成一级标题。","hint":"<code>#<\/code> 和文字之间要有一个空格。","start":"周末读书笔记","answer":"# 周末读书笔记"},{"id":"subheading","chapter":"文字","title":"小标题","text":"<code>##<\/code> 是二级标题，<code>###<\/code> 是三级，井号越多级别越低。把“还要做的事”和“几个数字”变成二级标题。","hint":"两行开头都写 <code>## <\/code>。","start":"# 周末读书笔记\n\n还要做的事\n\n几个数字","answer":"# 周末读书笔记\n\n## 还要做的事\n\n## 几个数字"},{"id":"paragraphs","chapter":"文字","title":"分段","text":"只换一行，两句还在同一段里，中间空一行才是新的一段。把下面两句分成两段。","hint":"在两句之间多按一次回车。","start":"这周读完了第二部分。\n周末想把笔记整理一下。","answer":"这周读完了第二部分。\n\n周末想把笔记整理一下。"},{"id":"bold","chapter":"文字","title":"加粗","text":"两边各加两个星号就是加粗，<code>**像这样**<\/code>。把“第三部分”加粗。","hint":"也可以选中文字按 <code>⌘B<\/code>。","start":"这本书最值得读的是第三部分。","answer":"这本书最值得读的是**第三部分**。"},{"id":"italic","chapter":"文字","title":"斜体","text":"两边各加一个星号是斜体，<code>*像这样*<\/code>。把“并不是”变成斜体。","hint":"选中后按 <code>⌘I<\/code>。","start":"历史并不是一条直线。","answer":"历史*并不是*一条直线。"},{"id":"strike","chapter":"文字","title":"删除线","text":"两边各加两个波浪线 <code>~~<\/code> 是删除线，适合划掉改了主意的地方。把“周六”划掉。","hint":"<code>~~<\/code> 要紧贴着文字。","start":"周六周日去图书馆还书。","answer":"~~周六~~周日去图书馆还书。"},{"id":"code","chapter":"文字","title":"行内代码","text":"用反引号包起来是行内代码，反引号在 Esc 下面，命令、文件名和快捷键都适合这样写。把 git status 标成代码。","hint":"两边各一个反引号。","start":"在终端里输入 git status 看看改了什么。","answer":"在终端里输入 `git status` 看看改了什么。"},{"id":"link","chapter":"文字","title":"链接","text":"方括号里写文字，紧跟着的圆括号里写地址，<code>[妙言](https://miaoyan.app)<\/code>。把“妙言官网”做成指向 <code>https://miaoyan.app<\/code> 的链接。","hint":"方括号和圆括号之间不能有空格。","start":"有空去妙言官网看看。","answer":"有空去[妙言官网](https://miaoyan.app)看看。"},{"id":"text-review","chapter":"文字","title":"小结","text":"把这一章用上：一级标题、分段、加粗、斜体，再加一个指向 <code>https://miaoyan.app/zh/blog/<\/code> 的链接，排成目标的样子。","hint":"先分段，再一处处加标记，预览里底色变深的地方就是还不一样的。","start":"读书会通知\n这周六下午三点，在二楼会议室。\n记得带上自己的笔记，往期笔记在这里。","answer":"# 读书会通知\n\n这周六下午三点，在**二楼会议室**。\n\n记得带上*自己的笔记*，往期笔记在[这里](https://miaoyan.app/zh/blog/)。"},{"id":"list","chapter":"结构","title":"列表","text":"每行开头写 <code>-<\/code> 加空格，就是一个列表项。把下面三样变成列表。","hint":"每一行都以 <code>- <\/code> 开头，在妙言里写完一项按回车，下一行会自动接上。","start":"牛奶\n面包\n鸡蛋","answer":"- 牛奶\n- 面包\n- 鸡蛋"},{"id":"ordered","chapter":"结构","title":"编号列表","text":"用 <code>1.<\/code> 加空格开头是编号列表，后面的数字写错了也会按顺序排。给三个步骤编上号。","hint":"每行都写 <code>1.<\/code> 也可以。","start":"打开妙言\n新建一篇笔记\n开始写","answer":"1. 打开妙言\n2. 新建一篇笔记\n3. 开始写"},{"id":"nested","chapter":"结构","title":"嵌套列表","text":"把一项往里缩进，比上一项多两个空格或者按一下 Tab，它就挂到上一项下面。让苹果和香蕉成为水果的子项。","hint":"在苹果和香蕉那两行开头按 Tab。","start":"- 水果\n- 苹果\n- 香蕉\n- 蔬菜","answer":"- 水果\n  - 苹果\n  - 香蕉\n- 蔬菜"},{"id":"tasks","chapter":"结构","title":"待办","text":"在 <code>-<\/code> 后面写 <code>[ ]<\/code> 是没做的待办，<code>[x]<\/code> 是做完的。把下面变成待办，第一项已经做完。","hint":"没做的方括号中间是一个空格，做完的写 <code>x<\/code>。","start":"- 读完第三部分\n- 整理笔记\n- 写短评","answer":"- [x] 读完第三部分\n- [ ] 整理笔记\n- [ ] 写短评"},{"id":"quote","chapter":"结构","title":"引用","text":"行首写 <code>&gt;<\/code> 加空格，这一段就是引用，摘抄书里的话正合适。把这句变成引用。","hint":"<code>&gt;<\/code> 后面空一格。","start":"历史从来不是一条直线，读的时候最好也别急着下结论。","answer":"> 历史从来不是一条直线，读的时候最好也别急着下结论。"},{"id":"rule","chapter":"结构","title":"分割线","text":"单独一行写 <code>---<\/code> 是一条分割线，上面要空一行，紧贴在文字下面会把那行变成标题，在妙言的 PPT 里它还是翻到下一页的记号。在两段中间加一条分割线。","hint":"<code>---<\/code> 的上下都留一个空行。","start":"上半场读完了。\n\n下半场明天继续。","answer":"上半场读完了。\n\n---\n\n下半场明天继续。"},{"id":"structure-review","chapter":"结构","title":"小结","text":"“周末计划”是二级标题，“要买的”和“要做的”是三级标题，要买的东西编上号，第一项待办已经做完，最后一句是引用。","hint":"标题和下面的列表之间空一行。","start":"周末计划\n要买的\n牛奶\n面包\n要做的\n读完第三部分\n写短评\n慢慢读，不着急。","answer":"## 周末计划\n\n### 要买的\n\n1. 牛奶\n2. 面包\n\n### 要做的\n\n- [x] 读完第三部分\n- [ ] 写短评\n\n> 慢慢读，不着急。"},{"id":"fence","chapter":"代码与表格","title":"代码块","text":"上下各一行三个反引号 <code>```<\/code> 围起来是代码块，开头的反引号后面写上语言名会按语言着色。把这段 Python 放进代码块，标上 <code>python<\/code>。","hint":"第一行写 <code>```python<\/code>，最后一行写 <code>```<\/code>。","start":"def words(text):\n    return len(text.split())","answer":"```python\ndef words(text):\n    return len(text.split())\n```"},{"id":"table","chapter":"代码与表格","title":"表格","text":"用竖线 <code>|<\/code> 隔开每一格，第二行写 <code>---<\/code> 把表头和内容分开。把下面做成两列的表格，第一行是表头。","hint":"每一行写成 <code>| a | b |<\/code>，第二行是 <code>| --- | --- |<\/code>，大一点的表格可以用 <a href=\"/zh/tools/markdown-table-generator/\">Markdown 表格生成器<\/a> 来做。","start":"事件，距今\n认知革命，7 万年\n农业革命，1.2 万年","answer":"| 事件 | 距今 |\n| --- | --- |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |"},{"id":"align","chapter":"代码与表格","title":"表格对齐","text":"在 <code>---<\/code> 那一行加冒号决定对齐，<code>:---<\/code> 靠左，<code>:---:<\/code> 居中，<code>---:<\/code> 靠右。让“距今”这一列靠右。","hint":"把第二行的第二格改成 <code>---:<\/code>。","start":"| 事件 | 距今 |\n| --- | --- |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |","answer":"| 事件 | 距今 |\n| --- | ---: |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |"},{"id":"image","chapter":"代码与表格","title":"图片","text":"图片和链接很像，前面多一个感叹号，<code>![说明](地址)<\/code>，方括号里写图片说明。插入地址为 <code>/assets/shots/zh-preview-1400.webp<\/code> 的图片，说明写“妙言预览”。","hint":"地址开头的 <code>/<\/code> 别漏了，感叹号要紧贴着方括号。","start":"妙言的预览长这样：\n\n","answer":"妙言的预览长这样：\n\n![妙言预览](/assets/shots/zh-preview-1400.webp)"},{"id":"escape","chapter":"代码与表格","title":"转义","text":"想让星号这类符号原样显示，在它前面加一个反斜杠 <code>\\<\/code>。让下面的星号原样显示，不变成斜体。","hint":"两个星号前面都要加 <code>\\<\/code>。","start":"*星号* 是 Markdown 的标记。","answer":"\\*星号\\* 是 Markdown 的标记。"},{"id":"blocks-review","chapter":"代码与表格","title":"小结","text":"“常用命令”是二级标题，表格里的命令写成行内代码，最后两行放进标着 <code>bash<\/code> 的代码块。","hint":"表格和代码块之间空一行。","start":"常用命令\n命令，作用\ngit status，看改了什么\ngit diff，看改了哪几行\ngit add .\ngit commit -m \"更新笔记\"","answer":"## 常用命令\n\n| 命令 | 作用 |\n| --- | --- |\n| `git status` | 看改了什么 |\n| `git diff` | 看改了哪几行 |\n\n```bash\ngit add .\ngit commit -m \"更新笔记\"\n```"},{"id":"math","chapter":"公式与图","title":"公式","text":"两个 <code>$<\/code> 中间写 LaTeX 就是行内公式，<code>^<\/code> 是上标。把勾股定理写成公式。","hint":"<code>$<\/code> 紧贴着公式，里面开头结尾不要留空格。","start":"勾股定理：a^2 + b^2 = c^2","answer":"勾股定理：$a^2 + b^2 = c^2$"},{"id":"math-block","chapter":"公式与图","title":"公式块","text":"单独成行的公式上下各写一行 <code>$$<\/code>，会居中放大显示。把这个增长公式写成公式块，<code>_0<\/code> 是下标。","hint":"第一行 <code>$$<\/code>，中间是公式，最后一行 <code>$$<\/code>。","start":"N(t) = N_0 e^{rt}","answer":"$$\nN(t) = N_0 e^{rt}\n$$"},{"id":"mermaid","chapter":"公式与图","title":"流程图","text":"代码块的语言写成 <code>mermaid<\/code>，里面的文字就会画成图，<code>--&gt;<\/code> 是箭头。把这段放进 mermaid 代码块，再加一步，做笔记指向写短评。","hint":"加一行 <code>B --&gt; C[写短评]<\/code>。","start":"flowchart LR\n  A[读书] --> B[做笔记]","answer":"```mermaid\nflowchart LR\n  A[读书] --> B[做笔记]\n  B --> C[写短评]\n```"},{"id":"final","chapter":"公式与图","title":"整篇笔记","text":"最后一关，把学过的都用上：两级标题、加粗、做完的待办、第二列靠右的表格、引用和公式，把这份草稿排成目标的样子。","hint":"从上往下一块块来，预览里底色变深的就是下一处要改的。","start":"周末读书笔记\n读《人类简史》后半本时记下的几个地方，第三部分最值得读。\n还要做的事\n读完第三部分\n整理书里的几个数字\n几个数字\n事件，距今\n认知革命，7 万年\n农业革命，1.2 万年\n历史从来不是一条直线。\n人口按 N_0 e^{rt} 增长。","answer":"# 周末读书笔记\n\n读《人类简史》后半本时记下的几个地方，**第三部分**最值得读。\n\n## 还要做的事\n\n- [x] 读完第三部分\n- [ ] 整理书里的几个数字\n\n## 几个数字\n\n| 事件 | 距今 |\n| --- | ---: |\n| 认知革命 | 7 万年 |\n| 农业革命 | 1.2 万年 |\n\n> 历史从来不是一条直线。\n\n人口按 $N_0 e^{rt}$ 增长。"}]}</script>
 <script src="/assets/tools/md-highlight.js?v=fe9f44b7f773" defer></script>
 <script src="/assets/tools/md-editor.js?v=8725d41dbbb2" defer></script>
 <script src="/assets/tools/md-rules.js?v=dee1d7b0f9b3" defer></script>
 <script src="/assets/tools/save-to-miaoyan.js?v=a189c8ac6217" defer></script>
-<script src="/assets/tools/learn.js?v=b16e9c568135" defer></script>
+<script src="/assets/tools/learn.js?v=5135325f2763" defer></script>
 <script>
 // A dark footer on screen tints the browser chrome, as on mole.fit. Safari's toolbar reads
 // body's colour, not only theme-color and the root, so body takes the footer's colour and a

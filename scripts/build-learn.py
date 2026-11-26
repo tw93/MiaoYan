@@ -415,6 +415,7 @@ COPY = {
         "description": "A free interactive Markdown tutorial in 26 levels, from headings, bold, lists and tasks to tables, code blocks, formulas and Mermaid diagrams, drawn in MiaoYan's preview as you type. Progress stays in your browser.",
         "map": "Levels",
         "level": "Level {n}",
+        "prev": "Previous level",
         "panes": ("Markdown", "Preview", "Goal"),
         "hint": "Hint",
         "answer": "Show answer",
@@ -431,6 +432,7 @@ COPY = {
             "passed": "Level done",
             "allDone": "All 26 levels done",
             "count": "{n} of {total} done",
+            "blocks": "{n} of {total}",
             "loadFailed": "Part of the page did not load; reload to try again.",
         },
     },
@@ -441,6 +443,7 @@ COPY = {
         "description": "免费的 Markdown 交互教程，26 关从标题、加粗、列表、待办到表格、代码块、公式和 Mermaid 图，边写边看妙言的预览，写对了就过关，进度留在浏览器里。",
         "map": "关卡",
         "level": "第 {n} 关",
+        "prev": "上一关",
         "panes": ("Markdown", "预览", "目标"),
         "hint": "提示",
         "answer": "看答案",
@@ -457,6 +460,7 @@ COPY = {
             "passed": "这一关过了",
             "allDone": "26 关都过了",
             "count": "已过 {n} / {total}",
+            "blocks": "{n} / {total}",
             "loadFailed": "页面有一部分没加载出来，刷新一下再试。",
         },
     },
@@ -495,6 +499,7 @@ def inline(text):
 def levels(lang):
     return [{
         "id": lv["id"],
+        "chapter": CHAPTERS[lv["chapter"]][lang],
         "title": lv["title"][lang],
         "text": inline(lv["text"][lang]),
         "hint": inline(lv["hint"][lang]),
@@ -503,20 +508,54 @@ def levels(lang):
     } for lv in LEVELS]
 
 
+CHEVRON = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+CARET = '<svg viewBox="0 0 10 6" width="10" height="6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+CHECK = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+
+
+def level_bar(lang):
+    """The level counter as on Flexbox Froggy and CSS Diner: arrows either side
+    of "Level n", the whole list one click away, and the run so far as one
+    track of 26 steps parted by chapter."""
+    copy = COPY[lang]
+    total = len(LEVELS)
+    track, n = [], 0
+    for key in CHAPTERS:
+        steps = []
+        for lv in LEVELS:
+            if lv["chapter"] != key:
+                continue
+            steps.append(f'<i class="learn-step" data-level="{n}"></i>')
+            n += 1
+        track.append(f'<span class="learn-track-part" style="flex-grow:{len(steps)}">{"".join(steps)}</span>')
+    return (
+        f'<div class="learn-bar">'
+        f'<div class="learn-nav">'
+        f'<button type="button" class="learn-arrow" data-action="prev" aria-label="{esc(copy["prev"])}">{CHEVRON}</button>'
+        f'<button type="button" class="learn-picker" id="learn-picker" aria-expanded="false" aria-controls="learn-map">'
+        f'<span id="learn-at">{esc(copy["level"].format(n=1))}</span><span class="learn-of">/ {total}</span>{CARET}</button>'
+        f'<button type="button" class="learn-arrow learn-arrow-next" data-action="skip" aria-label="{esc(copy["next"])}">{CHEVRON}</button>'
+        f'</div>'
+        f'<div class="learn-track" aria-hidden="true">{"".join(track)}</div>'
+        f'<p class="learn-count" id="learn-count">{esc(copy["strings"]["count"].format(n=0, total=total))}</p>'
+        f'{level_map(lang)}</div>'
+    )
+
+
 def level_map(lang):
     copy = COPY[lang]
     groups, n = [], 0
     for key, names in CHAPTERS.items():
-        dots = []
+        rows = []
         for lv in LEVELS:
             if lv["chapter"] != key:
                 continue
-            label = f'{copy["level"].format(n=n + 1)} {lv["title"][lang]}'
             current = ' aria-current="step"' if n == 0 else ""
-            dots.append(f'<li><button type="button" class="learn-dot" data-level="{n}" aria-label="{esc(label)}" title="{esc(label)}"{current}>{n + 1}</button></li>')
+            rows.append(f'<li><button type="button" class="learn-pick" data-level="{n}"{current}>'
+                        f'<span class="learn-pick-no">{n + 1}</span><span class="learn-pick-name">{esc(lv["title"][lang])}</span></button></li>')
             n += 1
-        groups.append(f'<div class="learn-chapter"><p class="learn-chapter-name">{esc(names[lang])}</p><ol class="learn-dots">{"".join(dots)}</ol></div>')
-    return f'<nav class="learn-map" aria-label="{esc(copy["map"])}">{"".join(groups)}</nav>'
+        groups.append(f'<div class="learn-chapter"><p class="learn-chapter-name">{esc(names[lang])}</p><ol class="learn-picks">{"".join(rows)}</ol></div>')
+    return f'<nav class="learn-map" id="learn-map" aria-label="{esc(copy["map"])}" hidden>{"".join(groups)}</nav>'
 
 
 def cheatsheet(lang):
@@ -600,37 +639,44 @@ def page(lang):
   <h1 class="section-title">{esc(copy["title"])}</h1>
   <p class="section-lede">{esc(copy["lede"])}</p>
   <div class="tool learn-tool" id="learn-tool">
-    {level_map(lang)}
-    <div class="learn-head">
-      <div class="learn-lesson">
-        <h2 class="learn-title" id="learn-title"><span class="learn-no">{esc(copy["level"].format(n=1))}</span> {esc(first["title"][lang])}</h2>
-        <p class="learn-text" id="learn-text">{inline(first["text"][lang])}</p>
-        <p class="learn-hint" id="learn-hint" hidden>{inline(first["hint"][lang])}</p>
+    {level_bar(lang)}
+    <div class="learn-board">
+      <div class="learn-side">
+        <div class="learn-lesson">
+          <p class="learn-chapter-now" id="learn-chapter">{esc(CHAPTERS[first["chapter"]][lang])}</p>
+          <h2 class="learn-title" id="learn-title">{esc(first["title"][lang])}</h2>
+          <p class="learn-text" id="learn-text">{inline(first["text"][lang])}</p>
+          <p class="learn-hint" id="learn-hint" hidden>{inline(first["hint"][lang])}</p>
+        </div>
+        <div class="learn-edit">
+          <div class="learn-pane-head">
+            <p class="learn-label" id="learn-code-label">{esc(panes[0])}</p>
+            <div class="learn-tools">
+              <button type="button" class="learn-link" data-action="hint">{esc(copy["hint"])}</button>
+              <button type="button" class="learn-link" data-action="answer">{esc(copy["answer"])}</button>
+              <button type="button" class="learn-link" data-action="reset">{esc(copy["reset"])}</button>
+            </div>
+          </div>
+          <div class="tool-editor"><textarea id="learn-code" class="tool-code viewer-code" aria-labelledby="learn-code-label" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(first["start"][lang])}</textarea></div>
+        </div>
+        <div class="learn-go">
+          <p class="learn-status" id="learn-status" role="status" aria-live="polite"></p>
+          <button type="button" class="tool-chip learn-next" data-action="next">{esc(copy["next"])}</button>
+        </div>
       </div>
-      <div class="learn-actions">
-        <button type="button" class="tool-chip" data-action="hint">{esc(copy["hint"])}</button>
-        <button type="button" class="tool-chip" data-action="answer">{esc(copy["answer"])}</button>
-        <button type="button" class="tool-chip" data-action="reset">{esc(copy["reset"])}</button>
-        <button type="button" class="tool-chip" data-action="next">{esc(copy["next"])}</button>
+      <div class="learn-stage">
+        <div class="learn-goal">
+          <div class="learn-pane-head">
+            <p class="learn-label">{esc(panes[2])}</p>
+            <p class="learn-score" id="learn-score"></p>
+          </div>
+          <div class="viewer-frame learn-frame learn-frame-goal"><iframe id="learn-goal" title="{esc(panes[2])}" {frame}></iframe></div>
+        </div>
+        <div class="learn-mine">
+          <div class="learn-pane-head"><p class="learn-label">{esc(panes[1])}</p></div>
+          <div class="viewer-frame learn-frame learn-frame-mine"><iframe id="learn-mine" title="{esc(panes[1])}" {frame}></iframe></div>
+        </div>
       </div>
-    </div>
-    <div class="learn-grid">
-      <div class="learn-pane learn-pane-edit">
-        <p class="learn-label" id="learn-code-label">{esc(panes[0])}</p>
-        <div class="tool-editor"><textarea id="learn-code" class="tool-code viewer-code" aria-labelledby="learn-code-label" data-highlight spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="soft">{esc(first["start"][lang])}</textarea></div>
-      </div>
-      <div class="learn-pane">
-        <p class="learn-label">{esc(panes[1])}</p>
-        <div class="viewer-frame learn-frame"><iframe id="learn-mine" title="{esc(panes[1])}" {frame}></iframe></div>
-      </div>
-      <div class="learn-pane">
-        <p class="learn-label">{esc(panes[2])}</p>
-        <div class="viewer-frame learn-frame learn-frame-goal"><iframe id="learn-goal" title="{esc(panes[2])}" {frame}></iframe></div>
-      </div>
-    </div>
-    <div class="tool-foot">
-      <p class="tool-status" id="learn-status" role="status" aria-live="polite"></p>
-      <p class="tool-count" id="learn-count">{esc(copy["strings"]["count"].format(n=0, total=len(LEVELS)))}</p>
     </div>
     <section class="learn-finish" id="learn-finish" hidden>
       <h2 class="learn-finish-title">{esc(copy["finish_title"])}</h2>

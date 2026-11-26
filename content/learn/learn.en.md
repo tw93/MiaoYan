@@ -16,7 +16,7 @@ Yes. The levels you finished and what you wrote in each stay in this browser, so
 
 ### What if I get stuck?
 
-Try the hint first. The tinted blocks in the preview are the ones that still differ from the goal. If you still cannot see it, show the answer, then start over and write it yourself.
+Try the hint first. A green dot beside a block in the goal means you have written it, and the tinted blocks in the preview are the ones that still differ from the goal. If you still cannot see it, show the answer, then start over and write it yourself.
 
 ### Does this Markdown work in MiaoYan?
 

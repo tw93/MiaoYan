@@ -6,8 +6,11 @@
 // *a* and _a_, "- " and "* " lists, or a loose and a tight list read as one.
 // Formulas compare by their TeX without spaces and Mermaid by its edges.
 // Blocks that differ are tinted in the preview, matched by their longest
-// common run so one extra block marks only itself. Progress, the level and
-// each level's text stay in localStorage.
+// common run so one extra block marks only itself, and each goal block the
+// reader has drawn gets a green dot, as Flexbox Froggy fills a lily pad.
+// Next is filled once the level is done; pressed before that it shakes the
+// editor and shows the hint. Progress, the level and each level's text stay
+// in localStorage.
 (function () {
   "use strict";
 
@@ -22,13 +25,23 @@
   var mineFrame = $("learn-mine");
   var goalFrame = $("learn-goal");
   var titleEl = $("learn-title");
+  var chapterEl = $("learn-chapter");
+  var atEl = $("learn-at");
+  var scoreEl = $("learn-score");
+  var picker = $("learn-picker");
+  var mapEl = $("learn-map");
+  var editEl = tool.querySelector(".learn-edit");
   var textEl = $("learn-text");
   var hintEl = $("learn-hint");
   var status = $("learn-status");
   var countEl = $("learn-count");
   var finish = $("learn-finish");
-  var dots = Array.prototype.slice.call(tool.querySelectorAll(".learn-dot"));
+  var picks = Array.prototype.slice.call(tool.querySelectorAll(".learn-pick"));
+  var steps = Array.prototype.slice.call(tool.querySelectorAll(".learn-step"));
   var nextButton = tool.querySelector('[data-action="next"]');
+  var prevArrow = tool.querySelector('[data-action="prev"]');
+  var skipArrow = tool.querySelector('[data-action="skip"]');
+  var CHECK = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var saveButton = finish.querySelector("[data-miaoyan-save]");
 
   var state = { at: 0, done: {}, text: {} };
@@ -47,7 +60,7 @@
   function track(name, params) {
     if (typeof window.gtag === "function") window.gtag("event", name, params || {});
   }
-  function say(text) { status.textContent = text || ""; }
+  function say(text) { status.innerHTML = text ? CHECK + "<span>" + esc(text) + "</span>" : ""; }
   function fill(s, map) { return s.replace(/\{(\w+)\}/g, function (m, k) { return k in map ? map[k] : m; }); }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) { return c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&quot;"; });
@@ -185,7 +198,8 @@
     });
   }
 
-  // Which of the reader's blocks are not in the longest run shared with the goal.
+  // Which of the reader's blocks are not in the longest run shared with the goal
+  // (off), and which of the goal's blocks are (hit).
   function unmatched(a, b) {
     var n = a.length;
     var m = b.length;
@@ -197,22 +211,25 @@
       }
     }
     var off = {};
+    var hit = {};
     i = 0;
     j = 0;
     while (i < n && j < m) {
-      if (a[i] === b[j]) { i++; j++; } else if (table[i + 1][j] >= table[i][j + 1]) { off[i] = true; i++; } else { j++; }
+      if (a[i] === b[j]) { hit[j] = true; i++; j++; } else if (table[i + 1][j] >= table[i][j + 1]) { off[i] = true; i++; } else { j++; }
     }
     for (; i < n; i++) off[i] = true;
-    return off;
+    return { off: off, hit: hit };
   }
 
   // ---- Frames ------------------------------------------------------------------------
 
-  var OFF_CSS = ".learn-off { background: #F2ECE1; border-radius: 6px; box-shadow: 0 0 0 6px #F2ECE1; }";
+  var OFF_CSS = ".learn-off { background: #F2ECE1; border-radius: 6px; box-shadow: 0 0 0 6px #F2ECE1; }" +
+    " #write > * { position: relative; } #write > *::before { content: ''; position: absolute; left: -13px; top: 0.62em; width: 7px; height: 7px; border-radius: 50%; background: #1a6840; opacity: 0; transform: scale(0.4); transition: opacity 0.25s, transform 0.25s; }" +
+    " #write > hr::before { top: -3px; } #write > .learn-hit::before { opacity: 1; transform: none; }";
   var frameDoc = "<!doctype html><html lang=\"" + (data.lang === "zh" ? "zh-CN" : "en") + "\"><head><meta charset=\"utf-8\">" +
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title></title>" +
     data.css.concat([data.katexCss]).map(function (href) { return '<link rel="stylesheet" href="' + href + '">'; }).join("") +
-    "<style>" + data.pageCss + " html { padding: 20px; } #write { padding: 0 8px; } #write > :last-child { margin-bottom: 0; } " + OFF_CSS + "</style></head><body><div class=\"markdown-body heti\" id=\"write\"></div></body></html>";
+    "<style>" + data.pageCss + " html { padding: 12px 12px 12px 10px; } #write { padding: 8px 16px 8px 18px; } #write > :last-child { margin-bottom: 0; } " + OFF_CSS + "</style></head><body><div class=\"markdown-body heti\" id=\"write\"></div></body></html>";
 
   function frameReady(frame) {
     return new Promise(function (resolve) {
@@ -303,14 +320,19 @@
 
   var goalKeys = null;
   var timer = 0;
+  var wasPassed = null;
 
   function level() { return LV[state.at]; }
   function doneCount() { return LV.filter(function (l) { return state.done[l.id]; }).length; }
 
   function paintMap() {
-    dots.forEach(function (dot, i) {
-      dot.classList.toggle("is-done", !!state.done[LV[i].id]);
-      if (i === state.at) dot.setAttribute("aria-current", "step"); else dot.removeAttribute("aria-current");
+    picks.forEach(function (pick, i) {
+      pick.classList.toggle("is-done", !!state.done[LV[i].id]);
+      if (i === state.at) pick.setAttribute("aria-current", "step"); else pick.removeAttribute("aria-current");
+    });
+    steps.forEach(function (step, i) {
+      step.classList.toggle("is-done", !!state.done[LV[i].id]);
+      step.classList.toggle("is-now", i === state.at);
     });
     var n = doneCount();
     countEl.textContent = fill(S.count, { n: n, total: LV.length });
@@ -330,23 +352,63 @@
     var mine = blocks(compare, text);
     if (!goalKeys) goalKeys = blocks(compare, L.answer);
     var passed = mine.length === goalKeys.length && mine.every(function (k, i) { return k === goalKeys[i]; });
+    var match = unmatched(mine, goalKeys);
     mineWrite.innerHTML = view.render(text);
     var kids = mineWrite.children;
     if (!passed && kids.length === mine.length) {
-      var off = unmatched(mine, goalKeys);
-      for (var i = 0; i < kids.length; i++) if (off[i]) kids[i].classList.add("learn-off");
+      for (var i = 0; i < kids.length; i++) if (match.off[i]) kids[i].classList.add("learn-off");
     }
+    paintHits(passed ? null : match.hit);
     finishDom(mineWrite);
     drawDiagrams(mineWrite);
-    if (passed && !state.done[L.id]) {
+    var fresh = passed && !state.done[L.id];
+    if (fresh) {
       state.done[L.id] = 1;
       store();
       track("learn_level", { level: L.id });
       if (doneCount() === LV.length) track("learn_complete");
     }
     nextButton.classList.toggle("tool-chip-primary", passed);
+    tool.classList.toggle("is-passed", passed);
     say(passed ? (doneCount() === LV.length ? S.allDone : S.passed) : "");
+    if (passed) hintEl.hidden = true;
     paintMap();
+    // The moment a level is done while the reader writes, not when a done level is opened again.
+    if (passed && wasPassed === false) celebrate();
+    wasPassed = passed;
+  }
+
+  // Each goal block the reader has drawn; all of them once the level is done.
+  function paintHits(hit) {
+    if (!goalWrite || !goalKeys) return;
+    var kids = goalWrite.children;
+    var n = 0;
+    var aligned = kids.length === goalKeys.length;
+    for (var i = 0; i < goalKeys.length; i++) {
+      var on = !hit || !!hit[i];
+      if (on) n++;
+      if (aligned) kids[i].classList.toggle("learn-hit", on);
+    }
+    scoreEl.textContent = fill(S.blocks, { n: n, total: goalKeys.length });
+  }
+
+  var wonTimer = 0;
+  function celebrate() {
+    var step = steps[state.at];
+    tool.classList.remove("is-won");
+    if (step) step.classList.remove("is-won");
+    void tool.offsetWidth;
+    tool.classList.add("is-won");
+    if (step) step.classList.add("is-won");
+    clearTimeout(wonTimer);
+    wonTimer = setTimeout(function () { tool.classList.remove("is-won"); if (step) step.classList.remove("is-won"); }, 600);
+  }
+
+  function shake() {
+    editEl.classList.remove("is-shake");
+    void editEl.offsetWidth;
+    editEl.classList.add("is-shake");
+    setTimeout(function () { editEl.classList.remove("is-shake"); }, 400);
   }
 
   // The goal's frame is as tall as the goal, so a one-line goal on its own
@@ -376,7 +438,12 @@
     state.at = i;
     store();
     var L = level();
-    titleEl.innerHTML = '<span class="learn-no">' + esc(fill(S.level, { n: i + 1 })) + "</span> " + esc(L.title);
+    titleEl.textContent = L.title;
+    chapterEl.textContent = L.chapter;
+    atEl.textContent = fill(S.level, { n: i + 1 });
+    prevArrow.disabled = i === 0;
+    skipArrow.disabled = i === LV.length - 1;
+    wasPassed = null;
     textEl.innerHTML = L.text;
     hintEl.innerHTML = L.hint;
     hintEl.hidden = true;
@@ -392,6 +459,7 @@
   }
 
   function go(i, focus) {
+    closeMap();
     show(i);
     var top = tool.getBoundingClientRect().top;
     if (top < 0 || top > window.innerHeight * 0.5) tool.scrollIntoView({ block: "start" });
@@ -417,9 +485,26 @@
     go(state.at + 1, true);
   }, true);
 
+  function closeMap() {
+    mapEl.hidden = true;
+    picker.setAttribute("aria-expanded", "false");
+  }
+  picker.addEventListener("click", function () {
+    var open = mapEl.hidden;
+    mapEl.hidden = !open;
+    picker.setAttribute("aria-expanded", String(open));
+    if (open) { var now = mapEl.querySelector('[aria-current="step"]'); if (now) now.focus(); }
+  });
+  document.addEventListener("click", function (e) {
+    if (!mapEl.hidden && !e.target.closest("#learn-map, #learn-picker")) closeMap();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !mapEl.hidden) { closeMap(); picker.focus(); }
+  });
+
   tool.addEventListener("click", function (e) {
-    var dot = e.target.closest(".learn-dot");
-    if (dot) { go(parseInt(dot.getAttribute("data-level"), 10), true); return; }
+    var pick = e.target.closest(".learn-pick");
+    if (pick) { go(parseInt(pick.getAttribute("data-level"), 10), true); return; }
     var button = e.target.closest("[data-action]");
     if (!button) return;
     var action = button.getAttribute("data-action");
@@ -440,6 +525,18 @@
       render();
       code.focus();
     } else if (action === "next") {
+      if (state.at >= LV.length - 1) return;
+      if (!tool.classList.contains("is-passed")) {
+        shake();
+        hintEl.hidden = false;
+        track("learn_hint", { level: L.id });
+        if (window.matchMedia("(pointer: fine)").matches) code.focus();
+        return;
+      }
+      go(state.at + 1, true);
+    } else if (action === "prev") {
+      if (state.at > 0) go(state.at - 1, true);
+    } else if (action === "skip") {
       if (state.at < LV.length - 1) go(state.at + 1, true);
     } else if (action === "again") {
       state = { at: 0, done: {}, text: {} };
