@@ -25,6 +25,32 @@ final class NoteVersionFilesTests: XCTestCase {
         XCTAssertTrue(versions.allSatisfy { NoteVersionFiles.isVersionFileName($0.url.lastPathComponent) })
     }
 
+    /// The text a restore replaces is kept even when it differs from the
+    /// newest version only in indentation: a list nested by hand and then
+    /// restored over was in neither the note nor the history.
+    func testAnExactSaveKeepsAnIndentOnlyChange() throws {
+        let start = Date(timeIntervalSince1970: 1_800_000_000)
+        XCTAssertNotNil(try NoteVersionFiles.save("- a\n- b\n", in: folder, at: start))
+        XCTAssertNil(try NoteVersionFiles.save("- a\n    - b\n", in: folder, at: start.addingTimeInterval(60)))
+        let kept = try XCTUnwrap(try NoteVersionFiles.save("- a\n    - b\n", in: folder, at: start.addingTimeInterval(120), exact: true))
+        XCTAssertEqual(try String(contentsOf: kept, encoding: .utf8), "- a\n    - b\n")
+        XCTAssertNil(try NoteVersionFiles.save("- a\n    - b\n", in: folder, at: start.addingTimeInterval(180), exact: true), "the same bytes again")
+    }
+
+    /// Past the budget the history goes down to nine tenths of it, so the
+    /// next save does not pass the budget again and walk every note.
+    func testTheBudgetTrimLeavesRoomForTheNextSave() throws {
+        let kilobyte = Data(repeating: 0x61, count: 1024)
+        let note = folder.appendingPathComponent("n-1")
+        try FileManager.default.createDirectory(at: note, withIntermediateDirectories: true)
+        for day in 1...10 {
+            try kilobyte.write(to: note.appendingPathComponent(String(format: "2026-11-%02dT10-00-00Z.md", day)))
+        }
+        // 10 KiB over a 10000-byte budget: trimmed to 9000 or less, not just under 10000.
+        XCTAssertEqual(NoteVersionFiles.keepWithinBudget(root: folder, budget: 10000), 8192)
+        XCTAssertEqual(NoteVersionFiles.versions(in: note).count, 8)
+    }
+
     func testTwoSavesInOneSecondKeepBoth() throws {
         let start = Date(timeIntervalSince1970: 1_800_000_000)
         let first = try XCTUnwrap(try NoteVersionFiles.save("a", in: folder, at: start))

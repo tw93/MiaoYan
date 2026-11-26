@@ -26,17 +26,21 @@ final class NoteVersionManager: @unchecked Sendable {
     }
 
     @MainActor
-    func saveVersionIfNeeded(for note: Note, force: Bool = false, completion: (@MainActor @Sendable () -> Void)? = nil) {
+    func saveVersionIfNeeded(
+        for note: Note, force: Bool = false, exact: Bool = false, completion: (@MainActor @Sendable () -> Void)? = nil
+    ) {
         let key = versionKey(for: note.url)
         let text = note.content.string
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             completion?()
             return
         }
-        saveVersion(key: key, text: text, force: force, completion: completion)
+        saveVersion(key: key, text: text, force: force, exact: exact, completion: completion)
     }
 
-    private func saveVersion(key: String, text: String, force: Bool, completion: (@MainActor @Sendable () -> Void)? = nil) {
+    private func saveVersion(
+        key: String, text: String, force: Bool, exact: Bool = false, completion: (@MainActor @Sendable () -> Void)? = nil
+    ) {
         queue.async { [weak self] in
             defer { DispatchQueue.main.async { completion?() } }
             guard let self else { return }
@@ -47,7 +51,7 @@ final class NoteVersionManager: @unchecked Sendable {
             let dir = self.versionsRoot.appendingPathComponent(key)
             let written: URL?
             do {
-                written = try NoteVersionFiles.save(text, in: dir)
+                written = try NoteVersionFiles.save(text, in: dir, exact: exact)
             } catch {
                 // Not marked as saved, so the next save tries again instead of
                 // skipping the whole interval without a snapshot.

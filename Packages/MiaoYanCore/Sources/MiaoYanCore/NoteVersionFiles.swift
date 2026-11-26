@@ -79,12 +79,17 @@ public enum NoteVersionFiles {
     /// when nothing was. A version merged in from a rename can already hold
     /// this second, so the save takes the next free one rather than writing
     /// over it. Keeps the newest `keptPerNote` afterwards.
+    ///
+    /// `exact` compares byte for byte, for the text a restore is about to
+    /// replace: `sameText` ignores indentation and blank lines, which nest
+    /// a list and part paragraphs, so a restore after an edit that only
+    /// changed those kept no copy of it and the edit was gone.
     @discardableResult
-    public static func save(_ text: String, in folder: URL, at date: Date = Date()) throws -> URL? {
+    public static func save(_ text: String, in folder: URL, at date: Date = Date(), exact: Bool = false) throws -> URL? {
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         if let latest = versions(in: folder).first,
             let previous = try? String(contentsOf: latest.url, encoding: .utf8),
-            sameText(previous, text)
+            exact ? previous == text : sameText(previous, text)
         {
             return nil
         }
@@ -112,11 +117,13 @@ public enum NoteVersionFiles {
             .forEach { try? FileManager.default.removeItem(at: $0) }
     }
 
-    /// Removes the oldest versions across all notes until the history fits
-    /// in `budget`, never a note's newest one, so each note keeps the
-    /// version it can always go back to. Version files are named by their
-    /// UTC time, so names sort oldest first in every folder alike. Returns
-    /// the size left.
+    /// Removes the oldest versions across all notes once the history passes
+    /// `budget`, down to nine tenths of it, never a note's newest one, so
+    /// each note keeps the version it can always go back to. Trimmed only to
+    /// the budget, the next save passed it again and every save after it
+    /// walked the whole history. Version files are named by their UTC time,
+    /// so names sort oldest first in every folder alike. Returns the size
+    /// left.
     @discardableResult
     public static func keepWithinBudget(root: URL, budget: Int64) -> Int64 {
         let manager = FileManager.default
@@ -143,8 +150,9 @@ public enum NoteVersionFiles {
             }
         }
         guard total > budget else { return total }
+        let target = budget / 10 * 9
         for file in removable.sorted(by: { $0.url.lastPathComponent < $1.url.lastPathComponent }) {
-            guard total > budget else { break }
+            guard total > target else { break }
             if (try? manager.removeItem(at: file.url)) != nil { total -= file.size }
         }
         return total

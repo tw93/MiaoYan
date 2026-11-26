@@ -545,7 +545,9 @@ final class VersionHistoryViewController: NSViewController {
             let text = (texts.flatMap { row < $0.count ? $0[row] : nil }) ?? (try? String(contentsOf: url, encoding: .utf8))
         else { return }
 
-        NoteVersionManager.shared.saveVersionIfNeeded(for: note, force: true)
+        // Exact: a current text that differs from the newest version only in
+        // indentation or blank lines is still kept before it is replaced.
+        NoteVersionManager.shared.saveVersionIfNeeded(for: note, force: true, exact: true)
         let timeStr = primaryLabel(for: .saved(date: date, url: url))
         let message = String(format: I18n.str("Restored to version from %@"), timeStr)
         if let onRestored {
