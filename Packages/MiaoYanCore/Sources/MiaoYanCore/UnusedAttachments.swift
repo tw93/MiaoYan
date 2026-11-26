@@ -11,6 +11,17 @@ public enum UnusedAttachments {
     private static let attachmentFolderNames: Set<String> = ["i", "files"]
     private static let noteExtensions: Set<String> = ["md", "markdown", "txt"]
 
+    /// What a scan found: the unused files, or why nothing may be cleaned.
+    public enum Scan: Equatable, Sendable {
+        case found([URL])
+        /// A note or a folder could not be read: a note there could link
+        /// any of the files.
+        case unreadable
+        /// A note iCloud keeps only online, or has not brought up to date;
+        /// its download has started, so a later run can read it.
+        case downloading
+    }
+
     /// The files in the library at `root`'s `i/` and `files/` folders that
     /// no note links, or nil when a note or a folder could not be read and
     /// nothing may be cleaned: a note there could link any of them. A file
@@ -19,19 +30,24 @@ public enum UnusedAttachments {
     /// through a file coordinator).
     public static func find(
         in root: URL, changedBefore cutoff: Date,
-        read: (URL) throws -> String = { url in
-            guard let text = NoteText.decode(try Data(contentsOf: url)) else {
-                throw CocoaError(.fileReadInapplicableStringEncoding)
-            }
-            return text
-        }
+        read: (URL) throws -> String = defaultRead
     ) -> [URL]? {
-        guard let listing = try? walk(root) else { return nil }
+        if case .found(let files) = scan(in: root, changedBefore: cutoff, read: read) { return files }
+        return nil
+    }
+
+    /// `find`, saying why nothing was found when nothing may be cleaned, so
+    /// the iPhone can tell a note still downloading from one it cannot read.
+    public static func scan(
+        in root: URL, changedBefore cutoff: Date,
+        read: (URL) throws -> String = defaultRead
+    ) -> Scan {
+        guard let listing = try? walk(root) else { return .unreadable }
         // With no i/ or files/ anywhere there is nothing to clean, and no
         // note needs reading: one only in iCloud must not turn "nothing
         // unused" into a failure.
-        guard !listing.attachmentFolders.isEmpty else { return [] }
-        guard listing.onlyInICloud == nil else { return nil }
+        guard !listing.attachmentFolders.isEmpty else { return .found([]) }
+        guard listing.onlyInICloud == nil else { return .downloading }
 
         let library = root.path
         var referenced = Set<String>()
@@ -39,7 +55,7 @@ public enum UnusedAttachments {
         // files are kept by name: a restore puts it back beside them.
         var trashNames = Set<String>()
         for (note, inTrash) in listing.notes {
-            guard let text = try? read(note) else { return nil }
+            guard let text = try? read(note) else { return .unreadable }
             let directory = note.deletingLastPathComponent().path
             let paths = AttachmentLinks.paths(in: text, noteDirectory: directory, library: library)
             if inTrash {
@@ -72,7 +88,16 @@ public enum UnusedAttachments {
                 unused.append(file)
             }
         }
-        return unused
+        return .found(unused)
+    }
+
+    /// A note's text as the Mac reads it: UTF-8, or the legacy readings
+    /// `NoteText.decode` falls back to.
+    public static func defaultRead(_ url: URL) throws -> String {
+        guard let text = NoteText.decode(try Data(contentsOf: url)) else {
+            throw CocoaError(.fileReadInapplicableStringEncoding)
+        }
+        return text
     }
 
     private struct Listing {

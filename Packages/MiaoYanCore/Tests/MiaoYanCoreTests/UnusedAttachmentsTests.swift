@@ -90,4 +90,19 @@ final class UnusedAttachmentsTests: XCTestCase {
         let privateRoot = URL(fileURLWithPath: root.path.hasPrefix("/private/") ? root.path : "/private" + root.path)
         XCTAssertEqual(unused(in: privateRoot), ["Work/i/c.png"])
     }
+
+    func testAScanTellsADownloadingNoteFromAnUnreadableOne() throws {
+        try write("# Note\n", "Work/note.md")
+        try write("x", "Work/i/a.png")
+        try write("x", "Work/.cloud.md.icloud")
+        XCTAssertEqual(UnusedAttachments.scan(in: root, changedBefore: .distantFuture), .downloading)
+        try FileManager.default.removeItem(at: root.appendingPathComponent("Work/.cloud.md.icloud"))
+        XCTAssertEqual(
+            UnusedAttachments.scan(in: root, changedBefore: .distantFuture) { _ in throw CocoaError(.fileReadNoPermission) },
+            .unreadable)
+        guard case .found(let files) = UnusedAttachments.scan(in: root, changedBefore: .distantFuture) else {
+            return XCTFail("a readable library is scanned")
+        }
+        XCTAssertEqual(files.map(\.lastPathComponent), ["a.png"])
+    }
 }
