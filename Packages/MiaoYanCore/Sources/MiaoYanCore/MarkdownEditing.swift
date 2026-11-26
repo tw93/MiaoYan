@@ -30,6 +30,24 @@ public enum SourceLines {
         }
     }
 
+    /// The range, without its line ending, of the line holding `offset`,
+    /// read from that line alone. Return and paste ask this of the caret, and
+    /// counting lines from the top made Return cost 16 ms in a note of 34,000
+    /// lines.
+    public static func range(around offset: Int, in text: NSString) -> NSRange {
+        var start = min(max(offset, 0), text.length)
+        // Between the two units of `\r\n` is the end of the line before.
+        if start > 0, start < text.length, text.character(at: start) == 0x0A, text.character(at: start - 1) == 0x0D {
+            start -= 1
+        }
+        while start > 0 {
+            let unit = text.character(at: start - 1)
+            if unit == 0x0A || unit == 0x0D { break }
+            start -= 1
+        }
+        return NSRange(location: start, length: end(from: start, in: text).end - start)
+    }
+
     /// Calls `body` with each line's index and range, without its line
     /// ending, until it returns false; one pass over the text.
     static func forEach(in text: NSString, _ body: (Int, NSRange) -> Bool) {
@@ -102,11 +120,18 @@ public enum ListContinuation {
     /// where `- name:` is code.
     public static func edit(in text: NSString, caret: Int) -> Edit? {
         guard caret >= 0, caret <= text.length else { return nil }
-        let lineIndex = SourceLines.line(atOffset: caret, in: text)
-        guard let line = SourceLines.range(ofLine: lineIndex, in: text), caret == NSMaxRange(line),
-            !isInFencedCode(line: lineIndex, in: text)
+        let line = SourceLines.range(around: caret, in: text)
+        guard caret == NSMaxRange(line), let edit = lineEdit(in: text, line: line, caret: caret),
+            // Last, since it reads the note from the top: most lines are
+            // neither items nor quotes.
+            !isInFencedCode(lineStart: line.location, in: text)
         else { return nil }
+        return edit
+    }
 
+    /// The rule on `line` alone, the caret at its end; internal for the test
+    /// that holds it to the line counting it replaced.
+    static func lineEdit(in text: NSString, line: NSRange, caret: Int) -> Edit? {
         let prefix: String
         if ruleRegex.firstMatch(in: text as String, range: line) == nil,  // `* * *` and `- - -` are rules, not items.
             let match = itemRegex.firstMatch(in: text as String, range: line)
@@ -147,28 +172,44 @@ public enum ListContinuation {
     /// closed is no block, as the editors' highlighting draws it.
     public static func isInFencedCode(at offset: Int, in text: NSString) -> Bool {
         guard offset >= 0, offset <= text.length else { return false }
-        return isInFencedCode(line: SourceLines.line(atOffset: offset, in: text), in: text)
+        return isInFencedCode(lineStart: SourceLines.range(around: offset, in: text).location, in: text)
     }
 
-    private static func isInFencedCode(line target: Int, in text: NSString) -> Bool {
+    /// Lines are told apart by where they start, so finding the caret's line
+    /// costs no count from the top, and fences are read unit by unit rather
+    /// than through a substring of every line.
+    private static func isInFencedCode(lineStart target: Int, in text: NSString) -> Bool {
         // A quick out for the common note with no fence at all.
         guard text.range(of: "```").location != NSNotFound else { return false }
         var openedAt: Int?
         var inside = false
-        SourceLines.forEach(in: text) { index, range in
-            let line = text.substring(with: range)
+        SourceLines.forEach(in: text) { _, range in
+            let start = range.location
             if let opened = openedAt {
-                if line.hasPrefix("```"), line.dropFirst(3).allSatisfy({ $0 == " " || $0 == "\t" }) {
-                    inside = opened < target && target <= index
+                if isClosingFence(range, in: text) {
+                    inside = opened < target && target <= start
                     openedAt = nil
-                    return !inside && index < target
+                    return !inside && start < target
                 }
                 return true
             }
-            if line.hasPrefix("```") { openedAt = index }
-            return index < target
+            if opensFence(range, in: text) { openedAt = start }
+            return start < target
         }
         return inside
+    }
+
+    private static func opensFence(_ line: NSRange, in text: NSString) -> Bool {
+        line.length >= 3 && (0..<3).allSatisfy { text.character(at: line.location + $0) == 0x60 }
+    }
+
+    /// Three backticks and nothing else but spaces and tabs.
+    private static func isClosingFence(_ line: NSRange, in text: NSString) -> Bool {
+        opensFence(line, in: text)
+            && (line.location + 3..<NSMaxRange(line)).allSatisfy {
+                let unit = text.character(at: $0)
+                return unit == 0x20 || unit == 0x09
+            }
     }
 
     /// `3.` becomes `4.`; a bullet stays as it is.

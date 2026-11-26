@@ -149,6 +149,88 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(pressReturn("  ```\n- a\n  ```", at: 9)?.0, "  ```\n- a\n- \n  ```")
     }
 
+    /// Return and paste read the caret's line alone since 2026-11-26; before,
+    /// they counted lines from the top, and Return cost 16 ms in a note of
+    /// 34,000 lines. Every caret of random notes gets the edit the counting
+    /// code gave, kept here as the reference.
+    func testReturnReadingOneLineMatchesCountingFromTheTop() {
+        let pieces = [
+            "a", "word ", " ", "\t", "- ", "* ", "1. ", "9) ", "> ", ">> ", "[ ] ", "[x] ", "- - -", "```", "``", "`",
+            "\n", "\n", "\n", "\r\n", "\r", "\u{2028}", "\u{00A0}",
+        ]
+        var generator = SeededGenerator(seed: 2026_11_26)
+        var checked = 0
+        for _ in 0..<1500 {
+            let count = Int.random(in: 1...24, using: &generator)
+            let text = (0..<count).map { _ in pieces.randomElement(using: &generator)! }.joined() as NSString
+            for caret in 0...text.length {
+                XCTAssertEqual(
+                    ListContinuation.edit(in: text, caret: caret), Self.countedEdit(in: text, caret: caret),
+                    "caret \(caret) in \(String(reflecting: text as String))")
+                if !Self.endsAfterALineBreak(text, caret: caret) {
+                    XCTAssertEqual(
+                        ListContinuation.isInFencedCode(at: caret, in: text), Self.countedIsInFence(at: caret, in: text),
+                        "caret \(caret) in \(String(reflecting: text as String))")
+                }
+                checked += 1
+            }
+        }
+        XCTAssertGreaterThan(checked, 20_000)
+    }
+
+    /// The empty line after a note's last line break is its own line, so after
+    /// a closing fence it is outside the code; counting lines folded it into
+    /// the line before, and HTML pasted there went in as plain text.
+    func testTheEmptyLastLineAfterAClosingFenceIsOutsideTheCode() {
+        let text = "```\ncode\n```\n" as NSString
+        XCTAssertFalse(ListContinuation.isInFencedCode(at: text.length, in: text))
+        XCTAssertTrue(Self.countedIsInFence(at: text.length, in: text), "what counting lines said")
+        XCTAssertTrue(ListContinuation.isInFencedCode(at: 5, in: text))
+        XCTAssertTrue(ListContinuation.isInFencedCode(at: text.length - 1, in: text), "the closing fence line")
+        let open = "```\ncode\n" as NSString
+        XCTAssertFalse(ListContinuation.isInFencedCode(at: open.length, in: open), "a fence never closed is no block")
+    }
+
+    private static func endsAfterALineBreak(_ text: NSString, caret: Int) -> Bool {
+        guard caret == text.length, caret > 0 else { return false }
+        let last = text.character(at: caret - 1)
+        return last == 0x0A || last == 0x0D
+    }
+
+    private static func countedEdit(in text: NSString, caret: Int) -> ListContinuation.Edit? {
+        guard caret >= 0, caret <= text.length else { return nil }
+        let lineIndex = SourceLines.line(atOffset: caret, in: text)
+        guard let line = SourceLines.range(ofLine: lineIndex, in: text), caret == NSMaxRange(line),
+            !countedIsInFence(line: lineIndex, in: text)
+        else { return nil }
+        return ListContinuation.lineEdit(in: text, line: line, caret: caret)
+    }
+
+    private static func countedIsInFence(at offset: Int, in text: NSString) -> Bool {
+        guard offset >= 0, offset <= text.length else { return false }
+        return countedIsInFence(line: SourceLines.line(atOffset: offset, in: text), in: text)
+    }
+
+    private static func countedIsInFence(line target: Int, in text: NSString) -> Bool {
+        guard text.range(of: "```").location != NSNotFound else { return false }
+        var openedAt: Int?
+        var inside = false
+        SourceLines.forEach(in: text) { index, range in
+            let line = text.substring(with: range)
+            if let opened = openedAt {
+                if line.hasPrefix("```"), line.dropFirst(3).allSatisfy({ $0 == " " || $0 == "\t" }) {
+                    inside = opened < target && target <= index
+                    openedAt = nil
+                    return !inside && index < target
+                }
+                return true
+            }
+            if line.hasPrefix("```") { openedAt = index }
+            return index < target
+        }
+        return inside
+    }
+
     func testLineBreakFollowsTheNote() {
         XCTAssertEqual(ListContinuation.lineBreak(in: "a\nb"), "\n")
         XCTAssertEqual(ListContinuation.lineBreak(in: "a\r\nb"), "\r\n")
@@ -373,5 +455,19 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(result, "Notes\n\n| [A]   | B   |\n| --- | --- |\n|     |     |\n|     |     |")
         let template = TableEditing.template(headers: ["Column 1", "Column 2"])
         XCTAssertEqual((template.text as NSString).substring(with: template.selection), "Column 1")
+    }
+}
+
+/// A small deterministic generator (SplitMix64), so a failure names a seed
+/// that reproduces it.
+private struct SeededGenerator: RandomNumberGenerator {
+    var state: UInt64
+    init(seed: UInt64) { state = seed }
+    mutating func next() -> UInt64 {
+        state &+= 0x9E37_79B9_7F4A_7C15
+        var z = state
+        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE5_E4B9
+        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+        return z ^ (z >> 31)
     }
 }

@@ -50,4 +50,9 @@ Since 2026-11-24 `Large` types into its last prose line, 34,000 lines below the 
 | Backspace | 37.44 / 40.51 | 2.88 / 2.96 |
 | Return | 51.44 / 55.18 | 16.17 / 16.66 |
 
-Return there still costs about 16 ms, outside the list indent; it is the next one to look at.
+Return there still cost about 16 ms: `ListContinuation.edit` counted lines from the top twice to find the caret's line. Since 2026-11-26 it reads that line alone (`SourceLines.range(around:)`) and checks for a fence only on an item or quote line, reading fences unit by unit; same machine and window, two runs each:
+
+| Return in `Large`, 100 times | Counting lines | Reading the caret's line |
+|---|---|---|
+| On the last prose line | 15.85 / 16.53 | 2.87 / 3.27, 2.84 / 3.29 |
+| At the end of a task item 280 characters from the end | | 2.66 / 3.31 |

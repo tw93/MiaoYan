@@ -254,8 +254,9 @@ public class TextFormatter {
         var contentsEnd = 0
         text.getParagraphStart(&start, end: nil, contentsEnd: &contentsEnd, for: NSRange(location: caret, length: 0))
         let line = NSRange(location: start, length: contentsEnd - start)
-        guard caret == contentsEnd, caret > start, !ListContinuation.isInFencedCode(at: caret, in: text),
-            let match = regex.firstMatch(in: text as String, range: line)
+        // The fence check last: it reads the note from the top.
+        guard caret == contentsEnd, caret > start, let match = regex.firstMatch(in: text as String, range: line),
+            !ListContinuation.isInFencedCode(at: caret, in: text)
         else { return nil }
         if match.range.length == line.length { return (line, "") }
         return (NSRange(location: caret, length: 0), ListContinuation.lineBreak(in: text) + text.substring(with: match.range))
