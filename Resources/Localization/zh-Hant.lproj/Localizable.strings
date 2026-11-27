@@ -18,9 +18,9 @@
 "Couldn't move %d note(s) to Trash" = "%d 篇筆記未能移到垃圾桶，可能受權限或同步限制";
 "Couldn't restore %d note(s) from the Trash" = "%d 篇筆記未能從垃圾桶還原";
 "Uploading image…" = "正在上傳圖片";
-"Upload failed. The local image was kept" = "圖片上傳失敗，改放在本機端，可手動上傳";
-"Install and set up %@ first" = "請確定你的 Mac 已經安裝並設定好 %@";
-"Press ⌘⇧W to leave single-file mode" = "在單獨編輯器模式中，可以敲下 ⌘⇧W 結束";
+"Upload failed. The local image was kept" = "圖片上傳失敗，已保留本機路徑";
+"Install and set up %@ first" = "請先安裝並設定 %@";
+"Press ⌘⇧W to leave single-file mode" = "按 ⌘⇧W 結束單獨編輯模式";
 "No note has this title" = "沒有找到這個標題的筆記";
 "Several notes share this title. Showing search results" = "有多篇同名筆記，已顯示搜尋結果";
 "Note link copied" = "已拷貝筆記連結";
