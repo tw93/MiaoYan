@@ -382,7 +382,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "保存";
 "Set Up" = "配置";
-"Region" = "区域";
 "Public URL" = "访问地址";
 "Pasted images upload to %@" = "粘贴的图片上传到 %@";
 "Upload to S3 or R2" = "上传到 S3 或 R2";

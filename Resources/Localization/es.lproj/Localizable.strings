@@ -374,7 +374,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "Guardar";
 "Set Up" = "Configurar";
-"Region" = "Región";
 "Public URL" = "URL pública";
 "Pasted images upload to %@" = "Las imágenes pegadas se suben a %@";
 "Upload to S3 or R2" = "Subir a S3 o R2";

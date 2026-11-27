@@ -52,7 +52,7 @@ final class S3UploaderTests: XCTestCase {
 
     private var r2: S3UploadConfig {
         S3UploadConfig(
-            endpoint: "https://abc123.r2.cloudflarestorage.com/notes-bucket/", region: "", bucket: " notes-bucket ",
+            endpoint: " https://abc123.r2.cloudflarestorage.com/notes-bucket/ ",
             accessKeyID: exampleKeyID, secretAccessKey: exampleSecret, publicURL: "img.example.com/")
     }
 
@@ -90,16 +90,42 @@ final class S3UploaderTests: XCTestCase {
         XCTAssertEqual(S3Uploader.objectKey(fileName: "README", contentHash: "abcdef0123", date: date), "2025/11/README-abcdef01")
     }
 
-    func testTheRegionComesFromAnAmazonEndpointWhenLeftBlank() {
-        func region(_ endpoint: String, _ typed: String = "") -> String {
-            S3UploadConfig(endpoint: endpoint, region: typed).signingRegion
+    /// R2 shows the bucket's S3 API address with the bucket at its end, and
+    /// Amazon puts it at the front of the host; both are typed as one field.
+    func testTheBucketComesFromTheAddress() throws {
+        func parsed(_ endpoint: String) -> (bucket: String?, base: String?) {
+            let config = S3UploadConfig(endpoint: endpoint)
+            return (config.bucket, config.endpointBase?.absoluteString)
         }
-        XCTAssertEqual(region("https://abc.r2.cloudflarestorage.com"), "auto")
-        XCTAssertEqual(region("s3.eu-west-1.amazonaws.com"), "eu-west-1")
-        XCTAssertEqual(region("https://s3.dualstack.ap-northeast-1.amazonaws.com"), "ap-northeast-1")
-        XCTAssertEqual(region("https://s3-us-west-2.amazonaws.com"), "us-west-2")
-        XCTAssertEqual(region("https://s3.amazonaws.com"), "us-east-1")
-        XCTAssertEqual(region("https://s3.amazonaws.com", " cn-north-1 "), "cn-north-1")
+        XCTAssertEqual(parsed("https://abc.r2.cloudflarestorage.com/notes").bucket, "notes")
+        XCTAssertEqual(parsed("https://abc.r2.cloudflarestorage.com/notes").base, "https://abc.r2.cloudflarestorage.com")
+        XCTAssertEqual(parsed("http://127.0.0.1:9000/photos/").bucket, "photos")
+        XCTAssertEqual(parsed("my.photos.s3.eu-west-1.amazonaws.com").bucket, "my.photos")
+        XCTAssertEqual(parsed("my.photos.s3.eu-west-1.amazonaws.com").base, "https://s3.eu-west-1.amazonaws.com")
+        XCTAssertEqual(parsed("https://s3.eu-west-1.amazonaws.com/photos").bucket, "photos")
+        XCTAssertNil(parsed("https://abc.r2.cloudflarestorage.com").bucket)
+        XCTAssertNil(parsed("https://s3.amazonaws.com").bucket)
+
+        let request = try S3Uploader.putRequest(
+            config: S3UploadConfig(endpoint: "photos.s3.eu-west-1.amazonaws.com", accessKeyID: "k", secretAccessKey: "s", publicURL: "img.example.com"),
+            key: "a.png", body: Data(), contentType: "image/png", date: Date(timeIntervalSince1970: 1_764_115_200))
+        XCTAssertEqual(request.url?.absoluteString, "https://s3.eu-west-1.amazonaws.com/photos/a.png")
+        XCTAssertTrue(request.value(forHTTPHeaderField: "Authorization")?.contains("/eu-west-1/s3/aws4_request") == true)
+    }
+
+    func testTheRegionComesFromTheAddress() {
+        func region(_ endpoint: String) -> String { S3UploadConfig(endpoint: endpoint).signingRegion }
+        XCTAssertEqual(region("https://abc.r2.cloudflarestorage.com/notes"), "auto")
+        XCTAssertEqual(region("https://abc.eu.r2.cloudflarestorage.com/notes"), "auto")
+        XCTAssertEqual(region("s3.eu-west-1.amazonaws.com/photos"), "eu-west-1")
+        XCTAssertEqual(region("photos.s3.dualstack.ap-northeast-1.amazonaws.com"), "ap-northeast-1")
+        XCTAssertEqual(region("https://s3-us-west-2.amazonaws.com/photos"), "us-west-2")
+        XCTAssertEqual(region("https://s3.amazonaws.com/photos"), "us-east-1")
+        XCTAssertEqual(region("https://s3.us-west-004.backblazeb2.com/photos"), "us-west-004")
+        XCTAssertEqual(region("http://127.0.0.1:9000/photos"), "us-east-1")
+        XCTAssertEqual(region("https://s3-proxy.corp.com/photos"), "us-east-1")
+        XCTAssertEqual(region("https://s3.files.corp.com/photos"), "us-east-1")
+        XCTAssertEqual(region("https://s3.us-gov-west-1.amazonaws.com/photos"), "us-gov-west-1")
     }
 
     /// A port the scheme implies is not sent as Host, so it is not signed either.
@@ -128,9 +154,12 @@ final class S3UploaderTests: XCTestCase {
         XCTAssertEqual(S3Uploader.UploadError.code(in: Data("not xml".utf8)), "")
     }
 
-    func testSettingsAreCompleteWithoutARegion() {
+    func testSettingsAreCompleteWithFourFields() {
         XCTAssertTrue(r2.isComplete)
         XCTAssertEqual(r2.signingRegion, "auto")
+        var noBucket = r2
+        noBucket.endpoint = "https://abc123.r2.cloudflarestorage.com"
+        XCTAssertFalse(noBucket.isComplete, "Save stays off until the address names a bucket")
         var missing = r2
         missing.secretAccessKey = " \n"
         XCTAssertFalse(missing.isComplete)

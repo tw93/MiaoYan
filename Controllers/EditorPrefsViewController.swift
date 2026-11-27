@@ -117,7 +117,8 @@ final class EditorPrefsViewController: BasePrefsViewController {
     }
 
     /// The bucket's settings in one sheet; Save stays off until every field
-    /// but Region is filled. Answers whether they were saved.
+    /// is filled and the S3 API address names a bucket. Answers whether they
+    /// were saved.
     private func presentS3Settings(completion: @escaping (Bool) -> Void) {
         let config = S3UploadSettings.load()
         let form = S3SettingsForm(config: config)
@@ -236,12 +237,10 @@ private final class S3SettingsForm: NSObject, NSTextFieldDelegate {
             var isSecret = false
         }
         let rows = [
-            Row(title: "Endpoint", placeholder: "https://<account>.r2.cloudflarestorage.com", keyPath: \.endpoint),
-            Row(title: "Bucket", placeholder: "images", keyPath: \.bucket),
+            Row(title: "S3 API", placeholder: "https://<account>.r2.cloudflarestorage.com/<bucket>", keyPath: \.endpoint),
             Row(title: "Access Key ID", placeholder: "", keyPath: \.accessKeyID),
             Row(title: "Secret Access Key", placeholder: "", keyPath: \.secretAccessKey, isSecret: true),
             Row(title: I18n.str("Public URL"), placeholder: "https://img.example.com", keyPath: \.publicURL),
-            Row(title: I18n.str("Region"), placeholder: "auto", keyPath: \.region),
         ]
         for (index, row) in rows.enumerated() {
             let label = NSTextField(labelWithString: row.title)
@@ -253,7 +252,7 @@ private final class S3SettingsForm: NSObject, NSTextFieldDelegate {
             field.focusRingType = .none
             field.delegate = self
             field.translatesAutoresizingMaskIntoConstraints = false
-            field.widthAnchor.constraint(equalToConstant: 300).isActive = true
+            field.widthAnchor.constraint(equalToConstant: 340).isActive = true
             fields[row.keyPath] = field
             if index == 0 { firstField = field }
             stack.addArrangedSubview(label)

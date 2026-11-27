@@ -356,7 +356,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "儲存";
 "Set Up" = "設定";
-"Region" = "區域";
 "Public URL" = "存取網址";
 "Pasted images upload to %@" = "貼上的圖片上傳到 %@";
 "Upload to S3 or R2" = "上傳到 S3 或 R2";

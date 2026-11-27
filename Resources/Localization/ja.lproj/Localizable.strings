@@ -380,7 +380,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "保存";
 "Set Up" = "設定";
-"Region" = "リージョン";
 "Public URL" = "公開 URL";
 "Pasted images upload to %@" = "貼り付けた画像を %@ にアップロード";
 "Upload to S3 or R2" = "S3 または R2 にアップロード";

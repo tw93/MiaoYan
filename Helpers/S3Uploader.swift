@@ -6,43 +6,75 @@ import Security
 /// that speaks the S3 API (Cloudflare R2, Amazon S3, MinIO and the like),
 /// written with a signed PUT so nobody has to install an uploader app.
 struct S3UploadConfig: Equatable, Sendable {
-    /// `https://<account>.r2.cloudflarestorage.com`; a path after the host is ignored.
+    /// The bucket's S3 API address as the provider shows it:
+    /// `https://<account>.r2.cloudflarestorage.com/<bucket>` on R2 (and
+    /// `host/bucket` anywhere else), or `<bucket>.s3.<region>.amazonaws.com`
+    /// on Amazon. The bucket and the signing region are read from it, so
+    /// there is nothing else to type for them.
     var endpoint = ""
-    /// Blank means `auto`, which is what R2 takes.
-    var region = ""
-    var bucket = ""
     var accessKeyID = ""
     var secretAccessKey = ""
     /// The address the bucket is read from, `https://img.example.com`.
     var publicURL = ""
 
-    /// Every field but Region filled, and an endpoint that names a host.
+    /// Every field filled, and an address that names a host and a bucket.
     var isComplete: Bool {
-        endpointBase != nil
-            && [bucket, accessKeyID, secretAccessKey, publicURL].allSatisfy { !$0.trimmed.isEmpty }
+        endpointBase != nil && bucket != nil
+            && [accessKeyID, secretAccessKey, publicURL].allSatisfy { !$0.trimmed.isEmpty }
     }
 
-    /// The region typed, else the one in an Amazon endpoint
-    /// (`s3.eu-west-1.amazonaws.com`), else `auto`, which R2 takes.
-    var signingRegion: String {
-        if !region.trimmed.isEmpty { return region.trimmed }
-        if let host = endpointBase?.host, host.hasSuffix(".amazonaws.com") {
-            let labels = host.split(separator: ".").map(String.init).filter { $0 != "dualstack" }
-            if let s3 = labels.firstIndex(where: { $0 == "s3" || $0.hasPrefix("s3-") }) {
-                if labels[s3].hasPrefix("s3-") { return String(labels[s3].dropFirst(3)) }
-                if s3 + 1 < labels.count - 2 { return labels[s3 + 1] }
-            }
-            return "us-east-1"
-        }
-        return "auto"
-    }
-
-    /// The endpoint's scheme, host and port; `https` when no scheme was typed,
-    /// and no port when it is the scheme's own, which is not sent as Host.
-    var endpointBase: URL? {
+    private var parts: URLComponents? {
         let trimmed = endpoint.trimmed
-        let withScheme = trimmed.contains("://") ? trimmed : "https://" + trimmed
-        guard let parts = URLComponents(string: withScheme), let host = parts.host, !host.isEmpty else { return nil }
+        let parts = URLComponents(string: trimmed.contains("://") ? trimmed : "https://" + trimmed)
+        guard let host = parts?.host, !host.isEmpty else { return nil }
+        return parts
+    }
+
+    private var hostLabels: [String] { parts?.host?.lowercased().split(separator: ".").map(String.init) ?? [] }
+
+    /// Where `s3` starts an Amazon host: the labels before it are the
+    /// bucket of a virtual-hosted address (`photos.s3.eu-west-1.…`).
+    private var amazonS3Label: Int? {
+        guard parts?.host?.lowercased().hasSuffix(".amazonaws.com") == true else { return nil }
+        return hostLabels.firstIndex { $0 == "s3" || $0.hasPrefix("s3-") }
+    }
+
+    /// The first path segment, else the labels before `s3` in an Amazon host.
+    var bucket: String? {
+        if let first = parts?.path.split(separator: "/").first.map(String.init), !first.isEmpty {
+            return first.removingPercentEncoding ?? first
+        }
+        if let s3 = amazonS3Label, s3 > 0 {
+            return parts?.host.map { $0.split(separator: ".").prefix(s3).joined(separator: ".") }
+        }
+        return nil
+    }
+
+    /// `auto` on R2; the label after `s3.` (or after `s3-`) wherever the host
+    /// names one, as Amazon, Backblaze and Wasabi do; else `us-east-1`, which
+    /// Amazon's global host, MinIO and most other stores take.
+    var signingRegion: String {
+        let labels = hostLabels.filter { $0 != "dualstack" }
+        if parts?.host?.lowercased().hasSuffix(".r2.cloudflarestorage.com") == true { return "auto" }
+        // Only a label shaped like a region counts, so a MinIO host such as
+        // `s3-proxy.corp.com` or `s3.files.corp.com` keeps `us-east-1`.
+        let isRegion = { (label: String) in label.range(of: #"^[a-z]{2}(-[a-z]+)+-\d+$"#, options: .regularExpression) != nil }
+        if let s3 = labels.firstIndex(where: { $0 == "s3" || $0.hasPrefix("s3-") }) {
+            let next = labels[s3].hasPrefix("s3-") ? String(labels[s3].dropFirst(3)) : (s3 + 1 < labels.count ? labels[s3 + 1] : "")
+            if isRegion(next) { return next }
+        }
+        return "us-east-1"
+    }
+
+    /// The address's scheme, host and port, with a virtual-hosted bucket
+    /// taken off the host, since the PUT names the bucket in its path;
+    /// `https` when no scheme was typed, and no port when it is the scheme's
+    /// own, which is not sent as Host.
+    var endpointBase: URL? {
+        guard let parts, var host = parts.host else { return nil }
+        if parts.path.split(separator: "/").isEmpty, let s3 = amazonS3Label, s3 > 0 {
+            host = host.split(separator: ".").dropFirst(s3).joined(separator: ".")
+        }
         var base = URLComponents()
         base.scheme = parts.scheme
         base.host = host
@@ -187,8 +219,7 @@ enum S3Uploader {
     /// (`endpoint/bucket/key`), which R2 and MinIO need and S3 accepts.
     static func putRequest(config: S3UploadConfig, key: String, body: Data, contentType: String, date: Date) throws -> URLRequest {
         guard config.isComplete else { throw UploadError.incompleteSettings }
-        guard let base = config.endpointBase, let host = base.host else { throw UploadError.invalidEndpoint }
-        let bucket = config.bucket.trimmed
+        guard let base = config.endpointBase, let host = base.host, let bucket = config.bucket else { throw UploadError.invalidEndpoint }
         let path = S3Signer.encodePath("/" + bucket + "/" + key)
         guard let url = URL(string: base.absoluteString + path) else { throw UploadError.invalidEndpoint }
         let hostHeader = base.port.map { "\(host):\($0)" } ?? host
@@ -275,8 +306,6 @@ enum S3UploadSettings {
     private static let keychainAccount = "secret-access-key"
     private enum Key {
         static let endpoint = "s3UploadEndpoint"
-        static let region = "s3UploadRegion"
-        static let bucket = "s3UploadBucket"
         static let accessKeyID = "s3UploadAccessKeyID"
         static let publicURL = "s3UploadPublicURL"
     }
@@ -285,8 +314,6 @@ enum S3UploadSettings {
         let defaults = UserDefaults.standard
         return S3UploadConfig(
             endpoint: defaults.string(forKey: Key.endpoint) ?? "",
-            region: defaults.string(forKey: Key.region) ?? "",
-            bucket: defaults.string(forKey: Key.bucket) ?? "",
             accessKeyID: defaults.string(forKey: Key.accessKeyID) ?? "",
             secretAccessKey: readSecret() ?? "",
             publicURL: defaults.string(forKey: Key.publicURL) ?? "")
@@ -296,8 +323,6 @@ enum S3UploadSettings {
     static func save(_ config: S3UploadConfig) -> Bool {
         let defaults = UserDefaults.standard
         defaults.set(config.endpoint.trimmed, forKey: Key.endpoint)
-        defaults.set(config.region.trimmed, forKey: Key.region)
-        defaults.set(config.bucket.trimmed, forKey: Key.bucket)
         defaults.set(config.accessKeyID.trimmed, forKey: Key.accessKeyID)
         defaults.set(config.publicURL.trimmed, forKey: Key.publicURL)
         return writeSecret(config.secretAccessKey.trimmed)
