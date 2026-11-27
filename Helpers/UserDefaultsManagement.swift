@@ -167,18 +167,8 @@ public enum UserDefaultsManagement {
             return stored
         }
 
-        // Use centralized font configuration
-        let defaultFont: String
-        switch key {
-        case Constants.CodeFontNameKey:
-            defaultFont = FontConfiguration.defaultCodeFont
-        case Constants.WindowFontName:
-            defaultFont = FontConfiguration.defaultInterfaceFont
-        case Constants.PreviewFontName:
-            defaultFont = FontConfiguration.defaultPreviewFont
-        default:
-            defaultFont = FontConfiguration.defaultEditorFont
-        }
+        let defaultFont =
+            key == Constants.CodeFontNameKey ? FontConfiguration.defaultCodeFont : FontConfiguration.firstRunTextFont()
         UserDefaults.standard.set(defaultFont, forKey: key)
         return defaultFont
     }

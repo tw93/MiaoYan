@@ -86,6 +86,18 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertTrue(stack.contains("PingFang SC"), stack)
     }
 
+    /// A reader who installed TsangerJinKai02 for an older MiaoYan opened a
+    /// new install (the App Store copy keeps settings of its own) on the
+    /// system face and had to choose it again.
+    @MainActor
+    func testAFreshInstallStartsOnTsangerJinKaiWhenTheMacHasIt() {
+        XCTAssertEqual(FontConfiguration.firstRunTextFont { $0 == "TsangerJinKai02-W04" }, "TsangerJinKai02-W04")
+        XCTAssertEqual(FontConfiguration.firstRunTextFont { _ in false }, FontConfiguration.fallbackFont)
+        // The real lookup agrees with what this Mac has installed.
+        let installed = NSFont(name: "TsangerJinKai02-W04", size: 12) != nil
+        XCTAssertEqual(FontConfiguration.firstRunTextFont(), installed ? "TsangerJinKai02-W04" : FontConfiguration.fallbackFont)
+    }
+
     @MainActor
     func testTheDefaultAndAMissingFaceRenderInTheSystemFace() {
         let system = NSFont.systemFont(ofSize: 16).fontName

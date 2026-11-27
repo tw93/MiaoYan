@@ -80,9 +80,12 @@ final class PrefsWindowControllerTests: XCTestCase {
         XCTAssertEqual(defaults.string(forKey: "fontName"), "NoSuchFace-Regular")
         XCTAssertEqual(UserDefaultsManagement.noteFont.fontName, NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize)).fontName)
 
-        // A fresh install starts on the default face by name.
+        // A fresh install starts on its first-run face by name, and a stored
+        // system face stays even where TsangerJinKai02 is installed.
         defaults.removeObject(forKey: "fontName")
-        XCTAssertEqual(UserDefaultsManagement.fontName, FontConfiguration.defaultEditorFont)
+        XCTAssertEqual(UserDefaultsManagement.fontName, FontConfiguration.firstRunTextFont())
+        defaults.set(FontConfiguration.fallbackFont, forKey: "fontName")
+        XCTAssertEqual(UserDefaultsManagement.fontName, FontConfiguration.fallbackFont)
     }
 
     /// A chosen face that was missing appears: the shell re-renders, as the

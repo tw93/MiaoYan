@@ -10,7 +10,8 @@ enum FontConfiguration {
     /// which `textFont(named:size:)` and `FontCatalog.fontStack` read as "not
     /// chosen" and set with the system face. A stored face that is not
     /// installed renders the same way and is never rewritten, so anyone who
-    /// installed TsangerJinKai02 keeps it.
+    /// installed TsangerJinKai02 keeps it. A fresh install on a Mac that has
+    /// it starts on it (`firstRunTextFont`).
     static let fallbackFont = "PingFangSC-Regular"
     static let defaultEditorFont = fallbackFont
 
@@ -19,6 +20,16 @@ enum FontConfiguration {
 
     /// Default preview font name
     static let defaultPreviewFont = fallbackFont
+
+    /// The face a fresh install starts on for the editor, the interface and the
+    /// preview: TsangerJinKai02 when the Mac already has it, as every older
+    /// MiaoYan defaulted to it and a reader who installed it for MiaoYan found
+    /// a new install (the App Store copy keeps its own settings) back on the
+    /// system face; the system pairing otherwise. Only an empty preference
+    /// asks, so a stored choice, the system face included, never changes.
+    static func firstRunTextFont(isInstalled: (String) -> Bool = { NSFont(name: $0, size: 12) != nil }) -> String {
+        isInstalled(FontCatalog.retiredBundledFace) ? FontCatalog.retiredBundledFace : fallbackFont
+    }
 
     /// Stored as the code font when code blocks use the text font, the editor
     /// font in the editor and the preview font in the preview. It names no
