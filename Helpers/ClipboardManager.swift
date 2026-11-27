@@ -520,7 +520,8 @@ class ClipboardManager {
                             if let error {
                                 AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
                             }
-                            textView.window?.contentViewController?.toast(message: I18n.str("Upload failed. The local image was kept"), style: .failure)
+                            let reason = (error as? S3Uploader.UploadError)?.toast
+                            textView.window?.contentViewController?.toast(message: reason ?? I18n.str("Upload failed. The local image was kept"), style: .failure)
                         }
                     }
                 }

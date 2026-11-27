@@ -169,6 +169,36 @@ final class S3UploaderTests: XCTestCase {
         XCTAssertThrowsError(try S3Uploader.putRequest(config: missing, key: "a.png", body: Data(), contentType: "image/png", date: Date()))
     }
 
+    /// App Transport Security lets plain `http` through to the local network
+    /// only, so Save stays off for an address every paste would fail on.
+    func testPlainHTTPIsTakenForTheLocalNetworkOnly() {
+        for address in [
+            "https://minio.example.com/photos", "minio.example.com/photos", "http://127.0.0.1:9000/photos", "http://nas.local:9000/photos", "http://nas:9000/photos", "http://[::1]:9000/photos", "http://192.168.1.8:9000/photos",
+            "http://nas.local./photos",
+        ] {
+            XCTAssertTrue(S3UploadConfig.isLoadable(address), address)
+        }
+        for address in ["http://minio.example.com/photos", "http://img.example.com", "ftp://img.example.com", "", "http://8.8.8.8/photos", "http://[2001:4860:4860::8888]/photos"] {
+            XCTAssertFalse(S3UploadConfig.isLoadable(address), address)
+        }
+        var remote = r2
+        remote.publicURL = "http://img.example.com"
+        XCTAssertFalse(remote.isComplete)
+        remote = r2
+        remote.endpoint = "http://minio.example.com:9000/photos"
+        XCTAssertFalse(remote.isComplete)
+    }
+
+    /// A refusal the writer can act on says which one it is.
+    @MainActor
+    func testARefusalAndAPrivateAddressEachHaveTheirOwnToast() {
+        XCTAssertTrue(S3Uploader.UploadError.rejected(status: 403, code: "AccessDenied").toast?.contains("AccessDenied") == true)
+        XCTAssertTrue(S3Uploader.UploadError.rejected(status: 500, code: "").toast?.contains("HTTP 500") == true)
+        XCTAssertNotNil(S3Uploader.UploadError.notPublic(status: 404).toast)
+        XCTAssertNotEqual(S3Uploader.UploadError.notPublic(status: 404).toast, S3Uploader.UploadError.rejected(status: 403, code: "AccessDenied").toast)
+        XCTAssertNil(S3Uploader.UploadError.incompleteSettings.toast)
+    }
+
     /// macOS 26 lays an alert's accessory out 6pt left of its text, and the
     /// labels and fields stood out of the title's column (maintainer 2026-11-27).
     @MainActor

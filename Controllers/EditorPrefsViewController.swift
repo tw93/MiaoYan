@@ -40,7 +40,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
         uploadDropdown.addOption("S3 / R2", value: Self.s3Service)
         s3SetupButton = PrefsPillButton(title: I18n.str("Set Up"), target: self, action: #selector(editS3Settings(_:)))
         uploadRow = PrefsRowView(
-            title: I18n.str("Image Upload"), detail: "", controls: [s3SetupButton, uploadDropdown], detailTruncation: .byTruncatingMiddle)
+            title: I18n.str("Image Upload"), detail: "", controls: [s3SetupButton, uploadDropdown])
 
         lineBreakDropdown = makeDropdown(action: #selector(lineBreakChanged(_:)))
         lineBreakDropdown.addOption(I18n.str("Every Newline"), value: "MiaoYan")
@@ -104,10 +104,13 @@ final class EditorPrefsViewController: BasePrefsViewController {
     private func updateUploadRow() {
         let isS3 = UserDefaultsManagement.defaultPicUpload == Self.s3Service
         s3SetupButton.isHidden = !isS3
-        // The Keychain is read only with S3 chosen.
-        if isS3, case let config = S3UploadSettings.load(), config.isComplete, let host = URL(string: config.publicLink(forKey: ""))?.host {
+        // A host shortens in the middle; the plain line is copy, which
+        // must fit whole in every language (`PrefsFitTests`).
+        if isS3, let host = S3UploadSettings.publicHost {
+            uploadRow.detailLabel.lineBreakMode = .byTruncatingMiddle
             uploadRow.detail = String(format: I18n.str("Pasted images upload to %@"), host)
         } else {
+            uploadRow.detailLabel.lineBreakMode = .byTruncatingTail
             uploadRow.detail = I18n.str("Send pasted images through an uploader app")
         }
     }
@@ -241,7 +244,7 @@ private final class S3SettingsForm: NSObject, NSTextFieldDelegate {
             Row(title: "S3 API", placeholder: "https://<account>.r2.cloudflarestorage.com/<bucket>", keyPath: \.endpoint),
             Row(title: "Access Key ID", placeholder: "", keyPath: \.accessKeyID),
             Row(title: "Secret Access Key", placeholder: "", keyPath: \.secretAccessKey, isSecret: true),
-            Row(title: I18n.str("Public URL"), placeholder: "https://img.example.com", keyPath: \.publicURL),
+            Row(title: "Public URL", placeholder: "https://img.example.com", keyPath: \.publicURL),
         ]
         for (index, row) in rows.enumerated() {
             let label = NSTextField(labelWithString: row.title)

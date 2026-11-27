@@ -141,6 +141,8 @@
 "Couldn't restore %d note(s) from the Trash" = "%d 篇笔记未能从废纸篓恢复";
 "Uploading image…" = "图片上传中…";
 "Upload failed. The local image was kept" = "图片上传失败，已保留本地路径";
+"The bucket refused the upload (%@). The local image was kept" = "存储桶拒绝了上传（%@），已保留本地路径";
+"The public URL does not show the uploaded image. The local image was kept" = "访问地址打不开刚上传的图片，已保留本地路径";
 "Install and set up %@ first" = "请先安装并配置 %@";
 "Press ⌘⇧W to leave single-file mode" = "按 ⌘⇧W 退出独立编辑模式";
 "No note has this title" = "没有找到这个标题的笔记";
@@ -382,7 +384,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "保存";
 "Set Up" = "配置";
-"Public URL" = "访问地址";
 "Pasted images upload to %@" = "粘贴的图片上传到 %@";
 "Upload to S3 or R2" = "上传到 S3 或 R2";
 "Could not save the secret key to the Keychain" = "密钥没能存进钥匙串";

@@ -17,8 +17,10 @@
 "Can't switch notes while exporting" = "匯出過程中無法切換筆記";
 "Couldn't move %d note(s) to Trash" = "%d 篇筆記未能移到垃圾桶，可能受權限或同步限制";
 "Couldn't restore %d note(s) from the Trash" = "%d 篇筆記未能從垃圾桶還原";
-"Uploading image…" = "正在上傳圖片";
+"Uploading image…" = "正在上傳圖片…";
 "Upload failed. The local image was kept" = "圖片上傳失敗，已保留本機路徑";
+"The bucket refused the upload (%@). The local image was kept" = "儲存貯體拒絕了上傳（%@），已保留本機路徑";
+"The public URL does not show the uploaded image. The local image was kept" = "存取網址打不開剛上傳的圖片，已保留本機路徑";
 "Install and set up %@ first" = "請先安裝並設定 %@";
 "Press ⌘⇧W to leave single-file mode" = "按 ⌘⇧W 結束單獨編輯模式";
 "No note has this title" = "沒有找到這個標題的筆記";
@@ -356,7 +358,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "儲存";
 "Set Up" = "設定";
-"Public URL" = "存取網址";
 "Pasted images upload to %@" = "貼上的圖片上傳到 %@";
 "Upload to S3 or R2" = "上傳到 S3 或 R2";
 "Could not save the secret key to the Keychain" = "密鑰沒能存進鑰匙圈";

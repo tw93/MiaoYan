@@ -170,6 +170,8 @@
 "Couldn't restore %d note(s) from the Trash" = "%d 件のノートをゴミ箱から戻せませんでした。";
 "Uploading image…" = "画像をアップロード中…";
 "Upload failed. The local image was kept" = "画像のアップロードに失敗しました。ローカルの画像はそのまま残っています";
+"The bucket refused the upload (%@). The local image was kept" = "バケットがアップロードを拒否しました（%@）。ローカルの画像はそのまま残っています";
+"The public URL does not show the uploaded image. The local image was kept" = "公開 URL でアップロードした画像を開けません。ローカルの画像はそのまま残っています";
 "Install and set up %@ first" = "先に %@ をインストールして設定してください";
 "Press ⌘⇧W to leave single-file mode" = "単独モードは ⌘⇧W で終了します";
 "No note has this title" = "このタイトルのノートはありません";
@@ -380,7 +382,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "保存";
 "Set Up" = "設定";
-"Public URL" = "公開 URL";
 "Pasted images upload to %@" = "貼り付けた画像を %@ にアップロード";
 "Upload to S3 or R2" = "S3 または R2 にアップロード";
 "Could not save the secret key to the Keychain" = "シークレットキーをキーチェーンに保存できませんでした";

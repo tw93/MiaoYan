@@ -17,10 +17,43 @@ struct S3UploadConfig: Equatable, Sendable {
     /// The address the bucket is read from, `https://img.example.com`.
     var publicURL = ""
 
-    /// Every field filled, and an address that names a host and a bucket.
+    /// Every field filled, an address that names a host and a bucket, and
+    /// both addresses ones the system lets the app reach.
     var isComplete: Bool {
         endpointBase != nil && bucket != nil
             && [accessKeyID, secretAccessKey, publicURL].allSatisfy { !$0.trimmed.isEmpty }
+            && Self.isLoadable(endpoint) && Self.isLoadable(publicURL)
+    }
+
+    /// `https`, or `http` to this Mac or the local network (a MinIO on
+    /// `127.0.0.1` or `nas.local`). App Transport Security allows local
+    /// networking only, so plain `http` to any other host was saved and
+    /// then failed on every paste, and it would send the picture in the
+    /// clear.
+    static func isLoadable(_ address: String) -> Bool {
+        let trimmed = address.trimmed
+        guard let parts = URLComponents(string: trimmed.contains("://") ? trimmed : "https://" + trimmed),
+            var host = parts.host?.lowercased(), !host.isEmpty
+        else { return false }
+        if host.hasSuffix(".") { host.removeLast() }
+        switch parts.scheme?.lowercased() {
+        case "https": return true
+        case "http":
+            if host.contains(":") {
+                // IPv6: loopback, link-local and unique local addresses.
+                let address = host.trimmingCharacters(in: CharacterSet(charactersIn: "[]"))
+                return address == "::1" || ["fe80:", "fc", "fd"].contains { address.hasPrefix($0) }
+            }
+            let octets = host.split(separator: ".").map { UInt8($0) }
+            if octets.count == 4, let first = octets[0], let second = octets[1], !octets.contains(nil) {
+                // Loopback, the private ranges and link-local; any other
+                // address is out on the internet.
+                return first == 127 || first == 10 || (first == 192 && second == 168) || (first == 172 && (16...31).contains(second))
+                    || (first == 169 && second == 254)
+            }
+            return !host.contains(".") || host.hasSuffix(".local")
+        default: return false
+        }
     }
 
     private var parts: URLComponents? {
@@ -167,6 +200,18 @@ enum S3Uploader {
         case rejected(status: Int, code: String)
         /// Uploaded, but the public URL does not serve it.
         case notPublic(status: Int)
+
+        /// What the writer is told, for the two refusals they can act on;
+        /// nil for the rest, which keep the plain "Upload failed".
+        @MainActor var toast: String? {
+            switch self {
+            case .rejected(let status, let code):
+                return String(format: I18n.str("The bucket refused the upload (%@). The local image was kept"), code.isEmpty ? "HTTP \(status)" : code)
+            case .notPublic:
+                return I18n.str("The public URL does not show the uploaded image. The local image was kept")
+            case .incompleteSettings, .invalidEndpoint: return nil
+            }
+        }
 
         var errorDescription: String? {
             switch self {
@@ -319,13 +364,23 @@ enum S3UploadSettings {
             publicURL: defaults.string(forKey: Key.publicURL) ?? "")
     }
 
-    @discardableResult
+    /// The secret first: when the Keychain refuses it nothing else is
+    /// written, so the saved address and key id never sit beside the secret
+    /// of the settings before them.
     static func save(_ config: S3UploadConfig) -> Bool {
+        guard writeSecret(config.secretAccessKey.trimmed) else { return false }
         let defaults = UserDefaults.standard
         defaults.set(config.endpoint.trimmed, forKey: Key.endpoint)
         defaults.set(config.accessKeyID.trimmed, forKey: Key.accessKeyID)
         defaults.set(config.publicURL.trimmed, forKey: Key.publicURL)
-        return writeSecret(config.secretAccessKey.trimmed)
+        return true
+    }
+
+    /// The host images are read from, without a read of the Keychain.
+    static var publicHost: String? {
+        let saved = S3UploadConfig(publicURL: UserDefaults.standard.string(forKey: Key.publicURL) ?? "")
+        guard !saved.publicURL.isEmpty else { return nil }
+        return URL(string: saved.publicLink(forKey: ""))?.host
     }
 
     private static var baseQuery: [String: Any] {

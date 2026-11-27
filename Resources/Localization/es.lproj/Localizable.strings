@@ -166,6 +166,8 @@
 "Can't switch notes while exporting" = "No se puede cambiar de nota durante la exportación";
 "Uploading image…" = "Subiendo imagen…";
 "Upload failed. The local image was kept" = "No se pudo subir la imagen. Se conservó la imagen local";
+"The bucket refused the upload (%@). The local image was kept" = "El bucket rechazó la subida (%@). Se conservó la imagen local";
+"The public URL does not show the uploaded image. The local image was kept" = "La URL pública no muestra la imagen subida. Se conservó la imagen local";
 "Install and set up %@ first" = "Instala y configura %@ primero";
 "Press ⌘⇧W to leave single-file mode" = "Pulsa ⌘⇧W para salir del modo de archivo único";
 "No note has this title" = "No hay ninguna nota con este título";
@@ -374,7 +376,6 @@
 /* Image upload to S3 or R2 */
 "Save" = "Guardar";
 "Set Up" = "Configurar";
-"Public URL" = "URL pública";
 "Pasted images upload to %@" = "Las imágenes pegadas se suben a %@";
 "Upload to S3 or R2" = "Subir a S3 o R2";
 "Could not save the secret key to the Keychain" = "No se pudo guardar la clave secreta en el llavero";
