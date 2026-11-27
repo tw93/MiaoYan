@@ -189,7 +189,6 @@
 /* Font Names */
 
 /* ClipboardManager Messages */
-"Image uploaded successfully" = "画像のアップロードが成功しました";
 
 /* Image Preview Tip */
 "Hold ⌘ Command key to preview images" = "⌘ Command キーを押しながら画像をプレビュー";

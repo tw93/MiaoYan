@@ -414,6 +414,72 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(editor.string, body, "no stray line break")
     }
 
+    /// uPic and Picsee put an `uploading-…` placeholder in and trashed the
+    /// local picture once they answered, whether or not the swap found the
+    /// placeholder, so a link edited during the upload pointed at the Trash.
+    /// They now share the PicGo and S3 path: the local link goes in first and
+    /// the file goes only after the note points at the upload.
+    @available(macOS 14, *)
+    @MainActor
+    func testAnUploaderAppKeepsThePictureWhenTheLinkChangedMeanwhile() async throws {
+        let previousNote = EditTextView.note
+        let previousHost = UserDefaultsManagement.defaultPicUpload
+        let previousExecutable = ClipboardManager.appUploaderExecutable
+        defer {
+            EditTextView.note = previousNote
+            UserDefaultsManagement.defaultPicUpload = previousHost
+            ClipboardManager.appUploaderExecutable = previousExecutable
+        }
+        EditTextView.note = nil
+        let note = makeLoadedNote("upload-app.md", body: "")
+        defer { note.discardPendingSave() }
+        let controller = ShellEditorController()
+        controller.show(note)
+        let editor = controller.textView
+
+        let source = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanUploadApp-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: source, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: source) }
+        let uploader = source.appendingPathComponent("uPic")
+        try "#!/bin/sh\nsleep 0.3\necho https://img.example.com/shot.png\n".write(to: uploader, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: uploader.path)
+        ClipboardManager.appUploaderExecutable = { _ in uploader.path }
+        UserDefaultsManagement.defaultPicUpload = "uPic"
+
+        let picture = source.appendingPathComponent("shot.png")
+        let image = NSImage(size: NSSize(width: 2, height: 2))
+        image.lockFocus()
+        NSColor.red.setFill()
+        NSRect(x: 0, y: 0, width: 2, height: 2).fill()
+        image.unlockFocus()
+        let png = try XCTUnwrap(NSBitmapImageRep(data: try XCTUnwrap(image.tiffRepresentation))?.representation(using: .png, properties: [:]))
+        try png.write(to: picture)
+        let board = NSPasteboard(name: NSPasteboard.Name("miaoyan-upload-app-\(UUID().uuidString)"))
+        defer { board.releaseGlobally() }
+        board.clearContents()
+        board.writeObjects([picture as NSURL])
+
+        // Held as the editor holds its own; a freed manager drops the reply.
+        let manager = ClipboardManager(textView: editor)
+        XCTAssertEqual(manager.dropFiles(from: board, at: 0), true)
+        let inserted = editor.string
+        let link = try XCTUnwrap(inserted.range(of: #"!\[\]\(/i/[^)]+\)"#, options: .regularExpression).map { String(inserted[$0]) }, inserted)
+        let local = note.project.url.path + String(link.dropFirst(4).dropLast())
+        XCTAssertTrue(FileManager.default.fileExists(atPath: local), "the local link goes in first")
+
+        // Alt text typed while the upload runs, so the swap misses the link.
+        let altAt = (inserted as NSString).range(of: "![](").location + 2
+        editor.insertText("a red dot", replacementRange: NSRange(location: altAt, length: 0))
+        XCTAssertTrue(note.content.string.contains("![a red dot](/i/"), "typing reaches the note at once")
+        try await Task.sleep(nanoseconds: 1_500_000_000)
+        withExtendedLifetime(manager) {}
+
+        XCTAssertTrue(editor.string.contains("![a red dot](/i/"), editor.string)
+        XCTAssertFalse(editor.string.contains("img.example.com"), editor.string)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: local), "the picture the note still links stays")
+        try? FileManager.default.removeItem(atPath: local)
+    }
+
     /// A file dropped inside a table became a row of it, and one dropped in a
     /// code block a line of the code; it goes after the whole block.
     @available(macOS 14, *)

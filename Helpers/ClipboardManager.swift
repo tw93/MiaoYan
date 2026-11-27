@@ -441,24 +441,6 @@ class ClipboardManager {
         return true
     }
 
-    // Simplified parameters for uPic/Picsee
-    struct UploadParameters {
-        let localPath: String
-        let originalPath: String
-        let picType: String
-        let textView: EditTextView
-        let note: Note
-        let placeholder: String
-    }
-
-    /// Placeholder inserted while an upload is in flight. Must be unique per
-    /// upload: a shared literal made concurrent uploads (or a stale
-    /// placeholder saved in another note) match the wrong buffer, and the
-    /// follow-up whole-buffer save then wrote note X's text into note Y (#543).
-    static func makeUploadPlaceholder() -> String {
-        "![](uploading-\(UUID().uuidString.prefix(8))...)"
-    }
-
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
         // Toasts go to whatever controller hosts the editor: the SwiftUI
         // shell has no ViewController, and requiring one made every image
@@ -477,7 +459,7 @@ class ClipboardManager {
 
             let uploadHost = Self.uploadHost(forAttachmentAt: path, setting: UserDefaultsManagement.defaultPicUpload)
             switch uploadHost {
-            case .http, .s3:
+            case .http, .s3, .app:
                 host?.toast(message: I18n.str("Uploading image…"))
                 // The local link holds the spot until the upload finishes:
                 // inserting the link at the cursor afterwards dropped it wherever
@@ -489,14 +471,23 @@ class ClipboardManager {
                 textView.insertText(defaultImage, replacementRange: textView.selectedRange())
 
                 let upload: (@escaping @Sendable (String?, Error?) -> Void) -> Void = { completion in
-                    if uploadHost == .s3 {
+                    switch uploadHost {
+                    case .s3:
                         S3Uploader.upload(fileAt: tempPath) { result in
                             switch result {
                             case .success(let link): completion(link, nil)
                             case .failure(let error): completion(nil, error)
                             }
                         }
-                    } else {
+                    case .app(let picType):
+                        // uPic or Picsee: it used to put a placeholder in and
+                        // trash the local file whether or not the swap found it.
+                        let executable = Self.appUploaderExecutable(picType)
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            let output = self.run(executablePath: executable, arguments: ["-o", "url", "-u", imagePath])
+                            completion(Self.uploadedURL(inCommandOutput: output), nil)
+                        }
+                    default:
                         self.postToPicGo(imagePath: imagePath, serverURL: uploadServerURL, completion: completion)
                     }
                 }
@@ -519,22 +510,6 @@ class ClipboardManager {
                         }
                     }
                 }
-            case .app(let picType):
-                // Restore uPic/Picsee support via Shell Command
-                let placeholderText = Self.makeUploadPlaceholder()
-                let uploadingPlaceholder = NSAttributedString(string: placeholderText)
-                textView.breakUndoCoalescing()
-                textView.insertText(uploadingPlaceholder, replacementRange: textView.selectedRange())
-
-                let uploadParams = UploadParameters(
-                    localPath: tempPath.path,
-                    originalPath: path,
-                    picType: picType,
-                    textView: textView,
-                    note: note,
-                    placeholder: placeholderText
-                )
-                uploadToCloudAsync(parameters: uploadParams)
             case nil:
                 // Default local storage
                 textView.breakUndoCoalescing()
@@ -650,54 +625,14 @@ class ClipboardManager {
         return String(data: result.outputData, encoding: .utf8)
     }
 
-    nonisolated private func uploadToCloudAsync(parameters: UploadParameters) {
-        let localPath = parameters.localPath
-        let originalPath = parameters.originalPath
-        let picType = parameters.picType
-        let textView = parameters.textView
-        let note = parameters.note
-        let placeholder = parameters.placeholder
+    /// Where uPic or Picsee is run from; a test points it at a stand-in.
+    static var appUploaderExecutable: (String) -> String = { "/Applications/\($0).app/Contents/MacOS/\($0)" }
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            let executablePath = "/Applications/\(picType).app/Contents/MacOS/\(picType)"
-            let runList = self.run(executablePath: executablePath, arguments: ["-o", "url", "-u", localPath])
-            let imageDesc = runList?.components(separatedBy: "\n") ?? []
-
-            var uploadedURL: String?
-            for line in imageDesc {
-                let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
-                if trimmedLine.hasPrefix("http://") || trimmedLine.hasPrefix("https://") {
-                    uploadedURL = trimmedLine
-                    break
-                }
-            }
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                if let validURL = uploadedURL {
-                    self.replacePlaceholderWithURL(
-                        placeholder: placeholder,
-                        cloudURL: validURL,
-                        textView: textView,
-                        note: note
-                    )
-                    self.deleteImage(tempPath: URL(fileURLWithPath: localPath))
-                    if let viewController = textView.window?.contentViewController {
-                        viewController.toast(message: I18n.str("Image uploaded successfully"), style: .success)
-                    }
-                } else {
-                    self.replacePlaceholderWithURL(
-                        placeholder: placeholder,
-                        cloudURL: originalPath,
-                        textView: textView,
-                        note: note
-                    )
-                    if let viewController = textView.window?.contentViewController {
-                        viewController.toast(message: I18n.str("Upload failed. The local image was kept"), style: .failure)
-                    }
-                }
-            }
-        }
+    /// The first web address in uPic's or Picsee's output, or nil.
+    nonisolated static func uploadedURL(inCommandOutput output: String?) -> String? {
+        output?.components(separatedBy: "\n")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .first { $0.hasPrefix("http://") || $0.hasPrefix("https://") }
     }
 
     private func postToPicGo(imagePath: String, serverURL: String, completion: @escaping @Sendable (String?, Error?) -> Void) {

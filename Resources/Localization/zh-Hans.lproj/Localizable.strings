@@ -199,7 +199,6 @@
 "Auto" = "自动";
 
 /* ClipboardManager Messages */
-"Image uploaded successfully" = "图片上传成功";
 
 /* Image Preview Tip */
 "Hold ⌘ Command key to preview images" = "按住 ⌘ Command 键可预览图片";

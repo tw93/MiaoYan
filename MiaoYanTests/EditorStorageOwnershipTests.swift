@@ -271,19 +271,6 @@ final class EditorStorageOwnershipTests: XCTestCase {
         XCTAssertEqual(noteA.content.string, "AAA original", "an ownerless (cleared) buffer must never be persisted")
     }
 
-    @MainActor
-    func testUploadPlaceholdersAreUniquePerUpload() {
-        // A shared "![](uploading...)" literal let one upload's completion
-        // match a placeholder in a different note's buffer and cross-write
-        // full contents between files (#543).
-        let first = ClipboardManager.makeUploadPlaceholder()
-        let second = ClipboardManager.makeUploadPlaceholder()
-
-        XCTAssertNotEqual(first, second)
-        XCTAssertTrue(first.hasPrefix("![](uploading-"))
-        XCTAssertTrue(first.hasSuffix("...)"))
-    }
-
     /// A note's fill reset the typing attributes to the font alone, so text
     /// typed or expanded before the caret moved had no line height: `/video`
     /// and Tab put its two wrapped lines closer than the rest of the note,
