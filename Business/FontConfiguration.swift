@@ -13,13 +13,6 @@ enum FontConfiguration {
     /// installed TsangerJinKai02 keeps it. A fresh install on a Mac that has
     /// it starts on it (`firstRunTextFont`).
     static let fallbackFont = "PingFangSC-Regular"
-    static let defaultEditorFont = fallbackFont
-
-    /// Default interface font name
-    static let defaultInterfaceFont = fallbackFont
-
-    /// Default preview font name
-    static let defaultPreviewFont = fallbackFont
 
     /// The face a fresh install starts on for the editor, the interface and the
     /// preview: TsangerJinKai02 when the Mac already has it, as every older

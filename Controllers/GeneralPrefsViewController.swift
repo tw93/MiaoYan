@@ -98,14 +98,14 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         }
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         let realHome = getpwuid(getuid()).map { String(cString: $0.pointee.pw_dir) } ?? home
-        let ownContainer = "iCloud~" + (Bundle.main.bundleIdentifier ?? "com.tw93.miaoyan").replacingOccurrences(of: ".", with: "~")
-        let appName = Bundle.main.localizedInfoDictionary?["CFBundleDisplayName"] as? String ?? "MiaoYan"
+        // Finder names a container by its app's NSUbiquitousContainerName,
+        // which is MiaoYan in every language; the localized app name (妙言)
+        // was a folder Finder does not show.
         storageRow.detail = Self.displayPath(
             path, homes: [realHome, home], iCloudDrive: I18n.str("iCloud Drive"),
             containerName: { container in
-                container == ownContainer
-                    ? appName
-                    : FileManager.default.displayName(atPath: (realHome as NSString).appendingPathComponent("Library/Mobile Documents/" + container))
+                let name = FileManager.default.displayName(atPath: (realHome as NSString).appendingPathComponent("Library/Mobile Documents/" + container))
+                return name.hasPrefix("iCloud~") ? "MiaoYan" : name
             })
     }
 
