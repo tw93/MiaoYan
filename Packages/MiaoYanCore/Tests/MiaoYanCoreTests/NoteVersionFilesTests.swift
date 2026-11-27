@@ -51,6 +51,24 @@ final class NoteVersionFilesTests: XCTestCase {
         XCTAssertEqual(NoteVersionFiles.versions(in: note).count, 8)
     }
 
+    /// With each note's newest version alone above nine tenths of the
+    /// budget, a trim to nine tenths took every older version of every note.
+    func testATrimStopsAtTheBudgetWhenTheNewestVersionsNearlyFillIt() throws {
+        let kilobyte = Data(repeating: 0x61, count: 1024)
+        for index in 0..<9 {
+            let note = folder.appendingPathComponent("Note\(index)-abc")
+            try FileManager.default.createDirectory(at: note, withIntermediateDirectories: true)
+            try kilobyte.write(to: note.appendingPathComponent("2026-11-02T10-00-00Z.md"))
+        }
+        let edited = folder.appendingPathComponent("Note0-abc")
+        for day in 3...5 {
+            try kilobyte.prefix(512).write(to: edited.appendingPathComponent(String(format: "2026-10-%02dT10-00-00Z.md", day)))
+        }
+        // The nine newest (9216) are over nine tenths of 10200; 10752 in all.
+        XCTAssertEqual(NoteVersionFiles.keepWithinBudget(root: folder, budget: 10200), 9728)
+        XCTAssertEqual(NoteVersionFiles.versions(in: edited).count, 2, "the oldest two went, not all three")
+    }
+
     func testTwoSavesInOneSecondKeepBoth() throws {
         let start = Date(timeIntervalSince1970: 1_800_000_000)
         let first = try XCTUnwrap(try NoteVersionFiles.save("a", in: folder, at: start))

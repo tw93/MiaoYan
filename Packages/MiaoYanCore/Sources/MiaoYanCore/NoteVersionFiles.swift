@@ -150,7 +150,12 @@ public enum NoteVersionFiles {
             }
         }
         guard total > budget else { return total }
-        let target = budget / 10 * 9
+        // Trimmed to nine tenths, so the next saves do not trim again at
+        // once; when each note's newest version alone is more than that, the
+        // older ones go only as far as the budget itself, or every trim
+        // would take all of them.
+        let kept = total - removable.reduce(0) { $0 + $1.size }
+        let target = kept > budget / 10 * 9 ? budget : budget / 10 * 9
         for file in removable.sorted(by: { $0.url.lastPathComponent < $1.url.lastPathComponent }) {
             guard total > target else { break }
             if (try? manager.removeItem(at: file.url)) != nil { total -= file.size }

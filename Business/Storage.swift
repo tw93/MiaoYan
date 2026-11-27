@@ -1552,10 +1552,12 @@ class Storage {
         var notes: [URL] = []
         var onlyInICloud: URL?
         var pending = [folder]
-        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isSymbolicLinkKey]
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isSymbolicLinkKey, .ubiquitousItemDownloadingStatusKey]
         while let directory = pending.popLast() {
             guard walked.insert(directory.resolvingSymlinksInPath().path).inserted else { continue }
-            let items = try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: keys, options: [])
+            // By path: macOS 27 refuses to list the URL of a linked folder
+            // (ENOTDIR), which made a library holding one unreadable here.
+            let items = try FileManager.default.contentsOfDirectory(atPath: directory.path).map { directory.appendingPathComponent($0) }
             for item in items {
                 let name = item.lastPathComponent
                 if name.hasPrefix(".") {
@@ -1590,6 +1592,14 @@ class Storage {
                         pending.append(item)
                     }
                 } else if extensions.contains(item.pathExtension.lowercased()) {
+                    // A note iCloud has downloaded but not brought up to date
+                    // may lack a link another device just added; nothing is
+                    // cleaned until it is current, as `UnusedAttachments` in
+                    // MiaoYanCore holds for the iPhone.
+                    if let status = values.ubiquitousItemDownloadingStatus, status != .current {
+                        try? FileManager.default.startDownloadingUbiquitousItem(at: item)
+                        onlyInICloud = onlyInICloud ?? item
+                    }
                     notes.append(item)
                 }
             }

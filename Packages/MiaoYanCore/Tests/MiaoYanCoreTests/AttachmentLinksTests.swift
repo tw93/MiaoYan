@@ -22,6 +22,31 @@ final class AttachmentLinksTests: XCTestCase {
         XCTAssertFalse(links.contains { $0.hasPrefix("data:") })
     }
 
+    /// The pattern that keeps a run of `/` or `../` from being read again
+    /// from each character must find what the plain one found: a path it
+    /// missed would be a file offered for the Trash while a note shows it.
+    func testTheGuardedPathPatternFindsWhatThePlainOneDid() throws {
+        let plain = try NSRegularExpression(pattern: #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"<>]+"#)
+        func matches(_ regex: NSRegularExpression, _ text: String) -> [String] {
+            let ns = text as NSString
+            return regex.matches(in: text, range: NSRange(location: 0, length: ns.length)).map { ns.substring(with: $0.range) }
+        }
+        var seed: UInt64 = 0x9E37_79B9_7F4A_7C15
+        func next(_ bound: Int) -> Int {
+            seed = seed &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
+            return Int((seed >> 33) % UInt64(bound))
+        }
+        let pieces = [".", "..", "/", "./", "../", "i/", "files/", "i", "f", "a.png", " ", ")", "(", "x", "//", ".../", "\n"]
+        for _ in 0..<20000 {
+            let text = (0..<(2 + next(10))).map { _ in pieces[next(pieces.count)] }.joined()
+            XCTAssertEqual(matches(AttachmentLinks.attachmentPathRegex, text), matches(plain, text), text.debugDescription)
+        }
+        let started = Date()
+        XCTAssertEqual(matches(AttachmentLinks.attachmentPathRegex, String(repeating: "../", count: 20000) + "i/a.png").count, 1)
+        XCTAssertTrue(matches(AttachmentLinks.attachmentPathRegex, String(repeating: "/", count: 8000)).isEmpty)
+        XCTAssertLessThan(Date().timeIntervalSince(started), 1, "a long run is read once, not once from each character")
+    }
+
     func testResolveKeepsEachLinkInsideItsBound() {
         let library = "/lib"
         let folder = "/lib/Work"

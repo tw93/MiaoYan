@@ -40,6 +40,18 @@ final class UnusedAttachmentsTests: XCTestCase {
         XCTAssertEqual(unused(), ["Work/files/unused.pdf", "Work/i/unused.png"])
     }
 
+    /// macOS 27 refuses to list a linked folder by its URL, so a library
+    /// holding one could not be read at all.
+    func testALinkedFolderIsReadThroughItsLink() throws {
+        try write("# Linked\n\n![](i/used.png)\n", "Outside/note.md")
+        try write("x", "Outside/i/used.png")
+        try write("x", "Outside/i/unused.png")
+        try write("# Top\n", "Library/top.md")
+        let library = root.appendingPathComponent("Library")
+        try FileManager.default.createSymbolicLink(at: library.appendingPathComponent("Linked"), withDestinationURL: root.appendingPathComponent("Outside"))
+        XCTAssertEqual(unused(in: library), ["Outside/i/unused.png"])
+    }
+
     func testATrashedNoteKeepsItsFilesByNameAndTheTrashIsNotCleaned() throws {
         try write("# Gone\n\n![](/i/kept.png)\n", "Trash/gone.md")
         try write("x", "Work/i/kept.png")

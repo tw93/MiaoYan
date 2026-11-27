@@ -117,6 +117,41 @@ final class VersionChangesTests: XCTestCase {
         }
     }
 
+    /// Restore keeps the current text as a version first, and compares it
+    /// exactly: a text that differs from the newest version only in its
+    /// indentation was taken for that version and lost to the restore (I-112).
+    @MainActor
+    func testRestoreKeepsACurrentTextThatDiffersOnlyInIndentation() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanVersionRestore-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let note = Note(url: dir.appendingPathComponent("List-\(UUID().uuidString).md"), with: Project(url: dir, label: "test", isRoot: true))
+        defer { NoteVersionManager.shared.removeVersions(for: note) }
+        note.content = NSMutableAttributedString(string: "- one\n- two\n")
+        let saved = expectation(description: "saved")
+        NoteVersionManager.shared.saveVersionIfNeeded(for: note, force: true) { saved.fulfill() }
+        wait(for: [saved], timeout: 5)
+        Thread.sleep(forTimeInterval: 1.1)
+        note.content = NSMutableAttributedString(string: "- one\n  - two\n")
+
+        let panel = VersionHistoryViewController(note: note)
+        let window = NSWindow(contentRect: NSRect(x: -4000, y: -4000, width: 700, height: 440), styleMask: [.borderless], backing: .buffered, defer: false)
+        window.contentView = panel.view
+        panel.viewDidAppear()
+        let table = try XCTUnwrap(descendants(of: panel.view).compactMap { $0 as? NSTableView }.first)
+        wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in table.numberOfRows == 2 }, object: nil)], timeout: 5)
+        table.selectRowIndexes([1], byExtendingSelection: false)
+        var restored = false
+        panel.onRestored = { _, _ in restored = true }
+        panel.perform(NSSelectorFromString("restoreAction"))
+        XCTAssertTrue(restored)
+        XCTAssertEqual(note.content.string, "- one\n- two\n")
+        let kept = NSPredicate { _, _ in NoteVersionManager.shared.versions(for: note).count == 2 }
+        wait(for: [XCTNSPredicateExpectation(predicate: kept, object: nil)], timeout: 5)
+        let texts = NoteVersionManager.shared.versions(for: note).compactMap { try? String(contentsOf: $0.url, encoding: .utf8) }
+        XCTAssertTrue(texts.contains("- one\n  - two\n"), "the indented text is kept before the restore replaces it")
+    }
+
     @MainActor
     private func descendants(of view: NSView) -> [NSView] {
         view.subviews + view.subviews.flatMap { descendants(of: $0) }

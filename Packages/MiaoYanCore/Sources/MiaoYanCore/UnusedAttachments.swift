@@ -120,8 +120,7 @@ public enum UnusedAttachments {
         // The Trash is walked first, as the Trash, so a link to it elsewhere
         // in the library finds it walked: reached through the link first,
         // its notes counted as live and its files lost their keep by name.
-        let topLevel = try FileManager.default.contentsOfDirectory(
-            at: root, includingPropertiesForKeys: [.isDirectoryKey], options: [])
+        let topLevel = try FileManager.default.contentsOfDirectory(atPath: root.path).map { root.appendingPathComponent($0) }
         for item in topLevel where item.lastPathComponent.caseInsensitiveCompare("Trash") == .orderedSame {
             if (try? item.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true { pending.append((item, true)) }
         }
@@ -130,8 +129,9 @@ public enum UnusedAttachments {
         ]
         while let (directory, inTrash) = pending.popLast() {
             guard walked.insert(directory.resolvingSymlinksInPath().path).inserted else { continue }
-            let items = try FileManager.default.contentsOfDirectory(
-                at: directory, includingPropertiesForKeys: keys, options: [])
+            // By path: macOS 27 refuses to list the URL of a linked folder
+            // (ENOTDIR), which made a library holding one unreadable here.
+            let items = try FileManager.default.contentsOfDirectory(atPath: directory.path).map { directory.appendingPathComponent($0) }
             for item in items {
                 let name = item.lastPathComponent
                 if name.hasPrefix(".") {

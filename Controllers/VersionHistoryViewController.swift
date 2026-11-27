@@ -552,7 +552,8 @@ final class VersionHistoryViewController: NSViewController {
         let message = String(format: I18n.str("Restored to version from %@"), timeStr)
         if let onRestored {
             note.save(content: NSMutableAttributedString(string: text))
-            dismiss(self)
+            // Not presented in a test that runs the restore on the panel alone.
+            if presentingViewController != nil { dismiss(self) }
             onRestored(note, message)
             return
         }
