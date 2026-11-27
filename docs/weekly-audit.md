@@ -427,7 +427,6 @@ new menu item and `I18n` key in all four languages; 792 quoted tokens in the gui
 
 ### Open
 
-- `decide 1125-22`: save a camera video to Photos when its copy fails.
 - Real-app checks: a full-window Magic PPT PDF from both windows with Mermaid and Markmap slides; a large video
   dropped, then ⌘Q during the copy; hovering a video link; on iPhone, the camera inside a note, New Note Done and
   Discard during an insert, and Move after Back while a video is still copying.

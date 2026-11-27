@@ -142,9 +142,9 @@ Bundled JS used by the preview is vendored under
   the library Trash).
 - Symlinked directories: supported but indexed in a way that avoids recursion
   loops (`Business/Storage.swift::checkSub`).
-- Version history: `Library/Application Support/com.tw93.miaoyan/Versions/<path-hash>/`
-  managed by `NoteVersionManager`, keyed by the note's path and moved along
-  on rename, folder move and Trash.
+- Version history: `Library/Application Support/com.tw93.miaoyan/Versions/<note name>-<path hash>/`,
+  its file rules in `NoteVersionFiles` (MiaoYanCore) and its queue in `NoteVersionManager`,
+  keyed by the note's path and moved along on rename, folder move and Trash.
 - Diagnostics log: `~/Library/Logs/MiaoYan/diagnostics.log` (ring buffer,
   50 lines, JSON per line). See `Helpers/Diagnostics.swift`.
 

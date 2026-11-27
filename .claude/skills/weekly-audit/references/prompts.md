@@ -72,7 +72,7 @@ saveTextStorageContent), retiring removed notes, loadFailed, Trash and the
 removedFromTrashKey marker, iCloud placeholders, symlinked folders and path aliases, folder
 moves, Clean Unused Attachments, frontmatter stripping on every output surface, wikilinks and
 backlinks. Then parity: every main-menu command and handleKeyDown shortcut works in both the
-storyboard window and the -MiaoYanShell window; every .lproj registered in the four
+storyboard window and the -MiaoYanShell window; every .lproj registered in the five
 PBXVariantGroups and every new menu item and toast localised in all four languages. Then error
 paths: failures swallowed with try? or print instead of AppDelegate.trackError, writes that do
 not fail closed. Name the user action that triggers each defect.

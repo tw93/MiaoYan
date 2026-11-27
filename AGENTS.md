@@ -23,7 +23,7 @@ MiaoYan is a lightweight Markdown editor built with Swift. This open-source repo
 - `Shell/` - the SwiftUI main window in progress (`-MiaoYanShell YES`), see `.claude/rules/shell.md`.
 - `MiaoYan.xcodeproj/` - Xcode project and version settings.
 - `Package.swift` - a reference list of the Swift package dependencies; no Xcode project reads it, the real package references live in `project.pbxproj`.
-- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews, list row dates, the first-run guide, the keys that edit a list or a table, line kinds and block inserts for the iPhone insert bar, pins through iCloud, CJK emphasis, attachment names and links, the attachment links Clean Unused Attachments keeps, version history files and line changes), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
+- `Packages/MiaoYanCore/` - local Swift package with the logic the Mac app and the iPhone app in MiaoYan-Pro must agree on (frontmatter, search matching, note text decoding, list-row and card previews, list row dates, the first-run guide, the keys that edit a list or a table, line kinds and block inserts for the iPhone insert bar, where a dropped file lands, pins through iCloud, CJK emphasis, attachment names and links, the attachment links Clean Unused Attachments keeps, version history files and line changes), with its own tests (`swift test --package-path Packages/MiaoYanCore`). It imports Foundation only; a change here reaches the iPhone app when Pro merges `main`, so keep its API stable.
 - `scripts/` - local build, release, and project maintenance scripts.
 - `scripts/release-ci/` - release note rendering, appcast, notarization, and package helpers.
 - `skills/miaoyan/` - published Agent Skill (tracked) describing MiaoYan's Markdown, PPT, and `miao` CLI surfaces to outside agents; it restates product syntax, so it drifts when those surfaces change. `.claude-plugin/marketplace.json` lists it as a Claude Code plugin (`/plugin install miaoyan --marketplace tw93/MiaoYan`, checked with `claude plugin validate .`); it names no version, so an install follows the repository's commits rather than a number that goes stale between releases.
@@ -78,6 +78,10 @@ fresh unique 24-hex ID for each new object.
   (`MARKETING_VERSION == CURRENT_PROJECT_VERSION == tag`) to prevent the
   V3.5.1 / #524 incident recurrence
 
+CI runs on macOS 15, where AppKit lays some views out differently from the
+local macOS 27: a test that measures a system layout (an `NSAlert` accessory)
+guards with `#available` and `XCTSkip` for the system it was measured on, as
+`testTheSheetsFieldsStartWhereItsTextStarts` does after failing there once.
 CI builds with Xcode 16.3 (Swift 6.1), whose concurrency checks are stricter
 than the local Xcode 27: reading a main-actor static from a nonisolated
 override, sending `self` into `Task.detached`, or a test calling a helper of a
@@ -138,7 +142,7 @@ Claude Code loads each `.claude/rules/*.md` when a file matching its `paths:` is
 - `.claude/rules/shell.md`: SwiftUI shell, sidebar, colour.
 - `.claude/rules/storage.md`: read before changing anything that moves or deletes a note, folder or attachment.
 - `.claude/rules/preview.md`: preview, Mermaid, PDF and PNG export, frontmatter, fonts.
-- `.claude/rules/editor.md`: editor, key handling, search, menus, `.lproj`.
+- `.claude/rules/editor.md`: editor, key handling, search, menus, `.lproj`, where a dropped file lands, image upload (the S3 / R2 network path and its Keychain secret).
 - `.claude/rules/release.md`: read before any release or release note, including the version-triplet rule (V3.5.1 / #524) that the CI tag check cites.
 
 ## Verification
