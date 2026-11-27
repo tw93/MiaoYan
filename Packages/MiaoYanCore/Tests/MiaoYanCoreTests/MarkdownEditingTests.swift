@@ -488,6 +488,42 @@ final class MarkdownEditingTests: XCTestCase {
         // A table inside code is code.
         let tableInCode = "```\n| a | b |\n| - | - |\n```\nend"
         XCTAssertEqual(end(tableInCode, at: "| a"), "```\n| a | b |\n| - | - |\n```")
+
+        // A fence under a list item, one of tildes and a formula are code too.
+        let nested = "- step\n  ```sh\n  make\n  ```\nafter"
+        XCTAssertEqual(end(nested, at: "make"), "- step\n  ```sh\n  make\n  ```")
+        XCTAssertEqual(end("~~~\ncode\n~~~\nafter", at: "code"), "~~~\ncode\n~~~")
+        XCTAssertEqual(end("$$\na+b\n$$\nafter", at: "a+b"), "$$\na+b\n$$")
+        XCTAssertEqual(end("```\nnever closed", at: "never"), "```\nnever closed", "a fence never closed is no block")
+        // A quote is left whole, its table with it.
+        let quote = "> | a | b |\n> | - | - |\n> | 1 | 2 |\nafter"
+        XCTAssertEqual(end(quote, at: "| a"), "> | a | b |\n> | - | - |\n> | 1 | 2 |")
+    }
+
+    /// The line breaks around a dropped link: cmark-gfm takes any line right
+    /// under a table for one more row and one right under a quote for more
+    /// of it, so those get an empty line; an empty line that kept two
+    /// paragraphs apart still does once it holds the link.
+    func testADropLeavesAnEmptyLineWhereTheLinkWouldJoinABlock() {
+        func spot(_ text: String, at needle: String, plus offset: Int = 0) -> [Int] {
+            let ns = text as NSString
+            let spot = DropPlacement.spot(around: ns.range(of: needle).location + offset, in: ns)
+            return [spot.offset, spot.breaksBefore, spot.breaksAfter]
+        }
+        XCTAssertEqual(spot("alpha\nnext", at: "alpha"), [5, 1, 0])
+        XCTAssertEqual(spot("| a | b |\n| - | - |\n| 1 | 2 |\n\nend", at: "| 1"), [29, 2, 0], "after a table")
+        XCTAssertEqual(spot("> quoted\n> more\nafter", at: "quoted"), [15, 2, 0], "after a quote")
+        XCTAssertEqual(spot("```\ncode\n```\nafter", at: "code"), [12, 1, 0], "code ends at its fence")
+        XCTAssertEqual(spot("first\n\nthird", at: "\n\n", plus: 1), [6, 1, 1], "between two paragraphs")
+        XCTAssertEqual(spot("first\r\n\r\nthird", at: "\r\n\r\n", plus: 2), [7, 1, 1], "with CRLF")
+        XCTAssertEqual(spot("| 1 | 2 |\n\nend", at: "\n\n", plus: 1), [10, 1, 1], "the empty line under a table")
+        XCTAssertEqual(spot("first\n\n\nthird", at: "\n\n\n", plus: 2), [7, 0, 1])
+        XCTAssertEqual(spot("first\n", at: "\n", plus: 1), [6, 1, 0], "the empty last line")
+        XCTAssertEqual(spot("", at: ""), [0, 0, 0], "an empty note")
+        XCTAssertEqual(spot("```\ncode\n\nmore\n```\nafter", at: "\n\nmore", plus: 1), [18, 1, 0], "an empty line inside code is code")
+        XCTAssertEqual(spot("$$\na\n\nb\n$$\nafter", at: "\n\nb", plus: 1), [10, 1, 0], "and inside a formula")
+        XCTAssertEqual(spot("    \nfoo", at: "    ", plus: 2), [4, 1, 0], "a line of spaces would indent the link into code")
+        XCTAssertEqual(spot("- a\n\n  para", at: "\n\n", plus: 1), [4, 0, 0], "an empty line inside a list item stays in the item")
     }
 }
 

@@ -192,34 +192,48 @@ class ClipboardManager {
 
     /// A drop goes after the line it was let go on, on a line of its own,
     /// and never splits that line (maintainer 2026-11-26): the caret moves to
-    /// the line's end, or the end of the table or fenced code block the drop
-    /// landed in (`DropPlacement`), and a line holding text gets a line
-    /// break first. The
+    /// the line's end, or the end of the table, quote, fenced code block or
+    /// formula the drop landed in, and the line breaks `DropPlacement.spot`
+    /// asks for go in first, two after a table or a quote so the link does
+    /// not become part of it. The
     /// iPhone and iPad editor places a dropped picture the same way. Returns
-    /// the break, for a drop that put nothing in to take back; that is read
+    /// the breaks, for a drop that put nothing in to take back; that is read
     /// from the text's length, since `saveFile` answers true for a picture
     /// whose file could not be written.
     private func beginDroppedLine(at location: Int, in textView: EditTextView, storage: NSTextStorage) -> NSRange? {
         let text = storage.string as NSString
-        let end = DropPlacement.lineEnd(around: location, in: text)
-        textView.setSelectedRange(NSRange(location: end, length: 0))
-        guard end > 0 else { return nil }
-        let previous = text.character(at: end - 1)
-        guard previous != 0x0A, previous != 0x0D else { return nil }
+        let spot = DropPlacement.spot(around: location, in: text)
+        droppedBreaksAfter = spot.breaksAfter
+        textView.setSelectedRange(NSRange(location: spot.offset, length: 0))
+        guard spot.breaksBefore > 0 else { return nil }
         // A note written with CRLF keeps one kind of line ending. Coalescing
         // is broken first, as before every insert in this file, so the break
         // belongs to the drop's undo group rather than the typing before it.
-        let lineBreak = ListContinuation.lineBreak(in: text)
+        let lineBreak = String(repeating: ListContinuation.lineBreak(in: text), count: spot.breaksBefore)
         textView.breakUndoCoalescing()
-        textView.insertText(lineBreak, replacementRange: NSRange(location: end, length: 0))
-        return NSRange(location: end, length: (lineBreak as NSString).length)
+        textView.insertText(lineBreak, replacementRange: NSRange(location: spot.offset, length: 0))
+        return NSRange(location: spot.offset, length: (lineBreak as NSString).length)
     }
 
     private func endDroppedLine(_ lineBreak: NSRange?, inserted: Bool, in textView: EditTextView) {
         droppedLineBreak = nil
-        guard !inserted, let lineBreak else { return }
-        textView.insertText("", replacementRange: lineBreak)
+        let after = droppedBreaksAfter
+        droppedBreaksAfter = 0
+        guard inserted else {
+            if let lineBreak { textView.insertText("", replacementRange: lineBreak) }
+            return
+        }
+        // The drop took an empty line that kept two blocks apart: one more
+        // break after the link keeps the next line out of its paragraph,
+        // and the caret stays at the link's end.
+        guard after > 0, let storage = textView.textStorage else { return }
+        let caret = textView.selectedRange()
+        let lineBreak = String(repeating: ListContinuation.lineBreak(in: storage.string as NSString), count: after)
+        textView.insertText(lineBreak, replacementRange: NSRange(location: NSMaxRange(caret), length: 0))
+        textView.setSelectedRange(caret)
     }
+
+    private var droppedBreaksAfter = 0
 
     /// The line break `beginDroppedLine` put in front of the link about to
     /// go in, while no link of the drop has, so a copy that fails later

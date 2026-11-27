@@ -303,6 +303,35 @@ public enum TableEditing {
         return state.isCode
     }
 
+    /// The end, without its line ending, of the line that closes the fence
+    /// or `$$` formula holding the line that starts at `lineStart`, its
+    /// opening and closing lines included; nil outside one. Read by the
+    /// same scan the table commands use, so a fence of tildes, one indented
+    /// under a list item and a formula count as they do there. A block never
+    /// closed is none.
+    static func codeBlockEnd(holding lineStart: Int, in text: NSString) -> Int? {
+        func appears(_ mark: String) -> Bool { text.range(of: mark, options: .literal).location != NSNotFound }
+        guard appears("```") || appears("~~~") || appears("$$") else { return nil }
+        var state = CodeState()
+        var opened: Int?
+        var end: Int?
+        SourceLines.forEach(in: text) { _, line in
+            let wasCode = state.isCode
+            state.take(text.substring(with: line))
+            if !wasCode, state.isCode {
+                opened = line.location
+            } else if wasCode, !state.isCode {
+                if let opened, opened <= lineStart, lineStart <= line.location {
+                    end = NSMaxRange(line)
+                    return false
+                }
+                opened = nil
+            }
+            return line.location < lineStart || opened.map { $0 <= lineStart } ?? false
+        }
+        return end
+    }
+
     /// The start offsets of the lines of `range` that begin inside a fence
     /// or a `$$` formula, by the same scan the table commands use, so an
     /// editor that must not treat those lines as prose agrees with them.

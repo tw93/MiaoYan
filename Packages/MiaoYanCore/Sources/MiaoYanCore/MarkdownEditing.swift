@@ -212,28 +212,6 @@ public enum ListContinuation {
             }
     }
 
-    /// The end, without its line ending, of the closing fence of the fenced
-    /// code block holding the line that starts at `lineStart`, its opening
-    /// and closing fences included; nil outside one. A fence never closed is
-    /// no block, as everywhere else here.
-    static func fencedBlockEnd(lineStart: Int, in text: NSString) -> Int? {
-        guard text.range(of: "```").location != NSNotFound else { return nil }
-        let line = SourceLines.range(around: lineStart, in: text)
-        let inside = isInFencedCode(lineStart: line.location, in: text)
-        guard inside || opensFence(line, in: text) else { return nil }
-        if inside, isClosingFence(line, in: text) { return NSMaxRange(line) }
-        var end: Int?
-        SourceLines.forEach(in: text) { _, range in
-            guard range.location > line.location else { return true }
-            if isClosingFence(range, in: text) {
-                end = NSMaxRange(range)
-                return false
-            }
-            return true
-        }
-        return end
-    }
-
     /// `3.` becomes `4.`; a bullet stays as it is.
     private static func next(_ bullet: String) -> String {
         guard let closer = bullet.last, closer == "." || closer == ")", let number = Int(bullet.dropLast()) else {
@@ -258,20 +236,91 @@ public enum ListContinuation {
 
 /// Where a file or picture dropped on the editor goes, the same on the Mac
 /// and the iPhone and iPad (maintainer 2026-11-26): after the line it was
-/// let go on, never splitting it, and after the whole table or fenced code
-/// block when it was let go inside one, where a link would have become a
-/// row of the table or a line of the code.
+/// let go on, never splitting it, and after the whole table, quote, fenced
+/// code block or `$$` formula when it was let go inside one, where a link
+/// would have become a row of the table or a line of the code.
 public enum DropPlacement {
+    /// Where the link goes and the line breaks to write around it.
+    public struct Spot: Equatable, Sendable {
+        /// The offset the link's line goes after.
+        public let offset: Int
+        /// One starts the link's own line. Two leave an empty line after a
+        /// table or a quote: cmark-gfm takes any line right under a table
+        /// for one more row, and one right under a quote for more of it.
+        public let breaksBefore: Int
+        /// One when the drop took an empty line that kept two blocks apart
+        /// and the next line holds text, so the link does not run into it.
+        public let breaksAfter: Int
+    }
+
     /// The offset the dropped link's line goes after: the end, without its
-    /// line ending, of the line holding `offset`, or of the table or fenced
-    /// code block holding that line.
+    /// line ending, of the line holding `offset`, or of the table, quote,
+    /// fenced code block or formula holding that line.
     public static func lineEnd(around offset: Int, in text: NSString) -> Int {
+        block(around: offset, in: text).end
+    }
+
+    public static func spot(around offset: Int, in text: NSString) -> Spot {
         let line = SourceLines.range(around: min(max(offset, 0), text.length), in: text)
-        if let fence = ListContinuation.fencedBlockEnd(lineStart: line.location, in: text) { return fence }
-        if let table = TableEditing.locate(in: text, selection: NSRange(location: line.location, length: 0)) {
-            return NSMaxRange(table.range)
+        // An empty line inside code is code, so the block is asked first.
+        if let code = TableEditing.codeBlockEnd(holding: line.location, in: text) {
+            return Spot(offset: code, breaksBefore: 1, breaksAfter: 0)
         }
-        return NSMaxRange(line)
+        guard isBlank(line, in: text) else {
+            let block = block(around: offset, in: text)
+            return Spot(offset: block.end, breaksBefore: block.needsEmptyLine ? 2 : 1, breaksAfter: 0)
+        }
+        var belowRange: NSRange?
+        var next = NSMaxRange(line)
+        if next < text.length {
+            next += text.character(at: next) == 0x0D && next + 1 < text.length && text.character(at: next + 1) == 0x0A ? 2 : 1
+            belowRange = SourceLines.range(around: next, in: text)
+        }
+        // A line of spaces alone would indent the link into code, so the
+        // link starts a line of its own after it.
+        guard line.length == 0 else { return Spot(offset: NSMaxRange(line), breaksBefore: 1, breaksAfter: 0) }
+        // An indented line below is more of a list item: the link stays
+        // right above it, where the item takes it in, as an empty line
+        // around it would end the list.
+        if let belowRange, belowRange.length > 0, [0x20, 0x09].contains(text.character(at: belowRange.location)), !isBlank(belowRange, in: text) {
+            return Spot(offset: line.location, breaksBefore: 0, breaksAfter: 0)
+        }
+        // An empty line takes the link as it is, and keeps the lines above
+        // and below it apart as it did while it was empty.
+        let above = line.location > 0 && !isBlank(SourceLines.range(around: line.location - 1, in: text), in: text)
+        let below = belowRange.map { !isBlank($0, in: text) } ?? false
+        return Spot(offset: line.location, breaksBefore: above ? 1 : 0, breaksAfter: below ? 1 : 0)
+    }
+
+    private static func block(around offset: Int, in text: NSString) -> (end: Int, needsEmptyLine: Bool) {
+        let line = SourceLines.range(around: min(max(offset, 0), text.length), in: text)
+        if let code = TableEditing.codeBlockEnd(holding: line.location, in: text) { return (code, false) }
+        if let table = TableEditing.locate(in: text, selection: NSRange(location: line.location, length: 0)) {
+            return (NSMaxRange(table.range), true)
+        }
+        guard isQuote(line, in: text) else { return (NSMaxRange(line), false) }
+        var last = line
+        SourceLines.forEach(in: text) { _, range in
+            guard range.location > line.location else { return true }
+            guard isQuote(range, in: text) else { return false }
+            last = range
+            return true
+        }
+        return (NSMaxRange(last), true)
+    }
+
+    private static func isBlank(_ line: NSRange, in text: NSString) -> Bool {
+        (line.location..<NSMaxRange(line)).allSatisfy {
+            let unit = text.character(at: $0)
+            return unit == 0x20 || unit == 0x09
+        }
+    }
+
+    /// `>` after at most three spaces, as CommonMark opens a quote.
+    private static func isQuote(_ line: NSRange, in text: NSString) -> Bool {
+        var index = line.location
+        while index < NSMaxRange(line), index - line.location < 3, text.character(at: index) == 0x20 { index += 1 }
+        return index < NSMaxRange(line) && text.character(at: index) == 0x3E
     }
 }
 

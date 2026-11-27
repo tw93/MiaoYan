@@ -391,8 +391,8 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(editor.string, body, "one undo takes the drop back")
 
         XCTAssertEqual(drop.dropFiles(from: board, at: 11), true)
-        XCTAssertTrue(editor.string.hasPrefix("first line\n[Plan.pdf](/files/"), "an empty line takes the link with no extra break: \(editor.string)")
-        XCTAssertTrue(editor.string.hasSuffix(")\nthird line"), editor.string)
+        XCTAssertTrue(editor.string.hasPrefix("first line\n\n[Plan.pdf](/files/"), "an empty line between two paragraphs keeps them apart: \(editor.string)")
+        XCTAssertTrue(editor.string.hasSuffix(")\n\nthird line"), editor.string)
         undo.undo()
         XCTAssertEqual(editor.string, body)
 
@@ -507,7 +507,8 @@ final class ShellEditorParityTests: XCTestCase {
         board.writeObjects([file as NSURL])
 
         XCTAssertEqual(drop.dropFiles(from: board, at: 2), true)
-        XCTAssertTrue(editor.string.hasPrefix("| a | b |\n| - | - |\n| 1 | 2 |\n[Plan.pdf](/files/Plan"), editor.string)
+        // An empty line first: cmark-gfm takes a line right under a table for one more row.
+        XCTAssertTrue(editor.string.hasPrefix("| a | b |\n| - | - |\n| 1 | 2 |\n\n[Plan.pdf](/files/Plan"), editor.string)
         editor.string = body
         XCTAssertEqual(drop.dropFiles(from: board, at: (body as NSString).range(of: "code").location), true)
         XCTAssertTrue(editor.string.contains("```\ncode\n```\n[Plan.pdf](/files/"), editor.string)
@@ -913,7 +914,8 @@ final class ShellEditorParityTests: XCTestCase {
         let previousUpload = UserDefaultsManagement.defaultPicUpload
         defer { UserDefaultsManagement.defaultPicUpload = previousUpload }
         UserDefaultsManagement.defaultPicUpload = "None"
-        let note = makeLoadedNote("drag.md", body: "before after")
+        // Two lines, the drop on the second: on one line every drop point gives the same text.
+        let note = makeLoadedNote("drag.md", body: "first\nbefore after")
         defer { note.discardPendingSave() }
         let controller = ShellEditorController()
         controller.show(note)
@@ -944,17 +946,17 @@ final class ShellEditorParityTests: XCTestCase {
 
         // The caret index performDragOperation will compute from this point.
         editor.layoutManager?.ensureLayout(for: editor.textContainer!)
-        let glyphRect = try XCTUnwrap(editor.layoutManager?.boundingRect(forGlyphRange: NSRange(location: 0, length: 12), in: editor.textContainer!))
+        let glyphRect = try XCTUnwrap(editor.layoutManager?.boundingRect(forGlyphRange: NSRange(location: 6, length: 12), in: editor.textContainer!))
         let origin = editor.textContainerOrigin
         let inView = NSPoint(x: origin.x + glyphRect.minX + glyphRect.width * 7 / 12, y: origin.y + glyphRect.midY)
         let point = editor.convert(inView, to: nil)
         let expected = editor.characterIndexForInsertion(at: inView)
-        XCTAssertTrue((1..<11).contains(expected), "the drop point is inside the text: \(expected)")
+        XCTAssertTrue((7..<17).contains(expected), "the drop point is inside the second line: \(expected)")
 
         let handled = editor.performDragOperation(StubDraggingInfo(pasteboard: board, location: point))
         XCTAssertTrue(handled)
         let text = editor.string
-        let match = try XCTUnwrap(text.range(of: "^before after\n!\\[\\]\\((/i/[^)]+\\.png)\\)$", options: .regularExpression), text)
+        let match = try XCTUnwrap(text.range(of: "^first\nbefore after\n!\\[\\]\\((/i/[^)]+\\.png)\\)$", options: .regularExpression), text)
         XCTAssertFalse(editor.textStorage?.containsAttachments ?? true)
         let link = String(text[text.range(of: "(/i/")!.lowerBound...].dropFirst().prefix(while: { $0 != ")" }))
         XCTAssertTrue(FileManager.default.fileExists(atPath: tempDir.path + link), "copied to \(link) (\(match))")
