@@ -270,6 +270,10 @@ private final class S3SettingsForm: NSObject, NSTextFieldDelegate {
     /// presenting lays the alert out again with the accessory at the same
     /// margin, whatever its width.
     func alignWithText(of alert: NSAlert) {
+        // Measured on macOS 26 only; macOS 15 lays the alert out again
+        // differently when it is presented, and the same inset moved the
+        // fields off the other way there (CI, 2026-11-27).
+        guard #available(macOS 26, *) else { return }
         alert.layout()
         guard let stack = view as? NSStackView,
             let text = Self.label(in: alert.window.contentView, showing: alert.informativeText),

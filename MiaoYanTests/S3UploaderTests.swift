@@ -173,6 +173,7 @@ final class S3UploaderTests: XCTestCase {
     /// labels and fields stood out of the title's column (maintainer 2026-11-27).
     @MainActor
     func testTheSheetsFieldsStartWhereItsTextStarts() async throws {
+        guard #available(macOS 26, *) else { throw XCTSkip("the alignment is measured on macOS 26's alert") }
         let controller = EditorPrefsViewController()
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 568, height: 500), styleMask: [.titled], backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
