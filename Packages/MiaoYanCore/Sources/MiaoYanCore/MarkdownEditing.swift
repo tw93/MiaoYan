@@ -298,15 +298,38 @@ public enum DropPlacement {
         if let table = TableEditing.locate(in: text, selection: NSRange(location: line.location, length: 0)) {
             return (NSMaxRange(table.range), true)
         }
-        guard isQuote(line, in: text) else { return (NSMaxRange(line), false) }
+        guard inQuote(line, in: text) else { return (NSMaxRange(line), false) }
         var last = line
         SourceLines.forEach(in: text) { _, range in
             guard range.location > line.location else { return true }
-            guard isQuote(range, in: text) else { return false }
+            // A plain line right under a quote's paragraph is more of that
+            // paragraph, with or without its `>`.
+            guard isQuote(range, in: text) || (holdsParagraphText(last, in: text) && holdsParagraphText(range, in: text)) else { return false }
             last = range
             return true
         }
         return (NSMaxRange(last), true)
+    }
+
+    /// Whether `line` opens with `>`, or is a plain line that carries on the
+    /// paragraph of a quote above it.
+    private static func inQuote(_ line: NSRange, in text: NSString) -> Bool {
+        var current = line
+        while !isQuote(current, in: text) {
+            guard holdsParagraphText(current, in: text), current.location > 0 else { return false }
+            current = SourceLines.range(around: current.location - 1, in: text)
+        }
+        return current.location == line.location || holdsParagraphText(current, in: text)
+    }
+
+    /// Whether the line, past any `>`, starts as paragraph text does: not
+    /// empty, and not on a character that opens a heading, list, code,
+    /// table, formula or HTML, which would end the paragraph above it.
+    private static func holdsParagraphText(_ line: NSRange, in text: NSString) -> Bool {
+        var index = line.location
+        while index < NSMaxRange(line), [0x20, 0x09, 0x3E].contains(text.character(at: index)) { index += 1 }
+        guard index < NSMaxRange(line), let scalar = Unicode.Scalar(text.character(at: index)) else { return false }
+        return !"#`~-*+<|$0123456789".unicodeScalars.contains(scalar)
     }
 
     private static func isBlank(_ line: NSRange, in text: NSString) -> Bool {

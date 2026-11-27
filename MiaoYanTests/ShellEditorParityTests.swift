@@ -595,6 +595,15 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(controller.textView.string, "first line\n[Plan.pdf](/files/Plan.pdf)\nthird line")
         for copy in drop.copies { await copy.value }
         XCTAssertEqual(controller.textView.string, body, "the link and its line break are gone")
+
+        // On the empty line between two paragraphs the drop writes a break
+        // on each side of the link, and both go back out.
+        let spaced = "first line\n\nthird line"
+        controller.textView.string = spaced
+        XCTAssertEqual(drop.dropFiles(from: board, at: 11), true)
+        XCTAssertEqual(controller.textView.string, "first line\n\n[Plan.pdf](/files/Plan.pdf)\n\nthird line")
+        for copy in drop.copies { await copy.value }
+        XCTAssertEqual(controller.textView.string, spaced, "no empty line is left behind")
     }
 
     /// With an image host set, every dropped file went up to it whatever its

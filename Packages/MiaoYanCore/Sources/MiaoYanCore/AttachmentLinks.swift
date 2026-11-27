@@ -139,11 +139,12 @@ public enum AttachmentLinks {
 
     static let attachmentPathRegex: NSRegularExpression = {
         // A match never starts right after a `/`, nor on the second dot of
-        // a `../`: the same path read from one character earlier matches
-        // too and is the one taken. Saying so keeps a long run of `/` or
-        // `../` from being read again from each of its characters (8000
-        // slashes took 2.8s), and the possessive `*+` never gives a step back.
-        let pattern = #"(?<!/)(?!(?<=\.)\./)(?:\.\./|\./|/)*+(?:i|files)/[^)\s'"<>]+"#
+        // a `../`, nor on the `/` of a `./`: the same path read from one
+        // character earlier matches too and is the one taken. Saying so
+        // keeps a long run of `/` or `../` from being read again from each
+        // of its characters (8000 slashes took 2.8s), and the possessive
+        // `*+` never gives a step back.
+        let pattern = #"(?<!/)(?!(?<=\.)\.?/)(?:\.\./|\./|/)*+(?:i|files)/[^)\s'"<>]+"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
             preconditionFailure("AttachmentLinks.attachmentPathRegex literal is invalid: \(pattern)")
         }

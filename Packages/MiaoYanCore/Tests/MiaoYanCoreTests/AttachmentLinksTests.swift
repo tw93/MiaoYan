@@ -44,6 +44,9 @@ final class AttachmentLinksTests: XCTestCase {
         let started = Date()
         XCTAssertEqual(matches(AttachmentLinks.attachmentPathRegex, String(repeating: "../", count: 20000) + "i/a.png").count, 1)
         XCTAssertTrue(matches(AttachmentLinks.attachmentPathRegex, String(repeating: "/", count: 8000)).isEmpty)
+        for run in ["../", "./", ".../", "/./"] {
+            XCTAssertTrue(matches(AttachmentLinks.attachmentPathRegex, String(repeating: run, count: 20000)).isEmpty, run)
+        }
         XCTAssertLessThan(Date().timeIntervalSince(started), 1, "a long run is read once, not once from each character")
     }
 

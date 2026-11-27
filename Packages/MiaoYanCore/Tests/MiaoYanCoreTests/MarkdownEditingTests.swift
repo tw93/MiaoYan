@@ -512,7 +512,7 @@ final class MarkdownEditingTests: XCTestCase {
         }
         XCTAssertEqual(spot("alpha\nnext", at: "alpha"), [5, 1, 0])
         XCTAssertEqual(spot("| a | b |\n| - | - |\n| 1 | 2 |\n\nend", at: "| 1"), [29, 2, 0], "after a table")
-        XCTAssertEqual(spot("> quoted\n> more\nafter", at: "quoted"), [15, 2, 0], "after a quote")
+        XCTAssertEqual(spot("> quoted\n> more\n\nafter", at: "quoted"), [15, 2, 0], "after a quote")
         XCTAssertEqual(spot("```\ncode\n```\nafter", at: "code"), [12, 1, 0], "code ends at its fence")
         XCTAssertEqual(spot("first\n\nthird", at: "\n\n", plus: 1), [6, 1, 1], "between two paragraphs")
         XCTAssertEqual(spot("first\r\n\r\nthird", at: "\r\n\r\n", plus: 2), [7, 1, 1], "with CRLF")
@@ -524,6 +524,13 @@ final class MarkdownEditingTests: XCTestCase {
         XCTAssertEqual(spot("$$\na\n\nb\n$$\nafter", at: "\n\nb", plus: 1), [10, 1, 0], "and inside a formula")
         XCTAssertEqual(spot("    \nfoo", at: "    ", plus: 2), [4, 1, 0], "a line of spaces would indent the link into code")
         XCTAssertEqual(spot("- a\n\n  para", at: "\n\n", plus: 1), [4, 0, 0], "an empty line inside a list item stays in the item")
+        // A plain line under a quote's paragraph is more of the quote.
+        XCTAssertEqual(spot("> quoted\nlazy\n\nafter", at: "quoted"), [13, 2, 0], "past the quote's lazy line")
+        XCTAssertEqual(spot("> quoted\nlazy\nmore\n\nafter", at: "lazy"), [18, 2, 0], "dropped on the lazy line itself")
+        XCTAssertEqual(spot("> quoted\n- item", at: "quoted"), [8, 2, 0], "a list under a quote is not part of it")
+        XCTAssertEqual(spot("> # title\nplain", at: "plain"), [15, 1, 0], "a line under a quoted heading is its own paragraph")
+        XCTAssertEqual(spot(">\nplain", at: "plain"), [7, 1, 0], "and under an empty quote line")
+        XCTAssertEqual(spot("plain\nmore", at: "more"), [10, 1, 0])
     }
 }
 

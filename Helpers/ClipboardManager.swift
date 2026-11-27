@@ -401,6 +401,10 @@ class ClipboardManager {
         let link = AttachmentFile.markdown(path: reserved.path, kind: kind, title: url.lastPathComponent)
         let removal = (droppedLineBreak ?? "") + link
         droppedLineBreak = nil
+        // The break `endDroppedLine` writes after the link of a drop that
+        // took an empty line goes back out with it too.
+        let trailing = String(
+            repeating: ListContinuation.lineBreak(in: textView.string as NSString), count: droppedBreaksAfter)
         EditTextView.shouldForceRescan = true
         textView.breakUndoCoalescing()
         textView.insertText(link, replacementRange: textView.selectedRange())
@@ -421,8 +425,8 @@ class ClipboardManager {
                 ImagesProcessor.releaseAttachment(destination)
                 guard let failure else { return }
                 AppDelegate.trackError(failure, context: "ClipboardManager.copyFile")
-                if !Self.removeLink(removal, of: note, in: textView), removal != link {
-                    Self.removeLink(link, of: note, in: textView)
+                for candidate in [removal + trailing, removal, link] where Self.removeLink(candidate, of: note, in: textView) {
+                    break
                 }
                 textView?.window?.contentViewController?.toast(message: I18n.str("Save Failed"), style: .failure)
             })
