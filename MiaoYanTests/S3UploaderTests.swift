@@ -169,6 +169,32 @@ final class S3UploaderTests: XCTestCase {
         XCTAssertThrowsError(try S3Uploader.putRequest(config: missing, key: "a.png", body: Data(), contentType: "image/png", date: Date()))
     }
 
+    /// macOS 26 lays an alert's accessory out 6pt left of its text, and the
+    /// labels and fields stood out of the title's column (maintainer 2026-11-27).
+    @MainActor
+    func testTheSheetsFieldsStartWhereItsTextStarts() async throws {
+        let controller = EditorPrefsViewController()
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 568, height: 500), styleMask: [.titled], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentViewController = controller
+        window.orderBack(nil)
+        defer { window.close() }
+        let open = NSSelectorFromString("editS3Settings:")
+        guard controller.responds(to: open) else { return XCTFail("the Set Up action moved") }
+        controller.perform(open, with: nil)
+        try await Task.sleep(nanoseconds: 500_000_000)
+        let sheet = try XCTUnwrap(window.attachedSheet)
+        defer { window.endSheet(sheet) }
+        func labels(in view: NSView) -> [NSTextField] {
+            (view as? NSTextField).map { [$0] } ?? view.subviews.flatMap(labels)
+        }
+        let all = labels(in: try XCTUnwrap(sheet.contentView))
+        let text = try XCTUnwrap(all.first { $0.stringValue.hasPrefix("Images go to your bucket") || $0.stringValue.hasPrefix("图片会上传") })
+        let label = try XCTUnwrap(all.first { $0.stringValue == "S3 API" })
+        // Measured on the sheet as presented, which lays the alert out again.
+        XCTAssertEqual(label.convert(label.bounds, to: nil).minX, text.convert(text.bounds, to: nil).minX, accuracy: 0.5)
+    }
+
     @MainActor
     func testOnlyImagesGoToTheBucket() {
         XCTAssertEqual(ClipboardManager.uploadHost(forAttachmentAt: "/i/shot.png", setting: "S3"), .s3)

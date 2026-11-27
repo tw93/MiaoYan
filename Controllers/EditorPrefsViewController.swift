@@ -127,6 +127,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
             informativeText: I18n.str("Images go to your bucket and the note links them through the public URL. The secret key is kept in your Keychain."),
             buttons: [I18n.str("Save"), I18n.str("Cancel")])
         alert.accessoryView = form.view
+        form.alignWithText(of: alert)
         alert.window.initialFirstResponder = form.firstField
         form.onChange = { [weak alert, weak form] in alert?.buttons.first?.isEnabled = form?.config.isComplete ?? false }
         alert.buttons.first?.isEnabled = config.isComplete
@@ -261,6 +262,33 @@ private final class S3SettingsForm: NSObject, NSTextFieldDelegate {
         }
         stack.layoutSubtreeIfNeeded()
         stack.frame.size = stack.fittingSize
+    }
+
+    /// The alert lays its accessory out 6pt left of its text (macOS 26), so
+    /// the labels and fields stood out of the title's column. The labels
+    /// are moved to where the informative text starts, measured once:
+    /// presenting lays the alert out again with the accessory at the same
+    /// margin, whatever its width.
+    func alignWithText(of alert: NSAlert) {
+        alert.layout()
+        guard let stack = view as? NSStackView,
+            let text = Self.label(in: alert.window.contentView, showing: alert.informativeText),
+            let first = stack.arrangedSubviews.first
+        else { return }
+        let gap = text.convert(text.bounds, to: nil).minX - first.convert(first.bounds, to: nil).minX
+        guard gap > 0.5 else { return }
+        stack.edgeInsets.left = gap
+        stack.layoutSubtreeIfNeeded()
+        stack.frame.size = stack.fittingSize
+    }
+
+    private static func label(in view: NSView?, showing text: String) -> NSTextField? {
+        guard let view else { return nil }
+        if let field = view as? NSTextField, field.stringValue == text { return field }
+        for subview in view.subviews {
+            if let field = label(in: subview, showing: text) { return field }
+        }
+        return nil
     }
 
     func controlTextDidChange(_ obj: Notification) {
